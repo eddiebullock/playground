@@ -1,4 +1,4 @@
-
+import math
 
 def calculate_mean(values):
     """Calculate the mean of a list of values"""

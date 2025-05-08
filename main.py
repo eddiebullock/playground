@@ -1,3 +1,17 @@
+"""
+Data Analysis Practice Project
+Main script that demonstrates the usage of our data analysis functions
+"""
+
+from data_cleaning import (
+    generate_messy_dataset,
+    detect_missing_values,
+    impute_missing_values,
+    detect_outliers_iqr,
+    normalize_min_max
+)
+from statistical_test import t_test_two_sample
+from visualizations import ascii_histogram, ascii_scatter_plot
 
 def main():
     # Generate messy data
