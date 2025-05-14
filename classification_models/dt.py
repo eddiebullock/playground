@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import accuracy_score
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import KFold
 
 # Load dataset
 data = pd.read_csv('/Users/eb2007/playground/data/raw/synthetic_dt_dataset.csv')
@@ -170,4 +170,44 @@ print("\n--- My DecisionTreeClassifier ---")
 for i, sample in enumerate(x):
     print(f"Input: {sample}, Predicted: {my_preds[i]}")
 print(f"Accuracy: {my_acc:.2f}")    
+
+def cross_validate(model_class, X, y, k=5, **kwargs):
+    kf = KFold(n_splits=k, shuffle=True, random_state=42)
+    accuracies = []
+
+    for train_index, val_index in kf.split(X):
+        X_train, X_val = X[train_index], X[val_index]
+        y_train, y_val = y[train_index], y[val_index]
+
+        model = model_class(**kwargs)
+        model.fit(X_train, y_train)
+        preds = model.predict(X_val)
+        accuracy = accuracy_score(y_val, preds)
+        accuracies.append(accuracy)
+
+    return np.mean(accuracies), accuracies
+
+#run cross validation on my model 
+my_cv_mean, my_cv_scores = cross_validate(MyDecisionTreeClassifier, x, y, k=5, max_depth=3)
+
+#run cross validation on scikit-learn model
+def sklearn_tree_wrapper(**kwargs):
+    class Wrapper:
+        def __init__(self):
+            self.model = DecisionTreeClassifier(max_depth=3)
+
+        def fit(self, X, y):
+            self.model.fit(X, y)
+
+        def predict(self, X):
+            return self.model.predict(X)
+            
+    return Wrapper()
+
+sk_cv_mean, sk_cv_scores = cross_validate(sklearn_tree_wrapper, x, y, k=5)
+
+#print cross validation results
+print("\n--- cross validation results ---")
+print(f"My DecisionTree Avg Accuracy: {my_cv_mean:.2f}, Fold Scores: {my_cv_scores}")
+print(f"Scikit-learn DecisionTree Avg Accuracy: {sk_cv_mean:.2f}, Fold Scores: {sk_cv_scores}")
 
