@@ -1,0 +1,15 @@
+# ignore venv
+venv/
+
+# ignore data files
+data/ 
+
+# ignore outputs
+outputs/
+
+# ignore jupyter notebook checkpoints
+.ipynb_checkpoints/
+
+# ignore os files
+.DS_Store
+
