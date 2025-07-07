@@ -7,7 +7,7 @@
 #SBATCH --time=00:30:00
 #SBATCH --output=logs/quick_test_%j.out
 #SBATCH --error=logs/quick_test_%j.err
-#SBATCH --partition=short
+#SBATCH --partition=cclake
 
 # Load required modules
 module load python/3.9
