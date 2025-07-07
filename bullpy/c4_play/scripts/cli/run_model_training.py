@@ -55,6 +55,22 @@ def main():
         default='experiments/models',
         help='Output directory for models and results'
     )
+    parser.add_argument(
+        '--subset',
+        type=int,
+        default=None,
+        help='Use a random subset of this many samples for local runs (default: all)'
+    )
+    parser.add_argument(
+        '--skip-smote',
+        action='store_true',
+        help='Skip SMOTE oversampling (recommended for local runs)'
+    )
+    parser.add_argument(
+        '--only-logistic',
+        action='store_true',
+        help='Run only Logistic Regression (fastest for local runs)'
+    )
     
     args = parser.parse_args()
     
@@ -87,7 +103,7 @@ def main():
         
         # Load data
         logger.info(f"Loading data from {data_path}")
-        X, y = trainer.load_data(str(data_path))
+        X, y = trainer.load_data(str(data_path), subset=args.subset)
         
         # Load configuration
         import yaml
@@ -104,11 +120,15 @@ def main():
         )
         
         # Initialize models
-        trainer.initialize_models()
+        trainer.initialize_models(only_logistic=args.only_logistic)
         
         # Train models
         logger.info("Training models...")
-        val_results = trainer.train_models(X_train, y_train, X_val, y_val)
+        val_results = trainer.train_models(
+            X_train, y_train, X_val, y_val,
+            use_smote=not args.skip_smote,
+            only_logistic=args.only_logistic
+        )
         
         # Evaluate on test set
         logger.info("Evaluating on test set...")

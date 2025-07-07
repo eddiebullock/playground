@@ -31,6 +31,7 @@ from sklearn.metrics import (
 from sklearn.preprocessing import StandardScaler
 from sklearn.impute import SimpleImputer
 import xgboost as xgb
+from imblearn.over_sampling import SMOTE
 
 # Visualization
 import matplotlib.pyplot as plt
@@ -67,57 +68,53 @@ class ClinicalModelTrainer:
         # Initialize imputer
         self.imputer = SimpleImputer(strategy='median')
         
-    def load_data(self, data_path: str) -> Tuple[pd.DataFrame, pd.Series]:
+    def load_data(self, data_path: str, subset: int = None, random_state: int = 42) -> tuple:
         """
-        Load processed data and prepare features/target.
-        
-        Args:
-            data_path: Path to processed features file
-            
-        Returns:
-            Tuple of (features, target)
+        Load processed data and prepare features/target. Optionally use a random subset for local runs.
         """
         logger.info(f"Loading data from {data_path}")
-        
         df = pd.read_csv(data_path)
         logger.info(f"Loaded data shape: {df.shape}")
-        
+        if subset is not None and subset < len(df):
+            df = df.sample(n=subset, random_state=random_state)
+            logger.info(f"Using random subset of {subset} samples for local experimentation.")
         # Prepare target (autism_any)
         target_col = 'autism_any'
         if target_col not in df.columns:
             raise ValueError(f"Target column '{target_col}' not found in DataFrame")
-        
-        # Drop target and other columns that should not be features
         cols_to_drop = [
             'autism_any', 'userid',
             'autism_subtype', 'autism_subtype_1', 'autism_subtype_2', 'autism_subtype_3',
             'autism_diagnosis_0', 'autism_diagnosis_1', 'autism_diagnosis_2'
         ]
-        
         X = df.drop(columns=[col for col in cols_to_drop if col in df.columns])
         y = df[target_col]
-        
-        # Handle categorical columns by dropping them for now (can be encoded later)
         categorical_cols = X.select_dtypes(include=['object']).columns
         if len(categorical_cols) > 0:
             logger.info(f"Dropping categorical columns: {categorical_cols.tolist()}")
             X = X.drop(columns=categorical_cols)
-        
-        # Ensure all remaining columns are numeric
         for col in X.columns:
             X[col] = pd.to_numeric(X[col], errors='coerce')
-        
-        # Drop any columns that became all NaN after conversion
         X = X.dropna(axis=1, how='all')
-        
         logger.info(f"Features shape after cleaning: {X.shape}")
         logger.info(f"Target distribution:\n{y.value_counts()}")
-        
         return X, y
     
+    def add_missingness_indicators(self, X: pd.DataFrame, threshold: float = 0.05) -> pd.DataFrame:
+        """
+        Add missingness indicator columns for features with >threshold missing values.
+        """
+        X_new = X.copy()
+        n = len(X_new)
+        for col in X_new.columns:
+            missing_pct = X_new[col].isnull().mean()
+            if missing_pct > threshold:
+                X_new[f'{col}_missing'] = X_new[col].isnull().astype(int)
+        return X_new
+
     def split_data(self, X: pd.DataFrame, y: pd.Series, 
                    test_size: float = 0.2, val_size: float = 0.2,
-                   random_state: int = 42) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, 
+                   random_state: int = 42, add_missingness: bool = True) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, 
                                                    pd.Series, pd.Series, pd.Series]:
         """
         Split data into train/validation/test sets.
@@ -128,6 +125,7 @@ class ClinicalModelTrainer:
             test_size: Proportion for test set
             val_size: Proportion for validation set (of remaining data)
             random_state: Random seed for reproducibility
+            add_missingness: Whether to add missingness indicators
             
         Returns:
             Tuple of (X_train, X_val, X_test, y_train, y_val, y_test)
@@ -152,119 +150,98 @@ class ClinicalModelTrainer:
         for name, y_split in [("Train", y_train), ("Validation", y_val), ("Test", y_test)]:
             logger.info(f"{name} target distribution: {y_split.value_counts().to_dict()}")
         
+        # Add missingness indicators if requested
+        if add_missingness:
+            X_train = self.add_missingness_indicators(X_train)
+            X_val = self.add_missingness_indicators(X_val)
+            X_test = self.add_missingness_indicators(X_test)
+        
         return X_train, X_val, X_test, y_train, y_val, y_test
     
-    def initialize_models(self) -> Dict[str, Any]:
+    def initialize_models(self, only_logistic: bool = False) -> dict:
         """
-        Initialize baseline models with clinical-appropriate parameters.
-        
-        Returns:
-            Dictionary of initialized models
+        Initialize baseline models. If only_logistic is True, only initialize Logistic Regression.
         """
         logger.info("Initializing baseline models...")
-        
-        models = {
-            'random_forest': RandomForestClassifier(
+        models = {}
+        if not only_logistic:
+            models['random_forest'] = RandomForestClassifier(
                 n_estimators=100,
                 max_depth=10,
                 min_samples_split=5,
                 min_samples_leaf=2,
                 random_state=42,
                 n_jobs=-1,
-                class_weight='balanced'  # Handle class imbalance
-            ),
-            
-            'xgboost': xgb.XGBClassifier(
+                class_weight='balanced'
+            )
+            models['xgboost'] = xgb.XGBClassifier(
                 n_estimators=100,
                 max_depth=6,
                 learning_rate=0.1,
                 subsample=0.8,
                 colsample_bytree=0.8,
                 random_state=42,
-                scale_pos_weight=1,  # Will be set based on class distribution
+                scale_pos_weight=1,
                 eval_metric='logloss'
-            ),
-            
-            'logistic_regression': LogisticRegression(
-                random_state=42,
-                max_iter=1000,
-                class_weight='balanced',
-                solver='liblinear'
             )
-        }
-        
+        models['logistic_regression'] = LogisticRegression(
+            random_state=42,
+            max_iter=1000,
+            class_weight='balanced',
+            solver='liblinear'
+        )
         self.models = models
-        logger.info(f"Initialized {len(models)} models")
-        
+        logger.info(f"Initialized {len(models)} models: {list(models.keys())}")
         return models
     
-    def train_models(self, X_train: pd.DataFrame, y_train: pd.Series,
-                    X_val: pd.DataFrame, y_val: pd.Series) -> Dict[str, Any]:
-        """
-        Train all models and evaluate on validation set.
-        
-        Args:
-            X_train: Training features
-            y_train: Training target
-            X_val: Validation features
-            y_val: Validation target
-            
-        Returns:
-            Dictionary with training results
-        """
-        logger.info("Training baseline models...")
-        
+    def train_models(self, X_train, y_train, X_val, y_val, use_smote=True, only_logistic=False):
+        logger.info("Training baseline models with local options...")
         results = {}
-        
         # Impute missing values
         logger.info("Imputing missing values...")
-        X_train_imputed = pd.DataFrame(
-            self.imputer.fit_transform(X_train),
-            columns=X_train.columns,
-            index=X_train.index
-        )
-        X_val_imputed = pd.DataFrame(
-            self.imputer.transform(X_val),
-            columns=X_val.columns,
-            index=X_val.index
-        )
-        
-        # Set scale_pos_weight for XGBoost based on class distribution
+        X_train_imputed = pd.DataFrame(self.imputer.fit_transform(X_train), columns=X_train.columns, index=X_train.index)
+        X_val_imputed = pd.DataFrame(self.imputer.transform(X_val), columns=X_val.columns, index=X_val.index)
+        # SMOTE oversampling (skip if only_logistic or use_smote is False)
+        if use_smote and not only_logistic:
+            logger.info("Applying SMOTE oversampling to training set...")
+            smote = SMOTE(random_state=42)
+            X_train_imputed, y_train = smote.fit_resample(X_train_imputed, y_train)
+            logger.info(f"After SMOTE: {dict(pd.Series(y_train).value_counts())}")
+        # Set scale_pos_weight for XGBoost
         neg_count = (y_train == 0).sum()
         pos_count = (y_train == 1).sum()
-        scale_pos_weight = neg_count / pos_count if pos_count > 0 else 1
-        self.models['xgboost'].set_params(scale_pos_weight=scale_pos_weight)
-        
+        if 'xgboost' in self.models:
+            scale_pos_weight = neg_count / pos_count if pos_count > 0 else 1
+            self.models['xgboost'].set_params(scale_pos_weight=scale_pos_weight)
         for name, model in self.models.items():
             logger.info(f"Training {name}...")
-            
-            # Train model
             model.fit(X_train_imputed, y_train)
-            
-            # Predictions
-            y_pred = model.predict(X_val_imputed)
             y_pred_proba = model.predict_proba(X_val_imputed)[:, 1]
-            
-            # Calculate metrics
+            # Threshold optimization
+            best_f1, best_thresh = 0, 0.5
+            precisions, recalls, thresholds = precision_recall_curve(y_val, y_pred_proba)
+            for t in thresholds:
+                y_pred = (y_pred_proba >= t).astype(int)
+                f1 = f1_score(y_val, y_pred)
+                if f1 > best_f1:
+                    best_f1, best_thresh = f1, t
+            logger.info(f"{name} best F1 on validation: {best_f1:.4f} at threshold {best_thresh:.3f}")
+            y_pred = (y_pred_proba >= best_thresh).astype(int)
             metrics = self._calculate_clinical_metrics(y_val, y_pred, y_pred_proba)
-            
-            # Store feature importance if available
             if hasattr(model, 'feature_importances_'):
                 self.feature_importance[name] = dict(zip(X_train.columns, model.feature_importances_))
             elif hasattr(model, 'coef_'):
                 self.feature_importance[name] = dict(zip(X_train.columns, np.abs(model.coef_[0])))
-            
             results[name] = {
                 'model': model,
                 'metrics': metrics,
                 'predictions': y_pred,
-                'probabilities': y_pred_proba
+                'probabilities': y_pred_proba,
+                'best_threshold': best_thresh
             }
-            
             logger.info(f"{name} validation metrics:")
             for metric, value in metrics.items():
                 logger.info(f"  {metric}: {value:.4f}")
-        
         self.results = results
         return results
     
@@ -324,7 +301,7 @@ class ClinicalModelTrainer:
         Returns:
             Dictionary with test set results
         """
-        logger.info("Evaluating models on test set...")
+        logger.info("Evaluating models on test set with optimized thresholds...")
         
         test_results = {}
         
@@ -339,8 +316,9 @@ class ClinicalModelTrainer:
             model = result['model']
             
             # Predictions on test set
-            y_pred = model.predict(X_test_imputed)
+            best_thresh = result.get('best_threshold', 0.5)
             y_pred_proba = model.predict_proba(X_test_imputed)[:, 1]
+            y_pred = (y_pred_proba >= best_thresh).astype(int)
             
             # Calculate test metrics
             test_metrics = self._calculate_clinical_metrics(y_test, y_pred, y_pred_proba)
@@ -349,7 +327,8 @@ class ClinicalModelTrainer:
                 'metrics': test_metrics,
                 'predictions': y_pred,
                 'probabilities': y_pred_proba,
-                'confusion_matrix': confusion_matrix(y_test, y_pred)
+                'confusion_matrix': confusion_matrix(y_test, y_pred),
+                'best_threshold': best_thresh
             }
             
             logger.info(f"{name} test metrics:")
