@@ -518,6 +518,117 @@ Generated: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
         
         return report
 
+    def select_top_features(self, X: pd.DataFrame, model, top_n: int = 20) -> pd.DataFrame:
+        """
+        Select top N features by absolute coefficient (for Logistic Regression).
+        """
+        if hasattr(model, 'coef_'):
+            coefs = np.abs(model.coef_[0])
+            top_idx = np.argsort(coefs)[-top_n:]
+            top_features = X.columns[top_idx]
+            return X[top_features]
+        else:
+            return X
+
+    def add_interaction_features(self, X: pd.DataFrame, features: list) -> pd.DataFrame:
+        """
+        Add pairwise interaction features for a list of features.
+        """
+        X_new = X.copy()
+        for i in range(len(features)):
+            for j in range(i+1, len(features)):
+                f1, f2 = features[i], features[j]
+                name = f'{f1}_x_{f2}'
+                X_new[name] = X_new[f1] * X_new[f2]
+        return X_new
+
+    def add_aq_eq_sq_spq_features(self, X: pd.DataFrame) -> pd.DataFrame:
+        """
+        Add AQ, EQ, SQ, SPQ composite scores and EQ/SQ ratio and their interaction.
+        """
+        X_new = X.copy()
+        # Composite scores (if not already present)
+        if not 'aq_total' in X_new.columns:
+            aq_cols = [col for col in X_new.columns if col.startswith('aq_')]
+            if aq_cols:
+                X_new['aq_total'] = X_new[aq_cols].sum(axis=1)
+        if not 'eq_total' in X_new.columns:
+            eq_cols = [col for col in X_new.columns if col.startswith('eq_')]
+            if eq_cols:
+                X_new['eq_total'] = X_new[eq_cols].sum(axis=1)
+        if not 'sqr_total' in X_new.columns:
+            sqr_cols = [col for col in X_new.columns if col.startswith('sqr_')]
+            if sqr_cols:
+                X_new['sqr_total'] = X_new[sqr_cols].sum(axis=1)
+        if not 'spq_total' in X_new.columns:
+            spq_cols = [col for col in X_new.columns if col.startswith('spq_')]
+            if spq_cols:
+                X_new['spq_total'] = X_new[spq_cols].sum(axis=1)
+        # EQ/SQ ratio and interaction
+        if 'eq_total' in X_new.columns and 'sqr_total' in X_new.columns:
+            X_new['eq_sq_ratio'] = X_new['eq_total'] / (X_new['sqr_total'] + 1e-6)
+            X_new['eq_x_sq'] = X_new['eq_total'] * X_new['sqr_total']
+        return X_new
+
+    def run_feature_engineering_experiment(self, X, y, top_n=20, add_interactions=True, analyze_aq_eq_sq_spq=True):
+        """
+        Run feature selection, add interaction features, and analyze AQ/EQ/SQ/SPQ.
+        Returns: dict of results and trained model.
+        """
+        logger.info("Running feature engineering experiment...")
+        # Split data
+        X_train, X_val, X_test, y_train, y_val, y_test = self.split_data(X, y)
+        # Impute missing values
+        X_train_imp = pd.DataFrame(self.imputer.fit_transform(X_train), columns=X_train.columns, index=X_train.index)
+        X_val_imp = pd.DataFrame(self.imputer.transform(X_val), columns=X_val.columns, index=X_val.index)
+        X_test_imp = pd.DataFrame(self.imputer.transform(X_test), columns=X_test.columns, index=X_test.index)
+        # Add AQ/EQ/SQ/SPQ features
+        if analyze_aq_eq_sq_spq:
+            X_train_imp = self.add_aq_eq_sq_spq_features(X_train_imp)
+            X_val_imp = self.add_aq_eq_sq_spq_features(X_val_imp)
+            X_test_imp = self.add_aq_eq_sq_spq_features(X_test_imp)
+        # Fit initial Logistic Regression
+        model = LogisticRegression(random_state=42, max_iter=1000, class_weight='balanced', solver='liblinear')
+        model.fit(X_train_imp, y_train)
+        # Feature selection
+        X_train_sel = self.select_top_features(X_train_imp, model, top_n=top_n)
+        X_val_sel = X_val_imp[X_train_sel.columns]
+        X_test_sel = X_test_imp[X_train_sel.columns]
+        # Add interaction features
+        if add_interactions:
+            top_feats = list(X_train_sel.columns)
+            X_train_sel = self.add_interaction_features(X_train_sel, top_feats)
+            X_val_sel = self.add_interaction_features(X_val_sel, top_feats)
+            X_test_sel = self.add_interaction_features(X_test_sel, top_feats)
+        # Retrain model
+        model2 = LogisticRegression(random_state=42, max_iter=1000, class_weight='balanced', solver='liblinear')
+        model2.fit(X_train_sel, y_train)
+        # Threshold optimization
+        y_val_proba = model2.predict_proba(X_val_sel)[:, 1]
+        best_f1, best_thresh = 0, 0.5
+        precisions, recalls, thresholds = precision_recall_curve(y_val, y_val_proba)
+        for t in thresholds:
+            y_pred = (y_val_proba >= t).astype(int)
+            f1 = f1_score(y_val, y_pred)
+            if f1 > best_f1:
+                best_f1, best_thresh = f1, t
+        logger.info(f"Best F1 on validation: {best_f1:.4f} at threshold {best_thresh:.3f}")
+        # Evaluate on test set
+        y_test_proba = model2.predict_proba(X_test_sel)[:, 1]
+        y_test_pred = (y_test_proba >= best_thresh).astype(int)
+        test_metrics = self._calculate_clinical_metrics(y_test, y_test_pred, y_test_proba)
+        # Analyze AQ/EQ/SQ/SPQ coefficients
+        coef_dict = dict(zip(X_train_sel.columns, model2.coef_[0]))
+        aq_eq_sq_spq_coefs = {k: v for k, v in coef_dict.items() if any(x in k for x in ['aq', 'eq', 'sqr', 'spq'])}
+        logger.info(f"AQ/EQ/SQ/SPQ feature coefficients: {aq_eq_sq_spq_coefs}")
+        return {
+            'test_metrics': test_metrics,
+            'best_threshold': best_thresh,
+            'aq_eq_sq_spq_coefs': aq_eq_sq_spq_coefs,
+            'model': model2,
+            'features': list(X_train_sel.columns)
+        }
+
 def main():
     """Main function to run model training pipeline."""
     
