@@ -95,6 +95,30 @@ def remove_duplicates(df: pd.DataFrame) -> pd.DataFrame:
     
     return df
 
+def clean_age_column(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Clean age column by handling '50+' values.
+    
+    Args:
+        df: DataFrame with age column
+        
+    Returns:
+        DataFrame with cleaned age column
+    """
+    logger.info("Cleaning age column...")
+    
+    df_clean = df.copy()
+    
+    if 'age' in df_clean.columns:
+        # Replace '50+' with 50
+        df_clean['age'] = df_clean['age'].replace('50+', 50)
+        # Convert to numeric, coercing errors to NaN
+        df_clean['age'] = pd.to_numeric(df_clean['age'], errors='coerce')
+        
+        logger.info(f"Age column cleaned. Range: {df_clean['age'].min()} - {df_clean['age'].max()}")
+    
+    return df_clean
+
 def validate_data_types(df: pd.DataFrame) -> pd.DataFrame:
     """
     Validate and correct data types.
@@ -108,6 +132,9 @@ def validate_data_types(df: pd.DataFrame) -> pd.DataFrame:
     logger.info("Validating data types...")
     
     df_clean = df.copy()
+    
+    # Clean age column first
+    df_clean = clean_age_column(df_clean)
     
     # Ensure numeric columns are numeric
     numeric_cols = df_clean.select_dtypes(include=[np.number]).columns

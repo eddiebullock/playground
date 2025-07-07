@@ -18,6 +18,10 @@ results/**
 experiments/logs/
 !experiments/logs/README.md
 
+# Ignore all models and model outputs
+experiments/models/
+!experiments/models/README.md
+
 # Ignore any CSV, Parquet, Excel, or similar data files anywhere
 *.csv
 *.tsv
