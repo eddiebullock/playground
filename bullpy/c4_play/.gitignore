@@ -1,8 +1,47 @@
 # ignore venv
 venv/
 
-# ignore data files
-data/ 
+# === DATA PROTECTION: DO NOT TRACK DATA FILES ===
+# Ignore all data files (raw, processed, intermediate, synthetic, etc.)
+data/
+!data/README.md
+
+data/**
+!data/README.md
+
+# Ignore all results, figures, and outputs
+results/
+results/**
+!results/README.md
+
+# Ignore experiment logs except for safe configs
+experiments/logs/
+!experiments/logs/README.md
+
+# Ignore any CSV, Parquet, Excel, or similar data files anywhere
+*.csv
+*.tsv
+*.parquet
+*.xlsx
+*.xls
+*.feather
+*.h5
+*.hdf5
+*.npz
+*.npy
+*.sav
+*.dta
+*.pkl
+*.pickle
+*.jsonl
+*.arrow
+
+# Ignore any backup or temp files
+*~
+*.bak
+*.tmp
+
+# === END DATA PROTECTION ===
 
 # ignore outputs
 outputs/
@@ -13,3 +52,5 @@ outputs/
 # ignore os files
 .DS_Store
 
+# ignore .cursor rules
+.cursorrules
