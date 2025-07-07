@@ -10,13 +10,13 @@
 #SBATCH --partition=medium
 
 # Load required modules
-module load python/3.9
+module load python/3.9.12/gcc/pdcqf4o5
 
 # Create logs directory if it doesn't exist
 mkdir -p logs
 
 # Activate virtual environment
-source autism_env/bin/activate
+source venv/bin/activate
 
 # Set working directory
 cd ~/predict_asc_c4
