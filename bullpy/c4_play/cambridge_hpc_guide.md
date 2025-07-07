@@ -10,11 +10,11 @@ ssh username@login.hpc.cam.ac.uk
 ### File Transfer
 ```bash
 # Upload files
-scp -r src/ username@login.hpc.cam.ac.uk:~/autism_project/
-scp data_file.csv username@login.hpc.cam.ac.uk:~/autism_project/
+scp -r src/ username@login.hpc.cam.ac.uk:~/predict_asc_c4/
+scp data_file.csv username@login.hpc.cam.ac.uk:~/predict_asc_c4/
 
 # Download results
-scp -r username@login.hpc.cam.ac.uk:~/autism_project/results/ ./
+scp -r username@login.hpc.cam.ac.uk:~/predict_asc_c4/results/ ./
 ```
 
 ## Environment Setup
@@ -79,7 +79,7 @@ scancel <job_id>
 ```bash
 # Check disk usage
 df -h
-du -sh ~/autism_project/
+du -sh ~/predict_asc_c4/
 
 # Clean up old files
 rm -rf test_output/ test_processed/ test_results/
@@ -112,10 +112,10 @@ module load python/3.9
 #### Data Path Errors
 ```bash
 # Check file permissions
-ls -la ~/autism_project/
+ls -la ~/predict_asc_c4/
 
 # Verify data files exist
-find ~/autism_project/ -name "*.csv"
+find ~/predict_asc_c4/ -name "*.csv"
 ```
 
 ### Debugging Commands
@@ -157,25 +157,25 @@ pip list
 ### Upload Strategy
 ```bash
 # Create project structure
-mkdir -p ~/autism_project/{src,data,results,logs}
+mkdir -p ~/predict_asc_c4/{src,data,results,logs}
 
 # Upload code
-scp -r src/ username@login.hpc.cam.ac.uk:~/autism_project/
+scp -r src/ username@login.hpc.cam.ac.uk:~/predict_asc_c4/
 
 # Upload data (if small)
-scp data.csv username@login.hpc.cam.ac.uk:~/autism_project/data/
+scp data.csv username@login.hpc.cam.ac.uk:~/predict_asc_c4/data/
 
 # For large data, use rsync or scp with compression
-rsync -avz --progress data/ username@login.hpc.cam.ac.uk:~/autism_project/data/
+rsync -avz --progress data/ username@login.hpc.cam.ac.uk:~/predict_asc_c4/data/
 ```
 
 ### Results Download
 ```bash
 # Download results
-scp -r username@login.hpc.cam.ac.uk:~/autism_project/results/ ./
+scp -r username@login.hpc.cam.ac.uk:~/predict_asc_c4/results/ ./
 
 # Download logs
-scp -r username@login.hpc.cam.ac.uk:~/autism_project/logs/ ./
+scp -r username@login.hpc.cam.ac.uk:~/predict_asc_c4/logs/ ./
 ```
 
 ## Quick Commands Reference
@@ -196,8 +196,8 @@ module load python/3.9
 module avail python
 
 # File operations
-ls -la ~/autism_project/
-du -sh ~/autism_project/
+ls -la ~/predict_asc_c4/
+du -sh ~/predict_asc_c4/
 
 # Log monitoring
 tail -f logs/quick_test_<job_id>.out

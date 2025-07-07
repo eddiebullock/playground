@@ -6,8 +6,8 @@
 echo "Setting up HPC environment for autism prediction project..."
 
 # Create project directory
-mkdir -p ~/autism_project
-cd ~/autism_project
+mkdir -p ~/predict_asc_c4
+cd ~/predict_asc_c4
 
 # Create logs directory
 mkdir -p logs
@@ -48,7 +48,7 @@ pip freeze > requirements.txt
 
 echo "Environment setup complete!"
 echo "Next steps:"
-echo "1. Upload your data files to ~/autism_project/"
-echo "2. Upload your src/ directory to ~/autism_project/"
+echo "1. Upload your data files to ~/predict_asc_c4/"
+echo "2. Upload your src/ directory to ~/predict_asc_c4/"
 echo "3. Update data paths in your scripts"
 echo "4. Submit test job: sbatch quick_test.slurm" 

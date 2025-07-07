@@ -19,13 +19,13 @@ mkdir -p logs
 source autism_env/bin/activate
 
 # Set working directory
-cd ~/autism_project
+cd ~/predict_asc_c4
 
 # Run quick validation test
 echo "Starting quick test at $(date)"
 echo "Testing data loading and preprocessing..."
 
-python src/data_loader.py --sample_size 1000 --output_dir test_output
+python src/modules/data_loader.py --sample_size 1000 --output_dir test_output
 if [ $? -ne 0 ]; then
     echo "ERROR: Data loading failed"
     exit 1

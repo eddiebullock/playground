@@ -19,13 +19,13 @@ mkdir -p logs
 source autism_env/bin/activate
 
 # Set working directory
-cd ~/autism_project
+cd ~/predict_asc_c4
 
 # Run full pipeline test
 echo "Starting full pipeline test at $(date)"
 echo "Step 1: Data loading..."
 
-python src/data_loader.py --sample_size 10000 --output_dir hpc_test
+python src/modules/data_loader.py --sample_size 10000 --output_dir hpc_test
 if [ $? -ne 0 ]; then
     echo "ERROR: Data loading failed"
     exit 1
