@@ -89,6 +89,16 @@ def train_baseline_models(X: pd.DataFrame, y: pd.Series, test_size: float = 0.2,
                          random_state: int = 42) -> Dict:
     """Train baseline models and evaluate performance."""
     logger.info("Training baseline models...")
+    # Drop all columns that could leak the target
+    leakage_cols = [col for col in X.columns if (
+        col.startswith('diagnosis_') or
+        col.startswith('autism_diagnosis_') or
+        col.startswith('autism_subtype') or
+        col in ['autism_any', 'num_diagnoses', 'has_adhd', 'userid']
+    )]
+    if leakage_cols:
+        logger.warning(f"Dropping potential leakage columns: {leakage_cols}")
+        X = X.drop(columns=leakage_cols)
     # Remove target column from features if present (data leakage check)
     if y.name in X.columns:
         logger.warning(f"Target column '{y.name}' found in features. Removing to prevent data leakage.")
