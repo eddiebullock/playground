@@ -3,11 +3,11 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
-#SBATCH --mem=32G
+#SBATCH --mem=16G
 #SBATCH --time=04:00:00
 #SBATCH --output=logs/full_pipeline_%j.out
 #SBATCH --error=logs/full_pipeline_%j.err
-#SBATCH --partition=medium
+#SBATCH --partition=icelake
 
 # Load required modules
 module load python/3.9.12/gcc/pdcqf4o5

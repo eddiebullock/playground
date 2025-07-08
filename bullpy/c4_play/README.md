@@ -224,6 +224,3 @@ splitting:
 - Save all results and random seeds for reproducibility
 - Use version control for all code and configurations
 
-## License
-
-[Add your license information here]

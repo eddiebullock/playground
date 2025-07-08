@@ -4,8 +4,8 @@ Data loading module for autism diagnosis prediction project.
 
 import pandas as pd
 import logging
-from pathlib import Path
-from typing import Optional
+from pathlib import Path 
+from typing import Optional 
 
 logger = logging.getLogger(__name__)
 
@@ -20,7 +20,7 @@ def load_data(file_path: str) -> pd.DataFrame:
         Loaded DataFrame
     """
     logger.info(f"Loading data from {file_path}")
-    
+
     file_path = Path(file_path)
     if not file_path.exists():
         raise FileNotFoundError(f"Data file not found: {file_path}")
@@ -35,7 +35,7 @@ def load_data(file_path: str) -> pd.DataFrame:
     
     logger.info(f"Loaded data shape: {df.shape}")
     logger.info(f"Columns: {list(df.columns)}")
-    
+
     return df
 
 def validate_data_structure(df: pd.DataFrame, expected_columns: Optional[list] = None) -> bool:
@@ -50,15 +50,15 @@ def validate_data_structure(df: pd.DataFrame, expected_columns: Optional[list] =
         True if validation passes
     """
     logger.info("Validating data structure...")
-    
+
     if df.empty:
         raise ValueError("DataFrame is empty")
-    
+
     if expected_columns:
         missing_cols = set(expected_columns) - set(df.columns)
         if missing_cols:
             raise ValueError(f"Missing expected columns: {missing_cols}")
-    
+        
     logger.info("Data structure validation passed")
     return True
 

@@ -3,7 +3,7 @@ venv/
 
 # === DATA PROTECTION: DO NOT TRACK DATA FILES ===
 # Ignore all data files (raw, processed, intermediate, synthetic, etc.)
-data/
+data/ 
 !data/README.md
 
 data/**
