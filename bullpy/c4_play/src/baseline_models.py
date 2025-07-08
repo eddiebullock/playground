@@ -21,6 +21,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report, confusion_matrix, roc_auc_score, f1_score
 from sklearn.preprocessing import StandardScaler, LabelEncoder
 import xgboost as xgb
+from sklearn.neural_network import MLPClassifier
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -101,7 +102,8 @@ def train_baseline_models(X: pd.DataFrame, y: pd.Series, test_size: float = 0.2,
     models = {
         'logistic_regression': LogisticRegression(random_state=random_state, max_iter=1000),
         'random_forest': RandomForestClassifier(n_estimators=100, random_state=random_state),
-        'xgboost': xgb.XGBClassifier(random_state=random_state, eval_metric='logloss')
+        'xgboost': xgb.XGBClassifier(random_state=random_state, eval_metric='logloss'),
+        'mlp': MLPClassifier(hidden_layer_sizes=(64, 32), max_iter=100, random_state=random_state)
     }
     
     results = {}
@@ -249,11 +251,11 @@ def create_visualizations(results: Dict, output_dir: str):
 
 def main():
     parser = argparse.ArgumentParser(description='Train baseline models for autism prediction')
-    parser.add_argument('--data_path', type=str, default='/home/eb2007/predict_asc_c4/data/data_c4_raw.csv',
+    parser.add_argument('--data_path', type=str, default='data/processed/features_full.csv',
                        help='Path to the data file')
-    parser.add_argument('--output_dir', type=str, default='baseline_results',
+    parser.add_argument('--output_dir', type=str, default='results/baseline',
                        help='Output directory for results')
-    parser.add_argument('--target_col', type=str, default='diagnosis',
+    parser.add_argument('--target_col', type=str, default='autism_any',
                        help='Name of the target variable column')
     parser.add_argument('--test_size', type=float, default=0.2,
                        help='Proportion of data for testing')

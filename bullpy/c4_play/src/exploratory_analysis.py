@@ -224,11 +224,11 @@ def generate_report(df: pd.DataFrame, missing_info: Dict, type_info: Dict,
 
 def main():
     parser = argparse.ArgumentParser(description='Comprehensive data exploration for autism prediction')
-    parser.add_argument('--data_path', type=str, default='/home/eb2007/predict_asc_c4/data/data_c4_raw.csv',
+    parser.add_argument('--data_path', type=str, default='data/processed/features_full.csv',
                        help='Path to the data file')
-    parser.add_argument('--output_dir', type=str, default='exploration_results',
+    parser.add_argument('--output_dir', type=str, default='results/eda',
                        help='Output directory for results')
-    parser.add_argument('--target_col', type=str, default='diagnosis',
+    parser.add_argument('--target_col', type=str, default='autism_any',
                        help='Name of the target variable column')
     parser.add_argument('--sample_size', type=int, default=None,
                        help='Number of samples to analyze (for large datasets)')
