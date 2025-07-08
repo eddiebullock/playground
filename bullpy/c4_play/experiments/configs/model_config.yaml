@@ -56,3 +56,20 @@ output:
   create_plots: true
   output_dir: 'experiments/models'
   results_file: 'experiments/logs/model_results.yaml' 
+
+# Class imbalance handling
+imbalance_handling:
+  method: 'none'  # Options: 'none', 'oversample', 'undersample', 'smote', 'class_weight'
+  random_state: 42
+
+# Feature engineering/selection
+feature_engineering:
+  engineering_methods: []  # e.g., ['polynomial']
+  selection_method: 'none'  # Options: 'none', 'importance', 'rfe', etc.
+
+# Hyperparameter tuning
+hyperparameter_tuning:
+  method: 'grid'  # Options: 'grid', 'random', 'bayesian'
+  param_grid: {}
+  scoring: 'f1'
+  cv: 5 

@@ -18,6 +18,12 @@ from typing import Dict, Any, Tuple, List
 from datetime import datetime
 import pickle
 import json
+import sys
+sys.path.append(str(Path(__file__).parent / 'modules'))
+from modules.imbalance_handler import handle_imbalance
+from modules.feature_selector import engineer_features, select_features
+from modules.advanced_models import get_model
+from modules.hyperparameter_tuning import tune_hyperparameters
 
 # Machine Learning imports
 from sklearn.model_selection import train_test_split, cross_val_score, StratifiedKFold
@@ -629,42 +635,90 @@ Generated: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
             'features': list(X_train_sel.columns)
         }
 
-def main():
-    """Main function to run model training pipeline."""
-    
-    # Initialize trainer
-    trainer = ClinicalModelTrainer()
-    
+def run_modular_training_pipeline(config_path: str):
+    """
+    Modular training pipeline using new config and modules.
+    Ensures no data leakage by dropping diagnosis columns before splitting and fitting feature selection only on training data.
+    """
+    logger.info("Starting modular training pipeline...")
+    with open(config_path, 'r') as f:
+        config = yaml.safe_load(f)
+
     # Load data
+    data_path = config.get('data_path', 'data/processed/features_full.csv')
+    X, y = ClinicalModelTrainer().load_data(data_path)
+
+    # Drop all diagnosis columns to prevent leakage
+    diagnosis_cols = [
+        'autism_any', 'userid',
+        'autism_subtype', 'autism_subtype_1', 'autism_subtype_2', 'autism_subtype_3',
+        'autism_diagnosis_0', 'autism_diagnosis_1', 'autism_diagnosis_2'
+    ]
+    X = X.drop(columns=[col for col in diagnosis_cols if col in X.columns], errors='ignore')
+
+    # Feature engineering (modular, non-target-based only)
+    fe_config = config.get('feature_engineering', {})
+    X = engineer_features(X, fe_config.get('engineering_methods', []))
+
+    # Data splitting
+    split_cfg = config.get('splitting', {})
+    trainer = ClinicalModelTrainer(output_dir=config.get('output', {}).get('output_dir', 'experiments/models'))
+    X_train, X_val, X_test, y_train, y_val, y_test = trainer.split_data(
+        X, y,
+        test_size=split_cfg.get('test_size', 0.2),
+        val_size=split_cfg.get('val_size', 0.2),
+        random_state=split_cfg.get('random_state', 42),
+        add_missingness=True
+    )
+
+    # Feature selection (fit only on training set, apply to val/test)
+    selection_method = fe_config.get('selection_method', 'none')
+    selected_features = select_features(X_train, y_train, selection_method)
+    X_train = X_train[selected_features]
+    X_val = X_val[selected_features]
+    X_test = X_test[selected_features]
+
+    # Class imbalance handling (modular, only on training set)
+    imb_cfg = config.get('imbalance_handling', {})
+    X_train, y_train = handle_imbalance(
+        X_train, y_train,
+        method=imb_cfg.get('method', 'none'),
+        random_state=imb_cfg.get('random_state', 42)
+    )
+
+    # Model selection (modular)
+    models_cfg = config.get('models', {})
+    for model_name, model_params in models_cfg.items():
+        logger.info(f"Training model: {model_name}")
+        model = get_model(model_name, model_params)
+        # Hyperparameter tuning (modular)
+        tuning_cfg = config.get('hyperparameter_tuning', {})
+        if tuning_cfg.get('method', 'none') != 'none':
+            model, best_params = tune_hyperparameters(
+                model, X_train, y_train,
+                method=tuning_cfg.get('method', 'grid'),
+                param_grid=tuning_cfg.get('param_grid', {}),
+                scoring=tuning_cfg.get('scoring', 'f1'),
+                cv=tuning_cfg.get('cv', 5)
+            )
+            logger.info(f"Best params for {model_name}: {best_params}")
+        # TODO: Fit model, evaluate, save results, etc.
+        # model.fit(X_train, y_train)
+        # ...
+
+    logger.info("Modular training pipeline completed!")
+
+def main():
+    import argparse
+    parser = argparse.ArgumentParser(description='Run modular model training pipeline')
+    parser.add_argument('--config', required=True, help='Path to model configuration file')
+    args = parser.parse_args()
     try:
-        X, y = trainer.load_data("data/processed/features_full.csv")
-    except FileNotFoundError:
-        logger.error("Processed data not found. Run data preprocessing first.")
-        return
-    
-    # Split data
-    X_train, X_val, X_test, y_train, y_val, y_test = trainer.split_data(X, y)
-    
-    # Initialize models
-    trainer.initialize_models()
-    
-    # Train models
-    val_results = trainer.train_models(X_train, y_train, X_val, y_val)
-    
-    # Evaluate on test set
-    test_results = trainer.evaluate_on_test_set(X_test, y_test)
-    
-    # Create plots
-    trainer.create_evaluation_plots(X_test, y_test, test_results)
-    
-    # Save results
-    trainer.save_results(test_results)
-    
-    # Print summary
-    summary = trainer.create_summary_report(test_results)
-    print(summary)
-    
-    logger.info("Model training pipeline completed successfully!")
+        run_modular_training_pipeline(args.config)
+        print("Modular pipeline completed successfully!")
+    except Exception as e:
+        logger.error(f"Pipeline failed: {str(e)}")
+        raise
 
 if __name__ == "__main__":
     main() 
