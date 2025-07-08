@@ -83,26 +83,12 @@ def analyze_target_variable(df: pd.DataFrame, target_col: str = 'diagnosis') -> 
     return target_info
 
 def create_visualizations(df: pd.DataFrame, output_dir: str, target_col: str = 'diagnosis'):
-    """Create exploratory visualizations."""
+    """Create only target variable distribution plot for large datasets."""
     logger.info("Creating visualizations...")
-    
     os.makedirs(output_dir, exist_ok=True)
-    
-    # Set up the plotting style
-    plt.style.use('default')
-    sns.set_palette("husl")
-    
-    # 1. Missing values heatmap
-    plt.figure(figsize=(12, 8))
-    missing_data = df.isnull()
-    sns.heatmap(missing_data, cbar=True, yticklabels=False, cmap='viridis')
-    plt.title('Missing Values Heatmap')
-    plt.tight_layout()
-    plt.savefig(os.path.join(output_dir, 'missing_values_heatmap.png'), dpi=300, bbox_inches='tight')
-    plt.close()
-    
-    # 2. Target variable distribution
+    # Only plot target variable distribution
     if target_col in df.columns:
+        import matplotlib.pyplot as plt
         plt.figure(figsize=(8, 6))
         df[target_col].value_counts().plot(kind='bar')
         plt.title(f'Distribution of {target_col}')
@@ -111,43 +97,6 @@ def create_visualizations(df: pd.DataFrame, output_dir: str, target_col: str = '
         plt.xticks(rotation=45)
         plt.tight_layout()
         plt.savefig(os.path.join(output_dir, 'target_distribution.png'), dpi=300, bbox_inches='tight')
-        plt.close()
-    
-    # 3. Numeric variables distributions
-    numeric_cols = df.select_dtypes(include=[np.number]).columns
-    if len(numeric_cols) > 0:
-        n_cols = min(3, len(numeric_cols))
-        n_rows = (len(numeric_cols) + n_cols - 1) // n_cols
-        
-        fig, axes = plt.subplots(n_rows, n_cols, figsize=(15, 5*n_rows))
-        if n_rows == 1:
-            axes = [axes] if n_cols == 1 else axes
-        else:
-            axes = axes.flatten()
-        
-        for i, col in enumerate(numeric_cols):
-            if i < len(axes):
-                df[col].hist(ax=axes[i], bins=30, alpha=0.7)
-                axes[i].set_title(f'Distribution of {col}')
-                axes[i].set_xlabel(col)
-        
-        # Hide empty subplots
-        for i in range(len(numeric_cols), len(axes)):
-            axes[i].set_visible(False)
-        
-        plt.tight_layout()
-        plt.savefig(os.path.join(output_dir, 'numeric_distributions.png'), dpi=300, bbox_inches='tight')
-        plt.close()
-    
-    # 4. Correlation matrix for numeric variables
-    if len(numeric_cols) > 1:
-        plt.figure(figsize=(12, 10))
-        correlation_matrix = df[numeric_cols].corr()
-        sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', center=0, 
-                   square=True, linewidths=0.5)
-        plt.title('Correlation Matrix of Numeric Variables')
-        plt.tight_layout()
-        plt.savefig(os.path.join(output_dir, 'correlation_matrix.png'), dpi=300, bbox_inches='tight')
         plt.close()
 
 def generate_report(df: pd.DataFrame, missing_info: Dict, type_info: Dict, 
@@ -238,7 +187,7 @@ def main():
     # Load data
     df = load_and_explore_data(args.data_path)
     
-    # Sample if specified
+    # Sample immediately after loading
     if args.sample_size and args.sample_size < len(df):
         df = df.sample(n=args.sample_size, random_state=42)
         logger.info(f"Sampled {args.sample_size} rows for analysis")

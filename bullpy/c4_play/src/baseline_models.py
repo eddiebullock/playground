@@ -89,7 +89,10 @@ def train_baseline_models(X: pd.DataFrame, y: pd.Series, test_size: float = 0.2,
                          random_state: int = 42) -> Dict:
     """Train baseline models and evaluate performance."""
     logger.info("Training baseline models...")
-    
+    # Remove target column from features if present (data leakage check)
+    if y.name in X.columns:
+        logger.warning(f"Target column '{y.name}' found in features. Removing to prevent data leakage.")
+        X = X.drop(columns=[y.name])
     # Split data
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=test_size, random_state=random_state, stratify=y
@@ -137,7 +140,8 @@ def train_baseline_models(X: pd.DataFrame, y: pd.Series, test_size: float = 0.2,
             'model': model,
             'metrics': metrics,
             'predictions': y_pred,
-            'probabilities': y_pred_proba
+            'probabilities': y_pred_proba,
+            'actual': y_test.values  # Save actual test labels for correct saving
         }
         
         logger.info(f"{name} - F1: {metrics['f1_score']:.3f}, CV F1: {metrics['cv_f1_mean']:.3f} ± {metrics['cv_f1_std']:.3f}")
@@ -175,7 +179,7 @@ def save_results(results: Dict, output_dir: str):
     for name, result in results.items():
         # Save predictions
         pred_df = pd.DataFrame({
-            'actual': result.get('actual', []),
+            'actual': result['actual'],
             'predicted': result['predictions']
         })
         if result['probabilities'] is not None:
