@@ -2,7 +2,7 @@
 
 # Data file paths
 data:
-  raw_data_path: "/Users/eb2007/Library/CloudStorage/OneDrive-UniversityofCambridge/Documents/PhD/data/data_c4_raw.csv"
+  raw_data_path: "data/raw/data_c4_raw.csv"
   processed_data_dir: "data/processed"
   output_dir: "experiments/logs"
 

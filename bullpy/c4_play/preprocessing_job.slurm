@@ -4,7 +4,7 @@
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=2
 #SBATCH --mem=4G
-#SBATCH --time=01:00:00
+#SBATCH --time=00:10:00
 #SBATCH --output=logs/preprocessing_%j.out
 #SBATCH --error=logs/preprocessing_%j.err
 #SBATCH --partition=icelake
