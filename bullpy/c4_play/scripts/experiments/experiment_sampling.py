@@ -2,7 +2,7 @@
 """
 Experiment: Compare different sampling/imbalance methods using the modular pipeline.
 Usage:
-    python experiment_sampling.py --sampling-method SMOTE --config ../../experiments/configs/model_config.yaml --output-dir ../../experiments/outputs/sampling_SMOTE
+    python experiment_sampling.py --method SMOTE --config ../../experiments/configs/model_config.yaml --output-dir ../../experiments/outputs/sampling_SMOTE
 """
 import argparse
 import sys
@@ -15,7 +15,7 @@ from model_training import run_modular_training_pipeline
 
 def main():
     parser = argparse.ArgumentParser(description='Experiment: Sampling Methods')
-    parser.add_argument('--sampling-method', type=str, required=True, help='Sampling method to use (e.g., SMOTE, ADASYN, BorderlineSMOTE, etc.)')
+    parser.add_argument('--method', type=str, required=True, help='Sampling method to use (e.g., SMOTE, ADASYN, BorderlineSMOTE, etc.)')
     parser.add_argument('--config', type=str, required=True, help='Path to model config YAML')
     parser.add_argument('--output-dir', type=str, required=True, help='Output directory for results')
     args = parser.parse_args()
@@ -23,7 +23,15 @@ def main():
     # Load config and update imbalance_handling method and output_dir
     with open(args.config, 'r') as f:
         config = yaml.safe_load(f)
-    config['imbalance_handling']['method'] = args.sampling_method
+    
+    # Ensure imbalance_handling section exists
+    if 'imbalance_handling' not in config:
+        config['imbalance_handling'] = {}
+    config['imbalance_handling']['method'] = args.method
+    
+    # Ensure output section exists
+    if 'output' not in config:
+        config['output'] = {}
     config['output']['output_dir'] = args.output_dir
 
     # Save modified config to a temp file

@@ -2,7 +2,7 @@
 """
 Experiment: XGBoost hyperparameter grid search using the modular pipeline.
 Usage:
-    python experiment_xgboost_grid.py --config ../../experiments/configs/model_config.yaml --param-grid ../../experiments/configs/xgboost_grid.yaml --output-dir ../../experiments/outputs/xgb_grid
+    python experiment_xgboost_grid.py --config ../../experiments/configs/xgboost_grid.yaml --output-dir ../../experiments/outputs/xgboost_grid
 """
 import argparse
 import sys
@@ -15,23 +15,21 @@ from model_training import run_modular_training_pipeline
 
 def main():
     parser = argparse.ArgumentParser(description='Experiment: XGBoost Grid Search')
-    parser.add_argument('--config', type=str, required=True, help='Path to model config YAML')
-    parser.add_argument('--param-grid', type=str, required=True, help='Path to YAML file with XGBoost param grid')
+    parser.add_argument('--config', type=str, required=True, help='Path to XGBoost grid config YAML')
     parser.add_argument('--output-dir', type=str, required=True, help='Output directory for results')
     args = parser.parse_args()
 
-    # Load config and update for XGBoost grid search
+    # Load config and update output_dir
     with open(args.config, 'r') as f:
         config = yaml.safe_load(f)
-    with open(args.param_grid, 'r') as f:
-        param_grid = yaml.safe_load(f)
-    config['models'] = {'xgboost': config['models'].get('xgboost', {})}
-    config['hyperparameter_tuning']['method'] = 'grid'
-    config['hyperparameter_tuning']['param_grid'] = param_grid
+    
+    # Ensure output section exists
+    if 'output' not in config:
+        config['output'] = {}
     config['output']['output_dir'] = args.output_dir
 
     # Save modified config to a temp file
-    temp_config_path = Path(args.output_dir) / 'temp_model_config.yaml'
+    temp_config_path = Path(args.output_dir) / 'temp_xgboost_config.yaml'
     Path(args.output_dir).mkdir(parents=True, exist_ok=True)
     with open(temp_config_path, 'w') as f:
         yaml.dump(config, f)
