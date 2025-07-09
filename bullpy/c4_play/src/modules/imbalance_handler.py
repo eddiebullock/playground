@@ -25,27 +25,27 @@ def handle_imbalance(X: pd.DataFrame, y: pd.Series, method: str = 'none', random
     Returns:
         X_res, y_res: Resampled features and target
     """
-    if method == 'none':
+    if method.lower() == 'none':
         return X, y
-    elif method == 'oversample':
+    elif method.lower() == 'oversample':
         if not IMBLEARN_AVAILABLE:
             raise ImportError("imblearn not available. Install with: pip install imbalanced-learn")
         sampler = RandomOverSampler(random_state=random_state)
         X_res, y_res = sampler.fit_resample(X, y)
         return X_res, y_res
-    elif method == 'undersample':
+    elif method.lower() == 'undersample':
         if not IMBLEARN_AVAILABLE:
             raise ImportError("imblearn not available. Install with: pip install imbalanced-learn")
         sampler = RandomUnderSampler(random_state=random_state)
         X_res, y_res = sampler.fit_resample(X, y)
         return X_res, y_res
-    elif method == 'smote':
+    elif method.lower() == 'smote':
         if not IMBLEARN_AVAILABLE:
             raise ImportError("imblearn not available. Install with: pip install imbalanced-learn")
         sampler = SMOTE(random_state=random_state)
         X_res, y_res = sampler.fit_resample(X, y)
         return X_res, y_res
-    elif method == 'class_weight':
+    elif method.lower() == 'class_weight':
         # No resampling, just return as is (handled in model)
         return X, y
     else:

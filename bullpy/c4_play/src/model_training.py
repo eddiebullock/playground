@@ -688,24 +688,32 @@ def run_modular_training_pipeline(config_path: str):
 
     # Model selection (modular)
     models_cfg = config.get('models', {})
-    for model_name, model_params in models_cfg.items():
-        logger.info(f"Training model: {model_name}")
-        model = get_model(model_name, model_params)
-        # Hyperparameter tuning (modular)
-        tuning_cfg = config.get('hyperparameter_tuning', {})
-        if tuning_cfg.get('method', 'none') != 'none':
-            model, best_params = tune_hyperparameters(
-                model, X_train, y_train,
-                method=tuning_cfg.get('method', 'grid'),
-                param_grid=tuning_cfg.get('param_grid', {}),
-                scoring=tuning_cfg.get('scoring', 'f1'),
-                cv=tuning_cfg.get('cv', 5)
-            )
-            logger.info(f"Best params for {model_name}: {best_params}")
-        # TODO: Fit model, evaluate, save results, etc.
-        # model.fit(X_train, y_train)
-        # ...
-
+    trainer = ClinicalModelTrainer(output_dir=config.get('output', {}).get('output_dir', 'experiments/models'))
+    
+    # Initialize models
+    trainer.initialize_models()
+    
+    # Train models
+    logger.info("Training models...")
+    val_results = trainer.train_models(
+        X_train, y_train, X_val, y_val,
+        use_smote=(imb_cfg.get('method', 'none').lower() != 'none'),
+        only_logistic=False
+    )
+    
+    # Evaluate on test set
+    logger.info("Evaluating on test set...")
+    test_results = trainer.evaluate_on_test_set(X_test, y_test)
+    
+    # Create plots
+    if config.get('output', {}).get('create_plots', True):
+        logger.info("Creating evaluation plots...")
+        trainer.create_evaluation_plots(X_test, y_test, test_results)
+    
+    # Save results
+    results_file = config.get('output', {}).get('results_file', 'experiments/logs/model_results.yaml')
+    trainer.save_results(test_results, results_file)
+    
     logger.info("Modular training pipeline completed!")
 
 def main():

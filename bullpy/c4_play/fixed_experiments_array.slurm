@@ -52,4 +52,4 @@ if [ $? -eq 0 ]; then
 else
     echo "Experiment $experiment_name failed"
     exit 1
-fi 
+fi
