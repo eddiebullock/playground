@@ -25,6 +25,11 @@ def handle_imbalance(X: pd.DataFrame, y: pd.Series, method: str = 'none', random
     Returns:
         X_res, y_res: Resampled features and target
     """
+    # Handle missing values before resampling
+    if X.isnull().any().any():
+        print(f"Warning: Found {X.isnull().sum().sum()} missing values. Filling with median...")
+        X = X.fillna(X.median())
+    
     if method.lower() == 'none':
         return X, y
     elif method.lower() == 'oversample':
