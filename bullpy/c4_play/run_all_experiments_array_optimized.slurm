@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=autism_experiments
-#SBATCH --output=experiments/logs/experiments_%A_%a.out
-#SBATCH --error=experiments/logs/experiments_%A_%a.err
+#SBATCH --output=~/predict_asc_c4/logs/deep_learning_%j.out
+#SBATCH --error=~/predict_asc_c4/logs/deep_learning_%j.err
 #SBATCH --time=01:30:00
 #SBATCH --mem=8G
 #SBATCH --cpus-per-task=2
@@ -12,8 +12,11 @@
 # Load modules
 module load python/3.9.12/gcc/pdcqf4o5
 
+# Set working directory
+cd ~/predict_asc_c4
+
 # Activate virtual environment
-source venv_tf/bin/activate
+source venv/bin/activate
 
 # Set experiment commands
 declare -a experiments=(

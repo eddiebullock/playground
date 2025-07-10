@@ -478,6 +478,10 @@ class ClinicalModelTrainer:
         with open(output_path, 'w') as f:
             yaml.dump(results_summary, f, default_flow_style=False)
         
+        # Also save as readable text file
+        text_output_path = output_path.with_suffix('.txt')
+        self._save_text_results(test_results, text_output_path)
+        
         # Save models
         models_dir = self.output_dir / 'trained_models'
         models_dir.mkdir(exist_ok=True)
@@ -488,7 +492,70 @@ class ClinicalModelTrainer:
                 pickle.dump(result['model'], f)
         
         logger.info(f"Results saved to {output_path}")
+        logger.info(f"Text results saved to {text_output_path}")
         logger.info(f"Models saved to {models_dir}")
+    
+    def _save_text_results(self, test_results: Dict[str, Any], output_file: Path) -> None:
+        """Save results in a readable text format."""
+        
+        with open(output_file, 'w') as f:
+            f.write("=" * 80 + "\n")
+            f.write("MODEL TRAINING RESULTS\n")
+            f.write("=" * 80 + "\n")
+            f.write(f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n")
+            
+            # Performance comparison table
+            f.write("PERFORMANCE COMPARISON\n")
+            f.write("-" * 80 + "\n")
+            f.write(f"{'Model':<20} {'F1-Score':<10} {'Accuracy':<10} {'Precision':<10} {'Recall':<10} {'ROC-AUC':<10}\n")
+            f.write("-" * 80 + "\n")
+            
+            for name, result in test_results.items():
+                metrics = result['metrics']
+                f.write(f"{name:<20} {metrics['f1_score']:<10.3f} {metrics['accuracy']:<10.3f} {metrics['precision']:<10.3f} {metrics['recall']:<10.3f} {metrics['roc_auc']:<10.3f}\n")
+            
+            f.write("\n\n")
+            
+            # Detailed metrics for each model
+            f.write("DETAILED METRICS BY MODEL\n")
+            f.write("-" * 50 + "\n\n")
+            
+            for name, result in test_results.items():
+                metrics = result['metrics']
+                f.write(f"MODEL: {name}\n")
+                f.write("-" * 30 + "\n")
+                f.write(f"F1-Score:        {metrics['f1_score']:.4f}\n")
+                f.write(f"Accuracy:        {metrics['accuracy']:.4f}\n")
+                f.write(f"Precision:       {metrics['precision']:.4f}\n")
+                f.write(f"Recall:          {metrics['recall']:.4f}\n")
+                f.write(f"ROC-AUC:         {metrics['roc_auc']:.4f}\n")
+                f.write(f"Balanced Accuracy: {metrics['balanced_accuracy']:.4f}\n")
+                f.write(f"Sensitivity:     {metrics['sensitivity']:.4f}\n")
+                f.write(f"Specificity:     {metrics['specificity']:.4f}\n")
+                f.write("\n")
+            
+            # Feature importance
+            if self.feature_importance:
+                f.write("TOP FEATURES BY MODEL\n")
+                f.write("-" * 40 + "\n\n")
+                
+                for name, importance_dict in self.feature_importance.items():
+                    f.write(f"{name.upper()}:\n")
+                    sorted_features = sorted(importance_dict.items(), key=lambda x: x[1], reverse=True)[:15]
+                    for i, (feature, importance) in enumerate(sorted_features, 1):
+                        f.write(f"  {i:2d}. {feature}: {importance:.4f}\n")
+                    f.write("\n")
+            
+            # Best model summary
+            best_model = max(test_results.items(), key=lambda x: x[1]['metrics']['f1_score'])
+            f.write("BEST PERFORMING MODEL\n")
+            f.write("-" * 30 + "\n")
+            f.write(f"Model: {best_model[0]}\n")
+            f.write(f"F1-Score: {best_model[1]['metrics']['f1_score']:.3f}\n")
+            f.write(f"Accuracy: {best_model[1]['metrics']['accuracy']:.3f}\n")
+            f.write(f"Precision: {best_model[1]['metrics']['precision']:.3f}\n")
+            f.write(f"Recall: {best_model[1]['metrics']['recall']:.3f}\n")
+            f.write(f"ROC-AUC: {best_model[1]['metrics']['roc_auc']:.3f}\n")
     
     def create_summary_report(self, test_results: Dict[str, Any]) -> str:
         """

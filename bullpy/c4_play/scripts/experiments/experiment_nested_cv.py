@@ -11,7 +11,7 @@ import yaml
 
 # Add src to path
 sys.path.append(str(Path(__file__).parent.parent.parent / 'src'))
-from model_training import run_modular_training_pipeline
+    from model_training import run_modular_training_pipeline
 
 def main():
     parser = argparse.ArgumentParser(description='Experiment: Nested Cross-Validation')

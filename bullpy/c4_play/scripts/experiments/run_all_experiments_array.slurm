@@ -13,11 +13,11 @@
 # Load required modules
 module load python/3.9.12/gcc/pdcqf4o5
 
-# Activate your virtual environment
-source venv/bin/activate
-
 # Set working directory
 cd ~/predict_asc_c4
+
+# Activate your virtual environment
+source venv/bin/activate
 
 # Define experiment commands
 EXPERIMENTS=(

@@ -49,6 +49,10 @@ $experiment_command
 # Check exit status
 if [ $? -eq 0 ]; then
     echo "Experiment $experiment_name completed successfully"
+    # Extract output directory from the experiment command (last argument)
+    output_dir=$(echo "$experiment_command" | awk '{print $NF}')
+    # Run analyze_results.py and save summary in the output directory
+    python scripts/analyze_results.py --outputs-dir "$output_dir" --output-file "$output_dir/experiment_results_summary.txt" --detailed-dir "$output_dir/experiment_reports"
 else
     echo "Experiment $experiment_name failed"
     exit 1

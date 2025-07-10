@@ -156,6 +156,8 @@ def main():
         raise ValueError(f"Target column {args.target_col} not found in data.")
     y = df[args.target_col].values.astype(np.float32)
     X = drop_leakage_columns(df)
+    # Encode categorical columns
+    X = pd.get_dummies(X, drop_first=True)
     # Standardize features
     scaler = StandardScaler()
     X_scaled = scaler.fit_transform(X.values)
