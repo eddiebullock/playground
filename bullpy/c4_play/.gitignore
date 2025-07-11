@@ -57,4 +57,4 @@ outputs/
 .DS_Store
 
 # ignore .cursor rules
-.cursorrules
+.cursorrulesautism_ml_study/processed_data_with_target.csv
