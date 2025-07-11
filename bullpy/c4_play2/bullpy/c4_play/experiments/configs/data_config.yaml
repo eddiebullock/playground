@@ -1,0 +1,75 @@
+# Data preprocessing configuration for autism diagnosis prediction project
+
+# Data file paths
+data:
+  raw_data_path: "data/raw/data_c4_raw.csv"
+  processed_data_dir: "data/processed"
+  output_dir: "experiments/logs"
+
+# Data cleaning parameters
+cleaning:
+  # Missing value handling
+  missing_codes: [-1, -999, 999, '', 'NA', 'N/A', 'null']
+  
+  # Diagnosis columns: drop rows with >2 missing values
+  diagnosis_missing_threshold: 2
+  
+  # Demographic columns: impute with new category
+  demographic_impute_value: 0
+  
+  # Questionnaire columns: impute with mean if ≤2 missing, otherwise drop
+  questionnaire_missing_threshold: 2
+  
+  # Remove duplicates
+  remove_duplicates: true
+
+# Feature engineering parameters
+features:
+  # Questionnaire blocks to create total scores for
+  questionnaire_blocks:
+    - "SPQ"
+    - "EQ" 
+    - "SQR"
+    - "AQ"
+  
+  # Age group bins for demographic features
+  age_bins: [0, 18, 25, 35, 50, 100]
+  age_labels: ["0-18", "19-25", "26-35", "36-50", "50+"]
+  
+  # Interaction features to create
+  interactions:
+    - ["spq_total", "eq_total"]
+    - ["aq_total", "sex"]
+  
+  # One-hot encoding for linear models
+  one_hot: false
+
+# Target variable
+target:
+  # Primary target column (autism_any: binary indicator for any autism diagnosis)
+  primary_target: "autism_any"
+  
+  # Alternative target columns to consider
+  alternative_targets:
+    - "autism_subtype"
+    - "autism_subtype_1"
+    - "autism_subtype_2"
+    - "autism_subtype_3"
+
+# Data splitting parameters
+splitting:
+  test_size: 0.2
+  random_state: 42
+  stratify: true
+
+# Logging parameters
+logging:
+  level: "INFO"
+  save_preprocessing_info: true
+  save_processed_data: true
+
+# Output parameters
+output:
+  save_format: "csv"
+  include_index: false
+  compression: null 

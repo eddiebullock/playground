@@ -1,0 +1,49 @@
+cleaning:
+  demographic_impute_value: 0
+  diagnosis_missing_threshold: 2
+  missing_codes:
+  - -1
+  - -999
+  - 999
+  - ''
+  - NA
+  - N/A
+  - 'null'
+  questionnaire_missing_threshold: 2
+  remove_duplicates: true
+data:
+  processed_data_dir: data/processed
+  raw_data_path: data/raw/test_data.csv
+features:
+  age_bins:
+  - 0
+  - 18
+  - 25
+  - 35
+  - 50
+  - 100
+  age_labels:
+  - 0-18
+  - 19-25
+  - 26-35
+  - 36-50
+  - 50+
+  interactions:
+  - - spq_total
+    - eq_total
+  - - aq_total
+    - sex
+  questionnaire_blocks:
+  - SPQ
+  - EQ
+  - SQR
+  - AQ
+output:
+  include_index: false
+  save_format: csv
+splitting:
+  random_state: 42
+  stratify: true
+  test_size: 0.2
+target:
+  primary_target: autism_any
