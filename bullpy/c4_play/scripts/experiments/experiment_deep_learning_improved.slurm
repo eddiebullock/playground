@@ -8,7 +8,6 @@
 #SBATCH --output=logs/deep_learning_improved_%j.out
 #SBATCH --error=logs/deep_learning_improved_%j.err
 #SBATCH --partition=icelake
-#SBATCH --qos=short
 
 # If GPU is available and needed, uncomment the next line:
 # SBATCH --gres=gpu:1
