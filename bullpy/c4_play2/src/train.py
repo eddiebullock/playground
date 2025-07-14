@@ -5,8 +5,6 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report, roc_auc_score
 import joblib
 import os
-from imblearn.over_sampling import SMOTE, RandomOverSampler
-from imblearn.under_sampling import RandomUnderSampler
 from xgboost import XGBClassifier
 
 def train_model(input_path, model_path):
@@ -16,13 +14,24 @@ def train_model(input_path, model_path):
     # Define features and target
     diagnosis_cols = [col for col in df.columns if col.startswith('diagnosis_') and not 'autism' in col]
     autism_diag_cols = [col for col in df.columns if 'autism_diagnosis' in col]
-    X = df.drop(columns=['autism_target'] + diagnosis_cols + autism_diag_cols)
+    drop_cols = ['autism_target', 'userid'] + diagnosis_cols + autism_diag_cols
+    X = df.drop(columns=drop_cols)
     y = df['autism_target']
 
     # Split data
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.2, stratify=y, random_state=42
     )
+
+    # --- Feature Selection: Top 20 features by Random Forest importance ---
+    rf_selector = RandomForestClassifier(n_estimators=100, random_state=42)
+    rf_selector.fit(X_train, y_train)
+    importances = pd.Series(rf_selector.feature_importances_, index=X_train.columns)
+    top_features = importances.sort_values(ascending=False).head(20).index
+    print("\nTop 20 features by importance:")
+    print(top_features)
+    X_train = X_train[top_features]
+    X_test = X_test[top_features]
 
     # Logistic Regression (with increased max_iter)
     print("\n--- Logistic Regression ---")
@@ -44,39 +53,6 @@ def train_model(input_path, model_path):
     print(classification_report(y_test, y_pred_rf))
     print("ROC-AUC:", roc_auc_score(y_test, y_probs_rf))
     joblib.dump(clf_rf, model_path.replace('.joblib', '_rf.joblib'))
-
-    # Logistic Regression + SMOTE
-    print("\n--- Logistic Regression + SMOTE ---")
-    smote = SMOTE(random_state=42)
-    X_train_smote, y_train_smote = smote.fit_resample(X_train, y_train)
-    clf_logreg_smote = LogisticRegression(max_iter=5000, class_weight='balanced', random_state=42)
-    clf_logreg_smote.fit(X_train_smote, y_train_smote)
-    y_pred_smote = clf_logreg_smote.predict(X_test)
-    y_probs_smote = clf_logreg_smote.predict_proba(X_test)[:, 1]
-    print(classification_report(y_test, y_pred_smote))
-    print("ROC-AUC:", roc_auc_score(y_test, y_probs_smote))
-
-    # Logistic Regression + RandomOverSampler
-    print("\n--- Logistic Regression + RandomOverSampler ---")
-    ros = RandomOverSampler(random_state=42)
-    X_train_ros, y_train_ros = ros.fit_resample(X_train, y_train)
-    clf_logreg_ros = LogisticRegression(max_iter=5000, class_weight='balanced', random_state=42)
-    clf_logreg_ros.fit(X_train_ros, y_train_ros)
-    y_pred_ros = clf_logreg_ros.predict(X_test)
-    y_probs_ros = clf_logreg_ros.predict_proba(X_test)[:, 1]
-    print(classification_report(y_test, y_pred_ros))
-    print("ROC-AUC:", roc_auc_score(y_test, y_probs_ros))
-
-    # Logistic Regression + RandomUnderSampler
-    print("\n--- Logistic Regression + RandomUnderSampler ---")
-    rus = RandomUnderSampler(random_state=42)
-    X_train_rus, y_train_rus = rus.fit_resample(X_train, y_train)
-    clf_logreg_rus = LogisticRegression(max_iter=5000, class_weight='balanced', random_state=42)
-    clf_logreg_rus.fit(X_train_rus, y_train_rus)
-    y_pred_rus = clf_logreg_rus.predict(X_test)
-    y_probs_rus = clf_logreg_rus.predict_proba(X_test)[:, 1]
-    print(classification_report(y_test, y_pred_rus))
-    print("ROC-AUC:", roc_auc_score(y_test, y_probs_rus))
 
     # XGBoost Model
     print("\n--- XGBoost ---")

@@ -24,6 +24,25 @@ def preprocess_data(input_path, output_path):
     questionnaire_cols = [col for col in df.columns if any(q in col for q in ['spq_', 'eq_', 'sqr_', 'aq_'])]
     df[questionnaire_cols] = df[questionnaire_cols].fillna(df[questionnaire_cols].median())
 
+    # Aggregate questionnaire scores
+    df['spq_total'] = df[[f'spq_{i}' for i in range(1, 11)]].sum(axis=1)
+    df['eq_total'] = df[[f'eq_{i}' for i in range(1, 11)]].sum(axis=1)
+    df['sqr_total'] = df[[f'sqr_{i}' for i in range(1, 11)]].sum(axis=1)
+    df['aq_total'] = df[[f'aq_{i}' for i in range(1, 11)]].sum(axis=1)
+
+    # D-score (EQ - SQR)
+    df['d_score'] = df['eq_total'] - df['sqr_total']
+
+    # Map sex to numeric for interaction (male=0, female=1, other=2, prefer_not_to_say=3, unknown=4)
+    sex_map = {'male': 0, 'female': 1, 'other': 2, 'prefer_not_to_say': 3, 'unknown': 4}
+    df['sex_num'] = df['sex'].map(sex_map).fillna(4)
+
+    # Interaction features
+    df['age_x_aq'] = df['age'] * df['aq_total']
+    df['sex_x_eq'] = df['sex_num'] * df['eq_total']
+    df['handedness_x_aq'] = df['handedness'].replace('unknown', 0).astype(float) * df['aq_total']
+    df['education_x_aq'] = df['education'].replace('unknown', 0).astype(float) * df['aq_total']
+
     # Drop rows with missing questionnaire data
     df = df.dropna(subset=questionnaire_cols)
 
