@@ -116,3 +116,8 @@ logs/
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# ignore data 
+/data/
+/*.csv
+.ipynb_checkpoints
