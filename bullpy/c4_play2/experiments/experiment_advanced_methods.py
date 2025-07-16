@@ -9,7 +9,6 @@ from sklearn.ensemble import IsolationForest
 
 # Load data
 # Use the preprocessed data file
-# (Update the path as needed)
 df = pd.read_csv('/Users/eb2007/playground/bullpy/c4_play2/data/processed/data_c4_processed.csv')
 
 # Drop columns that could leak data

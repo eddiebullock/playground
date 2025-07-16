@@ -59,7 +59,7 @@ def preprocess_data(input_path, output_path):
             return 0
     if 'occupation' in df.columns:
         df['is_stem_occupation'] = df['occupation'].apply(is_stem)
-
+    
     # Remove occupation, country_region, handedness, and education from demographic_cols for one-hot encoding
     demographic_cols = ['sex']
 
