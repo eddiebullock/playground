@@ -3,6 +3,7 @@ import os
 from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import RandomForestClassifier
 from imblearn.ensemble import BalancedRandomForestClassifier, EasyEnsembleClassifier
+import numpy as np
 
 def preprocess_data(input_path, output_path):
     # Load data
@@ -74,6 +75,29 @@ def preprocess_data(input_path, output_path):
 
     # One-hot encode demographic columns (sex only)
     df = pd.get_dummies(df, columns=demographic_cols, drop_first=True)
+
+    # --- Feature Engineering (must match notebook) ---
+    # Age group bins (categorical)
+    df['age_group'] = pd.cut(df['age'], bins=[0, 18, 30, 45, 60, 100], labels=['0-18', '19-30', '31-45', '46-60', '61+'])
+
+    # Nonlinear transformations
+    df['log_aq_total'] = np.log1p(df['aq_total'])
+    df['sqrt_age'] = np.sqrt(df['age'])
+
+    # Interaction terms
+    df['aq_eq_interaction'] = df['aq_total'] * df['eq_total']
+    df['sqp_aq_interaction'] = df['spq_total'] * df['aq_total']
+    df['age_x_eq'] = df['age'] * df['eq_total']
+
+    # Questionnaire score ratios
+    df['aq_spq_ratio'] = df['aq_total'] / (df['spq_total'] + 1e-8)
+    df['eq_sqr_ratio'] = df['eq_total'] / (df['sqr_total'] + 1e-8)
+
+    # Boolean: high AQ (above 1 std)
+    df['high_aq'] = (df['aq_total'] > df['aq_total'].mean() + df['aq_total'].std()).astype(int)
+
+    # One-hot encode new categorical features (age_group)
+    df = pd.get_dummies(df, columns=['age_group'], drop_first=True)
 
     # Drop columns that are no longer needed, including any occupation/country_region/handedness/education info
     drop_cols = ['userid', 'repeat', 'occupation', 'country_region', 'handedness', 'education']
