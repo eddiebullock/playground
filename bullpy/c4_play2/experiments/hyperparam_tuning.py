@@ -1,10 +1,13 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import classification_report, confusion_matrix, roc_curve, roc_auc_score,accuracy_score, f1_score
+from sklearn.metrics import classification_report, confusion_matrix, roc_curve, roc_auc_score, accuracy_score, f1_score
 from xgboost import XGBClassifier
 import joblib
 import os
+import sys
+
+print("Python executable:", sys.executable)
 
 # lead feature engineered data
 input_path = '/home/eb2007/c4/data/processed/data_c4_balanced_fe.csv'
@@ -59,7 +62,6 @@ y_val_pred = xgb_best.predict(X_val)
 print("XGBoost Validation Performance")
 print(classification_report(y_val, y_val_pred))
 print("accuracy:", accuracy_score(y_val, y_val_pred))
-
 print("F1 score:", f1_score(y_val, y_val_pred))
 joblib.dump(xgb_grid.best_estimator_, '/home/eb2007/c4/models/best_xgb_model.joblib')
 pd.DataFrame(xgb_grid.cv_results_).to_csv('/home/eb2007/c4/results/xgb_cv_results.csv', index=False)
