@@ -75,6 +75,13 @@ def preprocess_ybt_data(input_path, output_path):
     df['eq_total'] = df[[f'eq10_{i}' for i in range(1, 11) if f'eq10_{i}' in questionnaire_cols]].sum(axis=1)
     df['sqr_total'] = df[[f'sq10_{i}' for i in range(1, 11) if f'sq10_{i}' in questionnaire_cols]].sum(axis=1)
     df['aq_total'] = df[[f'aq_{i}' for i in range(1, 11) if f'aq_{i}' in questionnaire_cols]].sum(axis=1)
+    
+    # Create individual EQ and SQR items to match C4 format
+    for i in range(1, 11):
+        if f'eq10_{i}' in questionnaire_cols:
+            df[f'eq_{i}'] = df[f'eq10_{i}']
+        if f'sq10_{i}' in questionnaire_cols:
+            df[f'sqr_{i}'] = df[f'sq10_{i}']
 
     # Ensure age and aggregate columns are numeric
     df['age'] = pd.to_numeric(df['age'], errors='coerce')
