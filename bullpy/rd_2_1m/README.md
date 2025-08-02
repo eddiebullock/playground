@@ -42,7 +42,15 @@ rd_2_1m/
 
 ## Getting Started
 
-1. Install dependencies:
+1. Set up virtual environment:
+   ```bash
+   python3 -m venv venv
+   source venv/bin/activate  # On macOS/Linux
+   # or
+   venv\Scripts\activate     # On Windows
+   ```
+
+2. Install dependencies:
    ```bash
    pip install -r requirements.txt
    ```
