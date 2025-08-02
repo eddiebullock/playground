@@ -1,0 +1,24 @@
+# Core dependencies
+pandas>=2.0.0
+numpy>=1.24.0
+matplotlib>=3.7.0
+seaborn>=0.12.0
+plotly>=5.15.0
+
+# Data handling and APIs
+yfinance>=0.2.18
+requests>=2.31.0
+
+# Database (optional for future)
+sqlite3  # Built-in with Python
+
+# Configuration
+python-dotenv>=1.0.0
+
+# Testing
+pytest>=7.4.0
+pytest-cov>=4.1.0
+
+# Development tools
+black>=23.0.0
+flake8>=6.0.0 
