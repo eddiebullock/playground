@@ -1,0 +1,112 @@
+# Data files - NEVER upload any data
+data/
+*.csv
+*.xlsx
+*.xls
+*.json
+*.parquet
+*.h5
+*.hdf5
+*.pkl
+*.pickle
+*.joblib
+
+# Jupyter notebook outputs
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/*
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Model files
+models/
+*.joblib
+*.pkl
+*.pickle
+
+# Temporary files
+*.tmp
+*.temp
+temp/
+tmp/
+
+# Sensitive files
+*.key
+*.pem
+*.p12
+*.pfx
+config.ini
+secrets.json
+.env
+
+# Large files
+*.zip
+*.tar.gz
+*.rar
+
+# Output directories
+outputs/
+results/
+figures/
+plots/
+*.png
+*.jpg
+*.jpeg
+*.pdf
+*.svg
+
+# Cache
+.cache/
+cache/
+
+# Specific to this project
+c4_play2/
+processed/
+raw/ 
