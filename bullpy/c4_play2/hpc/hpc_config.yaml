@@ -1,0 +1,81 @@
+# Simplified HPC Configuration for Autism Classification
+# Focus on practical, efficient optimization
+
+# Data Configuration
+data:
+  input_file: "data/data_c4_enhanced_fe_v2.csv"
+  target_column: "autism_target"
+  test_size: 0.2
+  random_state: 42
+  stratify: true
+
+# Feature Engineering
+feature_engineering:
+  imputation_strategy: "mean"
+  feature_selection:
+    selectkbest_k: [50, 75, 100, 150, 200]
+    rfe_n_features: [50, 75, 100, 150, 200]
+
+# Random Forest Parameters (comprehensive but practical)
+random_forest:
+  n_estimators: [100, 200, 500]
+  max_depth: [10, 15, 20, None]
+  min_samples_split: [2, 5, 10]
+  min_samples_leaf: [1, 2, 4]
+  max_features: ["sqrt", "log2", None]
+  criterion: ["gini", "entropy"]
+
+# XGBoost Parameters
+xgboost:
+  n_estimators: [100, 200, 500]
+  max_depth: [3, 5, 7, 9]
+  learning_rate: [0.01, 0.1, 0.2]
+  subsample: [0.8, 0.9, 1.0]
+  colsample_bytree: [0.8, 0.9, 1.0]
+  reg_alpha: [0, 0.1, 1.0]
+  reg_lambda: [0, 0.1, 1.0]
+
+# LightGBM Parameters
+lightgbm:
+  n_estimators: [100, 200, 500]
+  max_depth: [3, 5, 7, 9]
+  learning_rate: [0.01, 0.1, 0.2]
+  num_leaves: [31, 50, 100]
+  subsample: [0.8, 0.9, 1.0]
+  colsample_bytree: [0.8, 0.9, 1.0]
+
+# Logistic Regression Parameters
+logistic_regression:
+  C: [0.001, 0.01, 0.1, 1.0, 10.0, 100.0]
+  penalty: ["l1", "l2"]
+  solver: ["liblinear", "saga"]
+  max_iter: [1000, 2000]
+
+# Neural Network Parameters (for deep learning script)
+neural_network:
+  hidden_layer_sizes:
+    - [100, 50]
+    - [200, 100, 50]
+    - [300, 200, 100]
+    - [500, 300, 200, 100]
+  activation: ["relu", "tanh"]
+  solver: ["adam"]
+  alpha: [0.0001, 0.001, 0.01]
+  learning_rate: ["constant", "adaptive"]
+  learning_rate_init: [0.001, 0.01]
+  max_iter: [1000, 2000]
+  early_stopping: true
+  validation_fraction: 0.1
+
+# Cross-Validation
+cross_validation:
+  inner_cv: 5
+  outer_cv: 5
+
+# Output Configuration
+output:
+  results_dir: "results"
+  models_dir: "models"
+  logs_dir: "logs"
+  plots_dir: "plots"
+  save_models: true 
