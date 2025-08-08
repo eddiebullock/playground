@@ -8,8 +8,9 @@ echo "Setting up HPC environment for autism classification optimization..."
 mkdir -p logs results models plots data
 
 # Make scripts executable
-chmod +x slurm_scripts/*.slurm
 chmod +x *.py
+chmod +x *.slurm
+chmod +x *.sh
 
 # Create virtual environment
 echo "Creating virtual environment..."
@@ -60,5 +61,5 @@ echo ""
 echo "Next steps:"
 echo "1. Copy your data file 'data_c4_enhanced_fe_v2.csv' to the hpc/data/ directory"
 echo "2. Update the data path in hpc_config.yaml if needed"
-echo "3. Submit jobs using: sbatch slurm_scripts/run_hyperparameter_tuning.slurm"
+echo "3. Submit jobs using: sbatch run_optimization.slurm"
 echo "4. Monitor jobs using: squeue -u $USER" 

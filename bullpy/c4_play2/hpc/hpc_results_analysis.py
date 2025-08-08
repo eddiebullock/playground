@@ -11,7 +11,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from datetime import datetime
-from pathlib import Path
 import glob
 
 class HPCResultsAnalyzer:

@@ -12,7 +12,6 @@ import argparse
 import numpy as np
 import pandas as pd
 from datetime import datetime
-from pathlib import Path
 
 # ML imports
 from sklearn.model_selection import GridSearchCV, StratifiedKFold, train_test_split
