@@ -60,3 +60,5 @@ print(f"Individual SQR items: {len(sqr_items)}")
 print(f"Individual AQ items: {len(aq_items)}")
 print(f"Engineered features: {len([f for f in engineered_features if f in x.columns])}")
 print(f"TOTAL: {len(x.columns)} features")
+
+
