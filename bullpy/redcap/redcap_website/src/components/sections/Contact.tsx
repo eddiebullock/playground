@@ -9,9 +9,7 @@ export default function Contact() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    // Handle form submission here
     console.log('Form submitted:', formData)
-    // Reset form
     setFormData({ name: '', email: '', message: '' })
   }
 
@@ -24,17 +22,15 @@ export default function Contact() {
 
   return (
     <section id="contact" className="py-20 bg-gray-50 relative overflow-hidden">
-      {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <img 
           src="/images/services/bg-1.jpg" 
           alt="Background - Work with us" 
-          className="w-full h-full object-cover opacity-40"
+          className="w-full h-full object-cover opacity-60"
         />
       </div>
       
       <div className="container mx-auto px-4 relative z-10">
-        {/* Section Header */}
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-serif font-bold text-dark-900 mb-6">
             Work With Us
@@ -45,7 +41,6 @@ export default function Contact() {
         </div>
 
         <div className="max-w-2xl mx-auto">
-          {/* Contact Form */}
           <div className="bg-white rounded-lg p-8 shadow-lg">
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>

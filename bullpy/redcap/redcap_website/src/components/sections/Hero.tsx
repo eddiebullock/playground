@@ -4,20 +4,33 @@ export default function Hero() {
   const [videoLoaded, setVideoLoaded] = useState(false)
 
   useEffect(() => {
-    // Preload the video
-    const videoUrl = "https://player.vimeo.com/video/1115769247?background=1&autoplay=1&loop=1&byline=0&title=0&muted=1&controls=0&portrait=0&dnt=1&transparent=0"
+    // Check if video loads successfully
+    const checkVideoLoad = () => {
+      const iframe = document.querySelector('iframe[src*="vimeo.com"]') as HTMLIFrameElement
+      if (iframe) {
+        // Try to detect if video is actually playing
+        setTimeout(() => {
+          try {
+            // If iframe is visible and has content, consider it loaded
+            if (iframe.offsetWidth > 0 && iframe.offsetHeight > 0) {
+              setVideoLoaded(true)
+            } else {
+              // Fallback to image if video doesn't load
+              setVideoLoaded(false)
+            }
+          } catch (error) {
+            // If there's an error, fallback to image
+            setVideoLoaded(false)
+          }
+        }, 2000)
+      }
+    }
+
+    // Initial check
+    checkVideoLoad()
     
-    // Create a temporary iframe to preload
-    const tempIframe = document.createElement('iframe')
-    tempIframe.src = videoUrl
-    tempIframe.style.display = 'none'
-    document.body.appendChild(tempIframe)
-    
-    // Set video as loaded after a short delay
-    setTimeout(() => {
-      setVideoLoaded(true)
-      document.body.removeChild(tempIframe)
-    }, 1000)
+    // Check again after a longer delay to ensure video is playing
+    setTimeout(checkVideoLoad, 3000)
   }, [])
 
   const scrollToSection = (sectionId: string) => {
@@ -31,10 +44,9 @@ export default function Hero() {
     <section className="relative h-screen flex items-center justify-center overflow-hidden">
       {/* Video Background */}
       <div className="absolute inset-0 z-0 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-dark-900/30 via-dark-900/50 to-dark-900/70 z-10" />
         <iframe
           src="https://player.vimeo.com/video/1115769247?background=1&autoplay=1&loop=1&byline=0&title=0&muted=1&controls=0&portrait=0&dnt=1&transparent=0"
-          className="absolute inset-0 w-full h-full z-20"
+          className="absolute inset-0 w-full h-full z-10"
           frameBorder="0"
           allow="autoplay; fullscreen; picture-in-picture"
           allowFullScreen
@@ -51,12 +63,15 @@ export default function Hero() {
             pointerEvents: 'none'
           }}
         />
-        {/* Fallback image if video doesn't load */}
+        {/* Fallback image - only shows if video fails to load */}
         <img
           src="/images/hero-fallback.jpg"
           alt="Cinematic background"
-          className="w-full h-full object-cover absolute inset-0 z-10"
+          className="w-full h-full object-cover absolute inset-0 z-5"
+          style={{ display: videoLoaded ? 'none' : 'block' }}
         />
+        {/* Dimming overlay - applied to both video and fallback */}
+        <div className="absolute inset-0 bg-gradient-to-b from-dark-900/50 via-dark-900/70 to-dark-900/90 z-20" />
       </div>
 
       {/* Content Overlay */}
@@ -74,7 +89,7 @@ export default function Hero() {
             onClick={() => scrollToSection('projects')}
             className="bg-primary-500 hover:bg-primary-600 text-white px-8 py-4 rounded-md text-lg font-semibold transition-all duration-300 transform hover:scale-105"
           >
-            Watch Our Work
+            Our Work
           </button>
           <button
             onClick={() => scrollToSection('contact')}

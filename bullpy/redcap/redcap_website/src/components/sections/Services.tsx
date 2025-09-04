@@ -21,7 +21,7 @@ const services: Service[] = [
   },
   {
     id: 2,
-    title: "Social Media Content",
+    title: "Social Media",
     description: "Social media is a huge opportunity to disseminate science. We create engaging content that makes research accessible.",
     icon: "megaphone",
     features: [
@@ -66,7 +66,7 @@ export default function Services() {
           <img 
             src="/images/services/bg-2.jpg" 
             alt="Background - What we do" 
-            className="w-full h-full object-cover opacity-40"
+            className="w-full h-full object-cover opacity-60"
           />
         </div>
         
@@ -144,27 +144,33 @@ export default function Services() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div className="text-center">
                 <div className="w-16 h-16 bg-primary-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-white font-bold text-xl">1</span>
+                  <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                  </svg>
                 </div>
-                <h4 className="text-lg font-semibold text-dark-900 mb-2">Research</h4>
+                <h4 className="text-lg font-semibold text-dark-900 mb-2">1. Research</h4>
                 <p className="text-dark-600 text-sm">
                   We dig into the latest science with academic rigour.
                 </p>
               </div>
               <div className="text-center">
                 <div className="w-16 h-16 bg-primary-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-white font-bold text-xl">2</span>
+                  <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+                  </svg>
                 </div>
-                <h4 className="text-lg font-semibold text-dark-900 mb-2">Storytelling</h4>
+                <h4 className="text-lg font-semibold text-dark-900 mb-2">2. Storytelling</h4>
                 <p className="text-dark-600 text-sm">
                   We translate complexity into clear, compelling narratives.
                 </p>
               </div>
               <div className="text-center">
                 <div className="w-16 h-16 bg-primary-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-white font-bold text-xl">3</span>
+                  <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                  </svg>
                 </div>
-                <h4 className="text-lg font-semibold text-dark-900 mb-2">Impact</h4>
+                <h4 className="text-lg font-semibold text-dark-900 mb-2">3. Impact</h4>
                 <p className="text-dark-600 text-sm">
                   We share it through film, talks, and writing to reach real people.
                 </p>

@@ -20,12 +20,11 @@ const About: React.FC = () => {
               About RedCap Media
             </h2>
             <p className="text-lg text-dark-600 leading-relaxed">
-              There's a huge gap between the science published in academic journals and the public. Our mission 
-              is to solve this problem by disseminating scientific information in an appealing, accessible way.
+            There’s a gap between research and the public. Our mission is to close it — turning science into stories that everyone can get exited by.
             </p>
             <p className="text-lg text-dark-600 leading-relaxed">
               Our belief is simple: knowledge shouldn't stay locked in journals — it should reach people 
-              where they are, in ways that resonate and inspire action.
+               in ways that resonate and inspire action.
             </p>
           </div>
 
@@ -99,10 +98,20 @@ const About: React.FC = () => {
                 </div>
               </div>
               <h4 className="text-xl font-serif text-dark-900 mb-2">Eddie</h4>
-              <p className="text-primary-600 mb-3">Creative Director & Producer</p>
-              <p className="text-dark-600 text-sm">
-                Award-winning filmmaker with a passion for uncovering untold stories and amplifying marginalized voices.
+              <p className="text-primary-600 mb-3">Presenter & Creative Director</p>
+              <p className="text-dark-600 text-sm mb-4">
+                Science presenter and PhD student at Cambridge University.
               </p>
+              <a
+                href="https://www.linkedin.com/in/eddie-bullock"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center w-8 h-8 bg-primary-600 hover:bg-primary-700 rounded-full transition-colors duration-200"
+              >
+                <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                </svg>
+              </a>
             </div>
 
             {/* Team Member 2 - Alf */}
@@ -118,9 +127,19 @@ const About: React.FC = () => {
               </div>
               <h4 className="text-xl font-serif text-dark-900 mb-2">Alf</h4>
               <p className="text-primary-600 mb-3">Director of Photography</p>
-              <p className="text-dark-600 text-sm">
+              <p className="text-dark-600 text-sm mb-4">
                 Visual storyteller who transforms complex narratives into compelling cinematic experiences.
               </p>
+              <a
+                href="https://www.linkedin.com/in/alfie-parry-photography/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center w-8 h-8 bg-primary-600 hover:bg-primary-700 rounded-full transition-colors duration-200"
+              >
+                <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                </svg>
+              </a>
             </div>
 
             {/* Team Member 3 - Sammy */}
@@ -136,9 +155,20 @@ const About: React.FC = () => {
               </div>
               <h4 className="text-xl font-serif text-dark-900 mb-2">Sammy</h4>
               <p className="text-primary-600 mb-3">Editor & Story Consultant</p>
-              <p className="text-dark-600 text-sm">
+              <p className="text-dark-600 text-sm mb-4">
                 Master of narrative structure who shapes raw footage into powerful, impactful stories.
               </p>
+              <a
+                href="#"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center w-8 h-8 bg-gray-400 rounded-full transition-colors duration-200 cursor-not-allowed"
+                title="LinkedIn coming soon"
+              >
+                <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                </svg>
+              </a>
             </div>
           </div>
         </div>
