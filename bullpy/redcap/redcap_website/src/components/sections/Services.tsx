@@ -10,8 +10,8 @@ const services: Service[] = [
   {
     id: 1,
     title: "Documentary Production",
-    description: "Full-service documentary production from concept to distribution, specializing in investigative and social impact storytelling.",
-    icon: "🎥",
+    description: "Full-service documentary production from concept to distribution, specialising in scientific storytelling.",
+    icon: "video",
     features: [
       "Investigative research & development",
       "Cinematography & sound design",
@@ -21,9 +21,9 @@ const services: Service[] = [
   },
   {
     id: 2,
-    title: "Branded Content & Campaigns",
-    description: "Authentic storytelling for brands that want to make a difference, not just sell products.",
-    icon: "📺",
+    title: "Social Media Content",
+    description: "Social media is a huge opportunity to disseminate science. We create engaging content that makes research accessible.",
+    icon: "megaphone",
     features: [
       "Brand narrative development",
       "Campaign video production",
@@ -34,20 +34,20 @@ const services: Service[] = [
   {
     id: 3,
     title: "Creative Strategy & Storytelling",
-    description: "Strategic storytelling that helps organizations communicate complex issues and inspire action.",
-    icon: "🎙️",
+    description: "Strategic storytelling that helps organisations communicate complex issues and inspire action.",
+    icon: "lightbulb",
     features: [
       "Story strategy & messaging",
       "Content planning & development",
       "Audience engagement",
-      "Campaign optimization"
+      "Campaign optimisation"
     ]
   },
   {
     id: 4,
-    title: "Impact Media",
-    description: "Documentary and media production for NGOs, foundations, and social impact organizations.",
-    icon: "🌍",
+    title: "Science Communications",
+    description: "Media production for science organisations, universities, tech companies and research institutions.",
+    icon: "globe",
     features: [
       "Impact storytelling",
       "Advocacy video production",
@@ -59,32 +59,61 @@ const services: Service[] = [
 
 export default function Services() {
   return (
-    <section id="services" className="py-20 bg-white">
-      <div className="container mx-auto px-4">
-        {/* Section Header */}
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-serif font-bold text-dark-900 mb-6">
+    <>
+      <section id="services" className="py-20 bg-white relative overflow-hidden">
+        {/* Background Image */}
+        <div className="absolute inset-0 z-0">
+          <img 
+            src="/images/services/bg-2.jpg" 
+            alt="Background - What we do" 
+            className="w-full h-full object-cover opacity-40"
+          />
+        </div>
+        
+        <div className="container mx-auto px-4 relative z-10">
+          {/* Section Header */}
+          <div className="text-center mb-16">
+                      <h2 className="text-4xl md:text-5xl font-serif font-bold text-dark-900 mb-6">
             What We Do
           </h2>
           <p className="text-xl text-dark-600 max-w-3xl mx-auto">
-            From investigative documentaries to branded content, we create media that matters and drives real change.
+            From documentary production to social media content, we create science communications that reach real people.
           </p>
-        </div>
+          </div>
 
-        {/* Services Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {services.map((service) => (
-            <div
-              key={service.id}
-              className="bg-gray-50 rounded-lg p-8 hover:bg-gray-100 transition-all duration-300 group"
-            >
-              {/* Service Icon */}
-              <div className="text-4xl mb-6 group-hover:scale-110 transition-transform duration-300">
-                {service.icon}
+          {/* Services Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {services.map((service) => (
+              <div
+                key={service.id}
+                className="text-center p-8 hover:bg-white/50 transition-all duration-300 group rounded-lg"
+              >
+                              {/* Service Icon */}
+              <div className="mb-6 group-hover:scale-110 transition-transform duration-300">
+                {service.icon === 'video' && (
+                  <svg className="w-16 h-16 text-primary-600 mx-auto" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/>
+                  </svg>
+                )}
+                {service.icon === 'megaphone' && (
+                  <svg className="w-16 h-16 text-primary-600 mx-auto" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                  </svg>
+                )}
+                {service.icon === 'lightbulb' && (
+                  <svg className="w-16 h-16 text-primary-600 mx-auto" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7zm-1.5 13v2h-1v-2h1zm-1-3h1v1h-1v-1z"/>
+                  </svg>
+                )}
+                {service.icon === 'globe' && (
+                  <svg className="w-16 h-16 text-primary-600 mx-auto" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+                  </svg>
+                )}
               </div>
 
-              {/* Service Title */}
-                              <h3 className="text-2xl font-serif font-semibold text-dark-900 mb-4">
+                {/* Service Title */}
+                <h3 className="text-2xl font-serif font-semibold text-dark-900 mb-4">
                   {service.title}
                 </h3>
 
@@ -92,72 +121,58 @@ export default function Services() {
                 <p className="text-dark-600 leading-relaxed mb-6">
                   {service.description}
                 </p>
+              </div>
+            ))}
+          </div>
 
-                {/* Service Features */}
-                <ul className="space-y-2">
-                  {service.features.map((feature, index) => (
-                    <li key={index} className="flex items-center text-dark-600 text-sm">
-                      <svg className="w-4 h-4 text-primary-600 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                      </svg>
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
-
-                {/* Learn More Button */}
-                <button className="mt-6 text-primary-600 hover:text-primary-700 font-semibold transition-colors duration-200">
-                  Learn More →
-                </button>
-            </div>
-          ))}
+          {/* Work With Us Button */}
+          <div className="mt-16 text-center">
+            <button className="btn-primary text-lg px-8 py-4">
+              Work With Us
+            </button>
+          </div>
         </div>
+      </section>
 
-        {/* Process Section */}
-        <div className="mt-20 text-center">
-          <h3 className="text-3xl font-serif font-bold text-dark-900 mb-12">
-            Our Process
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div className="text-center">
-              <div className="w-16 h-16 bg-primary-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-white font-bold text-xl">1</span>
+      {/* Process Section - Separate Full Width */}
+      <section className="py-20 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <div className="text-center">
+            <h3 className="text-3xl font-serif font-bold text-dark-900 mb-12">
+              Our Process
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="text-center">
+                <div className="w-16 h-16 bg-primary-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <span className="text-white font-bold text-xl">1</span>
+                </div>
+                <h4 className="text-lg font-semibold text-dark-900 mb-2">Research</h4>
+                <p className="text-dark-600 text-sm">
+                  We dig into the latest science with academic rigour.
+                </p>
               </div>
-              <h4 className="text-lg font-semibold text-dark-900 mb-2">Research</h4>
-              <p className="text-dark-600 text-sm">
-                Deep investigation and story development
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="w-16 h-16 bg-primary-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-white font-bold text-xl">2</span>
+              <div className="text-center">
+                <div className="w-16 h-16 bg-primary-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <span className="text-white font-bold text-xl">2</span>
+                </div>
+                <h4 className="text-lg font-semibold text-dark-900 mb-2">Storytelling</h4>
+                <p className="text-dark-600 text-sm">
+                  We translate complexity into clear, compelling narratives.
+                </p>
               </div>
-              <h4 className="text-lg font-semibold text-dark-900 mb-2">Production</h4>
-              <p className="text-dark-600 text-sm">
-                Cinematic filming with authentic storytelling
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="w-16 h-16 bg-primary-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-white font-bold text-xl">3</span>
+              <div className="text-center">
+                <div className="w-16 h-16 bg-primary-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <span className="text-white font-bold text-xl">3</span>
+                </div>
+                <h4 className="text-lg font-semibold text-dark-900 mb-2">Impact</h4>
+                <p className="text-dark-600 text-sm">
+                  We share it through film, talks, and writing to reach real people.
+                </p>
               </div>
-              <h4 className="text-lg font-semibold text-dark-900 mb-2">Post-Production</h4>
-              <p className="text-dark-600 text-sm">
-                Editing, sound design, and visual effects
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="w-16 h-16 bg-primary-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-white font-bold text-xl">4</span>
-              </div>
-              <h4 className="text-lg font-semibold text-dark-900 mb-2">Distribution</h4>
-              <p className="text-dark-600 text-sm">
-                Strategic release and impact amplification
-              </p>
             </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   )
 }

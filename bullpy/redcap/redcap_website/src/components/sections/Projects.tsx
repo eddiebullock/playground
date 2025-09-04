@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 interface Project {
   id: number
@@ -12,41 +12,43 @@ interface Project {
 const projects: Project[] = [
   {
     id: 1,
-    title: "Voices of the Valley",
-    description: "A documentary exploring the lives of migrant workers in California's agricultural heartland.",
+    title: "The Race to AGI",
+    description: "A feature documentary exploring the global race toward artificial intelligence.",
     image: "/images/projects/project-1.jpg",
     category: "Documentary",
     year: "2024"
   },
   {
     id: 2,
-    title: "The Last Fishermen",
-    description: "Following the dwindling community of traditional fishermen in coastal Maine.",
+    title: "Frontiers",
+    description: "Conversations with the public and leading scientists shaping our future.",
     image: "/images/projects/project-2.jpg",
-    category: "Documentary",
-    year: "2023"
-  },
-  {
-    id: 3,
-    title: "Tech Titans: Rise & Fall",
-    description: "An investigative series on the impact of big tech on society and democracy.",
-    image: "/images/projects/project-3.jpg",
     category: "Series",
     year: "2023"
   },
   {
-    id: 4,
-    title: "Climate Warriors",
-    description: "Profiling activists fighting climate change in frontline communities worldwide.",
-    image: "/images/projects/project-4.jpg",
+    id: 3,
+    title: "Science Live",
+    description: "Talks and workshops bringing science into classrooms and communities.",
+    image: "/images/projects/project-3.jpg",
     category: "Documentary",
     year: "2024"
+  },
+  {
+    id: 4,
+    title: "Articles & Newsletter",
+    description: "Sharp, accessible writing that translates research into everyday insight.",
+    image: "/images/projects/project-4.jpg",
+    category: "Series",
+    year: "2023"
   }
 ]
 
 export default function Projects() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
   const [currentIndex, setCurrentIndex] = useState(0)
+  const [touchStart, setTouchStart] = useState<number | null>(null)
+  const [touchEnd, setTouchEnd] = useState<number | null>(null)
 
   const nextProject = () => {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % projects.length)
@@ -55,6 +57,44 @@ export default function Projects() {
   const prevProject = () => {
     setCurrentIndex((prevIndex) => (prevIndex - 1 + projects.length) % projects.length)
   }
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null)
+    setTouchStart(e.targetTouches[0].clientX)
+  }
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX)
+  }
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return
+    
+    const distance = touchStart - touchEnd
+    const isLeftSwipe = distance > 50
+    const isRightSwipe = distance < -50
+
+    if (isLeftSwipe) {
+      nextProject()
+    }
+    if (isRightSwipe) {
+      prevProject()
+    }
+  }
+
+  // Add keyboard navigation for accessibility
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft') {
+        prevProject()
+      } else if (e.key === 'ArrowRight') {
+        nextProject()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [])
 
   return (
     <section id="projects" className="py-20 bg-white">
@@ -70,7 +110,7 @@ export default function Projects() {
         </div>
 
         {/* Desktop Grid */}
-        <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="hidden md:grid md:grid-cols-2 gap-8">
           {projects.map((project) => (
             <div
               key={project.id}
@@ -78,7 +118,7 @@ export default function Projects() {
               onClick={() => setSelectedProject(project)}
             >
               {/* Project Image */}
-              <div className="relative h-64 overflow-hidden">
+              <div className="relative h-80 overflow-hidden">
                 <img
                   src={project.image}
                   alt={project.title}
@@ -119,10 +159,13 @@ export default function Projects() {
 
         {/* Mobile Carousel */}
         <div className="md:hidden relative">
-          <div className="overflow-hidden">
+          <div className="overflow-hidden rounded-lg">
             <div 
               className="flex transition-transform duration-300 ease-in-out"
               style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+              onTouchStart={onTouchStart}
+              onTouchMove={onTouchMove}
+              onTouchEnd={onTouchEnd}
             >
               {projects.map((project) => (
                 <div key={project.id} className="w-full flex-shrink-0">
@@ -187,9 +230,15 @@ export default function Projects() {
 
           {/* Swipe Instructions */}
           <div className="text-center mt-4">
-            <p className="text-sm text-dark-400">
-              Swipe left or right to navigate
-            </p>
+            <div className="flex items-center justify-center space-x-2 text-sm text-dark-400">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+              <span>Swipe to navigate</span>
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </div>
           </div>
         </div>
 

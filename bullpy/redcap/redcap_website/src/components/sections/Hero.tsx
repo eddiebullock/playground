@@ -1,4 +1,25 @@
+import { useState, useEffect } from 'react'
+
 export default function Hero() {
+  const [videoLoaded, setVideoLoaded] = useState(false)
+
+  useEffect(() => {
+    // Preload the video
+    const videoUrl = "https://player.vimeo.com/video/1115769247?background=1&autoplay=1&loop=1&byline=0&title=0&muted=1&controls=0&portrait=0&dnt=1&transparent=0"
+    
+    // Create a temporary iframe to preload
+    const tempIframe = document.createElement('iframe')
+    tempIframe.src = videoUrl
+    tempIframe.style.display = 'none'
+    document.body.appendChild(tempIframe)
+    
+    // Set video as loaded after a short delay
+    setTimeout(() => {
+      setVideoLoaded(true)
+      document.body.removeChild(tempIframe)
+    }, 1000)
+  }, [])
+
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId)
     if (element) {
@@ -9,33 +30,42 @@ export default function Hero() {
   return (
     <section className="relative h-screen flex items-center justify-center overflow-hidden">
       {/* Video Background */}
-      <div className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-gradient-to-b from-dark-900/50 via-dark-900/70 to-dark-900/90 z-10" />
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="w-full h-full object-cover"
-          poster="/images/hero-poster.jpg"
-        >
-          <source src="/videos/hero-background.mp4" type="video/mp4" />
-          {/* Fallback image if video doesn't load */}
-          <img
-            src="/images/hero-fallback.jpg"
-            alt="Cinematic background"
-            className="w-full h-full object-cover"
-          />
-        </video>
+      <div className="absolute inset-0 z-0 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-dark-900/30 via-dark-900/50 to-dark-900/70 z-10" />
+        <iframe
+          src="https://player.vimeo.com/video/1115769247?background=1&autoplay=1&loop=1&byline=0&title=0&muted=1&controls=0&portrait=0&dnt=1&transparent=0"
+          className="absolute inset-0 w-full h-full z-20"
+          frameBorder="0"
+          allow="autoplay; fullscreen; picture-in-picture"
+          allowFullScreen
+          loading="eager"
+          style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            width: '100vw',
+            height: '56.25vw',
+            minHeight: '100vh',
+            minWidth: '177.78vh',
+            transform: 'translate(-50%, -50%)',
+            pointerEvents: 'none'
+          }}
+        />
+        {/* Fallback image if video doesn't load */}
+        <img
+          src="/images/hero-fallback.jpg"
+          alt="Cinematic background"
+          className="w-full h-full object-cover absolute inset-0 z-10"
+        />
       </div>
 
       {/* Content Overlay */}
       <div className="relative z-20 text-center px-4 max-w-4xl mx-auto">
         <h1 className="text-5xl md:text-7xl font-serif font-bold text-white mb-6 animate-fade-in">
-          Stories That Change Perspectives
+          Science, Made Accessible.
         </h1>
         <p className="text-xl md:text-2xl text-gray-200 mb-12 max-w-3xl mx-auto leading-relaxed animate-slide-up">
-          We create documentaries and media that uncover hidden truths, amplify voices, and inspire change.
+          We turn cutting-edge research into stories the world can see.
         </p>
         
         {/* CTA Buttons */}

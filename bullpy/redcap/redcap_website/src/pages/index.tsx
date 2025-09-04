@@ -18,6 +18,7 @@ export default function Home() {
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet" />
+        <script src="https://player.vimeo.com/api/player.js"></script>
       </Head>
       <div className="bg-white text-dark-900 min-h-screen">
         <Header />
