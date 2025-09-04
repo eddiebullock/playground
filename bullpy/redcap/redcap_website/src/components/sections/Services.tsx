@@ -64,7 +64,7 @@ export default function Services() {
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
           <img 
-            src="/images/services/bg-2.jpg" 
+            src="https://raw.githubusercontent.com/eddiebullock/landing-page-assets/main/WhatsApp%20Image%202025-08-31%20at%2015.58.40%20(1).jpeg" 
             alt="Background - What we do" 
             className="w-full h-full object-cover opacity-60"
           />

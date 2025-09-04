@@ -1,6 +1,18 @@
 import React from 'react';
 
 const About: React.FC = () => {
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    console.log('Image failed to load:', e.currentTarget.src);
+    // Set a fallback color or placeholder
+    e.currentTarget.style.backgroundColor = '#f3f4f6';
+    e.currentTarget.style.display = 'flex';
+    e.currentTarget.style.alignItems = 'center';
+    e.currentTarget.style.justifyContent = 'center';
+    e.currentTarget.style.color = '#6b7280';
+    e.currentTarget.style.fontSize = '14px';
+    e.currentTarget.alt = 'Image failed to load';
+  };
+
   return (
     <section id="about" className="section-padding bg-gray-50">
       <div className="container mx-auto">
@@ -20,7 +32,7 @@ const About: React.FC = () => {
               About RedCap Media
             </h2>
             <p className="text-lg text-dark-600 leading-relaxed">
-            There’s a gap between research and the public. Our mission is to close it — turning science into stories that everyone can get exited by.
+            There's a gap between research and the public. Our mission is to close it — turning science into stories that everyone can get exited by.
             </p>
             <p className="text-lg text-dark-600 leading-relaxed">
               Our belief is simple: knowledge shouldn't stay locked in journals — it should reach people 
@@ -49,10 +61,11 @@ const About: React.FC = () => {
               {/* Image next to video */}
               <div className="relative group overflow-hidden rounded-lg w-1/3">
                 <img 
-                  src="/images/about/bts-1.jpg" 
+                  src="https://raw.githubusercontent.com/eddiebullock/landing-page-assets/main/WhatsApp%20Image%202025-08-31%20at%2015.58.41%20(1).jpeg" 
                   alt="Behind the scenes - Production setup" 
                   className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                   style={{height:'100%'}}
+                  onError={handleImageError}
                 />
                 <div className="absolute inset-0 bg-black bg-opacity-20 group-hover:bg-opacity-0 transition-all duration-300" />
               </div>
@@ -62,17 +75,19 @@ const About: React.FC = () => {
             <div className="flex gap-3">
               <div className="relative group overflow-hidden rounded-lg flex-1">
                 <img 
-                  src="/images/about/bts-2.jpg" 
+                  src="https://raw.githubusercontent.com/eddiebullock/landing-page-assets/main/WhatsApp%20Image%202025-08-30%20at%2020.53.25.jpeg" 
                   alt="Behind the scenes - Camera work" 
                   className="w-full h-24 md:h-32 object-cover transition-transform duration-300 group-hover:scale-110"
+                  onError={handleImageError}
                 />
                 <div className="absolute inset-0 bg-black bg-opacity-20 group-hover:bg-opacity-0 transition-all duration-300" />
               </div>
               <div className="relative group overflow-hidden rounded-lg flex-1">
                 <img 
-                  src="/images/about/bts-3.jpg" 
+                  src="https://raw.githubusercontent.com/eddiebullock/landing-page-assets/main/WhatsApp%20Image%202025-08-31%20at%2015.58.41%20(1).jpeg" 
                   alt="Behind the scenes - Team collaboration" 
                   className="w-full h-24 md:h-32 object-cover transition-transform duration-300 group-hover:scale-110"
+                  onError={handleImageError}
                 />
                 <div className="absolute inset-0 bg-black bg-opacity-20 group-hover:bg-opacity-0 transition-all duration-300" />
               </div>
@@ -91,9 +106,10 @@ const About: React.FC = () => {
               <div className="relative mb-6">
                 <div className="w-48 h-48 mx-auto bg-gray-700 rounded-full overflow-hidden">
                   <img 
-                    src="/images/team/ed-head.png" 
+                    src="https://via.placeholder.com/200x200/1f2937/ffffff?text=Eddie" 
                     alt="Eddie" 
                     className="w-full h-full object-cover"
+                    onError={handleImageError}
                   />
                 </div>
               </div>
@@ -119,9 +135,10 @@ const About: React.FC = () => {
               <div className="relative mb-6">
                 <div className="w-48 h-48 mx-auto bg-gray-700 rounded-full overflow-hidden">
                   <img 
-                    src="/images/team/alf-head.png" 
+                    src="https://via.placeholder.com/200x200/1f2937/ffffff?text=Alf" 
                     alt="Alf" 
                     className="w-full h-full object-cover scale-110"
+                    onError={handleImageError}
                   />
                 </div>
               </div>
@@ -147,9 +164,10 @@ const About: React.FC = () => {
               <div className="relative mb-6">
                 <div className="w-48 h-48 mx-auto bg-gray-700 rounded-full overflow-hidden">
                   <img 
-                    src="/images/team/sam-head.jpeg" 
+                    src="https://via.placeholder.com/200x200/1f2937/ffffff?text=Sammy" 
                     alt="Sammy" 
                     className="w-full h-full object-cover"
+                    onError={handleImageError}
                   />
                 </div>
               </div>

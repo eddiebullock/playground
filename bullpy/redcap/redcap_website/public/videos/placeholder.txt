@@ -1,0 +1,23 @@
+VIDEO ASSETS NEEDED:
+
+This directory should contain:
+
+- hero-background.mp4 (Fullscreen looping background video for hero section)
+
+Video specifications:
+- Format: MP4
+- Resolution: 1920x1080 (minimum)
+- Duration: 10-30 seconds (looping)
+- File size: Under 10MB (optimized for web)
+- Content: Cinematic footage that represents documentary/media production
+- No audio (muted background video)
+
+Recommended content:
+- Camera equipment
+- Filming locations
+- Documentary subjects
+- Cinematic landscapes
+- Production crew at work
+- Abstract media-related imagery
+
+The video should be subtle enough to not interfere with the overlaid text content.

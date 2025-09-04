@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://redcapmedia.co.uk/sitemap.xml

@@ -1,92 +1,46 @@
-# RedCap Media - Documentary & Media Production
+# RedCap Media Website
 
-A cinematic landing page website for a media/documentary production company, built with Next.js and TailwindCSS.
+The official website for RedCap Media - Science, Made Accessible.
 
-## 🎬 About
+## About
 
-RedCap Media creates documentaries and media that uncover hidden truths, amplify voices, and inspire change. This website showcases our projects, team, and services with a focus on authentic storytelling and social impact.
+RedCap Media creates documentaries and media that make science accessible, engaging, and understandable for everyone.
 
-## 🚀 Getting Started
-
-1. Install dependencies:
-   ```bash
-   npm install
-   ```
-
-2. Run the development server:
-   ```bash
-   npm run dev
-   ```
-
-3. Open [http://localhost:3000](http://localhost:3000) in your browser.
-
-## 📁 Project Structure
-
-```
-redcap_website/
-├── src/
-│   ├── components/
-│   │   ├── layout/          # Header, Footer
-│   │   ├── sections/        # Hero, Projects, About, Services, Contact
-│   │   └── ui/              # Reusable UI components
-│   ├── pages/               # Next.js pages
-│   ├── styles/              # Global styles and TailwindCSS
-│   ├── utils/               # Utility functions
-│   └── types/               # TypeScript definitions
-├── public/
-│   ├── images/              # Image assets
-│   └── videos/              # Video assets
-└── docs/                    # Documentation
-```
-
-## 🎨 Design Features
-
-- **Cinematic Dark Theme**: Dark backgrounds with gold/teal accents
-- **Typography**: Playfair Display (serif) for headings, Inter (sans-serif) for body
-- **Responsive Design**: Mobile-first approach with smooth animations
-- **Accessibility**: WCAG compliant with proper contrast ratios
-- **Performance**: Optimized images and lazy loading
-
-## 📱 Sections
-
-1. **Hero Section**: Fullscreen video background with mission statement
-2. **Projects**: Grid of documentary projects with modal details
-3. **About**: Mission statement and team profiles
-4. **Services**: Four service offerings with process workflow
-5. **Contact**: Contact form and social media links
-6. **Footer**: Navigation and company information
-
-## 🛠 Tech Stack
+## Tech Stack
 
 - **Framework**: Next.js 14
-- **Styling**: TailwindCSS
+- **Styling**: Tailwind CSS
 - **Language**: TypeScript
-- **Fonts**: Google Fonts (Playfair Display, Inter)
-- **Icons**: Heroicons (SVG)
-- **Deployment**: Vercel-ready
+- **Deployment**: Vercel
 
-## 📸 Assets Needed
-
-See `public/images/placeholder.txt` and `public/videos/placeholder.txt` for required assets.
-
-## 🚀 Deployment
-
-The project is configured for easy deployment on Vercel:
+## Development
 
 ```bash
+# Install dependencies
+npm install
+
+# Run development server
+npm run dev
+
+# Build for production
 npm run build
-npm run start
+
+# Start production server
+npm start
 ```
 
-## 📝 Customization
+## Features
 
-- Update company information in component files
-- Replace placeholder images and videos
-- Modify color scheme in `tailwind.config.js`
-- Add new sections as needed
+- Responsive design
+- SEO optimized
+- Social media metadata
+- Modern UI/UX
+- Performance optimized
 
-## 📄 License
+## Deployment
 
-© 2024 RedCap Media. All rights reserved.
-# Force redeploy
-# Apply Next.js framework settings
+This website is deployed on Vercel and accessible at [redcapmedia.co.uk](https://redcapmedia.co.uk)
+
+## Contact
+
+For more information about RedCap Media, visit our website or contact us directly.

@@ -63,13 +63,13 @@ export default function Hero() {
             pointerEvents: 'none'
           }}
         />
-        {/* Fallback image - only shows if video fails to load */}
-        <img
-          src="/images/hero-fallback.jpg"
-          alt="Cinematic background"
-          className="w-full h-full object-cover absolute inset-0 z-5"
-          style={{ display: videoLoaded ? 'none' : 'block' }}
-        />
+                  {/* Fallback image - only shows if video fails to load */}
+          <img
+            src="https://raw.githubusercontent.com/eddiebullock/landing-page-assets/main/WhatsApp%20Image%202025-08-30%20at%2020.53.25.jpeg"
+            alt="Cinematic background"
+            className="w-full h-full object-cover absolute inset-0 z-5"
+            style={{ display: videoLoaded ? 'none' : 'block' }}
+          />
         {/* Dimming overlay - applied to both video and fallback */}
         <div className="absolute inset-0 bg-gradient-to-b from-dark-900/50 via-dark-900/70 to-dark-900/90 z-20" />
       </div>

@@ -1,0 +1,31 @@
+PLACEHOLDER IMAGES NEEDED:
+
+This directory should contain the following images:
+
+Hero Section:
+- hero-poster.jpg (video poster image)
+- hero-fallback.jpg (fallback image if video doesn't load)
+
+Projects:
+- projects/project-1.jpg (Voices of the Valley)
+- projects/project-2.jpg (The Last Fishermen)
+- projects/project-3.jpg (Tech Titans: Rise & Fall)
+- projects/project-4.jpg (Climate Warriors)
+- projects/project-5.jpg (The Art of Resistance)
+- projects/project-6.jpg (Digital Divide)
+
+About Section:
+- about/bts-photo.jpg (Behind the scenes photo)
+
+Team:
+- team/sarah-chen.jpg (Lead Presenter & Director)
+- team/marcus-rodriguez.jpg (Executive Producer)
+- team/aisha-patel.jpg (Creative Director)
+
+Recommended image sizes:
+- Hero images: 1920x1080px
+- Project thumbnails: 600x400px
+- Team photos: 400x500px
+- BTS photo: 1200x675px
+
+All images should be optimized for web use (JPEG format, under 500KB each).

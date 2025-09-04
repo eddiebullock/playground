@@ -14,7 +14,7 @@ const projects: Project[] = [
     id: 1,
     title: "The Race to AGI",
     description: "A feature documentary exploring the global race toward artificial intelligence.",
-    image: "/images/projects/project-1.jpg",
+    image: "https://raw.githubusercontent.com/eddiebullock/landing-page-assets/main/5.png",
     category: "Documentary",
     year: "2024"
   },
@@ -22,7 +22,7 @@ const projects: Project[] = [
     id: 2,
     title: "Frontiers",
     description: "Conversations with the public and leading scientists shaping our future.",
-    image: "/images/projects/project-2.jpg",
+    image: "https://raw.githubusercontent.com/eddiebullock/landing-page-assets/main/interview.png",
     category: "Series",
     year: "2023"
   },
@@ -30,7 +30,7 @@ const projects: Project[] = [
     id: 3,
     title: "Science Live",
     description: "Talks and workshops bringing science into classrooms and communities.",
-    image: "/images/projects/project-3.jpg",
+    image: "https://raw.githubusercontent.com/eddiebullock/landing-page-assets/main/school.png",
     category: "Documentary",
     year: "2024"
   },
@@ -38,7 +38,7 @@ const projects: Project[] = [
     id: 4,
     title: "Articles & Newsletter",
     description: "Sharp, accessible writing that translates research into everyday insight.",
-    image: "/images/projects/project-4.jpg",
+    image: "https://raw.githubusercontent.com/eddiebullock/landing-page-assets/main/school.png",
     category: "Series",
     year: "2023"
   }
