@@ -89,3 +89,4 @@ npm run start
 
 © 2024 RedCap Media. All rights reserved.
 # Force redeploy
+# Apply Next.js framework settings
