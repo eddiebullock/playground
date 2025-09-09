@@ -120,4 +120,4 @@ Thumbs.db
 # ignore data 
 /data/
 /*.csv
-.ipynb_checkpoints
+.ipynb_checkpointsbullpy/redcap/redcap_website/
