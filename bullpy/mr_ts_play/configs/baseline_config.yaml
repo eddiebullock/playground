@@ -1,0 +1,37 @@
+# Baseline experiment configuration
+
+# Data
+data:
+  root: "/Users/eb2007/Library/CloudStorage/OneDrive-UniversityofCambridge/Documents/PhD/data/mindreading_transporter_files/Mindreading emotions library/Emotions"
+  splits_dir: "data/splits"
+  modality: "both"  # "V", "T", or "both"
+  num_frames: 8
+  frame_interval: 1
+
+# Model
+model:
+  backbone: "resnet18"  # "resnet18" or "resnet50"
+  pretrained: true
+  freeze_backbone: true
+
+# Training
+training:
+  batch_size: 8
+  num_epochs: 5
+  learning_rate: 0.001
+  optimizer: "adam"
+  weight_decay: 0.0
+
+# Evaluation
+evaluation:
+  metrics: ["accuracy", "f1_macro", "f1_weighted"]
+
+# Reproducibility
+seed: 42
+
+# Output
+output:
+  results_dir: "results/baseline"
+  save_checkpoints: true
+  save_confusion_matrix: true
+

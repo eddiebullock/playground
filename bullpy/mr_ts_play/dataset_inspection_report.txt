@@ -1,0 +1,96 @@
+================================================================================
+MINREADING/CAM DATASET INSPECTION REPORT
+================================================================================
+
+DATASET OVERVIEW
+--------------------------------------------------------------------------------
+Total video files: 4944
+Total scenarios: 412
+Unique emotions: 410
+Unique actors: 13
+Modalities: T, V
+
+EMOTION DISTRIBUTION (Top 20)
+--------------------------------------------------------------------------------
+  hysterical                       24 videos
+  calculating                      24 videos
+  humiliating                      12 videos
+  detesting                        12 videos
+  blaming                          12 videos
+  scolding                         12 videos
+  aggressive                       12 videos
+  remote                           12 videos
+  animosity                        12 videos
+  resentful                        12 videos
+  belittling                       12 videos
+  brazen                           12 videos
+  cruel                            12 videos
+  bullying                         12 videos
+  pitiless                         12 videos
+  cold                             12 videos
+  condemning                       12 videos
+  condescending                    12 videos
+  argumentative                    12 videos
+  contemptuous                     12 videos
+
+ACTOR DISTRIBUTION
+--------------------------------------------------------------------------------
+  A           123 videos
+  B             9 videos
+  C           235 videos
+  M           831 videos
+  P           842 videos
+  R           272 videos
+  S           582 videos
+  U           779 videos
+  V            88 videos
+  W             8 videos
+  X             1 videos
+  Y           825 videos
+  Z           349 videos
+
+MODALITY DISTRIBUTION
+--------------------------------------------------------------------------------
+  Textual    2472 videos
+  Visual     2472 videos
+
+SCENARIO-EMOTION ALIGNMENT
+--------------------------------------------------------------------------------
+✓ All scenarios map to single emotion (1:1 mapping)
+
+CLASS BALANCE ANALYSIS
+--------------------------------------------------------------------------------
+Min videos per emotion: 12
+Max videos per emotion: 24
+Avg videos per emotion: 12.1
+Balance ratio (min/max): 0.500
+
+SAMPLE FILES
+--------------------------------------------------------------------------------
+  01/0100104/0100104R6Thumiliating.mov
+    Scenario: 0100104
+    Actor: R
+    Emotion: humiliating
+    Modality: T
+  01/0100104/0100104S1Vhumiliating.mov
+    Scenario: 0100104
+    Actor: S
+    Emotion: humiliating
+    Modality: V
+  01/0100104/0100104P5Thumiliating.mov
+    Scenario: 0100104
+    Actor: P
+    Emotion: humiliating
+    Modality: T
+  01/0100104/0100104M1Vhumiliating.mov
+    Scenario: 0100104
+    Actor: M
+    Emotion: humiliating
+    Modality: V
+  01/0100104/0100104U5Thumiliating.mov
+    Scenario: 0100104
+    Actor: U
+    Emotion: humiliating
+    Modality: T
+
+================================================================================
