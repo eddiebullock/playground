@@ -96,45 +96,76 @@ def create_splits(
     print(f"Unique actors: {len(actors)}")
     print(f"Actor distribution:\n{df['actor'].value_counts()}")
     
-    # Get emotion distribution per actor
+    # Get emotion and modality distribution per actor
     actor_emotions = defaultdict(set)
+    actor_modalities = defaultdict(set)
     for _, row in df.iterrows():
         actor_emotions[row['actor']].add(row['emotion'])
+        actor_modalities[row['actor']].add(row['modality'])
     
-    # Split actors into train/val/test
-    # Strategy: Sort actors by number of unique emotions (descending)
-    # Then assign to splits to maintain emotion coverage
-    actors_sorted = sorted(actors, key=lambda a: len(actor_emotions[a]), reverse=True)
+    # Separate actors by their primary modality
+    # Since actors typically specialize in one modality, we split them separately
+    # to ensure each split has both V and T videos
+    v_actors = [a for a in actors if 'V' in actor_modalities[a] and 'T' not in actor_modalities[a]]
+    t_actors = [a for a in actors if 'T' in actor_modalities[a] and 'V' not in actor_modalities[a]]
+    both_actors = [a for a in actors if len(actor_modalities[a]) == 2]
     
-    train_actors = []
-    val_actors = []
-    test_actors = []
+    print(f"V-only actors: {len(v_actors)}")
+    print(f"T-only actors: {len(t_actors)}")
+    print(f"Actors with both: {len(both_actors)}")
     
-    # Simple round-robin assignment (can be improved)
-    for i, actor in enumerate(actors_sorted):
-        if i % 3 == 0:
-            train_actors.append(actor)
-        elif i % 3 == 1:
-            val_actors.append(actor)
+    # Shuffle each group
+    np.random.shuffle(v_actors)
+    np.random.shuffle(t_actors)
+    np.random.shuffle(both_actors)
+    
+    def split_actors(actor_list, train_ratio, val_ratio, min_per_split=1):
+        """Split a list of actors into train/val/test, ensuring minimum per split."""
+        total = len(actor_list)
+        if total == 0:
+            return [], [], []
+        
+        # Ensure at least min_per_split in each split if possible
+        if total >= 3 * min_per_split:
+            target_train = max(min_per_split, int(total * train_ratio))
+            target_val = max(min_per_split, int(total * val_ratio))
+            target_test = max(min_per_split, total - target_train - target_val)
+            
+            # Adjust if total doesn't match
+            if target_train + target_val + target_test > total:
+                # Reduce from largest split
+                excess = (target_train + target_val + target_test) - total
+                if target_train >= excess + min_per_split:
+                    target_train -= excess
+                elif target_val >= excess + min_per_split:
+                    target_val -= excess
+                else:
+                    target_test -= excess
         else:
-            test_actors.append(actor)
+            # Distribute evenly if we have fewer than 3*min_per_split
+            target_train = max(1, total // 3)
+            target_val = max(1, (total - target_train) // 2)
+            target_test = total - target_train - target_val
+        
+        train = actor_list[:target_train]
+        val = actor_list[target_train:target_train + target_val]
+        test = actor_list[target_train + target_val:]
+        
+        return train, val, test
     
-    # Adjust to match desired ratios
-    total = len(actors_sorted)
-    target_train = int(total * train_ratio)
-    target_val = int(total * val_ratio)
+    # Split V actors - ensure at least 1 in each split
+    v_train, v_val, v_test = split_actors(v_actors, train_ratio, val_ratio, min_per_split=1)
     
-    # Reassign if needed
-    if len(train_actors) != target_train:
-        # Simple adjustment: move actors between splits
-        while len(train_actors) < target_train and val_actors:
-            train_actors.append(val_actors.pop(0))
-        while len(train_actors) > target_train and len(val_actors) < target_val:
-            val_actors.append(train_actors.pop())
-        while len(val_actors) < target_val and test_actors:
-            val_actors.append(test_actors.pop(0))
-        while len(val_actors) > target_val:
-            test_actors.append(val_actors.pop())
+    # Split T actors
+    t_train, t_val, t_test = split_actors(t_actors, train_ratio, val_ratio, min_per_split=1)
+    
+    # Split actors with both modalities
+    both_train, both_val, both_test = split_actors(both_actors, train_ratio, val_ratio, min_per_split=0)
+    
+    # Combine actors for each split
+    train_actors = v_train + t_train + both_train
+    val_actors = v_val + t_val + both_val
+    test_actors = v_test + t_test + both_test
     
     print(f"\nActor split:")
     print(f"  Train: {len(train_actors)} actors")
@@ -150,6 +181,12 @@ def create_splits(
     print(f"  Train: {len(train_df)} videos")
     print(f"  Val: {len(val_df)} videos")
     print(f"  Test: {len(test_df)} videos")
+    
+    # Check modality distribution per split
+    print(f"\nModality distribution:")
+    print(f"  Train - V: {len(train_df[train_df['modality'] == 'V'])}, T: {len(train_df[train_df['modality'] == 'T'])}")
+    print(f"  Val - V: {len(val_df[val_df['modality'] == 'V'])}, T: {len(val_df[val_df['modality'] == 'T'])}")
+    print(f"  Test - V: {len(test_df[test_df['modality'] == 'V'])}, T: {len(test_df[test_df['modality'] == 'T'])}")
     
     # Check class balance
     print(f"\nClass distribution:")
@@ -230,4 +267,6 @@ if __name__ == "__main__":
         args.seed,
         args.modality,
     )
+
+
 

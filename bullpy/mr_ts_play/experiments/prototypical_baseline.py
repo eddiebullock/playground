@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
 """
-Minimal baseline experiment to verify dataset loading and evaluation pipeline.
+Prototypical Networks baseline for few-shot emotion recognition.
 """
 
 import os
 import sys
 import argparse
-import random
 from pathlib import Path
 
 import torch
@@ -15,7 +14,7 @@ import torch.optim as optim
 from torch.utils.data import DataLoader
 import numpy as np
 import pandas as pd
-from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
+from sklearn.metrics import confusion_matrix
 import matplotlib.pyplot as plt
 import seaborn as sns
 
@@ -24,88 +23,128 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from src.data.dataset import MindreadingDataset
 from src.data.create_splits import create_splits
-from src.models.baseline import SimpleFrameClassifier
+from src.models.prototypical import PrototypicalNetwork, PrototypicalLoss
 from src.utils.transforms import get_default_transform
 from src.utils.seed import set_seed, worker_init_fn
+from src.evaluation.metrics import compute_all_metrics, print_metrics, compare_to_random
 
 
 def train_epoch(model, dataloader, criterion, optimizer, device):
     """Train for one epoch."""
     model.train()
     total_loss = 0.0
-    all_preds = []
+    all_embeddings = []
     all_labels = []
     
     for batch in dataloader:
         frames = batch['frames'].to(device)  # (B, T, C, H, W)
         labels = batch['label'].to(device)
         
-        # Forward
+        # Forward: extract embeddings
         optimizer.zero_grad()
-        logits = model(frames)
-        loss = criterion(logits, labels)
+        embeddings = model(frames)  # (B, embedding_dim)
+        
+        # Compute prototypes from current batch
+        # (In practice, we compute from all training data, but for efficiency
+        # we use batch prototypes during training)
+        prototypes = model.compute_prototypes(embeddings, labels)
+        
+        # Compute loss
+        loss = criterion(embeddings, labels, prototypes)
         
         # Backward
         loss.backward()
         optimizer.step()
         
-        # Metrics
+        # Store for metrics
         total_loss += loss.item()
-        preds = logits.argmax(dim=1).cpu().numpy()
-        all_preds.extend(preds)
-        all_labels.extend(labels.cpu().numpy())
+        all_embeddings.append(embeddings.detach().cpu())
+        all_labels.append(labels.cpu())
     
     avg_loss = total_loss / len(dataloader)
-    accuracy = accuracy_score(all_labels, all_preds)
+    all_embeddings = torch.cat(all_embeddings, dim=0)
+    all_labels = torch.cat(all_labels, dim=0)
     
-    return avg_loss, accuracy
+    return avg_loss, all_embeddings, all_labels
 
 
-def evaluate(model, dataloader, criterion, device):
-    """Evaluate model."""
+def evaluate(
+    model,
+    train_dataloader,
+    eval_dataloader,
+    criterion,
+    device,
+    num_classes: int,
+):
+    """
+    Evaluate model using prototypical networks approach.
+    
+    For each query sample:
+    1. Compute prototypes from training set
+    2. Classify query by distance to prototypes
+    """
     model.eval()
-    total_loss = 0.0
-    all_preds = []
-    all_labels = []
-    all_emotions = []
+    
+    # Compute prototypes from training set
+    print("Computing prototypes from training set...")
+    all_train_embeddings = []
+    all_train_labels = []
     
     with torch.no_grad():
-        for batch in dataloader:
+        for batch in train_dataloader:
             frames = batch['frames'].to(device)
             labels = batch['label'].to(device)
             
-            logits = model(frames)
-            loss = criterion(logits, labels)
+            embeddings = model(frames)
+            all_train_embeddings.append(embeddings.cpu())
+            all_train_labels.append(labels.cpu())
+    
+    all_train_embeddings = torch.cat(all_train_embeddings, dim=0)
+    all_train_labels = torch.cat(all_train_labels, dim=0)
+    
+    # Compute prototypes
+    prototypes = model.compute_prototypes(all_train_embeddings.to(device), all_train_labels.to(device))
+    prototypes = prototypes.cpu()
+    
+    # Evaluate on validation/test set
+    total_loss = 0.0
+    all_preds = []
+    all_labels = []
+    all_pred_proba = []
+    all_emotions = []
+    
+    with torch.no_grad():
+        for batch in eval_dataloader:
+            frames = batch['frames'].to(device)
+            labels = batch['label'].to(device)
             
+            # Extract embeddings
+            embeddings = model(frames).cpu()
+            
+            # Classify by distance to prototypes
+            logits = model.classify_by_distance(embeddings, prototypes)
+            
+            # Compute loss
+            loss = criterion(embeddings.to(device), labels.to(device), prototypes.to(device))
             total_loss += loss.item()
-            preds = logits.argmax(dim=1).cpu().numpy()
+            
+            # Get predictions
+            pred_proba = torch.softmax(logits, dim=1)
+            preds = logits.argmax(dim=1).numpy()
+            
             all_preds.extend(preds)
-            all_labels.extend(labels.cpu().numpy())
+            all_labels.extend(labels.numpy())
+            all_pred_proba.append(pred_proba.numpy())
             all_emotions.extend(batch['emotion'])
     
-    avg_loss = total_loss / len(dataloader)
-    accuracy = accuracy_score(all_labels, all_preds)
+    avg_loss = total_loss / len(eval_dataloader)
+    all_pred_proba = np.vstack(all_pred_proba)
     
-    return avg_loss, accuracy, all_preds, all_labels, all_emotions
-
-
-def plot_confusion_matrix(y_true, y_pred, class_names, output_path):
-    """Plot and save confusion matrix."""
-    cm = confusion_matrix(y_true, y_pred)
-    
-    plt.figure(figsize=(20, 20))
-    sns.heatmap(cm, annot=False, fmt='d', cmap='Blues', 
-                xticklabels=class_names, yticklabels=class_names)
-    plt.title('Confusion Matrix')
-    plt.ylabel('True Label')
-    plt.xlabel('Predicted Label')
-    plt.tight_layout()
-    plt.savefig(output_path, dpi=150)
-    plt.close()
+    return avg_loss, all_preds, all_labels, all_pred_proba, all_emotions
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Baseline experiment")
+    parser = argparse.ArgumentParser(description="Prototypical Networks baseline")
     parser.add_argument(
         "--data_root",
         type=str,
@@ -121,32 +160,32 @@ def main():
     parser.add_argument(
         "--batch_size",
         type=int,
-        default=8,
+        default=16,
         help="Batch size"
     )
     parser.add_argument(
         "--num_epochs",
         type=int,
-        default=20,
+        default=30,
         help="Number of epochs"
     )
     parser.add_argument(
         "--lr",
         type=float,
-        default=1e-3,
-        help="Learning rate for classifier"
-    )
-    parser.add_argument(
-        "--backbone_lr",
-        type=float,
-        default=1e-5,
-        help="Learning rate for backbone (if fine-tuning)"
+        default=1e-4,
+        help="Learning rate"
     )
     parser.add_argument(
         "--num_frames",
         type=int,
         default=8,
         help="Number of frames per video"
+    )
+    parser.add_argument(
+        "--embedding_dim",
+        type=int,
+        default=512,
+        help="Embedding dimension"
     )
     parser.add_argument(
         "--seed",
@@ -166,38 +205,22 @@ def main():
         help="Create splits if they don't exist"
     )
     parser.add_argument(
-        "--freeze_backbone",
-        action="store_true",
-        help="Freeze backbone (default: fine-tune with lower LR)"
-    )
-    parser.add_argument(
-        "--early_stop_patience",
-        type=int,
-        default=5,
-        help="Early stopping patience (epochs without improvement)"
-    )
-    parser.add_argument(
-        "--use_augmentation",
-        action="store_true",
-        help="Use data augmentation for training"
-    )
-    parser.add_argument(
-        "--use_class_weights",
-        action="store_true",
-        help="Use class weights for imbalanced classes"
-    )
-    parser.add_argument(
-        "--dropout",
-        type=float,
-        default=0.0,
-        help="Dropout rate (0.0 to disable)"
-    )
-    parser.add_argument(
         "--backbone",
         type=str,
         default="resnet18",
         choices=["resnet18", "resnet50"],
         help="Backbone architecture"
+    )
+    parser.add_argument(
+        "--dropout",
+        type=float,
+        default=0.3,
+        help="Dropout rate"
+    )
+    parser.add_argument(
+        "--use_augmentation",
+        action="store_true",
+        help="Use data augmentation"
     )
     
     args = parser.parse_args()
@@ -281,66 +304,31 @@ def main():
     
     # Create model
     print("Creating model...")
-    model = SimpleFrameClassifier(
+    model = PrototypicalNetwork(
         num_classes=train_dataset.num_classes,
+        embedding_dim=args.embedding_dim,
         backbone=args.backbone,
         pretrained=True,
-        freeze_backbone=args.freeze_backbone,
+        freeze_backbone=False,  # Fine-tune for better embeddings
         dropout=args.dropout,
     ).to(args.device)
     
     print(f"Model parameters: {sum(p.numel() for p in model.parameters()):,}")
     print(f"Trainable parameters: {sum(p.numel() for p in model.parameters() if p.requires_grad):,}")
     
-    # Loss with optional class weights
-    if args.use_class_weights:
-        # Compute class weights from training set
-        from collections import Counter
-        labels = [train_dataset[i]['label'].item() for i in range(len(train_dataset))]
-        class_counts = Counter(labels)
-        total = len(labels)
-        num_classes = train_dataset.num_classes
-        
-        # Inverse frequency weighting
-        class_weights = torch.zeros(num_classes)
-        for idx, count in class_counts.items():
-            class_weights[idx] = total / (num_classes * count)
-        
-        class_weights = class_weights.to(args.device)
-        print(f"Using class weights (min: {class_weights.min():.3f}, max: {class_weights.max():.3f})")
-        criterion = nn.CrossEntropyLoss(weight=class_weights)
-    else:
-        criterion = nn.CrossEntropyLoss()
-    
-    # Optimizer with differential learning rates
-    if args.freeze_backbone:
-        # Only classifier parameters
-        optimizer = optim.Adam(model.parameters(), lr=args.lr)
-    else:
-        # Different learning rates for backbone and classifier
-        # Separate parameters
-        backbone_params = [p for p in model.backbone.parameters() if p.requires_grad]
-        classifier_params = [p for p in model.classifier.parameters() if p.requires_grad]
-        
-        if backbone_params:
-            optimizer = optim.AdamW([
-                {'params': backbone_params, 'lr': args.backbone_lr},
-                {'params': classifier_params, 'lr': args.lr},
-            ], weight_decay=1e-4)
-        else:
-            optimizer = optim.AdamW(classifier_params, lr=args.lr, weight_decay=1e-4)
-    
-    # Learning rate scheduler
+    # Loss and optimizer
+    criterion = PrototypicalLoss()
+    optimizer = optim.AdamW(model.parameters(), lr=args.lr, weight_decay=1e-4)
     scheduler = optim.lr_scheduler.ReduceLROnPlateau(
-        optimizer, mode='min', factor=0.5, patience=3, verbose=True
+        optimizer, mode='min', factor=0.5, patience=5, verbose=True
     )
     
     # Training loop
     print("\nTraining...")
     best_val_acc = 0.0
-    best_val_loss = float('inf')
     patience_counter = 0
-    results_dir = Path("results/baseline")
+    early_stop_patience = 10
+    results_dir = Path("results/prototypical")
     results_dir.mkdir(parents=True, exist_ok=True)
     
     train_history = []
@@ -349,80 +337,88 @@ def main():
         print(f"\nEpoch {epoch+1}/{args.num_epochs}")
         
         # Train
-        train_loss, train_acc = train_epoch(model, train_loader, criterion, optimizer, args.device)
-        print(f"Train Loss: {train_loss:.4f}, Train Acc: {train_acc:.4f}")
+        train_loss, _, _ = train_epoch(model, train_loader, criterion, optimizer, args.device)
+        print(f"Train Loss: {train_loss:.4f}")
         
         # Validate
-        val_loss, val_acc, _, _, _ = evaluate(model, val_loader, criterion, args.device)
-        print(f"Val Loss: {val_loss:.4f}, Val Acc: {val_acc:.4f}")
+        val_loss, val_preds, val_labels, val_pred_proba, _ = evaluate(
+            model, train_loader, val_loader, criterion, args.device, train_dataset.num_classes
+        )
+        
+        # Compute metrics
+        class_names = [train_dataset.idx_to_emotion[i] for i in range(train_dataset.num_classes)]
+        val_metrics = compute_all_metrics(
+            np.array(val_labels),
+            np.array(val_preds),
+            val_pred_proba,
+            class_names,
+            top_k_values=(1, 5, 10, 20),
+        )
+        
+        print_metrics(val_metrics, f"Val Metrics (Epoch {epoch+1})")
         
         # Learning rate scheduling
         scheduler.step(val_loss)
         
-        # Get learning rates (may have multiple param groups)
-        lr_backbone = optimizer.param_groups[0]['lr']
-        lr_classifier = optimizer.param_groups[-1]['lr'] if len(optimizer.param_groups) > 1 else lr_backbone
-        
         train_history.append({
             'epoch': epoch + 1,
             'train_loss': train_loss,
-            'train_acc': train_acc,
             'val_loss': val_loss,
-            'val_acc': val_acc,
-            'lr_backbone': lr_backbone,
-            'lr_classifier': lr_classifier,
+            **val_metrics,
         })
         
-        # Save best model (based on validation accuracy)
-        if val_acc > best_val_acc:
-            best_val_acc = val_acc
-            best_val_loss = val_loss
+        # Save best model
+        if val_metrics['accuracy'] > best_val_acc:
+            best_val_acc = val_metrics['accuracy']
             patience_counter = 0
             torch.save(model.state_dict(), results_dir / "best_model.pth")
-            print(f"Saved best model (val_acc: {val_acc:.4f}, val_loss: {val_loss:.4f})")
+            print(f"Saved best model (val_acc: {best_val_acc:.4f})")
         else:
             patience_counter += 1
         
         # Early stopping
-        if patience_counter >= args.early_stop_patience:
-            print(f"\nEarly stopping triggered after {epoch+1} epochs (no improvement for {args.early_stop_patience} epochs)")
+        if patience_counter >= early_stop_patience:
+            print(f"\nEarly stopping triggered after {epoch+1} epochs")
             break
     
     # Final evaluation on test set
     print("\nEvaluating on test set...")
     model.load_state_dict(torch.load(results_dir / "best_model.pth"))
-    test_loss, test_acc, test_preds, test_labels, test_emotions = evaluate(
-        model, test_loader, criterion, args.device
+    test_loss, test_preds, test_labels, test_pred_proba, test_emotions = evaluate(
+        model, train_loader, test_loader, criterion, args.device, train_dataset.num_classes
     )
-    print(f"Test Loss: {test_loss:.4f}, Test Acc: {test_acc:.4f}")
     
-    # Classification report
-    class_names = [train_dataset.idx_to_emotion[i] for i in range(train_dataset.num_classes)]
-    report = classification_report(
-        test_labels, test_preds,
-        target_names=class_names,
-        output_dict=True,
-        zero_division=0,
+    # Compute test metrics
+    test_metrics = compute_all_metrics(
+        np.array(test_labels),
+        np.array(test_preds),
+        test_pred_proba,
+        class_names,
+        top_k_values=(1, 5, 10, 20, 50),
     )
+    
+    print_metrics(test_metrics, "Test Metrics")
+    
+    # Compare to random baseline
+    random_metrics = compare_to_random(train_dataset.num_classes, top_k_values=(1, 5, 10, 20, 50))
+    print("\nRandom Baseline:")
+    print("-" * 60)
+    for k in [1, 5, 10, 20, 50]:
+        if f'top_{k}_accuracy' in random_metrics:
+            print(f"Top-{k} Accuracy:  {random_metrics[f'top_{k}_accuracy']:.4f} ({random_metrics[f'top_{k}_accuracy']*100:.2f}%)")
+    print("-" * 60)
     
     # Save results
     pd.DataFrame(train_history).to_csv(results_dir / "train_history.csv", index=False)
     
     with open(results_dir / "test_results.txt", "w") as f:
-        f.write(f"Test Accuracy: {test_acc:.4f}\n")
-        f.write(f"Test Loss: {test_loss:.4f}\n\n")
-        f.write("Classification Report:\n")
-        f.write(classification_report(test_labels, test_preds, target_names=class_names))
-    
-    # Plot confusion matrix (sample of classes if too many)
-    if train_dataset.num_classes <= 50:
-        plot_confusion_matrix(
-            test_labels, test_preds,
-            class_names,
-            results_dir / "confusion_matrix.png"
-        )
-    else:
-        print(f"Skipping confusion matrix (too many classes: {train_dataset.num_classes})")
+        f.write("Test Set Results\n")
+        f.write("=" * 60 + "\n\n")
+        for key, value in test_metrics.items():
+            f.write(f"{key}: {value:.4f}\n")
+        f.write("\nRandom Baseline:\n")
+        for key, value in random_metrics.items():
+            f.write(f"{key}: {value:.4f}\n")
     
     print(f"\nResults saved to {results_dir}")
 

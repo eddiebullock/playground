@@ -164,3 +164,5 @@ This document explicitly states the experimental assumptions, task formulation, 
 - **2024-XX-XX**: Decided on actor-independent splits as primary strategy
 - **2024-XX-XX**: Baseline uses frozen pretrained encoder + linear classifier
 
+
+
