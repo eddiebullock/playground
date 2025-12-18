@@ -66,9 +66,20 @@ def compute_all_metrics(
             metrics[f'top_{k}_accuracy'] = top_k_accuracy(y_true, y_pred_proba, k)
     
     # Classification report
+    # Only include classes that appear in y_true or y_pred
+    unique_labels = np.unique(np.concatenate([y_true, y_pred]))
+    if len(unique_labels) != len(class_names):
+        # Filter class names to only those that appear
+        filtered_class_names = [class_names[i] for i in unique_labels if i < len(class_names)]
+        labels_to_use = unique_labels
+    else:
+        filtered_class_names = class_names
+        labels_to_use = None
+    
     report = classification_report(
         y_true, y_pred,
-        target_names=class_names,
+        target_names=filtered_class_names if labels_to_use is not None else class_names,
+        labels=labels_to_use,
         output_dict=True,
         zero_division=0,
     )

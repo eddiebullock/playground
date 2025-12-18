@@ -116,7 +116,7 @@ def evaluate(
     with torch.no_grad():
         for batch in eval_dataloader:
             frames = batch['frames'].to(device)
-            labels = batch['label'].to(device)
+            labels = batch['label']  # Keep on CPU for numpy conversion
             
             # Extract embeddings
             embeddings = model(frames).cpu()
@@ -124,17 +124,17 @@ def evaluate(
             # Classify by distance to prototypes
             logits = model.classify_by_distance(embeddings, prototypes)
             
-            # Compute loss
+            # Compute loss (need embeddings and labels on same device)
             loss = criterion(embeddings.to(device), labels.to(device), prototypes.to(device))
             total_loss += loss.item()
             
             # Get predictions
             pred_proba = torch.softmax(logits, dim=1)
-            preds = logits.argmax(dim=1).numpy()
+            preds = logits.argmax(dim=1).cpu().numpy()
             
             all_preds.extend(preds)
-            all_labels.extend(labels.numpy())
-            all_pred_proba.append(pred_proba.numpy())
+            all_labels.extend(labels.numpy())  # Already on CPU
+            all_pred_proba.append(pred_proba.cpu().numpy())
             all_emotions.extend(batch['emotion'])
     
     avg_loss = total_loss / len(eval_dataloader)
@@ -320,7 +320,7 @@ def main():
     criterion = PrototypicalLoss()
     optimizer = optim.AdamW(model.parameters(), lr=args.lr, weight_decay=1e-4)
     scheduler = optim.lr_scheduler.ReduceLROnPlateau(
-        optimizer, mode='min', factor=0.5, patience=5, verbose=True
+        optimizer, mode='min', factor=0.5, patience=5
     )
     
     # Training loop
