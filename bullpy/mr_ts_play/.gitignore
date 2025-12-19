@@ -34,7 +34,9 @@ wheels/
 
 # Data
 data/processed/
-data/splits/
+data/splits/*
+!data/splits/*.csv
+!data/splits/*.txt
 !data/basic_emotion_mapping.json
 *.mov
 *.mp4

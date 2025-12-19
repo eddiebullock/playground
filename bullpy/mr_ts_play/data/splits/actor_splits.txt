@@ -1,0 +1,8 @@
+Train actors:
+A, P, R, S, U, W, Z
+
+Val actors:
+M, X
+
+Test actors:
+B, C, V, Y
