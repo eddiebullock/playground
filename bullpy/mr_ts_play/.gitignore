@@ -65,5 +65,24 @@ logs/
 configs/*secret*.yaml
 configs/*secret*.json
 
+# Environment variables and secrets
+.env
+.env.local
+.env.*.local
+*.key
+*.pem
+*credentials*
+*password*
+*token*
 
+# Large data files
+*.h5
+*.hdf5
+*.pkl
+*.pickle
+*.npz
 
+# Temporary files
+*.tmp
+*.temp
+.cache/
