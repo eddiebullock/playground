@@ -1,0 +1,33 @@
+# CAM Face-Voice Battery Experiment Configuration - CLIP Large
+# 
+# Uses larger CLIP model for better performance
+
+# Dataset configuration
+data:
+  root: "/Users/eb2007/Library/CloudStorage/OneDrive-UniversityofCambridge/Documents/PhD/data/mindreading_transporter_files/Mindreading emotions library/Emotions"
+  splits_dir: "data/splits"
+  trial_definitions_file: "data/cam_trial_definitions_20concepts.json"
+
+# Model configuration
+model:
+  type: "clip"
+  name: "openai/clip-vit-large-patch14"  # Larger CLIP model
+  num_frames: 8
+  aggregation: "mean"
+
+# Device configuration
+device: "cpu"  # "cpu", "cuda", or "mps"
+
+# Evaluation configuration
+evaluation:
+  temperature: 1.0
+  calibration:
+    enabled: false  # Set to true to enable few-shot calibration
+
+# Reproducibility
+seed: 42
+
+# Output configuration
+output:
+  results_dir: "results/cam_human_like"
+

@@ -191,6 +191,17 @@ def main():
         choices=["resnet18", "resnet50"],
         help="Backbone architecture"
     )
+    parser.add_argument(
+        "--dropout",
+        type=float,
+        default=0.3,
+        help="Dropout rate for regularization"
+    )
+    parser.add_argument(
+        "--use_class_weights",
+        action="store_true",
+        help="Use class weights for imbalanced classes"
+    )
     
     args = parser.parse_args()
     
@@ -295,13 +306,42 @@ def main():
         backbone=args.backbone,
         pretrained=True,
         freeze_backbone=args.freeze_backbone,
+        dropout=args.dropout,  # Add dropout for regularization
     ).to(args.device)
     
     print(f"Model parameters: {sum(p.numel() for p in model.parameters()):,}")
     print(f"Trainable parameters: {sum(p.numel() for p in model.parameters() if p.requires_grad):,}")
     
-    # Loss and optimizer
-    criterion = nn.CrossEntropyLoss()
+    # Loss with class weights (CRITICAL for imbalanced classes)
+    if args.use_class_weights:
+        # Compute class weights from training set
+        from collections import Counter
+        # Get labels - they're already integers, not tensors
+        labels = []
+        for i in range(len(train_dataset)):
+            label = train_dataset[i]['label']
+            # Handle both tensor and int cases
+            if isinstance(label, torch.Tensor):
+                labels.append(label.item())
+            else:
+                labels.append(int(label))
+        
+        class_counts = Counter(labels)
+        total = len(labels)
+        num_classes = train_dataset.num_classes
+        
+        # Inverse frequency weighting
+        class_weights = torch.zeros(num_classes)
+        for idx, count in class_counts.items():
+            class_weights[idx] = total / (num_classes * count)
+        
+        class_weights = class_weights.to(args.device)
+        print(f"\nUsing class weights:")
+        for i, emotion in enumerate(train_dataset.idx_to_emotion.values()):
+            print(f"  {emotion:15s}: {class_weights[i]:.3f} (count: {class_counts.get(i, 0)})")
+        criterion = nn.CrossEntropyLoss(weight=class_weights)
+    else:
+        criterion = nn.CrossEntropyLoss()
     
     if args.freeze_backbone:
         optimizer = optim.Adam(model.parameters(), lr=args.lr)
@@ -318,7 +358,7 @@ def main():
             optimizer = optim.AdamW(classifier_params, lr=args.lr, weight_decay=1e-4)
     
     scheduler = optim.lr_scheduler.ReduceLROnPlateau(
-        optimizer, mode='min', factor=0.5, patience=3, verbose=True
+        optimizer, mode='min', factor=0.5, patience=3
     )
     
     # Training loop

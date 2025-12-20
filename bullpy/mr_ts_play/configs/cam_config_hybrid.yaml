@@ -1,0 +1,35 @@
+# CAM Face-Voice Battery Experiment Configuration - Hybrid Emotion + CLIP
+# 
+# Combines emotion model + CLIP for better performance (expected: 40-50%)
+
+# Dataset configuration
+data:
+  root: "/Users/eb2007/Library/CloudStorage/OneDrive-UniversityofCambridge/Documents/PhD/data/mindreading_transporter_files/Mindreading emotions library/Emotions"
+  splits_dir: "data/splits"
+  trial_definitions_file: "data/cam_trial_definitions_20concepts.json"
+
+# Model configuration
+model:
+  type: "hybrid"  # Emotion model + CLIP
+  emotion_model: "trpakov/vit-face-expression"
+  clip_model: "openai/clip-vit-base-patch32"
+  num_frames: 8
+  aggregation: "mean"
+  emotion_weight: 0.3  # Weight for emotion model (0.3), CLIP gets 0.7
+
+# Device configuration
+device: "cpu"  # "cpu", "cuda", or "mps"
+
+# Evaluation configuration
+evaluation:
+  temperature: 1.0
+  calibration:
+    enabled: false
+
+# Reproducibility
+seed: 42
+
+# Output configuration
+output:
+  results_dir: "results/cam_human_like"
+

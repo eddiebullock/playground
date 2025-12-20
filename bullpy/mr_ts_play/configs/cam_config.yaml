@@ -1,0 +1,79 @@
+# CAM Face-Voice Battery Experiment Configuration
+# 
+# This configuration file defines the experimental setup for the computational
+# replication of the Cambridge Mindreading (CAM) Face-Voice Battery
+# (Golan et al., 2006).
+
+# Dataset configuration
+data:
+  # Root directory containing CAM stimuli (video files)
+  root: "/Users/eb2007/Library/CloudStorage/OneDrive-UniversityofCambridge/Documents/PhD/data/mindreading_transporter_files/Mindreading emotions library/Emotions"
+  
+  # Directory containing actor-independent split definitions
+  # Expected files: train_actors.txt, val_actors.txt, test_actors.txt
+  # OR: train.csv, val.csv, test.csv with actor column
+  splits_dir: "data/splits"
+  
+  # Path to trial definitions JSON file
+  # Format: {
+  #   "trials": [
+  #     {
+  #       "trial_id": "trial_001",
+  #       "stimulus_path": "relative/path/to/video.mov",
+  #       "modality": "face" or "voice",
+  #       "correct_label": "emotion_name",
+  #       "candidate_labels": ["correct", "foil1", "foil2", "foil3"],
+  #       "correct_idx": 0,
+  #       "actor": "M",
+  #       "scenario_id": "0100104",
+  #       "concept": "humiliating"
+  #     }
+  #   ]
+  # }
+  # If None, trials will be generated from dataset structure (not yet implemented)
+  trial_definitions_file: "data/cam_trial_definitions_20concepts.json"  # Original CAM 20 concepts
+
+# Model configuration
+model:
+  # Model type: "clip", "audio", or "multimodal"
+  type: "clip"
+  
+  # Model name/identifier (HuggingFace model ID or local path)
+  name: "openai/clip-vit-base-patch32"
+  
+  # For CLIP models:
+  num_frames: 8  # Number of frames to sample from video
+  aggregation: "mean"  # How to aggregate frame-level scores: "mean", "max", "last"
+  
+  # For audio models:
+  # sample_rate: 16000
+  
+  # For multimodal models:
+  # vision_model: "openai/clip-vit-base-patch32"
+  # audio_model: "facebook/wav2vec2-base"
+  # fusion_method: "weighted_average"  # "weighted_average", "concat", "attention"
+
+# Device configuration
+device: "cpu"  # "cpu", "cuda", or "mps"
+
+# Evaluation configuration
+evaluation:
+  # Temperature scaling for scores (1.0 = no scaling)
+  # Higher temperature = softer probability distribution
+  temperature: 1.0
+  
+  # Optional few-shot calibration
+  # calibration:
+  #   enabled: false
+  #   method: "temperature_scaling"  # "temperature_scaling", "platt_scaling"
+  #   num_shots: 10
+
+# Reproducibility
+seed: 42
+
+# Output configuration
+output:
+  # Results will be saved to results/cam_human_like/{model_type}_{timestamp}/
+  # unless overridden by --output-dir argument
+  results_dir: "results/cam_human_like"
+

@@ -1,0 +1,34 @@
+# CAM Face-Voice Battery Experiment Configuration - With Calibration
+# 
+# Uses CLIP Base with few-shot temperature scaling calibration
+
+# Dataset configuration
+data:
+  root: "/Users/eb2007/Library/CloudStorage/OneDrive-UniversityofCambridge/Documents/PhD/data/mindreading_transporter_files/Mindreading emotions library/Emotions"
+  splits_dir: "data/splits"
+  trial_definitions_file: "data/cam_trial_definitions_20concepts.json"
+
+# Model configuration
+model:
+  type: "clip"
+  name: "openai/clip-vit-base-patch32"
+  num_frames: 8
+  aggregation: "mean"
+
+# Device configuration
+device: "cpu"  # "cpu", "cuda", or "mps"
+
+# Evaluation configuration
+evaluation:
+  temperature: 1.0  # Will be overridden by calibration
+  calibration:
+    enabled: true  # Enable few-shot calibration on validation set
+    method: "temperature_scaling"
+
+# Reproducibility
+seed: 42
+
+# Output configuration
+output:
+  results_dir: "results/cam_human_like"
+

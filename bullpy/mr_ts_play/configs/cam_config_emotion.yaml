@@ -1,0 +1,40 @@
+# CAM Face-Voice Battery Experiment Configuration - Emotion Model
+# 
+# Uses pre-trained emotion recognition model (expected: 50-60% accuracy)
+
+# Dataset configuration
+data:
+  root: "/Users/eb2007/Library/CloudStorage/OneDrive-UniversityofCambridge/Documents/PhD/data/mindreading_transporter_files/Mindreading emotions library/Emotions"
+  splits_dir: "data/splits"
+  trial_definitions_file: "data/cam_trial_definitions_20concepts.json"
+
+# Model configuration
+model:
+  type: "emotion"  # Pre-trained emotion recognition model
+  name: "trpakov/vit-face-expression"  # HuggingFace emotion model
+  num_frames: 8
+  aggregation: "mean"
+  
+  # Optional: Custom emotion mapping from model's classes to CAM concepts
+  # If not provided, uses default mapping
+  # emotion_mapping:
+  #   "happy": ["vibrant", "reassured", "empathic"]
+  #   "sad": ["nostalgic", "grave", "subdued"]
+  #   "angry": ["resentful", "stern", "confronted"]
+
+# Device configuration
+device: "cpu"  # "cpu", "cuda", or "mps"
+
+# Evaluation configuration
+evaluation:
+  temperature: 1.0
+  calibration:
+    enabled: false
+
+# Reproducibility
+seed: 42
+
+# Output configuration
+output:
+  results_dir: "results/cam_human_like"
+
