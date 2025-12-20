@@ -41,9 +41,10 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
 
 from src.data.dataset import MindreadingDataset
 
-# Import FER2013 dataset
+# Import FER2013 and EU-Emotion datasets
 sys.path.insert(0, str(Path(__file__).parent))
 from fer2013_dataset import FER2013Dataset
+from eu_emotion_dataset import EUEmotionDataset
 
 
 class EmotionCLIPDataset(Dataset):
@@ -285,7 +286,13 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  # Fine-tune on FER2013 (external dataset - recommended for rigor)
+  # Fine-tune on EU-Emotion (external dataset - 20 emotions, best for CAM)
+  python finetune_clip_emotions.py \\
+      --eu_emotion_dir data/eu_emotion \\
+      --output_dir models/clip_eu_emotion_finetuned \\
+      --num_epochs 10
+
+  # Fine-tune on FER2013 (external dataset - 7 basic emotions)
   python finetune_clip_emotions.py \\
       --fer2013_dir fer2013/ \\
       --output_dir models/clip_fer2013_finetuned \\
@@ -299,15 +306,17 @@ Examples:
       --output_dir models/clip_cam_finetuned \\
       --num_epochs 10
 
-  # Two-stage: FER2013 then CAM (best performance)
-  # Stage 1: python finetune_clip_emotions.py --fer2013_dir fer2013/ --output_dir models/clip_fer2013
-  # Stage 2: python finetune_clip_emotions.py --train_data ... --model_name models/clip_fer2013/best_model
+  # Two-stage: EU-Emotion → CAM (best performance + rigor)
+  # Stage 1: python finetune_clip_emotions.py --eu_emotion_dir data/eu_emotion --output_dir models/clip_eu_emotion
+  # Stage 2: python finetune_clip_emotions.py --train_data ... --model_name models/clip_eu_emotion/best_model
         """
     )
     parser.add_argument('--train_data', type=str, help='Path to CAM train split CSV')
     parser.add_argument('--val_data', type=str, help='Path to CAM val split CSV')
     parser.add_argument('--data_root', type=str, help='Root directory of CAM stimuli (required if using train_data)')
     parser.add_argument('--fer2013_dir', type=str, help='Path to FER2013 dataset directory (alternative to train_data)')
+    parser.add_argument('--eu_emotion_dir', type=str, help='Path to EU-Emotion dataset directory (alternative to train_data)')
+    parser.add_argument('--eu_emotion_modality', type=str, default='face', choices=['face', 'voice', 'body', 'all'], help='Modality to use for EU-Emotion (default: face)')
     parser.add_argument('--output_dir', type=str, default='models/clip_emotion_finetuned', help='Output directory')
     parser.add_argument('--model_name', type=str, default='openai/clip-vit-base-patch32', help='CLIP model to fine-tune (or path to previously fine-tuned model)')
     parser.add_argument('--num_epochs', type=int, default=10, help='Number of epochs')
@@ -320,8 +329,17 @@ Examples:
     args = parser.parse_args()
     
     # Validate arguments
-    if not args.train_data and not args.fer2013_dir:
-        parser.error("Must provide either --train_data (for CAM) or --fer2013_dir (for FER2013)")
+    dataset_count = sum([
+        bool(args.train_data),
+        bool(args.fer2013_dir),
+        bool(args.eu_emotion_dir),
+    ])
+    
+    if dataset_count == 0:
+        parser.error("Must provide one of: --train_data (CAM), --fer2013_dir (FER2013), or --eu_emotion_dir (EU-Emotion)")
+    
+    if dataset_count > 1:
+        parser.error("Can only specify one dataset: --train_data, --fer2013_dir, or --eu_emotion_dir")
     
     if args.train_data and not args.data_root:
         parser.error("--data_root is required when using --train_data")
@@ -331,7 +349,15 @@ Examples:
     
     # Create datasets
     print("Loading datasets...")
-    if args.fer2013_dir:
+    if args.eu_emotion_dir:
+        # EU-Emotion dataset (external, 20 emotions - best match for CAM)
+        print("Using EU-Emotion dataset (external emotion recognition dataset)")
+        print(f"  Modality: {args.eu_emotion_modality}")
+        print("  Note: 20 complex emotions - perfect match for CAM's 20 concepts")
+        print("  Note: This is more rigorous - no data leakage with CAM test set")
+        train_dataset = EUEmotionDataset(args.eu_emotion_dir, split='train', modality=args.eu_emotion_modality, num_frames=args.num_frames)
+        val_dataset = EUEmotionDataset(args.eu_emotion_dir, split='test', modality=args.eu_emotion_modality, num_frames=args.num_frames)
+    elif args.fer2013_dir:
         # FER2013 dataset (external, no overlap with CAM)
         print("Using FER2013 dataset (external emotion recognition dataset)")
         train_dataset = FER2013Dataset(args.fer2013_dir, split='train')
