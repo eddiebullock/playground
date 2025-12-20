@@ -253,3 +253,4 @@ experiments/cam_human_like/
 
 The key insight: **Zero-shot models struggle with complex emotions, but models trained on emotion data can reach 60-75%**, which is much closer to human performance (88%).
 
+

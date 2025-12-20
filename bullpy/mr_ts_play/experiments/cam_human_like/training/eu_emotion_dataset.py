@@ -76,7 +76,7 @@ class EUEmotionDataset(Dataset):
         
         Args:
             eu_emotion_dir: Root directory of EU-Emotion dataset
-            split: "train", "test", or "val"
+            split: "train", "test", or "val" (if dataset has splits, otherwise ignored)
             modality: Which modality to use ("face", "voice", "body", or "all")
             num_frames: Number of frames to extract from videos (for video files)
             transform: Optional image transforms
@@ -95,6 +95,7 @@ class EUEmotionDataset(Dataset):
         self.samples = []
         self.emotions = set()
         
+        # Check if dataset has explicit splits
         split_dir = self.eu_emotion_dir / split
         if not split_dir.exists():
             # Try alternative split names
@@ -106,17 +107,20 @@ class EUEmotionDataset(Dataset):
                     print(f"Using alternative split directory: {alt_split}")
                     break
         
+        # If no explicit splits, use the root directory and create our own split
         if not split_dir.exists():
-            raise ValueError(
-                f"EU-Emotion {split} directory not found: {split_dir}\n"
-                f"Available directories: {list(self.eu_emotion_dir.iterdir())}"
-            )
+            print(f"No explicit {split} split found. Using root directory and creating random split.")
+            split_dir = self.eu_emotion_dir
         
         # Auto-detect structure and load samples
         if auto_detect_structure:
             self._auto_detect_and_load(split_dir)
         else:
             self._load_emotion_based(split_dir)
+        
+        # If no explicit splits, create our own train/test split
+        if not (self.eu_emotion_dir / "train").exists() and not (self.eu_emotion_dir / "test").exists():
+            self._create_random_split()
         
         # Sort emotions for consistent indexing
         self.emotions = sorted(self.emotions)
@@ -134,6 +138,18 @@ class EUEmotionDataset(Dataset):
     
     def _auto_detect_and_load(self, split_dir: Path):
         """Auto-detect directory structure and load samples."""
+        # Strategy 0: Check if it's the original EU-Emotion structure
+        # (emotions*/HD Version - Face, Body, Social/Faces - HD Version/)
+        emotions_dirs = sorted(split_dir.glob("emotions*"))
+        if len(emotions_dirs) > 0:
+            # Check if this looks like the original structure
+            sample_emotions_dir = emotions_dirs[0]
+            faces_dir = sample_emotions_dir / "HD Version - Face, Body, Social" / "Faces - HD Version"
+            if faces_dir.exists():
+                print(f"Detected original EU-Emotion structure (emotions*/HD Version - Face, Body, Social/)")
+                self._load_original_structure(split_dir)
+                return
+        
         # Strategy 1: Check if it's emotion-based (emotion folders directly in split)
         emotion_dirs = [d for d in split_dir.iterdir() if d.is_dir() and not d.name.startswith('.')]
         
@@ -226,6 +242,83 @@ class EUEmotionDataset(Dataset):
                 self.emotions.add(emotion_name)
                 self.samples.append((str(file_path), emotion_name))
     
+    def _load_original_structure(self, root_dir: Path):
+        """
+        Load samples from original EU-Emotion structure:
+        emotions*/HD Version - Face, Body, Social/Faces - HD Version/EDITED/EmotionName/*.mp4
+        emotions*/HD Version - Face, Body, Social/Faces - HD Version/Original/EmotionName/*.mov
+        
+        Only includes files that exist locally (skips cloud-only OneDrive files).
+        """
+        emotions_dirs = sorted(root_dir.glob("emotions*"))
+        skipped_count = 0
+        
+        for emotions_dir in emotions_dirs:
+            if not emotions_dir.is_dir():
+                continue
+            
+            # Look for Faces - HD Version directory
+            faces_dir = emotions_dir / "HD Version - Face, Body, Social" / "Faces - HD Version"
+            
+            if not faces_dir.exists():
+                continue
+            
+            # Look in EDITED and Original subdirectories
+            for subdir_name in ["EDITED", "Original"]:
+                subdir = faces_dir / subdir_name
+                if not subdir.exists():
+                    continue
+                
+                # Find all emotion-named subdirectories
+                for emotion_dir in subdir.iterdir():
+                    if not emotion_dir.is_dir():
+                        continue
+                    
+                    emotion_name = emotion_dir.name.lower().replace('_', ' ').strip()
+                    
+                    # Find all video files in this emotion directory
+                    for video_file in emotion_dir.iterdir():
+                        if video_file.is_file() and video_file.suffix.lower() in self.VIDEO_EXTENSIONS:
+                            # Only include files that exist locally (not cloud-only)
+                            # Check if file is accessible by checking if it exists and has a size
+                            try:
+                                if video_file.exists() and video_file.stat().st_size > 0:
+                                    self.samples.append((str(video_file), emotion_name))
+                                    self.emotions.add(emotion_name)
+                                else:
+                                    skipped_count += 1
+                            except (OSError, PermissionError):
+                                # File is cloud-only or inaccessible
+                                skipped_count += 1
+        
+        if skipped_count > 0:
+            print(f"   Note: Skipped {skipped_count} files that are cloud-only or inaccessible (OneDrive)")
+    
+    def _create_random_split(self):
+        """Create random train/test split if dataset doesn't have explicit splits."""
+        import random
+        random.seed(42)
+        
+        # Shuffle samples
+        all_samples = self.samples.copy()
+        random.shuffle(all_samples)
+        
+        # Split: 80% train, 10% val, 10% test
+        train_size = int(0.8 * len(all_samples))
+        val_size = int(0.1 * len(all_samples))
+        
+        if self.split == "train":
+            self.samples = all_samples[:train_size]
+        elif self.split == "val":
+            self.samples = all_samples[train_size:train_size + val_size]
+        elif self.split == "test":
+            self.samples = all_samples[train_size + val_size:]
+        else:
+            # Default to train
+            self.samples = all_samples[:train_size]
+        
+        print(f"Created random {self.split} split: {len(self.samples)} samples")
+    
     def _extract_emotion_from_path(self, file_path: Path, split_dir: Path) -> Optional[str]:
         """Extract emotion name from file path."""
         # Strategy 1: Parent directory name (if it's not split_dir)
@@ -256,10 +349,21 @@ class EUEmotionDataset(Dataset):
         return None
     
     def _load_video_frames(self, video_path: Path) -> List[Image.Image]:
-        """Load frames from video file."""
+        """
+        Load multiple frames from video file.
+        
+        Returns a list of PIL Images, one for each sampled frame.
+        Handles OneDrive cloud-only files gracefully by returning None if file can't be opened.
+        """
+        # Check if file exists and is accessible (not cloud-only)
+        if not video_path.exists():
+            raise FileNotFoundError(f"Video file not found (may be cloud-only): {video_path}")
+        
+        # Try to open video
         cap = cv2.VideoCapture(str(video_path))
         if not cap.isOpened():
-            raise ValueError(f"Could not open video: {video_path}")
+            cap.release()
+            raise ValueError(f"Could not open video (may be cloud-only or corrupted): {video_path}")
         
         frames = []
         total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
@@ -268,8 +372,10 @@ class EUEmotionDataset(Dataset):
             cap.release()
             raise ValueError(f"Video has no frames: {video_path}")
         
-        # Sample frames evenly
-        frame_indices = np.linspace(0, total_frames - 1, self.num_frames, dtype=int)
+        # Sample frames evenly across the video
+        # Use min to handle videos shorter than num_frames
+        num_frames_to_extract = min(self.num_frames, total_frames)
+        frame_indices = np.linspace(0, total_frames - 1, num_frames_to_extract, dtype=int)
         
         for idx in frame_indices:
             cap.set(cv2.CAP_PROP_POS_FRAMES, idx)
@@ -293,19 +399,37 @@ class EUEmotionDataset(Dataset):
         file_path, emotion = self.samples[idx]
         file_path = Path(file_path)
         
-        # Load image or video frame
+        # Load image or video frames
         if file_path.suffix.lower() in self.VIDEO_EXTENSIONS:
-            # Load video and extract middle frame (or average)
-            frames = self._load_video_frames(file_path)
-            # Use middle frame as representative
-            image = frames[len(frames) // 2]
+            # Load multiple frames from video
+            try:
+                frames = self._load_video_frames(file_path)
+            except (ValueError, FileNotFoundError, OSError) as e:
+                # If video can't be loaded (cloud-only, corrupted, etc.), skip to next sample
+                # This shouldn't happen often since we filter during loading, but handle gracefully
+                print(f"Warning: Could not load {file_path.name}: {e}")
+                # Return a random valid sample instead
+                import random
+                return self.__getitem__(random.randint(0, len(self.samples) - 1))
+            
+            # Return all frames (not just middle frame)
+            # Apply transforms if provided
+            if self.transform:
+                frames = [self.transform(frame) for frame in frames]
+            return frames, emotion
         else:
             # Load static image
-            image = Image.open(file_path).convert('RGB')
-        
-        # Apply transforms if provided
-        if self.transform:
-            image = self.transform(image)
-        
-        return image, emotion
+            try:
+                image = Image.open(file_path).convert('RGB')
+            except (OSError, IOError) as e:
+                # If image can't be loaded, skip to next sample
+                print(f"Warning: Could not load {file_path.name}: {e}")
+                import random
+                return self.__getitem__(random.randint(0, len(self.samples) - 1))
+            
+            # Apply transforms if provided
+            if self.transform:
+                image = self.transform(image)
+            # Return as single-frame list for consistency
+            return [image], emotion
 

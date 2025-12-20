@@ -169,3 +169,4 @@ Looking at your train set:
 Let me implement the improvements (class weights, dropout, better augmentation) and see if we can get to 50-60%. Then we can decide if that's acceptable or if we need to remove actor stratification.
 
 
+

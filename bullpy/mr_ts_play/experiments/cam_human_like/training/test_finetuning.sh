@@ -62,3 +62,4 @@ echo "  - num_frames 8"
 echo ""
 echo "Or submit to HPC for much faster training!"
 
+

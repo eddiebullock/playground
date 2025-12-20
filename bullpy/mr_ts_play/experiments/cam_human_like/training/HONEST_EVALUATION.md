@@ -162,3 +162,4 @@
 
 **Verdict**: Fine-tuning will help, but reaching near-human performance (80-88%) is unlikely with the current approach. However, 50-60% is still a meaningful improvement worth pursuing, and 65-75% is achievable with EU-Emotion and better architecture.
 
+

@@ -59,3 +59,4 @@ echo "  find ~/data/CAM -type f | wc -l"
 echo "  du -sh ~/data/CAM"
 echo "=========================================="
 
+

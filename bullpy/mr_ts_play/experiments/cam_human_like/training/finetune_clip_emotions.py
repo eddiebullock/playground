@@ -80,23 +80,51 @@ class EmotionCLIPDataset(Dataset):
         for frame in frames:
             frame_images.append(Image.fromarray(frame))
         
-        # Use middle frame as representative (or average all frames)
-        # For simplicity, use middle frame
-        main_frame = frame_images[len(frame_images) // 2]
-        
-        return main_frame, emotion
+        # Return all frames (not just middle frame)
+        # The collate function will handle averaging or selection
+        return frame_images, emotion
 
 
-def collate_pil_images(batch):
+def collate_pil_images(batch, use_multiframe: bool = True):
     """
-    Custom collate function that handles PIL Images.
+    Custom collate function that handles PIL Images and multiple frames.
     
-    Returns images as a list (not tensor) so CLIP processor can handle them.
+    Each item in batch is (frames_list, emotion) where frames_list is a list of PIL Images.
+    
+    If use_multiframe=True: Returns all frames for each video (for multi-frame processing)
+    If use_multiframe=False: Returns middle frame only (faster, single-frame processing)
+    
+    Returns:
+        - images: List of lists of PIL Images (one list per video) OR list of PIL Images
+        - emotions: List of emotion labels (repeated for each frame if use_multiframe)
     """
-    images, emotions = zip(*batch)
-    # Keep images as list of PIL Images (CLIP processor expects this)
-    # Convert emotions to list
-    return list(images), list(emotions)
+    frames_lists, emotions = zip(*batch)
+    
+    if use_multiframe:
+        # Return all frames for each video
+        # This allows averaging features across frames during training
+        all_images = []
+        all_emotions = []
+        for frames_list, emotion in zip(frames_lists, emotions):
+            if isinstance(frames_list, list):
+                all_images.extend(frames_list)
+                all_emotions.extend([emotion] * len(frames_list))
+            elif isinstance(frames_list, Image.Image):
+                all_images.append(frames_list)
+                all_emotions.append(emotion)
+        return all_images, all_emotions
+    else:
+        # Use middle frame only (faster, backward compatible)
+        images = []
+        for frames_list in frames_lists:
+            if isinstance(frames_list, list) and len(frames_list) > 0:
+                images.append(frames_list[len(frames_list) // 2])
+            elif isinstance(frames_list, Image.Image):
+                images.append(frames_list)
+            else:
+                images.append(frames_list[0] if len(frames_list) > 0 else None)
+        images = [img for img in images if img is not None]
+        return images, list(emotions)
 
 
 def finetune_clip(
@@ -109,6 +137,7 @@ def finetune_clip(
     learning_rate=1e-5,
     device="cpu",
     save_every=2,
+    use_multiframe=True,
 ):
     """
     Fine-tune CLIP on emotion recognition.
@@ -135,12 +164,16 @@ def finetune_clip(
     
     # Setup training
     optimizer = torch.optim.AdamW(model.parameters(), lr=learning_rate)
+    
+    # Create collate function with multi-frame setting
+    collate_fn = lambda batch: collate_pil_images(batch, use_multiframe=use_multiframe)
+    
     train_loader = DataLoader(
         train_dataset,
         batch_size=batch_size,
         shuffle=True,
         num_workers=0,  # Set to 0 to avoid multiprocessing issues
-        collate_fn=collate_pil_images,  # Custom collate for PIL Images
+        collate_fn=collate_fn,  # Custom collate for PIL Images
     )
     
     best_val_acc = 0.0
@@ -175,6 +208,38 @@ def finetune_clip(
             image_features = model.get_image_features(**image_inputs)
             text_features = model.get_text_features(**text_inputs)
             
+            # If using multi-frame, average features for frames from the same video
+            if use_multiframe and len(images) > len(set(emotion_labels)):
+                # Group frames by emotion (assuming same emotion = same video)
+                # Average features for frames with the same emotion in this batch
+                unique_emotions = list(set(emotion_labels))
+                emotion_to_indices = {emotion: [] for emotion in unique_emotions}
+                for idx, emotion in enumerate(emotion_labels):
+                    emotion_to_indices[emotion].append(idx)
+                
+                # Average features for each unique emotion
+                averaged_features = []
+                averaged_labels = []
+                for emotion in unique_emotions:
+                    indices = emotion_to_indices[emotion]
+                    if len(indices) > 0:
+                        # Average the features for frames from the same video
+                        video_features = image_features[indices].mean(dim=0, keepdim=True)
+                        averaged_features.append(video_features)
+                        averaged_labels.append(emotion)
+                
+                if len(averaged_features) > 0:
+                    image_features = torch.cat(averaged_features, dim=0)
+                    emotion_labels = averaged_labels
+                    # Re-process text for unique emotions only
+                    text_inputs = processor(
+                        text=emotion_labels,
+                        return_tensors="pt",
+                        padding=True,
+                        truncation=True,
+                    ).to(device)
+                    text_features = model.get_text_features(**text_inputs)
+            
             # Normalize
             image_features = F.normalize(image_features, dim=-1)
             text_features = F.normalize(text_features, dim=-1)
@@ -184,7 +249,7 @@ def finetune_clip(
             logits_per_text = logits_per_image.t()
             
             # Labels: diagonal (image i matches text i)
-            labels = torch.arange(len(images)).to(device)
+            labels = torch.arange(len(image_features)).to(device)
             
             # Contrastive loss
             loss_img = nn.CrossEntropyLoss()(logits_per_image, labels)
@@ -203,7 +268,7 @@ def finetune_clip(
         print(f"Average Loss: {avg_loss:.4f}")
         
         # Validate
-        val_acc = validate(model, val_dataset, processor, device, batch_size)
+        val_acc = validate(model, val_dataset, processor, device, batch_size, use_multiframe)
         print(f"Validation Accuracy: {val_acc:.2%}")
         
         # Save checkpoint
@@ -227,18 +292,21 @@ def finetune_clip(
     return model
 
 
-def validate(model, val_dataset, processor, device, batch_size=32):
+def validate(model, val_dataset, processor, device, batch_size=32, use_multiframe=True):
     """Validate fine-tuned model."""
     model.eval()
     correct = 0
     total = 0
+    
+    # Create collate function with multi-frame setting
+    collate_fn = lambda batch: collate_pil_images(batch, use_multiframe=use_multiframe)
     
     val_loader = DataLoader(
         val_dataset, 
         batch_size=batch_size, 
         shuffle=False, 
         num_workers=0,
-        collate_fn=collate_pil_images,  # Custom collate for PIL Images
+        collate_fn=collate_fn,  # Custom collate for PIL Images
     )
     
     with torch.no_grad():
@@ -263,6 +331,36 @@ def validate(model, val_dataset, processor, device, batch_size=32):
             image_features = model.get_image_features(**image_inputs)
             text_features = model.get_text_features(**text_inputs)
             
+            # If using multi-frame, average features for frames from the same video
+            if use_multiframe and len(images) > len(set(emotion_labels)):
+                # Group frames by emotion (assuming same emotion = same video)
+                unique_emotions = list(set(emotion_labels))
+                emotion_to_indices = {emotion: [] for emotion in unique_emotions}
+                for idx, emotion in enumerate(emotion_labels):
+                    emotion_to_indices[emotion].append(idx)
+                
+                # Average features for each unique emotion
+                averaged_features = []
+                averaged_labels = []
+                for emotion in unique_emotions:
+                    indices = emotion_to_indices[emotion]
+                    if len(indices) > 0:
+                        video_features = image_features[indices].mean(dim=0, keepdim=True)
+                        averaged_features.append(video_features)
+                        averaged_labels.append(emotion)
+                
+                if len(averaged_features) > 0:
+                    image_features = torch.cat(averaged_features, dim=0)
+                    emotion_labels = averaged_labels
+                    # Re-process text for unique emotions only
+                    text_inputs = processor(
+                        text=emotion_labels,
+                        return_tensors="pt",
+                        padding=True,
+                        truncation=True,
+                    ).to(device)
+                    text_features = model.get_text_features(**text_inputs)
+            
             # Normalize
             image_features = F.normalize(image_features, dim=-1)
             text_features = F.normalize(text_features, dim=-1)
@@ -272,10 +370,10 @@ def validate(model, val_dataset, processor, device, batch_size=32):
             
             # Predictions: argmax over text labels
             predictions = logits.argmax(dim=1)
-            labels = torch.arange(len(images)).to(device)
+            labels = torch.arange(len(image_features)).to(device)
             
             correct += (predictions == labels).sum().item()
-            total += len(images)
+            total += len(image_features)
     
     return correct / total if total > 0 else 0.0
 
@@ -324,9 +422,14 @@ Examples:
     parser.add_argument('--learning_rate', type=float, default=1e-5, help='Learning rate')
     parser.add_argument('--device', type=str, default='cpu', help='Device (cpu, cuda, mps)')
     parser.add_argument('--num_frames', type=int, default=8, help='Frames per video (for CAM dataset)')
+    parser.add_argument('--use_multiframe', action='store_true', default=True, help='Use multiple frames per video (average features)')
+    parser.add_argument('--single_frame', action='store_true', help='Use only middle frame (faster, disables multi-frame)')
     parser.add_argument('--seed', type=int, default=42, help='Random seed')
     
     args = parser.parse_args()
+    
+    # Handle single_frame flag (overrides use_multiframe)
+    use_multiframe = args.use_multiframe and not args.single_frame
     
     # Validate arguments
     dataset_count = sum([
@@ -374,6 +477,7 @@ Examples:
     print(f"Val samples: {len(val_dataset)}")
     
     # Fine-tune
+    print(f"\nMulti-frame processing: {'Enabled' if use_multiframe else 'Disabled (using middle frame only)'}")
     model = finetune_clip(
         train_dataset=train_dataset,
         val_dataset=val_dataset,
@@ -383,6 +487,7 @@ Examples:
         batch_size=args.batch_size,
         learning_rate=args.learning_rate,
         device=args.device,
+        use_multiframe=use_multiframe,
     )
     
     print(f"\nFine-tuning complete! Model saved to {args.output_dir}")

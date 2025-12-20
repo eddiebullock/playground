@@ -238,3 +238,4 @@ python experiments/cam_human_like/run_experiment.py \
 
 The fine-tuning approach is the most reliable path to 60-75% accuracy, as it directly addresses the domain gap between general vision-language models and emotion recognition.
 
+
