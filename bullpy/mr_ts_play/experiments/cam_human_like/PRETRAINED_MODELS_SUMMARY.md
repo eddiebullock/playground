@@ -89,3 +89,6 @@ This should get you much closer to human performance (88% control, 70% AS).
 **Next step**: Run the fine-tuning script on your CAM train split to reach 65-75% accuracy!
 
 
+
+
+

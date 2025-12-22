@@ -66,6 +66,7 @@ def evaluate_finetuned_model(
     model_path: str,
     trial_definitions_file: str,
     data_root: str,
+    dataset_type: str = "cam",
     splits_dir: str = None,
     split_name: str = "test",
     device: str = "cpu",
@@ -95,14 +96,69 @@ def evaluate_finetuned_model(
     print()
     
     # Load dataset
-    print("Loading CAM test dataset...")
-    dataset = CAMDataset(
-        data_root=data_root,
-        trial_definitions_file=trial_definitions_file,
-        splits_dir=splits_dir,
-        split_name=split_name,
-        use_actor_filtering=False,  # Use all trials to match original CAM
-    )
+    if dataset_type == 'cam':
+        print("Loading CAM test dataset...")
+        dataset = CAMDataset(
+            data_root=data_root,
+            trial_definitions_file=trial_definitions_file,
+            splits_dir=splits_dir,
+            split_name=split_name,
+            use_actor_filtering=False,  # Use all trials to match original CAM
+        )
+    else:
+        # EU-Emotion: load directly from trial definitions
+        print("Loading EU-Emotion test dataset...")
+        from experiments.cam_human_like.training.task_specific_dataset import TaskSpecificTrialDataset
+        dataset = TaskSpecificTrialDataset(
+            data_root=data_root,
+            trial_definitions_file=trial_definitions_file,
+            num_frames=num_frames,
+        )
+        # Convert to CAMDataset-like interface for compatibility
+        # Need to get actual stimulus paths from trial definitions
+        import json
+        with open(trial_definitions_file, 'r') as f:
+            trial_defs = json.load(f)
+        
+        # Create mapping from trial_id to stimulus_path
+        trial_id_to_path = {t['trial_id']: t['stimulus_path'] for t in trial_defs['trials']}
+        
+        class EUEmotionDatasetWrapper:
+            def __init__(self, task_dataset, trial_id_to_path, data_root):
+                self.trials = []
+                from pathlib import Path
+                for i in range(len(task_dataset)):
+                    item = task_dataset[i]
+                    trial_id = item['trial_id']
+                    
+                    # Get actual stimulus path from trial definitions
+                    stimulus_path_rel = trial_id_to_path.get(trial_id, '')
+                    if stimulus_path_rel:
+                        # Resolve to absolute path
+                        if Path(stimulus_path_rel).is_absolute():
+                            stimulus_path = stimulus_path_rel
+                        else:
+                            stimulus_path = str(Path(data_root) / stimulus_path_rel)
+                    else:
+                        stimulus_path = ''
+                    
+                    from experiments.cam_human_like.dataset import CAMTrial
+                    trial = CAMTrial(
+                        trial_id=trial_id,
+                        stimulus_path=stimulus_path,  # Use actual path from trial definitions
+                        modality='face',  # EU-Emotion default
+                        correct_label=item['candidate_labels'][item['correct_idx']],
+                        candidate_labels=item['candidate_labels'],
+                        correct_idx=item['correct_idx'],
+                        actor='unknown',
+                        scenario_id='',
+                        concept=item['candidate_labels'][item['correct_idx']],
+                    )
+                    self.trials.append(trial)
+        
+        dataset_wrapper = EUEmotionDatasetWrapper(dataset, trial_id_to_path, data_root)
+        dataset = dataset_wrapper
+    
     print(f"Loaded {len(dataset.trials)} trials")
     print()
     
@@ -211,11 +267,12 @@ def evaluate_finetuned_model(
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Evaluate fine-tuned CLIP model on CAM test set")
+    parser = argparse.ArgumentParser(description="Evaluate fine-tuned CLIP model on CAM or EU-Emotion test set")
     parser.add_argument('--model_path', type=str, required=True, help='Path to fine-tuned model directory')
-    parser.add_argument('--trial_definitions', type=str, default='data/cam_trial_definitions_20concepts.json', help='Path to CAM trial definitions')
-    parser.add_argument('--data_root', type=str, required=True, help='Root directory of CAM stimuli')
-    parser.add_argument('--splits_dir', type=str, help='Directory containing train/val/test splits (optional)')
+    parser.add_argument('--trial_definitions', type=str, default='data/cam_trial_definitions_20concepts.json', help='Path to trial definitions JSON (CAM or EU-Emotion)')
+    parser.add_argument('--data_root', type=str, required=True, help='Root directory of video stimuli')
+    parser.add_argument('--dataset_type', type=str, choices=['cam', 'eu_emotion'], default='cam', help='Dataset type (default: cam)')
+    parser.add_argument('--splits_dir', type=str, help='Directory containing train/val/test splits (CAM only, optional)')
     parser.add_argument('--split', type=str, default='test', choices=['train', 'val', 'test'], help='Which split to evaluate on')
     parser.add_argument('--device', type=str, default='cpu', help='Device (cpu, cuda, mps)')
     parser.add_argument('--num_frames', type=int, default=8, help='Number of frames per video')
@@ -230,6 +287,7 @@ def main():
         model_path=args.model_path,
         trial_definitions_file=args.trial_definitions,
         data_root=args.data_root,
+        dataset_type=args.dataset_type,
         splits_dir=args.splits_dir,
         split_name=args.split,
         device=args.device,

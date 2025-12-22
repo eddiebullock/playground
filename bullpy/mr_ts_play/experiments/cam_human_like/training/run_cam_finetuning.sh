@@ -48,3 +48,6 @@ echo "To use the fine-tuned model, update configs/cam_config.yaml:"
 echo "  model.name: \"$OUTPUT_DIR/best_model\""
 
 
+
+
+

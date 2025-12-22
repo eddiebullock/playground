@@ -24,3 +24,6 @@ echo "To see live progress, check the rsync terminal window"
 echo "or press Enter in that window to see if it updates"
 
 
+
+
+

@@ -45,6 +45,7 @@ from src.data.dataset import MindreadingDataset
 sys.path.insert(0, str(Path(__file__).parent))
 from fer2013_dataset import FER2013Dataset
 from eu_emotion_dataset import EUEmotionDataset
+from task_specific_dataset import TaskSpecificTrialDataset, collate_trial_batch
 
 
 class EmotionCLIPDataset(Dataset):
@@ -292,6 +293,214 @@ def finetune_clip(
     return model
 
 
+def finetune_clip_task_specific(
+    train_dataset,
+    val_dataset,
+    model_name="openai/clip-vit-base-patch32",
+    output_dir="models/clip_emotion_finetuned",
+    num_epochs=10,
+    batch_size=8,
+    learning_rate=1e-5,
+    device="cpu",
+    num_frames=8,
+):
+    """
+    Fine-tune CLIP for task-specific 4-option forced-choice emotion recognition.
+    
+    This function trains CLIP specifically for the 4-option forced-choice task:
+    - Each video is paired with 4 candidate labels (1 correct + 3 foils)
+    - Loss is cross-entropy over the 4 options (task-specific)
+    - Multi-frame processing: extracts multiple frames, averages features
+    
+    Args:
+        train_dataset: TaskSpecificTrialDataset returning (frames, candidate_labels, correct_idx)
+        val_dataset: Validation dataset (same format)
+        model_name: CLIP model to fine-tune
+        output_dir: Directory to save fine-tuned model
+        num_epochs: Number of training epochs
+        batch_size: Batch size
+        learning_rate: Learning rate
+        device: Device to train on
+        num_frames: Number of frames per video
+    """
+    output_dir = Path(output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    
+    # Load CLIP
+    print(f"Loading CLIP model: {model_name}...")
+    model = CLIPModel.from_pretrained(model_name)
+    processor = CLIPProcessor.from_pretrained(model_name)
+    model = model.to(device)
+    
+    # Setup training
+    optimizer = torch.optim.AdamW(model.parameters(), lr=learning_rate)
+    
+    train_loader = DataLoader(
+        train_dataset,
+        batch_size=batch_size,
+        shuffle=True,
+        num_workers=0,
+        collate_fn=collate_trial_batch,
+    )
+    
+    val_loader = DataLoader(
+        val_dataset,
+        batch_size=batch_size,
+        shuffle=False,
+        num_workers=0,
+        collate_fn=collate_trial_batch,
+    )
+    
+    best_val_acc = 0.0
+    
+    # Training loop
+    for epoch in range(num_epochs):
+        model.train()
+        total_loss = 0
+        num_batches = 0
+        
+        print(f"\nEpoch {epoch+1}/{num_epochs}")
+        for batch_idx, (frames_batch, candidate_labels_batch, correct_indices) in enumerate(tqdm(train_loader, desc="Training")):
+            # frames_batch: List[List[PIL.Image]] - batch_size x num_frames
+            # candidate_labels_batch: List[List[str]] - batch_size x 4
+            # correct_indices: Tensor - batch_size
+            
+            batch_loss = 0
+            batch_size_actual = len(frames_batch)
+            
+            # Process each video in the batch
+            for video_idx in range(batch_size_actual):
+                video_frames = frames_batch[video_idx]  # List of num_frames PIL Images
+                candidate_labels = candidate_labels_batch[video_idx]  # List of 4 strings
+                correct_idx = correct_indices[video_idx].item()  # Integer 0-3
+                
+                # Process all frames
+                image_inputs = processor(images=video_frames, return_tensors="pt").to(device)
+                
+                # Process all 4 candidate labels with prompt templates
+                # Better prompts help CLIP understand the emotion recognition task
+                # Use prompt template: "a photo of a person feeling [emotion]"
+                prompted_labels = [f"a photo of a person feeling {label}" for label in candidate_labels]
+                
+                text_inputs = processor(
+                    text=prompted_labels,
+                    return_tensors="pt",
+                    padding=True,
+                    truncation=True,
+                ).to(device)
+                
+                # Get embeddings
+                image_features = model.get_image_features(**image_inputs)  # (num_frames, hidden_dim)
+                text_features = model.get_text_features(**text_inputs)  # (4, hidden_dim)
+                
+                # Aggregate video features: average across frames (multi-frame architecture)
+                video_features = image_features.mean(dim=0, keepdim=True)  # (1, hidden_dim)
+                
+                # Normalize
+                video_features = F.normalize(video_features, dim=-1)
+                text_features = F.normalize(text_features, dim=-1)
+                
+                # Compute similarity: video_features @ text_features.t() -> (1, 4)
+                logits = video_features @ text_features.t()  # (1, 4)
+                
+                # Cross-entropy loss over 4 options (task-specific)
+                target = torch.tensor([correct_idx], dtype=torch.long).to(device)
+                loss = nn.CrossEntropyLoss()(logits, target)
+                
+                batch_loss += loss
+            
+            # Average loss over batch
+            avg_batch_loss = batch_loss / batch_size_actual
+            
+            # Backward
+            optimizer.zero_grad()
+            avg_batch_loss.backward()
+            optimizer.step()
+            
+            total_loss += avg_batch_loss.item()
+            num_batches += 1
+        
+        avg_loss = total_loss / num_batches if num_batches > 0 else 0.0
+        print(f"Average Loss: {avg_loss:.4f}")
+        
+        # Validate
+        val_acc = validate_task_specific(model, val_loader, processor, device)
+        print(f"Validation Accuracy: {val_acc:.2%}")
+        
+        # Save checkpoint
+        if (epoch + 1) % 1 == 0 or val_acc > best_val_acc:
+            checkpoint_dir = output_dir / f"epoch_{epoch+1}"
+            checkpoint_dir.mkdir(exist_ok=True)
+            model.save_pretrained(str(checkpoint_dir))
+            processor.save_pretrained(str(checkpoint_dir))
+            print(f"Saved checkpoint to {checkpoint_dir}")
+            
+            if val_acc > best_val_acc:
+                best_val_acc = val_acc
+                # Save as best model
+                best_dir = output_dir / "best_model"
+                best_dir.mkdir(exist_ok=True)
+                model.save_pretrained(str(best_dir))
+                processor.save_pretrained(str(best_dir))
+                print(f"New best model! Saved to {best_dir}")
+    
+    print(f"\nTraining complete! Best validation accuracy: {best_val_acc:.2%}")
+    return model
+
+
+def validate_task_specific(model, val_loader, processor, device):
+    """Validate task-specific fine-tuned model."""
+    model.eval()
+    correct = 0
+    total = 0
+    
+    with torch.no_grad():
+        for frames_batch, candidate_labels_batch, correct_indices in tqdm(val_loader, desc="Validating"):
+            batch_size_actual = len(frames_batch)
+            
+            for video_idx in range(batch_size_actual):
+                video_frames = frames_batch[video_idx]
+                candidate_labels = candidate_labels_batch[video_idx]
+                correct_idx = correct_indices[video_idx].item()
+                
+                # Process
+                image_inputs = processor(images=video_frames, return_tensors="pt").to(device)
+                
+                # Use prompt templates for better text understanding
+                # Use prompt template: "a photo of a person feeling [emotion]"
+                prompted_labels = [f"a photo of a person feeling {label}" for label in candidate_labels]
+                
+                text_inputs = processor(
+                    text=prompted_labels,
+                    return_tensors="pt",
+                    padding=True,
+                    truncation=True,
+                ).to(device)
+                
+                # Get embeddings
+                image_features = model.get_image_features(**image_inputs)
+                text_features = model.get_text_features(**text_inputs)
+                
+                # Aggregate video features
+                video_features = image_features.mean(dim=0, keepdim=True)
+                
+                # Normalize
+                video_features = F.normalize(video_features, dim=-1)
+                text_features = F.normalize(text_features, dim=-1)
+                
+                # Compute similarity
+                logits = video_features @ text_features.t()  # (1, 4)
+                
+                # Prediction: argmax over 4 options
+                predicted_idx = logits.argmax(dim=1).item()
+                
+                if predicted_idx == correct_idx:
+                    correct += 1
+                total += 1
+    
+    return correct / total if total > 0 else 0.0
+
+
 def validate(model, val_dataset, processor, device, batch_size=32, use_multiframe=True):
     """Validate fine-tuned model."""
     model.eval()
@@ -415,6 +624,10 @@ Examples:
     parser.add_argument('--fer2013_dir', type=str, help='Path to FER2013 dataset directory (alternative to train_data)')
     parser.add_argument('--eu_emotion_dir', type=str, help='Path to EU-Emotion dataset directory (alternative to train_data)')
     parser.add_argument('--eu_emotion_modality', type=str, default='face', choices=['face', 'voice', 'body', 'all'], help='Modality to use for EU-Emotion (default: face)')
+    parser.add_argument('--dataset_type', type=str, choices=['cam', 'eu_emotion'], help='Dataset type for task-specific training (requires --train_trials and --val_trials)')
+    parser.add_argument('--train_trials', type=str, help='Path to train trial definitions JSON (for task-specific training)')
+    parser.add_argument('--val_trials', type=str, help='Path to validation trial definitions JSON (for task-specific training)')
+    parser.add_argument('--task_specific', action='store_true', help='Use task-specific 4-option forced-choice training')
     parser.add_argument('--output_dir', type=str, default='models/clip_emotion_finetuned', help='Output directory')
     parser.add_argument('--model_name', type=str, default='openai/clip-vit-base-patch32', help='CLIP model to fine-tune (or path to previously fine-tuned model)')
     parser.add_argument('--num_epochs', type=int, default=10, help='Number of epochs')
@@ -432,26 +645,74 @@ Examples:
     use_multiframe = args.use_multiframe and not args.single_frame
     
     # Validate arguments
-    dataset_count = sum([
-        bool(args.train_data),
-        bool(args.fer2013_dir),
-        bool(args.eu_emotion_dir),
-    ])
-    
-    if dataset_count == 0:
-        parser.error("Must provide one of: --train_data (CAM), --fer2013_dir (FER2013), or --eu_emotion_dir (EU-Emotion)")
-    
-    if dataset_count > 1:
-        parser.error("Can only specify one dataset: --train_data, --fer2013_dir, or --eu_emotion_dir")
-    
-    if args.train_data and not args.data_root:
-        parser.error("--data_root is required when using --train_data")
+    if args.task_specific:
+        # Task-specific training requires trial definitions
+        if not args.train_trials or not args.val_trials:
+            parser.error("--train_trials and --val_trials are required for task-specific training")
+        if not args.data_root:
+            parser.error("--data_root is required for task-specific training")
+        if not args.dataset_type:
+            parser.error("--dataset_type is required for task-specific training")
+    else:
+        # Standard training
+        dataset_count = sum([
+            bool(args.train_data),
+            bool(args.fer2013_dir),
+            bool(args.eu_emotion_dir),
+        ])
+        
+        if dataset_count == 0:
+            parser.error("Must provide one of: --train_data (CAM), --fer2013_dir (FER2013), or --eu_emotion_dir (EU-Emotion)")
+        
+        if dataset_count > 1:
+            parser.error("Can only specify one dataset: --train_data, --fer2013_dir, or --eu_emotion_dir")
+        
+        if args.train_data and not args.data_root:
+            parser.error("--data_root is required when using --train_data")
     
     torch.manual_seed(args.seed)
     np.random.seed(args.seed)
     
     # Create datasets
     print("Loading datasets...")
+    if args.task_specific:
+        # Task-specific training with trial definitions
+        print(f"Using task-specific 4-option forced-choice training")
+        print(f"Dataset type: {args.dataset_type}")
+        print(f"Train trials: {args.train_trials}")
+        print(f"Val trials: {args.val_trials}")
+        
+        train_dataset = TaskSpecificTrialDataset(
+            data_root=args.data_root,
+            trial_definitions_file=args.train_trials,
+            num_frames=args.num_frames,
+        )
+        val_dataset = TaskSpecificTrialDataset(
+            data_root=args.data_root,
+            trial_definitions_file=args.val_trials,
+            num_frames=args.num_frames,
+        )
+        
+        print(f"Train samples: {len(train_dataset)}")
+        print(f"Val samples: {len(val_dataset)}")
+        
+        # Fine-tune with task-specific method
+        print(f"\nMulti-frame processing: Enabled ({args.num_frames} frames per video)")
+        model = finetune_clip_task_specific(
+            train_dataset=train_dataset,
+            val_dataset=val_dataset,
+            model_name=args.model_name,
+            output_dir=args.output_dir,
+            num_epochs=args.num_epochs,
+            batch_size=args.batch_size,
+            learning_rate=args.learning_rate,
+            device=args.device,
+            num_frames=args.num_frames,
+        )
+        
+        print(f"\nFine-tuning complete! Model saved to {args.output_dir}")
+        return
+    
     if args.eu_emotion_dir:
         # EU-Emotion dataset (external, 20 emotions - best match for CAM)
         print("Using EU-Emotion dataset (external emotion recognition dataset)")

@@ -39,3 +39,6 @@ echo "  du -sh ~/data/EU_emotions"
 echo "  find ~/data/EU_emotions -type f | wc -l"
 
 
+
+
+
