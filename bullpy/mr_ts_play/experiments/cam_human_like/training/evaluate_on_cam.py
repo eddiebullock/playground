@@ -14,11 +14,14 @@ import json
 # Add parent directory to path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
 
-from experiments.cam_human_like.run_experiment import main as run_experiment_main
-from experiments.cam_human_like.models.clip_wrapper import CLIPWrapper
 from experiments.cam_human_like.dataset import CAMDataset
-from experiments.cam_human_like.trials.forced_choice import ForcedChoiceTrial
 import torch
+import torch.nn.functional as F
+from transformers import CLIPModel, CLIPProcessor
+from tqdm import tqdm
+import cv2
+import numpy as np
+from PIL import Image
 
 
 def compute_metrics(predictions, trials):
@@ -74,22 +77,27 @@ def evaluate_finetuned_model(
     use_multiframe: bool = True,
 ):
     """
-    Evaluate a fine-tuned CLIP model on CAM test set.
+    Evaluate a fine-tuned CLIP model on CAM or EU-Emotion test set.
     
     Args:
         model_path: Path to fine-tuned model (directory containing config.json, pytorch_model.bin)
-        trial_definitions_file: Path to CAM trial definitions JSON
-        data_root: Root directory of CAM stimuli
-        splits_dir: Directory containing train/val/test splits (optional)
+        trial_definitions_file: Path to trial definitions JSON (CAM or EU-Emotion)
+        data_root: Root directory of video stimuli
+        dataset_type: "cam" or "eu_emotion"
+        splits_dir: Directory containing train/val/test splits (CAM only, optional)
         split_name: Which split to evaluate on ("test" or "val")
         device: Device to run on
         num_frames: Number of frames to extract per video
         use_multiframe: Whether to use multiple frames (average features)
     """
     print("=" * 60)
-    print("Evaluating Fine-Tuned Model on CAM Test Set")
+    if dataset_type == 'cam':
+        print("Evaluating Fine-Tuned Model on CAM Test Set")
+    else:
+        print("Evaluating Fine-Tuned Model on EU-Emotion Test Set")
     print("=" * 60)
     print(f"Model: {model_path}")
+    print(f"Dataset: {dataset_type.upper()}")
     print(f"Split: {split_name}")
     print(f"Device: {device}")
     print(f"Multi-frame: {use_multiframe}")
@@ -116,7 +124,6 @@ def evaluate_finetuned_model(
         )
         # Convert to CAMDataset-like interface for compatibility
         # Need to get actual stimulus paths from trial definitions
-        import json
         with open(trial_definitions_file, 'r') as f:
             trial_defs = json.load(f)
         
@@ -164,29 +171,101 @@ def evaluate_finetuned_model(
     
     # Load fine-tuned model
     print(f"Loading fine-tuned model from: {model_path}")
-    try:
-        model = CLIPWrapper(
-            model_name=model_path,
-            device=device,
-            num_frames=num_frames,
-            aggregation="mean" if use_multiframe else "middle",
-        )
-        print("✅ Model loaded successfully")
-    except Exception as e:
-        print(f"❌ Error loading model: {e}")
-        print("\nTrying alternative loading method...")
-        # Try loading as HuggingFace model directly
-        from transformers import CLIPModel, CLIPProcessor
-        model = CLIPModel.from_pretrained(model_path)
-        processor = CLIPProcessor.from_pretrained(model_path)
-        # Wrap in CLIPWrapper
-        model = CLIPWrapper(
-            model_name=model_path,
-            device=device,
-            num_frames=num_frames,
-            aggregation="mean" if use_multiframe else "middle",
-        )
+    model = CLIPModel.from_pretrained(model_path)
+    processor = CLIPProcessor.from_pretrained(model_path)
+    model = model.to(device)
+    model.eval()
+    print("✅ Model loaded successfully")
     print()
+    
+    def load_video_frames(video_path, num_frames=8):
+        """Extract frames from video."""
+        try:
+            # Check if file exists first
+            if not Path(video_path).exists():
+                raise FileNotFoundError(f"Video file does not exist: {video_path}")
+            
+            # Check file permissions
+            if not Path(video_path).is_file():
+                raise ValueError(f"Path is not a file: {video_path}")
+            
+            # Check file size - videos smaller than 50KB are likely corrupted/incomplete
+            import os
+            file_size = os.path.getsize(video_path)
+            if file_size < 50 * 1024:  # 50KB threshold
+                raise ValueError(f"Video file too small (likely corrupted): {video_path} (size: {file_size:,} bytes, expected >50KB)")
+            
+            # Try to open with OpenCV
+            cap = cv2.VideoCapture(str(video_path))
+            if not cap.isOpened():
+                # Provide more diagnostic info
+                raise ValueError(f"Could not open video: {video_path} (file exists: True, size: {file_size:,} bytes)")
+            
+            total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+            if total_frames == 0:
+                raise ValueError(f"Video has no frames: {video_path}")
+            
+            frame_indices = np.linspace(0, total_frames - 1, num_frames, dtype=int)
+            frames = []
+            for idx in frame_indices:
+                cap.set(cv2.CAP_PROP_POS_FRAMES, idx)
+                ret, frame = cap.read()
+                if ret:
+                    frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+                    frames.append(Image.fromarray(frame))
+                else:
+                    if len(frames) > 0:
+                        frames.append(frames[-1])
+                    else:
+                        frames.append(Image.new('RGB', (224, 224), (0, 0, 0)))
+            cap.release()
+            
+            while len(frames) < num_frames:
+                frames.append(frames[-1] if frames else Image.new('RGB', (224, 224), (0, 0, 0)))
+            
+            return frames[:num_frames]
+        except Exception as e:
+            raise ValueError(f"Error loading video {video_path}: {e}")
+    
+    def score_labels(model, processor, video_path, candidate_labels, device, num_frames=8, use_multiframe=True):
+        """Score candidate labels for a video."""
+        # Load frames
+        video_frames = load_video_frames(video_path, num_frames if use_multiframe else 1)
+        
+        # Process images
+        image_inputs = processor(images=video_frames, return_tensors="pt").to(device)
+        
+        # Use prompt templates
+        prompted_labels = [f"a photo of a person feeling {label}" for label in candidate_labels]
+        text_inputs = processor(
+            text=prompted_labels,
+            return_tensors="pt",
+            padding=True,
+            truncation=True,
+        ).to(device)
+        
+        # Get embeddings
+        with torch.no_grad():
+            image_features = model.get_image_features(**image_inputs)
+            text_features = model.get_text_features(**text_inputs)
+            
+            # Aggregate video features (mean pooling if multi-frame)
+            if use_multiframe and len(video_frames) > 1:
+                video_features = image_features.mean(dim=0, keepdim=True)
+            else:
+                video_features = image_features[0:1]  # Use first frame
+            
+            # Normalize
+            video_features = F.normalize(video_features, dim=-1)
+            text_features = F.normalize(text_features, dim=-1)
+            
+            # Compute similarity
+            logits = video_features @ text_features.t()  # (1, num_labels)
+            
+            # Convert to scores dictionary
+            scores = {label: logits[0][i].item() for i, label in enumerate(candidate_labels)}
+        
+        return scores
     
     # Run evaluation
     print("Running evaluation...")
@@ -194,17 +273,55 @@ def evaluate_finetuned_model(
     correct_labels = []
     skipped_trials = []
     
-    for trial in dataset.trials:
+    for trial in tqdm(dataset.trials, desc="Evaluating"):
         try:
+            # Resolve video path - handle multiple path formats
+            video_path = None
+            stimulus_path = trial.stimulus_path
+            
+            # Strategy 1: Use path as-is if it exists
+            if Path(stimulus_path).exists():
+                video_path = Path(stimulus_path)
+            # Strategy 2: If relative, try joining with data_root
+            elif not Path(stimulus_path).is_absolute():
+                candidate = Path(data_root) / stimulus_path
+                if candidate.exists():
+                    video_path = candidate
+            # Strategy 3: If absolute but doesn't exist, try relative to data_root
+            elif Path(stimulus_path).is_absolute():
+                # Extract relative part and try with data_root
+                try:
+                    # If path contains data_root, try extracting relative part
+                    if str(data_root) in stimulus_path:
+                        rel_part = stimulus_path.split(str(data_root))[-1].lstrip('/')
+                        candidate = Path(data_root) / rel_part
+                        if candidate.exists():
+                            video_path = candidate
+                except:
+                    pass
+            
+            # Strategy 4: Search by filename as last resort
+            if video_path is None or not video_path.exists():
+                filename = Path(stimulus_path).name
+                found_files = list(Path(data_root).rglob(filename))
+                if found_files:
+                    video_path = found_files[0]
+                else:
+                    raise FileNotFoundError(f"Video not found: {trial.stimulus_path} (tried: {stimulus_path})")
+            
             # Score labels
-            output = model.score_labels(
-                stimulus_path=trial.stimulus_path,
+            scores = score_labels(
+                model=model,
+                processor=processor,
+                video_path=video_path,
                 candidate_labels=trial.candidate_labels,
-                modality=trial.modality,
+                device=device,
+                num_frames=num_frames,
+                use_multiframe=use_multiframe,
             )
             
             # Get prediction (highest scoring label)
-            predicted_label = max(output.label_scores.items(), key=lambda x: x[1])[0]
+            predicted_label = max(scores.items(), key=lambda x: x[1])[0]
             predicted_idx = trial.candidate_labels.index(predicted_label)
             
             predictions.append({
@@ -214,7 +331,7 @@ def evaluate_finetuned_model(
                 'correct_label': trial.correct_label,
                 'correct_idx': trial.correct_idx,
                 'is_correct': predicted_idx == trial.correct_idx,
-                'scores': output.label_scores,
+                'scores': scores,
             })
             correct_labels.append(trial.correct_label)
         except (ValueError, FileNotFoundError, OSError) as e:
@@ -240,12 +357,19 @@ def evaluate_finetuned_model(
     print(f"Face Accuracy: {metrics.get('face_accuracy', 'N/A')}")
     print(f"Voice Accuracy: {metrics.get('voice_accuracy', 'N/A')}")
     print()
-    print(f"Baseline (zero-shot CLIP): 37.0%")
-    print(f"Improvement: {metrics['accuracy'] - 0.37:.2%} ({((metrics['accuracy'] / 0.37) - 1) * 100:.1f}% relative)")
+    if dataset_type == 'cam':
+        print(f"Baseline (zero-shot CLIP on CAM): 37.0%")
+        print(f"Improvement: {metrics['accuracy'] - 0.37:.2%} ({((metrics['accuracy'] / 0.37) - 1) * 100:.1f}% relative)")
+    else:
+        print(f"Random baseline (4-option forced-choice): 25.0%")
+        print(f"Improvement over random: {metrics['accuracy'] - 0.25:.2%} ({((metrics['accuracy'] / 0.25) - 1) * 100:.1f}% relative)")
     print()
     
     # Save results
-    results_file = Path(model_path).parent / f"cam_evaluation_{split_name}.json"
+    if dataset_type == 'eu_emotion':
+        results_file = Path(model_path).parent / f"eu_emotion_evaluation_{split_name}.json"
+    else:
+        results_file = Path(model_path).parent / f"cam_evaluation_{split_name}.json"
     results = {
         'model_path': model_path,
         'split': split_name,

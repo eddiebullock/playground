@@ -1,19 +1,17 @@
 #!/bin/bash
-#SBATCH --job-name=cam_replication
-#SBATCH --output=cam_replication_%j.out
-#SBATCH --error=cam_replication_%j.err
-#SBATCH --time=12:00:00
+#SBATCH --job-name=eu_emotion_test
+#SBATCH --output=eu_emotion_test_%j.out
+#SBATCH --error=eu_emotion_test_%j.err
+#SBATCH --time=02:00:00
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=32G
 #SBATCH -p icelake
 
-# CSD3 CPU partition configuration (optimized for queue positioning):
-# - Partition: icelake (CPU nodes - you have access to this)
-# - 4 CPUs per task (good balance: not too many = faster queue, sufficient for training)
-# - 32G memory (sufficient for batch processing, not excessive)
-# - 12 hours (reasonable time limit, shorter = faster queue)
+# CSD3 CPU partition configuration (quick test):
+# - 2 hours should be enough for 2 epochs test
+# - Same resource specs as CAM replication for consistency
 
 # Load required modules for CSD3
 module purge
@@ -31,7 +29,6 @@ else
 fi
 
 # Activate virtual environment
-# Try symlink first (points to RDS venv), then check RDS paths directly, then home venv
 if [ -f "${HOME}/mr_ts_play/venv/bin/activate" ]; then
     source ${HOME}/mr_ts_play/venv/bin/activate
 elif [ -f "${HOME}/rds/rds-autism-research-ePtR33Nsgi4/users/eb2007/venv/bin/activate" ]; then
@@ -46,7 +43,7 @@ else
     exit 1
 fi
 
-# Set environment variables for CPU (match number of CPUs requested)
+# Set environment variables for CPU
 export OMP_NUM_THREADS=4
 export MKL_NUM_THREADS=4
 export NUMEXPR_NUM_THREADS=4
@@ -54,5 +51,6 @@ export NUMEXPR_NUM_THREADS=4
 # Change to project directory
 cd ${HOME}/mr_ts_play || exit 1
 
-# Run the CAM replication script
-bash experiments/cam_human_like/training/hpc_cam_replication.sh
+# Run the EU-Emotion test script
+bash experiments/cam_human_like/training/hpc_eu_emotion_test.sh
+
