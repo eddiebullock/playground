@@ -5,14 +5,17 @@
 set -e
 
 # EU Emotions data location - On RDS
-if [ -d "${HOME}/rds/rds-autism-research-ePtR33Nsgi4/data/EU_emotions" ]; then
+# Check multiple possible RDS mount points
+if [ -d "/rds/rds-autism-research-ePtR33Nsgi4/data/EU_emotions" ]; then
+    EU_EMOTIONS_DATA_ROOT="/rds/rds-autism-research-ePtR33Nsgi4/data/EU_emotions"
+elif [ -d "${HOME}/rds/rds-autism-research-ePtR33Nsgi4/data/EU_emotions" ]; then
     EU_EMOTIONS_DATA_ROOT="${HOME}/rds/rds-autism-research-ePtR33Nsgi4/data/EU_emotions"
 elif [ -d "/rds/user/eb2007/rds-autism-research-ePtR33Nsgi4/data/EU_emotions" ]; then
     EU_EMOTIONS_DATA_ROOT="/rds/user/eb2007/rds-autism-research-ePtR33Nsgi4/data/EU_emotions"
 elif [ -d "/rds-d7/project/45718/users/eb2007/data/EU_emotions" ]; then
     EU_EMOTIONS_DATA_ROOT="/rds-d7/project/45718/users/eb2007/data/EU_emotions"
 else
-    EU_EMOTIONS_DATA_ROOT="${HOME}/rds/rds-autism-research-ePtR33Nsgi4/data/EU_emotions"
+    EU_EMOTIONS_DATA_ROOT="/rds/rds-autism-research-ePtR33Nsgi4/data/EU_emotions"
 fi
 
 if [ ! -d "$EU_EMOTIONS_DATA_ROOT" ]; then
@@ -22,11 +25,21 @@ fi
 echo "✅ EU Emotions data location: $EU_EMOTIONS_DATA_ROOT"
 
 OUTPUT_BASE="results"
-NUM_EPOCHS=10  # Full replication: 10 epochs
-BATCH_SIZE=4   # Smaller batch size for CPU
-LEARNING_RATE=1e-5
-NUM_FRAMES=8
-DEVICE="cpu"   # Using CPU nodes
+NUM_EPOCHS=20  # Optimized for GPU: 20 epochs for better convergence
+BATCH_SIZE=16  # Optimized for GPU: larger batch size for stable training
+LEARNING_RATE=5e-5  # Optimized: slightly higher LR for faster convergence
+WEIGHT_DECAY=0.01  # Regularization
+NUM_FRAMES=16  # Optimized: more frames for better temporal coverage
+DEVICE="cuda"  # Using GPU nodes (ukaea-amp partition)
+
+# Check if CUDA is available, fallback to CPU if not
+if ! python3 -c "import torch; print('CUDA available:', torch.cuda.is_available())" 2>/dev/null | grep -q "True"; then
+    echo "⚠️  Warning: CUDA not available, falling back to CPU"
+    DEVICE="cpu"
+    BATCH_SIZE=4  # Smaller batch for CPU
+fi
+
+echo "Configuration: GPU training enabled (10-20x faster than CPU)"
 
 # Project root
 PROJECT_ROOT="${HOME}/mr_ts_play"
@@ -47,10 +60,11 @@ echo "Configuration:"
 echo "  EU Emotions data root: $EU_EMOTIONS_DATA_ROOT"
 echo "  Output directory: $OUTPUT_BASE"
 echo "  Device: $DEVICE"
-echo "  Epochs: $NUM_EPOCHS"
-echo "  Batch size: $BATCH_SIZE"
-echo "  Learning rate: $LEARNING_RATE"
-echo "  Num frames: $NUM_FRAMES"
+echo "  Epochs: $NUM_EPOCHS (optimized for GPU)"
+echo "  Batch size: $BATCH_SIZE (optimized for GPU)"
+echo "  Learning rate: $LEARNING_RATE (optimized)"
+echo "  Weight decay: $WEIGHT_DECAY (regularization)"
+echo "  Num frames: $NUM_FRAMES (optimized for temporal coverage)"
 echo ""
 
 # Create output directories
@@ -92,7 +106,13 @@ echo ""
 echo "============================================================"
 echo "Step 2: Fine-tuning CLIP on EU-Emotion"
 echo "============================================================"
-echo "Note: Running on CPU - this will take approximately 6-10 hours for 10 epochs..."
+if [ "$DEVICE" = "cuda" ]; then
+    echo "Note: Running on GPU - this will take approximately 1-2 hours for 20 epochs..."
+    echo "      (10-20x faster than CPU training)"
+else
+    echo "Note: Running on CPU - this will take approximately 6-10 hours for 20 epochs..."
+    echo "      (Slower than GPU, but will complete successfully)"
+fi
 echo ""
 
 $PYTHON_CMD experiments/cam_human_like/training/finetune_clip_emotions.py \
@@ -105,8 +125,11 @@ $PYTHON_CMD experiments/cam_human_like/training/finetune_clip_emotions.py \
     --num_epochs $NUM_EPOCHS \
     --batch_size $BATCH_SIZE \
     --learning_rate $LEARNING_RATE \
+    --weight_decay $WEIGHT_DECAY \
     --device $DEVICE \
-    --num_frames $NUM_FRAMES
+    --num_frames $NUM_FRAMES \
+    --use_lr_scheduler \
+    --warmup_steps 100
 
 EU_MODEL_PATH="$OUTPUT_BASE/eu_emotion_replication/model_checkpoints/best_model"
 

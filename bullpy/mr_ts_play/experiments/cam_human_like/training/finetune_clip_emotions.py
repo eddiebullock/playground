@@ -301,8 +301,11 @@ def finetune_clip_task_specific(
     num_epochs=10,
     batch_size=8,
     learning_rate=1e-5,
+    weight_decay=0.01,
     device="cpu",
     num_frames=8,
+    use_lr_scheduler=True,
+    warmup_steps=100,
 ):
     """
     Fine-tune CLIP for task-specific 4-option forced-choice emotion recognition.
@@ -333,7 +336,7 @@ def finetune_clip_task_specific(
     model = model.to(device)
     
     # Setup training
-    optimizer = torch.optim.AdamW(model.parameters(), lr=learning_rate)
+    optimizer = torch.optim.AdamW(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
     
     train_loader = DataLoader(
         train_dataset,
@@ -351,6 +354,19 @@ def finetune_clip_task_specific(
         collate_fn=collate_trial_batch,
     )
     
+    # Setup learning rate scheduler with warmup (after DataLoader is created)
+    if use_lr_scheduler:
+        # Calculate total steps
+        total_steps = len(train_loader) * num_epochs
+        # Cosine annealing with warmup
+        from torch.optim.lr_scheduler import CosineAnnealingLR, LinearLR, SequentialLR
+        warmup_scheduler = LinearLR(optimizer, start_factor=0.1, end_factor=1.0, total_iters=warmup_steps)
+        cosine_scheduler = CosineAnnealingLR(optimizer, T_max=total_steps - warmup_steps, eta_min=learning_rate * 0.01)
+        scheduler = SequentialLR(optimizer, schedulers=[warmup_scheduler, cosine_scheduler], milestones=[warmup_steps])
+        print(f"Using LR scheduler: warmup={warmup_steps} steps, then cosine annealing over {total_steps - warmup_steps} steps")
+    else:
+        scheduler = None
+    
     best_val_acc = 0.0
     
     # Training loop
@@ -361,88 +377,117 @@ def finetune_clip_task_specific(
         
         print(f"\nEpoch {epoch+1}/{num_epochs}")
         for batch_idx, (frames_batch, candidate_labels_batch, correct_indices) in enumerate(tqdm(train_loader, desc="Training")):
-            # frames_batch: List[List[PIL.Image]] - batch_size x num_frames
-            # candidate_labels_batch: List[List[str]] - batch_size x 4
-            # correct_indices: Tensor - batch_size
-            
-            batch_loss = 0
-            batch_size_actual = len(frames_batch)
-            
-            # Process each video in the batch
-            for video_idx in range(batch_size_actual):
-                video_frames = frames_batch[video_idx]  # List of num_frames PIL Images
-                candidate_labels = candidate_labels_batch[video_idx]  # List of 4 strings
-                correct_idx = correct_indices[video_idx].item()  # Integer 0-3
+            try:
+                # frames_batch: List[List[PIL.Image]] - batch_size x num_frames
+                # candidate_labels_batch: List[List[str]] - batch_size x 4
+                # correct_indices: Tensor - batch_size
                 
-                # Process all frames
-                image_inputs = processor(images=video_frames, return_tensors="pt").to(device)
+                batch_loss = 0
+                batch_size_actual = len(frames_batch)
                 
-                # Process all 4 candidate labels with prompt templates
-                # Better prompts help CLIP understand the emotion recognition task
-                # Use prompt template: "a photo of a person feeling [emotion]"
-                prompted_labels = [f"a photo of a person feeling {label}" for label in candidate_labels]
+                # Process each video in the batch
+                for video_idx in range(batch_size_actual):
+                    try:
+                        video_frames = frames_batch[video_idx]  # List of num_frames PIL Images
+                        candidate_labels = candidate_labels_batch[video_idx]  # List of 4 strings
+                        correct_idx = correct_indices[video_idx].item()  # Integer 0-3
+                        
+                        # Process all frames
+                        image_inputs = processor(images=video_frames, return_tensors="pt").to(device)
+                        
+                        # Process all 4 candidate labels with prompt templates
+                        # Better prompts help CLIP understand the emotion recognition task
+                        # Use prompt template: "a photo of a person feeling [emotion]"
+                        prompted_labels = [f"a photo of a person feeling {label}" for label in candidate_labels]
+                        
+                        text_inputs = processor(
+                            text=prompted_labels,
+                            return_tensors="pt",
+                            padding=True,
+                            truncation=True,
+                        ).to(device)
+                        
+                        # Get embeddings
+                        image_features = model.get_image_features(**image_inputs)  # (num_frames, hidden_dim)
+                        text_features = model.get_text_features(**text_inputs)  # (4, hidden_dim)
+                        
+                        # Aggregate video features: average across frames (multi-frame architecture)
+                        video_features = image_features.mean(dim=0, keepdim=True)  # (1, hidden_dim)
+                        
+                        # Normalize
+                        video_features = F.normalize(video_features, dim=-1)
+                        text_features = F.normalize(text_features, dim=-1)
+                        
+                        # Compute similarity: video_features @ text_features.t() -> (1, 4)
+                        logits = video_features @ text_features.t()  # (1, 4)
+                        
+                        # Cross-entropy loss over 4 options (task-specific)
+                        target = torch.tensor([correct_idx], dtype=torch.long).to(device)
+                        loss = nn.CrossEntropyLoss()(logits, target)
+                        
+                        batch_loss += loss
+                    except Exception as e:
+                        print(f"Error processing video {video_idx} in training batch {batch_idx}: {e}", flush=True)
+                        import traceback
+                        traceback.print_exc()
+                        continue
                 
-                text_inputs = processor(
-                    text=prompted_labels,
-                    return_tensors="pt",
-                    padding=True,
-                    truncation=True,
-                ).to(device)
-                
-                # Get embeddings
-                image_features = model.get_image_features(**image_inputs)  # (num_frames, hidden_dim)
-                text_features = model.get_text_features(**text_inputs)  # (4, hidden_dim)
-                
-                # Aggregate video features: average across frames (multi-frame architecture)
-                video_features = image_features.mean(dim=0, keepdim=True)  # (1, hidden_dim)
-                
-                # Normalize
-                video_features = F.normalize(video_features, dim=-1)
-                text_features = F.normalize(text_features, dim=-1)
-                
-                # Compute similarity: video_features @ text_features.t() -> (1, 4)
-                logits = video_features @ text_features.t()  # (1, 4)
-                
-                # Cross-entropy loss over 4 options (task-specific)
-                target = torch.tensor([correct_idx], dtype=torch.long).to(device)
-                loss = nn.CrossEntropyLoss()(logits, target)
-                
-                batch_loss += loss
-            
-            # Average loss over batch
-            avg_batch_loss = batch_loss / batch_size_actual
-            
+                # Average loss over batch
+                if batch_size_actual > 0:
+                    avg_batch_loss = batch_loss / batch_size_actual
+                    
             # Backward
             optimizer.zero_grad()
             avg_batch_loss.backward()
             optimizer.step()
             
+            # Update learning rate scheduler
+            if scheduler is not None:
+                scheduler.step()
+            
             total_loss += avg_batch_loss.item()
             num_batches += 1
+            except Exception as e:
+                print(f"Error during training batch {batch_idx} in epoch {epoch+1}: {e}", flush=True)
+                import traceback
+                traceback.print_exc()
+                continue
         
         avg_loss = total_loss / num_batches if num_batches > 0 else 0.0
         print(f"Average Loss: {avg_loss:.4f}")
         
         # Validate
-        val_acc = validate_task_specific(model, val_loader, processor, device)
-        print(f"Validation Accuracy: {val_acc:.2%}")
+        try:
+            val_acc = validate_task_specific(model, val_loader, processor, device)
+            print(f"Validation Accuracy: {val_acc:.2%}")
+        except Exception as e:
+            print(f"Error during validation in epoch {epoch+1}: {e}", flush=True)
+            import traceback
+            traceback.print_exc()
+            val_acc = 0.0  # Set to 0 to avoid saving a bad model
         
         # Save checkpoint
-        if (epoch + 1) % 1 == 0 or val_acc > best_val_acc:
-            checkpoint_dir = output_dir / f"epoch_{epoch+1}"
-            checkpoint_dir.mkdir(exist_ok=True)
-            model.save_pretrained(str(checkpoint_dir))
-            processor.save_pretrained(str(checkpoint_dir))
-            print(f"Saved checkpoint to {checkpoint_dir}")
-            
-            if val_acc > best_val_acc:
-                best_val_acc = val_acc
-                # Save as best model
-                best_dir = output_dir / "best_model"
-                best_dir.mkdir(exist_ok=True)
-                model.save_pretrained(str(best_dir))
-                processor.save_pretrained(str(best_dir))
-                print(f"New best model! Saved to {best_dir}")
+        try:
+            if (epoch + 1) % 1 == 0 or val_acc > best_val_acc:
+                checkpoint_dir = output_dir / f"epoch_{epoch+1}"
+                checkpoint_dir.mkdir(exist_ok=True)
+                model.save_pretrained(str(checkpoint_dir))
+                processor.save_pretrained(str(checkpoint_dir))
+                print(f"Saved checkpoint to {checkpoint_dir}")
+                
+                if val_acc > best_val_acc:
+                    best_val_acc = val_acc
+                    # Save as best model
+                    best_dir = output_dir / "best_model"
+                    best_dir.mkdir(exist_ok=True)
+                    model.save_pretrained(str(best_dir))
+                    processor.save_pretrained(str(best_dir))
+                    print(f"New best model! Saved to {best_dir}")
+        except Exception as e:
+            print(f"Error saving checkpoint in epoch {epoch+1}: {e}", flush=True)
+            import traceback
+            traceback.print_exc()
+            # Continue training even if checkpoint save fails
     
     print(f"\nTraining complete! Best validation accuracy: {best_val_acc:.2%}")
     return model
@@ -453,50 +498,73 @@ def validate_task_specific(model, val_loader, processor, device):
     model.eval()
     correct = 0
     total = 0
+    errors = 0
     
     with torch.no_grad():
-        for frames_batch, candidate_labels_batch, correct_indices in tqdm(val_loader, desc="Validating"):
-            batch_size_actual = len(frames_batch)
-            
-            for video_idx in range(batch_size_actual):
-                video_frames = frames_batch[video_idx]
-                candidate_labels = candidate_labels_batch[video_idx]
-                correct_idx = correct_indices[video_idx].item()
-                
-                # Process
-                image_inputs = processor(images=video_frames, return_tensors="pt").to(device)
-                
-                # Use prompt templates for better text understanding
-                # Use prompt template: "a photo of a person feeling [emotion]"
-                prompted_labels = [f"a photo of a person feeling {label}" for label in candidate_labels]
-                
-                text_inputs = processor(
-                    text=prompted_labels,
-                    return_tensors="pt",
-                    padding=True,
-                    truncation=True,
-                ).to(device)
-                
-                # Get embeddings
-                image_features = model.get_image_features(**image_inputs)
-                text_features = model.get_text_features(**text_inputs)
-                
-                # Aggregate video features
-                video_features = image_features.mean(dim=0, keepdim=True)
-                
-                # Normalize
-                video_features = F.normalize(video_features, dim=-1)
-                text_features = F.normalize(text_features, dim=-1)
-                
-                # Compute similarity
-                logits = video_features @ text_features.t()  # (1, 4)
-                
-                # Prediction: argmax over 4 options
-                predicted_idx = logits.argmax(dim=1).item()
-                
-                if predicted_idx == correct_idx:
-                    correct += 1
-                total += 1
+        try:
+            for batch_idx, batch_data in enumerate(tqdm(val_loader, desc="Validating")):
+                try:
+                    frames_batch, candidate_labels_batch, correct_indices = batch_data
+                    batch_size_actual = len(frames_batch)
+                    
+                    for video_idx in range(batch_size_actual):
+                        try:
+                            video_frames = frames_batch[video_idx]
+                            candidate_labels = candidate_labels_batch[video_idx]
+                            correct_idx = correct_indices[video_idx].item()
+                            
+                            # Process
+                            image_inputs = processor(images=video_frames, return_tensors="pt").to(device)
+                            
+                            # Use prompt templates for better text understanding
+                            # Use prompt template: "a photo of a person feeling [emotion]"
+                            prompted_labels = [f"a photo of a person feeling {label}" for label in candidate_labels]
+                            
+                            text_inputs = processor(
+                                text=prompted_labels,
+                                return_tensors="pt",
+                                padding=True,
+                                truncation=True,
+                            ).to(device)
+                            
+                            # Get embeddings
+                            image_features = model.get_image_features(**image_inputs)
+                            text_features = model.get_text_features(**text_inputs)
+                            
+                            # Aggregate video features
+                            video_features = image_features.mean(dim=0, keepdim=True)
+                            
+                            # Normalize
+                            video_features = F.normalize(video_features, dim=-1)
+                            text_features = F.normalize(text_features, dim=-1)
+                            
+                            # Compute similarity
+                            logits = video_features @ text_features.t()  # (1, 4)
+                            
+                            # Prediction: argmax over 4 options
+                            predicted_idx = logits.argmax(dim=1).item()
+                            
+                            if predicted_idx == correct_idx:
+                                correct += 1
+                            total += 1
+                        except Exception as e:
+                            errors += 1
+                            print(f"Warning: Error processing video {video_idx} in batch {batch_idx}: {e}", flush=True)
+                            continue
+                except Exception as e:
+                    errors += 1
+                    print(f"Warning: Error processing batch {batch_idx}: {e}", flush=True)
+                    import traceback
+                    traceback.print_exc()
+                    continue
+        except Exception as e:
+            print(f"Error in validation loop: {e}", flush=True)
+            import traceback
+            traceback.print_exc()
+            raise
+    
+    if errors > 0:
+        print(f"Warning: {errors} errors encountered during validation", flush=True)
     
     return correct / total if total > 0 else 0.0
 
@@ -633,6 +701,9 @@ Examples:
     parser.add_argument('--num_epochs', type=int, default=10, help='Number of epochs')
     parser.add_argument('--batch_size', type=int, default=16, help='Batch size')
     parser.add_argument('--learning_rate', type=float, default=1e-5, help='Learning rate')
+    parser.add_argument('--weight_decay', type=float, default=0.01, help='Weight decay for optimizer')
+    parser.add_argument('--use_lr_scheduler', action='store_true', default=True, help='Use cosine annealing LR scheduler with warmup')
+    parser.add_argument('--warmup_steps', type=int, default=100, help='Number of warmup steps for LR scheduler')
     parser.add_argument('--device', type=str, default='cpu', help='Device (cpu, cuda, mps)')
     parser.add_argument('--num_frames', type=int, default=8, help='Frames per video (for CAM dataset)')
     parser.add_argument('--use_multiframe', action='store_true', default=True, help='Use multiple frames per video (average features)')
@@ -706,8 +777,11 @@ Examples:
             num_epochs=args.num_epochs,
             batch_size=args.batch_size,
             learning_rate=args.learning_rate,
+            weight_decay=args.weight_decay,
             device=args.device,
             num_frames=args.num_frames,
+            use_lr_scheduler=args.use_lr_scheduler,
+            warmup_steps=args.warmup_steps,
         )
         
         print(f"\nFine-tuning complete! Model saved to {args.output_dir}")
@@ -757,5 +831,12 @@ Examples:
 
 
 if __name__ == "__main__":
-    main()
+    import sys
+    try:
+        main()
+    except Exception as e:
+        print(f"Fatal error: {e}", file=sys.stderr, flush=True)
+        import traceback
+        traceback.print_exc(file=sys.stderr)
+        sys.exit(1)
 

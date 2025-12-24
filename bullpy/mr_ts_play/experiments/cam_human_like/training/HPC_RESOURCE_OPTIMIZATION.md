@@ -194,3 +194,4 @@ scontrol show job <job_id>
 - Verify CUDA: `python3 -c "import torch; print(torch.cuda.is_available())"`
 - Check module loading
 
+

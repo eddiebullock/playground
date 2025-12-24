@@ -2,20 +2,46 @@
 #SBATCH --job-name=eu_emotion_repl
 #SBATCH --output=eu_emotion_repl_%j.out
 #SBATCH --error=eu_emotion_repl_%j.err
-#SBATCH --time=12:00:00
+#SBATCH --time=06:00:00
+# GPU-optimized replication: 20 epochs, full trial set
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=4
+#SBATCH --cpus-per-task=8
 #SBATCH --mem=32G
-#SBATCH -p icelake
+#SBATCH --gres=gpu:1
+#SBATCH -p ukaea-amp
 
-# CSD3 CPU partition configuration (full replication):
-# - 12 hours for 10 epochs (estimated 6-10 hours needed)
-# - Same resource specs as CAM replication
+# CSD3 GPU partition configuration (optimized for performance):
+# - Partition: ukaea-amp (GPU nodes with good availability)
+# - 1 GPU per job (NVIDIA A100 or similar)
+# - 8 CPUs per task (for efficient data loading)
+# - 32G memory (sufficient for batch processing)
+# - 6 hours (GPU is 10-20x faster, should complete in 1-2 hours)
 
-# Load required modules for CSD3
+# Load required modules for CSD3 GPU nodes
 module purge
-# Load available Python module (compute nodes have different modules than login nodes)
+# Load CUDA and cuDNN for GPU support
+if module load cuda/11.8 2>/dev/null; then
+    echo "Loaded cuda/11.8"
+elif module load cuda/12.0 2>/dev/null; then
+    echo "Loaded cuda/12.0"
+elif module load cuda/11.4 2>/dev/null; then
+    echo "Loaded cuda/11.4"
+else
+    echo "Warning: Could not load CUDA module. Available:"
+    module avail cuda 2>&1 | head -10
+fi
+
+if module load cudnn/8.6 2>/dev/null; then
+    echo "Loaded cudnn/8.6"
+elif module load cudnn/8.9 2>/dev/null; then
+    echo "Loaded cudnn/8.9"
+else
+    echo "Warning: Could not load cuDNN module. Available:"
+    module avail cudnn 2>&1 | head -10
+fi
+
+# Load Python module
 if module load python/3.8 2>/dev/null; then
     echo "Loaded python/3.8"
 elif module load python/3.11.0-icl 2>/dev/null; then
@@ -43,14 +69,19 @@ else
     exit 1
 fi
 
-# Set environment variables for CPU
-export OMP_NUM_THREADS=4
-export MKL_NUM_THREADS=4
-export NUMEXPR_NUM_THREADS=4
+# Set environment variables for GPU
+export CUDA_VISIBLE_DEVICES=0
+export OMP_NUM_THREADS=8
+export MKL_NUM_THREADS=8
+export NUMEXPR_NUM_THREADS=8
+
+# Verify GPU is available
+python3 -c "import torch; print(f'CUDA available: {torch.cuda.is_available()}'); print(f'GPU device: {torch.cuda.get_device_name(0) if torch.cuda.is_available() else \"N/A\"}')" || echo "Warning: Could not verify GPU availability"
 
 # Change to project directory
 cd ${HOME}/mr_ts_play || exit 1
 
 # Run the EU-Emotion replication script
 bash experiments/cam_human_like/training/hpc_eu_emotion_replication.sh
+
 

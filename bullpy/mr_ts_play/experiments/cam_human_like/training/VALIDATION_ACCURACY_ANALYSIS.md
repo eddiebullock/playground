@@ -164,3 +164,4 @@ The code structure appears **correct**:
 The current performance (33%) is actually **reasonable** given the constraints (2 epochs, 108 trials, 27 emotions). With proper data and training, **50-60% is achievable**, which would be **comparable to or better than** the CAM zero-shot baseline (37%).
 
 
+

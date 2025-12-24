@@ -104,3 +104,4 @@ echo "  1. Check training log for validation accuracy"
 echo "  2. Evaluate model: python experiments/cam_human_like/training/evaluate_on_cam.py ..."
 echo ""
 
+

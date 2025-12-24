@@ -78,3 +78,4 @@ Training is running in the background with:
 - ✅ Trials regenerated: `results/eu_emotion_replication/eu_emotion_trial_definitions_*.json`
 
 
+

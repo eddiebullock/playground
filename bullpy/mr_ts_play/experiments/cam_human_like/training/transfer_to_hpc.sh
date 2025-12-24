@@ -47,13 +47,23 @@ rsync -avh --progress -e "ssh $SSH_OPTS" \
   "${HPC_USER}@${HPC_HOST}:${HPC_PATH}/data/"
 
 echo ""
-echo "Step 3: Transferring HPC scripts..."
+echo "Step 3: Transferring HPC scripts and training code..."
 rsync -avh --progress -e "ssh $SSH_OPTS" \
   "${LOCAL_PROJECT}/experiments/cam_human_like/training/hpc_cam_replication.sh" \
   "${LOCAL_PROJECT}/experiments/cam_human_like/training/hpc_cam_replication.slurm" \
-  "${LOCAL_PROJECT}/experiments/cam_human_like/training/hpc_cam_replication_ampere.slurm" \
+  "${LOCAL_PROJECT}/experiments/cam_human_like/training/hpc_cam_test.sh" \
+  "${LOCAL_PROJECT}/experiments/cam_human_like/training/hpc_cam_test.slurm" \
+  "${LOCAL_PROJECT}/experiments/cam_human_like/training/hpc_eu_emotion_replication.sh" \
+  "${LOCAL_PROJECT}/experiments/cam_human_like/training/hpc_eu_emotion_replication.slurm" \
+  "${LOCAL_PROJECT}/experiments/cam_human_like/training/hpc_eu_emotion_test.sh" \
+  "${LOCAL_PROJECT}/experiments/cam_human_like/training/hpc_eu_emotion_test.slurm" \
   "${LOCAL_PROJECT}/experiments/cam_human_like/training/setup_rds_venv.sh" \
   "${LOCAL_PROJECT}/experiments/cam_human_like/training/transfer_eu_emotions_to_rds.sh" \
+  "${LOCAL_PROJECT}/experiments/cam_human_like/training/create_cam_trials_from_all_files.py" \
+  "${LOCAL_PROJECT}/experiments/cam_human_like/training/create_eu_emotion_trials.py" \
+  "${LOCAL_PROJECT}/experiments/cam_human_like/training/finetune_clip_emotions.py" \
+  "${LOCAL_PROJECT}/experiments/cam_human_like/training/evaluate_on_cam.py" \
+  "${LOCAL_PROJECT}/experiments/cam_human_like/training/task_specific_dataset.py" \
   "${HPC_USER}@${HPC_HOST}:${HPC_PATH}/experiments/cam_human_like/training/"
 
 # Clean up SSH control socket

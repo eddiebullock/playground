@@ -2,20 +2,22 @@
 #SBATCH --job-name=cam_test
 #SBATCH --output=cam_test_%j.out
 #SBATCH --error=cam_test_%j.err
-#SBATCH --time=02:00:00
+#SBATCH --time=04:00:00
+# Increased to 4 hours to avoid time limit issues during validation
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=32G
 #SBATCH -p icelake
 
-# CSD3 CPU partition configuration (quick test):
-# - 2 hours should be enough for 2 epochs test
-# - Same resource specs as EU-Emotion test for consistency
+# Quick test script for CAM replication
+# - 2 epochs (quick validation)
+# - Reduced trials (5 per concept)
+# - 2 hours runtime
+# Use this to verify pipeline before full replication
 
-# Load required modules for CSD3
+# Load required modules
 module purge
-# Load available Python module (compute nodes have different modules than login nodes)
 if module load python/3.8 2>/dev/null; then
     echo "Loaded python/3.8"
 elif module load python/3.11.0-icl 2>/dev/null; then
@@ -35,15 +37,13 @@ elif [ -f "${HOME}/rds/rds-autism-research-ePtR33Nsgi4/users/eb2007/venv/bin/act
     source ${HOME}/rds/rds-autism-research-ePtR33Nsgi4/users/eb2007/venv/bin/activate
 elif [ -f "/rds/user/eb2007/rds-autism-research-ePtR33Nsgi4/users/eb2007/venv/bin/activate" ]; then
     source /rds/user/eb2007/rds-autism-research-ePtR33Nsgi4/users/eb2007/venv/bin/activate
-elif [ -f "/rds-d7/project/45718/users/eb2007/venv/bin/activate" ]; then
-    source /rds-d7/project/45718/users/eb2007/venv/bin/activate
 else
     echo "Error: Virtual environment not found!"
     echo "Please run: bash experiments/cam_human_like/training/setup_rds_venv.sh"
     exit 1
 fi
 
-# Set environment variables for CPU (match number of CPUs requested)
+# Set environment variables for CPU
 export OMP_NUM_THREADS=4
 export MKL_NUM_THREADS=4
 export NUMEXPR_NUM_THREADS=4
@@ -53,4 +53,3 @@ cd ${HOME}/mr_ts_play || exit 1
 
 # Run the CAM test script
 bash experiments/cam_human_like/training/hpc_cam_test.sh
-

@@ -19,7 +19,8 @@ from torch.utils.data import Dataset
 
 sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
 
-from experiments.cam_human_like.dataset import CAMDataset, CAMTrial
+# Note: This dataset is dataset-agnostic and works for both CAM and EU-Emotion
+# It doesn't need to import CAM-specific classes
 
 
 class TaskSpecificTrialDataset(Dataset):
@@ -63,6 +64,12 @@ class TaskSpecificTrialDataset(Dataset):
     
     def _load_video_frames(self, video_path: Path) -> List[Image.Image]:
         """Extract frames from video."""
+        # Check file size first - videos smaller than 50KB are likely corrupted
+        if video_path.exists():
+            file_size = video_path.stat().st_size
+            if file_size < 50 * 1024:  # 50KB threshold
+                raise ValueError(f"Video file too small (likely corrupted): {video_path} (size: {file_size:,} bytes, expected >50KB)")
+        
         try:
             cap = cv2.VideoCapture(str(video_path))
             if not cap.isOpened():
@@ -89,8 +96,9 @@ class TaskSpecificTrialDataset(Dataset):
                     if len(frames) > 0:
                         frames.append(frames[-1])
                     else:
-                        # If no frames, create a black frame
-                        frames.append(Image.new('RGB', (224, 224), (0, 0, 0)))
+                        # If no frames at all, raise error (don't return black frames)
+                        cap.release()
+                        raise ValueError(f"Could not read any frames from video: {video_path}")
             
             cap.release()
             
@@ -101,9 +109,9 @@ class TaskSpecificTrialDataset(Dataset):
             return frames[:self.num_frames]
         
         except Exception as e:
-            print(f"Warning: Error loading video {video_path}: {e}")
-            # Return black frames as fallback
-            return [Image.new('RGB', (224, 224), (0, 0, 0)) for _ in range(self.num_frames)]
+            # Don't return black frames - raise error so training can skip this trial
+            # The training loop should handle this gracefully
+            raise ValueError(f"Error loading video {video_path}: {e}")
     
     def __len__(self):
         return len(self.trials)

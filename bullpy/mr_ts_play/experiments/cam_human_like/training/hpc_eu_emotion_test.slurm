@@ -2,7 +2,8 @@
 #SBATCH --job-name=eu_emotion_test
 #SBATCH --output=eu_emotion_test_%j.out
 #SBATCH --error=eu_emotion_test_%j.err
-#SBATCH --time=02:00:00
+#SBATCH --time=04:00:00
+# Increased to 4 hours to avoid time limit issues during validation
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=4
@@ -53,4 +54,5 @@ cd ${HOME}/mr_ts_play || exit 1
 
 # Run the EU-Emotion test script
 bash experiments/cam_human_like/training/hpc_eu_emotion_test.sh
+
 

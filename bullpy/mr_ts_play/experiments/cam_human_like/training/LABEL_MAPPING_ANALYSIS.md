@@ -79,3 +79,4 @@ This approach:
 The label mismatch explains the poor CAM performance. The model is learning the wrong labels. **Two-stage fine-tuning is essential** - EU-Emotion provides general emotion features, but CAM fine-tuning is needed to learn the specific 20 concepts.
 
 
+

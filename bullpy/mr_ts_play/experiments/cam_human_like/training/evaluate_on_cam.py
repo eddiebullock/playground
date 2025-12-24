@@ -30,10 +30,11 @@ def compute_metrics(predictions, trials):
     
     Args:
         predictions: List of prediction dicts with keys:
+            - 'trial_id': str
             - 'is_correct': bool
             - 'predicted_label': str
             - 'correct_label': str
-        trials: List of trial objects with 'modality' attribute
+        trials: List of trial objects with 'modality' and 'trial_id' attributes
     
     Returns:
         Dictionary with metrics: accuracy, face_accuracy, voice_accuracy
@@ -45,15 +46,21 @@ def compute_metrics(predictions, trials):
     correct = sum(1 for p in predictions if p['is_correct'])
     accuracy = correct / len(predictions)
     
-    # Split by modality
+    # Create trial lookup by trial_id (fixes bug where zip assumes index alignment)
+    trial_dict = {trial.trial_id: trial for trial in trials}
+    
+    # Split by modality - match predictions to trials by trial_id
     face_predictions = []
     voice_predictions = []
     
-    for pred, trial in zip(predictions, trials):
-        if trial.modality == 'face':
-            face_predictions.append(pred)
-        elif trial.modality == 'voice':
-            voice_predictions.append(pred)
+    for pred in predictions:
+        trial_id = pred['trial_id']
+        if trial_id in trial_dict:
+            trial = trial_dict[trial_id]
+            if trial.modality == 'face':
+                face_predictions.append(pred)
+            elif trial.modality == 'voice':
+                voice_predictions.append(pred)
     
     face_accuracy = sum(1 for p in face_predictions if p['is_correct']) / len(face_predictions) if face_predictions else 0.0
     voice_accuracy = sum(1 for p in voice_predictions if p['is_correct']) / len(voice_predictions) if voice_predictions else 0.0

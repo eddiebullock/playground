@@ -96,3 +96,4 @@ sbatch experiments/cam_human_like/training/hpc_cam_replication.slurm
 - Evaluation script is now fixed and should work for both datasets
 - If evaluation fails, check the error logs in `*_test_<JOBID>.err`
 
+
