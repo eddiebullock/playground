@@ -14,7 +14,7 @@ import json
 # Add parent directory to path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
 
-from experiments.cam_human_like.dataset import CAMDataset
+# CAMDataset is not needed - we use TaskSpecificTrialDataset instead
 import torch
 import torch.nn.functional as F
 from transformers import CLIPModel, CLIPProcessor
@@ -113,13 +113,37 @@ def evaluate_finetuned_model(
     # Load dataset
     if dataset_type == 'cam':
         print("Loading CAM test dataset...")
-        dataset = CAMDataset(
+        from experiments.cam_human_like.training.task_specific_dataset import TaskSpecificTrialDataset
+        
+        # Load trial definitions to create wrapper
+        with open(trial_definitions_file, 'r') as f:
+            trial_defs = json.load(f)
+        
+        # Create a simple trial class for compatibility
+        class SimpleTrial:
+            def __init__(self, trial_data, data_root):
+                self.trial_id = trial_data.get('trial_id', '')
+                self.stimulus_path = str(Path(data_root) / trial_data['stimulus_path']) if not Path(trial_data['stimulus_path']).is_absolute() else trial_data['stimulus_path']
+                self.modality = trial_data.get('modality', 'face')
+                self.correct_label = trial_data.get('correct_label', '')
+                self.candidate_labels = trial_data.get('candidate_labels', [])
+                self.correct_idx = trial_data.get('correct_idx', 0)
+                self.actor = trial_data.get('actor', '')
+                self.scenario_id = trial_data.get('scenario_id', '')
+                self.concept = trial_data.get('concept', '')
+        
+        # Create wrapper that provides .trials attribute
+        class CAMDatasetWrapper:
+            def __init__(self, task_dataset, trial_defs, data_root):
+                self.task_dataset = task_dataset
+                self.trials = [SimpleTrial(t, data_root) for t in trial_defs.get('trials', [])]
+        
+        task_dataset = TaskSpecificTrialDataset(
             data_root=data_root,
             trial_definitions_file=trial_definitions_file,
-            splits_dir=splits_dir,
-            split_name=split_name,
-            use_actor_filtering=False,  # Use all trials to match original CAM
+            num_frames=num_frames,
         )
+        dataset = CAMDatasetWrapper(task_dataset, trial_defs, data_root)
     else:
         # EU-Emotion: load directly from trial definitions
         print("Loading EU-Emotion test dataset...")
@@ -156,18 +180,31 @@ def evaluate_finetuned_model(
                     else:
                         stimulus_path = ''
                     
-                    from experiments.cam_human_like.dataset import CAMTrial
-                    trial = CAMTrial(
-                        trial_id=trial_id,
-                        stimulus_path=stimulus_path,  # Use actual path from trial definitions
-                        modality='face',  # EU-Emotion default
-                        correct_label=item['candidate_labels'][item['correct_idx']],
-                        candidate_labels=item['candidate_labels'],
-                        correct_idx=item['correct_idx'],
-                        actor='unknown',
-                        scenario_id='',
-                        concept=item['candidate_labels'][item['correct_idx']],
-                    )
+                    # Create simple trial object for EU-Emotion
+                    class SimpleTrial:
+                        def __init__(self, trial_data, data_root):
+                            self.trial_id = trial_data.get('trial_id', '')
+                            self.stimulus_path = str(Path(data_root) / trial_data['stimulus_path']) if not Path(trial_data['stimulus_path']).is_absolute() else trial_data['stimulus_path']
+                            self.modality = trial_data.get('modality', 'face')
+                            self.correct_label = trial_data.get('correct_label', '')
+                            self.candidate_labels = trial_data.get('candidate_labels', [])
+                            self.correct_idx = trial_data.get('correct_idx', 0)
+                            self.actor = trial_data.get('actor', 'unknown')
+                            self.scenario_id = trial_data.get('scenario_id', '')
+                            self.concept = trial_data.get('concept', '')
+                    
+                    trial_data = {
+                        'trial_id': trial_id,
+                        'stimulus_path': stimulus_path,
+                        'modality': 'face',
+                        'correct_label': item['candidate_labels'][item['correct_idx']],
+                        'candidate_labels': item['candidate_labels'],
+                        'correct_idx': item['correct_idx'],
+                        'actor': 'unknown',
+                        'scenario_id': '',
+                        'concept': item['candidate_labels'][item['correct_idx']],
+                    }
+                    trial = SimpleTrial(trial_data, data_root)
                     self.trials.append(trial)
         
         dataset_wrapper = EUEmotionDatasetWrapper(dataset, trial_id_to_path, data_root)

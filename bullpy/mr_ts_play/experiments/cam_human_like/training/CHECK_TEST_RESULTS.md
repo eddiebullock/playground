@@ -94,3 +94,4 @@ ls -lh results/*/model_checkpoints/*evaluation*.json 2>/dev/null
 - No model checkpoint directory
 - No evaluation file
 
+

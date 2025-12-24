@@ -130,3 +130,4 @@ nvidia-smi
 - **Hyperparameter Tuning**: All 10 runs should complete in ~10-20 hours on GPU
 - **Results Organization**: Each hyperparameter run saves to separate directory for easy comparison
 
+

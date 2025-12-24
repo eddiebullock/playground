@@ -41,22 +41,33 @@ fi
 
 # Note: CAM trials are now generated from all files, not from pre-defined definitions
 # The script create_cam_trials_from_all_files.py will discover all valid files
-OUTPUT_BASE="results"
-NUM_EPOCHS=20  # Optimized for GPU: 20 epochs for better convergence
-BATCH_SIZE=16  # Optimized for GPU: larger batch size for stable training
+
+# Output directory: Use RDS to avoid /home quota issues
+# RDS has 1099.5GB available vs /home's 50GB quota
+if [ -d "${HOME}/rds/rds-autism-research-ePtR33Nsgi4/users/eb2007" ]; then
+    RDS_USER_DIR="${HOME}/rds/rds-autism-research-ePtR33Nsgi4/users/eb2007"
+elif [ -d "/rds/user/eb2007/rds-autism-research-ePtR33Nsgi4/users/eb2007" ]; then
+    RDS_USER_DIR="/rds/user/eb2007/rds-autism-research-ePtR33Nsgi4/users/eb2007"
+elif [ -d "/rds-d7/project/45718/users/eb2007" ]; then
+    RDS_USER_DIR="/rds-d7/project/45718/users/eb2007"
+else
+    RDS_USER_DIR="${HOME}/rds/rds-autism-research-ePtR33Nsgi4/users/eb2007"  # Default
+fi
+
+# Create results directory on RDS
+OUTPUT_BASE="${RDS_USER_DIR}/mr_ts_play_results"
+mkdir -p "$OUTPUT_BASE"
+echo "✅ Using RDS for results: $OUTPUT_BASE"
+NUM_EPOCHS=20  # Optimized: 20 epochs for better convergence
+BATCH_SIZE=4   # CPU-optimized: smaller batch size for CPU training
 LEARNING_RATE=5e-5  # Optimized: slightly higher LR for faster convergence
 WEIGHT_DECAY=0.01  # Regularization
 NUM_FRAMES=16  # Optimized: more frames for better temporal coverage
-DEVICE="cuda"  # Using GPU nodes (ukaea-amp partition)
+DEVICE="cpu"   # Using CPU nodes (icelake partition - user has CPU access only)
 
-# Check if CUDA is available, fallback to CPU if not
-if ! python3 -c "import torch; print('CUDA available:', torch.cuda.is_available())" 2>/dev/null | grep -q "True"; then
-    echo "⚠️  Warning: CUDA not available, falling back to CPU"
-    DEVICE="cpu"
-    BATCH_SIZE=4  # Smaller batch for CPU
-fi
-
-echo "Configuration: GPU training enabled (10-20x faster than CPU)"
+# Note: User account only has access to CPU partitions (icelake)
+# Scripts will automatically use CPU with appropriate batch size
+echo "Configuration: CPU training (GPU not available for this account)"
 
 # Project root (adjust if needed)
 PROJECT_ROOT="${HOME}/mr_ts_play"
@@ -77,8 +88,8 @@ echo "Configuration:"
 echo "  CAM data root: $CAM_DATA_ROOT"
 echo "  Output directory: $OUTPUT_BASE"
 echo "  Device: $DEVICE"
-echo "  Epochs: $NUM_EPOCHS (optimized for GPU)"
-echo "  Batch size: $BATCH_SIZE (optimized for GPU)"
+echo "  Epochs: $NUM_EPOCHS (optimized)"
+echo "  Batch size: $BATCH_SIZE (CPU-optimized)"
 echo "  Learning rate: $LEARNING_RATE (optimized)"
 echo "  Weight decay: $WEIGHT_DECAY (regularization)"
 echo "  Num frames: $NUM_FRAMES (optimized for temporal coverage)"
@@ -124,13 +135,8 @@ echo ""
 echo "============================================================"
 echo "Step 2: Fine-tuning CLIP on CAM"
 echo "============================================================"
-if [ "$DEVICE" = "cuda" ]; then
-    echo "Note: Running on GPU - this will take approximately 1-2 hours for 20 epochs..."
-    echo "      (10-20x faster than CPU training)"
-else
-    echo "Note: Running on CPU - this will take approximately 6-10 hours for 20 epochs..."
-    echo "      (Slower than GPU, but will complete successfully)"
-fi
+echo "Note: Running on CPU - this will take approximately 6-10 hours for 20 epochs..."
+echo "      (CPU training is slower than GPU, but will complete successfully)"
 echo ""
 
 $PYTHON_CMD experiments/cam_human_like/training/finetune_clip_emotions.py \

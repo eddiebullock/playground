@@ -89,7 +89,11 @@ def discover_all_cam_files(data_root: str, min_file_size_kb: int = 50) -> Dict[s
             continue
         
         concept = parsed['emotion']
-        modality = parsed['modality']
+        modality_code = parsed['modality']  # 'V' or 'T'
+        
+        # Convert modality code to dictionary key
+        # V = Visual (face), T = Textual (voice)
+        modality = "face" if modality_code == "V" else "voice"
         
         # Only include CAM 20 concepts
         if not is_cam_concept(concept):
@@ -99,7 +103,7 @@ def discover_all_cam_files(data_root: str, min_file_size_kb: int = 50) -> Dict[s
             'path': str(video_file.relative_to(data_path)),
             'actor': parsed['actor'],
             'scenario_id': parsed['scenario_id'],
-            'modality': modality,
+            'modality': modality_code,  # Keep original 'V' or 'T' in the data
             'full_path': str(video_file),
         })
         

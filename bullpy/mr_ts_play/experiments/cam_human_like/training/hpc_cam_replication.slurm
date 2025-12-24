@@ -3,45 +3,23 @@
 #SBATCH --output=cam_replication_%j.out
 #SBATCH --error=cam_replication_%j.err
 #SBATCH --time=06:00:00
-# GPU-optimized replication: 20 epochs, all available files, comprehensive evaluation
+# CPU-optimized replication: 20 epochs, all available files, comprehensive evaluation
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=32G
-#SBATCH --gres=gpu:1
-#SBATCH -p ukaea-amp
+#SBATCH -p icelake
 
-# CSD3 GPU partition configuration (optimized for performance):
-# - Partition: ukaea-amp (GPU nodes with good availability)
-# - 1 GPU per job (NVIDIA A100 or similar)
+# CSD3 CPU partition configuration (user has CPU access only):
+# - Partition: icelake (CPU nodes - user has access to this)
 # - 8 CPUs per task (for efficient data loading)
 # - 32G memory (sufficient for batch processing)
-# - 6 hours (GPU is 10-20x faster, should complete in 1-2 hours)
+# - 12 hours (CPU training is slower, but will complete)
+# Note: Scripts automatically detect CPU and adjust batch size
 
-# Load required modules for CSD3 GPU nodes
+# Load required modules for CSD3 CPU nodes
 module purge
-# Load CUDA and cuDNN for GPU support
-if module load cuda/11.8 2>/dev/null; then
-    echo "Loaded cuda/11.8"
-elif module load cuda/12.0 2>/dev/null; then
-    echo "Loaded cuda/12.0"
-elif module load cuda/11.4 2>/dev/null; then
-    echo "Loaded cuda/11.4"
-else
-    echo "Warning: Could not load CUDA module. Available:"
-    module avail cuda 2>&1 | head -10
-fi
-
-if module load cudnn/8.6 2>/dev/null; then
-    echo "Loaded cudnn/8.6"
-elif module load cudnn/8.9 2>/dev/null; then
-    echo "Loaded cudnn/8.9"
-else
-    echo "Warning: Could not load cuDNN module. Available:"
-    module avail cudnn 2>&1 | head -10
-fi
-
-# Load Python module
+# Load Python module (no CUDA needed for CPU)
 if module load python/3.8 2>/dev/null; then
     echo "Loaded python/3.8"
 elif module load python/3.11.0-icl 2>/dev/null; then
@@ -70,14 +48,10 @@ else
     exit 1
 fi
 
-# Set environment variables for GPU
-export CUDA_VISIBLE_DEVICES=0
+# Set environment variables for CPU (match number of CPUs requested)
 export OMP_NUM_THREADS=8
 export MKL_NUM_THREADS=8
 export NUMEXPR_NUM_THREADS=8
-
-# Verify GPU is available
-python3 -c "import torch; print(f'CUDA available: {torch.cuda.is_available()}'); print(f'GPU device: {torch.cuda.get_device_name(0) if torch.cuda.is_available() else \"N/A\"}')" || echo "Warning: Could not verify GPU availability"
 
 # Change to project directory
 cd ${HOME}/mr_ts_play || exit 1

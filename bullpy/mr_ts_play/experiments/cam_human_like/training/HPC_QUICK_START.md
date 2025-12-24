@@ -179,3 +179,4 @@ sbatch experiments/cam_human_like/training/hpc_cam_replication.slurm
 - **Full replications**: 10 epochs, all files (final results)
 - **Expected**: 70-85% CAM accuracy (approaching human performance)
 
+

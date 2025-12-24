@@ -436,17 +436,17 @@ def finetune_clip_task_specific(
                 if batch_size_actual > 0:
                     avg_batch_loss = batch_loss / batch_size_actual
                     
-            # Backward
-            optimizer.zero_grad()
-            avg_batch_loss.backward()
-            optimizer.step()
-            
-            # Update learning rate scheduler
-            if scheduler is not None:
-                scheduler.step()
-            
-            total_loss += avg_batch_loss.item()
-            num_batches += 1
+                    # Backward
+                    optimizer.zero_grad()
+                    avg_batch_loss.backward()
+                    optimizer.step()
+                    
+                    # Update learning rate scheduler
+                    if scheduler is not None:
+                        scheduler.step()
+                    
+                    total_loss += avg_batch_loss.item()
+                    num_batches += 1
             except Exception as e:
                 print(f"Error during training batch {batch_idx} in epoch {epoch+1}: {e}", flush=True)
                 import traceback
@@ -702,7 +702,7 @@ Examples:
     parser.add_argument('--batch_size', type=int, default=16, help='Batch size')
     parser.add_argument('--learning_rate', type=float, default=1e-5, help='Learning rate')
     parser.add_argument('--weight_decay', type=float, default=0.01, help='Weight decay for optimizer')
-    parser.add_argument('--use_lr_scheduler', action='store_true', default=True, help='Use cosine annealing LR scheduler with warmup')
+    parser.add_argument('--use_lr_scheduler', action='store_true', help='Use cosine annealing LR scheduler with warmup (default: True)')
     parser.add_argument('--warmup_steps', type=int, default=100, help='Number of warmup steps for LR scheduler')
     parser.add_argument('--device', type=str, default='cpu', help='Device (cpu, cuda, mps)')
     parser.add_argument('--num_frames', type=int, default=8, help='Frames per video (for CAM dataset)')
@@ -780,7 +780,7 @@ Examples:
             weight_decay=args.weight_decay,
             device=args.device,
             num_frames=args.num_frames,
-            use_lr_scheduler=args.use_lr_scheduler,
+            use_lr_scheduler=getattr(args, 'use_lr_scheduler', True),
             warmup_steps=args.warmup_steps,
         )
         

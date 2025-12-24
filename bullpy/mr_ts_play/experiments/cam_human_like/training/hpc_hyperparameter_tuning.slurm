@@ -9,7 +9,9 @@
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=32G
 #SBATCH --gres=gpu:1
-#SBATCH -p ukaea-amp
+#SBATCH -p ampere
+# Note: If ukaea-amp is not accessible, try: #SBATCH -p ampere
+# If GPU partitions fail, fall back to CPU: #SBATCH -p icelake (and remove --gres=gpu:1)
 
 # CSD3 GPU partition configuration for hyperparameter tuning:
 # - Partition: ukaea-amp (GPU nodes with good availability)

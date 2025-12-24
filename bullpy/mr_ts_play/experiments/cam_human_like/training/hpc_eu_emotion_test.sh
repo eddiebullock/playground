@@ -26,10 +26,11 @@ echo "✅ EU Emotions data location: $EU_EMOTIONS_DATA_ROOT"
 
 OUTPUT_BASE="results"
 NUM_EPOCHS=2   # Quick test: only 2 epochs
-BATCH_SIZE=4   # Smaller batch size for CPU
-LEARNING_RATE=1e-5
-NUM_FRAMES=8
-DEVICE="cpu"   # Using CPU nodes
+BATCH_SIZE=4   # CPU-optimized: smaller batch size for CPU training
+LEARNING_RATE=5e-5  # Optimized: same as CAM for consistency
+WEIGHT_DECAY=0.01  # Regularization
+NUM_FRAMES=16  # Optimized: more frames for better temporal coverage
+DEVICE="cpu"   # Using CPU nodes (icelake partition - user has CPU access only)
 
 # Project root
 PROJECT_ROOT="${HOME}/mr_ts_play"
@@ -51,9 +52,10 @@ echo "  EU Emotions data root: $EU_EMOTIONS_DATA_ROOT"
 echo "  Output directory: $OUTPUT_BASE"
 echo "  Device: $DEVICE"
 echo "  Epochs: $NUM_EPOCHS (QUICK TEST - will complete in ~30-60 minutes)"
-echo "  Batch size: $BATCH_SIZE"
-echo "  Learning rate: $LEARNING_RATE"
-echo "  Num frames: $NUM_FRAMES"
+echo "  Batch size: $BATCH_SIZE (CPU-optimized)"
+echo "  Learning rate: $LEARNING_RATE (optimized)"
+echo "  Weight decay: $WEIGHT_DECAY (regularization)"
+echo "  Num frames: $NUM_FRAMES (optimized for temporal coverage)"
 echo ""
 
 # Create output directories
@@ -113,8 +115,11 @@ $PYTHON_CMD experiments/cam_human_like/training/finetune_clip_emotions.py \
     --num_epochs $NUM_EPOCHS \
     --batch_size $BATCH_SIZE \
     --learning_rate $LEARNING_RATE \
+    --weight_decay $WEIGHT_DECAY \
     --device $DEVICE \
-    --num_frames $NUM_FRAMES
+    --num_frames $NUM_FRAMES \
+    --use_lr_scheduler \
+    --warmup_steps 100
 
 EU_MODEL_PATH="$OUTPUT_BASE/eu_emotion_test/model_checkpoints/best_model"
 
