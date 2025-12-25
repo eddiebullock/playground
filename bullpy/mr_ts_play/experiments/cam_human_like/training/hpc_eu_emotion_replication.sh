@@ -42,8 +42,8 @@ mkdir -p "$OUTPUT_BASE"
 echo "✅ Using RDS for results: $OUTPUT_BASE"
 NUM_EPOCHS=20  # Optimized: 20 epochs for better convergence
 BATCH_SIZE=4   # CPU-optimized: smaller batch size for CPU training
-LEARNING_RATE=5e-5  # Optimized: slightly higher LR for faster convergence
-WEIGHT_DECAY=0.01  # Regularization
+LEARNING_RATE=1e-5  # Fixed: Lower LR for stable training (5e-5 was too high, caused plateau/overfitting)
+WEIGHT_DECAY=0.0  # Fixed: Removed weight decay (was causing issues with small dataset)
 NUM_FRAMES=16  # Optimized: more frames for better temporal coverage
 DEVICE="cpu"   # Using CPU nodes (icelake partition - user has CPU access only)
 
@@ -72,8 +72,8 @@ echo "  Output directory: $OUTPUT_BASE"
 echo "  Device: $DEVICE"
 echo "  Epochs: $NUM_EPOCHS (optimized)"
 echo "  Batch size: $BATCH_SIZE (CPU-optimized)"
-echo "  Learning rate: $LEARNING_RATE (optimized)"
-echo "  Weight decay: $WEIGHT_DECAY (regularization)"
+echo "  Learning rate: $LEARNING_RATE (fixed: lower for stable training)"
+echo "  Weight decay: $WEIGHT_DECAY (disabled for small datasets)"
 echo "  Num frames: $NUM_FRAMES (optimized for temporal coverage)"
 echo ""
 
@@ -132,9 +132,7 @@ $PYTHON_CMD experiments/cam_human_like/training/finetune_clip_emotions.py \
     --learning_rate $LEARNING_RATE \
     --weight_decay $WEIGHT_DECAY \
     --device $DEVICE \
-    --num_frames $NUM_FRAMES \
-    --use_lr_scheduler \
-    --warmup_steps 100
+    --num_frames $NUM_FRAMES
 
 EU_MODEL_PATH="$OUTPUT_BASE/eu_emotion_replication/model_checkpoints/best_model"
 
