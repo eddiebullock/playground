@@ -1,11 +1,9 @@
 #!/bin/bash
-#SBATCH --job-name=hp_tuning
-#SBATCH --output=hp_tuning_%j.out
-#SBATCH --error=hp_tuning_%j.err
+#SBATCH --job-name=hp_tuning_cam
+#SBATCH --output=hp_tuning_cam_%j.out
+#SBATCH --error=hp_tuning_cam_%j.err
 #SBATCH --time=12:00:00
-# Hyperparameter tuning: 5 configurations × 2 datasets = 10 runs
-# Time for CPU training (each run ~2-3 hours, with early stopping may be faster)
-# 12 hours is maximum allowed by account - early stopping should help complete within limit
+# Hyperparameter tuning: 5 configurations for CAM
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
@@ -17,7 +15,7 @@
 # - Partition: icelake (CPU nodes)
 # - 8 CPUs per task (for efficient data loading)
 # - 32G memory (sufficient for batch processing)
-# - 12 hours (maximum allowed by account - early stopping should help complete within limit)
+# - 12 hours (allows for 5 runs: ~2-3 hours each on CPU, with early stopping may be faster)
 
 # Load required modules for CSD3 CPU nodes
 module purge
@@ -55,8 +53,20 @@ export OMP_NUM_THREADS=8
 export MKL_NUM_THREADS=8
 export NUMEXPR_NUM_THREADS=8
 
+# Set TMPDIR to RDS to avoid filling up /home with temp files
+if [ -d "${HOME}/rds/rds-autism-research-ePtR33Nsgi4/users/eb2007" ]; then
+    export TMPDIR="${HOME}/rds/rds-autism-research-ePtR33Nsgi4/users/eb2007/tmp"
+elif [ -d "/rds/user/eb2007/rds-autism-research-ePtR33Nsgi4/users/eb2007" ]; then
+    export TMPDIR="/rds/user/eb2007/rds-autism-research-ePtR33Nsgi4/users/eb2007/tmp"
+else
+    export TMPDIR="${HOME}/rds/rds-autism-research-ePtR33Nsgi4/users/eb2007/tmp"
+fi
+mkdir -p "$TMPDIR"
+echo "Using TMPDIR: $TMPDIR"
+
 # Change to project directory
 cd ${HOME}/mr_ts_play || exit 1
 
-# Run the hyperparameter tuning script
-bash experiments/cam_human_like/training/hpc_hyperparameter_tuning.sh
+# Run the CAM hyperparameter tuning script
+bash experiments/cam_human_like/training/hpc_hyperparameter_tuning_cam.sh
+

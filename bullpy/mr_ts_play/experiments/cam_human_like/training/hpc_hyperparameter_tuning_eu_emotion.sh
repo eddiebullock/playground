@@ -1,5 +1,5 @@
 #!/bin/bash
-# HPC Script: Hyperparameter Tuning for CAM and EU-Emotion
+# HPC Script: Hyperparameter Tuning for EU-Emotion Only
 # Tests different learning rates to find optimal configuration
 # Uses early stopping to prevent overfitting
 
@@ -26,7 +26,6 @@ EARLY_STOPPING_PATIENCE=5
 EARLY_STOPPING_MIN_DELTA=0.001
 
 # Data paths
-CAM_DATA_ROOT="/home/eb2007/data/CAM"
 if [ -d "${HOME}/rds/rds-autism-research-ePtR33Nsgi4/data/EU_emotions" ]; then
     EU_EMOTIONS_DATA_ROOT="${HOME}/rds/rds-autism-research-ePtR33Nsgi4/data/EU_emotions"
 elif [ -d "/rds/rds-autism-research-ePtR33Nsgi4/data/EU_emotions" ]; then
@@ -47,7 +46,7 @@ else
 fi
 
 echo "============================================================"
-echo "Hyperparameter Tuning Study"
+echo "EU-Emotion Hyperparameter Tuning Study"
 echo "============================================================"
 echo ""
 echo "Configuration:"
@@ -56,7 +55,6 @@ echo "  Num frames: $NUM_FRAMES"
 echo "  Weight decay: $WEIGHT_DECAY (disabled)"
 echo "  Max epochs: $NUM_EPOCHS (with early stopping)"
 echo "  Early stopping patience: $EARLY_STOPPING_PATIENCE epochs"
-echo "  CAM data: $CAM_DATA_ROOT"
 echo "  EU-Emotion data: $EU_EMOTIONS_DATA_ROOT"
 echo "  Output: $OUTPUT_BASE"
 echo ""
@@ -76,83 +74,6 @@ declare -a CONFIGS=(
     "3e-5:4:lr_higher2"
     "8e-6:4:lr_lower2"
 )
-
-# ============================================================
-# CAM Hyperparameter Tuning
-# ============================================================
-echo "============================================================"
-echo "CAM Hyperparameter Tuning"
-echo "============================================================"
-echo ""
-
-# Generate CAM trials once (shared across all runs)
-CAM_TRIALS_DIR="$OUTPUT_BASE/cam_replication/hp_tuning"
-mkdir -p "$CAM_TRIALS_DIR"
-
-echo "Generating CAM trials (shared across all runs)..."
-$PYTHON_CMD experiments/cam_human_like/training/create_cam_trials_from_all_files.py \
-    --cam-dir "$CAM_DATA_ROOT" \
-    --output-dir "$CAM_TRIALS_DIR" \
-    --trials-per-concept 10 \
-    --min-file-size-kb 50 \
-    --train-ratio 0.8 \
-    --seed 42
-
-CAM_TRAIN_TRIALS="$CAM_TRIALS_DIR/cam_trial_definitions_train_all_files.json"
-CAM_TEST_TRIALS="$CAM_TRIALS_DIR/cam_trial_definitions_test_all_files.json"
-
-if [ ! -f "$CAM_TRAIN_TRIALS" ] || [ ! -f "$CAM_TEST_TRIALS" ]; then
-    echo "Error: Failed to generate CAM trials"
-    exit 1
-fi
-
-echo "CAM trials generated successfully"
-echo ""
-
-# Run each configuration
-for config in "${CONFIGS[@]}"; do
-    IFS=':' read -r lr batch_size name <<< "$config"
-    
-    echo "============================================================"
-    echo "CAM Run: $name (lr=$lr, batch_size=$batch_size)"
-    echo "============================================================"
-    
-    RUN_OUTPUT_DIR="$OUTPUT_BASE/cam_replication/hp_tuning/run_${name}"
-    mkdir -p "$RUN_OUTPUT_DIR"
-    
-    $PYTHON_CMD experiments/cam_human_like/training/finetune_clip_emotions.py \
-        --task_specific \
-        --dataset_type cam \
-        --train_trials "$CAM_TRAIN_TRIALS" \
-        --val_trials "$CAM_TEST_TRIALS" \
-        --data_root "$CAM_DATA_ROOT" \
-        --output_dir "$RUN_OUTPUT_DIR/model_checkpoints" \
-        --num_epochs $NUM_EPOCHS \
-        --batch_size $batch_size \
-        --learning_rate $lr \
-        --weight_decay $WEIGHT_DECAY \
-        --device $DEVICE \
-        --num_frames $NUM_FRAMES \
-        --early_stopping_patience $EARLY_STOPPING_PATIENCE \
-        --early_stopping_min_delta $EARLY_STOPPING_MIN_DELTA
-    
-    # Evaluate on test set
-    echo ""
-    echo "Evaluating CAM model ($name) on test set..."
-    $PYTHON_CMD experiments/cam_human_like/training/evaluate_on_cam.py \
-        --model_path "$RUN_OUTPUT_DIR/model_checkpoints/best_model" \
-        --trial_definitions "$CAM_TEST_TRIALS" \
-        --data_root "$CAM_DATA_ROOT" \
-        --dataset_type cam \
-        --split test \
-        --device $DEVICE \
-        --num_frames $NUM_FRAMES \
-        --use_multiframe
-    
-    echo ""
-    echo "CAM run $name complete!"
-    echo ""
-done
 
 # ============================================================
 # EU-Emotion Hyperparameter Tuning
@@ -231,11 +152,9 @@ for config in "${CONFIGS[@]}"; do
 done
 
 echo "============================================================"
-echo "Hyperparameter Tuning Complete!"
+echo "EU-Emotion Hyperparameter Tuning Complete!"
 echo "============================================================"
 echo ""
-echo "Results saved to:"
-echo "  CAM: $OUTPUT_BASE/cam_replication/hp_tuning/"
-echo "  EU-Emotion: $OUTPUT_BASE/eu_emotion_replication/hp_tuning/"
-echo ""
+echo "Results saved to: $OUTPUT_BASE/eu_emotion_replication/hp_tuning/"
 echo "To compare results, check the evaluation JSON files in each run directory."
+

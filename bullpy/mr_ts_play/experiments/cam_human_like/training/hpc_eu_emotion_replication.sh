@@ -40,7 +40,7 @@ fi
 OUTPUT_BASE="${RDS_USER_DIR}/mr_ts_play_results"
 mkdir -p "$OUTPUT_BASE"
 echo "✅ Using RDS for results: $OUTPUT_BASE"
-NUM_EPOCHS=20  # Optimized: 20 epochs for better convergence
+NUM_EPOCHS=40  # Extended: 40 epochs for maximum convergence (with early stopping)
 BATCH_SIZE=4   # CPU-optimized: smaller batch size for CPU training
 LEARNING_RATE=1e-5  # Fixed: Lower LR for stable training (5e-5 was too high, caused plateau/overfitting)
 WEIGHT_DECAY=0.0  # Fixed: Removed weight decay (was causing issues with small dataset)
@@ -70,7 +70,7 @@ echo "Configuration:"
 echo "  EU Emotions data root: $EU_EMOTIONS_DATA_ROOT"
 echo "  Output directory: $OUTPUT_BASE"
 echo "  Device: $DEVICE"
-echo "  Epochs: $NUM_EPOCHS (optimized)"
+echo "  Epochs: $NUM_EPOCHS (extended with early stopping)"
 echo "  Batch size: $BATCH_SIZE (CPU-optimized)"
 echo "  Learning rate: $LEARNING_RATE (fixed: lower for stable training)"
 echo "  Weight decay: $WEIGHT_DECAY (disabled for small datasets)"
@@ -91,18 +91,26 @@ echo ""
 EU_TRAIN_TRIALS="$OUTPUT_BASE/eu_emotion_replication/eu_emotion_trial_definitions_train.json"
 EU_TEST_TRIALS="$OUTPUT_BASE/eu_emotion_replication/eu_emotion_trial_definitions_test.json"
 
-$PYTHON_CMD experiments/cam_human_like/training/create_eu_emotion_trials.py \
-    --eu-emotion-dir "$EU_EMOTIONS_DATA_ROOT" \
-    --output-dir "$OUTPUT_BASE/eu_emotion_replication" \
-    --modality face \
-    --trials-per-emotion 10 \
-    --min-stimuli-per-emotion 3 \
-    --train-ratio 0.8 \
-    --seed 42
-
+# Only generate trials if they don't already exist (to ensure consistency across runs)
 if [ ! -f "$EU_TRAIN_TRIALS" ] || [ ! -f "$EU_TEST_TRIALS" ]; then
-    echo "Error: Failed to generate EU-Emotion trial definitions"
-    exit 1
+    echo "Generating EU-Emotion trial definitions (not found, creating new ones)..."
+    $PYTHON_CMD experiments/cam_human_like/training/create_eu_emotion_trials.py \
+        --eu-emotion-dir "$EU_EMOTIONS_DATA_ROOT" \
+        --output-dir "$OUTPUT_BASE/eu_emotion_replication" \
+        --modality face \
+        --trials-per-emotion 10 \
+        --min-stimuli-per-emotion 3 \
+        --train-ratio 0.8 \
+        --seed 42
+    
+    if [ ! -f "$EU_TRAIN_TRIALS" ] || [ ! -f "$EU_TEST_TRIALS" ]; then
+        echo "Error: Failed to generate EU-Emotion trial definitions"
+        exit 1
+    fi
+else
+    echo "Using existing EU-Emotion trial definitions (to ensure consistency):"
+    echo "  Train: $EU_TRAIN_TRIALS"
+    echo "  Test: $EU_TEST_TRIALS"
 fi
 
 echo "EU-Emotion trials generated successfully"
@@ -132,7 +140,9 @@ $PYTHON_CMD experiments/cam_human_like/training/finetune_clip_emotions.py \
     --learning_rate $LEARNING_RATE \
     --weight_decay $WEIGHT_DECAY \
     --device $DEVICE \
-    --num_frames $NUM_FRAMES
+    --num_frames $NUM_FRAMES \
+    --early_stopping_patience 5 \
+    --early_stopping_min_delta 0.001
 
 EU_MODEL_PATH="$OUTPUT_BASE/eu_emotion_replication/model_checkpoints/best_model"
 

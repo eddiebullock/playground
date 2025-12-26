@@ -58,7 +58,7 @@ fi
 OUTPUT_BASE="${RDS_USER_DIR}/mr_ts_play_results"
 mkdir -p "$OUTPUT_BASE"
 echo "✅ Using RDS for results: $OUTPUT_BASE"
-NUM_EPOCHS=20  # Optimized: 20 epochs for better convergence
+NUM_EPOCHS=40  # Extended: 40 epochs for maximum convergence (with early stopping)
 BATCH_SIZE=4   # CPU-optimized: smaller batch size for CPU training
 LEARNING_RATE=1e-5  # Fixed: Lower LR for stable training (5e-5 was too high, caused plateau/overfitting)
 WEIGHT_DECAY=0.0  # Fixed: Removed weight decay (was causing issues with small dataset)
@@ -88,7 +88,7 @@ echo "Configuration:"
 echo "  CAM data root: $CAM_DATA_ROOT"
 echo "  Output directory: $OUTPUT_BASE"
 echo "  Device: $DEVICE"
-echo "  Epochs: $NUM_EPOCHS (optimized)"
+echo "  Epochs: $NUM_EPOCHS (extended with early stopping)"
 echo "  Batch size: $BATCH_SIZE (CPU-optimized)"
 echo "  Learning rate: $LEARNING_RATE (fixed: lower for stable training)"
 echo "  Weight decay: $WEIGHT_DECAY (disabled for small datasets)"
@@ -107,21 +107,29 @@ echo "Step 1: Generating CAM trials from ALL available files..."
 echo "============================================================"
 echo ""
 
-# Generate trials from all valid files (unified methodology)
-$PYTHON_CMD experiments/cam_human_like/training/create_cam_trials_from_all_files.py \
-    --cam-dir "$CAM_DATA_ROOT" \
-    --output-dir "$OUTPUT_BASE/cam_replication" \
-    --trials-per-concept 10 \
-    --min-file-size-kb 50 \
-    --train-ratio 0.8 \
-    --seed 42
-
 CAM_TRAIN_TRIALS="$OUTPUT_BASE/cam_replication/cam_trial_definitions_train_all_files.json"
 CAM_TEST_TRIALS="$OUTPUT_BASE/cam_replication/cam_trial_definitions_test_all_files.json"
 
+# Only generate trials if they don't already exist (to ensure consistency across runs)
 if [ ! -f "$CAM_TRAIN_TRIALS" ] || [ ! -f "$CAM_TEST_TRIALS" ]; then
-    echo "Error: Failed to generate CAM trials"
-    exit 1
+    echo "Generating CAM trials (not found, creating new ones)..."
+    # Generate trials from all valid files (unified methodology)
+    $PYTHON_CMD experiments/cam_human_like/training/create_cam_trials_from_all_files.py \
+        --cam-dir "$CAM_DATA_ROOT" \
+        --output-dir "$OUTPUT_BASE/cam_replication" \
+        --trials-per-concept 10 \
+        --min-file-size-kb 50 \
+        --train-ratio 0.8 \
+        --seed 42
+    
+    if [ ! -f "$CAM_TRAIN_TRIALS" ] || [ ! -f "$CAM_TEST_TRIALS" ]; then
+        echo "Error: Failed to generate CAM trials"
+        exit 1
+    fi
+else
+    echo "Using existing CAM trial definitions (to ensure consistency):"
+    echo "  Train: $CAM_TRAIN_TRIALS"
+    echo "  Test: $CAM_TEST_TRIALS"
 fi
 
 echo "CAM trials generated successfully"
@@ -151,7 +159,9 @@ $PYTHON_CMD experiments/cam_human_like/training/finetune_clip_emotions.py \
     --learning_rate $LEARNING_RATE \
     --weight_decay $WEIGHT_DECAY \
     --device $DEVICE \
-    --num_frames $NUM_FRAMES
+    --num_frames $NUM_FRAMES \
+    --early_stopping_patience 5 \
+    --early_stopping_min_delta 0.001
 
 CAM_MODEL_PATH="$OUTPUT_BASE/cam_replication/model_checkpoints/best_model"
 

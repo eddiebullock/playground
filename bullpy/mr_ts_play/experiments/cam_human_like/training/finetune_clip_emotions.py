@@ -306,6 +306,8 @@ def finetune_clip_task_specific(
     num_frames=8,
     use_lr_scheduler=True,
     warmup_steps=100,
+    early_stopping_patience=5,
+    early_stopping_min_delta=0.001,
 ):
     """
     Fine-tune CLIP for task-specific 4-option forced-choice emotion recognition.
@@ -368,6 +370,7 @@ def finetune_clip_task_specific(
         scheduler = None
     
     best_val_acc = 0.0
+    epochs_without_improvement = 0
     
     # Training loop
     for epoch in range(num_epochs):
@@ -475,14 +478,21 @@ def finetune_clip_task_specific(
                 processor.save_pretrained(str(checkpoint_dir))
                 print(f"Saved checkpoint to {checkpoint_dir}")
                 
-                if val_acc > best_val_acc:
+                if val_acc > best_val_acc + early_stopping_min_delta:
                     best_val_acc = val_acc
+                    epochs_without_improvement = 0
                     # Save as best model
                     best_dir = output_dir / "best_model"
                     best_dir.mkdir(exist_ok=True)
                     model.save_pretrained(str(best_dir))
                     processor.save_pretrained(str(best_dir))
                     print(f"New best model! Saved to {best_dir}")
+                else:
+                    epochs_without_improvement += 1
+                    if early_stopping_patience > 0 and epochs_without_improvement >= early_stopping_patience:
+                        print(f"\nEarly stopping triggered! No improvement for {epochs_without_improvement} epochs.")
+                        print(f"Best validation accuracy: {best_val_acc:.2%}")
+                        break
         except Exception as e:
             print(f"Error saving checkpoint in epoch {epoch+1}: {e}", flush=True)
             import traceback
@@ -704,6 +714,8 @@ Examples:
     parser.add_argument('--weight_decay', type=float, default=0.01, help='Weight decay for optimizer')
     parser.add_argument('--use_lr_scheduler', action='store_true', help='Use cosine annealing LR scheduler with warmup (default: True)')
     parser.add_argument('--warmup_steps', type=int, default=100, help='Number of warmup steps for LR scheduler')
+    parser.add_argument('--early_stopping_patience', type=int, default=0, help='Early stopping patience (0 = disabled, default: 0)')
+    parser.add_argument('--early_stopping_min_delta', type=float, default=0.001, help='Minimum change to qualify as improvement (default: 0.001)')
     parser.add_argument('--device', type=str, default='cpu', help='Device (cpu, cuda, mps)')
     parser.add_argument('--num_frames', type=int, default=8, help='Frames per video (for CAM dataset)')
     parser.add_argument('--use_multiframe', action='store_true', default=True, help='Use multiple frames per video (average features)')
@@ -782,6 +794,8 @@ Examples:
             num_frames=args.num_frames,
             use_lr_scheduler=getattr(args, 'use_lr_scheduler', True),
             warmup_steps=args.warmup_steps,
+            early_stopping_patience=getattr(args, 'early_stopping_patience', 0),
+            early_stopping_min_delta=getattr(args, 'early_stopping_min_delta', 0.001),
         )
         
         print(f"\nFine-tuning complete! Model saved to {args.output_dir}")
