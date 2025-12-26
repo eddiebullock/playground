@@ -60,7 +60,7 @@ mkdir -p "$OUTPUT_BASE"
 echo "✅ Using RDS for results: $OUTPUT_BASE"
 NUM_EPOCHS=40  # Extended: 40 epochs for maximum convergence (with early stopping)
 BATCH_SIZE=4   # CPU-optimized: smaller batch size for CPU training
-LEARNING_RATE=1e-5  # Fixed: Lower LR for stable training (5e-5 was too high, caused plateau/overfitting)
+LEARNING_RATE=5e-6  # Optimized: Best from HP tuning (72.5% accuracy vs 62.5% baseline)
 WEIGHT_DECAY=0.0  # Fixed: Removed weight decay (was causing issues with small dataset)
 NUM_FRAMES=16  # Optimized: more frames for better temporal coverage
 DEVICE="cpu"   # Using CPU nodes (icelake partition - user has CPU access only)
@@ -90,7 +90,7 @@ echo "  Output directory: $OUTPUT_BASE"
 echo "  Device: $DEVICE"
 echo "  Epochs: $NUM_EPOCHS (extended with early stopping)"
 echo "  Batch size: $BATCH_SIZE (CPU-optimized)"
-echo "  Learning rate: $LEARNING_RATE (fixed: lower for stable training)"
+echo "  Learning rate: $LEARNING_RATE (optimized: best from HP tuning - 72.5% accuracy)"
 echo "  Weight decay: $WEIGHT_DECAY (disabled for small datasets)"
 echo "  Num frames: $NUM_FRAMES (optimized for temporal coverage)"
 echo "  Project root: $PROJECT_ROOT"

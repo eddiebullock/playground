@@ -2,8 +2,8 @@
 #SBATCH --job-name=cam_replication
 #SBATCH --output=cam_replication_%j.out
 #SBATCH --error=cam_replication_%j.err
-#SBATCH --time=06:00:00
-# CPU-optimized replication: 20 epochs, all available files, comprehensive evaluation
+#SBATCH --time=12:00:00
+# CPU-optimized replication: 40 epochs with early stopping, all available files, comprehensive evaluation
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
@@ -14,7 +14,7 @@
 # - Partition: icelake (CPU nodes - user has access to this)
 # - 8 CPUs per task (for efficient data loading)
 # - 32G memory (sufficient for batch processing)
-# - 12 hours (CPU training is slower, but will complete)
+# - 12 hours (40 epochs with early stopping - will stop early if validation plateaus)
 # Note: Scripts automatically detect CPU and adjust batch size
 
 # Load required modules for CSD3 CPU nodes
