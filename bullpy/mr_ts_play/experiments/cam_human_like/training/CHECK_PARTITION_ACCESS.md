@@ -105,3 +105,4 @@ sed -i 's/#SBATCH -p ampere/#SBATCH -p icelake/' experiments/cam_human_like/trai
 The training script will automatically detect CPU and adjust batch size.
 
 
+

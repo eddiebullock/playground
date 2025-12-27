@@ -1,0 +1,41 @@
+llm:
+  provider: "openai"  # Primary provider, extendable to "anthropic", "google", etc.
+  # For emotion embeddings (label-only processing)
+  embedding_model: "text-embedding-3-small"  # OpenAI embedding model
+  # For video description (vision processing)
+  vision_model: "gpt-4o-mini"  # Vision model: "gpt-4o", "gpt-4o-mini", "gpt-4-turbo"
+  # Use vision_model for video processing, embedding_model for text embeddings
+  model: "gpt-4o-mini"  # Default model (used for vision if vision_model not set)
+  api_key_env: "OPENAI_API_KEY"  # Environment variable name (loaded from .env)
+  cache_dir: "data/llm_cache"  # Relative to experiment directory
+  use_cache: true
+  cache_version: "1.0"  # For cache invalidation if needed
+  vision_detail: "low"  # Image detail: "low" (cheaper) or "high" (better quality)
+
+fusion:
+  # Primary method: Weighted Average (most common in literature)
+  method: "weighted_average"  # Options: "weighted_average", "attention"
+  clip_weight: 0.7  # Weight for CLIP scores (0.0 to 1.0)
+  llm_weight: 0.3   # Weight for LLM scores (1.0 - clip_weight)
+  
+  # Attention-based fusion (if method = "attention")
+  attention_dim: 128  # Dimension for attention mechanism
+  
+  # Future: Concatenation + MLP (requires training)
+  # mlp_hidden_dim: 256
+
+data:
+  dataset_type: "cam"  # "cam" or "eu_emotion"
+  
+  cam_data_root: "/Users/eb2007/Library/CloudStorage/OneDrive-UniversityofCambridge/Documents/PhD/data/mindreading_transporter_files/Mindreading emotions library/Emotions"
+  eu_emotion_data_root: "/Users/eb2007/Library/CloudStorage/OneDrive-UniversityofCambridge/Documents/PhD/data/EU_emotions"
+  
+  # Test trial definitions (relative to project root)
+  project_root: "/Users/eb2007/playground/bullpy/mr_ts_play"
+  cam_test_trials: "data/trial_definitions/cam_test.json"
+  eu_emotion_test_trials: "data/trial_definitions/eu_emotion_test.json"
+
+models:
+  cam_clip_model_path: "/Users/eb2007/playground/bullpy/mr_ts_play/models/cam_finetuned_best"
+  eu_emotion_clip_model_path: "/Users/eb2007/playground/bullpy/mr_ts_play/models/eu_emotion_finetuned_best"
+
