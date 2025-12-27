@@ -1,0 +1,25 @@
+llm:
+  provider: "openai"
+  embedding_model: "text-embedding-3-small"
+  api_key_env: "OPENAI_API_KEY"
+  cache_dir: "data/llm_cache"
+  use_cache: true
+
+fusion:
+  method: "weighted_average"
+  clip_weight: 0.7
+  llm_weight: 0.3
+
+data:
+  cam_data_root: "/Users/eb2007/Library/CloudStorage/OneDrive-UniversityofCambridge/Documents/PhD/data/mindreading_transporter_files/Mindreading emotions library/Emotions"
+  eu_emotion_data_root: "/Users/eb2007/Library/CloudStorage/OneDrive-UniversityofCambridge/Documents/PhD/data/EU_emotions"
+  
+  models:
+    cam_basic_emotions_model: "/Users/eb2007/playground/bullpy/mr_ts_play/models/basic_emotions_cam_finetuned"
+    eu_emotion_basic_emotions_model: "/Users/eb2007/playground/bullpy/mr_ts_play/models/basic_emotions_eu_emotion_finetuned"
+
+evaluation:
+  classification_type: "multi_class"  # 7-way classification
+  num_classes: 7
+  candidate_labels: ["happy", "sad", "angry", "fear", "surprise", "disgust", "neutral"]
+

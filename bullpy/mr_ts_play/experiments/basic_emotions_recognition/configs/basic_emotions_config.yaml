@@ -1,0 +1,21 @@
+training:
+  num_epochs: 20
+  batch_size: 4  # Smaller for CPU
+  learning_rate: 5e-5
+  num_frames: 16
+  device: "cpu"  # CPU training
+  weight_decay: 0.01
+
+data:
+  cam_data_root: "/Users/eb2007/Library/CloudStorage/OneDrive-UniversityofCambridge/Documents/PhD/data/mindreading_transporter_files/Mindreading emotions library/Emotions"
+  eu_emotion_data_root: "/Users/eb2007/Library/CloudStorage/OneDrive-UniversityofCambridge/Documents/PhD/data/EU_emotions"
+  
+  # Emotion mappings
+  cam_basic_mapping: "data/basic_emotion_mapping.json"  # Existing file
+  eu_emotion_basic_mapping: "data/basic_emotion_mappings/eu_emotion_basic_mapping.json"  # New file
+
+basic_emotions:
+  categories: ["happy", "sad", "angry", "fear", "surprise", "disgust", "neutral"]
+  num_classes: 7
+  classification_type: "multi_class"  # 7-way classification, not forced-choice
+
