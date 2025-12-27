@@ -9,8 +9,9 @@ llm:
   api_key_env: "OPENAI_API_KEY"  # Environment variable name (loaded from .env)
   cache_dir: "data/llm_cache"  # Relative to experiment directory
   use_cache: true
-  cache_version: "1.0"  # For cache invalidation if needed
+  cache_version: "1.2"  # For cache invalidation if needed (bumped for binary classification revert)
   vision_detail: "low"  # Image detail: "low" (cheaper) or "high" (better quality)
+  max_frames_per_video: 4  # Number of frames to send to LLM (1-8, default 4 for balance)
 
 fusion:
   # Primary method: Weighted Average (most common in literature)

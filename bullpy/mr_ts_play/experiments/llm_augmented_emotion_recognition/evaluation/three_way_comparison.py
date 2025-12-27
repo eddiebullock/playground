@@ -213,19 +213,19 @@ def run_llm_only(
             # Load video frames
             video_frames = load_video_frames(video_path, num_frames)
             
-            # Describe video using LLM vision model
-            video_description = llm_wrapper.describe_video_frames(
+            # Direct emotion classification (like ChatGPT web interface)
+            # This avoids information loss from description → embedding → similarity
+            candidate_labels = trial['candidate_labels']
+            scores = llm_wrapper.classify_emotion_directly(
                 video_frames,
+                candidate_labels,
                 video_path=video_path,
                 detail="low",  # Use "low" for cost efficiency
+                max_frames=llm_wrapper.max_frames,  # Use multiple frames for better quality
             )
             
-            # Score emotions based on description
-            candidate_labels = trial['candidate_labels']
-            scores = llm_wrapper.score_emotions_from_description(
-                video_description,
-                candidate_labels,
-            )
+            # Get video description for logging (optional, for analysis)
+            video_description = None  # Not needed for direct classification, but can be retrieved if needed
             
             # Get predicted label
             predicted_label = max(scores.items(), key=lambda x: x[1])[0]
@@ -238,7 +238,7 @@ def run_llm_only(
                 'candidate_labels': candidate_labels,
                 'scores': scores,
                 'is_correct': predicted_label == correct_label,
-                'video_description': video_description,  # Include for analysis
+                'method': 'direct_classification',  # Indicate we used direct classification
             })
         except Exception as e:
             logger.error(f"Error processing trial {trial.get('trial_id', 'unknown')}: {e}")
@@ -377,6 +377,8 @@ def run_three_way_comparison(
         cache_version=llm_config.get('cache_version', '1.0'),
         vision_detail=llm_config.get('vision_detail', 'low'),
     )
+    # Set max_frames from config
+    llm_wrapper.max_frames = llm_config.get('max_frames_per_video', 4)
     augmented_wrapper = LLMAugmentedWrapper(
         clip_loader=clip_loader,
         llm_wrapper=llm_wrapper,
