@@ -38,8 +38,8 @@ OUTPUT_BASE="${RDS_USER_DIR}/mr_ts_play_results"
 mkdir -p "$OUTPUT_BASE"
 echo "✅ Using RDS for results: $OUTPUT_BASE"
 
-# Training configuration (CPU-optimized)
-NUM_EPOCHS=20
+# Training configuration (CPU-optimized, faster)
+NUM_EPOCHS=12  # Reduced from 20 - early stopping will likely stop before this
 BATCH_SIZE=4
 LEARNING_RATE=5e-5
 WEIGHT_DECAY=0.01
@@ -47,7 +47,7 @@ NUM_FRAMES=16
 DEVICE="cpu"
 
 echo "Configuration: CPU training (icelake partition)"
-echo "Note: CPU training will take approximately 8-12 hours for 20 epochs..."
+echo "Note: CPU training will take approximately 3-5 hours (optimized settings)"
 
 # Project root
 PROJECT_ROOT="${HOME}/mr_ts_play"

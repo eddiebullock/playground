@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Evaluate fine-tuned CLIP model on basic emotions test set (7-way classification).
+Evaluate fine-tuned CLIP model on basic emotions test set (4-option forced-choice).
 """
 
 import argparse
@@ -90,7 +90,7 @@ def evaluate_basic_emotions(
                     # Process frames
                     image_inputs = processor(images=video_frames, return_tensors="pt").to(device)
                     
-                    # Process all 7 candidate labels
+                    # Process all 4 candidate labels (forced-choice format)
                     prompted_labels = [f"a photo of a person feeling {label}" for label in candidate_labels]
                     text_inputs = processor(
                         text=prompted_labels,
@@ -195,9 +195,8 @@ def main():
     parser.add_argument(
         '--device',
         type=str,
-        default='cpu',
-        choices=['cpu', 'cuda'],
-        help='Device to evaluate on (default: cpu)'
+        default='auto',
+        help='Device to evaluate on: auto (detect), cpu, cuda, or mps (default: auto)'
     )
     parser.add_argument(
         '--num_frames',
@@ -213,6 +212,16 @@ def main():
     )
     
     args = parser.parse_args()
+    
+    # Auto-detect device if 'auto' or not specified
+    if args.device == 'auto' or args.device is None:
+        if hasattr(torch.backends, 'mps') and torch.backends.mps.is_available():
+            args.device = 'mps'
+        elif torch.cuda.is_available():
+            args.device = 'cuda'
+        else:
+            args.device = 'cpu'
+        print(f"Auto-detected device: {args.device}")
     
     # Evaluate
     results = evaluate_basic_emotions(

@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
 """
-Fine-tune CLIP on basic emotions (7-way classification).
+Fine-tune CLIP on basic emotions (4-option forced-choice, matching complex emotion experiments).
 
-This script fine-tunes CLIP to predict 7 basic emotions:
+This script fine-tunes CLIP to predict 7 basic emotions using 4-option forced-choice:
 - happy, sad, angry, fear, surprise, disgust, neutral
+- Each trial has 4 candidate labels: 1 correct + 3 foils
+- Model selects from the 4 options (easier discrimination than 7-way)
 
-Key differences from fine-grained training:
-- Only 7 classes instead of 20-405 classes
-- Standard multi-class classification (not forced-choice)
-- All 7 emotions are candidate labels for each trial
+Key change: Now uses 4-option forced-choice (like complex emotion experiments):
+- Matches task structure of complex emotion experiments
+- Easier discrimination task
+- Better performance expected
 """
 
 import argparse
@@ -38,9 +40,11 @@ BASIC_EMOTIONS = ["happy", "sad", "angry", "fear", "surprise", "disgust", "neutr
 
 class BasicEmotionDataset(TaskSpecificTrialDataset):
     """
-    Dataset for basic emotion fine-tuning (7-way classification).
+    Dataset for basic emotion fine-tuning (4-option forced-choice).
     
-    Extends TaskSpecificTrialDataset but ensures all trials have 7 candidate labels.
+    Extends TaskSpecificTrialDataset for forced-choice format:
+    - Each trial has 4 candidate labels (1 correct + 3 foils)
+    - Matches complex emotion experiment format
     """
     
     def __getitem__(self, idx):
@@ -63,27 +67,38 @@ class BasicEmotionDataset(TaskSpecificTrialDataset):
                 if found_files:
                     video_path = found_files[0]
         
-        # Load frames
-        frames = self._load_video_frames(video_path)
+        # Load frames - catch errors and return placeholder
+        try:
+            frames = self._load_video_frames(video_path)
+        except (ValueError, FileNotFoundError, OSError) as e:
+            # Return a random valid sample instead (like EUEmotionDataset does)
+            print(f"Warning: Could not load {video_path.name}: {e}", flush=True)
+            import random
+            return self.__getitem__(random.randint(0, len(self.trials) - 1))
         
         # Apply transforms if provided
         if self.transform:
             frames = [self.transform(frame) for frame in frames]
         
-        # Get candidate labels (should be all 7 basic emotions)
-        candidate_labels = trial.get('all_candidate_labels', BASIC_EMOTIONS.copy())
+        # Get candidate labels (should be 4 options: 1 correct + 3 foils)
+        candidate_labels = trial.get('candidate_labels', [])
         
-        # Ensure we have exactly 7 labels
-        if len(candidate_labels) != 7:
-            candidate_labels = BASIC_EMOTIONS.copy()
+        # Validate we have 4 candidate labels
+        if len(candidate_labels) != 4:
+            # Fallback: create 4-option forced-choice from correct label
+            correct_label = trial.get('correct_label', 'neutral')
+            foils = [e for e in BASIC_EMOTIONS if e != correct_label][:3]
+            candidate_labels = [correct_label] + foils
+            import random
+            random.shuffle(candidate_labels)
         
-        # Get correct index
+        # Get correct index (should be 0-3)
         correct_idx = trial.get('correct_idx', 0)
         
         # Validate correct_idx is in range
-        if correct_idx < 0 or correct_idx >= 7:
+        if correct_idx < 0 or correct_idx >= 4:
             # Try to find correct label index
-            correct_label = trial.get('correct_label') or trial.get('basic_emotion', 'neutral')
+            correct_label = trial.get('correct_label', 'neutral')
             if correct_label in candidate_labels:
                 correct_idx = candidate_labels.index(correct_label)
             else:
@@ -98,7 +113,7 @@ class BasicEmotionDataset(TaskSpecificTrialDataset):
 
 
 def validate_basic_emotions(model, val_loader, processor, device):
-    """Validate model on validation set (7-way classification)."""
+    """Validate model on validation set (4-option forced-choice)."""
     model.eval()
     correct = 0
     total = 0
@@ -116,7 +131,7 @@ def validate_basic_emotions(model, val_loader, processor, device):
                     # Process frames
                     image_inputs = processor(images=video_frames, return_tensors="pt").to(device)
                     
-                    # Process all 7 candidate labels with prompt templates
+                    # Process all 4 candidate labels with prompt templates
                     prompted_labels = [f"a photo of a person feeling {label}" for label in candidate_labels]
                     text_inputs = processor(
                         text=prompted_labels,
@@ -139,7 +154,7 @@ def validate_basic_emotions(model, val_loader, processor, device):
                     # Compute similarity
                     logits = video_features @ text_features.t()
                     
-                    # Get predicted index
+                    # Get predicted index (0-3 for 4-option forced-choice)
                     predicted_idx = logits.argmax(dim=-1).item()
                     
                     if predicted_idx == correct_idx:
@@ -170,10 +185,11 @@ def finetune_basic_emotions(
     early_stopping_min_delta=0.001,
 ):
     """
-    Fine-tune CLIP for 7-way basic emotion classification.
+    Fine-tune CLIP for 4-option forced-choice basic emotion classification.
     
     Args:
         train_dataset: BasicEmotionDataset returning (frames, candidate_labels, correct_idx)
+                      Each trial has 4 candidate labels (1 correct + 3 foils)
         val_dataset: Validation dataset (same format)
         model_name: CLIP model to fine-tune
         output_dir: Directory to save fine-tuned model
@@ -245,14 +261,21 @@ def finetune_basic_emotions(
                         candidate_labels = candidate_labels_batch[video_idx]
                         correct_idx = correct_indices[video_idx].item()
                         
-                        # Ensure we have exactly 7 labels
-                        if len(candidate_labels) != 7:
-                            candidate_labels = BASIC_EMOTIONS.copy()
+                        # Ensure we have 4 candidate labels (forced-choice format)
+                        if len(candidate_labels) != 4:
+                            # Fallback: create 4-option forced-choice
+                            trial = train_dataset.trials[video_idx] if hasattr(train_dataset, 'trials') else {}
+                            correct_label = trial.get('correct_label', 'neutral')
+                            foils = [e for e in BASIC_EMOTIONS if e != correct_label][:3]
+                            candidate_labels = [correct_label] + foils
+                            import random
+                            random.shuffle(candidate_labels)
+                            correct_idx = candidate_labels.index(correct_label)
                         
                         # Process frames
                         image_inputs = processor(images=video_frames, return_tensors="pt").to(device)
                         
-                        # Process all 7 candidate labels with prompt templates
+                        # Process all 4 candidate labels with prompt templates
                         prompted_labels = [f"a photo of a person feeling {label}" for label in candidate_labels]
                         text_inputs = processor(
                             text=prompted_labels,
@@ -272,10 +295,10 @@ def finetune_basic_emotions(
                         video_features = F.normalize(video_features, dim=-1)
                         text_features = F.normalize(text_features, dim=-1)
                         
-                        # Compute similarity: video_features @ text_features.t() -> (1, 7)
+                        # Compute similarity: video_features @ text_features.t() -> (1, 4)
                         logits = video_features @ text_features.t()
                         
-                        # Cross-entropy loss over 7 options
+                        # Cross-entropy loss over 4 options (forced-choice)
                         target = torch.tensor([correct_idx], dtype=torch.long).to(device)
                         loss = nn.CrossEntropyLoss()(logits, target)
                         
@@ -408,9 +431,8 @@ def main():
     parser.add_argument(
         '--device',
         type=str,
-        default='cpu',
-        choices=['cpu', 'cuda'],
-        help='Device to train on (default: cpu)'
+        default='auto',
+        help='Device to train on: auto (detect), cpu, cuda, or mps (default: auto)'
     )
     parser.add_argument(
         '--num_frames',
@@ -432,6 +454,17 @@ def main():
     )
     
     args = parser.parse_args()
+    
+    # Auto-detect device if 'auto' or not specified
+    if args.device == 'auto' or args.device is None:
+        import torch
+        if hasattr(torch.backends, 'mps') and torch.backends.mps.is_available():
+            args.device = 'mps'
+        elif torch.cuda.is_available():
+            args.device = 'cuda'
+        else:
+            args.device = 'cpu'
+        print(f"Auto-detected device: {args.device}")
     
     # Create datasets
     print("Creating datasets...")
