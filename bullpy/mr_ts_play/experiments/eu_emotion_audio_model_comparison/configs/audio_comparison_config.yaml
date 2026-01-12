@@ -1,0 +1,56 @@
+dataset:
+  name: "eu_emotion_audio"
+  data_root: "/Users/eb2007/Library/CloudStorage/OneDrive-UniversityofCambridge/Documents/PhD/data/EU_emotions"
+  trial_definitions: "data/trial_definitions/eu_emotion_audio_test.json"
+  audio_subdirectory: "EU Emotion - UK Voices/Fixed - amplified volume"
+
+models:
+  audio_models:
+    - wav2vec2_base
+    - wav2vec2_large
+    - whisper_base
+    - whisper_tiny
+    # - hubert_base  # Uncomment to include HuBERT
+
+  # Model-specific configurations
+  model_configs:
+    wav2vec2_base:
+      model_name: "facebook/wav2vec2-base"
+      sample_rate: 16000
+      # Uncomment to use fine-tuned model:
+      # fine_tuned_path: "models/wav2vec2_emotion_finetuned_task_specific"
+    
+    wav2vec2_large:
+      model_name: "facebook/wav2vec2-large"
+      sample_rate: 16000
+      # fine_tuned_path: "models/wav2vec2_large_emotion_finetuned_task_specific"
+    
+    whisper_base:
+      model_name: "openai/whisper-base"
+      sample_rate: 16000
+      # fine_tuned_path: "models/whisper_base_emotion_finetuned_task_specific"
+    
+    whisper_small:
+      model_name: "openai/whisper-small"
+      sample_rate: 16000
+      # fine_tuned_path: "models/whisper_small_emotion_finetuned_task_specific"
+    
+    whisper_tiny:
+      model_name: "openai/whisper-tiny"
+      sample_rate: 16000
+      # fine_tuned_path: "models/whisper_tiny_emotion_finetuned_task_specific"
+    
+    hubert_base:
+      model_name: "facebook/hubert-base-ls960"
+      sample_rate: 16000
+
+audio_processing:
+  target_sample_rate: 16000  # Standard for Wav2Vec2 and Whisper
+  max_duration: null  # None = no limit, or specify seconds
+  normalize: true  # Normalize audio to [-1, 1] range
+
+output:
+  results_dir: "results/eu_emotion_audio_model_comparison"
+  save_predictions: true
+  save_confusion_matrices: true
+  save_per_emotion_results: true

@@ -146,8 +146,36 @@ class TaskSpecificTrialDataset(Dataset):
             frames = [self.transform(frame) for frame in frames]
         
         # Get candidate labels and correct index
-        candidate_labels = trial['candidate_labels']
-        correct_idx = trial['correct_idx']
+        # Generate candidate_labels if not present (for compatibility with EU-Emotion train/val splits)
+        if 'candidate_labels' in trial:
+            candidate_labels = trial['candidate_labels']
+        else:
+            # Generate 4 candidate labels: correct + 3 random foils
+            # Get all unique emotions from all trials
+            all_emotions = set()
+            for t in self.trials:
+                if 'correct_label' in t:
+                    all_emotions.add(t['correct_label'])
+                elif 'emotion' in t:
+                    all_emotions.add(t['emotion'])
+            
+            correct_label = trial.get('correct_label', trial.get('emotion', 'neutral'))
+            other_emotions = [e for e in all_emotions if e != correct_label]
+            import random
+            foils = random.sample(other_emotions, min(3, len(other_emotions)))
+            candidate_labels = [correct_label] + foils
+            random.shuffle(candidate_labels)
+        
+        # Get correct index
+        if 'correct_idx' in trial:
+            correct_idx = trial['correct_idx']
+        else:
+            # Find correct index
+            correct_label = trial.get('correct_label', trial.get('emotion', 'neutral'))
+            try:
+                correct_idx = candidate_labels.index(correct_label)
+            except ValueError:
+                correct_idx = 0  # Default to first option
         
         return {
             'frames': frames,
