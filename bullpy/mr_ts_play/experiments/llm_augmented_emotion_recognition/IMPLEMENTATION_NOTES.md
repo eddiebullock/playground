@@ -73,3 +73,4 @@ If vision model fails, the system falls back to:
 - Batch processing (process multiple videos in one call)
 - Alternative vision models (Claude, Gemini)
 
+

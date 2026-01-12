@@ -156,3 +156,4 @@ python scripts/run_llm_augmented_experiment.py \
 - Costs are per experiment run (94 videos)
 - Caching makes subsequent runs essentially free
 
+

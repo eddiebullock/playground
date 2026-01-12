@@ -1,0 +1,72 @@
+dataset:
+  name: "eu_emotion"
+  data_root: "/Users/eb2007/Library/CloudStorage/OneDrive-UniversityofCambridge/Documents/PhD/data/EU_emotions"
+  trial_definitions: "data/trial_definitions/eu_emotion_test.json"
+
+models:
+  vision_models:
+    - i3d
+    - timesformer
+    - resnet50
+    - vit_base
+    - efficientnet_b0
+    - clip_finetuned
+    - fer2013_vit
+    - instructblip
+  
+  llm_models:
+    - gpt-4o-mini
+    - gpt-4o
+
+  # Model-specific configurations
+  model_configs:
+    clip_finetuned:
+      model_path: "/Users/eb2007/playground/bullpy/mr_ts_play/models/eu_emotion_finetuned_best"
+      # Note: Currently using clip-vit-base-patch32
+      # To use larger CLIP: change model_name in fine-tuning script to:
+      # - "openai/clip-vit-large-patch14" (larger, slower)
+      # - "openai/clip-vit-base-patch16" (same size, higher resolution)
+    
+    # Fine-tuned models (task-specific approach, 4-option forced-choice)
+    resnet50:
+      fine_tuned_path: "models/resnet50_emotion_finetuned_task_specific/best_model.pth"
+    
+    vit_base:
+      fine_tuned_path: "models/vit_emotion_finetuned_task_specific/best_model.pth"
+    
+    efficientnet_b0:
+      fine_tuned_path: "models/efficientnet_b0_emotion_finetuned_task_specific/best_model.pth"
+    
+    fer2013_vit:
+      model_name: "trpakov/vit-face-expression"
+    
+    instructblip:
+      model_name: "Salesforce/instructblip-vicuna-7b"
+    
+    gpt-4o-mini:
+      vision_detail: "low"
+      cache_dir: "experiments/eu_emotion_model_comparison/data/llm_cache"
+      use_cache: true
+      cost_limit_usd: 13.0
+    
+    gpt-4o:
+      vision_detail: "low"
+      cache_dir: "experiments/eu_emotion_model_comparison/data/llm_cache"
+      use_cache: true
+      cost_limit_usd: 13.0
+
+video_processing:
+  num_frames: 8
+  frame_sampling: "uniform"  # or "temporal" or "keyframe"
+
+llm_settings:
+  vision_detail: "low"  # or "high"
+  max_frames_per_video: 4
+  use_cache: true
+  cost_limit_gbp: 10.0
+
+output:
+  results_dir: "results/eu_emotion_model_comparison"
+  save_predictions: true
+  save_confusion_matrices: true
+  save_per_emotion_results: true

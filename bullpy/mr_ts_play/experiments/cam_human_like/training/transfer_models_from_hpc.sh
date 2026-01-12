@@ -96,3 +96,4 @@ echo "  from transformers import CLIPModel, CLIPProcessor"
 echo "  model = CLIPModel.from_pretrained('${LOCAL_MODELS_DIR}/cam_finetuned_best')"
 echo "  processor = CLIPProcessor.from_pretrained('${LOCAL_MODELS_DIR}/cam_finetuned_best')"
 
+
