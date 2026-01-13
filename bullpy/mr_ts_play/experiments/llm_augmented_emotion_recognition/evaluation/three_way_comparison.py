@@ -367,11 +367,27 @@ def run_three_way_comparison(
     # Initialize models
     logger.info("Initializing models...")
     clip_loader = CLIPModelLoader(clip_model_path, device=device)
+    
+    # Extract provider-specific config (supports both old and new config formats)
+    provider = llm_config['provider']
+    
+    # New config format: provider-specific sections
+    if provider in llm_config:
+        provider_config = llm_config[provider]
+        model = provider_config.get('model', llm_config.get('model', 'text-embedding-3-small'))
+        embedding_model = provider_config.get('embedding_model', llm_config.get('embedding_model'))
+        vision_model = provider_config.get('vision_model', llm_config.get('vision_model', model))
+    else:
+        # Old config format: flat structure
+        model = llm_config.get('model', 'text-embedding-3-small')
+        embedding_model = llm_config.get('embedding_model')
+        vision_model = llm_config.get('vision_model', model)
+    
     llm_wrapper = LLMWrapper(
-        provider=llm_config['provider'],
-        model=llm_config.get('model', 'text-embedding-3-small'),
-        embedding_model=llm_config.get('embedding_model'),
-        vision_model=llm_config.get('vision_model'),
+        provider=provider,
+        model=model,
+        embedding_model=embedding_model,
+        vision_model=vision_model,
         cache_dir=llm_config['cache_dir'],
         use_cache=llm_config['use_cache'],
         cache_version=llm_config.get('cache_version', '1.0'),
