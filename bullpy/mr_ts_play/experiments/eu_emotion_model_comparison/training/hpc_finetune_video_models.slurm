@@ -69,7 +69,9 @@ echo "Partition: icelake (CPU)"
 echo "=========================================="
 
 # Run fine-tuning (both I3D and TimeSformer)
-bash experiments/eu_emotion_model_comparison/training/finetune_i3d_timesformer.sh
+# IMPORTANT: use the HPC wrapper (it sets the correct RDS data root).
+# The generic finetune_i3d_timesformer.sh may contain a local (macOS) DATA_ROOT.
+bash experiments/eu_emotion_model_comparison/training/hpc_finetune_video_models.sh
 
 echo "=========================================="
 echo "Fine-tuning completed!"
