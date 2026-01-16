@@ -6,8 +6,8 @@ llm:
     model: gpt-4o-mini
     api_key_env: OPENAI_API_KEY
   anthropic:
-    vision_model: claude-sonnet-4-5-20250929
-    model: claude-sonnet-4-5-20250929
+    vision_model: claude-3-5-sonnet-20241022
+    model: claude-3-5-sonnet-20241022
     api_key_env: ANTHROPIC_API_KEY
     max_tokens: 50
   google:
@@ -17,7 +17,7 @@ llm:
     max_tokens: 50
   cache_dir: data/llm_cache
   use_cache: true
-  cache_version: '1.2'
+  cache_version: '1.3'
   vision_detail: low
   max_frames_per_video: 4
 fusion:
@@ -32,7 +32,7 @@ data:
   eu_emotion_data_root: /Users/eb2007/Library/CloudStorage/OneDrive-UniversityofCambridge/Documents/PhD/data/EU_emotions
   project_root: /Users/eb2007/playground/bullpy/mr_ts_play
   cam_test_trials: data/trial_definitions/cam_test.json
-  eu_emotion_test_trials: data/trial_definitions/eu_emotion_test.json
+  eu_emotion_test_trials: data/trial_definitions/eu_emotion_val_test.json
 models:
   cam_clip_model_path: /Users/eb2007/playground/bullpy/mr_ts_play/models/cam_finetuned_best
   eu_emotion_clip_model_path: /Users/eb2007/playground/bullpy/mr_ts_play/models/eu_emotion_finetuned_best
