@@ -116,6 +116,13 @@ def main():
         default=4,
         help='Number of frames per video'
     )
+    parser.add_argument(
+        '--prompt_variation',
+        type=str,
+        default='baseline',
+        choices=['baseline', 'explicit_distinctions', 'intensity_aware', 'temporal_analysis', 'combined'],
+        help='Prompt variation to use (default: baseline)'
+    )
     
     args = parser.parse_args()
     
@@ -169,6 +176,7 @@ def main():
     # Evaluate LLM on each trial
     logger.info("="*60)
     logger.info("Running LLM-only evaluation...")
+    logger.info(f"Prompt variation: {args.prompt_variation}")
     logger.info("="*60)
     
     predictions = []
@@ -212,12 +220,23 @@ def main():
                 logger.warning(f"No frames loaded for {trial_id}, skipping")
                 continue
             
+            # Get custom prompt if variation is specified
+            custom_prompt = None
+            if args.prompt_variation != 'baseline':
+                # Add scripts directory to path
+                scripts_dir = Path(__file__).parent
+                if str(scripts_dir) not in sys.path:
+                    sys.path.insert(0, str(scripts_dir))
+                from create_enhanced_prompts import get_prompt
+                custom_prompt = get_prompt(args.prompt_variation, candidate_labels, include_reasoning=True)
+            
             # Classify emotion using LLM (with reasoning)
             result = llm_wrapper.classify_emotion_directly(
                 frames=frames,
                 candidate_labels=candidate_labels,
                 video_path=str(video_path),
-                include_reasoning=True
+                include_reasoning=True,
+                custom_prompt=custom_prompt
             )
             
             # Extract scores and predicted label from result
