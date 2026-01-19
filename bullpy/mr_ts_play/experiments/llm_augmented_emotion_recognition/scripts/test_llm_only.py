@@ -120,7 +120,7 @@ def main():
         '--prompt_variation',
         type=str,
         default='baseline',
-        choices=['baseline', 'explicit_distinctions', 'intensity_aware', 'temporal_analysis', 'combined'],
+        choices=['baseline', 'explicit_distinctions', 'intensity_aware', 'temporal_analysis', 'combined', 'validation_optimized'],
         help='Prompt variation to use (default: baseline)'
     )
     

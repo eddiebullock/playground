@@ -152,6 +152,105 @@ What to observe:
 - Overall emotional tone progression"""
 
 
+def create_validation_optimized_prompt(candidate_labels: List[str], include_reasoning: bool = True) -> str:
+    """Create prompt optimized based on validation set error patterns.
+    
+    This is scientifically sound because:
+    - Based on validation set errors (used for optimization)
+    - Not based on test set errors
+    - Will be tested on validation set before final test
+    """
+    labels_str = ", ".join(candidate_labels)
+    
+    # Check which distinctions are relevant (based on validation set errors)
+    distinctions_text = ""
+    
+    has_afraid = any("afraid" in label.lower() for label in candidate_labels)
+    has_surprised = any("surprised" in label.lower() for label in candidate_labels)
+    has_worried = any("worried" in label.lower() for label in candidate_labels)
+    has_interested = any("interested" in label.lower() for label in candidate_labels)
+    has_neutral = any("neutral" in label.lower() for label in candidate_labels)
+    has_disgusted_low = any("disgusted low intensity" in label.lower() for label in candidate_labels)
+    has_sneaky = any("sneaky" in label.lower() for label in candidate_labels)
+    has_kind = any("kind" in label.lower() for label in candidate_labels)
+    has_happy_low = any("happy low intensity" in label.lower() for label in candidate_labels)
+    
+    # Validation set error patterns to address
+    if has_afraid and has_surprised:
+        distinctions_text += """
+CRITICAL DISTINCTION - Afraid vs. Surprised (common confusion):
+- AFRAID: Eyes wide WITH TENSION (muscles contracted), visible sclera above AND below iris, 
+  head may RETRACT backward, mouth open with TENSION (not relaxed), body LEANING BACK, 
+  defensive posture, protective response, overall DEFENSIVE reaction, fear of threat
+- SURPRISED: Eyes wide but RELAXED (no tension), eyebrows raised creating forehead wrinkles, 
+  mouth in 'O' shape (relaxed, not tense), head may LEAN FORWARD (curiosity), 
+  body FORWARD posture, engaged response, overall CURIOUS reaction, response to unexpected event
+"""
+    
+    if has_afraid and has_worried:
+        distinctions_text += """
+CRITICAL DISTINCTION - Afraid vs. Worried:
+- AFRAID: Strong fear response, wide eyes with visible tension, more intense facial 
+  contractions, higher arousal, may include head retraction, physical threat response
+- WORRIED: Subtle, sustained apprehension, slight brow furrow (not strong), 
+  eyes slightly widened (not wide open), mouth closed or slightly open, 
+  lower intensity, more controlled expression, cognitive concern rather than physical fear
+"""
+    
+    if has_interested and has_neutral:
+        distinctions_text += """
+CRITICAL DISTINCTION - Interested vs. Neutral:
+- INTERESTED: Active engagement, eyebrows slightly raised, eyes focused and alert, 
+  slight forward lean or attentive posture, subtle tension showing attention, 
+  engaged expression, shows curiosity or attention
+- NEUTRAL: Completely relaxed, no tension, no engagement, flat expression, 
+  no active attention, passive state, no emotional indicators
+"""
+    
+    if has_disgusted_low and has_sneaky:
+        distinctions_text += """
+CRITICAL DISTINCTION - Disgusted Low Intensity vs. Sneaky:
+- DISGUSTED LOW INTENSITY: Subtle aversion, slight nose wrinkle, upper lip may raise slightly, 
+  downturned mouth corners, negative reaction to something unpleasant, not secretive
+- SNEAKY: Indirect gaze (side-eye), subtle suppressed smirk, engaged but secretive, 
+  mischievous expression, watching discretely, active engagement with hidden intent
+"""
+    
+    if has_kind and has_happy_low:
+        distinctions_text += """
+CRITICAL DISTINCTION - Kind vs. Happy Low Intensity:
+- KIND: Social emotion, warm gentle smile, soft eyes, approachable demeanor, 
+  directed toward others, social warmth, interpersonal connection
+- HAPPY LOW INTENSITY: Personal emotion, subtle smile, positive feeling, 
+  self-focused contentment, less about social interaction, more about internal state
+"""
+    
+    return f"""Analyze these video frames and identify the emotion being expressed.
+
+The emotion must be one of these options: {labels_str}
+
+IMPORTANT: Provide your answer FIRST, then explain your reasoning.{distinctions_text}
+
+INTENSITY ANALYSIS:
+- Assess whether the emotion is LOW INTENSITY or FULL INTENSITY
+- Low intensity: Subtle expressions, controlled, less extreme facial movements, 
+  restrained emotional display
+- Full intensity: Strong expressions, more extreme facial movements, higher arousal, 
+  more pronounced emotional display
+- Match the intensity level to the candidate labels
+
+Format your response EXACTLY as:
+EMOTION: [single emotion label from the list above]
+REASONING: [detailed reasoning explaining what you observed, intensity assessment, and why this emotion matches]
+
+What to observe:
+- Facial expressions (eyes, mouth, eyebrows) in detail
+- Body language and posture
+- Overall emotional tone
+- Intensity level (low vs full)
+- Social vs personal emotion context"""
+
+
 def create_combined_prompt(candidate_labels: List[str], include_reasoning: bool = True) -> str:
     """Create combined prompt with all enhancements."""
     labels_str = ", ".join(candidate_labels)
@@ -222,6 +321,7 @@ def get_prompt(variation: str, candidate_labels: List[str], include_reasoning: b
         "intensity_aware": create_intensity_aware_prompt,
         "temporal_analysis": create_temporal_analysis_prompt,
         "combined": create_combined_prompt,
+        "validation_optimized": create_validation_optimized_prompt,
     }
     
     if variation not in variations:
