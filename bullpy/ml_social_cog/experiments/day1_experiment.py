@@ -34,3 +34,30 @@ def main():
 
 if __name__ == "__main__":
     model, losses = main()
+
+
+# save model 
+torch.save(model.state_dict(), "outputs/day1_model.pt")
+
+# save losses
+import json 
+with open("outputs/day1_losses.json", "w") as f:
+    json.dump({"losses": losses}, f)
+
+# test predictions 
+model.eval()
+test_dataset = ToyDataset(n_samples=100, input_dim=10, noise_level=0.1)
+test_loader = DataLoader(test_dataset, batch_size=32)
+
+predictions = []
+targets = []
+with torch.no_grad():
+    for X, y in test_loader:
+        pred = model(X).squeeze()
+        predictions.extend(pred.tolist())
+        targets.extend(y.tolist())
+
+# save predictions 
+with open("outputs/day1_predictions.json", "w") as f:
+    json.dump({"predictions": predictions, "targets": targets}, f)
+    
