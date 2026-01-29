@@ -54,5 +54,4 @@ def train_model(model: nn.Module, train_loader: DataLoader,
                 avg_loss = train_epoch(model, train_loader, optimizer, criterion)
                 losses.append(avg_loss)
                 print(f"epoch {epoch+1}/{n_epochs}: Loss: {avg_loss:.4f}")
-
             return losses
