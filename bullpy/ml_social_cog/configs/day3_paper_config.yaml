@@ -1,0 +1,21 @@
+# day3 CVAE - skeleton config
+# paper: learning structured output representaion using deep conditional generative models
+
+seed: 42 
+
+data:
+  n_samples: 500 
+  input_dim: 10 
+  noise_level: 0.1
+
+model: 
+  input_dim: 10 
+  hidden_dim: 32
+  latent_dim: 2
+  condition_dim: 1
+
+training:
+  epochs: 2
+  batch_size: 32
+  lr: 0.001
+  beta: 1.0
