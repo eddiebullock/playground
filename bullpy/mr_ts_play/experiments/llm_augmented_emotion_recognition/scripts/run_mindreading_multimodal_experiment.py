@@ -339,6 +339,25 @@ def main():
     total_valid = len([p for p in predictions if p.get('is_correct') is not None])
     accuracy = len(correct_predictions) / total_valid if total_valid > 0 else 0.0
     
+    # Per-emotion accuracy (valid trials only)
+    from collections import defaultdict
+    by_emotion = defaultdict(lambda: {"count": 0, "correct": 0})
+    for p in predictions:
+        correct_label = p.get("correct_label") or ""
+        if not correct_label:
+            continue
+        is_correct = p.get("is_correct")
+        if is_correct is None:
+            continue
+        by_emotion[correct_label]["count"] += 1
+        if is_correct is True:
+            by_emotion[correct_label]["correct"] += 1
+    per_emotion = {}
+    for emotion in sorted(by_emotion.keys()):
+        d = by_emotion[emotion]
+        n, c = d["count"], d["correct"]
+        per_emotion[emotion] = {"count": n, "correct": c, "accuracy": round(c / n, 4) if n > 0 else 0.0}
+    
     logger.info("=" * 60)
     logger.info("RESULTS")
     logger.info("=" * 60)
@@ -350,7 +369,7 @@ def main():
     logger.info(f"Accuracy: {accuracy:.2%}")
     logger.info("=" * 60)
     
-    # Save summary
+    # Save summary (include per_emotion)
     summary = {
         'total_trials': len(trials),
         'processed': len(predictions),
@@ -358,6 +377,7 @@ def main():
         'valid_predictions': total_valid,
         'correct': len(correct_predictions),
         'accuracy': accuracy,
+        'per_emotion': per_emotion,
         'failed_trials': failed_trials,
         'use_audio': args.use_audio,
         'video_only': getattr(args, 'video_only', False),
@@ -369,6 +389,12 @@ def main():
     with open(summary_file, 'w') as f:
         json.dump(summary, f, indent=2)
     logger.info(f"Saved summary to {summary_file}")
+    
+    # Also save per_emotion.json for easy use
+    per_emotion_file = output_dir / "per_emotion.json"
+    with open(per_emotion_file, 'w') as f:
+        json.dump(per_emotion, f, indent=2)
+    logger.info(f"Saved per-emotion scores to {per_emotion_file}")
     
     return accuracy
 

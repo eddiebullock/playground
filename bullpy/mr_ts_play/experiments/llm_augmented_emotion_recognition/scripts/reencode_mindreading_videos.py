@@ -114,7 +114,7 @@ def reencode_video_ffmpeg(src: Path, dst: Path) -> bool:
     Re-encode video to H.264 MP4 with AAC audio. Returns True on success.
     """
     dst.parent.mkdir(parents=True, exist_ok=True)
-    # -y overwrite; -i input; -c:v libx264 H.264; -c:a aac; -movflags +faststart for web
+    # H.264 baseline + yuv420p for OpenCV/QuickTime compatibility on macOS
     cmd = [
         "ffmpeg",
         "-y",
@@ -122,6 +122,12 @@ def reencode_video_ffmpeg(src: Path, dst: Path) -> bool:
         str(src),
         "-c:v",
         "libx264",
+        "-profile:v",
+        "baseline",
+        "-level",
+        "3.0",
+        "-pix_fmt",
+        "yuv420p",
         "-preset",
         "medium",
         "-crf",
