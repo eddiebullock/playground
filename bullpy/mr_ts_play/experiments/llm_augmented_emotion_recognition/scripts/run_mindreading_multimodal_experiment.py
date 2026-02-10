@@ -217,13 +217,42 @@ def main():
     import random
     random.seed(42)
     
+    # Load existing predictions if resuming
+    predictions_file = output_dir / "predictions.json"
+    existing_predictions = {}
+    if predictions_file.exists():
+        logger.info(f"Loading existing predictions from {predictions_file}...")
+        try:
+            with open(predictions_file, 'r') as f:
+                existing_list = json.load(f)
+                for pred in existing_list:
+                    trial_id = pred.get('trial_id')
+                    if trial_id:
+                        existing_predictions[trial_id] = pred
+            logger.info(f"Loaded {len(existing_predictions)} existing predictions")
+        except Exception as e:
+            logger.warning(f"Could not load existing predictions: {e}")
+    
     # Process trials
     predictions = []
     failed_trials = []
+    skipped_existing = 0
     
     logger.info("Processing trials...")
     for i, trial in enumerate(trials):
         trial_id = trial.get('trial_id', f'trial_{i}')
+        
+        # Skip if we already have a valid prediction for this trial
+        if trial_id in existing_predictions:
+            existing_pred = existing_predictions[trial_id]
+            # Only skip if we have a valid prediction (is_correct is not None)
+            if existing_pred.get('is_correct') is not None:
+                predictions.append(existing_pred)
+                skipped_existing += 1
+                if skipped_existing % 50 == 0:
+                    logger.info(f"Skipped {skipped_existing} existing valid predictions...")
+                continue
+        
         stimulus_path = trial.get('stimulus_path', '')
         candidate_labels = trial.get('candidate_labels', [])
         correct_label = trial.get('correct_label') or trial.get('emotion', '')
@@ -329,10 +358,11 @@ def main():
                 raise
     
     # Save predictions
-    predictions_file = output_dir / "predictions.json"
     with open(predictions_file, 'w') as f:
         json.dump(predictions, f, indent=2)
     logger.info(f"Saved predictions to {predictions_file}")
+    if skipped_existing > 0:
+        logger.info(f"Resumed: Skipped {skipped_existing} trials with existing valid predictions")
     
     # Calculate metrics
     correct_predictions = [p for p in predictions if p.get('is_correct') is True]
