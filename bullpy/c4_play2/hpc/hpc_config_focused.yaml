@@ -1,0 +1,80 @@
+# Focused HPC Configuration - Optimize Top 3-5 Models Only
+# Scientifically robust but more time-efficient
+
+# Data Configuration
+data:
+  input_file: "data/processed/data_c4_balanced_fe.csv"
+  target_column: "autism_target"
+  test_size: 0.2
+  random_state: 42
+  stratify: true
+
+# Feature Engineering
+feature_engineering:
+  imputation_strategy: "mean"
+  feature_selection:
+    selectkbest_k: [50, 75, 100, 150, 200]
+    rfe_n_features: [50, 75, 100, 150, 200]
+
+# LightGBM Parameters (EXPANDED) - Top performer
+lightgbm:
+  n_estimators: [100, 200, 500, 1000]
+  max_depth: [3, 5, 7, 9, 11]
+  learning_rate: [0.01, 0.05, 0.1, 0.2]
+  num_leaves: [31, 63, 127, 255]
+  subsample: [0.6, 0.8, 0.9, 1.0]
+  colsample_bytree: [0.6, 0.8, 0.9, 1.0]
+  reg_alpha: [0, 0.1, 0.5, 1.0]
+  reg_lambda: [0, 0.1, 0.5, 1.0]
+  class_weight: ["balanced", None]
+
+# Gradient Boosting Parameters (EXPANDED) - Best AUC
+gradient_boosting:
+  n_estimators: [100, 200, 500, 1000]
+  max_depth: [3, 5, 7, 9]
+  learning_rate: [0.01, 0.05, 0.1, 0.2]
+  subsample: [0.6, 0.8, 0.9, 1.0]
+  max_features: ["sqrt", "log2", None]
+
+# XGBoost Parameters (EXPANDED) - Strong performer
+xgboost:
+  n_estimators: [100, 200, 500, 1000]
+  max_depth: [3, 5, 7, 9, 11]
+  learning_rate: [0.01, 0.05, 0.1, 0.2]
+  subsample: [0.6, 0.8, 0.9, 1.0]
+  colsample_bytree: [0.6, 0.8, 0.9, 1.0]
+  reg_alpha: [0, 0.1, 0.5, 1.0]
+  reg_lambda: [0, 0.1, 0.5, 1.0]
+  scale_pos_weight: [1.0, 2.0, 3.0, 5.0]
+
+# CatBoost Parameters (NEW) - Might outperform others
+catboost:
+  iterations: [100, 200, 500, 1000]
+  depth: [3, 5, 7, 9]
+  learning_rate: [0.01, 0.05, 0.1, 0.2]
+  l2_leaf_reg: [1, 3, 5, 7]
+  border_count: [32, 64, 128, 254]
+  class_weights: [None, "balanced"]
+
+# Random Forest Parameters (EXPANDED) - Good baseline
+random_forest:
+  n_estimators: [100, 200, 500, 1000, 2000]
+  max_depth: [10, 15, 20, 25, 30, None]
+  min_samples_split: [2, 5, 10, 20]
+  min_samples_leaf: [1, 2, 4, 8]
+  max_features: ["sqrt", "log2", 0.3, 0.5, 0.7]
+  criterion: ["gini", "entropy"]
+  class_weight: ["balanced", "balanced_subsample", None]
+
+# Cross-Validation
+cross_validation:
+  inner_cv: 5
+  outer_cv: 5
+
+# Output Configuration
+output:
+  results_dir: "results"
+  models_dir: "models"
+  logs_dir: "logs"
+  plots_dir: "plots"
+  save_models: true
