@@ -442,9 +442,30 @@ def load_cohort_ybt(
     df["age"] = pd.to_numeric(df["age"], errors="coerce")
     df = df[df["age"].notna() & (df["age"] >= age_min) & (df["age"] <= age_max)]
 
-    for c in [f"eq_{i}" for i in range(1, 11)] + [f"sqr_{i}" for i in range(1, 11)] + [f"aq_{i}" for i in range(1, 11)]:
-        if c in df.columns:
-            df[c] = pd.to_numeric(df[c], errors="coerce").fillna(0)
+    # YBT raw stores EQ/SQ-R/AQ as text ("strongly agree", etc.). Map to 1-4 then apply C4 binary scoring.
+    _ybt_map = {"strongly agree": 4, "slightly agree": 3, "slightly disagree": 2, "strongly disagree": 1}
+
+    def _ybt_to_14(ser: pd.Series) -> pd.Series:
+        out = ser.astype(str).str.strip().str.lower().replace(_ybt_map)
+        return pd.to_numeric(out, errors="coerce")
+
+    for i in range(1, 11):
+        for col, reverse in [
+            (f"eq_{i}", i == 3),
+            (f"sqr_{i}", i in (2, 4, 6, 8, 10)),
+            (f"aq_{i}", i in (2, 3, 4, 5, 6, 9)),
+        ]:
+            if col not in df.columns:
+                continue
+            if df[col].dtype == object:
+                raw = _ybt_to_14(df[col])
+                if reverse:
+                    df[col] = raw.apply(lambda x: 1 if pd.notna(x) and 1 <= x <= 2 else (0 if pd.notna(x) and 3 <= x <= 4 else np.nan))
+                else:
+                    df[col] = raw.apply(lambda x: 1 if pd.notna(x) and 3 <= x <= 4 else (0 if pd.notna(x) and 1 <= x <= 2 else np.nan))
+                df[col] = df[col].fillna(0)
+            else:
+                df[col] = pd.to_numeric(df[col], errors="coerce").fillna(0)
 
     df["eq_total"] = df[[f"eq_{i}" for i in range(1, 11) if f"eq_{i}" in df.columns]].sum(axis=1)
     df["sqr_total"] = df[[f"sqr_{i}" for i in range(1, 11) if f"sqr_{i}" in df.columns]].sum(axis=1)
