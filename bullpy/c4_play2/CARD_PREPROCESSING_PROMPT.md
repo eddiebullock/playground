@@ -145,8 +145,16 @@ def parse_itemised_scores(itemised_str, test_name):
         # Create item dictionary based on test name
         item_dict = {}
         if 'aq' in test_name.lower():
-            for i, val in enumerate(items[:10], 1):  # AQ-10
-                item_dict[f'aq_{i}'] = val
+            # AQ-10 is NOT items 1-10 of AQ-50.
+            # Allison, Auyeung & Baron-Cohen (2012): AQ-50 items 5,20,27,28,31,32,36,37,41,45 (1-indexed)
+            aq10_from_aq50 = [4, 19, 26, 27, 30, 31, 35, 36, 40, 44]  # 0-indexed positions in AQ-50
+            if len(items) >= 50:
+                for i, idx in enumerate(aq10_from_aq50, 1):
+                    item_dict[f'aq_{i}'] = items[idx]
+            else:
+                # If the dataset already stores the 10 AQ-10 items directly
+                for i, val in enumerate(items[:10], 1):
+                    item_dict[f'aq_{i}'] = val
         elif 'eq' in test_name.lower():
             for i, val in enumerate(items[:10], 1):  # EQ-10
                 item_dict[f'eq_{i}'] = val

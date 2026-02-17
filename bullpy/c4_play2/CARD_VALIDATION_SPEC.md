@@ -37,7 +37,7 @@ All indices below are **0-based** (position in the full questionnaire’s item l
 
 | Questionnaire | Full length | Short 10-item indices (0-based) | Source |
 |---------------|-------------|----------------------------------|--------|
-| **AQ-10** from AQ-50 | 50 | [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] (items 1–10) | Allison et al. (2012) JAACAP |
+| **AQ-10** from AQ-50 | 50 | [4, 19, 26, 27, 30, 31, 35, 36, 40, 44] (1-based: 5, 20, 27, 28, 31, 32, 36, 37, 41, 45) | Allison et al. (2012) JAACAP |
 | **EQ-10** from EQ-60 | 60 | [13, 3, 8, 30, 27, 34, 11, 21, 17, 33] (1-based: 14, 4, 9, 31, 28, 35, 12, 22, 18, 34) | Greenberg et al. (2018) PNAS |
 | **SQ-R-10** from SQ-R-75 | 75 | [31, 15, 26, 8, 29, 32, 11, 24, 7, 6] (1-based: 32, 16, 27, 9, 30, 33, 12, 25, 8, 7) | Greenberg et al. (2018) PNAS |
 | **SPQ-10** from SPQ-92 | 92 | [1, 20, 31, 34, 37, 57, 61, 72, 73, 87] (1-based: 2, 21, 32, 35, 38, 58, 62, 73, 74, 88) | Greenberg et al. (2018) PNAS |

@@ -39,7 +39,7 @@ This notebook provides:
 - **AQ-10**: Allison et al. (2012) JAACAP
 
 **Mappings (0-indexed)**:
-- **AQ-10**: Items [0-9] from AQ-50 (items 1-10)
+- **AQ-10**: Items [4, 19, 26, 27, 30, 31, 35, 36, 40, 44] from AQ-50 (1-based: 5, 20, 27, 28, 31, 32, 36, 37, 41, 45)
 - **EQ-10**: Items [13, 3, 8, 30, 27, 34, 11, 21, 17, 33] from EQ-60
 - **SQ-R-10**: Items [31, 15, 26, 8, 29, 32, 11, 24, 7, 6] from SQ-R-75
 - **SPQ-10**: Items [1, 20, 31, 34, 37, 57, 61, 72, 73, 87] from SPQ-92

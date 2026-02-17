@@ -11,6 +11,10 @@ The CARD dataset contains full questionnaires (AQ-50, EQ-60, SQ-R-75, SPQ-92) in
 ### AQ-10 from AQ-50
 **Reference**: Allison, C., Auyeung, B., & Baron-Cohen, S. (2012). JAACAP, 51(2), 202-212
 
+**AQ-50 → AQ-10 mapping (authoritative)**:
+- **AQ-50 items (1-indexed)**: 5, 20, 27, 28, 31, 32, 36, 37, 41, 45
+- **Converted to 0-indexed positions**: `[4, 19, 26, 27, 30, 31, 35, 36, 40, 44]`
+
 **AQ-10 Items** (item wording):
 1. "I often notice small sounds when others do not"
 2. "I usually concentrate more on the whole picture, rather than the small details"
@@ -27,7 +31,7 @@ The CARD dataset contains full questionnaires (AQ-50, EQ-60, SQ-R-75, SPQ-92) in
 - Items 1, 7, 8, 10: Score 1 for "Definitely/Slightly Agree"
 - Items 2, 3, 4, 5, 6, 9: Score 1 for "Definitely/Slightly Disagree"
 
-**TODO**: Find which AQ-50 item numbers correspond to these 10 items.
+**Status**: Mapping confirmed (see above).
 
 ### EQ-10 from EQ-60
 **Reference**: Greenberg, D.M., et al. (2018). PNAS. DOI: 10.1073/pnas.1811032115
@@ -108,7 +112,7 @@ Once you have the mappings, update the `ITEM_MAPPINGS` dictionary in the noteboo
 ITEM_MAPPINGS = {
     'aq': {
         'full_length': 50,
-        'short_items': [0, 5, 10, 15, 20, 25, 30, 35, 40, 45]  # 0-indexed positions
+        'short_items': [4, 19, 26, 27, 30, 31, 35, 36, 40, 44]  # AQ-50 -> AQ-10 (Allison et al. 2012)
     },
     'eq': {
         'full_length': 60,
@@ -137,8 +141,8 @@ ITEM_MAPPINGS = {
 ## Configured Mappings (0-indexed positions)
 
 ### AQ-10
-- **Items from AQ-50**: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] (items 1-10)
-- **Source**: Allison et al. (2012) JAACAP Table S20
+- **Items from AQ-50**: [4, 19, 26, 27, 30, 31, 35, 36, 40, 44] (1-based: 5, 20, 27, 28, 31, 32, 36, 37, 41, 45)
+- **Source**: Allison et al. (2012) JAACAP; confirmed by multiple independent publications
 
 ### EQ-10
 - **Items from EQ-60**: [13, 3, 8, 30, 27, 34, 11, 21, 17, 33]
