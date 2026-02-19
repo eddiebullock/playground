@@ -1,0 +1,10 @@
+=== YBT AQ-10 DESCRIPTIVES ===
+AQ-10 total - overall:
+  Mean (SD): 0.00 (0.00)
+  Median: 0.0
+  Range: 0-0
+AQ-10 total - Autism (n=0):
+  Mean (SD): nan (nan)
+AQ-10 total - Non-autism (n=13819):
+  Mean (SD): 0.00 (0.00)
+=== END YBT AQ DESCRIPTIVES ===

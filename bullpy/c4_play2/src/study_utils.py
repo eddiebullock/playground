@@ -139,6 +139,77 @@ def ppv_score(y_true: np.ndarray, y_pred: np.ndarray) -> float:
     return precision_score(y_true, y_pred, zero_division=0)
 
 
+def bootstrap_auroc_ci(
+    y_true: np.ndarray,
+    y_proba: np.ndarray,
+    n_bootstrap: int = 1000,
+    ci: float = 0.95,
+    random_state: int = RANDOM_STATE,
+) -> Tuple[float, float, float]:
+    """
+    Compute bootstrap confidence interval for AUROC on held-out test set.
+    Returns (auroc_point_estimate, ci_lower, ci_upper).
+    """
+    rng = np.random.RandomState(random_state)
+    y_true = np.asarray(y_true)
+    y_proba = np.asarray(y_proba)
+    n = len(y_true)
+    aucs: List[float] = []
+    for _ in range(n_bootstrap):
+        idx = rng.randint(0, n, n)
+        y_b = y_true[idx]
+        y_p = y_proba[idx]
+        # Skip bootstrap samples with only one class
+        if len(np.unique(y_b)) < 2:
+            continue
+        try:
+            aucs.append(roc_auc_score(y_b, y_p))
+        except Exception:
+            continue
+    if not aucs:
+        point = roc_auc_score(y_true, y_proba)
+        return point, float("nan"), float("nan")
+    alpha = (1.0 - ci) / 2.0
+    point_est = roc_auc_score(y_true, y_proba)
+    ci_lower = np.percentile(aucs, 100 * alpha)
+    ci_upper = np.percentile(aucs, 100 * (1 - alpha))
+    return float(point_est), float(ci_lower), float(ci_upper)
+
+
+def bootstrap_metric_ci(
+    y_true: np.ndarray,
+    y_pred_binary: np.ndarray,
+    metric_fn,
+    n_bootstrap: int = 1000,
+    ci: float = 0.95,
+    random_state: int = RANDOM_STATE,
+) -> Tuple[float, float, float]:
+    """
+    Bootstrap CI for any metric that takes (y_true, y_pred_binary).
+    metric_fn: callable, e.g. f1_score, precision_score, recall_score, specificity_score, npv_score.
+    Returns (point_estimate, ci_lower, ci_upper).
+    """
+    rng = np.random.RandomState(random_state)
+    y_true = np.asarray(y_true)
+    y_pred_binary = np.asarray(y_pred_binary)
+    n = len(y_true)
+    scores: List[float] = []
+    for _ in range(n_bootstrap):
+        idx = rng.randint(0, n, n)
+        try:
+            scores.append(float(metric_fn(y_true[idx], y_pred_binary[idx])))
+        except Exception:
+            continue
+    if not scores:
+        point = float(metric_fn(y_true, y_pred_binary))
+        return point, float("nan"), float("nan")
+    alpha = (1.0 - ci) / 2.0
+    point_est = float(metric_fn(y_true, y_pred_binary))
+    ci_lower = float(np.percentile(scores, 100 * alpha))
+    ci_upper = float(np.percentile(scores, 100 * (1 - alpha)))
+    return point_est, ci_lower, ci_upper
+
+
 def evaluate_model(
     model: Any,
     X: np.ndarray,

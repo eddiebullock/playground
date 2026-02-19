@@ -1,0 +1,53 @@
+=== YBT EXCLUSION FLOWCHART ===
+Step 0 - Raw N: 24205
+Step 1 - After age 18-55 filter: 14368 (excluded: 9837, 40.6%)
+Step 2 - After removing missing diagnosis: 6321 (excluded: 8047)
+Step 3 - AQ>=6 filter on autism cases:
+         Autism before: 549
+         Autism after:  549 (excluded: 0)
+Step 4 - Final analytic N: 6321
+=== END YBT FLOWCHART ===
+
+=== YBT EXCLUSION FLOWCHART ===
+Step 0 - Raw N: 24205
+Step 1 - After age 18-55 filter: 14368 (excluded: 9837, 40.6%)
+Step 2 - After removing missing diagnosis: 6321 (excluded: 8047)
+Step 3 - AQ>=6 filter on autism cases:
+         Autism before: 549
+         Autism after:  549 (excluded: 0)
+Step 4 - Final analytic N: 6321
+=== END YBT FLOWCHART ===
+
+=== YBT EXCLUSION FLOWCHART ===
+Step 0 - Raw N: 24205
+Step 1 - After age 18-55 filter: 14368 (excluded: 9837, 40.6%)
+Step 2 - After removing missing diagnosis: 6321 (excluded: 8047)
+Step 3 - AQ>=6 filter on autism cases:
+         Autism before: 549
+         Autism after:  549 (excluded: 0)
+Step 4 - Final analytic N: 6321
+=== END YBT FLOWCHART ===
+
+=== YBT EXCLUSION FLOWCHART ===
+Step 0 - Raw N: 24205
+Step 1 - After age 18-55 filter: 14368 (excluded: 9837, 40.6%)
+Step 2 - After removing missing diagnosis: 6321 (excluded: 8047)
+Step 3 - AQ>=6 filter on autism cases:
+         Autism before: 549
+         Autism after:  549 (excluded: 0)
+Step 4 - Final analytic N: 6321
+=== END YBT FLOWCHART ===
+
+=== CARD EXCLUSION FLOWCHART ===
+=== CARD EXCLUSION FLOWCHART ===
+Step 0 - Post-aggregation N (one row per participant): 22800
+=== CARD EXCLUSION FLOWCHART ===
+Step 0 - Post-aggregation N (one row per participant): 22800
+Step 1 - After age 18-55 filter: 16866 (excluded: 5934, 26.0%)
+Step 2 - After removing missing diagnosis (ASC diagnosis): 16605 (excluded: 261)
+Step 3 - AQ filter skipped (aq_total not yet computed)
+         Autism: 3550
+         Non-autism: 13055
+Step 4 - Final analytic N: 16605
+=== END CARD FLOWCHART ===
+

@@ -28,9 +28,9 @@
 General inclusion/exclusion across cohorts (from `ML_STUDY_README.md` and `study_utils`):
 
 - **Age restrictions**:
-  - Study 1: C4, CARD, YBT loaded with **age ≥18**, no explicit upper cutoff in `study1_within_cohort_cv.ipynb` (C4/YBT up to 120).
-  - Study 2 and Study 3: **age 18–55** for all cohorts (via `age_min=18, age_max=55` in cohort loaders).
-  - Additional age grouping in Study 2: 18–30, 31–40, 41–50, 51–55.
+  - Study 1: C4, CARD, YBT loaded with **age ≥18**, no explicit upper cutoff in `study1_within_cohort_cv.ipynb` (C4/YBT up to at least 120).
+  - Study 2 and Study 3 (updated): **age ≥18** for all cohorts (via `age_min=18, age_max=120` in cohort loaders).
+  - Additional age grouping in Study 2: 18–30, 31–40, 41–50, 51+.
 - **AQ-based filtering**:
   - For all three cohorts in all three studies, **AQ-10 total ≥ 6 is required only for autism cases**; non-autism controls are not filtered by AQ.
   - Implemented in `load_cohort_c4`, `load_cohort_card`, `load_cohort_ybt`:
@@ -43,6 +43,13 @@ General inclusion/exclusion across cohorts (from `ML_STUDY_README.md` and `study
     - Implemented in `load_cohort_c4`, `load_cohort_card`, `load_cohort_ybt` with `balance_50_50=True`, sampling `n = min(#autism, #non-autism)` from each class and shuffling.
   - **Study 2**:
     - Uses **unbalanced data** to preserve subgroup sizes; `balance_50_50=False` in `study2_subgroup_analysis.ipynb`.
+- **Downsampling method (all cohorts)**:
+  - **Approach**: Undersample the majority class to match the minority; no oversampling or SMOTE.
+  - **Implementation** (in `src/study_utils.py`): `pos = df[diagnosis==1]`, `neg = df[diagnosis==0]`, `n = min(len(pos), len(neg))`; then `pos.sample(n=n, random_state=RANDOM_STATE)`, `neg.sample(n=n, random_state=RANDOM_STATE)`; concatenate and shuffle with `sample(frac=1, random_state=RANDOM_STATE)`.
+  - **Random seed**: `RANDOM_STATE = 42` throughout.
+  - **C4 pipeline** (`data_pipeline_recreation.ipynb`): Raw ~759k rows; internal steps include 50/50 balance and AQ>=6 filtering before writing `data_c4_final_recreated_cleaned.csv` (35,792 rows). Study loaders apply age and AQ again and optionally balance again.
+  - **CARD** (`card_c4_validation.ipynb`): Aggregate to one row per participant (22,800); then AQ>=6 (autism only) and 50/50 balance before saving `card_aligned.csv`. Study loaders apply age filter and optional balance.
+  - **YBT**: No pre-balance in raw/aligned file; balance applied only inside `load_cohort_ybt` when `balance_50_50=True`.
 
 Below, Ns are reported **after exclusions and before any balancing**, based on custom scripts that replicate the cohort loaders’ age and AQ filters.
 
@@ -58,12 +65,12 @@ Below, Ns are reported **after exclusions and before any balancing**, based on c
 - **Data file used**:
   - `data/processed/data_c4_final_recreated_cleaned.csv`.
 - **Final analytic sample (after exclusions, pre-balance)**:
-  - From Python script replicating Study 2-style filters (age 18–55, AQ filter on autism cases only):
+  - From Python script replicating Study 2-style filters (age ≥18, AQ filter on autism cases only):
     - **N total**: 28 003
     - **N autism**: 13 076
     - **N non-autism**: 14 927
 - **Total N before exclusions**:
-  - **[NOT FOUND — check: raw C4 source in `data_pipeline_recreation.ipynb` prior to filtering steps]**
+  - **Raw C4** (from `data_pipeline_recreation.ipynb`): **758,916** rows (or 758,901 after removing test user IDs, `userid > 174283`). Pipeline then applies questionnaire scoring, AQ≥6 and 50/50 balance steps internally; saved file `data_c4_final_recreated_cleaned.csv` has **35,792** rows (age and diagnosis already applied in pipeline). Study loaders apply age ≥18 (and ≤120) and AQ≥6 for autism again to that file, yielding **28,003** pre-balance analytic (then 26,860 after 50/50 balance in Study 1).
 - **Exclusion criteria applied** (implemented in `load_cohort_c4`):
   - **Age**:
     - Included: age between **18 and 55 years** (for Study 2/3; Study 1 allows up to 120).
@@ -83,7 +90,7 @@ Below, Ns are reported **after exclusions and before any balancing**, based on c
     - After filtering, let `pos` be autism (diagnosis=1) and `neg` non-autism (diagnosis=0).
     - Sample `n = min(len(pos), len(neg))` from each, then concatenate and shuffle.
   - **Original autism prevalence before balancing**:
-    - Autism proportion in analytic C4 sample (18–55, AQ-filtered):
+    - Autism proportion in analytic C4 sample (age ≥18, AQ-filtered):
       - 13 076 / 28 003 ≈ **46.7%**.
   - **Balanced dataset sizes (Study 1)**:
     - For C4 in Study 1, `load_cohort_c4` with `balance_50_50=True` yields:
@@ -108,14 +115,12 @@ Below, Ns are reported **after exclusions and before any balancing**, based on c
 - **Data file used**:
   - `data/processed/card_aligned.csv` (one row per participant with 45 C4-aligned features plus outcome and demographics).
 - **Final analytic sample (after exclusions, pre-balance)**:
-  - Using age 18–55 and AQ≥6 for autism, applied by custom script matching `load_cohort_card` logic:
+  - Using age ≥18 and AQ≥6 for autism, applied by custom script matching `load_cohort_card` logic:
     - **N total**: 3 893
     - **N autism**: 2 033
     - **N non-autism**: 1 860
 - **Total N before exclusions**:
-  - At the aggregated (one-row-per-participant) stage (`df_card_aggregated` in `CARD_PREPROCESSING_PROMPT.md` code):
-    - **Participants**: printed as `len(df_card_aggregated)` (not explicitly given in markdown; requires rerunning notebook).
-  - **[NOT FOUND — check: `card_c4_validation.ipynb` after aggregation for exact pre-filter N]**
+  - **Post-aggregation (one row per participant)** in `card_c4_validation.ipynb`: **22,800** participants (adult questionnaires only). The notebook then applies AQ≥6 for autism cases and 50/50 balance before saving `card_aligned.csv` (~4,650 rows). Study loaders read `card_aligned.csv`, apply age filter (≥18, ≤120) and optional balance, giving **3,893** pre-balance analytic when using age 18–120.
 - **Exclusion criteria applied** (from `CARD_VALIDATION_SPEC.md` and preprocessing prompt):
   - **Age**:
     - Age derived from `AgeWhenTestCompleted` or `YearOfBirth`.
@@ -159,16 +164,16 @@ Below, Ns are reported **after exclusions and before any balancing**, based on c
     - `YBT raw: True`
     - So Study 1 and Study 3 use **raw YBT → 35-feature schema (no SPQ)**.
 - **Final analytic sample (after exclusions, pre-balance)**:
-  - Using `load_cohort_ybt` with `age 18–55`, AQ≥6 for autism, `balance_50_50=False` (Study 2-style analytic sample; see custom script calling `load_cohort_ybt`):
+  - Using `load_cohort_ybt` with **age ≥18**, AQ≥6 for autism, `balance_50_50=False` (Study 2-style analytic sample; see custom script calling `load_cohort_ybt`):
     - **N total**: 14 368
     - **N autism**: 549
     - **N non-autism**: 13 819
 - **Total N before exclusions**:
-  - **[NOT FOUND — check: raw YBT load in `01_explore_ybt_data.ipynb` or `external_validation_ybt.ipynb` before filters]**
+  - **Raw YBT**: **24,205** rows. Study loaders use age ≥18 (no upper limit, `age_max=120`). After age ≥18 filter: more than 14,368 (the old flowchart used 18–55, but studies use ≥18). After removing missing diagnosis: varies by age range. Study loaders using age ≥18 and AQ≥6 for autism yield **14,368+** pre-balance analytic (exact N depends on how many participants >55 are included); after 50/50 balance in Study 1, N = 1,182.
 - **Exclusion criteria applied** (from `study_utils.load_cohort_ybt` and YBT preprocessing):
   - **Age**:
-    - Included: age between **18 and 55 years**, using numeric conversion and dropping rows with missing or out-of-range age.
-    - **[NOT FOUND — exact number and percentage excluded by age; check: `external_validation_ybt.ipynb`]**
+    - Included: age **≥18 years** (no upper limit; `age_max=120` in Study 1/2/3), using numeric conversion and dropping rows with missing or out-of-range age.
+    - Note: The exclusion flowchart in `external_validation_ybt.ipynb` previously used 18–55 but has been updated to match Study 1/2/3 (age ≥18).
   - **AQ-based filtering**:
     - Autism group restricted to **AQ-10 total ≥ 6** (after constructing binary AQ-10 items with C4-compatible scoring).
     - Non-autism group retained irrespective of AQ total.
@@ -191,7 +196,7 @@ Below, Ns are reported **after exclusions and before any balancing**, based on c
 
 ### 1.3 Participant Characteristics (for Table 1)
 
-All characteristics below are **after exclusions and before balancing** (age 18–55, AQ≥6 for autism cases, unbalanced). Values are derived from the custom Python scripts executed in this repo and from Study 2 subgroup tables (for sex N).
+All characteristics below are **after exclusions and before balancing** (age ≥18, AQ≥6 for autism cases, unbalanced). Values are derived from the custom Python scripts executed in this repo and from Study 2 subgroup tables (for sex N).
 
 #### 1.3.1 C4
 
@@ -275,7 +280,7 @@ All characteristics below are **after exclusions and before balancing** (age 18�
 
 #### 1.3.3 Dataset3 (YBT)
 
-- **Sample sizes** (Study 2-style analytic sample, age 18–55, AQ≥6 in autism, pre-balance):
+- **Sample sizes** (Study 2-style analytic sample, age ≥18, AQ≥6 in autism, pre-balance):
   - N total: **14 368**
   - N autism: **549**
   - N non-autism: **13 819**
@@ -620,14 +625,17 @@ Feature definitions from `src/study_utils.py` and CARD specification.
   - **Accuracy**: `(TP + TN) / (TP + TN + FP + FN)`.
   - Study 2 subgroups also compute confusion counts internally to derive sensitivity and specificity before reporting.
 - **Confidence intervals**:
-  - Study 2 uses `bootstrap_ci_auroc`:
-    - 1 000 bootstrap resamples.
-    - Each resample draws with replacement from the subgroup’s indices.
-    - Computes AUROC per resample; 95% CI taken as 2.5th and 97.5th percentiles.
-  - Study 1 and Study 3 **do not compute** confidence intervals for AUROC or other metrics.
-  - **[NOT FOUND — CIs for Study 1 and Study 3 metrics; would require additional bootstrap or DeLong code]**
+  - **Study 1 and Study 3 (held-out test metrics, best models per cohort)**:
+    - Use `bootstrap_auroc_ci` and `bootstrap_metric_ci` on held-out test sets.
+    - `n_bootstrap=1000`, `random_state=42`, 95% CIs derived from the 2.5th and 97.5th percentiles of the bootstrap distributions.
+    - CIs are stored in `performance_metrics.json` for AUROC, sensitivity, specificity, F1, PPV, NPV, and accuracy (see Section 2.2 and Table 2).
+  - **Study 2 (subgroups)**:
+    - Uses `bootstrap_ci_auroc`:
+      - 1 000 bootstrap resamples.
+      - Each resample draws with replacement from the subgroup’s indices.
+      - Computes AUROC per resample; 95% CI taken as 2.5th and 97.5th percentiles.
 - **Number of bootstrap iterations**:
-  - `n_bootstrap=1000` in `bootstrap_ci_auroc`.
+  - `n_bootstrap=1000` in all bootstrap CI functions (`bootstrap_ci_auroc`, `bootstrap_auroc_ci`, `bootstrap_metric_ci`).
 
 ### 1.9 Statistical Analysis
 
@@ -666,11 +674,11 @@ Feature definitions from `src/study_utils.py` and CARD specification.
 
 ### 2.1 Participant Flow (CONSORT-style)
 
-For each cohort, only final analytic Ns (post-exclusions) and balanced Ns are recoverable directly from outputs; stepwise exclusion counts are not stored.
+For each cohort, final analytic Ns (post-exclusions) and balanced Ns are available, and for Dataset3/YBT a stepwise exclusion flowchart is now stored.
 
 - **C4**:
   - Starting N (raw C4): **[NOT FOUND — check: `data_pipeline_recreation.ipynb` for initial raw sample size]**
-  - After age 18–55 filter and AQ≥6 in autism:
+  - After age ≥18 filter and AQ≥6 in autism (original Table 1 analytic sample):
     - N total: **28 003**
     - N autism: **13 076**
     - N non-autism: **14 927**
@@ -685,7 +693,7 @@ For each cohort, only final analytic Ns (post-exclusions) and balanced Ns are re
 
 - **CARD**:
   - Starting N (aggregated participant-level dataset): **[NOT FOUND — check: `card_c4_validation.ipynb` after aggregation]**
-  - After age 18–55 filter and AQ≥6 in autism (pre-balance):
+  - After age ≥18 filter and AQ≥6 in autism (pre-balance):
     - N total: **3 893**
     - N autism: **2 033**
     - N non-autism: **1 860**
@@ -698,8 +706,13 @@ For each cohort, only final analytic Ns (post-exclusions) and balanced Ns are re
     - **[NOT FOUND — exact numbers per split; would need added logging]**
 
 - **Dataset3 (YBT)**:
-  - Starting N in raw YBT: **[NOT FOUND — check: `01_explore_ybt_data.ipynb` or `external_validation_ybt.ipynb`]**
-  - After age 18–55 filter and AQ≥6 in autism (pre-balance, Study 2-style analytic sample via `load_cohort_ybt`):
+  - Stepwise exclusion counts (from `results/exclusion_flowcharts.txt` in `external_validation_ybt.ipynb` using the 18–55 band that underlies the original analytic sample):
+    - **Step 0 – Raw N**: 24 205.
+    - **Step 1 – Age 18–55 filter**: 14 368 (excluded 9 837; 40.6%).
+    - **Step 2 – Remove missing diagnosis**: 6 321 (excluded 8 047).
+    - **Step 3 – AQ≥6 filter on autism cases**: 549 autism before, 549 after (0 excluded by AQ filter).
+    - **Step 4 – Final analytic N (diagnosis available)**: 6 321.
+  - Pre-balance analytic Ns used for Study 2-style descriptives (via `load_cohort_ybt` with age ≥18, AQ≥6 in autism, `balance_50_50=False`):
     - N total: **14 368**
     - N autism: **549**
     - N non-autism: **13 819**
@@ -1261,7 +1274,7 @@ To feed into the abstract, the following key numbers are extracted (rounded to 2
   - Cohort: **C4**.
   - Model: **XGBoost** (within-cohort, 5-fold CV on training, evaluation on balanced test set).
   - Test set metrics:
-    - AUROC: **0.91** (95% CI for AUROC **[NOT FOUND — no CI computed for Study 1]**).
+    - AUROC: **0.91** (95% CI **[0.90, 0.92]**).
     - Sensitivity: **0.90**.
     - Specificity: **0.77**.
     - F1: **0.84**.
@@ -1269,7 +1282,7 @@ To feed into the abstract, the following key numbers are extracted (rounded to 2
 - **Replication (Study 1, same model, second cohort)**:
   - Cohort: **CARD**.
   - Model: **XGBoost**.
-  - Test AUROC: **0.90** (95% CI **[NOT FOUND]**).
+  - Test AUROC: **0.90** (95% CI **[0.88, 0.92]**).
   - F1: **0.83**.
 - **Subgroup finding (Study 2, most notable)**:
   - **Age effect**:
@@ -1324,11 +1337,11 @@ Note: All test metrics computed on **balanced test sets (50/50 autism vs non-aut
 | Metric                             | C4 (XGBoost)      | CARD (Logistic)   | Dataset3/YBT (Logistic) |
 |------------------------------------|-------------------|-------------------|--------------------------|
 | Test AUROC                         | 0.91              | 0.90              | 0.82                     |
-| Test AUROC 95% CI                  | [NOT FOUND]       | [NOT FOUND]       | [NOT FOUND]              |
+| Test AUROC 95% CI                  | [0.90, 0.92]      | [0.89, 0.92]      | [0.76, 0.87]             |
 | Sensitivity                        | 0.90              | 0.88              | 0.75                     |
 | Specificity                        | 0.77              | 0.77              | 0.71                     |
 | F1                                 | 0.84              | 0.83              | 0.74                     |
-| Accuracy                           | [NOT FOUND]       | [NOT FOUND]       | [NOT FOUND]              |
+| Accuracy                           | 0.83              | 0.82              | 0.73                     |
 | PPV                                | 0.80              | 0.79              | 0.72                     |
 | NPV                                | 0.88              | 0.87              | 0.74                     |
 | Optimal threshold (F1-optimized)   | 0.40              | 0.42              | 0.40                     |
