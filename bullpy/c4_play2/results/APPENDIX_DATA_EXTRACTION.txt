@@ -1,0 +1,349 @@
+======================================================================
+APPENDIX A: QUESTIONNAIRE ITEM FEATURE NAMES
+======================================================================
+
+AQ-10 items (feature names):
+['aq_1', 'aq_2', 'aq_3', 'aq_4', 'aq_5', 'aq_6', 'aq_7', 'aq_8', 'aq_9', 'aq_10']
+
+EQ-10 items (feature names):
+['eq_1', 'eq_2', 'eq_3', 'eq_4', 'eq_5', 'eq_6', 'eq_7', 'eq_8', 'eq_9', 'eq_10']
+
+SQ-R-10 items (feature names):
+['sqr_1', 'sqr_2', 'sqr_3', 'sqr_4', 'sqr_5', 'sqr_6', 'sqr_7', 'sqr_8', 'sqr_9', 'sqr_10']
+
+SPQ-10 items (feature names):
+['spq_1', 'spq_2', 'spq_3', 'spq_4', 'spq_5', 'spq_6', 'spq_7', 'spq_8', 'spq_9', 'spq_10']
+
+Note: Actual questionnaire item text and full-to-short mappings (e.g. AQ-50 to AQ-10)
+are in CARD_ITEM_MAPPING_REQUIREMENTS.md and card_c4_validation.ipynb (ITEM_MAPPINGS).
+
+======================================================================
+APPENDIX B.1: MODEL HYPERPARAMETERS
+======================================================================
+XGBOOST:
+  max_depth=5, learning_rate=0.05, n_estimators=200, scale_pos_weight=1.0,
+  random_state=42, eval_metric='logloss'
+
+LIGHTGBM:
+  max_depth=5, learning_rate=0.05, n_estimators=200, random_state=42, verbose=-1
+
+RANDOM_FOREST:
+  n_estimators=200, max_depth=10, random_state=42
+
+LOGISTIC:
+  max_iter=1000, random_state=42
+
+======================================================================
+APPENDIX B.2: DATA PREPROCESSING
+======================================================================
+StandardScaler: used for all models (fit on train, transform train and test).
+Missing values: filled with 0 in cohort loading and feature matrices (fillna(0)).
+Stratification: StratifiedKFold(n_splits=5, shuffle=True, random_state=42) for CV;
+  train_test_split(..., stratify=y) for 80/20 train/test.
+Train/test split: test_size=0.2 (80% train, 20% test).
+CV folds: 5. Random state: 42.
+
+======================================================================
+APPENDIX B.3: TRAIN-TEST SPLIT SIZES (80/20)
+======================================================================
+
+C4 (Channel 4):
+  Total (balanced): 26152
+  Train (80%):     20921
+  Test (20%):      5231
+
+CARD:
+  Total (balanced): 3893
+  Train (80%):     3114
+  Test (20%):      779
+
+YBT (Dataset3):
+  Total (balanced): 684
+  Train (80%):     547
+  Test (20%):      137
+
+======================================================================
+APPENDIX C: CONFUSION MATRICES (TEST SET)
+======================================================================
+
+--- C4 ---
+  xgboost: TP=2409, TN=2066, FP=620, FN=277 | Sens=0.897, Spec=0.769
+  lightgbm: TP=2405, TN=2072, FP=614, FN=281 | Sens=0.895, Spec=0.771
+  random_forest: TP=2388, TN=2065, FP=621, FN=298 | Sens=0.889, Spec=0.769
+  logistic: TP=2372, TN=2069, FP=617, FN=314 | Sens=0.883, Spec=0.770
+
+--- CARD ---
+  xgboost: TP=349, TN=303, FP=95, FN=49 | Sens=0.877, Spec=0.761
+  lightgbm: TP=351, TN=290, FP=108, FN=47 | Sens=0.882, Spec=0.729
+  random_forest: TP=336, TN=311, FP=87, FN=62 | Sens=0.844, Spec=0.781
+  logistic: TP=351, TN=305, FP=93, FN=47 | Sens=0.882, Spec=0.766
+
+--- YBT (Dataset3) ---
+  xgboost: TP=105, TN=54, FP=65, FN=13 | Sens=0.890, Spec=0.454
+  lightgbm: TP=108, TN=58, FP=61, FN=10 | Sens=0.915, Spec=0.487
+  random_forest: TP=109, TN=50, FP=69, FN=9 | Sens=0.924, Spec=0.420
+  logistic: TP=89, TN=84, FP=35, FN=29 | Sens=0.754, Spec=0.706
+
+======================================================================
+APPENDIX D: SUBGROUP SAMPLE SIZES (Study 2)
+======================================================================
+
+Age strata:
+  Cohort Subgroup Category     n
+      C4      Age    18-30 18774
+      C4      Age    31-40  4937
+      C4      Age    41-50  3325
+      C4      Age      51+  2033
+    CARD      Age    18-30  1633
+    CARD      Age    31-40  1043
+    CARD      Age    41-50   934
+    CARD      Age      51+   617
+Dataset3      Age    18-30  7651
+Dataset3      Age    31-40  3635
+Dataset3      Age    41-50  2303
+Dataset3      Age      51+  2171
+
+Sex:
+  Cohort Subgroup Category     n
+      C4      Sex     Male 12124
+      C4      Sex   Female 15945
+    CARD      Sex     Male  1614
+    CARD      Sex   Female  2613
+Dataset3      Sex     Male  5968
+Dataset3      Sex   Female  9792
+
+Comorbidity:
+  Cohort    Subgroup   Category    n
+      C4 Comorbidity       Adhd 3327
+      C4 Comorbidity    Anxiety 1381
+      C4 Comorbidity Depression 9613
+    CARD Comorbidity       Adhd  470
+    CARD Comorbidity    Anxiety  693
+    CARD Comorbidity Depression 1426
+Dataset3 Comorbidity       Adhd 1790
+Dataset3 Comorbidity    Anxiety 2621
+Dataset3 Comorbidity Depression 2832
+
+======================================================================
+APPENDIX E: TOP 20 SHAP FEATURES (C4)
+======================================================================
+  feature  mean_abs_shap  mean_shap_signed  direction  rank
+     eq_1       0.413784         -0.062404 non_autism     1
+     eq_4       0.409369         -0.018851 non_autism     2
+      age       0.364953         -0.006145 non_autism     3
+    eq_10       0.349642         -0.000050 non_autism     4
+     eq_6       0.321642         -0.026787 non_autism     5
+spq_total       0.240537         -0.023936 non_autism     6
+    sqr_1       0.195439         -0.002026 non_autism     7
+     eq_3       0.172702         -0.016028 non_autism     8
+     eq_8       0.169855         -0.000818 non_autism     9
+     eq_2       0.143816         -0.021984 non_autism    10
+     eq_5       0.141018         -0.004053 non_autism    11
+    spq_1       0.120201         -0.009047 non_autism    12
+    spq_4       0.107324         -0.011710 non_autism    13
+    spq_3       0.104806          0.010367     autism    14
+      sex       0.095681         -0.009989 non_autism    15
+    spq_5       0.090919         -0.009522 non_autism    16
+    spq_9       0.082084         -0.003751 non_autism    17
+     eq_9       0.081768          0.006740     autism    18
+    sqr_6       0.079974         -0.001778 non_autism    19
+    spq_8       0.077542         -0.003278 non_autism    20
+
+======================================================================
+APPENDIX F: SOFTWARE ENVIRONMENT
+======================================================================
+
+Python: 3.13.5
+Platform: macOS-14.8.3-arm64-arm-64bit-Mach-O
+  numpy: 2.2.0
+  pandas: 2.3.1
+  sklearn: 1.6.1
+  xgboost: 3.0.2
+  lightgbm: 4.6.0
+  shap: 0.48.0
+
+Full pip freeze (first 2500 chars):
+anyio==4.9.0
+appnope==0.1.4
+argon2-cffi==25.1.0
+argon2-cffi-bindings==21.2.0
+arrow==1.3.0
+asttokens==3.0.0
+async-lru==2.0.5
+attrs==25.3.0
+babel==2.17.0
+beautifulsoup4==4.13.4
+bleach==6.2.0
+catboost==1.2.8
+certifi==2025.7.9
+cffi==2.0.0
+charset-normalizer==3.4.2
+cloudpickle==3.1.1
+comm==0.2.2
+contourpy==1.3.2
+cryptography==46.0.3
+cycler==0.12.1
+debugpy==1.8.14
+decorator==5.2.1
+defusedxml==0.7.1
+et_xmlfile==2.0.0
+executing==2.2.0
+fastjsonschema==2.21.1
+fonttools==4.58.5
+fqdn==1.5.1
+graphviz==0.21
+h11==0.16.0
+httpcore==1.0.9
+httpx==0.28.1
+idna==3.10
+imbalanced-learn==0.13.0
+ipykernel==6.29.5
+ipython==9.4.0
+ipython_pygments_lexers==1.1.1
+ipywidgets==8.1.7
+isoduration==20.11.0
+jedi==0.19.2
+Jinja2==3.1.6
+joblib==1.5.1
+json5==0.12.0
+jsonpointer==3.0.0
+jsonschema==4.24.0
+jsonschema-specifications==2025.4.1
+jupyter==1.1.1
+jupyter-console==6.6.3
+jupyter-events==0.12.0
+jupyter-lsp==2.2.5
+jupyter_client==8.6.3
+jupyter_core==5.8.1
+jupyter_server==2.16.0
+jupyter_server_terminals==0.5.3
+jupyterlab==4.4.4
+jupyterlab_pygments==0.3.0
+jupyterlab_server==2.27.3
+jupyterlab_widgets==3.0.15
+kiwisolver==1.4.8
+lightgbm==4.6.0
+llvmlite==0.44.0
+MarkupSafe==3.0.2
+matplotlib==3.10.3
+matplotlib-inline==0.1.7
+mistune==3.1.3
+msoffcrypto-tool==5.4.2
+narwhals==2.3.0
+nbclient==0.10.2
+nbconvert==7.16.6
+nbformat==5.10.4
+nbstripout==0.8.1
+nest-asyncio==1.6.0
+notebook==7.4.4
+notebook_shim==0.2.4
+numba==0.61.2
+numpy==2.2.0
+olefile==0.47
+openpyxl==3.1.5
+overrides==7.7.0
+packaging==25.0
+pandas==2.3.1
+pandocfilters==1.5.1
+parso==0.8.4
+patsy==1.0.1
+pexpect==4.9.0
+pillow==11.3.0
+platformdirs==4.3.8
+plotly==6.3.0
+prometheus_client==0.22.1
+prompt_toolkit==3.0.51
+psutil==7.0.0
+ptyprocess==0.7.0
+pure_eval==0.2.3
+pycparser==2.22
+Pygments==2.19.2
+pyparsing==3.2.3
+python-dateutil==2.9.0.post0
+python-json-logger==3.3.0
+pytz==2025.2
+PyYAML==6.0.2
+pyzmq==27.0.0
+referencing==0.36.2
+requests==2.32.4
+rfc3339-validator==0.1.4
+rfc3986-validator==0.1.1
+rpds-py==0.26.0
+scikit-learn==1.6.1
+scipy==1.16.0
+seaborn==0.13.2
+Send2Trash==1.8.3
+setuptools==80.9.0
+shap==0.48.0
+six==1.17.0
+sklearn-compat==0.1.3
+slicer==0.0.8
+sniffio==1.3.1
+soupsieve==2.7
+stack-data==0.6.3
+statsmodels==0.14.5
+terminado==0.18.1
+threadpoolctl==3.6.0
+tinycss2==1.4.0
+tornado==6.5.1
+tqdm==4.67.1
+traitlets==5.14.3
+types-python-dateutil==2.9.0.20250708
+typing_extensions==4.14.1
+tzdata==2025.2
+uri-template==1.3.0
+urllib3==2.5.0
+wcwidth==0.2.13
+webcolors==24.11.1
+webencodings==0.5.1
+websocket-client==1.8.0
+widgetsnbextension==4.0.14
+xgboost==3.0.2
+
+
+======================================================================
+APPENDIX K: DATASET SIZES
+======================================================================
+
+Balanced (50/50, age 18-55, AQ>=6 for autism):
+  C4: N_total=26152, N_autism=13076, N_non_autism=13076
+  CARD: N_total=3893, N_autism=2033, N_non_autism=1860
+  YBT: N_total=684, N_autism=342, N_non_autism=342
+
+Pre-balancing (after exclusions, before 50/50):
+  C4: ~28,003 total (13,076 autism, 14,927 non-autism) - from pipeline.
+  CARD: ~3,893 (2,033 autism, 1,860 non-autism) - card_aligned pre-balance.
+  YBT: balanced N in table above; raw varies by data source.
+
+======================================================================
+APPENDIX E.3: FEATURE SET ABLATION (Study 3)
+======================================================================
+Cohort  Feature_Set  N_Features    AUROC       F1
+    C4 demographics           8 0.627069 0.573451
+    C4      eq_only          10 0.887633 0.814555
+    C4     sqr_only          10 0.770456 0.708719
+    C4     spq_only          10 0.771128 0.704528
+    C4      aq_only          10 0.943746 0.905880
+    C4   eq_sq_only          20 0.899488 0.825680
+    C4    all_no_aq          45 0.912091 0.836891
+    C4 all_features          45 0.912091 0.836891
+  CARD demographics           8 0.584488 0.544688
+  CARD      eq_only          10 0.885889 0.807316
+  CARD     sqr_only          10 0.735982 0.671825
+  CARD     spq_only          10 0.655704 0.552956
+  CARD   eq_sq_only          20 0.890649 0.815884
+  CARD    all_no_aq          45 0.907881 0.828984
+  CARD all_features          45 0.907881 0.828984
+   YBT demographics           8 0.466909 0.471667
+   YBT      eq_only          10 0.726149 0.660666
+   YBT     sqr_only          10 0.616960 0.602904
+   YBT   eq_sq_only          20 0.744353 0.677936
+   YBT    all_no_aq          34 0.761941 0.674357
+   YBT all_features          34 0.761941 0.674357
+
+Note: Values are 5-fold cross-validation AUROC and F1. Per-fold results not saved.
+
+======================================================================
+CV: Fold-level details
+======================================================================
+Only mean and std saved (e.g. cv_auroc_mean, cv_auroc_std in performance_metrics.json).

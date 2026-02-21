@@ -1,0 +1,20 @@
+YBT AQ-10 scores for manuscript tables (balanced 50/50 dataset, age 18-55, AQ>=6 for autism cases)
+====================================================================================================
+
+Sample (YBT balanced):
+  N total: 684
+  N autism: 342
+  N non-autism: 342
+
+AQ-10 total (mean, SD):
+  Overall:        5.35 (3.30)
+  Autism:         8.04 (1.33)
+  Non-autism:     2.65 (2.34)
+
+Formatted for tables (Mean +/- SD or Mean (SD)):
+  YBT, overall:   5.35 +/- 3.30   or   5.35 (3.30)
+  YBT, autism:    8.04 +/- 1.33   or   8.04 (1.33)
+  YBT, non-autism: 2.65 +/- 2.34  or   2.65 (2.34)
+
+Note: YBT balanced N=684 when loading from raw YBT with same pipeline (age 18-55, AQ>=6, 50/50).
+If your table uses a different YBT sample (e.g. N=1098 from an aligned file), re-run with that file and update these numbers.

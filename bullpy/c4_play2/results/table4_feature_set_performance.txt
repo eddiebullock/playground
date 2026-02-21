@@ -1,0 +1,14 @@
+Table 4: Feature Set Performance (5-fold CV AUROC)
+Marginal Gain = AUROC - Demographics AUROC for that cohort.
+
+Feature Set          | C4 AUROC | CARD AUROC | YBT AUROC | Marginal Gain
+------------------------------------------------------------------------
+Demographics         |   0.63   |    0.58    |   0.47    | —
+EQ-10                |   0.89   |    0.89    |   0.73    | +0.26
+SQ-R-10              |   0.77   |    0.74    |   0.62    | +0.14
+SPQ-10               |   0.77   |    0.66    |     —     | +0.14
+AQ-10                |   0.94   |     —      |     —     | +0.32
+EQ + SQ-R            |   0.90   |    0.89    |   0.74    | +0.27
+EQ + SQ-R + SPQ      |   0.91   |    0.91    |   0.76    | +0.29
+EQ + SQ-R + AQ       |    —     |     —      |     —     | 
+Full Model           |   0.91   |    0.91    |   0.76    | +0.29

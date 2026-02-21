@@ -16,7 +16,14 @@ import numpy as np
 
 # Add src to path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
-from study_utils import load_cohort_c4, load_cohort_card, load_cohort_ybt, REPO_ROOT
+from study_utils import (
+    load_cohort_c4,
+    load_cohort_card,
+    load_cohort_ybt,
+    REPO_ROOT,
+    RANDOM_STATE,
+    COMOBIDITY_COLUMNS,
+)
 
 def format_statistics(df: pd.DataFrame, cohort_name: str, target_col: str = "diagnosis") -> dict:
     """Compute and format demographic statistics for a cohort."""
@@ -96,6 +103,84 @@ def format_statistics(df: pd.DataFrame, cohort_name: str, target_col: str = "dia
     return stats
 
 
+def load_ybt_with_aq(data_path: str, age_min: int = 18, age_max: int = 55) -> pd.DataFrame:
+    """
+    Load raw YBT, apply same preprocessing as study_utils (age, AQ/EQ/SQ-R scoring,
+    AQ>=6 filter, 50/50 balance) but retain aq_total and columns needed for demographics.
+    """
+    df = pd.read_csv(data_path, low_memory=False)
+    if "diagnosis" in df.columns and df["diagnosis"].dtype == object:
+        diag_str = df["diagnosis"].astype(str)
+        df["has_adhd"] = diag_str.str.contains("ADHD", case=False, na=False).astype(int)
+        df["has_anxiety"] = diag_str.str.contains("Anxiety", case=False, na=False).astype(int)
+        df["has_depression"] = diag_str.str.contains("Depression", case=False, na=False).astype(int)
+    if "autism_target" in df.columns:
+        df = df.rename(columns={"autism_target": "diagnosis"})
+    elif "diagnosis_yes_no" in df.columns and "diagnosis" in df.columns:
+        autism_keywords = ["autism", "asd", "asperger", "autistic"]
+        df["diagnosis"] = df["diagnosis"].astype(str).str.contains(
+            "|".join(autism_keywords), case=False, na=False
+        ).astype(int)
+    eq_map = {f"eq10_{i}": f"eq_{i}" for i in range(1, 11)}
+    sq_map = {f"sq10_{i}": f"sqr_{i}" for i in range(1, 11)}
+    df = df.rename(columns={**eq_map, **sq_map})
+    for i in range(1, 11):
+        if f"eq_{i}" not in df.columns and f"eq10_{i}" in df.columns:
+            df[f"eq_{i}"] = df[f"eq10_{i}"]
+        if f"sqr_{i}" not in df.columns and f"sq10_{i}" in df.columns:
+            df[f"sqr_{i}"] = df[f"sq10_{i}"]
+    df["age"] = pd.to_numeric(df["age"], errors="coerce")
+    df = df[df["age"].notna() & (df["age"] >= age_min) & (df["age"] <= age_max)]
+    _ybt_map = {"strongly agree": 4, "slightly agree": 3, "slightly disagree": 2, "strongly disagree": 1}
+
+    def _ybt_to_14(ser):
+        out = ser.astype(str).str.strip().str.lower().replace(_ybt_map)
+        return pd.to_numeric(out, errors="coerce")
+
+    for i in range(1, 11):
+        for col, reverse in [
+            (f"eq_{i}", i == 3),
+            (f"sqr_{i}", i in (2, 4, 6, 8, 10)),
+            (f"aq_{i}", i in (2, 3, 4, 5, 6, 9)),
+        ]:
+            if col not in df.columns:
+                continue
+            if df[col].dtype == object:
+                raw = _ybt_to_14(df[col])
+                if reverse:
+                    df[col] = raw.apply(
+                        lambda x: 1 if pd.notna(x) and 1 <= x <= 2 else (0 if pd.notna(x) and 3 <= x <= 4 else np.nan)
+                    )
+                else:
+                    df[col] = raw.apply(
+                        lambda x: 1 if pd.notna(x) and 3 <= x <= 4 else (0 if pd.notna(x) and 1 <= x <= 2 else np.nan)
+                    )
+                df[col] = df[col].fillna(0)
+            else:
+                df[col] = pd.to_numeric(df[col], errors="coerce").fillna(0)
+    df["eq_total"] = df[[f"eq_{i}" for i in range(1, 11) if f"eq_{i}" in df.columns]].sum(axis=1)
+    df["sqr_total"] = df[[f"sqr_{i}" for i in range(1, 11) if f"sqr_{i}" in df.columns]].sum(axis=1)
+    df["aq_total"] = df[[f"aq_{i}" for i in range(1, 11) if f"aq_{i}" in df.columns]].sum(axis=1)
+    sex_map = {"male": 0, "female": 1, "m": 0, "f": 1, "Male": 0, "Female": 1}
+    df["sex_num"] = df["sex"].astype(str).str.strip().str.lower().map(sex_map).fillna(0)
+    autism = df[df["diagnosis"] == 1]
+    non_autism = df[df["diagnosis"] == 0]
+    autism = autism[autism["aq_total"] >= 6]
+    df = pd.concat([autism, non_autism], ignore_index=True)
+    pos = df[df["diagnosis"] == 1]
+    neg = df[df["diagnosis"] == 0]
+    n = min(len(pos), len(neg))
+    if n == 0:
+        return df
+    pos = pos.sample(n=n, random_state=RANDOM_STATE)
+    neg = neg.sample(n=n, random_state=RANDOM_STATE)
+    df = pd.concat([pos, neg], ignore_index=True).sample(frac=1, random_state=RANDOM_STATE)
+    keep = ["age", "sex_num", "diagnosis", "aq_total", "eq_total", "sqr_total"] + [
+        c for c in COMOBIDITY_COLUMNS if c in df.columns
+    ]
+    return df[[c for c in keep if c in df.columns]].copy()
+
+
 def main():
     """Load balanced datasets and compute demographics."""
     print("=" * 80)
@@ -147,25 +232,21 @@ def main():
     _default_ybt = os.path.expanduser("~/Library/CloudStorage/OneDrive-UniversityofCambridge/Documents/PhD/data/YBT.csv")
     _repo_ybt = os.path.join(REPO_ROOT, "data", "raw", "YBT.csv")
     
-    # Prefer aligned file if it exists (already balanced)
+    # Prefer aligned file if it exists (already balanced); otherwise load raw with aq_total retained
     if os.path.isfile(ybt_aligned_path):
         df_ybt = pd.read_csv(ybt_aligned_path)
         if "autism_target" in df_ybt.columns:
             df_ybt = df_ybt.rename(columns={"autism_target": "diagnosis"})
         if "age" in df_ybt.columns:
             df_ybt = df_ybt[(df_ybt["age"] >= 18) & (df_ybt["age"] <= 55)]
+        if "aq_total" not in df_ybt.columns and all(f"aq_{i}" in df_ybt.columns for i in range(1, 11)):
+            df_ybt["aq_total"] = df_ybt[[f"aq_{i}" for i in range(1, 11)]].sum(axis=1)
         print(f"  Loaded aligned file: {len(df_ybt)} rows (already balanced)")
     else:
         ybt_path = _default_ybt if os.path.isfile(_default_ybt) else _repo_ybt
         if os.path.isfile(ybt_path):
-            df_ybt, _, _ = load_cohort_ybt(
-                ybt_path,
-                age_min=18,
-                age_max=55,
-                balance_50_50=True,
-                apply_aq_filter=True
-            )
-            print(f"  Loaded and balanced: {len(df_ybt)} rows")
+            df_ybt = load_ybt_with_aq(ybt_path, age_min=18, age_max=55)
+            print(f"  Loaded and balanced (with AQ): {len(df_ybt)} rows")
         else:
             df_ybt = pd.DataFrame()
             print(f"  ⚠️  File not found: {ybt_path}")
