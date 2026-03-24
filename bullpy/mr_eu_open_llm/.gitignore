@@ -1,0 +1,54 @@
+__pycache__/
+*.py[cod]
+*.so
+*.dylib
+
+# Virtual environments
+.venv/
+venv/
+.env/
+.mypy_cache/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# VSCode / Cursor
+.vscode/
+.cursor/
+
+# Data and models (local and HPC sync)
+data/raw/
+data/interim/
+data/processed/
+datasets/
+models/
+
+# Large HPC artifacts
+results/activations/
+results/cache/
+*.npy
+*.pt
+*.bin
+*.safetensors
+
+# Model weights and checkpoints
+*/models/
+checkpoints/
+*/checkpoints/
+
+# Hugging Face and transformer caches
+~/.cache/huggingface/
+~/.cache/torch/
+
+# Logs
+logs/
+*.log
+
+# API keys and secrets
+.env.*
+*.secret
+*.key
+*credentials*.json
+
+# OS-specific
+.DS_Store
+Thumbs.db

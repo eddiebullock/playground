@@ -1,0 +1,31 @@
+name: mr_eu_open_llm
+channels:
+  - pytorch
+  - conda-forge
+dependencies:
+  - python=3.10
+  - pytorch
+  - torchvision
+  - torchaudio
+  - pip
+  - numpy
+  - pandas
+  - scipy
+  - scikit-learn
+  - matplotlib
+  - seaborn
+  - tqdm
+  - opencv
+  - pillow
+  - statsmodels
+  - ipykernel
+  - jupyter
+  - pip:
+      - transformers
+      - peft
+      - accelerate
+      - huggingface_hub
+      - transformer-lens
+      - einops
+      - timm
+      - sentencepiece
