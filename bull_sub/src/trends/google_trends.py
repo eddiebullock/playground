@@ -92,6 +92,31 @@ def _parse_cache_payload(raw: dict[str, Any]) -> tuple[datetime, list[TrendTopic
     return fetched_at, topics
 
 
+def _fallback_topics_from_config(keyword_groups: list[list[str]]) -> list[TrendTopic]:
+    """
+    When Trends cannot be fetched, use configured keywords with a neutral score.
+
+    Args:
+        keyword_groups: Same structure as ``GOOGLE_TRENDS_KEYWORD_GROUPS``.
+
+    Returns:
+        De-duplicated ``TrendTopic`` rows (score 50, source ``config_fallback``).
+    """
+    seen: set[str] = set()
+    out: list[TrendTopic] = []
+    for group in keyword_groups:
+        for raw in group:
+            k = str(raw).strip()
+            if not k:
+                continue
+            key = k.lower()
+            if key in seen:
+                continue
+            seen.add(key)
+            out.append(TrendTopic(topic=k, trend_score=50.0, source="config_fallback"))
+    return out
+
+
 def _fetch_via_pytrends(keyword_groups: list[list[str]]) -> list[TrendTopic]:
     """
     Query pytrends for each keyword group and return per-keyword scores.
@@ -208,4 +233,9 @@ def get_trending_topics(
                     return topics, False
             except Exception as e2:
                 logger.warning("Stale cache unusable: %s", e2)
-        return [], False
+        fb = _fallback_topics_from_config(groups)
+        logger.warning(
+            "Using config keyword fallback (%d topics); trend scores are neutral (50).",
+            len(fb),
+        )
+        return fb, False

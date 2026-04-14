@@ -49,4 +49,6 @@ streamlit run dashboard.py
 ## Notes
 - The database is stored at `data/bull_sub.db` (gitignored).
 - Articles are saved as drafts with `status=pending` until approved in the dashboard.
+- If Google Trends is blocked (proxy/VPN), the pipeline uses a **config keyword fallback** (neutral scores) so you can still generate drafts.
+- Set `GEMINI_MODEL_NAME` in `.env` if the default model id is not enabled for your API key (see `.env.example`).
 
