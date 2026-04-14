@@ -5,13 +5,14 @@ Streamlit dashboard: analytics, topics, drafts, content queue, alerts.
 from __future__ import annotations
 
 import os
+from pathlib import Path
 
 import pandas as pd
 import streamlit as st
 from dotenv import load_dotenv
 from sqlalchemy import desc, select
 
-from config import PROJECT_ROOT
+from config import EXPORTS_DIR, PROJECT_ROOT
 from src.alerts.cta_detector import run_cta_detection
 from src.analytics.csv_parser import import_exports_folder
 from src.db.models import Alert, Draft, Note, Post, Thread, TopicScore
@@ -53,6 +54,56 @@ def main() -> None:
 
         with tab_analytics:
             st.subheader("Performance")
+
+            exports_path = EXPORTS_DIR.resolve()
+            EXPORTS_DIR.mkdir(parents=True, exist_ok=True)
+
+            with st.expander("How to get a CSV from Substack", expanded=False):
+                st.markdown(
+                    """
+1. In Substack: **Dashboard → Settings → Exports** (left sidebar).
+2. Click **Create new export**. When it is ready, download the **ZIP** from that page (Substack may also email you).
+3. Unzip the archive and find CSV file(s) with **post stats** (often something like posts or statistics; column names should include title, dates, and open rates).
+4. Either **upload below** or copy the `.csv` file into this folder on your computer:
+
+   `{path}`
+
+5. Click **Import CSV** below. If you see `files=0`, no `.csv` was found in that folder.
+
+**Note:** Substack’s export layout can change. If import shows many **skipped** rows, the CSV may use different column names—open an issue or adjust the file to include `title`, `published_at`, `open_rate`, and `click_rate` (or similar).
+""".format(
+                        path=exports_path
+                    )
+                )
+
+            uploaded = st.file_uploader("Upload a Substack stats CSV", type=["csv"], key="substack_csv_upload")
+            if uploaded is not None and st.button("Save uploaded file to data/exports", key="save_csv_upload"):
+                dest = exports_path / Path(uploaded.name).name
+                dest.write_bytes(uploaded.getvalue())
+                st.session_state["import_msg"] = f"Saved file to {dest}. Click Import CSV below."
+                st.rerun()
+
+            if "import_msg" in st.session_state:
+                msg = st.session_state.pop("import_msg")
+                if msg.startswith("Import failed") or "failed" in msg.lower():
+                    st.error(msg)
+                else:
+                    st.success(msg)
+
+            if st.button("Import CSV from data/exports", key="import_csv_btn"):
+                try:
+                    imp = import_exports_folder(session)
+                    run_cta_detection(session)
+                    session.commit()
+                    st.session_state["import_msg"] = (
+                        f"Imported: files={imp.files_seen} rows={imp.rows_seen} "
+                        f"upserted={imp.upserted_posts} skipped={imp.skipped_rows}. "
+                        f"If upserted=0, check the CSV has title, date, and open/click columns."
+                    )
+                except Exception as e:
+                    st.session_state["import_msg"] = f"Import failed: {e}"
+                st.rerun()
+
             posts = session.scalars(select(Post).order_by(desc(Post.published_at))).all()
             if posts:
                 df = pd.DataFrame(
@@ -99,17 +150,7 @@ def main() -> None:
                         st.bar_chart(top_paid)
                 st.dataframe(df.sort_values("published_at", ascending=False), width="stretch")
             else:
-                st.info("No posts yet. Import a Substack CSV export.")
-
-            if st.button("Import CSV from data/exports"):
-                imp = import_exports_folder(session)
-                run_cta_detection(session)
-                session.commit()
-                st.success(
-                    f"Imported: files={imp.files_seen} rows={imp.rows_seen} "
-                    f"upserted={imp.upserted_posts} skipped={imp.skipped_rows}"
-                )
-                st.rerun()
+                st.info("No posts yet. Import a Substack CSV export (see expander above).")
 
         with tab_topics:
             st.subheader("Scored topics")

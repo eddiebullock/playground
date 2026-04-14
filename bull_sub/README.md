@@ -25,7 +25,9 @@ pip install -r requirements.txt
 cp .env.example .env
 ```
 
-3. Put Substack CSV exports into `data/exports/` (they are gitignored).
+3. Put Substack CSV exports into `data/exports/` (they are gitignored), or use **Upload** on the Analytics tab in the dashboard.
+
+   **From Substack:** Dashboard → **Settings** → **Exports** → *Create new export* → download the ZIP when ready → find the stats/posts CSV inside, then upload or copy the `.csv` into `data/exports/`.
 
 ## Run
 - Run the full pipeline once:
