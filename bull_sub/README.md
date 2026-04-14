@@ -31,6 +31,7 @@ cp .env.example .env
 - Run the full pipeline once:
 
 ```bash
+python main.py          # same as run-once (default)
 python main.py run-once
 ```
 

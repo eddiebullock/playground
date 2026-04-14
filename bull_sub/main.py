@@ -33,8 +33,10 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Grey Matters (bull_sub) content engine")
     parser.add_argument(
         "command",
+        nargs="?",
+        default="run-once",
         choices=["run-once", "schedule"],
-        help="run-once: single pipeline run; schedule: daily APScheduler loop",
+        help="run-once (default): single pipeline run; schedule: daily APScheduler loop",
     )
     args = parser.parse_args()
     if args.command == "run-once":
