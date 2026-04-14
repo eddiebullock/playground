@@ -7,7 +7,6 @@ so the pipeline remains easy to test and modify.
 
 from __future__ import annotations
 
-import os
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -79,7 +78,15 @@ VOICE = VoiceConfig()
 ARTICLE_TARGET_WORDS_MIN = 900
 ARTICLE_TARGET_WORDS_MAX = 1100
 
-# Gemini model id (google-generativeai). Google rotates ids; override with GEMINI_MODEL_NAME in .env.
-# Default uses a widely available Flash-class model; try ``gemini-1.5-flash-8b`` if your key supports it.
-GEMINI_MODEL_NAME = os.environ.get("GEMINI_MODEL_NAME", "gemini-2.0-flash")
+# Gemini model id (google-generativeai). ``gemini-2.0-flash`` is deprecated for new API keys; use 2.5 Flash.
+# Override with GEMINI_MODEL_NAME in .env if needed.
+GEMINI_MODEL_NAME_DEFAULT = "gemini-2.5-flash"
+
+# If the primary model returns 404 (not enabled), try these in order.
+GEMINI_MODEL_FALLBACKS: list[str] = [
+    "gemini-2.5-flash-lite",
+    "gemini-1.5-flash-8b",
+    "gemini-1.5-flash",
+]
+# Runtime resolution happens in ``src.generation.llm`` after ``load_dotenv`` (use ``GEMINI_MODEL_NAME`` env).
 
