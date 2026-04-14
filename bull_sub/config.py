@@ -77,6 +77,8 @@ VOICE = VoiceConfig()
 
 ARTICLE_TARGET_WORDS_MIN = 900
 ARTICLE_TARGET_WORDS_MAX = 1100
+# Slightly lower than titles/notes for steadier structure in long pieces.
+ARTICLE_GENERATION_TEMPERATURE = 0.72
 
 # Gemini model id (google-generativeai). ``gemini-2.0-flash`` is deprecated for new API keys; use 2.5 Flash.
 # Override with GEMINI_MODEL_NAME in .env if needed.
