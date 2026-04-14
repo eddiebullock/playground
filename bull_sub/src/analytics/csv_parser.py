@@ -12,6 +12,7 @@ The importer is idempotent via a unique constraint on (title, published_at).
 from __future__ import annotations
 
 import csv
+import datetime as pydt
 import logging
 from dataclasses import dataclass
 from pathlib import Path
@@ -100,13 +101,31 @@ def parse_published_at(v: Any) -> Optional[Any]:
     if s == "":
         return None
     try:
-        dt = dtparser.parse(s)
-        if dt.tzinfo is None:
+        if s.isdigit() and len(s) >= 10:
+            # Unix seconds (Substack sometimes exports epoch).
+            ts = int(s[:10])
+            return pydt.datetime.fromtimestamp(ts, tz=tz.UTC)
+        parsed = dtparser.parse(s)
+        if parsed.tzinfo is None:
             # Treat naive timestamps as UTC.
-            return dt.replace(tzinfo=tz.UTC)
-        return dt.astimezone(tz.UTC)
+            return parsed.replace(tzinfo=tz.UTC)
+        return parsed.astimezone(tz.UTC)
     except Exception:
         return None
+
+
+def _coalesce(norm: dict[str, Any], *keys: str) -> Any:
+    """Return the first non-empty mapped value for the given normalized column keys."""
+    for k in keys:
+        if k not in norm:
+            continue
+        val = norm[k]
+        if val is None:
+            continue
+        if str(val).strip() == "":
+            continue
+        return val
+    return None
 
 
 @dataclass(frozen=True)
@@ -153,11 +172,19 @@ def import_exports_folder(
 
     for csv_path in csv_files:
         logger.info("Importing Substack export: %s", csv_path.name)
+        logged_skip_columns = False
         for row in _read_rows(csv_path):
             rows_seen += 1
             mapped = _map_row(row)
             if mapped is None:
                 skipped += 1
+                if not logged_skip_columns:
+                    sample_norm = {normalize_col(k): v for k, v in row.items() if k is not None}
+                    logger.warning(
+                        "At least one row skipped; first skipped row column names (normalized): %s",
+                        sorted(sample_norm.keys()),
+                    )
+                    logged_skip_columns = True
                 continue
             _upsert_post(session, mapped)
             upserted += 1
@@ -170,25 +197,80 @@ def _map_row(row: dict[str, Any]) -> Optional[dict[str, Any]]:
     Map a raw CSV row to Post fields.
 
     Returns None if required fields are missing/unparseable.
+
+    Substack full-export ``posts.csv`` often uses names like ``post_date``, ``slug``, or
+    ``created_at`` rather than ``title`` / ``published_at``. Stats may live in a different
+    CSV; we still import posts with null rates when those columns are absent.
     """
     norm = {normalize_col(k): v for k, v in row.items() if k is not None}
 
-    # Try a couple of common aliases.
-    title = norm.get("title") or norm.get("post_title") or norm.get("subject")
-    published_at = norm.get("published_at") or norm.get("publish_date") or norm.get("date")
+    title = _coalesce(
+        norm,
+        "title",
+        "post_title",
+        "subject",
+        "name",
+        "post_name",
+        "headline",
+        "slug",
+        "post_slug",
+        "filename",
+        "file_name",
+        "url",
+    )
+    published_at = _coalesce(
+        norm,
+        "published_at",
+        "publish_date",
+        "publication_date",
+        "date",
+        "post_date",
+        "created_at",
+        "created",
+        "sent_at",
+        "scheduled_at",
+        "published",
+        "pub_date",
+        "timestamp",
+        "post_timestamp",
+    )
 
-    open_rate = norm.get("open_rate") or norm.get("open_rate_pct") or norm.get("open_rate_percent")
-    click_rate = norm.get("click_rate") or norm.get("click_rate_pct") or norm.get("click_rate_percent")
+    open_rate = _coalesce(
+        norm,
+        "open_rate",
+        "open_rate_pct",
+        "open_rate_percent",
+        "email_open_rate",
+        "email_open_pct",
+        "opens_rate",
+        "delivery_rate",
+    )
+    click_rate = _coalesce(
+        norm,
+        "click_rate",
+        "click_rate_pct",
+        "click_rate_percent",
+        "ctr",
+        "click_through_rate",
+        "email_click_rate",
+    )
 
     if title is None or str(title).strip() == "":
         return None
-    dt = parse_published_at(published_at)
-    if dt is None:
+    title_str = str(title).strip()
+    if title_str.lower().startswith("http"):
+        # Substack sometimes puts the post URL in the title column.
+        part = title_str.rstrip("/").split("/")[-1]
+        title_str = part.replace("-", " ").title() if part else title_str
+    title_str = title_str[:500]
+
+    pub = parse_published_at(published_at)
+    if pub is None:
         return None
 
     mapped: dict[str, Any] = {
-        "title": str(title).strip(),
-        "published_at": dt,
+        "title": title_str,
+        "published_at": pub,
         "open_rate": parse_rate_to_percent(open_rate),
         "click_rate": parse_rate_to_percent(click_rate),
     }
@@ -201,6 +283,10 @@ def _map_row(row: dict[str, Any]) -> Optional[dict[str, Any]]:
     if "topics" in norm:
         topics = norm.get("topics")
         mapped["topics"] = str(topics).strip() if topics is not None and str(topics).strip() != "" else None
+    elif "tags" in norm and norm.get("tags") is not None and str(norm.get("tags")).strip() != "":
+        mapped["topics"] = str(norm.get("tags")).strip()
+    elif "categories" in norm and norm.get("categories") is not None and str(norm.get("categories")).strip() != "":
+        mapped["topics"] = str(norm.get("categories")).strip()
     if "word_count" in norm:
         mapped["word_count"] = parse_optional_int(norm.get("word_count"))
 
