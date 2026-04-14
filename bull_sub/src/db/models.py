@@ -83,6 +83,7 @@ class Draft(Base):
     topic: Mapped[str] = mapped_column(String(200), nullable=False, index=True)
 
     title_variants: Mapped[list[dict[str, Any]]] = mapped_column(JSON, nullable=False, default=list)
+    cover_image_prompt: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     combined_score: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
     status: Mapped[str] = mapped_column(String(20), nullable=False, default="pending", index=True)
     created_at: Mapped[dt.datetime] = mapped_column(DateTime(timezone=True), default=utcnow, nullable=False)

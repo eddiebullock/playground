@@ -13,6 +13,7 @@ from src.alerts.cta_detector import build_historical_context_for_topic, run_cta_
 from src.analytics.csv_parser import ImportResult, import_exports_folder
 from src.db.models import Draft, Note, Thread
 from src.generation.article_generator import generate_article
+from src.generation.cover_prompt import generate_cover_image_prompt
 from src.generation.notes_generator import generate_notes
 from src.generation.thread_generator import generate_threads
 from src.generation.title_generator import generate_and_score_titles, pick_recommended_title
@@ -122,11 +123,16 @@ def generate_draft_for_topic(
     else:
         title = pick_recommended_title(scored_titles)
 
+    cover_prompt = generate_cover_image_prompt(topic, title[:500], body)
+    if not cover_prompt:
+        logger.warning("Cover image prompt generation failed; draft saved without it")
+
     draft = Draft(
         title=title[:500],
         content=body,
         topic=topic[:200],
         title_variants=scored_titles,
+        cover_image_prompt=cover_prompt,
         combined_score=combined_score,
         status="pending",
     )

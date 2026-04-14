@@ -12,7 +12,7 @@ from pathlib import Path
 from contextlib import contextmanager
 from typing import Iterator
 
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 from sqlalchemy.engine import Engine
 from sqlalchemy.orm import Session, sessionmaker
 
@@ -59,7 +59,27 @@ def init_db(engine: Engine | None = None) -> Engine:
     import src.db.models as _models  # noqa: F401
 
     Base.metadata.create_all(engine)
+    _sqlite_add_column_if_missing(engine, "drafts", "cover_image_prompt", "TEXT")
     return engine
+
+
+def _sqlite_add_column_if_missing(engine: Engine, table: str, column: str, col_type: str) -> None:
+    """
+    Add a column to an existing SQLite table if it does not exist (lightweight migration).
+
+    Args:
+        engine: SQLAlchemy engine.
+        table: Table name.
+        column: Column name to add.
+        col_type: SQLite type (e.g. TEXT).
+    """
+    with engine.connect() as conn:
+        rows = conn.execute(text(f"PRAGMA table_info({table})")).fetchall()
+        names = {str(r[1]) for r in rows}
+        if column in names:
+            return
+        conn.execute(text(f'ALTER TABLE "{table}" ADD COLUMN "{column}" {col_type}'))
+        conn.commit()
 
 
 def get_session(engine: Engine | None = None) -> Session:

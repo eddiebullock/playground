@@ -41,7 +41,7 @@ python main.py run-once
 python main.py schedule
 ```
 
-- Run the dashboard:
+- Run the dashboard (from the `bull_sub` folder; filename is `dashboard.py`):
 
 ```bash
 streamlit run dashboard.py
@@ -52,4 +52,5 @@ streamlit run dashboard.py
 - Articles are saved as drafts with `status=pending` until approved in the dashboard.
 - If Google Trends is blocked (proxy/VPN), the pipeline uses a **config keyword fallback** (neutral scores) so you can still generate drafts.
 - Set `GEMINI_MODEL_NAME` in `.env` if the default model id is not enabled for your API key (see `.env.example`).
+- Each draft can include a **cover image prompt** (text only): paste it into DALL-E, Midjourney, etc., then upload the image in Substack.
 

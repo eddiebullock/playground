@@ -97,7 +97,7 @@ def main() -> None:
                     )
                     if not top_paid.empty:
                         st.bar_chart(top_paid)
-                st.dataframe(df.sort_values("published_at", ascending=False), use_container_width=True)
+                st.dataframe(df.sort_values("published_at", ascending=False), width="stretch")
             else:
                 st.info("No posts yet. Import a Substack CSV export.")
 
@@ -138,7 +138,7 @@ def main() -> None:
                         for s in latest
                     ]
                 )
-                st.dataframe(tdf, use_container_width=True)
+                st.dataframe(tdf, width="stretch")
 
                 for _, row in tdf.iterrows():
                     c1, c2 = st.columns([4, 1])
@@ -167,6 +167,10 @@ def main() -> None:
             for d in drafts:
                 with st.expander(f"{d.status.upper()} · {d.title[:80]} (topic: {d.topic})"):
                     st.markdown(f"**Score:** {d.combined_score}")
+                    if d.cover_image_prompt:
+                        st.subheader("Cover image prompt (paste into DALL-E, Midjourney, etc.)")
+                        st.caption("No image is generated here—copy the text below into your image tool, then upload the result in Substack.")
+                        st.code(d.cover_image_prompt, language=None)
                     st.markdown(d.content[:4000] + ("…" if len(d.content) > 4000 else ""))
                     if d.title_variants:
                         st.write("Title variants (scores from your historical patterns):")
@@ -277,4 +281,17 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    import subprocess
+    import sys
+
+    from streamlit.runtime.scriptrunner import get_script_run_ctx
+
+    if get_script_run_ctx() is not None:
+        main()
+    else:
+        script_path = os.path.abspath(__file__)
+        raise SystemExit(
+            subprocess.call(
+                [sys.executable, "-m", "streamlit", "run", script_path, *sys.argv[1:]],
+            )
+        )
