@@ -169,10 +169,29 @@ def main() -> None:
                     st.markdown(f"**Score:** {d.combined_score}")
                     st.markdown(d.content[:4000] + ("…" if len(d.content) > 4000 else ""))
                     if d.title_variants:
-                        st.write("Title variants:")
+                        st.write("Title variants (scores from your historical patterns):")
                         for v in d.title_variants:
                             rec = " (recommended)" if v.get("recommended") else ""
                             st.write(f"- {v.get('title')} — score {v.get('score')}{rec}")
+                        choices = [str(v.get("title", "")) for v in d.title_variants if v.get("title")]
+                        if choices:
+                            rec_i = 0
+                            for v in d.title_variants:
+                                if v.get("recommended") and str(v.get("title")) in choices:
+                                    rec_i = choices.index(str(v["title"]))
+                                    break
+                            pick = st.selectbox(
+                                "Use this title for the draft",
+                                choices,
+                                key=f"title_pick_{d.id}",
+                                index=rec_i,
+                            )
+                            if st.button("Apply selected title", key=f"apply_title_{d.id}"):
+                                d.title = pick[:500]
+                                for v in d.title_variants:
+                                    v["recommended"] = v.get("title") == pick
+                                session.commit()
+                                st.rerun()
 
                     c1, c2 = st.columns(2)
                     with c1:
