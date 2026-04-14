@@ -30,6 +30,7 @@ data/*.db
 data/*.sqlite
 data/*.sqlite3
 data/bull_sub.db
+data/google_trends_cache.json
 data/exports/*.csv
 
 # Exports

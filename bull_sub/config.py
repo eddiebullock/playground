@@ -15,6 +15,8 @@ PROJECT_ROOT = Path(__file__).resolve().parent
 DATA_DIR = PROJECT_ROOT / "data"
 EXPORTS_DIR = DATA_DIR / "exports"
 DB_PATH = DATA_DIR / "bull_sub.db"
+GOOGLE_TRENDS_CACHE_PATH = DATA_DIR / "google_trends_cache.json"
+GOOGLE_TRENDS_CACHE_TTL_HOURS = 24
 
 
 SUBSTACK_EXPORT_REQUIRED_COLUMNS = {
