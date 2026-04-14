@@ -1,6 +1,11 @@
 import argparse
 import json
 import re
+import os
+import socket
+import subprocess
+import traceback
+import types
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence, Tuple
@@ -25,6 +30,42 @@ from scripts.statistics import binomial_vs_chance, wilson_ci
 MEDIA_EXTS = {".mp4", ".mov", ".avi", ".mkv", ".jpg", ".jpeg", ".png", ".webp"}
 
 
+def _safe_cmd(cmd: List[str]) -> Optional[str]:
+    try:
+        out = subprocess.check_output(cmd, stderr=subprocess.STDOUT, text=True).strip()
+        return out or None
+    except Exception:
+        return None
+
+
+def collect_run_metadata() -> Dict[str, Any]:
+    meta: Dict[str, Any] = {
+        "hostname": socket.gethostname(),
+        "slurm_job_id": os.environ.get("SLURM_JOB_ID"),
+        "slurm_job_name": os.environ.get("SLURM_JOB_NAME"),
+        "slurm_partition": os.environ.get("SLURM_JOB_PARTITION"),
+        "slurm_submit_dir": os.environ.get("SLURM_SUBMIT_DIR"),
+        "python": _safe_cmd(["python", "-V"]) or _safe_cmd(["python3", "-V"]),
+        "git_commit": _safe_cmd(["git", "rev-parse", "HEAD"]),
+        "transformers_version": None,
+        "torch_version": torch.__version__,
+        "cuda_available": bool(torch.cuda.is_available()),
+    }
+    try:
+        import transformers  # type: ignore
+
+        meta["transformers_version"] = getattr(transformers, "__version__", None)
+    except Exception:
+        pass
+
+    freeze = _safe_cmd(["python", "-m", "pip", "freeze"]) or _safe_cmd(["python3", "-m", "pip", "freeze"])
+    if isinstance(freeze, str):
+        meta["pip_freeze_head"] = "\n".join(freeze.splitlines()[:50])
+    else:
+        meta["pip_freeze_head"] = None
+    return meta
+
+
 def load_model(model_key: str) -> Any:
     """
     Load a multimodal model given a key in MODELS.
@@ -36,12 +77,269 @@ def load_model(model_key: str) -> Any:
     return None
 
 
+def _internvl2_fallback_generation_config(mod: Any) -> Any:
+    """
+    InternLM2 configs often break GenerationConfig.from_model_config (None._from_model_config).
+    Always fall back to a plain GenerationConfig with token ids copied from the LM config.
+    """
+    from transformers import GenerationConfig  # type: ignore
+
+    cfg = getattr(mod, "config", None)
+    if cfg is not None:
+        try:
+            return GenerationConfig.from_model_config(cfg)  # type: ignore[attr-defined]
+        except Exception:
+            pass
+    gc = GenerationConfig()
+    if cfg is not None:
+        for name in ("eos_token_id", "pad_token_id", "bos_token_id"):
+            val = getattr(cfg, name, None)
+            if val is not None:
+                setattr(gc, name, val)
+    return gc
+
+
+def _internvl2_ensure_module_generation_config(mod: Any) -> None:
+    if mod is None or getattr(mod, "generation_config", None) is not None:
+        return
+    mod.generation_config = _internvl2_fallback_generation_config(mod)
+
+
+def _internvl2_past_seq_len(past_key_values: Any) -> int:
+    """
+    InternLM2 remote `prepare_inputs_for_generation` uses past_key_values[0][0].shape[2].
+    Transformers 4.5+ may pass DynamicCache where layer key tensors are still None (lazy init);
+    use the Cache API when available.
+    """
+    if past_key_values is None:
+        return 0
+    gsq = getattr(past_key_values, "get_seq_length", None)
+    if callable(gsq):
+        try:
+            return int(gsq(0))
+        except TypeError:
+            try:
+                return int(gsq())
+            except Exception:
+                pass
+        except Exception:
+            pass
+    try:
+        layer0 = past_key_values[0]
+        first = layer0[0] if layer0 is not None else None
+        if first is not None and hasattr(first, "shape") and len(first.shape) > 2:
+            return int(first.shape[2])
+    except Exception:
+        pass
+    return 0
+
+
+def _internvl2_patch_prepare_inputs_for_generation(lm: Any) -> None:
+    """
+    Replace broken legacy cache indexing with cache.get_seq_length(); fix position_ids slicing when
+    input_ids is empty (inputs_embeds prefill path).
+    """
+    if getattr(lm, "_mr_eu_internvl_prep_patch", False):
+        return
+
+    def prepare_inputs_for_generation(
+        self: Any,
+        input_ids: Any,
+        past_key_values: Any = None,
+        attention_mask: Any = None,
+        inputs_embeds: Any = None,
+        **kwargs: Any,
+    ) -> Any:
+        if past_key_values is not None:
+            past_length = _internvl2_past_seq_len(past_key_values)
+            if input_ids is not None and input_ids.shape[1] > 0:
+                if input_ids.shape[1] > past_length:
+                    remove_prefix_length = past_length
+                else:
+                    remove_prefix_length = input_ids.shape[1] - 1
+                input_ids = input_ids[:, remove_prefix_length:]
+
+        position_ids = kwargs.get("position_ids", None)
+        if attention_mask is not None and position_ids is None:
+            position_ids = attention_mask.long().cumsum(-1) - 1
+            position_ids.masked_fill_(attention_mask == 0, 1)
+            if past_key_values:
+                if input_ids is not None and input_ids.shape[1] > 0:
+                    seq_w = int(input_ids.shape[1])
+                else:
+                    seq_w = int(attention_mask.shape[1])
+                position_ids = position_ids[:, -seq_w:]
+
+        if inputs_embeds is not None and past_key_values is None:
+            model_inputs = {"inputs_embeds": inputs_embeds}
+        else:
+            model_inputs = {"input_ids": input_ids}
+
+        model_inputs.update(
+            {
+                "position_ids": position_ids,
+                "past_key_values": past_key_values,
+                "use_cache": kwargs.get("use_cache"),
+                "attention_mask": attention_mask,
+            }
+        )
+        return model_inputs
+
+    lm.prepare_inputs_for_generation = types.MethodType(prepare_inputs_for_generation, lm)
+    setattr(lm, "_mr_eu_internvl_prep_patch", True)
+
+
+def _internvl2_wrap_language_model_generate(lm: Any) -> None:
+    """
+    InternVL batch_chat does self.generate(..., **dict), so InternVLChatModel passes
+    max_new_tokens etc. as kwargs while generation_config stays None. language_model.generate
+    must not receive generation_config=None under GenerationMixin on recent Transformers.
+    """
+    if getattr(lm, "_mr_eu_internvl_gc_wrap", False):
+        return
+    orig = lm.generate
+
+    def generate(self: Any, *args: Any, generation_config: Any = None, **kwargs: Any) -> Any:
+        if generation_config is None:
+            _internvl2_ensure_module_generation_config(self)
+            generation_config = getattr(self, "generation_config", None)
+            if generation_config is None:
+                self.generation_config = _internvl2_fallback_generation_config(self)
+                generation_config = self.generation_config
+        return orig(*args, generation_config=generation_config, **kwargs)
+
+    lm.generate = types.MethodType(generate, lm)
+    setattr(lm, "_mr_eu_internvl_gc_wrap", True)
+
+
+def patch_internvl2_language_model_generation(model: Any) -> None:
+    """
+    InternVL's chat/batch_chat call self.language_model.generate(...). On Transformers >=4.50,
+    some remote-code LMs (e.g. InternLM2ForCausalLM) no longer inherit GenerationMixin, so
+    `.generate` is missing. Mix GenerationMixin onto the *instance* so InternVL's forward path works.
+    """
+    _internvl2_ensure_module_generation_config(model)
+    lm = getattr(model, "language_model", None)
+    if lm is None:
+        return
+    _internvl2_ensure_module_generation_config(lm)
+
+    if not callable(getattr(lm, "generate", None)):
+        try:
+            from transformers.generation.utils import GenerationMixin  # type: ignore
+
+            base_cls = lm.__class__
+            if not issubclass(base_cls, GenerationMixin):
+                merged_name = base_cls.__name__ + "_WithGenerationMixin"
+                merged_cls = type(merged_name, (base_cls, GenerationMixin), {})
+                lm.__class__ = merged_cls  # type: ignore[assignment]
+                _internvl2_ensure_module_generation_config(lm)
+        except Exception as e:
+            raise RuntimeError(
+                "InternVL2 language model has no .generate() under this Transformers version "
+                "(common with Transformers>=4.50). Could not attach GenerationMixin. "
+                "Try a dedicated env with transformers<4.50, or an updated InternVL checkpoint."
+            ) from e
+
+    _internvl2_patch_prepare_inputs_for_generation(lm)
+    _internvl2_wrap_language_model_generate(lm)
+
+
 def resolve_model_path(model_key: str) -> Path:
     cfg = MODELS[model_key]
     hpc = Path(cfg["hpc_path"])
     if hpc.exists():
         return hpc
     return Path(cfg["local_path"])
+
+
+def load_hf_model_for_key(model_key: str, model_path: Path, device: str, dtype: torch.dtype) -> Any:
+    """
+    Best-effort loader across HF model class variants.
+    """
+    # Qwen2-VL dedicated class first (where available).
+    if model_key == "qwen2vl":
+        try:
+            from transformers import Qwen2VLForConditionalGeneration  # type: ignore
+
+            return Qwen2VLForConditionalGeneration.from_pretrained(
+                model_path,
+                torch_dtype=dtype,
+                device_map="auto" if device == "cuda" else None,
+                trust_remote_code=True,
+            )
+        except Exception:
+            pass
+
+    # InternVL2: prefer its custom AutoModel (InternVLChatModel).
+    if model_key == "internvl2":
+        try:
+            from transformers import AutoModel  # type: ignore
+
+            return AutoModel.from_pretrained(
+                model_path,
+                torch_dtype=dtype,
+                device_map="auto" if device == "cuda" else None,
+                trust_remote_code=True,
+            )
+        except Exception:
+            pass
+
+    # LLaVA-NeXT is not always mapped correctly by older Transformers versions.
+    # Try common explicit classes first.
+    if model_key == "llavanext":
+        for cls_name in (
+            "LlavaForConditionalGeneration",
+            "LlavaNextForConditionalGeneration",
+            "LlavaQwenForConditionalGeneration",
+        ):
+            try:
+                mod = __import__("transformers", fromlist=[cls_name])
+                cls = getattr(mod, cls_name)
+                return cls.from_pretrained(
+                    model_path,
+                    torch_dtype=dtype,
+                    device_map="auto" if device == "cuda" else None,
+                    trust_remote_code=True,
+                )
+            except Exception:
+                pass
+
+    # Most recent multimodal auto class.
+    try:
+        from transformers import AutoModelForImageTextToText  # type: ignore
+
+        return AutoModelForImageTextToText.from_pretrained(
+            model_path,
+            torch_dtype=dtype,
+            device_map="auto" if device == "cuda" else None,
+            trust_remote_code=True,
+        )
+    except Exception:
+        pass
+
+    # Older multimodal class.
+    try:
+        from transformers import AutoModelForVision2Seq  # type: ignore
+
+        return AutoModelForVision2Seq.from_pretrained(
+            model_path,
+            torch_dtype=dtype,
+            device_map="auto" if device == "cuda" else None,
+            trust_remote_code=True,
+        )
+    except Exception:
+        pass
+
+    # Last resort fallback.
+    from transformers import AutoModelForCausalLM
+
+    return AutoModelForCausalLM.from_pretrained(
+        model_path,
+        torch_dtype=dtype,
+        device_map="auto" if device == "cuda" else None,
+        trust_remote_code=True,
+    )
 
 
 def resolve_dataset_root(dataset_key: str, override_root: Optional[Path] = None) -> Path:
@@ -251,7 +549,7 @@ def _match_raw_to_option(raw: str, options: Sequence[str]) -> Optional[str]:
     return None
 
 
-def parse_emotion(output_text: str, options: Sequence[str]) -> Tuple[Optional[str], Optional[str]]:
+def parse_emotion(output_text: Any, options: Sequence[str]) -> Tuple[Optional[str], Optional[str]]:
     """
     Return (emotion, reasoning). Emotion is forced to one of options if possible.
 
@@ -260,7 +558,14 @@ def parse_emotion(output_text: str, options: Sequence[str]) -> Tuple[Optional[st
     """
     emotion = None
     reasoning = None
-    text = output_text.strip()
+    if not isinstance(output_text, str):
+        try:
+            text = json.dumps(output_text, ensure_ascii=False)
+        except Exception:
+            text = str(output_text)
+    else:
+        text = output_text
+    text = text.strip()
 
     # Last EMOTION line wins (avoids matching the template line in the user message).
     for m in reversed(list(re.finditer(r"(?im)^\s*EMOTION\s*[:\-]\s*(.+?)\s*$", text))):
@@ -279,6 +584,16 @@ def parse_emotion(output_text: str, options: Sequence[str]) -> Tuple[Optional[st
             continue
         reasoning = rs
         break
+
+    # Fallback: some models ignore the EMOTION/REASONING format and just answer with
+    # an option label (or include it inline). Since we decode only generated tokens,
+    # scanning the completion is safe (it won't match the OPTIONS block from the prompt).
+    if emotion is None and text:
+        lower = text.lower()
+        for opt in sorted(options, key=lambda x: -len(str(x))):
+            if str(opt).lower() in lower:
+                emotion = str(opt)
+                break
 
     return emotion, reasoning
 
@@ -323,53 +638,89 @@ def run_evaluation(
     device = "cuda" if torch.cuda.is_available() else "cpu"
     dtype = torch.bfloat16 if device == "cuda" else torch.float32
 
-    if model_key == "qwen2vl":
-        model_path = resolve_model_path(model_key)
-        processor = AutoProcessor.from_pretrained(model_path, trust_remote_code=True)
-        # Compatibility: transformers versions differ in exposed model classes.
-        model = None
-        # Try the specific Qwen2-VL class first (most reliable when available).
-        try:
-            from transformers import Qwen2VLForConditionalGeneration  # type: ignore
+    model_path = resolve_model_path(model_key)
+    processor = AutoProcessor.from_pretrained(model_path, trust_remote_code=True)
 
-            model = Qwen2VLForConditionalGeneration.from_pretrained(
-                model_path,
-                torch_dtype=dtype,
-                device_map="auto" if device == "cuda" else None,
-                trust_remote_code=True,
-            )
+    # InternVL2 is best driven via its custom chat() API.
+    tokenizer = None
+    if model_key == "internvl2":
+        from transformers import AutoTokenizer  # type: ignore
+
+        tok_err: Optional[Exception] = None
+        for use_fast in (True, False):
+            try:
+                tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=True, use_fast=use_fast)
+                break
+            except Exception as e:
+                tok_err = e
+                tokenizer = None
+        if tokenizer is None:
+            raise RuntimeError(f"InternVL2 tokenizer failed to load: {tok_err}")
+
+    model = load_hf_model_for_key(model_key=model_key, model_path=model_path, device=device, dtype=dtype)
+    if device != "cuda":
+        model = model.to(device)
+    model.eval()
+
+    # Model-family specific compatibility tweaks.
+    if model_key == "llavanext":
+        # Some LLaVA checkpoints use a SigLIP vision tower that lacks `.patch_size`,
+        # but downstream utilities may assume it exists.
+        try:
+            vt = getattr(model, "vision_tower", None)
+            if vt is None and hasattr(model, "get_vision_tower"):
+                vt = model.get_vision_tower()
+            if vt is not None and not hasattr(vt, "patch_size"):
+                cfg = getattr(vt, "config", None)
+                ps = getattr(cfg, "patch_size", None) if cfg is not None else None
+                if ps is None:
+                    vision_cfg = getattr(cfg, "vision_config", None) if cfg is not None else None
+                    ps = getattr(vision_cfg, "patch_size", None) if vision_cfg is not None else None
+                if ps is not None:
+                    setattr(vt, "patch_size", ps)
         except Exception:
             pass
 
-        # Fall back to a Vision2Seq auto class if present.
-        if model is None:
+    if model_key == "internvl2":
+        # If we didn't get the chat wrapper, retry a couple of other auto-classes.
+        if not hasattr(model, "chat"):
             try:
-                from transformers import AutoModelForVision2Seq  # type: ignore
+                from transformers import AutoModel  # type: ignore
 
-                model = AutoModelForVision2Seq.from_pretrained(
+                model = AutoModel.from_pretrained(
                     model_path,
                     torch_dtype=dtype,
-                    device_map="auto" if device == "cuda" else None,
                     trust_remote_code=True,
                 )
+                if device == "cuda":
+                    model = model.to(device)
+                model.eval()
             except Exception:
                 pass
-
-        # Last resort: CausalLM auto class (may still work for some versions).
-        if model is None:
-            from transformers import AutoModelForCausalLM
-
-            model = AutoModelForCausalLM.from_pretrained(
-                model_path,
-                torch_dtype=dtype,
-                device_map="auto" if device == "cuda" else None,
-                trust_remote_code=True,
+        if not hasattr(model, "chat"):
+            raise RuntimeError(
+                "InternVL2 loaded without `chat()` (got a base LM). "
+                "Your local model snapshot likely isn't the InternVL chat wrapper class. "
+                "Re-download the model to ensure `auto_map` is present, or switch to an InternVL2 chat checkpoint."
             )
-        if device != "cuda":
-            model = model.to(device)
-        model.eval()
-    else:
-        raise NotImplementedError(f"Model inference not implemented yet for: {model_key}")
+        try:
+            tok = getattr(processor, "tokenizer", None)
+            if tok is not None and hasattr(model, "img_context_token_id"):
+                if getattr(model, "img_context_token_id", None) is None:
+                    candidates = ["<IMG_CONTEXT>", "<img_context>", "<image>", "<IMAGE>"]
+                    for cand in candidates:
+                        try:
+                            tid = tok.convert_tokens_to_ids(cand)
+                            if isinstance(tid, int) and tid >= 0 and tid != getattr(tok, "unk_token_id", -1):
+                                setattr(model, "img_context_token_id", tid)
+                                break
+                        except Exception:
+                            continue
+        except Exception:
+            pass
+
+        # batch_chat/chat -> self.generate -> language_model.generate; LM must expose .generate().
+        patch_internvl2_language_model_generation(model)
 
     trials: List[Dict[str, Any]] = []
     n_correct = 0
@@ -381,49 +732,175 @@ def run_evaluation(
 
         try:
             images = load_stimulus_as_images(stimulus_path, n_frames=n_frames)
-
-            # Qwen2-VL: build a prompt + embed as many <image> tokens as we have frames.
-            content: List[Dict[str, Any]] = [{"type": "image"} for _ in images]
-            content.append({"type": "text", "text": prompt})
-            messages = [{"role": "user", "content": content}]
-
-            try:
-                text = processor.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
-            except Exception:
-                # Fallback: some processors don't support the chat template interface.
-                # We include explicit <image> placeholders then the text prompt.
-                image_placeholder = "<image>"
-                joined = "\n".join([image_placeholder] * len(images))
-                text = f"{joined}\n{prompt}"
-
-            inputs = processor(text=[text], images=images, return_tensors="pt")
-            inputs = {k: v.to(model.device) if hasattr(v, "to") else v for k, v in inputs.items()}
-
-            gen_kwargs: Dict[str, Any] = {
-                "max_new_tokens": int(max_new_tokens),
-            }
-            if float(temperature) > 0:
-                gen_kwargs.update(
-                    {
-                        "do_sample": True,
-                        "temperature": float(temperature),
-                        "top_p": float(EVAL["top_p"]),
-                    }
-                )
+            # Some model families (notably many LLaVA and InternVL variants) behave as
+            # single-image chat models; passing multiple frames can cause failures.
+            if model_key in {"llavanext", "internvl2"}:
+                images = [images[0]]
+                images_for_processor: Any = images[0]  # pass a single PIL.Image
             else:
-                gen_kwargs["do_sample"] = False
+                images_for_processor = images
 
-            with torch.inference_mode():
-                out_ids = model.generate(**inputs, **gen_kwargs)
-            # Decode only generated tokens so we do not parse EMOTION/REASONING from the prompt.
-            input_ids = inputs["input_ids"]
-            in_len = int(input_ids.shape[1])
-            gen_ids = out_ids[:, in_len:]
-            if gen_ids.shape[1] > 0:
-                out_text = processor.batch_decode(gen_ids, skip_special_tokens=True)[0]
+            # InternVL2: always use the checkpoint's chat() API (no fallback to generate()).
+            if model_key == "internvl2":
+                if tokenizer is None or not hasattr(model, "chat"):
+                    raise RuntimeError(
+                        f"InternVL2 missing chat() or tokenizer (tokenizer={tokenizer is not None}, has_chat={hasattr(model, 'chat')})."
+                    )
+                img_proc = getattr(processor, "image_processor", None) or getattr(processor, "vision_processor", None)
+                if img_proc is None:
+                    try:
+                        from transformers import AutoImageProcessor  # type: ignore
+
+                        img_proc = AutoImageProcessor.from_pretrained(model_path, trust_remote_code=True)
+                    except Exception:
+                        img_proc = None
+                if img_proc is None:
+                    raise RuntimeError("InternVL2 processor missing image processor.")
+
+                pv = img_proc(images_for_processor, return_tensors="pt")
+                pixel_values = pv.get("pixel_values")
+                if pixel_values is None:
+                    raise RuntimeError("InternVL2 image processor did not return pixel_values.")
+                pixel_values = pixel_values.to(model.device, dtype=dtype)
+
+                # InternVL remote code expects a *mutable dict* passed as generation_config; batch_chat
+                # does `generation_output = self.generate(..., **generation_config)`. Never pass
+                # generation kwargs as **kwargs to batch_chat (that triggers "unexpected keyword ...").
+                gen_cfg: Dict[str, Any] = {"max_new_tokens": int(max_new_tokens)}
+                if float(temperature) > 0:
+                    gen_cfg.update({"do_sample": True, "temperature": float(temperature), "top_p": float(EVAL["top_p"])})
+                else:
+                    gen_cfg["do_sample"] = False
+                with torch.inference_mode():
+                    # batch_chat requires num_patches_list (see OpenGVLab modeling_internvl_chat.py).
+                    num_patches_list = [int(pixel_values.shape[0])] if pixel_values is not None else []
+                    if hasattr(model, "batch_chat") and num_patches_list:
+                        gc = dict(gen_cfg)
+                        out_list = model.batch_chat(
+                            tokenizer,
+                            pixel_values,
+                            [prompt],
+                            gc,
+                            num_patches_list=num_patches_list,
+                        )
+                        out_text = out_list[0] if isinstance(out_list, list) and out_list else str(out_list)
+                    else:
+                        out_text = model.chat(tokenizer, pixel_values, prompt, generation_config=dict(gen_cfg))
+                if not isinstance(out_text, str):
+                    out_text = str(out_text)
+            elif model_key == "llavanext":
+                # LLaVA Interleave: the HF pipeline handles image/text alignment more robustly than
+                # hand-rolled processor + generate for some backbone/processor combinations.
+                try:
+                    from transformers import pipeline  # type: ignore
+
+                    pipe = pipeline(
+                        "image-text-to-text",
+                        model=model_path,
+                        device=0 if device == "cuda" else -1,
+                        torch_dtype=dtype if device == "cuda" else None,
+                    )
+                    messages = [
+                        {
+                            "role": "user",
+                            "content": [
+                                {"type": "image", "image": images_for_processor},
+                                {"type": "text", "text": prompt},
+                            ],
+                        }
+                    ]
+                    out = pipe(text=messages, max_new_tokens=int(max_new_tokens))
+                    if isinstance(out, list) and out:
+                        out0 = out[0]
+                        out_text = out0.get("generated_text") if isinstance(out0, dict) else None
+                        if out_text is None:
+                            out_text = str(out0)
+                    else:
+                        out_text = str(out)
+                except Exception as e:
+                    raise RuntimeError(f"LLaVA pipeline inference failed: {e}") from e
             else:
-                out_text = processor.batch_decode(out_ids, skip_special_tokens=True)[0]
+                # Qwen2-VL: structured chat template with {"type": "image"} blocks.
+                # LLaVA(-Next): also prefers structured chat template; avoid manual <image> token counting.
+                text: str
+                if model_key == "llavanext":
+                    # Follow the official LLaVA Interleave HF example: text first, then image placeholder.
+                    # This avoids internal image/text alignment errors seen with other orderings.
+                    conversation = [{"role": "user", "content": [{"type": "text", "text": prompt}, {"type": "image"}]}]
+                    try:
+                        text = processor.apply_chat_template(conversation, tokenize=False, add_generation_prompt=True)
+                    except Exception:
+                        text = f"{prompt}\n<image>"
+                elif model_key == "qwen2vl":
+                    content_q: List[Dict[str, Any]] = [{"type": "image"} for _ in images]
+                    content_q.append({"type": "text", "text": prompt})
+                    messages_q = [{"role": "user", "content": content_q}]
+                    try:
+                        text = processor.apply_chat_template(messages_q, tokenize=False, add_generation_prompt=True)
+                    except Exception:
+                        image_placeholder = "<image>"
+                        joined = "\n".join([image_placeholder] * len(images))
+                        text = f"{joined}\n{prompt}"
+                else:
+                    image_placeholder = "<image>"
+                    joined = "\n".join([image_placeholder] * len(images))
+                    text = f"{joined}\n{prompt}"
 
+                # Some processors expect `text` (str) not `text=[...]`.
+                try:
+                    inputs = processor(images=images_for_processor, text=text, return_tensors="pt")
+                except Exception:
+                    try:
+                        inputs = processor(images=images_for_processor, text=[text], return_tensors="pt")
+                    except Exception:
+                        inputs = processor(text=text, images=images_for_processor, return_tensors="pt")
+                if inputs is None:
+                    raise RuntimeError("Processor returned None.")
+
+                # LLaVA(-Next) generation often expects image sizes; ensure present and non-None.
+                if model_key == "llavanext":
+                    try:
+                        image_sizes = inputs.get("image_sizes") if hasattr(inputs, "get") else inputs["image_sizes"]  # type: ignore[index]
+                    except Exception:
+                        image_sizes = None
+                    if image_sizes is None:
+                        h = int(images[0].size[1])
+                        w = int(images[0].size[0])
+                        try:
+                            inputs["image_sizes"] = torch.tensor([[h, w]], device=model.device)  # type: ignore[index]
+                        except Exception:
+                            pass
+
+                inputs = {k: v.to(model.device) if hasattr(v, "to") else v for k, v in inputs.items()}
+
+                gen_kwargs: Dict[str, Any] = {"max_new_tokens": int(max_new_tokens)}
+                if float(temperature) > 0:
+                    gen_kwargs.update({"do_sample": True, "temperature": float(temperature), "top_p": float(EVAL["top_p"])})
+                else:
+                    gen_kwargs["do_sample"] = False
+
+                with torch.inference_mode():
+                    out_ids = model.generate(**inputs, **gen_kwargs)
+
+                in_len = 0
+                try:
+                    input_ids = inputs.get("input_ids") if hasattr(inputs, "get") else inputs["input_ids"]
+                    if input_ids is not None:
+                        in_len = int(input_ids.shape[1])
+                except Exception:
+                    in_len = 0
+                try:
+                    gen_ids = out_ids[:, in_len:] if in_len > 0 else out_ids
+                    out_text = processor.batch_decode(gen_ids, skip_special_tokens=True)[0]
+                except Exception:
+                    out_text = str(out_ids)
+
+            # Ensure parsing always receives a string-like value.
+            if not isinstance(out_text, str):
+                try:
+                    out_text = json.dumps(out_text, ensure_ascii=False)
+                except Exception:
+                    out_text = str(out_text)
             pred, reasoning = parse_emotion(out_text, options)
             # Enforce 4AFC scoring: if the model didn't output one of the provided options,
             # we treat it as a wrong response rather than "unscored".
@@ -446,13 +923,19 @@ def run_evaluation(
                 }
             )
         except Exception as e:
+            msg = str(e).strip()
+            if not msg:
+                msg = f"{type(e).__name__} (empty message)"
+            else:
+                msg = f"{type(e).__name__}: {msg}"
             trials.append(
                 {
                     **t,
                     "options": options,
                     "prediction": None,
                     "correct": None,
-                    "error": str(e),
+                    "error": msg,
+                    "traceback": traceback.format_exc(limit=6),
                 }
             )
 
@@ -482,6 +965,9 @@ def run_evaluation(
         "dataset_root": str(dataset_root),
         "manifest": str(manifest) if manifest is not None else None,
         "created_at_utc": datetime.now(timezone.utc).isoformat(),
+        "max_new_tokens": int(max_new_tokens),
+        "evaluator_version": "2026-04-01-internvl-prepare-inputs-cache",
+        "run_metadata": collect_run_metadata(),
         "trials": trials,
     }
     return metrics

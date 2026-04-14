@@ -27,6 +27,18 @@ conda activate "${ENV_NAME}"
 cd "${PROJECT_ROOT}"
 mkdir -p results/test_runs logs
 
+# Avoid filling the login/home filesystem when Transformers caches dynamic modules.
+# Keep caches on the HPC project storage.
+HF_CACHE_DIR="${PROJECT_ROOT}/hf_cache"
+mkdir -p "${HF_CACHE_DIR}/modules" "${HF_CACHE_DIR}/transformers" "${HF_CACHE_DIR}/datasets" "${HF_CACHE_DIR}/torch"
+export HF_HOME="${HF_CACHE_DIR}"
+export HF_MODULES_CACHE="${HF_CACHE_DIR}/modules"
+export TRANSFORMERS_CACHE="${HF_CACHE_DIR}/transformers"
+export HF_DATASETS_CACHE="${HF_CACHE_DIR}/datasets"
+export TORCH_HOME="${HF_CACHE_DIR}/torch"
+export TOKENIZERS_PARALLELISM="false"
+export TRANSFORMERS_VERBOSITY="${TRANSFORMERS_VERBOSITY:-info}"
+
 # Override on submit: MAX_TRIALS=20 sbatch test_job.sh
 MAX_TRIALS="${MAX_TRIALS:-50}"
 

@@ -39,7 +39,8 @@ MODELS = {
         "hpc_path": HPC_MODELS_DIR / "internvl2",
     },
     "llavanext": {
-        "hf_id": "lmms-lab/llava-next-interleave-7b",
+        # Use an HF-converted checkpoint that Transformers can load without custom model_type mappings.
+        "hf_id": "llava-hf/llava-interleave-qwen-7b-hf",
         "local_path": LOCAL_MODELS_DIR / "llavanext",
         "hpc_path": HPC_MODELS_DIR / "llavanext",
     },
