@@ -44,6 +44,13 @@ MODELS = {
         "local_path": LOCAL_MODELS_DIR / "llavanext",
         "hpc_path": HPC_MODELS_DIR / "llavanext",
     },
+    "gemma4": {
+        # Gemma 4 is Apache-2.0 and supports Transformers' image-text-to-text pipeline.
+        # E4B is a practical default for single-GPU A100 baseline runs.
+        "hf_id": "google/gemma-4-E4B-it",
+        "local_path": LOCAL_MODELS_DIR / "gemma4",
+        "hpc_path": HPC_MODELS_DIR / "gemma4",
+    },
 }
 
 

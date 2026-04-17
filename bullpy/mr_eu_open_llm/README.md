@@ -6,7 +6,8 @@ This repository contains the code and analysis for a PhD study on **fine-tuning 
 
 - **Qwen2-VL-7B-Instruct** (`Qwen/Qwen2-VL-7B-Instruct`)
 - **InternVL2-8B** (`OpenGVLab/InternVL2-8B`)
-- **LLaVA-NeXT-Interleave-7B** (`lmms-lab/llava-next-interleave-7b`)
+- **LLaVA-NeXT-Interleave-7B** (`llava-hf/llava-interleave-qwen-7b-hf`)
+- **Gemma 4 E4B (instruction-tuned)** (`google/gemma-4-E4B-it`)
 
 ### Datasets
 

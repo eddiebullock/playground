@@ -27,6 +27,10 @@ if ! command -v conda >/dev/null 2>&1; then
   exit 1
 fi
 
+# Keep environments and packages on project storage (not $HOME), to avoid permission/quota issues.
+export CONDA_ENVS_PATH="${PROJECT_ROOT}/conda_envs"
+export CONDA_PKGS_DIRS="${PROJECT_ROOT}/conda_pkgs"
+
 ENV_NAME="mr_eu_open_llm"
 
 if conda env list | grep -q "^${ENV_NAME} "; then
@@ -62,6 +66,10 @@ huggingface-cli download OpenGVLab/InternVL2-8B \
 huggingface-cli download lmms-lab/llava-next-interleave-7b \
   --local-dir "${MODEL_DIR}/llavanext" \
   --local-dir-use-symlinks False || echo "LLaVA-NeXT download failed or partially cached."
+
+huggingface-cli download google/gemma-4-E4B-it \
+  --local-dir "${MODEL_DIR}/gemma4" \
+  --local-dir-use-symlinks False || echo "Gemma4 download failed or partially cached."
 
 echo "HPC setup complete."
 

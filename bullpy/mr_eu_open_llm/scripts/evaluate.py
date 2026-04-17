@@ -639,7 +639,28 @@ def run_evaluation(
     dtype = torch.bfloat16 if device == "cuda" else torch.float32
 
     model_path = resolve_model_path(model_key)
-    processor = AutoProcessor.from_pretrained(model_path, trust_remote_code=True)
+    # Some models (e.g. Gemma4) may require a newer Transformers version for AutoProcessor to resolve the
+    # correct processing class. Only load a processor when we actually need it, and provide a targeted
+    # error for Gemma4 if the installed Transformers is too old.
+    processor = None
+    if model_key not in {"gemma4"}:
+        processor = AutoProcessor.from_pretrained(model_path, trust_remote_code=True)
+    else:
+        try:
+            processor = AutoProcessor.from_pretrained(model_path, trust_remote_code=True)
+        except Exception as e:
+            try:
+                # If available, use the explicit processor class (newer Transformers).
+                from transformers import Gemma4Processor  # type: ignore
+
+                processor = Gemma4Processor.from_pretrained(model_path)
+            except Exception:
+                raise RuntimeError(
+                    "Gemma4 processor could not be loaded from the local model folder. "
+                    "This usually means your Transformers version is too old for Gemma4. "
+                    "On CSD3, try: `python -m pip install --upgrade transformers` in the mr_eu_open_llm env, "
+                    "then re-run the job."
+                ) from e
 
     # InternVL2 is best driven via its custom chat() API.
     tokenizer = None
@@ -725,6 +746,7 @@ def run_evaluation(
     trials: List[Dict[str, Any]] = []
     n_correct = 0
     n_scored = 0
+    pipe_cache: Dict[str, Any] = {}
     for t in trials_raw:
         options = make_4afc_options(t["label"], labels, rng) if labels else []
         stimulus_path = Path(t["stimulus_path"])
@@ -734,7 +756,7 @@ def run_evaluation(
             images = load_stimulus_as_images(stimulus_path, n_frames=n_frames)
             # Some model families (notably many LLaVA and InternVL variants) behave as
             # single-image chat models; passing multiple frames can cause failures.
-            if model_key in {"llavanext", "internvl2"}:
+            if model_key in {"llavanext", "internvl2", "gemma4"}:
                 images = [images[0]]
                 images_for_processor: Any = images[0]  # pass a single PIL.Image
             else:
@@ -788,18 +810,61 @@ def run_evaluation(
                         out_text = model.chat(tokenizer, pixel_values, prompt, generation_config=dict(gen_cfg))
                 if not isinstance(out_text, str):
                     out_text = str(out_text)
+            elif model_key == "gemma4":
+                # Gemma 4: prefer the Transformers-native image-text-to-text pipeline for robustness.
+                # If the local Transformers is too old to resolve Gemma4Processor, pipeline construction will fail;
+                # in that case, instruct the user to upgrade Transformers in the HPC env.
+                try:
+                    from transformers import pipeline  # type: ignore
+
+                    pipe = pipe_cache.get("gemma4")
+                    if pipe is None:
+                        pipe = pipeline(
+                            "image-text-to-text",
+                            model=model_path,
+                            device=0 if device == "cuda" else -1,
+                            torch_dtype=dtype if device == "cuda" else None,
+                        )
+                        pipe_cache["gemma4"] = pipe
+
+                    messages = [
+                        {
+                            "role": "user",
+                            "content": [
+                                {"type": "image", "image": images_for_processor},
+                                {"type": "text", "text": prompt},
+                            ],
+                        }
+                    ]
+                    out = pipe(text=messages, max_new_tokens=int(max_new_tokens))
+                    if isinstance(out, list) and out:
+                        out0 = out[0]
+                        out_text = out0.get("generated_text") if isinstance(out0, dict) else None
+                        if out_text is None:
+                            out_text = str(out0)
+                    else:
+                        out_text = str(out)
+                except Exception as e:
+                    raise RuntimeError(
+                        f"Gemma4 pipeline inference failed: {e}. "
+                        "If this mentions an unrecognized Gemma4 processor/config, upgrade Transformers "
+                        "in the mr_eu_open_llm env (e.g. `python -m pip install --upgrade transformers`)."
+                    ) from e
             elif model_key == "llavanext":
                 # LLaVA Interleave: the HF pipeline handles image/text alignment more robustly than
                 # hand-rolled processor + generate for some backbone/processor combinations.
                 try:
                     from transformers import pipeline  # type: ignore
 
-                    pipe = pipeline(
-                        "image-text-to-text",
-                        model=model_path,
-                        device=0 if device == "cuda" else -1,
-                        torch_dtype=dtype if device == "cuda" else None,
-                    )
+                    pipe = pipe_cache.get("llavanext")
+                    if pipe is None:
+                        pipe = pipeline(
+                            "image-text-to-text",
+                            model=model_path,
+                            device=0 if device == "cuda" else -1,
+                            torch_dtype=dtype if device == "cuda" else None,
+                        )
+                        pipe_cache["llavanext"] = pipe
                     messages = [
                         {
                             "role": "user",
