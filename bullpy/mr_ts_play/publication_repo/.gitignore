@@ -1,0 +1,19 @@
+.env
+__pycache__/
+*.pyc
+.DS_Store
+
+cache/
+data/videos/
+data/audio/
+*.mp4
+*.mov
+*.wav
+*.mp3
+
+# Keep results/ directory, ignore large outputs
+results/*.csv
+
+.ipynb_checkpoints/
+venv/
+*.egg-info/

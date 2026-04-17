@@ -1,0 +1,18 @@
+You are given a short video clip.
+
+Task: Analyze the video frames only to identify the emotion being expressed.
+
+You MUST choose exactly one emotion from the provided options:
+{labels}
+
+Output requirements:
+- Provide your answer FIRST, then your reasoning.
+- Use the exact format below.
+
+EMOTION: [single emotion label from the list]
+REASONING: [detailed reasoning about visual cues observed]
+
+What to observe (video only):
+- Facial expressions: eyes, mouth, eyebrows
+- Body language: posture, gestures, movement patterns
+- Overall emotional tone conveyed by the person
