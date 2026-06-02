@@ -7,10 +7,17 @@ This script implements confidence intervals, hypothesis tests, multiple-comparis
 corrections, effect sizes, and post-hoc power analyses used to reproduce the
 paper's reported statistical results.
 
-Human benchmark values (used throughout; Golan et al., 2006):
-- Non-autistic group: M = 0.8629, n = 17
-- Autistic group:     M = 0.6805, n = 21
-- Chance performance: 0.25 (four-alternative forced choice)
+Human benchmark values:
+- This version of the analysis is designed to compare model performance to
+  EU-Emotions human benchmarks reported in:
+  - O’Reilly et al. (EU-Emotion Stimulus Set: validation study)
+  - Lassalle et al. (EU-Emotion Voice Database)
+
+Benchmarks differ by modality (video-only, audio-only, audio+video). Provide the
+benchmark(s) in `HUMAN_BENCHMARKS` below or pass them in as an argument to
+`run_all_analyses(...)`.
+
+Chance performance: 0.25 (four-alternative forced choice).
 """
 
 import logging
@@ -24,12 +31,35 @@ from statsmodels.stats.power import NormalIndPower
 logger = logging.getLogger(__name__)
 
 
-# Human benchmarks (Golan et al., 2006)
-NON_AUTISTIC_MEAN = 0.8629
-NON_AUTISTIC_N = 17
-AUTISTIC_MEAN = 0.6805
-AUTISTIC_N = 21
 CHANCE = 0.25
+
+
+# Human benchmarks keyed by (dataset, condition).
+# Populate these with the correct values from:
+# - O’Reilly et al. (EU-Emotion Stimulus Set: validation study)
+# - Lassalle et al. (EU-Emotion Voice Database)
+#
+# Structure:
+#   {
+#     "eu_emotion": {
+#        "video_only": {"citation": "...", "accuracy": 0.xx, "n": N},
+#        "audio_only": {"citation": "...", "accuracy": 0.xx, "n": N},
+#        "multimodal": {"citation": "...", "accuracy": 0.xx, "n": N},
+#     },
+#     "mindreading": {
+#        "video_only": {...},  # optional; leave absent if not applicable
+#     }
+#   }
+HUMAN_BENCHMARKS: Dict[str, Dict[str, Dict[str, Any]]] = {
+    "eu_emotion": {
+        # TODO: fill these from the two EU benchmark papers.
+        "video_only": {"citation": "O’Reilly et al. (EU-Emotion Stimulus Set)", "accuracy": None, "n": None},
+        "audio_only": {"citation": "Lassalle et al. (EU-Emotion Voice Database)", "accuracy": None, "n": None},
+        "multimodal": {"citation": "O’Reilly et al. (EU-Emotion Stimulus Set)", "accuracy": None, "n": None},
+    },
+    # Mindreading: no human benchmark in this study (EU-only human comparisons).
+    "mindreading": {},
+}
 
 
 def wilson_ci(n_correct: int, n_total: int, confidence: float = 0.95) -> Tuple[float, float]:
@@ -250,22 +280,27 @@ def run_all_analyses(results_dict: Mapping[str, Any]) -> Dict[str, Any]:
     Run all statistical analyses for the paper given model results.
 
     Expected `results_dict` structure (flexible):
-        {
-          "<model_name>": {
-              "eu_emotion": {"n_correct": int, "n_total": int} | (n_correct, n_total) | ...,
-              "mindreading": {"n_correct": int, "n_total": int} | (n_correct, n_total) | ...,
-          },
-          ...
-        }
+        Option A (nested, recommended):
+            {
+              "<model_name>": {
+                  "<dataset_name>": {
+                      "<condition>": {"n_correct": int, "n_total": int} | (n_correct, n_total) | ...
+                  }
+              }
+            }
+
+        Option B (legacy nested without conditions):
+            {
+              "<model_name>": {
+                  "<dataset_name>": {"n_correct": int, "n_total": int} | (n_correct, n_total) | ...
+              }
+            }
 
     Analyses performed:
     - Binomial tests vs chance for each model on each dataset
-    - Two-proportion z-tests vs non-autistic benchmark with Bonferroni correction
-      (alpha=0.025, two comparisons per model-dataset)
-    - Two-proportion z-tests vs autistic benchmark with same Bonferroni correction
+    - Two-proportion z-tests vs human benchmark (if provided) per dataset+condition
     - Pairwise Fisher's exact tests among five models per dataset with Bonferroni correction
-      (alpha=0.005, 10 comparisons for 5 models)
-    - Cross-dataset z-tests per model with Bonferroni correction (alpha=0.010, five comparisons)
+      (alpha=0.005, 10 comparisons for 5 models) within each dataset+condition
     - Cohen's h effect sizes for all comparisons
     - Post-hoc power analyses (alpha=0.01, two-sided)
 
@@ -275,166 +310,138 @@ def run_all_analyses(results_dict: Mapping[str, Any]) -> Dict[str, Any]:
     Verification:
     - Warn if computed accuracies differ from known reported values by > 0.001 (absolute proportion).
     """
-    # Known reported accuracies for verification (accuracy as proportion, n_total)
-    known = {
-        ("gemini-3-pro", "eu_emotion"): (0.8205, 117),
-        ("gemini-3-flash", "eu_emotion"): (0.7712, 118),
-        ("gpt-5", "eu_emotion"): (0.7522, 113),
-        ("gpt-5-mini", "eu_emotion"): (0.7203, 118),
-        ("claude-opus-4-5", "eu_emotion"): (0.7297, 111),
-        ("gemini-3-flash", "mindreading"): (0.6724, 583),
-        ("gpt-5", "mindreading"): (0.6573, 572),
-        ("gemini-3-pro", "mindreading"): (0.6449, 583),
-        ("gpt-5-mini", "mindreading"): (0.6261, 583),
-        ("claude-opus-4-5", "mindreading"): (0.5592, 583),
-    }
-
-    # Normalize counts into a consistent structure
+    # Normalize counts into a consistent structure:
+    # counts[model][dataset][condition] = (n_correct, n_total)
     models = sorted(results_dict.keys())
-    datasets = ["eu_emotion", "mindreading"]
-    counts: Dict[str, Dict[str, Tuple[int, int]]] = {m: {} for m in models}
+    counts: Dict[str, Dict[str, Dict[str, Tuple[int, int]]]] = {m: {} for m in models}
 
     for m in models:
-        for d in datasets:
-            if d not in results_dict[m]:
-                continue
-            n_correct, n_total = _extract_counts(results_dict[m][d])
-            counts[m][d] = (n_correct, n_total)
-
-            acc = n_correct / n_total if n_total > 0 else 0.0
-            if (m, d) in known:
-                exp_acc, exp_n = known[(m, d)]
-                if n_total == exp_n and abs(acc - exp_acc) > 0.001:
-                    logger.warning(
-                        "Accuracy mismatch for %s %s: computed=%.4f expected=%.4f (n=%s)",
-                        m,
-                        d,
-                        acc,
-                        exp_acc,
-                        n_total,
-                    )
+        per_dataset = results_dict.get(m, {}) or {}
+        if not isinstance(per_dataset, Mapping):
+            raise ValueError(f"results_dict[{m!r}] must be a mapping")
+        for dataset_name, payload in per_dataset.items():
+            if isinstance(payload, Mapping) and any(isinstance(v, Mapping) or isinstance(v, (tuple, list)) for v in payload.values()):
+                # Might be either condition-mapped or legacy counts dict. Detect by keys.
+                if "n_correct" in payload or "correct" in payload or "total" in payload or "n_total" in payload or "accuracy" in payload:
+                    # Legacy: payload is counts for dataset
+                    n_correct, n_total = _extract_counts(payload)
+                    counts[m].setdefault(dataset_name, {})["video_only"] = (n_correct, n_total)
+                else:
+                    # Condition-mapped
+                    for condition_name, obj in payload.items():
+                        n_correct, n_total = _extract_counts(obj)
+                        counts[m].setdefault(dataset_name, {})[str(condition_name)] = (n_correct, n_total)
+            elif isinstance(payload, (tuple, list)):
+                n_correct, n_total = _extract_counts(payload)
+                counts[m].setdefault(dataset_name, {})["video_only"] = (n_correct, n_total)
+            else:
+                raise ValueError(f"Unrecognized payload for model={m} dataset={dataset_name}: {type(payload)}")
 
     # Prepare outputs
     out: Dict[str, Any] = {
         "benchmarks": {
             "chance": CHANCE,
-            "non_autistic": {"mean": NON_AUTISTIC_MEAN, "n": NON_AUTISTIC_N},
-            "autistic": {"mean": AUTISTIC_MEAN, "n": AUTISTIC_N},
+            "human_benchmarks": HUMAN_BENCHMARKS,
         },
         "per_model_dataset": {},
         "comparisons": {
             "vs_chance": {},
-            "vs_non_autistic": {},
-            "vs_autistic": {},
+            "vs_human_benchmark": {},
             "pairwise_models_fisher": {},
-            "cross_dataset_ztests": {},
         },
     }
 
-    # Per model/dataset stats and binomial vs chance
+    # Per model/dataset/condition stats and binomial vs chance
     print("\n=== Table: Accuracy, Wilson CI, Binomial vs chance ===")
-    header = f"{'Model':<18} {'Dataset':<12} {'n':>6} {'Acc%':>8} {'CI95%':>20} {'p(chance)':>12}"
+    header = f"{'Model':<18} {'Dataset':<12} {'Cond':<10} {'n':>6} {'Acc%':>8} {'CI95%':>20} {'p(chance)':>12}"
     print(header)
     print("-" * len(header))
 
     for m in models:
         out["per_model_dataset"].setdefault(m, {})
-        for d in datasets:
-            if d not in counts[m]:
-                continue
-            n_correct, n_total = counts[m][d]
-            acc = n_correct / n_total
-            ci_lo, ci_hi = wilson_ci(n_correct, n_total, confidence=0.95)
-            p_chance = binomial_test_vs_chance(n_correct, n_total, chance=CHANCE)
+        for dataset_name, per_cond in counts[m].items():
+            out["per_model_dataset"][m].setdefault(dataset_name, {})
+            for cond, (n_correct, n_total) in per_cond.items():
+                acc = n_correct / n_total if n_total > 0 else 0.0
+                ci_lo, ci_hi = wilson_ci(n_correct, n_total, confidence=0.95)
+                p_chance = binomial_test_vs_chance(n_correct, n_total, chance=CHANCE)
 
-            out["per_model_dataset"][m][d] = {
-                "n_correct": n_correct,
-                "n_total": n_total,
-                "accuracy": acc,
-                "wilson_ci_95": (ci_lo, ci_hi),
-            }
-            out["comparisons"]["vs_chance"].setdefault(m, {})[d] = {"p_value": p_chance}
+                out["per_model_dataset"][m][dataset_name][cond] = {
+                    "n_correct": n_correct,
+                    "n_total": n_total,
+                    "accuracy": acc,
+                    "wilson_ci_95": (ci_lo, ci_hi),
+                }
+                out["comparisons"]["vs_chance"].setdefault(m, {}).setdefault(dataset_name, {})[cond] = {"p_value": p_chance}
 
-            print(
-                f"{m:<18} {d:<12} {n_total:>6} {acc*100:>7.2f} "
-                f"[{ci_lo*100:>6.2f}, {ci_hi*100:>6.2f}] {p_chance:>12.3g}"
-            )
+                print(
+                    f"{m:<18} {dataset_name:<12} {cond:<10} {n_total:>6} {acc*100:>7.2f} "
+                    f"[{ci_lo*100:>6.2f}, {ci_hi*100:>6.2f}] {p_chance:>12.3g}"
+                )
 
-    # Z-tests vs human benchmarks (Bonferroni: alpha=0.025, two comparisons per model-dataset)
-    # Here the "two comparisons" are vs non-autistic and vs autistic for each model-dataset.
-    # We'll compute raw p-values and corrected p-values within each model-dataset pair.
-    print("\n=== Table: Z-tests vs human benchmarks (Bonferroni alpha=0.025; 2 comparisons) ===")
-    header = (
-        f"{'Model':<18} {'Dataset':<12} {'Acc%':>8} "
-        f"{'z(non)':>10} {'p(non)c':>10} {'h(non)':>10} "
-        f"{'z(aut)':>10} {'p(aut)c':>10} {'h(aut)':>10}"
-    )
+    # Z-tests vs human benchmark (if provided) per dataset+condition
+    print("\n=== Table: Z-tests vs human benchmark (if configured) ===")
+    header = f"{'Model':<18} {'Dataset':<12} {'Cond':<10} {'Acc%':>8} {'z':>10} {'p':>10} {'h':>10} {'benchmark':>18}"
     print(header)
     print("-" * len(header))
 
     for m in models:
-        out["comparisons"]["vs_non_autistic"].setdefault(m, {})
-        out["comparisons"]["vs_autistic"].setdefault(m, {})
-        for d in datasets:
-            if d not in counts[m]:
-                continue
-            n_correct, n_total = counts[m][d]
-            p_model = n_correct / n_total
+        out["comparisons"]["vs_human_benchmark"].setdefault(m, {})
+        for dataset_name, per_cond in counts[m].items():
+            out["comparisons"]["vs_human_benchmark"][m].setdefault(dataset_name, {})
+            for cond, (n_correct, n_total) in per_cond.items():
+                p_model = n_correct / n_total if n_total > 0 else 0.0
+                b = (HUMAN_BENCHMARKS.get(dataset_name, {}) or {}).get(cond)
+                if not b or b.get("accuracy") is None or b.get("n") is None:
+                    out["comparisons"]["vs_human_benchmark"][m][dataset_name][cond] = None
+                    print(f"{m:<18} {dataset_name:<12} {cond:<10} {p_model*100:>7.2f} {'-':>10} {'-':>10} {'-':>10} {'(none)':>18}")
+                    continue
 
-            z_non, p_non = two_proportion_z_test(p_model, n_total, NON_AUTISTIC_MEAN, NON_AUTISTIC_N)
-            z_aut, p_aut = two_proportion_z_test(p_model, n_total, AUTISTIC_MEAN, AUTISTIC_N)
+                p_b = float(b["accuracy"])
+                n_b = int(b["n"])
+                z, p = two_proportion_z_test(p_model, n_total, p_b, n_b)
+                h = cohen_h(p_model, p_b)
+                out["comparisons"]["vs_human_benchmark"][m][dataset_name][cond] = {
+                    "benchmark": b,
+                    "z": z,
+                    "p_value_raw": p,
+                    "cohen_h": h,
+                    "power_alpha_0_01": power_analysis(h, n=min(n_total, n_b), alpha=0.01),
+                }
+                label = (b.get("citation") or "human")[:18]
+                print(f"{m:<18} {dataset_name:<12} {cond:<10} {p_model*100:>7.2f} {z:>10.2f} {p:>10.3g} {h:>10.2f} {label:>18}")
 
-            corrected, thresh = bonferroni_correct([p_non, p_aut], alpha=0.025)
-            p_non_c, p_aut_c = corrected
-
-            h_non = cohen_h(p_model, NON_AUTISTIC_MEAN)
-            h_aut = cohen_h(p_model, AUTISTIC_MEAN)
-
-            out["comparisons"]["vs_non_autistic"][m][d] = {
-                "z": z_non,
-                "p_value_raw": p_non,
-                "p_value_bonferroni": p_non_c,
-                "alpha_threshold": thresh,
-                "cohen_h": h_non,
-                "power_alpha_0_01": power_analysis(h_non, n=min(n_total, NON_AUTISTIC_N), alpha=0.01),
-            }
-            out["comparisons"]["vs_autistic"][m][d] = {
-                "z": z_aut,
-                "p_value_raw": p_aut,
-                "p_value_bonferroni": p_aut_c,
-                "alpha_threshold": thresh,
-                "cohen_h": h_aut,
-                "power_alpha_0_01": power_analysis(h_aut, n=min(n_total, AUTISTIC_N), alpha=0.01),
-            }
-
-            print(
-                f"{m:<18} {d:<12} {p_model*100:>7.2f} "
-                f"{z_non:>10.2f} {p_non_c:>10.3g} {h_non:>10.2f} "
-                f"{z_aut:>10.2f} {p_aut_c:>10.3g} {h_aut:>10.2f}"
-            )
-
-    # Pairwise Fisher exact among five models per dataset (10 comparisons), Bonferroni alpha=0.005
+    # Pairwise Fisher exact among models per dataset+condition (10 comparisons), Bonferroni alpha=0.005
     print("\n=== Table: Pairwise model comparisons (Fisher exact; Bonferroni alpha=0.005; 10 comparisons) ===")
-    for d in datasets:
-        available_models = [m for m in models if d in counts[m]]
+    # Build list of dataset+condition combinations present
+    combos: List[Tuple[str, str]] = []
+    for m in models:
+        for dataset_name, per_cond in counts[m].items():
+            for cond in per_cond.keys():
+                if (dataset_name, cond) not in combos:
+                    combos.append((dataset_name, cond))
+    combos = sorted(combos)
+
+    for dataset_name, cond in combos:
+        available_models = [m for m in models if dataset_name in counts[m] and cond in counts[m][dataset_name]]
         if len(available_models) < 2:
             continue
 
-        pairs: List[Tuple[str, str]] = []
         raw_pvals: List[float] = []
         pair_results: List[Dict[str, Any]] = []
 
         for i in range(len(available_models)):
             for j in range(i + 1, len(available_models)):
                 m1, m2 = available_models[i], available_models[j]
-                c1, t1 = counts[m1][d]
-                c2, t2 = counts[m2][d]
+                c1, t1 = counts[m1][dataset_name][cond]
+                c2, t2 = counts[m2][dataset_name][cond]
                 odds, p = fisher_exact_2x2(c1, t1, c2, t2)
                 h = cohen_h(c1 / t1, c2 / t2)
-                pairs.append((m1, m2))
                 raw_pvals.append(p)
                 pair_results.append(
                     {
+                        "dataset": dataset_name,
+                        "condition": cond,
                         "model_a": m1,
                         "model_b": m2,
                         "odds_ratio": odds,
@@ -452,58 +459,15 @@ def run_all_analyses(results_dict: Mapping[str, Any]) -> Dict[str, Any]:
             r["p_value_bonferroni"] = p_c
             r["alpha_threshold"] = thresh
 
-        out["comparisons"]["pairwise_models_fisher"][d] = pair_results
+        out["comparisons"]["pairwise_models_fisher"][f"{dataset_name}:{cond}"] = pair_results
 
-        print(f"\nDataset: {d} (threshold={thresh:.4g})")
+        print(f"\nDataset: {dataset_name} | Condition: {cond} (threshold={thresh:.4g})")
         print(f"{'A':<18} {'B':<18} {'OR':>10} {'p_raw':>10} {'p_corr':>10} {'h':>8}")
         for r in pair_results:
             print(
                 f"{r['model_a']:<18} {r['model_b']:<18} {r['odds_ratio']:>10.3g} "
                 f"{r['p_value_raw']:>10.3g} {r['p_value_bonferroni']:>10.3g} {r['cohen_h']:>8.2f}"
             )
-
-    # Cross-dataset z-tests per model, Bonferroni alpha=0.010 (five comparisons)
-    print("\n=== Table: Cross-dataset comparisons per model (Z-test; Bonferroni alpha=0.010; 5 comparisons) ===")
-    raw_pvals_cd: List[float] = []
-    cd_models: List[str] = []
-    cd_results: List[Dict[str, Any]] = []
-
-    for m in models:
-        if "eu_emotion" not in counts[m] or "mindreading" not in counts[m]:
-            continue
-        c1, t1 = counts[m]["eu_emotion"]
-        c2, t2 = counts[m]["mindreading"]
-        p1 = c1 / t1
-        p2 = c2 / t2
-        z, p = two_proportion_z_test(p1, t1, p2, t2)
-        h = cohen_h(p1, p2)
-        cd_models.append(m)
-        raw_pvals_cd.append(p)
-        cd_results.append(
-            {
-                "model": m,
-                "z": z,
-                "p_value_raw": p,
-                "cohen_h": h,
-                "power_alpha_0_01": power_analysis(h, n=min(t1, t2), alpha=0.01),
-                "eu_emotion": {"n_correct": c1, "n_total": t1, "accuracy": p1},
-                "mindreading": {"n_correct": c2, "n_total": t2, "accuracy": p2},
-            }
-        )
-
-    corrected, thresh = bonferroni_correct(raw_pvals_cd, alpha=0.010)
-    for r, p_c in zip(cd_results, corrected):
-        r["p_value_bonferroni"] = p_c
-        r["alpha_threshold"] = thresh
-
-    out["comparisons"]["cross_dataset_ztests"] = cd_results
-
-    print(f"{'Model':<18} {'z':>10} {'p_corr':>10} {'h':>8} {'EU%':>8} {'MR%':>8}")
-    for r in cd_results:
-        print(
-            f"{r['model']:<18} {r['z']:>10.2f} {r['p_value_bonferroni']:>10.3g} {r['cohen_h']:>8.2f} "
-            f"{r['eu_emotion']['accuracy']*100:>7.2f} {r['mindreading']['accuracy']*100:>7.2f}"
-        )
 
     return out
 
@@ -512,12 +476,19 @@ if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
 
     # Example usage with dummy counts (replace with real aggregated results).
+    # Conditions correspond to the evaluation `--condition` flag (video_only, audio_only, multimodal).
     example_results = {
-        "gemini-3-pro": {"eu_emotion": (96, 117), "mindreading": (376, 583)},
-        "gemini-3-flash": {"eu_emotion": (91, 118), "mindreading": (392, 583)},
-        "gpt-5": {"eu_emotion": (85, 113), "mindreading": (376, 572)},
-        "gpt-5-mini": {"eu_emotion": (85, 118), "mindreading": (365, 583)},
-        "claude-opus-4-5": {"eu_emotion": (81, 111), "mindreading": (326, 583)},
+        "gemini-3-pro": {
+            "eu_emotion": {"video_only": (96, 117), "audio_only": (90, 118), "multimodal": (98, 117)},
+            "mindreading": {"video_only": (376, 583), "audio_only": (500, 583), "multimodal": (510, 583)},
+        },
+        "gemini-3-flash": {
+            "eu_emotion": {"video_only": (91, 118), "audio_only": (88, 118), "multimodal": (92, 118)},
+            "mindreading": {"video_only": (392, 583), "audio_only": (505, 583), "multimodal": (512, 583)},
+        },
+        "gpt-5": {"eu_emotion": {"video_only": (85, 113)}, "mindreading": {"video_only": (376, 572)}},
+        "gpt-5-mini": {"eu_emotion": {"video_only": (85, 118)}, "mindreading": {"video_only": (365, 583)}},
+        "claude-opus-4-5": {"eu_emotion": {"video_only": (81, 111)}, "mindreading": {"video_only": (326, 583)}},
     }
 
     run_all_analyses(example_results)

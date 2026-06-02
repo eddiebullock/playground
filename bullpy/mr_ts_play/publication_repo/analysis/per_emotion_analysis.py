@@ -9,11 +9,13 @@ cross-model summaries (mean/SD/min/max) to identify hardest/easiest states.
 
 import logging
 from pathlib import Path
-from typing import List, Tuple
+from typing import Dict, List, Optional, Tuple
 
 import pandas as pd
 
 logger = logging.getLogger(__name__)
+
+LOW_INTENSITY_TOKEN = "low intensity"
 
 
 def compute_per_emotion_accuracy(results_df: pd.DataFrame) -> pd.DataFrame:
@@ -54,6 +56,67 @@ def compute_per_emotion_accuracy(results_df: pd.DataFrame) -> pd.DataFrame:
     )
     out["accuracy"] = out["n_correct"] / out["n_trials"]
     return out[["mental_state", "model", "n_trials", "n_correct", "accuracy"]]
+
+
+def _normalize_state(s: str) -> str:
+    return (s or "").strip().casefold()
+
+
+def remove_neutral(results_df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Remove 'neutral' rows from a results dataframe (case-insensitive).
+    """
+    if "mental_state" in results_df.columns:
+        col = "mental_state"
+    elif "correct_label" in results_df.columns:
+        col = "correct_label"
+    else:
+        return results_df
+    return results_df[results_df[col].astype(str).map(_normalize_state) != "neutral"].copy()
+
+
+def intensity_summary(per_emotion_df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Summarise accuracy for high vs low intensity variants (EU-Emotions).
+
+    Treat labels containing 'low intensity' as low-intensity. Base label is the label
+    with the 'low intensity' suffix removed.
+
+    Returns a per-model summary with:
+      - n_pairs
+      - mean_high_accuracy
+      - mean_low_accuracy
+      - mean_difference (high - low)
+    """
+    req = {"mental_state", "model", "accuracy"}
+    missing = req - set(per_emotion_df.columns)
+    if missing:
+        raise ValueError(f"per_emotion_df missing required columns: {sorted(missing)}")
+
+    df = per_emotion_df.copy()
+    df["ms_cf"] = df["mental_state"].astype(str).map(_normalize_state)
+    df["is_low"] = df["ms_cf"].str.contains(LOW_INTENSITY_TOKEN, regex=False)
+    df["base"] = df["ms_cf"].str.replace(f" {LOW_INTENSITY_TOKEN}", "", regex=False).str.strip()
+
+    high = df[~df["is_low"]][["model", "base", "accuracy"]].rename(columns={"accuracy": "high_accuracy"})
+    low = df[df["is_low"]][["model", "base", "accuracy"]].rename(columns={"accuracy": "low_accuracy"})
+    merged = high.merge(low, on=["model", "base"], how="inner")
+    if merged.empty:
+        return pd.DataFrame(columns=["model", "n_pairs", "mean_high_accuracy", "mean_low_accuracy", "mean_difference"])
+
+    merged["difference"] = merged["high_accuracy"] - merged["low_accuracy"]
+    out = (
+        merged.groupby("model", as_index=False)
+        .agg(
+            n_pairs=("base", "size"),
+            mean_high_accuracy=("high_accuracy", "mean"),
+            mean_low_accuracy=("low_accuracy", "mean"),
+            mean_difference=("difference", "mean"),
+        )
+        .sort_values("mean_difference", ascending=False, kind="mergesort")
+        .reset_index(drop=True)
+    )
+    return out
 
 
 def compute_cross_model_summary(per_emotion_df: pd.DataFrame) -> pd.DataFrame:
@@ -163,6 +226,9 @@ def generate_report(results_dir: str, output_path: str) -> None:
         else:
             raise ValueError("Results CSVs must include 'mental_state' or 'correct_label' column.")
 
+    # Neutral is not a mental state; remove it from this report.
+    results_df = remove_neutral(results_df)
+
     per_emotion = compute_per_emotion_accuracy(results_df)
     summary = compute_cross_model_summary(per_emotion)
     perfect_df, zero_df = identify_perfect_and_zero(summary)
@@ -185,6 +251,21 @@ def generate_report(results_dir: str, output_path: str) -> None:
     print("\nBottom 5 mental states by mean accuracy:")
     for _, r in bottom5.iterrows():
         print(f"- {r['mental_state']}: {r['mean_accuracy']*100:.2f}% (sd={r['sd_accuracy']*100:.2f}%)")
+
+    # Intensity analysis (EU-style labels)
+    try:
+        intens = intensity_summary(per_emotion)
+        if not intens.empty:
+            print("\n=== High vs low intensity summary (by model; neutral excluded) ===")
+            for _, r in intens.iterrows():
+                print(
+                    f"- {r['model']}: pairs={int(r['n_pairs'])} "
+                    f"high={r['mean_high_accuracy']*100:.2f}% "
+                    f"low={r['mean_low_accuracy']*100:.2f}% "
+                    f"diff={r['mean_difference']*100:.2f}pp"
+                )
+    except Exception as e:
+        logger.warning("Failed intensity summary: %s", str(e))
 
 
 if __name__ == "__main__":
