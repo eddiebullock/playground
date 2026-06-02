@@ -86,3 +86,8 @@ configs/*secret*.json
 *.tmp
 *.temp
 .cache/
+
+# Publication eval vendored deps and run artifacts
+publication_repo/.deps/
+publication_repo/cache/
+publication_repo/results/
