@@ -21,8 +21,8 @@ export CONDA_ENVS_PATH="${PROJECT_ROOT}/conda_envs"
 export CONDA_PKGS_DIRS="${PROJECT_ROOT}/conda_pkgs"
 set +u
 source "$(conda info --base)/etc/profile.d/conda.sh"
-set -u
 conda activate "${ENV_NAME}"
+set -u
 
 cd "${PROJECT_ROOT}"
 mkdir -p results/test_runs logs
@@ -38,20 +38,23 @@ export TORCH_HOME="${HF_CACHE_DIR}/torch"
 export TOKENIZERS_PARALLELISM="false"
 export TRANSFORMERS_VERBOSITY="${TRANSFORMERS_VERBOSITY:-info}"
 
-MAX_TRIALS="${MAX_TRIALS:-50}"
-MAX_NEW_TOKENS="${MAX_NEW_TOKENS:-96}"
+MAX_TRIALS="${MAX_TRIALS:-5}"
+CONDITION="${CONDITION:-multimodal}"
+STAGE="${STAGE:-both}"
 
-echo "Running Gemma4 EU-Emotions smoke test (${MAX_TRIALS} trials)..."
+echo "Running Gemma4 EU-Emotions ${CONDITION} smoke (${MAX_TRIALS} trials, stage=${STAGE})..."
 
 python -m scripts.evaluate \
   --model gemma4 \
   --dataset eu_emotions \
-  --n_frames 4 \
+  --condition "${CONDITION}" \
+  --stage "${STAGE}" \
+  --max_frames 16 \
+  --fps 1 \
   --data_root data/eu_emotions_118 \
   --manifest data/eu_emotions_118_manifest.json \
   --max_trials "${MAX_TRIALS}" \
-  --max_new_tokens "${MAX_NEW_TOKENS}" \
-  --output "results/test_runs/test_gemma4_eu_emotions_${MAX_TRIALS}trials.json"
+  --output "results/test_runs/test_gemma4_eu_emotions_${CONDITION}_${MAX_TRIALS}trials.json"
 
 echo "Gemma4 smoke test complete."
 

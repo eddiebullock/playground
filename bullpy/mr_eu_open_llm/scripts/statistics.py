@@ -1,6 +1,6 @@
 import argparse
 from pathlib import Path
-from typing import Tuple
+from typing import List, Optional, Sequence, Tuple
 
 import numpy as np
 from scipy.stats import binomtest
@@ -58,6 +58,17 @@ def fisher_exact_test(
         raise ValueError("fisher_exact_test expects a 2x2 contingency table")
     _, p = fisher_exact(table, alternative=alternative)
     return float(p)
+
+
+def bonferroni_correction(
+    p_values: Sequence[float],
+    n_tests: Optional[int] = None,
+) -> List[float]:
+    """Bonferroni-adjusted p-values (capped at 1.0)."""
+    n = n_tests if n_tests is not None else len(p_values)
+    if n <= 0:
+        return []
+    return [min(1.0, float(p) * n) for p in p_values]
 
 
 def cohens_h(p1: float, p2: float) -> float:

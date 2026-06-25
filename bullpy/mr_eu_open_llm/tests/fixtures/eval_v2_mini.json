@@ -1,0 +1,63 @@
+{
+  "protocol_version": "v2-study1-study2",
+  "frame_policy": "fps1_cap16",
+  "frame_mode": "composite_grid",
+  "enforce_multi_frame": true,
+  "fps": 1,
+  "max_frames": 16,
+  "accuracy": 0.6666666666666666,
+  "mean_semantic_entropy": 1.25,
+  "n_trials": 3,
+  "n_scored": 3,
+  "n_correct": 2,
+  "seed": 42,
+  "model": "fixture",
+  "dataset": "eu_emotions",
+  "condition": "video_only",
+  "stage": "both",
+  "temperature": 0.1,
+  "trials": [
+    {
+      "trial_id": "fixture_joking_01",
+      "label": "Joking",
+      "stage1": {
+        "free_response_text": "The person seems playful and is teasing others.",
+        "semantic_entropy": 0.8
+      },
+      "stage2": {
+        "options": ["Joking", "Proud", "Afraid", "Sad"],
+        "prediction": "Joking",
+        "correct": true,
+        "raw_model_output": "EMOTION: Joking\nREASONING: playful expression"
+      }
+    },
+    {
+      "trial_id": "fixture_proud_02",
+      "label": "Proud",
+      "stage1": {
+        "free_response_text": "He looks proud of what he accomplished.",
+        "semantic_entropy": 1.5
+      },
+      "stage2": {
+        "options": ["Joking", "Proud", "Afraid", "Sad"],
+        "prediction": "Proud",
+        "correct": true,
+        "raw_model_output": "EMOTION: Proud\nREASONING: upright posture"
+      }
+    },
+    {
+      "trial_id": "fixture_afraid_03",
+      "label": "Afraid",
+      "stage1": {
+        "free_response_text": "The person appears bored and disengaged.",
+        "semantic_entropy": 2.1
+      },
+      "stage2": {
+        "options": ["Joking", "Proud", "Afraid", "Sad"],
+        "prediction": "Sad",
+        "correct": false,
+        "raw_model_output": "EMOTION: Sad\nREASONING: downcast eyes"
+      }
+    }
+  ]
+}

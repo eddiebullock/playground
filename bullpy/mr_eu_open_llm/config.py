@@ -4,12 +4,14 @@ from pathlib import Path
 # Random seeds
 SEED = 42
 
+PROTOCOL_VERSION = "v2-study1-study2"
 
 # Base directories (local)
 PROJECT_ROOT = Path(__file__).resolve().parent
 LOCAL_DATA_DIR = PROJECT_ROOT / "data"
 LOCAL_RESULTS_DIR = PROJECT_ROOT / "results"
 LOCAL_MODELS_DIR = PROJECT_ROOT / "models"
+LOCAL_CACHE_DIR = LOCAL_DATA_DIR / "cache"
 
 
 # HPC paths (CSD3)
@@ -26,6 +28,9 @@ HPC_GPU_PROJECT = "BARON-COHEN-SL3-GPU"
 HPC_CPU_PROJECT = "BARON-COHEN-SL3-CPU"
 
 
+# Study 1/2 model set (InternVL2 excluded 2026-06: transformers 5.x load failures on CSD3).
+STUDY_MODELS = ("qwen2vl", "llavanext", "gemma4")
+
 # Model identifiers and local/HPC paths
 MODELS = {
     "qwen2vl": {
@@ -33,20 +38,12 @@ MODELS = {
         "local_path": LOCAL_MODELS_DIR / "qwen2vl",
         "hpc_path": HPC_MODELS_DIR / "qwen2vl",
     },
-    "internvl2": {
-        "hf_id": "OpenGVLab/InternVL2-8B",
-        "local_path": LOCAL_MODELS_DIR / "internvl2",
-        "hpc_path": HPC_MODELS_DIR / "internvl2",
-    },
     "llavanext": {
-        # Use an HF-converted checkpoint that Transformers can load without custom model_type mappings.
         "hf_id": "llava-hf/llava-interleave-qwen-7b-hf",
         "local_path": LOCAL_MODELS_DIR / "llavanext",
         "hpc_path": HPC_MODELS_DIR / "llavanext",
     },
     "gemma4": {
-        # Gemma 4 is Apache-2.0 and supports Transformers' image-text-to-text pipeline.
-        # E4B is a practical default for single-GPU A100 baseline runs.
         "hf_id": "google/gemma-4-E4B-it",
         "local_path": LOCAL_MODELS_DIR / "gemma4",
         "hpc_path": HPC_MODELS_DIR / "gemma4",
@@ -54,11 +51,27 @@ MODELS = {
 }
 
 
+# Per-architecture LoRA target module names (exact names may differ per checkpoint)
+LORA_TARGET_MODULES = {
+    "qwen2vl": ["q_proj", "v_proj"],
+    "llavanext": ["q_proj", "v_proj"],
+    "gemma4": ["q_proj", "v_proj"],
+}
+
+
+def lora_alpha_for_rank(r: int) -> int:
+    return 2 * r
+
+
 # Dataset paths
 DATASETS = {
     "eu_emotions": {
         "local": LOCAL_DATA_DIR / "eu_emotions",
         "hpc": HPC_DATA_DIR / "eu_emotions",
+        "manifest_hpc": HPC_DATA_DIR / "eu_emotions_118_manifest.json",
+        "manifest_local": LOCAL_DATA_DIR / "eu_emotions_118_manifest.json",
+        "root_118_hpc": HPC_DATA_DIR / "eu_emotions_118",
+        "root_118_local": LOCAL_DATA_DIR / "eu_emotions_118",
     },
     "mindreading": {
         "local": LOCAL_DATA_DIR / "mindreading",
@@ -67,26 +80,67 @@ DATASETS = {
     "rmet": {
         "local": LOCAL_DATA_DIR / "rmet",
         "hpc": HPC_DATA_DIR / "rmet",
+        "deprecated": True,
     },
 }
 
 
-# Evaluation parameters
+# Protocol v2 frame policy (all study models)
+FRAME_POLICY = {
+    "fps": 1,
+    "max_frames": 16,
+    "ablation_frames": [4, 16],
+    "ablation_n_trials": 30,
+    "enforce_multi_frame": True,
+    # Artifact: report composite-grid (default) AND native multi-frame where supported
+    "modes": {
+        "composite_grid": {"fps": 1, "max_frames": 16, "enforce_multi_frame": True},
+        "native_video": {"fps": 1, "max_frames": 16, "enforce_multi_frame": False},
+    },
+    "default_mode": "composite_grid",
+}
+
+# Semantic entropy (Stage 1 ambiguity index)
+N_EU_EMOTIONS_LABELS = 27  # full taxonomy (4-AFC foils); entropy pool excludes neutral
+ENTROPY_EXCLUDE_LABELS = ("neutral",)
+ENTROPY_USE_RICH_LABEL_EMBEDDINGS = True
+ENTROPY_COLLAPSE_INTENSITY = True  # primary H_sem is over base emotions after collapsing intensity
+EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
+ENTROPY_TEMPERATURE = 0.1
+ENTROPY_LOG_BASE = "e"
+# Post-hoc robustness (scripts/entropy_sensitivity.py); does not change primary eval defaults.
+ENTROPY_SENSITIVITY_TEMPERATURES = (0.05, 0.1, 0.2)
+ENTROPY_SENSITIVITY_EMBEDDING_MODELS = (
+    "sentence-transformers/all-MiniLM-L6-v2",
+    "sentence-transformers/all-mpnet-base-v2",
+)
+
+# Two-stage evaluation
+CHAIN_STAGES = False
+STAGE1_MAX_NEW_TOKENS = 256
+STAGE2_MAX_NEW_TOKENS = 128
+
+# Study 2 layer depth fractions
+LAYER_DEPTH_FRACTIONS = [0.125, 0.375, 0.75]
+
+# Set after Study 1 baseline comparison (or via select_best_model.py)
+BEST_MODEL_KEY = "gemma4"
+
+# Generation defaults (Stage 2 and legacy alias)
 EVAL = {
-    "n_frames_default": 4,
-    "n_frames_ablation": [4, 8],
-    "frame_sampling_4": [0.0, 0.25, 0.5, 0.75],
-    "frame_sampling_8": [0.0, 0.2, 0.35, 0.5, 0.6, 0.7, 0.8, 1.0],
     "temperature": 0.1,
     "top_p": 1.0,
     "seed": SEED,
+    # Deprecated v1 keys (callers should use FRAME_POLICY)
+    "n_frames_default": FRAME_POLICY["max_frames"],
+    "n_frames_ablation": FRAME_POLICY["ablation_frames"],
 }
 
 
-# LoRA hyperparameters (defaults and search space)
+# LoRA hyperparameters
 LORA_DEFAULT = {
     "r": 16,
-    "alpha": 32,
+    "alpha": lora_alpha_for_rank(16),
     "target_modules": ["q_proj", "v_proj"],
     "dropout": 0.1,
 }
@@ -102,32 +156,69 @@ TRAINING_DEFAULTS = {
     "grad_accum_steps": 4,
     "fp16": True,
     "save_every_epoch": True,
+    "mindreading_train_subset": 100,
+    "mindreading_val_subset": 50,
 }
 
-
-# Human benchmark values (Golan et al. 2006)
+# Modality-matched EU-Emotions human benchmarks (O'Reilly / Lassalle).
+# TODO: fill accuracy/n from O'Reilly et al. (EU-Emotion Stimulus Set) and
+# Lassalle et al. (EU-Emotion Voice Database) validation papers.
 HUMAN_BENCHMARKS = {
-    "non_autistic": {
-        "accuracy": 0.8629,
-        "n": 17,
+    "eu_emotion": {
+        "video_only": {
+            "citation": "O'Reilly et al. (EU-Emotion Stimulus Set)",
+            "accuracy": None,
+            "n": None,
+        },
+        "audio_only": {
+            "citation": "Lassalle et al. (EU-Emotion Voice Database)",
+            "accuracy": None,
+            "n": None,
+        },
+        "multimodal": {
+            "citation": "O'Reilly et al. (EU-Emotion Stimulus Set)",
+            "accuracy": None,
+            "n": None,
+        },
     },
-    "autistic": {
-        "accuracy": 0.6805,
-        "n": 21,
-    },
+    "mindreading": {},
 }
 
+MODALITY_CONDITIONS = ("video_only", "audio_only", "multimodal")
 
-# Chance level for 4AFC
+# Native audio input support in scripts/model_inference.py (audit 2026-06).
+# Audio ablations are scheduled only for True entries; infrastructure still validates resolution.
+MODEL_AUDIO_CAPABILITIES = {
+    "qwen2vl": False,  # Qwen2-VL: vision/video only (use Qwen2-Audio for speech)
+    "llavanext": False,
+    "gemma4": True,  # Gemma 4 E4B-it: native audio (max ~30s per clip)
+}
+
+# LoRA fine-tuning modality (Mindreading item-folder audio; never Emotions/Audio/).
+FINETUNE_MODALITY = "multimodal"
+FINETUNE_MODALITY_BY_MODEL = {
+    "gemma4": "multimodal",
+    "qwen2vl": "video_only",
+    "llavanext": "video_only",
+}
+
+EU_EMOTION_LABELS_FILE = LOCAL_DATA_DIR / "eu_emotion_states_list.txt"
+
 CHANCE_LEVEL = 0.25
+CONFIRMATORY_N_MODELS = len(STUDY_MODELS)
+
+# Catastrophic forgetting threshold (percentage points on EU-Emotions)
+FORGETTING_THRESHOLD_PP = 5.0
 
 
 __all__ = [
     "SEED",
+    "PROTOCOL_VERSION",
     "PROJECT_ROOT",
     "LOCAL_DATA_DIR",
     "LOCAL_RESULTS_DIR",
     "LOCAL_MODELS_DIR",
+    "LOCAL_CACHE_DIR",
     "HPC_USER",
     "HPC_LOGIN_HOST",
     "HPC_WORK_BASE",
@@ -136,13 +227,31 @@ __all__ = [
     "HPC_RESULTS_DIR",
     "HPC_GPU_PROJECT",
     "HPC_CPU_PROJECT",
+    "STUDY_MODELS",
     "MODELS",
+    "LORA_TARGET_MODULES",
+    "lora_alpha_for_rank",
     "DATASETS",
+    "FRAME_POLICY",
+    "N_EU_EMOTIONS_LABELS",
+    "EMBEDDING_MODEL",
+    "ENTROPY_TEMPERATURE",
+    "ENTROPY_LOG_BASE",
+    "CHAIN_STAGES",
+    "STAGE1_MAX_NEW_TOKENS",
+    "STAGE2_MAX_NEW_TOKENS",
+    "LAYER_DEPTH_FRACTIONS",
+    "BEST_MODEL_KEY",
     "EVAL",
     "LORA_DEFAULT",
     "LORA_SWEEP",
     "TRAINING_DEFAULTS",
     "HUMAN_BENCHMARKS",
+    "MODALITY_CONDITIONS",
+    "MODEL_AUDIO_CAPABILITIES",
+    "FINETUNE_MODALITY",
+    "EU_EMOTION_LABELS_FILE",
     "CHANCE_LEVEL",
+    "CONFIRMATORY_N_MODELS",
+    "FORGETTING_THRESHOLD_PP",
 ]
-

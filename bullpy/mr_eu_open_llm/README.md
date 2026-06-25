@@ -1,117 +1,107 @@
-## Mental State Recognition with Open-Weight Multimodal LLMs
+## Theory of Mind in open multimodal LLMs
 
-This repository contains the code and analysis for a PhD study on **fine-tuning open-source multimodal LLMs for mental state recognition with mechanistic interpretability**. All heavy compute runs on the Cambridge CSD3 (Wilkes3, NVIDIA A100 GPUs), while this repo is developed locally in Cursor.
+This repository implements **Protocol v2** for benchmarking EU-Emotions mental-state recognition and mechanistic interpretability on open VLMs. Heavy compute runs on Cambridge CSD3 (NVIDIA A100).
+
+**Pivot (2026-06):** repositioning toward a **shippable eval artifact** + **circuit-level interpretability** — see [`PIVOT.md`](PIVOT.md) and [`docs/ARTIFACT.md`](docs/ARTIFACT.md).
+
+**Agent instructions:** [`PROTOCOL_V2_AGENT_PROMPT.md`](PROTOCOL_V2_AGENT_PROMPT.md)  
+**Methods alignment:** [`MANUSCRIPT_CHANGES.md`](MANUSCRIPT_CHANGES.md)
+
+### Evaluation artifact (Workstream A)
+
+- **Primary metric:** free-response judge (`scripts/free_response_judge.py`, synonyms in `data/eu_emotion_synonyms.json`)
+- **Calibration axis:** selective prediction / ECE (`scripts/selective_prediction.py`)
+- **Secondary:** 4AFC (`parse_emotion`) for human-comparability
+- **Inspect AI:** optional front-end in `inspect_eu/` (`pip install inspect-ai`)
+- **Canonical local runner:** `scripts/evaluate.py` (unchanged)
+
+```bash
+pytest tests/test_parse_emotion.py tests/test_free_response_judge.py -q
+python -m scripts.augment_eval_artifact --input results/.../eval_v2_*.json --output results/.../eval_artifact.json
+python -m scripts.verify_finetune_eval --eval_json results/finetune/eu_post_ft/....json
+```
+
+### Interpretability flagship (Workstream B / Study 3)
+
+Real activation extraction (`scripts/extract_activations.py` + `activation_forward.py`), probing, RSA, hook-based patching. Fine-tuning is a **causal probe** (representation vs readout), not the headline result.
 
 ### Models
 
-- **Qwen2-VL-7B-Instruct** (`Qwen/Qwen2-VL-7B-Instruct`)
-- **InternVL2-8B** (`OpenGVLab/InternVL2-8B`)
-- **LLaVA-NeXT-Interleave-7B** (`llava-hf/llava-interleave-qwen-7b-hf`)
-- **Gemma 4 E4B (instruction-tuned)** (`google/gemma-4-E4B-it`)
+- **Qwen2-VL-7B-Instruct**
+- **InternVL2-8B**
+- **LLaVA-NeXT-Interleave-7B**
+- **Gemma 4 E4B IT**
 
-### Datasets
+### Study 1 (benchmarking + fine-tuning)
 
-- **EU-Emotions** stimulus set (4AFC, 118 test trials, 27 mental states)
-- **Mindreading DVD** (train/val/test splits with videos and images)
-- **RMET** Reading the Mind in the Eyes Test (36 trials, held-out zero-shot generalisation)
+Each trial has **two stages**:
 
-### Study phases
+1. **Free response** — no label options; model describes expressed mental state(s). Runs under **`video_only`** only (semantic entropy comparability).
+2. **4AFC** — deterministic foils (`sha256(trial_id|seed)`); accuracy vs chance (0.25) and modality-matched EU human benchmarks (O'Reilly / Lassalle).
 
-- **Phase 1 – Baseline evaluation**
-  - Zero-shot evaluation of all three models on EU-Emotions, Mindreading test set, and RMET.
-  - 4-alternative forced choice with **4 frames per video** (0%, 25%, 50%, 75% of duration).
-  - Frame sampling ablation on a 30-trial subset (4 vs 8 frames).
+**Modality ablations:** `video_only`, `audio_only`, `multimodal` via `--condition`. EU multimodal pairs face video with UK Voices by emotion label; Mindreading audio uses item-folder T-files (not `Emotions/Audio/`).
 
-- **Phase 2 – Fine-tuning**
-  - LoRA fine-tuning on Mindreading training split:
-    - \(r = 16\), \(\alpha = 32\), target modules \([q\_proj, v\_proj]\), dropout \(= 0.1\).
-  - Hyperparameter sweep on a 100 train / 50 val subset:
-    - LRs \(\{1e{-4}, 5e{-5}, 1e{-5}\}\) × ranks \(\{8, 16, 32\}\).
-  - Full runs: 5 epochs, batch size 4, grad accumulation 4 (effective 16), fp16, save each epoch.
-  - Monitor EU-Emotions accuracy to detect catastrophic forgetting (>5pp drop).
+From Stage 1 text we compute **semantic entropy** over 27 EU-Emotions label embeddings (co-primary with accuracy).
 
-- **Phase 3 – Mechanistic interpretability**
-  - Activation extraction across early/mid/late transformer layers (baseline and fine-tuned).
-  - Probing (per-layer logistic regression), RSA, and activation patching (with TransformerLens).
-  - Statistical analysis: Wilson CIs, binomial tests vs chance, two-proportion z-tests vs human benchmarks, Fisher’s exact tests with Bonferroni correction, and Cohen’s h.
+**Frame policy (all four models):** 1 fps, max 16 frames, uniform in time. Non-Qwen models receive a **composite frame grid** (`scripts/multi_frame.py`).
 
-### Directory structure
+**Fine-tuning:** best model only; LoRA on Mindreading **video_only** face clips; monitor EU-Emotions retention.
 
-- `scripts/`: all runnable Python scripts for preprocessing, evaluation, fine-tuning, and interpretability.
-- `slurm_jobs/`: SLURM job scripts for CSD3 (Wilkes3, A100).
-- `notebooks/`: Jupyter notebooks for analysis and visualisation.
-- `results/`: structured outputs from baseline, fine-tuning, and interpretability.
-- `data/`: **local** copies of datasets (not tracked in git).
-- `models/`: **local** model weights cache (not tracked in git).
+### Study 2 (interpretability)
 
-See `results/README.md` for the expected result file layout and naming conventions.
+Linear probing, RSA vs human RDM, and activation patching — baseline four models plus best model before/after fine-tuning.
 
----
+### Quickstart
 
-### HPC workflow (CSD3, Wilkes3 A100s)
+From Mac: `./sync.sh push`
 
-- **HPC username**: `eb2007`
-- **Login**: `ssh eb2007@login.hpc.cam.ac.uk`
-- **GPU project**: `BARON-COHEN-SL3-GPU` (A100s, `ampere` partition, SL3 12hr limit)
-- **CPU project**: `BARON-COHEN-SL3-CPU`
-- **Data/model storage**: `~/rds/hpc-work/study2/` (not the home directory)
-
-Environment and paths on CSD3 are configured via `config.py` and `environment.yml`, and the directory structure is bootstrapped by `setup_hpc.sh`.
-
----
-
-### Quickstart: local setup to first CSD3 test job
-
-#### 1. Create the local conda environment
-
-From the project root:
+On CSD3 (in `~/rds/hpc-work/study2`):
 
 ```bash
-conda env create -f environment.yml
+bash setup_hpc.sh
 conda activate mr_eu_open_llm
-python -m ipykernel install --user --name=mr_eu_open_llm
+pip install sentence-transformers
 ```
 
-Copy your datasets into the local `data/` folder (mirroring the planned HPC layout):
+Smoke test: `MAX_TRIALS=5 sbatch slurm_jobs/test_job.sh`
 
-- `data/eu_emotions/`
-- `data/mindreading/`
-- `data/rmet/`
+Video-only baselines: `sbatch slurm_jobs/submit_baselines.sh`
 
-#### 2. Sync scripts and configs to CSD3
-
-From the project root:
+**Stimulus data on HPC** (not included in `./sync.sh push`):
 
 ```bash
-chmod +x sync.sh
-./sync.sh push
+# From Mac: UK Voices + Mindreading item folders (skips Emotions/Audio/)
+bash scripts/sync_data_hpc.sh
 ```
 
-This will create/update `~/rds/hpc-work/study2/scripts/` and copy `config.py`, `requirements.txt`, and `environment.yml` to `~/rds/hpc-work/study2/` on CSD3.
+You still need EU face videos and manifests under `data/eu_emotions_118/` on CSD3. UK Voices must live at
+`data/eu_emotions_118/EU Emotion - UK Voices/` (the sync script places them there). Mindreading T-files
+live inside item folders next to V face clips.
 
-#### 3. SSH into CSD3 and run HPC setup
+Modality ablation suite:
 
 ```bash
-ssh eb2007@login.hpc.cam.ac.uk
-cd ~/rds/hpc-work/study2
-chmod +x setup_hpc.sh
-./setup_hpc.sh
+python run_ablation_suite.py \
+  --data-dir-eu data/eu_emotions_118 \
+  --data-dir-mr data/mindreading \
+  --manifest-eu data/eu_emotions_118_manifest.json \
+  --manifest-mr data/mindreading_test_manifest.json
 ```
 
-This will:
+Or: `sbatch slurm_jobs/ablation_suite.sh`
 
-- Create the full HPC directory layout under `~/rds/hpc-work/study2/`.
-- Load the `miniconda` module.
-- Create the `mr_eu_open_llm` conda environment from `environment.yml`.
-- Download the three multimodal models into `~/rds/hpc-work/study2/models/`.
+### Results (v2 only)
 
-#### 4. Submit the first test job
+Use names like:
 
-From the CSD3 login node, in `~/rds/hpc-work/study2`:
+`results/baseline/eu_emotions/{model}/eval_v2_eu_emotions_{model}_video_only_fps1_cap16_two_stage_seed42.json`
 
-```bash
-sbatch slurm_jobs/test_job.sh
-```
+Companion CSV: `{model}_{dataset}_{condition}_results.csv`
 
-This submits a 1-hour, 1-GPU smoke test (50-trial pipeline) on the `ampere` partition using project `BARON-COHEN-SL3-GPU`. Logs and results will appear under `results/test_runs/` once the job has finished.
+See [`results/README.md`](results/README.md).
 
+### HPC
+
+- Login: `ssh eb2007@login.hpc.cam.ac.uk`
+- Work dir: `~/rds/hpc-work/study2/`
+- GPU project: `BARON-COHEN-SL3-GPU`

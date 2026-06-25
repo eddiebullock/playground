@@ -17,5 +17,11 @@ Pillow
 einops
 timm
 sentencepiece
+sentence-transformers
+librosa
+soundfile
 ipykernel
 jupyter
+
+# Optional: Inspect AI front-end (Workstream A1)
+# pip install inspect-ai
