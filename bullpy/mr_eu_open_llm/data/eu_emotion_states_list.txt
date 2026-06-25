@@ -1,0 +1,27 @@
+afraid
+afraid low intensity
+angry
+angry low intensity
+ashamed
+bored
+disappointed
+disgusted
+disgusted low intensity
+excited
+frustrated
+happy
+happy low intensity
+hurt
+interested
+jealous
+joking
+kind
+neutral
+proud
+sad
+sad low intensity
+sneaky
+surprised
+surprised low intensity
+unfriendly
+worried

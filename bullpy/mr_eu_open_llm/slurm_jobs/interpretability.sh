@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #SBATCH -J msr_interp
 #SBATCH -A BARON-COHEN-SL3-CPU
-#SBATCH -p cpu
+#SBATCH -p icelake
 #SBATCH --time=08:00:00
 #SBATCH --cpus-per-task=16
 #SBATCH --mem=128G
@@ -18,8 +18,8 @@ export CONDA_ENVS_PATH="${PROJECT_ROOT}/conda_envs"
 export CONDA_PKGS_DIRS="${PROJECT_ROOT}/conda_pkgs"
 set +u
 source "$(conda info --base)/etc/profile.d/conda.sh"
-set -u
 conda activate "${ENV_NAME}"
+set -u
 
 cd "${PROJECT_ROOT}"
 mkdir -p results/probes results/rsa logs

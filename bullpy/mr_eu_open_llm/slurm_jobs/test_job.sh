@@ -21,8 +21,8 @@ export CONDA_ENVS_PATH="${PROJECT_ROOT}/conda_envs"
 export CONDA_PKGS_DIRS="${PROJECT_ROOT}/conda_pkgs"
 set +u
 source "$(conda info --base)/etc/profile.d/conda.sh"
-set -u
 conda activate "${ENV_NAME}"
+set -u
 
 cd "${PROJECT_ROOT}"
 mkdir -p results/test_runs logs
@@ -39,20 +39,21 @@ export TORCH_HOME="${HF_CACHE_DIR}/torch"
 export TOKENIZERS_PARALLELISM="false"
 export TRANSFORMERS_VERBOSITY="${TRANSFORMERS_VERBOSITY:-info}"
 
-# Override on submit: MAX_TRIALS=20 sbatch test_job.sh
-MAX_TRIALS="${MAX_TRIALS:-50}"
+# Override on submit: MAX_TRIALS=5 sbatch test_job.sh
+MAX_TRIALS="${MAX_TRIALS:-5}"
 
-echo "Running EU-Emotions manifest pipeline test (${MAX_TRIALS} trials)..."
+echo "Running protocol v2 smoke test (${MAX_TRIALS} trials, both stages + entropy)..."
 
 python -m scripts.evaluate \
   --model qwen2vl \
   --dataset eu_emotions \
-  --n_frames 4 \
+  --max_frames 16 \
+  --fps 1 \
+  --stage both \
   --data_root data/eu_emotions_118 \
   --manifest data/eu_emotions_118_manifest.json \
   --max_trials "${MAX_TRIALS}" \
-  --max_new_tokens 96 \
-  --output "results/test_runs/test_qwen2vl_eu_emotions_${MAX_TRIALS}trials.json"
+  --output "results/test_runs/test_qwen2vl_v2_two_stage_${MAX_TRIALS}trials.json"
 
 echo "Test job complete."
 

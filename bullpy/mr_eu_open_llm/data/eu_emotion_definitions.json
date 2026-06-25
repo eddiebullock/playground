@@ -1,0 +1,90 @@
+{
+  "version": "eu_emotions_validation_set",
+  "source": "EU-Emotions stimulus set emotion definitions (O'Reilly et al.)",
+  "base_emotions": {
+    "afraid": {
+      "canonical_name": "Fear",
+      "definition": "to feel frightened, to have a feeling of fear"
+    },
+    "angry": {
+      "canonical_name": "Anger",
+      "definition": "to feel extremely displeased, annoyed or hostile"
+    },
+    "ashamed": {
+      "canonical_name": "Shame",
+      "definition": "to feel badly or embarrassed about yourself or your actions"
+    },
+    "bored": {
+      "canonical_name": "Boredom",
+      "definition": "to feel uninterested because something or someone is dull or unstimulating"
+    },
+    "kind": {
+      "canonical_name": "Kindness",
+      "definition": "to act in a friendly manner, to be considerate of others, thoughtful"
+    },
+    "disappointed": {
+      "canonical_name": "Disappointment",
+      "definition": "to feel let down, to feel someone or something has not met one's expectations or hopes"
+    },
+    "disgusted": {
+      "canonical_name": "Disgust",
+      "definition": "to be severely offended by something or someone, to find something very unpleasant"
+    },
+    "excited": {
+      "canonical_name": "Excitement",
+      "definition": "to feel very happy and enthusiastic"
+    },
+    "frustrated": {
+      "canonical_name": "Frustration",
+      "definition": "to feel dissatisfied because one is thwarted in doing something or because one has no control"
+    },
+    "happy": {
+      "canonical_name": "Happiness",
+      "definition": "to feel pleasure"
+    },
+    "hurt": {
+      "canonical_name": "Hurt",
+      "definition": "to feel upset or in pain"
+    },
+    "interested": {
+      "canonical_name": "Interest",
+      "definition": "to have one's attention held by something or someone"
+    },
+    "jealous": {
+      "canonical_name": "Jealousy",
+      "definition": "to want what others possess"
+    },
+    "joking": {
+      "canonical_name": "Joking",
+      "definition": "feeling playful, doing something to amuse others and make them laugh"
+    },
+    "proud": {
+      "canonical_name": "Pride",
+      "definition": "to feel happy and satisfied by one's own self-worth"
+    },
+    "sad": {
+      "canonical_name": "Sadness",
+      "definition": "to feel unhappy or sorrowful"
+    },
+    "surprised": {
+      "canonical_name": "Surprise",
+      "definition": "to feel unexpectedly amazed or shocked"
+    },
+    "unfriendly": {
+      "canonical_name": "Unfriendliness",
+      "definition": "to show disregard for someone or be unkind to them"
+    },
+    "worried": {
+      "canonical_name": "Worry",
+      "definition": "to feel unsettled or anxious about something"
+    },
+    "sneaky": {
+      "canonical_name": "Sneaky",
+      "definition": "acting in a secretive or deceptive manner"
+    },
+    "neutral": {
+      "canonical_name": "Neutral",
+      "definition": "showing neither strong positive nor negative emotion"
+    }
+  }
+}

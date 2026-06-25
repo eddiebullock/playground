@@ -1,0 +1,29 @@
+{
+  "version": "eu_emotions_synonyms_v1",
+  "source": "EU-Emotions validation set + O'Reilly canonical names; auditable for judge scoring",
+  "notes": "Keys are normalized base labels (lowercase). Values are accepted strings for rule-based free-response matching.",
+  "synonyms": {
+    "afraid": ["afraid", "fear", "fearful", "frightened", "scared", "terrified", "anxious", "apprehensive"],
+    "angry": ["angry", "anger", "mad", "furious", "irritated", "annoyed", "hostile", "enraged"],
+    "ashamed": ["ashamed", "shame", "embarrassed", "humiliated", "mortified"],
+    "bored": ["bored", "boredom", "uninterested", "dull", "apathetic"],
+    "disappointed": ["disappointed", "disappointment", "let down", "disheartened"],
+    "disgusted": ["disgusted", "disgust", "revolted", "repulsed", "sickened"],
+    "excited": ["excited", "excitement", "enthusiastic", "thrilled", "elated"],
+    "frustrated": ["frustrated", "frustration", "thwarted", "blocked"],
+    "happy": ["happy", "happiness", "joyful", "joy", "pleased", "cheerful", "delighted"],
+    "hurt": ["hurt", "wounded", "upset", "pained", "emotional pain"],
+    "interested": ["interested", "interest", "curious", "engaged", "attentive"],
+    "jealous": ["jealous", "jealousy", "envious", "envy", "covetous"],
+    "joking": ["joking", "joke", "playful", "teasing", "humorous", "amused", "funny"],
+    "kind": ["kind", "kindness", "friendly", "caring", "compassionate", "warm"],
+    "proud": ["proud", "pride", "satisfied", "accomplished"],
+    "sad": ["sad", "sadness", "unhappy", "sorrowful", "melancholy", "downcast", "gloomy"],
+    "sneaky": ["sneaky", "sly", "devious", "cunning", "deceptive", "secretive"],
+    "surprised": ["surprised", "surprise", "shocked", "astonished", "amazed", "startled"],
+    "unfriendly": ["unfriendly", "cold", "hostile", "unkind", "disdainful", "aloof"],
+    "worried": ["worried", "worry", "concerned", "uneasy", "nervous", "anxious"]
+  },
+  "intensity_suffix": "low intensity",
+  "collapse_intensity_to_base": true
+}

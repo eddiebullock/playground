@@ -16,6 +16,7 @@ dependencies:
   - seaborn
   - tqdm
   - opencv
+  - ffmpeg
   - pillow
   - statsmodels
   - ipykernel
@@ -29,3 +30,6 @@ dependencies:
       - einops
       - timm
       - sentencepiece
+      - sentence-transformers
+      - librosa
+      - soundfile

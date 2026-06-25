@@ -9,12 +9,17 @@ def flatten_metrics(path: Path) -> Dict[str, Any]:
     obj = json.loads(path.read_text(encoding="utf-8"))
     return {
         "file": str(path),
+        "protocol_version": obj.get("protocol_version"),
+        "frame_policy": obj.get("frame_policy"),
+        "max_frames": obj.get("max_frames"),
         "model": obj.get("model"),
         "dataset": obj.get("dataset"),
+        "condition": obj.get("condition"),
         "n_frames": obj.get("n_frames"),
-        "max_new_tokens": obj.get("max_new_tokens"),
         "temperature": obj.get("temperature"),
         "accuracy": obj.get("accuracy"),
+        "mean_semantic_entropy": obj.get("mean_semantic_entropy"),
+        "median_semantic_entropy": obj.get("median_semantic_entropy"),
         "n_trials": obj.get("n_trials"),
         "n_scored": obj.get("n_scored"),
         "n_correct": obj.get("n_correct"),

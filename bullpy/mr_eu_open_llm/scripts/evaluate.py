@@ -5,7 +5,6 @@ import os
 import socket
 import subprocess
 import traceback
-import types
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence, Tuple
@@ -22,9 +21,62 @@ from config import (
     DATASETS,
     EVAL,
     LOCAL_RESULTS_DIR,
+    PROTOCOL_VERSION,
+    FRAME_POLICY,
+    EMBEDDING_MODEL,
+    ENTROPY_COLLAPSE_INTENSITY,
+    ENTROPY_EXCLUDE_LABELS,
+    ENTROPY_TEMPERATURE,
+    ENTROPY_LOG_BASE,
+    ENTROPY_USE_RICH_LABEL_EMBEDDINGS,
+    CHAIN_STAGES,
+    STAGE1_MAX_NEW_TOKENS,
+    STAGE2_MAX_NEW_TOKENS,
+    HUMAN_BENCHMARKS,
+    MODALITY_CONDITIONS,
+    MODEL_AUDIO_CAPABILITIES,
+    EU_EMOTION_LABELS_FILE,
+    CHANCE_LEVEL,
+    CONFIRMATORY_N_MODELS,
 )
 
-from scripts.statistics import binomial_vs_chance, wilson_ci
+from scripts.eu_audio_resolver import (
+    build_audio_mapping_audit as build_eu_audio_audit,
+    resolve_eu_audio_only,
+    resolve_eu_multimodal_audio,
+    save_audio_mapping_audit as save_eu_audio_audit,
+)
+from scripts.mindreading_audio_resolver import (
+    LeakageAudioPathError,
+    build_audio_mapping_audit as build_mr_audio_audit,
+    extract_audio_from_video,
+    resolve_item_folder_audio,
+    resolve_mindreading_v_video,
+    save_audio_mapping_audit as save_mr_audio_audit,
+)
+from scripts.trial_foils import (
+    build_emotion_pool_from_trials,
+    resolve_eu_emotion_pool,
+    resolve_candidate_labels,
+)
+from scripts.tolerant_parse import parse_emotion_tolerant
+from scripts.emotion_parse import parse_emotion
+from scripts.prompts import build_free_response_prompt, build_4afc_prompt, build_finetune_prompt
+from scripts.frame_sampling import load_stimulus_as_images, frame_policy_tag
+from scripts.multi_frame import prepare_images_for_model
+from scripts.model_inference import generate_model_response
+from scripts.semantic_entropy import (
+    compute_entropy_bundle,
+    load_or_compute_label_embeddings,
+    prepare_entropy_label_pool,
+    strip_boilerplate_response,
+)
+from scripts.statistics import (
+    binomial_vs_chance,
+    wilson_ci,
+    two_proportion_ztest_vs_human,
+    bonferroni_correction,
+)
 
 
 MEDIA_EXTS = {".mp4", ".mov", ".avi", ".mkv", ".jpg", ".jpeg", ".png", ".webp"}
@@ -66,7 +118,25 @@ def collect_run_metadata() -> Dict[str, Any]:
     return meta
 
 
-def load_model(model_key: str) -> Any:
+def resolve_frame_mode_policy(
+    frame_mode: Optional[str],
+    fps: float,
+    max_frames: int,
+) -> Tuple[float, int, bool, str]:
+    """Resolve fps, max_frames, enforce_multi_frame, and mode key from FRAME_POLICY."""
+    mode_key = (frame_mode or FRAME_POLICY.get("default_mode", "composite_grid")).strip()
+    modes = FRAME_POLICY.get("modes") or {}
+    if mode_key in modes:
+        spec = modes[mode_key]
+        return (
+            float(spec.get("fps", fps)),
+            int(spec.get("max_frames", max_frames)),
+            bool(spec.get("enforce_multi_frame", True)),
+            mode_key,
+        )
+    return fps, max_frames, bool(FRAME_POLICY.get("enforce_multi_frame", True)), mode_key
+
+
     """
     Load a multimodal model given a key in MODELS.
 
@@ -77,180 +147,37 @@ def load_model(model_key: str) -> Any:
     return None
 
 
-def _internvl2_fallback_generation_config(mod: Any) -> Any:
-    """
-    InternLM2 configs often break GenerationConfig.from_model_config (None._from_model_config).
-    Always fall back to a plain GenerationConfig with token ids copied from the LM config.
-    """
-    from transformers import GenerationConfig  # type: ignore
-
-    cfg = getattr(mod, "config", None)
-    if cfg is not None:
-        try:
-            return GenerationConfig.from_model_config(cfg)  # type: ignore[attr-defined]
-        except Exception:
-            pass
-    gc = GenerationConfig()
-    if cfg is not None:
-        for name in ("eos_token_id", "pad_token_id", "bos_token_id"):
-            val = getattr(cfg, name, None)
-            if val is not None:
-                setattr(gc, name, val)
-    return gc
-
-
-def _internvl2_ensure_module_generation_config(mod: Any) -> None:
-    if mod is None or getattr(mod, "generation_config", None) is not None:
-        return
-    mod.generation_config = _internvl2_fallback_generation_config(mod)
-
-
-def _internvl2_past_seq_len(past_key_values: Any) -> int:
-    """
-    InternLM2 remote `prepare_inputs_for_generation` uses past_key_values[0][0].shape[2].
-    Transformers 4.5+ may pass DynamicCache where layer key tensors are still None (lazy init);
-    use the Cache API when available.
-    """
-    if past_key_values is None:
-        return 0
-    gsq = getattr(past_key_values, "get_seq_length", None)
-    if callable(gsq):
-        try:
-            return int(gsq(0))
-        except TypeError:
-            try:
-                return int(gsq())
-            except Exception:
-                pass
-        except Exception:
-            pass
-    try:
-        layer0 = past_key_values[0]
-        first = layer0[0] if layer0 is not None else None
-        if first is not None and hasattr(first, "shape") and len(first.shape) > 2:
-            return int(first.shape[2])
-    except Exception:
-        pass
-    return 0
-
-
-def _internvl2_patch_prepare_inputs_for_generation(lm: Any) -> None:
-    """
-    Replace broken legacy cache indexing with cache.get_seq_length(); fix position_ids slicing when
-    input_ids is empty (inputs_embeds prefill path).
-    """
-    if getattr(lm, "_mr_eu_internvl_prep_patch", False):
-        return
-
-    def prepare_inputs_for_generation(
-        self: Any,
-        input_ids: Any,
-        past_key_values: Any = None,
-        attention_mask: Any = None,
-        inputs_embeds: Any = None,
-        **kwargs: Any,
-    ) -> Any:
-        if past_key_values is not None:
-            past_length = _internvl2_past_seq_len(past_key_values)
-            if input_ids is not None and input_ids.shape[1] > 0:
-                if input_ids.shape[1] > past_length:
-                    remove_prefix_length = past_length
-                else:
-                    remove_prefix_length = input_ids.shape[1] - 1
-                input_ids = input_ids[:, remove_prefix_length:]
-
-        position_ids = kwargs.get("position_ids", None)
-        if attention_mask is not None and position_ids is None:
-            position_ids = attention_mask.long().cumsum(-1) - 1
-            position_ids.masked_fill_(attention_mask == 0, 1)
-            if past_key_values:
-                if input_ids is not None and input_ids.shape[1] > 0:
-                    seq_w = int(input_ids.shape[1])
-                else:
-                    seq_w = int(attention_mask.shape[1])
-                position_ids = position_ids[:, -seq_w:]
-
-        if inputs_embeds is not None and past_key_values is None:
-            model_inputs = {"inputs_embeds": inputs_embeds}
-        else:
-            model_inputs = {"input_ids": input_ids}
-
-        model_inputs.update(
-            {
-                "position_ids": position_ids,
-                "past_key_values": past_key_values,
-                "use_cache": kwargs.get("use_cache"),
-                "attention_mask": attention_mask,
-            }
-        )
-        return model_inputs
-
-    lm.prepare_inputs_for_generation = types.MethodType(prepare_inputs_for_generation, lm)
-    setattr(lm, "_mr_eu_internvl_prep_patch", True)
-
-
-def _internvl2_wrap_language_model_generate(lm: Any) -> None:
-    """
-    InternVL batch_chat does self.generate(..., **dict), so InternVLChatModel passes
-    max_new_tokens etc. as kwargs while generation_config stays None. language_model.generate
-    must not receive generation_config=None under GenerationMixin on recent Transformers.
-    """
-    if getattr(lm, "_mr_eu_internvl_gc_wrap", False):
-        return
-    orig = lm.generate
-
-    def generate(self: Any, *args: Any, generation_config: Any = None, **kwargs: Any) -> Any:
-        if generation_config is None:
-            _internvl2_ensure_module_generation_config(self)
-            generation_config = getattr(self, "generation_config", None)
-            if generation_config is None:
-                self.generation_config = _internvl2_fallback_generation_config(self)
-                generation_config = self.generation_config
-        return orig(*args, generation_config=generation_config, **kwargs)
-
-    lm.generate = types.MethodType(generate, lm)
-    setattr(lm, "_mr_eu_internvl_gc_wrap", True)
-
-
-def patch_internvl2_language_model_generation(model: Any) -> None:
-    """
-    InternVL's chat/batch_chat call self.language_model.generate(...). On Transformers >=4.50,
-    some remote-code LMs (e.g. InternLM2ForCausalLM) no longer inherit GenerationMixin, so
-    `.generate` is missing. Mix GenerationMixin onto the *instance* so InternVL's forward path works.
-    """
-    _internvl2_ensure_module_generation_config(model)
-    lm = getattr(model, "language_model", None)
-    if lm is None:
-        return
-    _internvl2_ensure_module_generation_config(lm)
-
-    if not callable(getattr(lm, "generate", None)):
-        try:
-            from transformers.generation.utils import GenerationMixin  # type: ignore
-
-            base_cls = lm.__class__
-            if not issubclass(base_cls, GenerationMixin):
-                merged_name = base_cls.__name__ + "_WithGenerationMixin"
-                merged_cls = type(merged_name, (base_cls, GenerationMixin), {})
-                lm.__class__ = merged_cls  # type: ignore[assignment]
-                _internvl2_ensure_module_generation_config(lm)
-        except Exception as e:
-            raise RuntimeError(
-                "InternVL2 language model has no .generate() under this Transformers version "
-                "(common with Transformers>=4.50). Could not attach GenerationMixin. "
-                "Try a dedicated env with transformers<4.50, or an updated InternVL checkpoint."
-            ) from e
-
-    _internvl2_patch_prepare_inputs_for_generation(lm)
-    _internvl2_wrap_language_model_generate(lm)
-
-
 def resolve_model_path(model_key: str) -> Path:
     cfg = MODELS[model_key]
     hpc = Path(cfg["hpc_path"])
     if hpc.exists():
         return hpc
     return Path(cfg["local_path"])
+
+
+def _patch_remote_code_tied_weights(model: Any) -> None:
+    """Instance-level fallback after load (device_map paths)."""
+    if model is not None and not hasattr(model, "all_tied_weights_keys"):
+        tied = getattr(model, "_tied_weights_keys", None)
+        if tied is not None:
+            model.all_tied_weights_keys = tied
+
+
+def _from_pretrained_with_device_fallback(loader: Any, model_path: Path, *, device: str, dtype: torch.dtype) -> Any:
+    """Load with device_map=auto on CUDA; retry without auto map on older remote-code models."""
+    base_kw = {"torch_dtype": dtype, "trust_remote_code": True}
+    if device == "cuda":
+        try:
+            model = loader.from_pretrained(model_path, device_map="auto", **base_kw)
+            _patch_remote_code_tied_weights(model)
+            return model
+        except (AttributeError, TypeError, ValueError, RuntimeError):
+            pass
+    model = loader.from_pretrained(model_path, device_map=None, **base_kw)
+    _patch_remote_code_tied_weights(model)
+    if device == "cuda":
+        model = model.to(device)
+    return model
 
 
 def load_hf_model_for_key(model_key: str, model_path: Path, device: str, dtype: torch.dtype) -> Any:
@@ -262,25 +189,18 @@ def load_hf_model_for_key(model_key: str, model_path: Path, device: str, dtype: 
         try:
             from transformers import Qwen2VLForConditionalGeneration  # type: ignore
 
-            return Qwen2VLForConditionalGeneration.from_pretrained(
-                model_path,
-                torch_dtype=dtype,
-                device_map="auto" if device == "cuda" else None,
-                trust_remote_code=True,
+            return _from_pretrained_with_device_fallback(
+                Qwen2VLForConditionalGeneration, model_path, device=device, dtype=dtype
             )
         except Exception:
             pass
 
-    # InternVL2: prefer its custom AutoModel (InternVLChatModel).
-    if model_key == "internvl2":
+    if model_key == "gemma4":
         try:
-            from transformers import AutoModel  # type: ignore
+            from transformers import AutoModelForMultimodalLM  # type: ignore
 
-            return AutoModel.from_pretrained(
-                model_path,
-                torch_dtype=dtype,
-                device_map="auto" if device == "cuda" else None,
-                trust_remote_code=True,
+            return _from_pretrained_with_device_fallback(
+                AutoModelForMultimodalLM, model_path, device=device, dtype=dtype
             )
         except Exception:
             pass
@@ -296,11 +216,8 @@ def load_hf_model_for_key(model_key: str, model_path: Path, device: str, dtype: 
             try:
                 mod = __import__("transformers", fromlist=[cls_name])
                 cls = getattr(mod, cls_name)
-                return cls.from_pretrained(
-                    model_path,
-                    torch_dtype=dtype,
-                    device_map="auto" if device == "cuda" else None,
-                    trust_remote_code=True,
+                return _from_pretrained_with_device_fallback(
+                    cls, model_path, device=device, dtype=dtype
                 )
             except Exception:
                 pass
@@ -331,15 +248,152 @@ def load_hf_model_for_key(model_key: str, model_path: Path, device: str, dtype: 
     except Exception:
         pass
 
-    # Last resort fallback.
+    # Last resort fallback (vision/multimodal keys must not use CausalLM).
+    if model_key in {"qwen2vl", "llavanext", "gemma4"}:
+        raise RuntimeError(
+            f"Failed to load {model_key} from {model_path}. "
+            "Check model files and transformers version on the compute node."
+        )
     from transformers import AutoModelForCausalLM
 
-    return AutoModelForCausalLM.from_pretrained(
-        model_path,
-        torch_dtype=dtype,
-        device_map="auto" if device == "cuda" else None,
-        trust_remote_code=True,
+    return _from_pretrained_with_device_fallback(
+        AutoModelForCausalLM, model_path, device=device, dtype=dtype
     )
+
+
+def _dataset_benchmark_key(dataset_key: str) -> str:
+    return "eu_emotion" if dataset_key == "eu_emotions" else dataset_key
+
+
+def _lookup_human_benchmark(dataset_key: str, condition: str) -> Optional[Dict[str, Any]]:
+    ds = _dataset_benchmark_key(dataset_key)
+    bench = (HUMAN_BENCHMARKS.get(ds) or {}).get(condition)
+    if not bench:
+        return None
+    if bench.get("accuracy") is None or bench.get("n") is None:
+        return None
+    return bench
+
+
+def _guard_no_leakage_audio(audio_path: Optional[Path]) -> None:
+    if audio_path is not None and "/Emotions/Audio/" in str(audio_path).replace("\\", "/"):
+        raise LeakageAudioPathError(f"Refusing leakage audio path: {audio_path}")
+
+
+def load_trials_from_manifest(manifest_path: Path, dataset_root: Path) -> Tuple[List[Dict[str, Any]], List[str]]:
+    obj = json.loads(manifest_path.read_text(encoding="utf-8"))
+    trials_in = obj.get("trials", [])
+    labels = sorted(
+        {
+            str(t.get("correct_label") or t.get("emotion") or t.get("label"))
+            for t in trials_in
+            if t.get("correct_label") or t.get("emotion") or t.get("label")
+        }
+    )
+    trials: List[Dict[str, Any]] = []
+    for t in trials_in:
+        rel_path = t.get("stimulus_path") or t.get("video_path")
+        if not rel_path:
+            continue
+        abs_path = Path(rel_path)
+        if not abs_path.is_absolute():
+            abs_path = (dataset_root / rel_path).resolve()
+        label = t.get("correct_label") or t.get("emotion") or t.get("label")
+        trials.append(
+            {
+                **t,
+                "trial_id": t.get("trial_id", rel_path),
+                "stimulus_path": str(abs_path),
+                "label": label,
+                "stimulus_relpath": rel_path if not Path(rel_path).is_absolute() else None,
+            }
+        )
+    return trials, labels
+
+
+def resolve_trial_media(
+    trial: Dict[str, Any],
+    *,
+    dataset_key: str,
+    dataset_root: Path,
+    condition: str,
+    seed: int,
+) -> Tuple[Optional[Path], Optional[Path], str]:
+    """Return (video_path, audio_path, audio_rule) for a trial under the given condition."""
+    stimulus = Path(str(trial["stimulus_path"]))
+    trial_id = str(trial.get("trial_id", stimulus.name))
+    label = str(trial.get("label") or trial.get("correct_label") or trial.get("emotion") or "")
+
+    video_path: Optional[Path] = None
+    audio_path: Optional[Path] = None
+    audio_rule = "none"
+
+    if dataset_key == "mindreading":
+        video_path = resolve_mindreading_v_video(stimulus)
+    else:
+        video_path = stimulus
+
+    if condition == "video_only":
+        return video_path, None, "video_only"
+
+    if dataset_key == "eu_emotions":
+        if condition == "audio_only":
+            ap, audio_rule = resolve_eu_audio_only(
+                emotion_label=label, base_data_dir=dataset_root, trial_id=trial_id, seed=seed
+            )
+            audio_path = ap
+            video_path = None
+        elif condition == "multimodal":
+            ap, audio_rule = resolve_eu_multimodal_audio(
+                video_path,
+                emotion_label=label,
+                base_data_dir=dataset_root,
+                trial_id=trial_id,
+                seed=seed,
+            )
+            audio_path = ap
+    elif dataset_key == "mindreading" and condition in {"audio_only", "multimodal"}:
+        ap, audio_rule = resolve_item_folder_audio(video_path)
+        if ap is not None and ap.suffix.lower() == ".mov":
+            ap = extract_audio_from_video(ap) or ap
+        audio_path = ap
+        if condition == "audio_only":
+            video_path = None
+
+    _guard_no_leakage_audio(audio_path)
+    return video_path, audio_path, audio_rule
+
+
+def write_results_csv(metrics: Dict[str, Any], csv_path: Path) -> None:
+    import csv
+
+    rows: List[Dict[str, Any]] = []
+    for t in metrics.get("trials", []):
+        s2 = t.get("stage2") or {}
+        s1 = t.get("stage1") or {}
+        rows.append(
+            {
+                "trial_id": t.get("trial_id"),
+                "model": metrics.get("model"),
+                "dataset": metrics.get("dataset"),
+                "condition": metrics.get("condition"),
+                "correct_label": t.get("label"),
+                "predicted_label": s2.get("prediction"),
+                "is_correct": s2.get("correct"),
+                "semantic_entropy": s1.get("semantic_entropy"),
+                "p_correct": s1.get("p_correct"),
+                "margin_correct": s1.get("margin_correct"),
+                "video_path": t.get("video_path"),
+                "audio_path": t.get("audio_path"),
+            }
+        )
+    if not rows:
+        return
+    csv_path.parent.mkdir(parents=True, exist_ok=True)
+    with csv_path.open("w", newline="", encoding="utf-8") as f:
+        w = csv.DictWriter(f, fieldnames=list(rows[0].keys()))
+        w.writeheader()
+        w.writerows(rows)
 
 
 def resolve_dataset_root(dataset_key: str, override_root: Optional[Path] = None) -> Path:
@@ -389,248 +443,95 @@ def load_eu_emotions_manifest(
     manifest_path: Path,
     dataset_root: Path,
 ) -> Tuple[List[Dict[str, Any]], List[str]]:
-    """
-    Load the 118-trial EU-Emotions stimulus set from a manifest JSON.
-
-    Expected format (as in mr_ts_play):
-      {
-        "num_trials": 118,
-        "trials": [
-          {"stimulus_path": "...", "correct_label": "...", "trial_id": "..."},
-          ...
-        ]
-      }
-    """
-    obj = json.loads(manifest_path.read_text(encoding="utf-8"))
-    trials_in = obj.get("trials", [])
-    labels = sorted({t["correct_label"] for t in trials_in if "correct_label" in t})
-
-    trials: List[Dict[str, Any]] = []
-    for t in trials_in:
-        rel_path = t["stimulus_path"]
-        abs_path = (dataset_root / rel_path).resolve()
-        trials.append(
-            {
-                "trial_id": t.get("trial_id", rel_path),
-                "stimulus_path": str(abs_path),
-                "label": t["correct_label"],
-                "stimulus_relpath": rel_path,
-            }
-        )
-
-    return trials, labels
-
-
-def make_4afc_options(
-    correct_label: str,
-    all_labels: Sequence[str],
-    rng: np.random.Generator,
-) -> List[str]:
-    others = [l for l in all_labels if l != correct_label]
-    if len(others) < 3:
-        raise ValueError("Need at least 4 labels total for 4AFC.")
-    sampled = rng.choice(np.array(others, dtype=object), size=3, replace=False).tolist()
-    options = [correct_label, *sampled]
-    rng.shuffle(options)
-    return [str(x) for x in options]
-
-
-def frame_schedule(n_frames: int) -> List[float]:
-    if n_frames == 4:
-        return list(EVAL["frame_sampling_4"])
-    if n_frames == 8:
-        return list(EVAL["frame_sampling_8"])
-    # Fallback: uniform positions (inclusive endpoints)
-    if n_frames <= 1:
-        return [0.5]
-    return [float(x) for x in np.linspace(0.0, 1.0, n_frames)]
-
-
-def load_frames_from_video(video_path: Path, n_frames: int) -> List[Image.Image]:
-    # Interlaced HD clips can spam FFmpeg swscaler warnings to stderr; job still succeeds.
-    try:
-        cv2.utils.logging.setLogLevel(cv2.utils.logging.LOG_LEVEL_ERROR)
-    except Exception:
-        pass
-
-    cap = cv2.VideoCapture(str(video_path))
-    if not cap.isOpened():
-        raise RuntimeError(f"Failed to open video: {video_path}")
-
-    frame_count = int(cap.get(cv2.CAP_PROP_FRAME_COUNT) or 0)
-    if frame_count <= 0:
-        cap.release()
-        raise RuntimeError(f"Video has no frames: {video_path}")
-
-    positions = frame_schedule(n_frames)
-    frames: List[Image.Image] = []
-    for pos in positions:
-        idx = int(round(pos * (frame_count - 1)))
-        idx = max(0, min(frame_count - 1, idx))
-        cap.set(cv2.CAP_PROP_POS_FRAMES, idx)
-        ok, frame_bgr = cap.read()
-        if not ok or frame_bgr is None:
-            continue
-        frame_rgb = cv2.cvtColor(frame_bgr, cv2.COLOR_BGR2RGB)
-        frames.append(Image.fromarray(frame_rgb))
-
-    cap.release()
-    if not frames:
-        raise RuntimeError(f"Failed to extract frames from: {video_path}")
-    return frames
-
-
-def load_stimulus_as_images(stimulus_path: Path, n_frames: int) -> List[Image.Image]:
-    ext = stimulus_path.suffix.lower()
-    if ext in {".jpg", ".jpeg", ".png", ".webp"}:
-        img = Image.open(stimulus_path).convert("RGB")
-        return [img]
-    if ext in {".mp4", ".mov", ".avi", ".mkv"}:
-        return load_frames_from_video(stimulus_path, n_frames=n_frames)
-    raise ValueError(f"Unsupported stimulus type: {stimulus_path}")
-
-
-def build_4afc_prompt(options: Sequence[str]) -> str:
-    opts = "\n".join([f"{i+1}) {opt}" for i, opt in enumerate(options)])
-    return (
-        "You are performing a 4-alternative forced-choice mental state recognition task.\n"
-        "Choose exactly one label from the options.\n\n"
-        f"OPTIONS:\n{opts}\n\n"
-        "Respond with:\n"
-        "EMOTION: <one of the option labels exactly>\n"
-        "REASONING: <brief justification>\n"
-    )
-
-
-def _is_instruction_emotion_placeholder(raw: str) -> bool:
-    s = raw.strip().lower()
-    if "<" in raw and ">" in raw:
-        return True
-    if "option labels" in s or "brief justification" in s:
-        return True
-    return False
-
-
-def _match_raw_to_option(raw: str, options: Sequence[str]) -> Optional[str]:
-    """
-    Map raw EMOTION field text to one of the four options (4AFC).
-    Prefer longer labels on substring match so e.g. 'Afraid Low Intensity' beats 'Afraid'.
-    """
-    raw0 = raw.strip().strip(" .\"'`")
-    # "3) Excited" or "2) Proud"
-    m_paren = re.match(r"^(\d+)\s*[\)\.:]\s*(.+)$", raw0)
-    if m_paren:
-        idx = int(m_paren.group(1)) - 1
-        rest = m_paren.group(2).strip()
-        if 0 <= idx < len(options):
-            if rest.lower() == options[idx].lower() or rest.lower() in options[idx].lower():
-                return options[idx]
-            em = _match_raw_to_option(rest, options)
-            if em is not None:
-                return em
-        em = _match_raw_to_option(rest, options)
-        if em is not None:
-            return em
-
-    mnum = re.match(r"^(\d+)\s*[\)\.]?\s*$", raw0)
-    if mnum:
-        idx = int(mnum.group(1)) - 1
-        if 0 <= idx < len(options):
-            return options[idx]
-
-    for opt in options:
-        if raw0.lower() == opt.lower():
-            return opt
-
-    for opt in sorted(options, key=lambda x: -len(str(x))):
-        if opt.lower() in raw0.lower():
-            return opt
-
-    return None
-
-
-def parse_emotion(output_text: Any, options: Sequence[str]) -> Tuple[Optional[str], Optional[str]]:
-    """
-    Return (emotion, reasoning). Emotion is forced to one of options if possible.
-
-    If output_text still includes the user prompt (should be avoided: decode only new tokens),
-    we skip instruction placeholders and use the last EMOTION / REASONING lines.
-    """
-    emotion = None
-    reasoning = None
-    if not isinstance(output_text, str):
-        try:
-            text = json.dumps(output_text, ensure_ascii=False)
-        except Exception:
-            text = str(output_text)
-    else:
-        text = output_text
-    text = text.strip()
-
-    # Last EMOTION line wins (avoids matching the template line in the user message).
-    for m in reversed(list(re.finditer(r"(?im)^\s*EMOTION\s*[:\-]\s*(.+?)\s*$", text))):
-        raw = m.group(1).strip()
-        if _is_instruction_emotion_placeholder(raw):
-            continue
-        emotion = _match_raw_to_option(raw, options)
-        if emotion is not None:
-            break
-
-    for r in reversed(list(re.finditer(r"(?im)^\s*REASONING\s*:\s*(.+?)\s*$", text))):
-        rs = r.group(1).strip()
-        if rs.lower() in {"<brief justification>", "brief justification"}:
-            continue
-        if "<" in rs and "brief" in rs.lower():
-            continue
-        reasoning = rs
-        break
-
-    # Fallback: some models ignore the EMOTION/REASONING format and just answer with
-    # an option label (or include it inline). Since we decode only generated tokens,
-    # scanning the completion is safe (it won't match the OPTIONS block from the prompt).
-    if emotion is None and text:
-        lower = text.lower()
-        for opt in sorted(options, key=lambda x: -len(str(x))):
-            if str(opt).lower() in lower:
-                emotion = str(opt)
-                break
-
-    return emotion, reasoning
+    return load_trials_from_manifest(manifest_path, dataset_root)
 
 
 def run_evaluation(
     model_key: str,
     dataset_key: str,
-    n_frames: int,
     output_path: Path,
     seed: int = SEED,
     data_root: Optional[Path] = None,
     manifest: Optional[Path] = None,
     max_trials: Optional[int] = None,
     temperature: float = EVAL["temperature"],
-    max_new_tokens: int = 128,
+    max_frames: int = FRAME_POLICY["max_frames"],
+    fps: float = FRAME_POLICY["fps"],
+    stage: str = "both",
+    condition: str = "video_only",
+    skip_entropy: bool = False,
+    n_frames: Optional[int] = None,
+    lora_adapter: Optional[Path] = None,
+    stage2_prompt_mode: str = "4afc",
+    frame_mode: Optional[str] = None,
 ) -> Dict[str, Any]:
     """
-    Run the full 4AFC evaluation pipeline for a model/dataset combination.
+    Protocol v2 two-stage evaluation per trial.
 
-    Returns a dictionary of aggregate metrics and metadata which is also saved to output_path.
+    Stage 1 (semantic entropy) runs only for condition=video_only (cross-model comparability).
+    Stage 2 uses condition-aware prompts and modality gating.
     """
-    rng = np.random.default_rng(seed)
+    if n_frames is not None:
+        max_frames = int(n_frames)
+    fps, max_frames, enforce_multi_frame, frame_mode_key = resolve_frame_mode_policy(
+        frame_mode, fps, max_frames
+    )
+    stage = stage.lower()
+    condition = (condition or "video_only").strip().lower()
+    if condition not in MODALITY_CONDITIONS:
+        raise ValueError(f"Invalid condition={condition}; use one of {MODALITY_CONDITIONS}")
+    if stage not in {"both", "stage1", "stage2"}:
+        raise ValueError(f"Invalid stage={stage}; use both|stage1|stage2")
+    stage2_prompt_mode = (stage2_prompt_mode or "4afc").strip().lower()
+    if stage2_prompt_mode not in {"4afc", "finetune_label"}:
+        raise ValueError(f"Invalid stage2_prompt_mode={stage2_prompt_mode}; use 4afc|finetune_label")
+
+    if condition in {"audio_only", "multimodal"} and not MODEL_AUDIO_CAPABILITIES.get(model_key, False):
+        raise ValueError(
+            f"Model {model_key} does not support native audio input in model_inference.py; "
+            f"cannot run condition={condition}. Set MODEL_AUDIO_CAPABILITIES or use video_only."
+        )
 
     dataset_root = resolve_dataset_root(dataset_key, override_root=data_root)
-    if dataset_key == "eu_emotions":
-        if manifest is not None:
-            trials_raw, labels = load_eu_emotions_manifest(manifest, dataset_root)
-        else:
-            trials_raw, labels = list_eu_emotions_trials(dataset_root)
+    if manifest is not None:
+        trials_raw, labels = load_trials_from_manifest(manifest, dataset_root)
+    elif dataset_key == "eu_emotions":
+        trials_raw, labels = list_eu_emotions_trials(dataset_root)
     else:
-        # Stub for other datasets; will be implemented later.
         trials_raw, labels = ([], [])
 
-    # Optional: cap number of trials for smoke tests.
-    trials_raw = list(trials_raw)
+    trials_all = list(trials_raw)
     if max_trials is not None:
-        trials_raw = trials_raw[: int(max_trials)]
+        trials_raw = trials_all[: int(max_trials)]
+    else:
+        trials_raw = trials_all
+
+    if dataset_key == "eu_emotions":
+        data_labels = None
+        if data_root is not None:
+            data_labels = Path(data_root).parent / "eu_emotion_states_list.txt"
+        emotion_pool = resolve_eu_emotion_pool(
+            label_paths=[EU_EMOTION_LABELS_FILE, data_labels],
+            trials_fallback=trials_all,
+        )
+    else:
+        emotion_pool = build_emotion_pool_from_trials(trials_raw)
+
+    if condition in {"audio_only", "multimodal"}:
+        audit_path = output_path.with_name(
+            f"{model_key}_{dataset_key}_{condition}_audio_mapping_audit.json"
+        )
+        try:
+            if dataset_key == "mindreading":
+                audit = build_mr_audio_audit(trials_raw, base_data_dir=dataset_root)
+                save_mr_audio_audit(audit, audit_path)
+            elif dataset_key == "eu_emotions":
+                audit = build_eu_audio_audit(
+                    trials_raw, base_data_dir=dataset_root, condition=condition, seed=seed
+                )
+                save_eu_audio_audit(audit, audit_path)
+        except Exception:
+            traceback.print_exc()
 
     # Load model (Phase B: implemented for Qwen2-VL only).
     model = None
@@ -662,23 +563,15 @@ def run_evaluation(
                     "then re-run the job."
                 ) from e
 
-    # InternVL2 is best driven via its custom chat() API.
     tokenizer = None
-    if model_key == "internvl2":
-        from transformers import AutoTokenizer  # type: ignore
-
-        tok_err: Optional[Exception] = None
-        for use_fast in (True, False):
-            try:
-                tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=True, use_fast=use_fast)
-                break
-            except Exception as e:
-                tok_err = e
-                tokenizer = None
-        if tokenizer is None:
-            raise RuntimeError(f"InternVL2 tokenizer failed to load: {tok_err}")
-
     model = load_hf_model_for_key(model_key=model_key, model_path=model_path, device=device, dtype=dtype)
+    if lora_adapter is not None:
+        from peft import PeftModel
+
+        adapter_path = Path(lora_adapter)
+        if not adapter_path.exists():
+            raise FileNotFoundError(f"LoRA adapter not found: {adapter_path}")
+        model = PeftModel.from_pretrained(model, str(adapter_path), is_trainable=False)
     if device != "cuda":
         model = model.to(device)
     model.eval()
@@ -702,289 +595,186 @@ def run_evaluation(
         except Exception:
             pass
 
-    if model_key == "internvl2":
-        # If we didn't get the chat wrapper, retry a couple of other auto-classes.
-        if not hasattr(model, "chat"):
-            try:
-                from transformers import AutoModel  # type: ignore
-
-                model = AutoModel.from_pretrained(
-                    model_path,
-                    torch_dtype=dtype,
-                    trust_remote_code=True,
-                )
-                if device == "cuda":
-                    model = model.to(device)
-                model.eval()
-            except Exception:
-                pass
-        if not hasattr(model, "chat"):
-            raise RuntimeError(
-                "InternVL2 loaded without `chat()` (got a base LM). "
-                "Your local model snapshot likely isn't the InternVL chat wrapper class. "
-                "Re-download the model to ensure `auto_map` is present, or switch to an InternVL2 chat checkpoint."
-            )
-        try:
-            tok = getattr(processor, "tokenizer", None)
-            if tok is not None and hasattr(model, "img_context_token_id"):
-                if getattr(model, "img_context_token_id", None) is None:
-                    candidates = ["<IMG_CONTEXT>", "<img_context>", "<image>", "<IMAGE>"]
-                    for cand in candidates:
-                        try:
-                            tid = tok.convert_tokens_to_ids(cand)
-                            if isinstance(tid, int) and tid >= 0 and tid != getattr(tok, "unk_token_id", -1):
-                                setattr(model, "img_context_token_id", tid)
-                                break
-                        except Exception:
-                            continue
-        except Exception:
-            pass
-
-        # batch_chat/chat -> self.generate -> language_model.generate; LM must expose .generate().
-        patch_internvl2_language_model_generation(model)
+    if dataset_key == "eu_emotions" and emotion_pool:
+        entropy_labels = prepare_entropy_label_pool(emotion_pool, exclude=ENTROPY_EXCLUDE_LABELS)
+    else:
+        entropy_labels = list(labels)
+    label_embeddings = None
+    if entropy_labels and stage in {"both", "stage1"} and not skip_entropy:
+        label_embeddings = load_or_compute_label_embeddings(
+            entropy_labels,
+            EMBEDDING_MODEL,
+            rich_prompts=ENTROPY_USE_RICH_LABEL_EMBEDDINGS,
+        )
 
     trials: List[Dict[str, Any]] = []
     n_correct = 0
     n_scored = 0
+    entropies: List[float] = []
     pipe_cache: Dict[str, Any] = {}
-    for t in trials_raw:
-        options = make_4afc_options(t["label"], labels, rng) if labels else []
-        stimulus_path = Path(t["stimulus_path"])
-        prompt = build_4afc_prompt(options)
+    fp_tag = frame_policy_tag(fps, max_frames, frame_mode_key)
+
+    for trial_idx, t in enumerate(trials_raw):
+        trial_copy = dict(t)
+        options = (
+            resolve_candidate_labels(trial_copy, emotion_pool, seed=seed, trial_index=trial_idx)
+            if stage in {"both", "stage2"}
+            else []
+        )
+        video_path, audio_path, audio_rule = resolve_trial_media(
+            trial_copy,
+            dataset_key=dataset_key,
+            dataset_root=dataset_root,
+            condition=condition,
+            seed=seed,
+        )
+        stage1_prompt = build_free_response_prompt(condition=condition)
+        if options and stage2_prompt_mode == "finetune_label":
+            stage2_prompt = build_finetune_prompt(condition=condition)
+        else:
+            stage2_prompt = build_4afc_prompt(options, condition=condition) if options else ""
 
         try:
-            images = load_stimulus_as_images(stimulus_path, n_frames=n_frames)
-            # Some model families (notably many LLaVA and InternVL variants) behave as
-            # single-image chat models; passing multiple frames can cause failures.
-            if model_key in {"llavanext", "internvl2", "gemma4"}:
-                images = [images[0]]
-                images_for_processor: Any = images[0]  # pass a single PIL.Image
-            else:
-                images_for_processor = images
+            images: List[Any] = []
+            frame_indices: List[int] = []
+            mf_meta: Dict[str, Any] = {}
+            images_for_processor: Any = None
 
-            # InternVL2: always use the checkpoint's chat() API (no fallback to generate()).
-            if model_key == "internvl2":
-                if tokenizer is None or not hasattr(model, "chat"):
-                    raise RuntimeError(
-                        f"InternVL2 missing chat() or tokenizer (tokenizer={tokenizer is not None}, has_chat={hasattr(model, 'chat')})."
+            if video_path is not None and condition != "audio_only":
+                images, frame_indices = load_stimulus_as_images(
+                    video_path, fps=fps, max_frames=max_frames
+                )
+                images_for_processor, mf_meta = prepare_images_for_model(
+                    model_key,
+                    images,
+                    enforce_multi_frame=enforce_multi_frame,
+                )
+            elif condition == "audio_only":
+                if audio_path is None:
+                    raise FileNotFoundError(
+                        f"audio_only requires resolved audio for trial {t.get('trial_id')}"
                     )
-                img_proc = getattr(processor, "image_processor", None) or getattr(processor, "vision_processor", None)
-                if img_proc is None:
-                    try:
-                        from transformers import AutoImageProcessor  # type: ignore
 
-                        img_proc = AutoImageProcessor.from_pretrained(model_path, trust_remote_code=True)
-                    except Exception:
-                        img_proc = None
-                if img_proc is None:
-                    raise RuntimeError("InternVL2 processor missing image processor.")
+            stage1_block: Dict[str, Any] = {}
+            stage2_block: Dict[str, Any] = {}
 
-                pv = img_proc(images_for_processor, return_tensors="pt")
-                pixel_values = pv.get("pixel_values")
-                if pixel_values is None:
-                    raise RuntimeError("InternVL2 image processor did not return pixel_values.")
-                pixel_values = pixel_values.to(model.device, dtype=dtype)
+            if stage in {"both", "stage1"}:
+                out_stage1 = generate_model_response(
+                    model_key=model_key,
+                    model=model,
+                    processor=processor,
+                    tokenizer=tokenizer,
+                    model_path=model_path,
+                    prompt=stage1_prompt,
+                    images=images,
+                    images_for_processor=images_for_processor,
+                    device=device,
+                    dtype=dtype,
+                    temperature=temperature,
+                    max_new_tokens=STAGE1_MAX_NEW_TOKENS,
+                    pipe_cache=pipe_cache,
+                    audio_path=audio_path,
+                    condition=condition,
+                )
+                free_text = strip_boilerplate_response(out_stage1)
+                entropy_bundle: Dict[str, Any] = {}
+                if not skip_entropy and label_embeddings is not None:
+                    entropy_bundle = compute_entropy_bundle(
+                        free_text,
+                        entropy_labels,
+                        true_label=t.get("label"),
+                        label_embeddings=label_embeddings,
+                        model_name=EMBEDDING_MODEL,
+                        temperature=ENTROPY_TEMPERATURE,
+                        log_base=ENTROPY_LOG_BASE,
+                        rich_prompts=ENTROPY_USE_RICH_LABEL_EMBEDDINGS,
+                        collapse_intensity=ENTROPY_COLLAPSE_INTENSITY,
+                    )
+                    h_sem = entropy_bundle.get("semantic_entropy")
+                    if h_sem is not None and h_sem == h_sem:
+                        entropies.append(float(h_sem))
+                stage1_block = {
+                    "prompt": stage1_prompt,
+                    "free_response_text": free_text,
+                    "raw_model_output": out_stage1,
+                    "semantic_entropy": entropy_bundle.get("semantic_entropy") if not skip_entropy else None,
+                    "semantic_entropy_fine": entropy_bundle.get("semantic_entropy_fine") if not skip_entropy else None,
+                    "semantic_entropy_base": entropy_bundle.get("semantic_entropy_base") if not skip_entropy else None,
+                    "label_probs": entropy_bundle.get("label_probs") if not skip_entropy else None,
+                    "base_label_probs": entropy_bundle.get("base_label_probs") if not skip_entropy else None,
+                    "base_labels": entropy_bundle.get("base_labels") if not skip_entropy else None,
+                    "top_labels": entropy_bundle.get("top_labels") if not skip_entropy else None,
+                    "p_correct": entropy_bundle.get("p_correct") if not skip_entropy else None,
+                    "margin_correct": entropy_bundle.get("margin_correct") if not skip_entropy else None,
+                    "correct_in_entropy_pool": entropy_bundle.get("correct_in_entropy_pool") if not skip_entropy else None,
+                    "n_entropy_labels": entropy_bundle.get("n_entropy_labels") if not skip_entropy else None,
+                    "embedding_model": EMBEDDING_MODEL,
+                    "entropy_temperature": ENTROPY_TEMPERATURE,
+                    "entropy_rich_label_embeddings": ENTROPY_USE_RICH_LABEL_EMBEDDINGS,
+                    "entropy_exclude_labels": list(ENTROPY_EXCLUDE_LABELS),
+                    "entropy_collapse_intensity": ENTROPY_COLLAPSE_INTENSITY,
+                }
 
-                # InternVL remote code expects a *mutable dict* passed as generation_config; batch_chat
-                # does `generation_output = self.generate(..., **generation_config)`. Never pass
-                # generation kwargs as **kwargs to batch_chat (that triggers "unexpected keyword ...").
-                gen_cfg: Dict[str, Any] = {"max_new_tokens": int(max_new_tokens)}
-                if float(temperature) > 0:
-                    gen_cfg.update({"do_sample": True, "temperature": float(temperature), "top_p": float(EVAL["top_p"])})
+            if stage in {"both", "stage2"}:
+                if CHAIN_STAGES and stage1_block.get("free_response_text"):
+                    stage2_prompt = (
+                        f"Prior description:\n{stage1_block['free_response_text']}\n\n{stage2_prompt}"
+                    )
+                out_stage2 = generate_model_response(
+                    model_key=model_key,
+                    model=model,
+                    processor=processor,
+                    tokenizer=tokenizer,
+                    model_path=model_path,
+                    prompt=stage2_prompt,
+                    images=images,
+                    images_for_processor=images_for_processor,
+                    device=device,
+                    dtype=dtype,
+                    temperature=temperature,
+                    max_new_tokens=STAGE2_MAX_NEW_TOKENS,
+                    pipe_cache=pipe_cache,
+                    audio_path=audio_path,
+                    condition=condition,
+                )
+                pred, reasoning, parse_method = parse_emotion_tolerant(
+                    out_stage2, options, full_label_pool=emotion_pool
+                )
+                if pred is None and stage2_prompt_mode == "4afc":
+                    pred, reasoning = parse_emotion(out_stage2, options)
+                    parse_method = "strict_4afc"
+                if pred is None:
+                    correct = False
                 else:
-                    gen_cfg["do_sample"] = False
-                with torch.inference_mode():
-                    # batch_chat requires num_patches_list (see OpenGVLab modeling_internvl_chat.py).
-                    num_patches_list = [int(pixel_values.shape[0])] if pixel_values is not None else []
-                    if hasattr(model, "batch_chat") and num_patches_list:
-                        gc = dict(gen_cfg)
-                        out_list = model.batch_chat(
-                            tokenizer,
-                            pixel_values,
-                            [prompt],
-                            gc,
-                            num_patches_list=num_patches_list,
-                        )
-                        out_text = out_list[0] if isinstance(out_list, list) and out_list else str(out_list)
-                    else:
-                        out_text = model.chat(tokenizer, pixel_values, prompt, generation_config=dict(gen_cfg))
-                if not isinstance(out_text, str):
-                    out_text = str(out_text)
-            elif model_key == "gemma4":
-                # Gemma 4: prefer the Transformers-native image-text-to-text pipeline for robustness.
-                # If the local Transformers is too old to resolve Gemma4Processor, pipeline construction will fail;
-                # in that case, instruct the user to upgrade Transformers in the HPC env.
-                try:
-                    from transformers import pipeline  # type: ignore
-
-                    pipe = pipe_cache.get("gemma4")
-                    if pipe is None:
-                        pipe = pipeline(
-                            "image-text-to-text",
-                            model=model_path,
-                            device=0 if device == "cuda" else -1,
-                            torch_dtype=dtype if device == "cuda" else None,
-                        )
-                        pipe_cache["gemma4"] = pipe
-
-                    messages = [
-                        {
-                            "role": "user",
-                            "content": [
-                                {"type": "image", "image": images_for_processor},
-                                {"type": "text", "text": prompt},
-                            ],
-                        }
-                    ]
-                    out = pipe(text=messages, max_new_tokens=int(max_new_tokens))
-                    if isinstance(out, list) and out:
-                        out0 = out[0]
-                        out_text = out0.get("generated_text") if isinstance(out0, dict) else None
-                        if out_text is None:
-                            out_text = str(out0)
-                    else:
-                        out_text = str(out)
-                except Exception as e:
-                    raise RuntimeError(
-                        f"Gemma4 pipeline inference failed: {e}. "
-                        "If this mentions an unrecognized Gemma4 processor/config, upgrade Transformers "
-                        "in the mr_eu_open_llm env (e.g. `python -m pip install --upgrade transformers`)."
-                    ) from e
-            elif model_key == "llavanext":
-                # LLaVA Interleave: the HF pipeline handles image/text alignment more robustly than
-                # hand-rolled processor + generate for some backbone/processor combinations.
-                try:
-                    from transformers import pipeline  # type: ignore
-
-                    pipe = pipe_cache.get("llavanext")
-                    if pipe is None:
-                        pipe = pipeline(
-                            "image-text-to-text",
-                            model=model_path,
-                            device=0 if device == "cuda" else -1,
-                            torch_dtype=dtype if device == "cuda" else None,
-                        )
-                        pipe_cache["llavanext"] = pipe
-                    messages = [
-                        {
-                            "role": "user",
-                            "content": [
-                                {"type": "image", "image": images_for_processor},
-                                {"type": "text", "text": prompt},
-                            ],
-                        }
-                    ]
-                    out = pipe(text=messages, max_new_tokens=int(max_new_tokens))
-                    if isinstance(out, list) and out:
-                        out0 = out[0]
-                        out_text = out0.get("generated_text") if isinstance(out0, dict) else None
-                        if out_text is None:
-                            out_text = str(out0)
-                    else:
-                        out_text = str(out)
-                except Exception as e:
-                    raise RuntimeError(f"LLaVA pipeline inference failed: {e}") from e
-            else:
-                # Qwen2-VL: structured chat template with {"type": "image"} blocks.
-                # LLaVA(-Next): also prefers structured chat template; avoid manual <image> token counting.
-                text: str
-                if model_key == "llavanext":
-                    # Follow the official LLaVA Interleave HF example: text first, then image placeholder.
-                    # This avoids internal image/text alignment errors seen with other orderings.
-                    conversation = [{"role": "user", "content": [{"type": "text", "text": prompt}, {"type": "image"}]}]
-                    try:
-                        text = processor.apply_chat_template(conversation, tokenize=False, add_generation_prompt=True)
-                    except Exception:
-                        text = f"{prompt}\n<image>"
-                elif model_key == "qwen2vl":
-                    content_q: List[Dict[str, Any]] = [{"type": "image"} for _ in images]
-                    content_q.append({"type": "text", "text": prompt})
-                    messages_q = [{"role": "user", "content": content_q}]
-                    try:
-                        text = processor.apply_chat_template(messages_q, tokenize=False, add_generation_prompt=True)
-                    except Exception:
-                        image_placeholder = "<image>"
-                        joined = "\n".join([image_placeholder] * len(images))
-                        text = f"{joined}\n{prompt}"
-                else:
-                    image_placeholder = "<image>"
-                    joined = "\n".join([image_placeholder] * len(images))
-                    text = f"{joined}\n{prompt}"
-
-                # Some processors expect `text` (str) not `text=[...]`.
-                try:
-                    inputs = processor(images=images_for_processor, text=text, return_tensors="pt")
-                except Exception:
-                    try:
-                        inputs = processor(images=images_for_processor, text=[text], return_tensors="pt")
-                    except Exception:
-                        inputs = processor(text=text, images=images_for_processor, return_tensors="pt")
-                if inputs is None:
-                    raise RuntimeError("Processor returned None.")
-
-                # LLaVA(-Next) generation often expects image sizes; ensure present and non-None.
-                if model_key == "llavanext":
-                    try:
-                        image_sizes = inputs.get("image_sizes") if hasattr(inputs, "get") else inputs["image_sizes"]  # type: ignore[index]
-                    except Exception:
-                        image_sizes = None
-                    if image_sizes is None:
-                        h = int(images[0].size[1])
-                        w = int(images[0].size[0])
-                        try:
-                            inputs["image_sizes"] = torch.tensor([[h, w]], device=model.device)  # type: ignore[index]
-                        except Exception:
-                            pass
-
-                inputs = {k: v.to(model.device) if hasattr(v, "to") else v for k, v in inputs.items()}
-
-                gen_kwargs: Dict[str, Any] = {"max_new_tokens": int(max_new_tokens)}
-                if float(temperature) > 0:
-                    gen_kwargs.update({"do_sample": True, "temperature": float(temperature), "top_p": float(EVAL["top_p"])})
-                else:
-                    gen_kwargs["do_sample"] = False
-
-                with torch.inference_mode():
-                    out_ids = model.generate(**inputs, **gen_kwargs)
-
-                in_len = 0
-                try:
-                    input_ids = inputs.get("input_ids") if hasattr(inputs, "get") else inputs["input_ids"]
-                    if input_ids is not None:
-                        in_len = int(input_ids.shape[1])
-                except Exception:
-                    in_len = 0
-                try:
-                    gen_ids = out_ids[:, in_len:] if in_len > 0 else out_ids
-                    out_text = processor.batch_decode(gen_ids, skip_special_tokens=True)[0]
-                except Exception:
-                    out_text = str(out_ids)
-
-            # Ensure parsing always receives a string-like value.
-            if not isinstance(out_text, str):
-                try:
-                    out_text = json.dumps(out_text, ensure_ascii=False)
-                except Exception:
-                    out_text = str(out_text)
-            pred, reasoning = parse_emotion(out_text, options)
-            # Enforce 4AFC scoring: if the model didn't output one of the provided options,
-            # we treat it as a wrong response rather than "unscored".
-            if pred is None:
-                correct = False
-            else:
-                correct = pred == t["label"]
-
-            n_scored += 1
-            n_correct += int(correct)
-
-            trials.append(
-                {
-                    **t,
+                    correct = pred == t["label"]
+                n_scored += 1
+                n_correct += int(correct)
+                stage2_block = {
                     "options": options,
+                    "prompt": stage2_prompt,
+                    "prompt_mode": stage2_prompt_mode,
                     "prediction": pred,
                     "correct": bool(correct),
                     "reasoning": reasoning,
-                    "raw_model_output": out_text,
+                    "parse_method": parse_method if stage2_prompt_mode == "finetune_label" else None,
+                    "raw_model_output": out_stage2,
+                }
+
+            trials.append(
+                {
+                    "trial_id": t.get("trial_id"),
+                    "stimulus_path": t.get("stimulus_path"),
+                    "stimulus_relpath": t.get("stimulus_relpath"),
+                    "label": t.get("label"),
+                    "video_path": str(video_path) if video_path else None,
+                    "audio_path": str(audio_path) if audio_path else None,
+                    "audio_resolution_rule": audio_rule,
+                    "frame_indices": frame_indices,
+                    "n_frames_used": mf_meta.get("n_frames_used", len(images)),
+                    "multi_frame_strategy": mf_meta.get("multi_frame_strategy"),
+                    "stage1": stage1_block if stage1_block else None,
+                    "stage2": stage2_block if stage2_block else None,
+                    "error": None,
                 }
             )
         except Exception as e:
@@ -995,10 +785,17 @@ def run_evaluation(
                 msg = f"{type(e).__name__}: {msg}"
             trials.append(
                 {
-                    **t,
-                    "options": options,
-                    "prediction": None,
-                    "correct": None,
+                    "trial_id": t.get("trial_id"),
+                    "stimulus_path": t.get("stimulus_path"),
+                    "label": t.get("label"),
+                    "stage1": None,
+                    "stage2": {
+                        "options": options,
+                        "prediction": None,
+                        "correct": None,
+                    }
+                    if stage in {"both", "stage2"}
+                    else None,
                     "error": msg,
                     "traceback": traceback.format_exc(limit=6),
                 }
@@ -1014,28 +811,78 @@ def run_evaluation(
         ci_low, ci_high = (None, None)
         p_binom = None
 
+    human_bench = _lookup_human_benchmark(dataset_key, condition)
+    p_vs_human = None
+    p_vs_human_bonf = None
+    if n_scored > 0 and human_bench is not None:
+        h_acc = float(human_bench["accuracy"])
+        h_n = int(human_bench["n"])
+        p_vs_human = two_proportion_ztest_vs_human(
+            n_correct, n_scored, int(round(h_acc * h_n)), h_n
+        )
+        p_vs_human_bonf = bonferroni_correction([p_vs_human], CONFIRMATORY_N_MODELS)[0]
+
+    ent_arr = [x for x in entropies if x == x]
+    if ent_arr:
+        mean_sem = float(np.mean(ent_arr))
+        median_sem = float(np.median(ent_arr))
+        std_sem = float(np.std(ent_arr))
+    else:
+        mean_sem = median_sem = std_sem = None
+
     metrics: Dict[str, Any] = {
+        "protocol_version": PROTOCOL_VERSION,
+        "frame_policy": fp_tag,
+        "frame_mode": frame_mode_key,
+        "enforce_multi_frame": enforce_multi_frame,
+        "fps": fps,
+        "max_frames": max_frames,
+        "primary_outcomes": ["accuracy", "semantic_entropy"],
         "accuracy": accuracy,
         "accuracy_wilson_ci_95": [ci_low, ci_high],
         "p_binom_gt_chance": p_binom,
+        "p_vs_human_benchmark": p_vs_human,
+        "p_vs_human_benchmark_bonferroni": p_vs_human_bonf,
+        "human_benchmark": human_bench,
+        "condition": condition,
+        "stage1_policy": "free_response_semantic_entropy_all_conditions",
+        "stage2_prompt_mode": stage2_prompt_mode,
+        "mean_semantic_entropy": mean_sem,
+        "median_semantic_entropy": median_sem,
+        "std_semantic_entropy": std_sem,
         "n_trials": n_trials,
         "n_scored": n_scored,
         "n_correct": n_correct,
         "seed": seed,
         "model": model_key,
         "dataset": dataset_key,
-        "n_frames": n_frames,
         "temperature": float(temperature),
+        "embedding_model": EMBEDDING_MODEL,
+        "entropy_temperature": ENTROPY_TEMPERATURE,
+        "entropy_log_base": ENTROPY_LOG_BASE,
+        "entropy_exclude_labels": list(ENTROPY_EXCLUDE_LABELS),
+        "entropy_rich_label_embeddings": ENTROPY_USE_RICH_LABEL_EMBEDDINGS,
+        "entropy_collapse_intensity": ENTROPY_COLLAPSE_INTENSITY,
+        "entropy_definition": (
+            "primary semantic_entropy = H over base emotions after softmax on "
+            f"{len(entropy_labels)} fine labels (neutral excluded), rich label prompts, "
+            "intensity collapsed"
+            if ENTROPY_COLLAPSE_INTENSITY
+            else "semantic_entropy over fine labels (neutral excluded)"
+        ),
+        "chain_stages": CHAIN_STAGES,
+        "stage": stage,
         "device": str(device),
         "dataset_root": str(dataset_root),
         "manifest": str(manifest) if manifest is not None else None,
         "created_at_utc": datetime.now(timezone.utc).isoformat(),
-        "max_new_tokens": int(max_new_tokens),
-        "evaluator_version": "2026-04-01-internvl-prepare-inputs-cache",
+        "evaluator_version": "protocol-v2-two-stage",
         "run_metadata": collect_run_metadata(),
+        "lora_adapter": str(lora_adapter) if lora_adapter is not None else None,
         "trials": trials,
     }
     return metrics
+
 
 
 def main() -> None:
@@ -1055,10 +902,41 @@ def main() -> None:
         help="Dataset key defined in config.DATASETS.",
     )
     parser.add_argument(
+        "--max_frames",
+        type=int,
+        default=FRAME_POLICY["max_frames"],
+        help="Max frames per video (protocol v2: 1 fps, cap at this value).",
+    )
+    parser.add_argument(
+        "--fps",
+        type=float,
+        default=FRAME_POLICY["fps"],
+        help="Frames per second of video duration to sample.",
+    )
+    parser.add_argument(
         "--n_frames",
         type=int,
-        default=EVAL["n_frames_default"],
-        help="Number of frames per video to include in the prompt.",
+        default=None,
+        help="Deprecated alias for --max_frames.",
+    )
+    parser.add_argument(
+        "--stage",
+        type=str,
+        default="both",
+        choices=["both", "stage1", "stage2"],
+        help="Run Stage 1 (free response), Stage 2 (4AFC), or both.",
+    )
+    parser.add_argument(
+        "--condition",
+        type=str,
+        default="video_only",
+        choices=list(MODALITY_CONDITIONS),
+        help="Modality ablation: video_only, audio_only, or multimodal.",
+    )
+    parser.add_argument(
+        "--skip_entropy",
+        action="store_true",
+        help="Debug only: skip semantic entropy computation.",
     )
     parser.add_argument(
         "--output",
@@ -1097,38 +975,76 @@ def main() -> None:
         help="Sampling temperature for generation.",
     )
     parser.add_argument(
-        "--max_new_tokens",
-        type=int,
-        default=128,
-        help="Max new tokens to generate per trial.",
+        "--stage2_prompt_mode",
+        type=str,
+        default="4afc",
+        choices=["4afc", "finetune_label"],
+        help="Stage 2 prompt: standard 4AFC or finetune-style LABEL: (in-distribution readout).",
     )
-
+    parser.add_argument(
+        "--frame_mode",
+        type=str,
+        default=None,
+        choices=list(FRAME_POLICY.get("modes", {}).keys()) or None,
+        help="Frame presentation mode: composite_grid (default) or native_video.",
+    )
+    parser.add_argument(
+        "--lora_adapter",
+        type=Path,
+        default=None,
+        help="Path to PEFT LoRA adapter directory (fine-tuned checkpoint).",
+    )
     args = parser.parse_args()
+    max_frames = args.max_frames if args.n_frames is None else args.n_frames
+    fps, max_frames, _, frame_mode_key = resolve_frame_mode_policy(
+        args.frame_mode, args.fps, max_frames
+    )
+    fp = frame_policy_tag(fps, max_frames, frame_mode_key)
 
     if args.output is None:
         default_dir = LOCAL_RESULTS_DIR / "baseline" / args.dataset / args.model
         default_dir.mkdir(parents=True, exist_ok=True)
-        args.output = default_dir / f"baseline_{args.dataset}_{args.model}_frames{args.n_frames}_seed{args.seed}.json"
+        if args.stage2_prompt_mode == "finetune_label":
+            default_dir = LOCAL_RESULTS_DIR / "finetune" / "eu_post_ft"
+            args.output = (
+                default_dir
+                / f"eval_v2_{args.dataset}_{args.model}_{args.condition}_finetune_prompt_seed{args.seed}.json"
+            )
+        else:
+            args.output = (
+                default_dir
+                / f"eval_v2_{args.dataset}_{args.model}_{args.condition}_{fp}_two_stage_seed{args.seed}.json"
+            )
     else:
         args.output.parent.mkdir(parents=True, exist_ok=True)
 
     metrics = run_evaluation(
         model_key=args.model,
         dataset_key=args.dataset,
-        n_frames=args.n_frames,
         output_path=args.output,
         seed=args.seed,
         data_root=args.data_root,
         manifest=args.manifest,
         max_trials=args.max_trials,
         temperature=args.temperature,
-        max_new_tokens=args.max_new_tokens,
+        max_frames=max_frames,
+        fps=args.fps,
+        stage=args.stage,
+        condition=args.condition,
+        skip_entropy=args.skip_entropy,
+        lora_adapter=args.lora_adapter,
+        stage2_prompt_mode=args.stage2_prompt_mode,
+        frame_mode=args.frame_mode,
     )
 
-    # Always write a results artifact (even if metrics are placeholders).
     with args.output.open("w", encoding="utf-8") as f:
         json.dump(metrics, f, indent=2, sort_keys=True, default=str)
         f.write("\n")
+
+    csv_path = args.output.with_name(
+        f"{args.model}_{args.dataset}_{args.condition}_results.csv"
+    )
+    write_results_csv(metrics, csv_path)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,21 @@
+name: tests
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install pytest
+      - name: Parser, judge, scorer, and artifact pipeline tests
+        run: pytest tests/test_parse_emotion.py tests/test_free_response_judge.py tests/test_selective_prediction.py tests/test_tolerant_parse.py tests/test_semantic_entropy.py tests/test_eu_emotion_definitions.py tests/test_artifact_pipeline.py tests/test_artifact_results_table.py -q
