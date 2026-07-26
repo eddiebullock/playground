@@ -51,6 +51,7 @@ def resolve_trial_extraction_prompt(
     seed: int,
     trial_index: int,
     global_prompt: Optional[str] = None,
+    n_options: int = 4,
 ) -> str:
     """Return the forward prompt for one trial."""
     if global_prompt is not None:
@@ -58,7 +59,7 @@ def resolve_trial_extraction_prompt(
     if prompt_mode == "4afc":
         pool = resolve_eu_emotion_pool()
         options = resolve_candidate_labels(
-            dict(trial), pool, seed=seed, trial_index=trial_index
+            dict(trial), pool, seed=seed, trial_index=trial_index, n_options=n_options
         )
         return build_4afc_prompt(options, condition=condition_modality)
     return default_extraction_prompt(condition=condition_modality)
@@ -132,6 +133,7 @@ def extract_activations(
     prompt: Optional[str] = None,
     prompt_mode: PromptMode = "free_response",
     pooling: Optional[PoolingMode] = None,
+    n_options: Optional[int] = None,
 ) -> Dict[str, Any]:
     trials, _labels = load_eu_emotions_manifest(manifest, dataset_root)
     if max_trials is not None:
@@ -142,6 +144,14 @@ def extract_activations(
         raise ValueError(f"Invalid modality {modality}")
     if prompt_mode not in {"free_response", "4afc"}:
         raise ValueError(f"Invalid prompt_mode={prompt_mode}")
+
+    if n_options is None:
+        from scripts.evaluate import manifest_n_options
+
+        n_options = manifest_n_options(manifest)
+    if n_options is None:
+        n_options = 4
+    n_options = int(n_options)
 
     pool_mode: PoolingMode = pooling or default_pooling_for_prompt_mode(prompt_mode)
 
@@ -179,6 +189,7 @@ def extract_activations(
                 seed=seed,
                 trial_index=trial_idx,
                 global_prompt=prompt,
+                n_options=n_options,
             )
             video_path, audio_path, _audio_rule = resolve_trial_media(
                 trial_copy,
@@ -237,6 +248,7 @@ def extract_activations(
         "modality": modality,
         "prompt_mode": prompt_mode,
         "pooling": pool_mode,
+        "n_options": n_options,
         "n_layers": nl,
         "layer_map": layer_map,
         "n_trials": len(trials),
@@ -308,6 +320,12 @@ def main() -> None:
         default=None,
         help="Optional fixed prompt for all trials (overrides prompt_mode templates)",
     )
+    ap.add_argument(
+        "--n_options",
+        type=int,
+        default=None,
+        help="Forced-choice size when prompt_mode=4afc (default: manifest n_options or 4).",
+    )
     args = ap.parse_args()
 
     dataset_root = args.data_root or resolve_dataset_root("eu_emotions")
@@ -336,6 +354,7 @@ def main() -> None:
         prompt=args.prompt,
         prompt_mode=args.prompt_mode,
         pooling=args.pooling,
+        n_options=args.n_options,
     )
     print(json.dumps(meta, indent=2))
 

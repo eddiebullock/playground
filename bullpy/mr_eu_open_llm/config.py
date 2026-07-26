@@ -1,10 +1,11 @@
 from pathlib import Path
+import os
 
 
 # Random seeds
 SEED = 42
 
-PROTOCOL_VERSION = "v2-study1-study2"
+PROTOCOL_VERSION = "v2-study3-full-eu-6afc"
 
 # Base directories (local)
 PROJECT_ROOT = Path(__file__).resolve().parent
@@ -18,8 +19,12 @@ LOCAL_CACHE_DIR = LOCAL_DATA_DIR / "cache"
 HPC_USER = "eb2007"
 HPC_LOGIN_HOST = "login.hpc.cam.ac.uk"
 
-HPC_WORK_BASE = Path("/home") / HPC_USER / "rds" / "hpc-work" / "study2"
-HPC_MODELS_DIR = HPC_WORK_BASE / "models"
+# study3 = data/results home for this experiment. Override with MR_EU_HPC_PROJECT=study2 if needed.
+HPC_PROJECT = os.environ.get("MR_EU_HPC_PROJECT", "study3")
+HPC_WORK_BASE = Path("/home") / HPC_USER / "rds" / "hpc-work" / HPC_PROJECT
+HPC_STUDY2_BASE = Path("/home") / HPC_USER / "rds" / "hpc-work" / "study2"
+# Reuse study2 checkpoints/envs (do not retrain for study3 setup).
+HPC_MODELS_DIR = Path(os.environ.get("MR_EU_HPC_MODELS_DIR", str(HPC_STUDY2_BASE / "models")))
 HPC_DATA_DIR = HPC_WORK_BASE / "data"
 HPC_RESULTS_DIR = HPC_WORK_BASE / "results"
 
@@ -63,15 +68,18 @@ def lora_alpha_for_rank(r: int) -> int:
     return 2 * r
 
 
-# Dataset paths
+# Dataset paths (study3: full Faces EDITED + Fixed UK Voices; not the 118-trial subset)
 DATASETS = {
     "eu_emotions": {
         "local": LOCAL_DATA_DIR / "eu_emotions",
         "hpc": HPC_DATA_DIR / "eu_emotions",
-        "manifest_hpc": HPC_DATA_DIR / "eu_emotions_118_manifest.json",
-        "manifest_local": LOCAL_DATA_DIR / "eu_emotions_118_manifest.json",
-        "root_118_hpc": HPC_DATA_DIR / "eu_emotions_118",
+        "manifest_hpc": HPC_DATA_DIR / "eu_emotions_full_manifest.json",
+        "manifest_local": LOCAL_DATA_DIR / "eu_emotions_full_manifest.json",
+        # Legacy study2 118-trial paths (still on study2 disk; do not use for study3 eval)
+        "root_118_hpc": HPC_STUDY2_BASE / "data" / "eu_emotions_118",
         "root_118_local": LOCAL_DATA_DIR / "eu_emotions_118",
+        "manifest_118_hpc": HPC_STUDY2_BASE / "data" / "eu_emotions_118_manifest.json",
+        "manifest_118_local": LOCAL_DATA_DIR / "eu_emotions_118_manifest.json",
     },
     "mindreading": {
         "local": LOCAL_DATA_DIR / "mindreading",
@@ -101,7 +109,8 @@ FRAME_POLICY = {
 }
 
 # Semantic entropy (Stage 1 ambiguity index)
-N_EU_EMOTIONS_LABELS = 27  # full taxonomy (4-AFC foils); entropy pool excludes neutral
+N_EU_EMOTIONS_LABELS = 27  # full taxonomy (6-AFC foils in study3); entropy pool excludes neutral
+N_OPTIONS = 6  # study3 Stage-2 forced choice (study2 used 4)
 ENTROPY_EXCLUDE_LABELS = ("neutral",)
 ENTROPY_USE_RICH_LABEL_EMBEDDINGS = True
 ENTROPY_COLLAPSE_INTENSITY = True  # primary H_sem is over base emotions after collapsing intensity
@@ -163,6 +172,7 @@ TRAINING_DEFAULTS = {
 # Modality-matched EU-Emotions human benchmarks (O'Reilly / Lassalle).
 # TODO: fill accuracy/n from O'Reilly et al. (EU-Emotion Stimulus Set) and
 # Lassalle et al. (EU-Emotion Voice Database) validation papers.
+# Note: published human figures are often 6AFC — aligned with study3 N_OPTIONS.
 HUMAN_BENCHMARKS = {
     "eu_emotion": {
         "video_only": {
@@ -204,7 +214,7 @@ FINETUNE_MODALITY_BY_MODEL = {
 
 EU_EMOTION_LABELS_FILE = LOCAL_DATA_DIR / "eu_emotion_states_list.txt"
 
-CHANCE_LEVEL = 0.25
+CHANCE_LEVEL = 1.0 / float(N_OPTIONS)  # study3 6AFC; study2 was 0.25
 CONFIRMATORY_N_MODELS = len(STUDY_MODELS)
 
 # Catastrophic forgetting threshold (percentage points on EU-Emotions)
@@ -221,7 +231,9 @@ __all__ = [
     "LOCAL_CACHE_DIR",
     "HPC_USER",
     "HPC_LOGIN_HOST",
+    "HPC_PROJECT",
     "HPC_WORK_BASE",
+    "HPC_STUDY2_BASE",
     "HPC_MODELS_DIR",
     "HPC_DATA_DIR",
     "HPC_RESULTS_DIR",
@@ -234,6 +246,7 @@ __all__ = [
     "DATASETS",
     "FRAME_POLICY",
     "N_EU_EMOTIONS_LABELS",
+    "N_OPTIONS",
     "EMBEDDING_MODEL",
     "ENTROPY_TEMPERATURE",
     "ENTROPY_LOG_BASE",

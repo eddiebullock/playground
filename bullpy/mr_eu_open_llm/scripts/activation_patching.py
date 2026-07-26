@@ -33,7 +33,8 @@ from scripts.evaluate import (
     resolve_model_path,
     resolve_trial_media,
 )
-from scripts.model_inference import _generate_gemma4, _gen_kwargs, generate_model_response
+from scripts.model_compat import apply_llavanext_compat
+from scripts.model_inference import _generate_gemma4, generate_model_response
 from scripts.probing import load_trial_ids
 from scripts.prompts import build_4afc_prompt
 from scripts.trial_foils import resolve_candidate_labels, resolve_eu_emotion_pool
@@ -82,45 +83,6 @@ def _count_hook_fires(
     return counts
 
 
-def _generate_via_loaded_model(
-    model_key: str,
-    model: Any,
-    processor: Any,
-    *,
-    prompt: str,
-    images: List[Any],
-    images_for_processor: Any,
-    audio_path: Optional[Path],
-    condition_modality: str,
-    temperature: float,
-    max_new_tokens: int,
-) -> str:
-    """Generate on the in-memory model (PeftModel). Required for patching hooks."""
-    device = "cuda" if torch.cuda.is_available() else "cpu"
-    dtype = torch.bfloat16 if torch.cuda.is_available() else torch.float32
-    inputs = build_forward_inputs(
-        model_key,
-        model,
-        processor,
-        prompt=prompt,
-        images=images,
-        images_for_processor=images_for_processor,
-        device=device,
-        dtype=dtype,
-        audio_path=audio_path,
-        condition=condition_modality,
-    )
-    gen_kwargs = _gen_kwargs(temperature, max_new_tokens)
-    with torch.inference_mode():
-        out_ids = model.generate(**inputs, **gen_kwargs)
-    in_len = 0
-    input_ids = inputs.get("input_ids")
-    if input_ids is not None:
-        in_len = int(input_ids.shape[1])
-    gen_ids = out_ids[:, in_len:] if in_len > 0 else out_ids
-    return processor.batch_decode(gen_ids, skip_special_tokens=True)[0]
-
-
 def resolve_hook_target_for_generation(
     model_key: str,
     model: Any,
@@ -133,6 +95,7 @@ def resolve_hook_target_for_generation(
     seed: int,
     condition_modality: str,
     trial_index: int,
+    n_options: int = 4,
 ) -> HookTarget:
     """Pick the layer block that actually runs during generate (and forward as fallback)."""
 
@@ -149,12 +112,15 @@ def resolve_hook_target_for_generation(
             trial_index=trial_index,
             patcher=None,
             hook_target=None,
+            n_options=n_options,
         )
 
     def _run_forward() -> None:
         trial_copy = dict(trial)
         pool = resolve_eu_emotion_pool()
-        options = resolve_candidate_labels(trial_copy, pool, seed=seed, trial_index=trial_index)
+        options = resolve_candidate_labels(
+            trial_copy, pool, seed=seed, trial_index=trial_index, n_options=n_options
+        )
         prompt = build_4afc_prompt(options, condition=condition_modality)
         video_path, audio_path, _ = resolve_trial_media(
             trial_copy,
@@ -291,6 +257,7 @@ def _load_model_bundle(
         from peft import PeftModel
 
         model = PeftModel.from_pretrained(model, str(checkpoint), is_trainable=False)
+    apply_llavanext_compat(model, model_key)
     model.eval()
     return model, processor, device_s, dtype, model_path
 
@@ -308,10 +275,13 @@ def _generate_4afc(
     trial_index: int = 0,
     patcher: Optional[ActivationPatcher] = None,
     hook_target: Optional[HookTarget] = None,
+    n_options: int = 4,
 ) -> Tuple[Optional[str], str, Optional[str]]:
     trial_copy = dict(trial)
     pool = resolve_eu_emotion_pool()
-    options = resolve_candidate_labels(trial_copy, pool, seed=seed, trial_index=trial_index)
+    options = resolve_candidate_labels(
+        trial_copy, pool, seed=seed, trial_index=trial_index, n_options=n_options
+    )
     prompt = build_4afc_prompt(options, condition=condition_modality)
 
     video_path, audio_path, _ = resolve_trial_media(
@@ -339,7 +309,6 @@ def _generate_4afc(
     dtype = torch.bfloat16 if torch.cuda.is_available() else torch.float32
     cond = (condition_modality or "video_only").strip().lower()
     use_gemma4_native = model_key == "gemma4" and cond in {"audio_only", "multimodal"}
-    use_loaded_model = model_key in {"qwen2vl", "llavanext"}
 
     try:
         if use_gemma4_native:
@@ -352,19 +321,6 @@ def _generate_4afc(
                 condition=cond,
                 device=device,
                 dtype=dtype,
-                temperature=float(EVAL["temperature"]),
-                max_new_tokens=STAGE2_MAX_NEW_TOKENS,
-            )
-        elif use_loaded_model:
-            out = _generate_via_loaded_model(
-                model_key,
-                model,
-                processor,
-                prompt=prompt,
-                images=images,
-                images_for_processor=images_for_processor,
-                audio_path=audio_path,
-                condition_modality=condition_modality,
                 temperature=float(EVAL["temperature"]),
                 max_new_tokens=STAGE2_MAX_NEW_TOKENS,
             )
@@ -385,6 +341,7 @@ def _generate_4afc(
                 pipe_cache={},
                 audio_path=audio_path,
                 condition=condition_modality,
+                prefer_loaded_model=True,
             )
     finally:
         if patcher is not None:
@@ -440,6 +397,7 @@ def run_patching_trial_same_stimulus(
     patch_mode: PatchMode = "last_token",
     model_bundle: Optional[Tuple[Any, Any, str, torch.dtype, Path]] = None,
     hook_target: Optional[HookTarget] = None,
+    n_options: int = 4,
 ) -> Dict[str, Any]:
     if model_bundle is None:
         model_bundle = _load_model_bundle(model_key, checkpoint)
@@ -460,6 +418,7 @@ def run_patching_trial_same_stimulus(
         seed=seed,
         condition_modality=condition_modality,
         trial_index=trial_index,
+        n_options=n_options,
     )
 
     patcher = ActivationPatcher(patch_mode=patch_mode)
@@ -474,6 +433,7 @@ def run_patching_trial_same_stimulus(
         seed=seed,
         condition_modality=condition_modality,
         trial_index=trial_index,
+        n_options=n_options,
         patcher=patcher,
         hook_target=hook_target,
     )
@@ -512,6 +472,7 @@ def run_patching_experiment(
     condition_modality: str = "multimodal",
     patch_mode: PatchMode = "last_token",
     selection_mode: str = "ft_incorrect_same_trial",
+    n_options: int = 4,
 ) -> Dict[str, Any]:
     results: Dict[str, Any] = {
         "model": model_key,
@@ -519,6 +480,7 @@ def run_patching_experiment(
         "peak_layer": peak_layer,
         "patch_mode": patch_mode,
         "selection_mode": selection_mode,
+        "n_options": n_options,
         "checkpoint": str(checkpoint) if checkpoint else None,
         "baseline_activations_dir": str(baseline_activations_dir),
         "n_trials_requested": len(trials),
@@ -572,6 +534,7 @@ def run_patching_experiment(
         seed=seed,
         condition_modality=condition_modality,
         trial_index=trial_index_by_id.get(str(probe_trial.get("trial_id")), 0),
+        n_options=n_options,
     )
     results["hook_target"] = {
         "name": hook_target.name,
@@ -595,6 +558,7 @@ def run_patching_experiment(
             patch_mode=patch_mode,
             model_bundle=model_bundle,
             hook_target=hook_target,
+            n_options=n_options,
         )
         if trial_result.get("prediction_changed"):
             results["n_prediction_changed"] += 1
@@ -696,6 +660,12 @@ def main() -> None:
         action="store_true",
         help="Only patch trials baseline got right (stronger causal contrast).",
     )
+    ap.add_argument(
+        "--n_options",
+        type=int,
+        default=4,
+        help="Forced-choice size (use 6 for study3 full-EU).",
+    )
     args = ap.parse_args()
 
     peak = args.peak_layer
@@ -722,6 +692,7 @@ def main() -> None:
         checkpoint=args.checkpoint,
         condition_modality=args.modality,
         patch_mode=args.patch_mode,
+        n_options=args.n_options,
     )
 
 

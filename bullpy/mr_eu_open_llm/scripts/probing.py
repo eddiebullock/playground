@@ -75,10 +75,47 @@ def probe_layer(
     y: np.ndarray,
     seed: int = SEED,
     n_splits: int = 5,
+    *,
+    allow_random_fallback: bool = False,
 ) -> float:
     eff = _effective_n_splits(len(X), y, n_splits=n_splits)
     if eff is None:
-        return float("nan")
+        if not allow_random_fallback or len(X) < 8:
+            return float("nan")
+        classes, counts = np.unique(y, return_counts=True)
+        keep = {c for c, n in zip(classes, counts) if int(n) >= 2}
+        mask = np.array([yi in keep for yi in y])
+        if int(mask.sum()) < 8:
+            return float("nan")
+        X = X[mask]
+        y = y[mask]
+        from sklearn.model_selection import train_test_split
+
+        accs: List[float] = []
+        for split_seed in range(seed, seed + 3):
+            try:
+                idx = np.arange(len(X))
+                train_idx, test_idx = train_test_split(
+                    idx,
+                    test_size=0.25,
+                    random_state=split_seed,
+                    stratify=y,
+                )
+            except ValueError:
+                continue
+            if len(test_idx) < 2:
+                continue
+            scaler = StandardScaler()
+            Xtr = scaler.fit_transform(X[train_idx])
+            Xte = scaler.transform(X[test_idx])
+            clf = LogisticRegression(
+                multi_class="multinomial",
+                max_iter=2000,
+                random_state=seed,
+            )
+            clf.fit(Xtr, y[train_idx])
+            accs.append(float(clf.score(Xte, y[test_idx])))
+        return float(np.mean(accs)) if accs else float("nan")
     skf = StratifiedKFold(n_splits=eff, shuffle=True, random_state=seed)
     accs = []
     for train_idx, test_idx in skf.split(X, y):
@@ -138,18 +175,27 @@ def run_probing_sweep(
         if low_ids:
             mask = np.array([tid in low_ids for tid in trial_ids])
             if mask.sum() >= 5:
-                low_acc = probe_layer(X[mask], y[mask], seed=seed)
+                low_acc = probe_layer(X[mask], y[mask], seed=seed, allow_random_fallback=True)
                 if low_acc == low_acc:
                     entry["low_ambiguity_accuracy"] = low_acc
         if high_ids:
             mask = np.array([tid in high_ids for tid in trial_ids])
             if mask.sum() >= 5:
-                high_acc = probe_layer(X[mask], y[mask], seed=seed)
+                high_acc = probe_layer(X[mask], y[mask], seed=seed, allow_random_fallback=True)
                 if high_acc == high_acc:
                     entry["high_ambiguity_accuracy"] = high_acc
         layer_results.append(entry)
 
     peak = max(layer_results, key=lambda r: r["cv_accuracy"])
+    peak_entry = next(r for r in layer_results if r["layer_index"] == peak["layer_index"])
+    tertile_summary: Dict = {}
+    if low_ids or high_ids:
+        tertile_summary = {
+            "n_low_ambiguity": len(low_ids),
+            "n_high_ambiguity": len(high_ids),
+            "peak_layer_low_ambiguity_accuracy": peak_entry.get("low_ambiguity_accuracy"),
+            "peak_layer_high_ambiguity_accuracy": peak_entry.get("high_ambiguity_accuracy"),
+        }
     results = {
         "activations_dir": str(activations_dir),
         "eval_json": str(eval_json),
@@ -159,6 +205,7 @@ def run_probing_sweep(
         "peak_layer": peak["layer_index"],
         "peak_accuracy": peak["cv_accuracy"],
         "overall_accuracy": peak["cv_accuracy"],
+        "entropy_tertiles": tertile_summary,
     }
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(results, indent=2) + "\n", encoding="utf-8")
@@ -195,13 +242,13 @@ def run_probing(
     if low_ids:
         mask = np.array([tid in low_ids for tid in trial_ids])
         if mask.sum() >= 5:
-            low_acc = probe_layer(X[mask], y[mask], seed=seed)
+            low_acc = probe_layer(X[mask], y[mask], seed=seed, allow_random_fallback=True)
             if low_acc == low_acc:
                 results["low_ambiguity_accuracy"] = low_acc
     if high_ids:
         mask = np.array([tid in high_ids for tid in trial_ids])
         if mask.sum() >= 5:
-            high_acc = probe_layer(X[mask], y[mask], seed=seed)
+            high_acc = probe_layer(X[mask], y[mask], seed=seed, allow_random_fallback=True)
             if high_acc == high_acc:
                 results["high_ambiguity_accuracy"] = high_acc
     output.parent.mkdir(parents=True, exist_ok=True)

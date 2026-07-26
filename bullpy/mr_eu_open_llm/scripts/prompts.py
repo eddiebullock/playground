@@ -47,6 +47,8 @@ def build_finetune_prompt(*, condition: str = "video_only") -> str:
 
 
 def build_4afc_prompt(options: Sequence[str], *, condition: str = "video_only") -> str:
+    """Build an N-AFC prompt (historically 4; study3 uses 6). Name kept for callers."""
+    n = len(options)
     opts = "\n".join([f"{i+1}) {opt}" for i, opt in enumerate(options)])
     c = (condition or "video_only").strip().lower()
     if c == "audio_only":
@@ -56,7 +58,7 @@ def build_4afc_prompt(options: Sequence[str], *, condition: str = "video_only") 
     else:
         modality = "Analyze video frames only. Choose exactly one label.\n"
     return (
-        f"You are performing a 4-alternative forced-choice mental state recognition task.\n"
+        f"You are performing a {n}-alternative forced-choice mental state recognition task.\n"
         f"{modality}\nOPTIONS:\n{opts}\n\n"
         "Respond with:\nEMOTION: <one of the option labels exactly>\nREASONING: <brief justification>\n"
     )
