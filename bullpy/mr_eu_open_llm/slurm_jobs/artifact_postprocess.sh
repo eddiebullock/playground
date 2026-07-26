@@ -36,7 +36,7 @@ if ((${#ARTIFACTS[@]} > 0)); then
   for f in "${ARTIFACTS[@]}"; do
     CAL_ARGS+=(--input "${f}")
   done
-  python -m scripts.plot_calibration "${CAL_ARGS[@]}"
+  python -m scripts.plot_calibration "${CAL_ARGS[@]}" || echo "WARNING: plot_calibration skipped (no entropy trials in artifacts)"
 fi
 
 echo "Artifact post-processing complete."

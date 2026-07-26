@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-"""Deterministic 4-AFC foil generation (sha256(trial_id|seed))."""
+"""Deterministic N-AFC foil generation (sha256(trial_id|seed); default 4, study3 uses 6)."""
 
 import hashlib
 import random
@@ -71,7 +71,7 @@ def resolve_eu_emotion_pool(
     label_paths: Optional[Sequence[Optional[Path]]] = None,
     trials_fallback: Optional[Sequence[dict]] = None,
 ) -> List[str]:
-    """Full EU emotion label pool for 4-AFC foils (independent of --max_trials slice)."""
+    """Full EU emotion label pool for N-AFC foils (independent of --max_trials slice)."""
     checked: set[str] = set()
     for raw in label_paths or ():
         if raw is None:
@@ -110,16 +110,30 @@ def generate_candidate_labels(
 
 
 def resolve_candidate_labels(
-    trial: dict, emotion_pool: Sequence[str], *, seed: int, trial_index: Optional[int] = None
+    trial: dict,
+    emotion_pool: Sequence[str],
+    *,
+    seed: int,
+    trial_index: Optional[int] = None,
+    n_options: int = 4,
 ) -> List[str]:
+    if n_options < 2:
+        raise ValueError(f"n_options must be >= 2, got {n_options}")
     existing = trial.get("candidate_labels")
-    if isinstance(existing, list) and len(existing) == 4:
+    if isinstance(existing, list) and len(existing) == n_options:
         return list(existing)
     correct_label = trial.get("correct_label") or trial.get("emotion") or trial.get("label")
     if not correct_label:
         raise ValueError(f"Trial missing label (trial_id={trial.get('trial_id')!r})")
     trial_id = trial.get("trial_id") or f"trial_{trial_index if trial_index is not None else 0}"
-    generated = generate_candidate_labels(str(correct_label), emotion_pool, trial_id=str(trial_id), seed=seed)
+    generated = generate_candidate_labels(
+        str(correct_label),
+        emotion_pool,
+        trial_id=str(trial_id),
+        seed=seed,
+        n_options=n_options,
+    )
     trial["candidate_labels"] = generated
     trial["candidate_labels_generated"] = True
+    trial["n_options"] = n_options
     return generated

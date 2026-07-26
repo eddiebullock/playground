@@ -311,6 +311,15 @@ def load_trials_from_manifest(manifest_path: Path, dataset_root: Path) -> Tuple[
     return trials, labels
 
 
+def manifest_n_options(manifest_path: Path) -> Optional[int]:
+    """Read optional top-level n_options from a manifest (e.g. 6 for study3 full-EU)."""
+    obj = json.loads(manifest_path.read_text(encoding="utf-8"))
+    raw = obj.get("n_options")
+    if raw is None:
+        return None
+    return int(raw)
+
+
 def resolve_trial_media(
     trial: Dict[str, Any],
     *,
@@ -464,12 +473,15 @@ def run_evaluation(
     lora_adapter: Optional[Path] = None,
     stage2_prompt_mode: str = "4afc",
     frame_mode: Optional[str] = None,
+    n_options: Optional[int] = None,
 ) -> Dict[str, Any]:
     """
     Protocol v2 two-stage evaluation per trial.
 
     Stage 1 (semantic entropy) runs only for condition=video_only (cross-model comparability).
     Stage 2 uses condition-aware prompts and modality gating.
+    n_options: Stage-2 forced-choice size (default 4; study3 full-EU uses 6). If None,
+    uses manifest n_options when present, else 4.
     """
     if n_frames is not None:
         max_frames = int(n_frames)
@@ -495,10 +507,19 @@ def run_evaluation(
     dataset_root = resolve_dataset_root(dataset_key, override_root=data_root)
     if manifest is not None:
         trials_raw, labels = load_trials_from_manifest(manifest, dataset_root)
+        if n_options is None:
+            n_options = manifest_n_options(manifest)
     elif dataset_key == "eu_emotions":
         trials_raw, labels = list_eu_emotions_trials(dataset_root)
     else:
         trials_raw, labels = ([], [])
+
+    if n_options is None:
+        n_options = 4
+    n_options = int(n_options)
+    if n_options < 2:
+        raise ValueError(f"n_options must be >= 2, got {n_options}")
+    chance_level = 1.0 / float(n_options)
 
     trials_all = list(trials_raw)
     if max_trials is not None:
@@ -577,23 +598,11 @@ def run_evaluation(
     model.eval()
 
     # Model-family specific compatibility tweaks.
-    if model_key == "llavanext":
-        # Some LLaVA checkpoints use a SigLIP vision tower that lacks `.patch_size`,
-        # but downstream utilities may assume it exists.
-        try:
-            vt = getattr(model, "vision_tower", None)
-            if vt is None and hasattr(model, "get_vision_tower"):
-                vt = model.get_vision_tower()
-            if vt is not None and not hasattr(vt, "patch_size"):
-                cfg = getattr(vt, "config", None)
-                ps = getattr(cfg, "patch_size", None) if cfg is not None else None
-                if ps is None:
-                    vision_cfg = getattr(cfg, "vision_config", None) if cfg is not None else None
-                    ps = getattr(vision_cfg, "patch_size", None) if vision_cfg is not None else None
-                if ps is not None:
-                    setattr(vt, "patch_size", ps)
-        except Exception:
-            pass
+    from scripts.model_compat import apply_llavanext_compat, is_peft_model
+
+    apply_llavanext_compat(model, model_key)
+
+    use_peft = lora_adapter is not None or is_peft_model(model)
 
     if dataset_key == "eu_emotions" and emotion_pool:
         entropy_labels = prepare_entropy_label_pool(emotion_pool, exclude=ENTROPY_EXCLUDE_LABELS)
@@ -617,7 +626,9 @@ def run_evaluation(
     for trial_idx, t in enumerate(trials_raw):
         trial_copy = dict(t)
         options = (
-            resolve_candidate_labels(trial_copy, emotion_pool, seed=seed, trial_index=trial_idx)
+            resolve_candidate_labels(
+                trial_copy, emotion_pool, seed=seed, trial_index=trial_idx, n_options=n_options
+            )
             if stage in {"both", "stage2"}
             else []
         )
@@ -675,6 +686,7 @@ def run_evaluation(
                     pipe_cache=pipe_cache,
                     audio_path=audio_path,
                     condition=condition,
+                    prefer_loaded_model=use_peft,
                 )
                 free_text = strip_boilerplate_response(out_stage1)
                 entropy_bundle: Dict[str, Any] = {}
@@ -736,6 +748,7 @@ def run_evaluation(
                     pipe_cache=pipe_cache,
                     audio_path=audio_path,
                     condition=condition,
+                    prefer_loaded_model=use_peft,
                 )
                 pred, reasoning, parse_method = parse_emotion_tolerant(
                     out_stage2, options, full_label_pool=emotion_pool
@@ -805,7 +818,7 @@ def run_evaluation(
     if n_scored > 0:
         accuracy = n_correct / n_scored
         ci_low, ci_high = wilson_ci(n_correct, n_scored)
-        p_binom = binomial_vs_chance(n_correct, n_scored)
+        p_binom = binomial_vs_chance(n_correct, n_scored, p0=chance_level)
     else:
         accuracy = None
         ci_low, ci_high = (None, None)
@@ -847,6 +860,8 @@ def run_evaluation(
         "condition": condition,
         "stage1_policy": "free_response_semantic_entropy_all_conditions",
         "stage2_prompt_mode": stage2_prompt_mode,
+        "n_options": n_options,
+        "chance_level": chance_level,
         "mean_semantic_entropy": mean_sem,
         "median_semantic_entropy": median_sem,
         "std_semantic_entropy": std_sem,
@@ -924,7 +939,7 @@ def main() -> None:
         type=str,
         default="both",
         choices=["both", "stage1", "stage2"],
-        help="Run Stage 1 (free response), Stage 2 (4AFC), or both.",
+        help="Run Stage 1 (free response), Stage 2 (N-AFC), or both.",
     )
     parser.add_argument(
         "--condition",
@@ -975,11 +990,17 @@ def main() -> None:
         help="Sampling temperature for generation.",
     )
     parser.add_argument(
+        "--n_options",
+        type=int,
+        default=None,
+        help="Stage-2 forced-choice size (default: manifest n_options if set, else 4). Use 6 for study3.",
+    )
+    parser.add_argument(
         "--stage2_prompt_mode",
         type=str,
         default="4afc",
         choices=["4afc", "finetune_label"],
-        help="Stage 2 prompt: standard 4AFC or finetune-style LABEL: (in-distribution readout).",
+        help="Stage 2 prompt: standard N-AFC (4afc mode) or finetune-style LABEL: (in-distribution readout).",
     )
     parser.add_argument(
         "--frame_mode",
@@ -1035,6 +1056,7 @@ def main() -> None:
         lora_adapter=args.lora_adapter,
         stage2_prompt_mode=args.stage2_prompt_mode,
         frame_mode=args.frame_mode,
+        n_options=args.n_options,
     )
 
     with args.output.open("w", encoding="utf-8") as f:
