@@ -27,6 +27,16 @@ venv/
 *.swp
 *.swo
 
+# Cursor / local agent tooling (do not publish)
+.cursor/
+**/.cursor/
+agent-transcripts/
+**/agent-transcripts/
+*_AGENT_PROMPT.md
+**/PROTOCOL_V2_AGENT_PROMPT.md
+**/STUDY2_PREP_AGENT_PROMPT.md
+**/ARTIFACT_COMPLETION_AGENT_PROMPT.md
+
 # Data files 
 *.csv
 *.xlsx
