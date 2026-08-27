@@ -3,7 +3,7 @@
 **Authors**: _TBD_
 
 ## Abstract
-We evaluate five large language models (Gemini 3 Pro, Gemini 3 Flash, GPT-5, GPT-5 Mini, Claude Opus 4.5) on two mental state recognition datasets—EU-Emotion (27 mental states) and Mindreading (357 mental states)—using a four-alternative forced-choice paradigm.
+We evaluate large language models on two mental state recognition datasets—EU-Emotion (27 mental states) and Mindreading (357 mental states)—using a four-alternative forced-choice paradigm. **Gemini 3 Flash** provides audio-capable modality ablations; additional models are evaluated video-only where applicable. Gemini 3 Pro was omitted from the main study after pilot evaluation (see `analysis/study_config.py`).
 
 ## Repository structure
 - **`models/`**: Model wrappers/adapters and shared inference utilities for each LLM provider.
@@ -35,6 +35,15 @@ Run the evaluation entrypoint:
 ```bash
 python experiments/run_evaluation.py
 ```
+
+Run analyses on completed results (excludes `gemini-3-pro` by default):
+
+```bash
+cd publication_repo
+python analysis/run_study_analysis.py --results-dir results/full_run
+```
+
+Outputs land in `analysis_outputs/` (`statistical_analysis.json`, `per_emotion_breakdown.csv`).
 
 ## Data availability
 The EU-Emotion and Mindreading stimuli cannot be included in this repository due to licensing restrictions. Please obtain the datasets from the original sources:

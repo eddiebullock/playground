@@ -101,9 +101,10 @@ def main() -> None:
     if not runner.exists():
         raise FileNotFoundError(f"Missing runner: {runner}")
 
-    # EU: video-only for all models; audio-only and multimodal for Gemini (audio-capable).
-    eu_models = ["gemini-3-pro", "gemini-3-flash", "gpt-5", "gpt-5-mini", "claude-opus-4-5"]
-    for m in eu_models:
+    # EU: video-only for all study models; audio/multimodal for Gemini 3 Flash only.
+    from analysis.study_config import GEMINI_AUDIO_MODEL, VIDEO_ONLY_MODELS
+
+    for m in VIDEO_ONLY_MODELS:
         _run(
             _evaluation_cmd(
                 runner=runner,
@@ -119,7 +120,7 @@ def main() -> None:
         )
 
     # EU multimodal: face trials + UK Voices pairing via eu_audio_resolver (emotion label).
-    for m in ["gemini-3-pro", "gemini-3-flash"]:
+    for m in [GEMINI_AUDIO_MODEL]:
         _run(
             _evaluation_cmd(
                 runner=runner,
@@ -134,7 +135,7 @@ def main() -> None:
             )
         )
 
-    for m in ["gemini-3-pro", "gemini-3-flash"]:
+    for m in [GEMINI_AUDIO_MODEL]:
         _run(
             _evaluation_cmd(
                 runner=runner,
@@ -149,9 +150,9 @@ def main() -> None:
             )
         )
 
-    # Mindreading: Gemini modality ablations; item-folder T audio (not Emotions/Audio/).
+    # Mindreading: Gemini 3 Flash modality ablations; item-folder audio (not Emotions/Audio/).
     for cond in ["video_only", "audio_only", "multimodal"]:
-        for m in ["gemini-3-pro", "gemini-3-flash"]:
+        for m in [GEMINI_AUDIO_MODEL]:
             _run(
                 _evaluation_cmd(
                     runner=runner,

@@ -91,3 +91,4 @@ configs/*secret*.json
 publication_repo/.deps/
 publication_repo/cache/
 publication_repo/results/
+publication_repo/analysis_outputs/

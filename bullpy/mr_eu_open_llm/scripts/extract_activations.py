@@ -134,6 +134,7 @@ def extract_activations(
     prompt_mode: PromptMode = "free_response",
     pooling: Optional[PoolingMode] = None,
     n_options: Optional[int] = None,
+    human_entropy_lookup: Optional[Path] = None,
 ) -> Dict[str, Any]:
     trials, _labels = load_eu_emotions_manifest(manifest, dataset_root)
     if max_trials is not None:
@@ -154,6 +155,12 @@ def extract_activations(
     n_options = int(n_options)
 
     pool_mode: PoolingMode = pooling or default_pooling_for_prompt_mode(prompt_mode)
+
+    human_options: Dict[str, Any] = {}
+    if human_entropy_lookup is not None and human_entropy_lookup.exists():
+        human_options = json.loads(human_entropy_lookup.read_text(encoding="utf-8")).get(
+            "trials", {}
+        )
 
     fps_val = float(fps if fps is not None else FRAME_POLICY["fps"])
     max_frames_val = int(max_frames if max_frames is not None else FRAME_POLICY["max_frames"])
@@ -181,6 +188,9 @@ def extract_activations(
         trial_id = str(t.get("trial_id", ""))
         trial_ids.append(trial_id)
         trial_copy = dict(t)
+        human_entry = human_options.get(trial_id)
+        if human_entry and len(human_entry.get("human_options", [])) == n_options:
+            trial_copy["candidate_labels"] = list(human_entry["human_options"])
         try:
             trial_prompt = resolve_trial_extraction_prompt(
                 trial_copy,
@@ -257,6 +267,9 @@ def extract_activations(
         "max_frames": max_frames_val,
         "prompt": prompt if prompt is not None else None,
         "prompt_note": "per_trial_4afc" if prompt_mode == "4afc" and prompt is None else "fixed",
+        "human_options_source": (
+            str(human_entropy_lookup) if human_options and human_entropy_lookup else None
+        ),
         "checkpoint": str(checkpoint) if checkpoint else None,
         "saved_layers": saved_layers,
         "n_errors": len(errors),
@@ -326,6 +339,12 @@ def main() -> None:
         default=None,
         help="Forced-choice size when prompt_mode=4afc (default: manifest n_options or 4).",
     )
+    ap.add_argument(
+        "--human_options",
+        type=Path,
+        default=None,
+        help="eu_emotions_human_entropy.json — use human 6AFC option sets (like evaluate.py).",
+    )
     args = ap.parse_args()
 
     dataset_root = args.data_root or resolve_dataset_root("eu_emotions")
@@ -355,6 +374,7 @@ def main() -> None:
         prompt_mode=args.prompt_mode,
         pooling=args.pooling,
         n_options=args.n_options,
+        human_entropy_lookup=args.human_options,
     )
     print(json.dumps(meta, indent=2))
 

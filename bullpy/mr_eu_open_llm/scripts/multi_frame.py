@@ -1,8 +1,8 @@
 """
 Fair multi-frame input across architectures (protocol v2).
 
-- Qwen2-VL: native multi-image chat template.
-- LLaVA-NeXT, Gemma4: composite frame grid when len(images) > 1
+- Qwen2-VL, Qwen3-VL: native multi-image chat template.
+- LLaVA-NeXT, Gemma4, Molmo2: composite frame grid when len(images) > 1
   so all models receive the same temporal information without silent 1-frame truncation.
 """
 
@@ -12,6 +12,9 @@ import math
 from typing import Any, Dict, List, Tuple
 
 from PIL import Image
+
+# Models whose processor accepts a list of frames directly (no composite grid).
+NATIVE_MULTI_IMAGE_MODELS = {"qwen2vl", "qwen3vl"}
 
 
 def make_frame_grid(images: List[Image.Image], max_cells: int = 8, cell_size: Tuple[int, int] = (336, 336)) -> Image.Image:
@@ -54,7 +57,7 @@ def prepare_images_for_model(
         raise ValueError("No frames provided")
 
     if not enforce_multi_frame or len(images) == 1:
-        if model_key == "qwen2vl" and len(images) > 1:
+        if model_key in NATIVE_MULTI_IMAGE_MODELS and len(images) > 1:
             meta["multi_frame_strategy"] = "native_list"
             return images, meta
         single = images[0]
@@ -62,7 +65,7 @@ def prepare_images_for_model(
         meta["multi_frame_strategy"] = "single_first_frame"
         return single, meta
 
-    if model_key == "qwen2vl":
+    if model_key in NATIVE_MULTI_IMAGE_MODELS:
         meta["multi_frame_strategy"] = "native_list"
         return images, meta
 

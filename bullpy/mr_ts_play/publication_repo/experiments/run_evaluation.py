@@ -37,6 +37,7 @@ from mindreading_audio_resolver import (
     extract_audio_from_video,
     has_audio_stream,
     resolve_item_folder_audio,
+    resolve_mr_v_video_from_t_stimulus,
     save_audio_mapping_audit as save_mr_audio_audit,
 )
 from trial_foils import (
@@ -240,20 +241,24 @@ def run_evaluation(
             else:
                 raise ValueError(f"Unknown condition: {condition}")
 
-            # If Mindreading trial stimulus points to an audio-only .mov (T marker), and we are in multimodal,
-            # try to locate a corresponding V video clip in the same folder (same code + same tail label).
-            if dataset_name == "mindreading" and condition == "multimodal" and audio_path is not None and video_path is None:
-                ap = Path(audio_path)
-                try:
-                    name = ap.name
-                    if "T" in name and "V" not in name:
-                        prefix = name[:7]
-                        tail = name.split("T", 1)[1]
-                        candidates = sorted(ap.parent.glob(f"{prefix}*V{tail}"))
-                        if candidates:
-                            video_path = str(candidates[0])
-                except Exception:
-                    pass
+            # Mindreading T-marker stimuli point at audio-only .mov files. For video_only and
+            # multimodal, resolve the paired V video clip so all models see the same face video.
+            if (
+                dataset_name == "mindreading"
+                and condition in {"video_only", "multimodal"}
+                and video_path is None
+                and _is_audio_path(resolved_stimulus)
+            ):
+                paired_v = resolve_mr_v_video_from_t_stimulus(Path(resolved_stimulus))
+                if paired_v is not None:
+                    video_path = str(paired_v)
+                    trial["video_resolution_rule"] = "t_stimulus_paired_v"
+                elif condition == "video_only":
+                    logger.warning(
+                        "No paired V video for T stimulus %s (trial_id=%s); skipping API call",
+                        resolved_stimulus,
+                        trial_id,
+                    )
 
             # Only Gemini models are evaluated with audio input in this pipeline.
             if not model_name.startswith("gemini"):
@@ -292,11 +297,16 @@ def run_evaluation(
                             logger.exception("Failed to extract wav from %s", audio_path)
                             audio_path = None
 
-            # EU multimodal: pair face video with UK Voices clip by emotion label.
-            if dataset_name == "eu_emotion" and model_name.startswith("gemini") and condition == "multimodal":
-                if audio_path is None and video_path is not None:
+            # EU audio/multimodal: pair UK Voices (or sidecar) by emotion label.
+            # audio_only clears video_path above; resolve from video_path_for_audio_resolution.
+            if dataset_name == "eu_emotion" and model_name.startswith("gemini") and condition in {
+                "audio_only",
+                "multimodal",
+            }:
+                eu_video_for_audio = video_path if condition == "multimodal" else video_path_for_audio_resolution
+                if audio_path is None and eu_video_for_audio is not None:
                     ap, rule = resolve_eu_multimodal_audio(
-                        Path(video_path),
+                        Path(eu_video_for_audio),
                         emotion_label=correct_label,
                         base_data_dir=base_data_dir,
                         trial_id=str(trial_id),
@@ -336,7 +346,14 @@ def run_evaluation(
                     "raw_response": raw_response,
                 }
             )
-        except Exception:
+        except Exception as e:
+            if "daily request quota exceeded" in str(e).casefold():
+                logger.error(
+                    "Stopping evaluation: Gemini daily quota exceeded (trial_id=%s). "
+                    "Rerun the same command after RPD resets; cached trials will be skipped.",
+                    trial.get("trial_id"),
+                )
+                raise
             logger.exception("Failed processing trial: %s", trial.get("trial_id"))
             n_unparseable += 1
             rows.append(

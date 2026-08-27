@@ -97,7 +97,7 @@ def build_forward_inputs(
 
     # Qwen2-VL / LLaVA-style
     n_img = len(images) if isinstance(images, list) else 1
-    if model_key == "qwen2vl":
+    if model_key in {"qwen2vl", "qwen3vl"}:
         content_q: List[Dict[str, Any]] = [{"type": "image"} for _ in range(n_img)]
         content_q.append({"type": "text", "text": prompt})
         messages_q = [{"role": "user", "content": content_q}]
@@ -113,6 +113,14 @@ def build_forward_inputs(
             text = processor.apply_chat_template(conversation, tokenize=False, add_generation_prompt=True)
         except Exception:
             text = f"{prompt}\n<image>"
+    elif model_key == "molmo2":
+        messages_m = [
+            {"role": "user", "content": [{"type": "image"}, {"type": "text", "text": prompt}]}
+        ]
+        try:
+            text = processor.apply_chat_template(messages_m, tokenize=False, add_generation_prompt=True)
+        except Exception:
+            text = f"{prompt}\n<image>"
     else:
         text = f"{prompt}\n<image>"
 
@@ -126,6 +134,12 @@ def build_forward_inputs(
     if model_key == "llavanext":
         inputs = dict(inputs)
         inputs.pop("image_sizes", None)
+
+    if model_key == "molmo2":
+        # Molmo is trained with causal attention only; HF emits token_type_ids to switch
+        # image tokens to bidirectional attention, which changes the model's outputs.
+        inputs = dict(inputs)
+        inputs.pop("token_type_ids", None)
 
     model_device = resolve_model_device(model)
 

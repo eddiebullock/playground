@@ -7,6 +7,7 @@ repo are vision-only; audio ablations are gated via config.MODEL_AUDIO_CAPABILIT
 
 from __future__ import annotations
 
+import hashlib
 import json
 from pathlib import Path
 from typing import Any, Dict, List, Optional
@@ -18,7 +19,22 @@ from scripts.activation_forward import build_forward_inputs
 from scripts.model_compat import is_peft_model
 
 
-def _gen_kwargs(temperature: float, max_new_tokens: int) -> Dict[str, Any]:
+def seed_generation(seed: int, *parts: Any) -> None:
+    """
+    Make a sampled generation reproducible.
+
+    Sampling is on whenever temperature > 0, but nothing seeded the RNG, so repeated
+    forced-choice draws (RQ1.1b) were not reproducible run to run. Derived the same way
+    as foil selection in trial_foils.py: sha256 over the joined parts.
+    """
+    payload = "|".join([str(seed), *(str(p) for p in parts)])
+    digest = hashlib.sha256(payload.encode("utf-8")).hexdigest()
+    torch.manual_seed(int(digest[:16], 16))
+
+
+def _gen_kwargs(
+    temperature: float, max_new_tokens: int, num_return_sequences: int = 1
+) -> Dict[str, Any]:
     gen_kwargs: Dict[str, Any] = {"max_new_tokens": int(max_new_tokens)}
     if float(temperature) > 0:
         gen_kwargs.update(
@@ -26,7 +42,37 @@ def _gen_kwargs(temperature: float, max_new_tokens: int) -> Dict[str, Any]:
         )
     else:
         gen_kwargs["do_sample"] = False
+    if int(num_return_sequences) > 1:
+        if not gen_kwargs["do_sample"]:
+            raise ValueError("num_return_sequences > 1 requires temperature > 0")
+        gen_kwargs["num_return_sequences"] = int(num_return_sequences)
     return gen_kwargs
+
+
+def _first_or_empty(texts: List[str]) -> str:
+    return texts[0] if texts else ""
+
+
+def _decode_generated_sequences(
+    processor: Any, out_ids: Any, inputs: Dict[str, Any]
+) -> List[str]:
+    """Decode every returned sequence; the single-sequence case is just the first row."""
+    in_len = 0
+    input_ids = inputs.get("input_ids")
+    if input_ids is not None:
+        in_len = int(input_ids.shape[1])
+
+    gen_ids = out_ids if out_ids.shape[1] <= in_len else out_ids[:, in_len:]
+    try:
+        return list(processor.batch_decode(gen_ids, skip_special_tokens=True))
+    except Exception:
+        tok = getattr(processor, "tokenizer", None)
+        if tok is None:
+            return [str(gen_ids)]
+        try:
+            return [tok.decode(row, skip_special_tokens=True) for row in gen_ids]
+        except Exception:
+            return [str(gen_ids)]
 
 
 def _decode_generated_ids(processor: Any, out_ids: Any, inputs: Dict[str, Any]) -> str:
@@ -87,7 +133,8 @@ def _generate_gemma4(
     dtype: torch.dtype,
     temperature: float,
     max_new_tokens: int,
-) -> str:
+    num_return_sequences: int = 1,
+) -> List[str]:
     content = _build_gemma4_content(
         prompt,
         condition=condition,
@@ -123,11 +170,11 @@ def _generate_gemma4(
         for k, v in inputs.items()
     }
 
-    gen_kwargs = _gen_kwargs(temperature, max_new_tokens)
+    gen_kwargs = _gen_kwargs(temperature, max_new_tokens, num_return_sequences)
     with torch.inference_mode():
         out_ids = model.generate(**inputs, **gen_kwargs)
 
-    return _decode_generated_ids(processor, out_ids, inputs)
+    return _decode_generated_sequences(processor, out_ids, inputs)
 
 
 def _generate_on_loaded_model(
@@ -144,7 +191,8 @@ def _generate_on_loaded_model(
     dtype: torch.dtype,
     temperature: float,
     max_new_tokens: int,
-) -> str:
+    num_return_sequences: int = 1,
+) -> List[str]:
     """Generate with the in-memory model (required for PeftModel + patching hooks)."""
     inputs = build_forward_inputs(
         model_key,
@@ -158,7 +206,7 @@ def _generate_on_loaded_model(
         audio_path=audio_path,
         condition=condition,
     )
-    gen_kwargs = _gen_kwargs(temperature, max_new_tokens)
+    gen_kwargs = _gen_kwargs(temperature, max_new_tokens, num_return_sequences)
     tok = getattr(processor, "tokenizer", None)
     if tok is not None:
         pad_id = getattr(tok, "pad_token_id", None)
@@ -170,7 +218,31 @@ def _generate_on_loaded_model(
 
     with torch.inference_mode():
         out_ids = model.generate(**inputs, **gen_kwargs)
-    return _decode_generated_ids(processor, out_ids, inputs)
+    return _decode_generated_sequences(processor, out_ids, inputs)
+
+
+def _extract_pipeline_completion(raw: Any) -> Optional[str]:
+    """
+    `pipeline` returns the whole conversation when given chat-format input, so the
+    completion has to be pulled out of the trailing assistant turn.
+    """
+    if raw is None or isinstance(raw, str):
+        return raw
+    if isinstance(raw, list) and raw:
+        last = raw[-1]
+        if isinstance(last, dict):
+            content = last.get("content")
+            if isinstance(content, str):
+                return content
+            if isinstance(content, list):
+                parts = [
+                    p.get("text", "")
+                    for p in content
+                    if isinstance(p, dict) and p.get("type") == "text"
+                ]
+                if parts:
+                    return "\n".join(parts)
+    return None
 
 
 def _should_use_loaded_model(
@@ -182,13 +254,123 @@ def _should_use_loaded_model(
 ) -> bool:
     if prefer_loaded_model or is_peft_model(model):
         return True
-    if model_key == "qwen2vl":
+    if model_key in {"qwen2vl", "qwen3vl", "molmo2"}:
         return True
     if model_key == "llavanext":
         return True
     if model_key == "gemma4" and use_audio:
         return True
     return False
+
+
+def generate_model_response_batch(
+    model_key: str,
+    model: Any,
+    processor: Any,
+    tokenizer: Any,
+    model_path: Path,
+    prompt: str,
+    images: List[Any],
+    images_for_processor: Any,
+    device: str,
+    dtype: torch.dtype,
+    temperature: float,
+    max_new_tokens: int,
+    pipe_cache: Dict[str, Any],
+    num_return_sequences: int,
+    audio_path: Optional[Path] = None,
+    condition: str = "video_only",
+    prefer_loaded_model: bool = False,
+) -> List[str]:
+    """
+    Return `num_return_sequences` completions for one prompt in a single generate call.
+
+    RQ1.1b needs 20 samples of the same forced-choice prompt per trial. Looping costs 20
+    sequential decodes; `num_return_sequences` gets them from one batched pass, which is
+    the difference between roughly 3.5 hours and under an hour per model on the full
+    manifest. Falls back to a loop for any path that cannot batch.
+    """
+    if int(num_return_sequences) <= 1:
+        return [
+            generate_model_response(
+                model_key=model_key,
+                model=model,
+                processor=processor,
+                tokenizer=tokenizer,
+                model_path=model_path,
+                prompt=prompt,
+                images=images,
+                images_for_processor=images_for_processor,
+                device=device,
+                dtype=dtype,
+                temperature=temperature,
+                max_new_tokens=max_new_tokens,
+                pipe_cache=pipe_cache,
+                audio_path=audio_path,
+                condition=condition,
+                prefer_loaded_model=prefer_loaded_model,
+            )
+        ]
+
+    cond = (condition or "video_only").strip().lower()
+    use_audio = audio_path is not None and cond in {"audio_only", "multimodal"}
+
+    if model_key == "gemma4":
+        return _generate_gemma4(
+            model,
+            processor,
+            prompt,
+            images_for_processor=images_for_processor,
+            audio_path=audio_path if use_audio else None,
+            condition=cond,
+            device=device,
+            dtype=dtype,
+            temperature=temperature,
+            max_new_tokens=max_new_tokens,
+            num_return_sequences=int(num_return_sequences),
+        )
+
+    if _should_use_loaded_model(
+        model_key, model, prefer_loaded_model=prefer_loaded_model, use_audio=use_audio
+    ):
+        return _generate_on_loaded_model(
+            model_key,
+            model,
+            processor,
+            prompt=prompt,
+            images=images,
+            images_for_processor=images_for_processor,
+            audio_path=audio_path,
+            condition=condition,
+            device=device,
+            dtype=dtype,
+            temperature=temperature,
+            max_new_tokens=max_new_tokens,
+            num_return_sequences=int(num_return_sequences),
+        )
+
+    # Unbatchable path: fall back to sequential draws rather than silently returning one.
+    return [
+        generate_model_response(
+            model_key=model_key,
+            model=model,
+            processor=processor,
+            tokenizer=tokenizer,
+            model_path=model_path,
+            prompt=prompt,
+            images=images,
+            images_for_processor=images_for_processor,
+            device=device,
+            dtype=dtype,
+            temperature=temperature,
+            max_new_tokens=max_new_tokens,
+            pipe_cache=pipe_cache,
+            audio_path=audio_path,
+            condition=condition,
+            prefer_loaded_model=prefer_loaded_model,
+        )
+        for _ in range(int(num_return_sequences))
+    ]
 
 
 def generate_model_response(
@@ -215,36 +397,43 @@ def generate_model_response(
     cond = (condition or "video_only").strip().lower()
     use_audio = audio_path is not None and cond in {"audio_only", "multimodal"}
 
-    if model_key == "gemma4" and use_audio:
-        return _generate_gemma4(
-            model,
-            processor,
-            prompt,
-            images_for_processor=images_for_processor if cond == "multimodal" else None,
-            audio_path=audio_path,
-            condition=cond,
-            device=device,
-            dtype=dtype,
-            temperature=temperature,
-            max_new_tokens=max_new_tokens,
+    # All Gemma 4 conditions go through apply_chat_template. The generic `pipeline`
+    # path returns the full conversation as `generated_text`, so video_only silently
+    # scored the echoed prompt instead of the model's answer.
+    if model_key == "gemma4":
+        return _first_or_empty(
+            _generate_gemma4(
+                model,
+                processor,
+                prompt,
+                images_for_processor=images_for_processor,
+                audio_path=audio_path if use_audio else None,
+                condition=cond,
+                device=device,
+                dtype=dtype,
+                temperature=temperature,
+                max_new_tokens=max_new_tokens,
+            )
         )
 
     if _should_use_loaded_model(
         model_key, model, prefer_loaded_model=prefer_loaded_model, use_audio=use_audio
     ):
-        return _generate_on_loaded_model(
-            model_key,
-            model,
-            processor,
-            prompt=prompt,
-            images=images,
-            images_for_processor=images_for_processor,
-            audio_path=audio_path,
-            condition=condition,
-            device=device,
-            dtype=dtype,
-            temperature=temperature,
-            max_new_tokens=max_new_tokens,
+        return _first_or_empty(
+            _generate_on_loaded_model(
+                model_key,
+                model,
+                processor,
+                prompt=prompt,
+                images=images,
+                images_for_processor=images_for_processor,
+                audio_path=audio_path,
+                condition=condition,
+                device=device,
+                dtype=dtype,
+                temperature=temperature,
+                max_new_tokens=max_new_tokens,
+            )
         )
 
     out_text: Optional[str] = None
@@ -279,7 +468,8 @@ def generate_model_response(
         out = pipe(text=messages, max_new_tokens=int(max_new_tokens))
         if isinstance(out, list) and out:
             out0 = out[0]
-            out_text = out0.get("generated_text") if isinstance(out0, dict) else None
+            raw = out0.get("generated_text") if isinstance(out0, dict) else None
+            out_text = _extract_pipeline_completion(raw)
             if out_text is None:
                 out_text = str(out0)
         else:

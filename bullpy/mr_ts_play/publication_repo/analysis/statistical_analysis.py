@@ -35,27 +35,32 @@ CHANCE = 0.25
 
 
 # Human benchmarks keyed by (dataset, condition).
-# Populate these with the correct values from:
-# - O’Reilly et al. (EU-Emotion Stimulus Set: validation study)
-# - Lassalle et al. (EU-Emotion Voice Database)
 #
-# Structure:
-#   {
-#     "eu_emotion": {
-#        "video_only": {"citation": "...", "accuracy": 0.xx, "n": N},
-#        "audio_only": {"citation": "...", "accuracy": 0.xx, "n": N},
-#        "multimodal": {"citation": "...", "accuracy": 0.xx, "n": N},
-#     },
-#     "mindreading": {
-#        "video_only": {...},  # optional; leave absent if not applicable
-#     }
-#   }
+# Values are raw (uncorrected) accuracy from the EU validation literature.
+# Original human tasks used 6-AFC; this study uses 4-AFC — direct comparability
+# is limited (note in manuscript limitations).
+#
+# O'Reilly et al. (2016) reports separate benchmarks for face (63%), body (77%),
+# and social scenes (72%). Facial expression is used for video_only as the
+# closest match to full-face video clips; no single modality perfectly matches
+# multimodal video presentation. No human multimodal benchmark exists — omit.
 HUMAN_BENCHMARKS: Dict[str, Dict[str, Dict[str, Any]]] = {
     "eu_emotion": {
-        # TODO: fill these from the two EU benchmark papers.
-        "video_only": {"citation": "O’Reilly et al. (EU-Emotion Stimulus Set)", "accuracy": None, "n": None},
-        "audio_only": {"citation": "Lassalle et al. (EU-Emotion Voice Database)", "accuracy": None, "n": None},
-        "multimodal": {"citation": "O’Reilly et al. (EU-Emotion Stimulus Set)", "accuracy": None, "n": None},
+        "video_only": {
+            "citation": "O'Reilly et al. (2016); facial expression",
+            "accuracy": 0.63,
+            "n": 1231,
+        },
+        "audio_only": {
+            "citation": "Lassalle et al. (2019); UK vocal expression",
+            "accuracy": 0.4519,
+            "n": 427,
+        },
+        "multimodal": {
+            "citation": None,
+            "accuracy": None,
+            "n": None,
+        },
     },
     # Mindreading: no human benchmark in this study (EU-only human comparisons).
     "mindreading": {},
@@ -348,6 +353,8 @@ def run_all_analyses(results_dict: Mapping[str, Any]) -> Dict[str, Any]:
             "vs_chance": {},
             "vs_human_benchmark": {},
             "pairwise_models_fisher": {},
+            "cross_dataset_video_only": [],
+            "modality_ablations_gemini_flash": [],
         },
     }
 
@@ -469,27 +476,111 @@ def run_all_analyses(results_dict: Mapping[str, Any]) -> Dict[str, Any]:
                 f"{r['p_value_raw']:>10.3g} {r['p_value_bonferroni']:>10.3g} {r['cohen_h']:>8.2f}"
             )
 
+    # Cross-dataset generalization (video_only): EU vs Mindreading per model
+    print("\n=== Table: Cross-dataset generalization (video_only; EU -> Mindreading) ===")
+    cross_rows: List[Dict[str, Any]] = []
+    cross_pvals: List[float] = []
+    for m in models:
+        eu = counts.get(m, {}).get("eu_emotion", {}).get("video_only")
+        mr = counts.get(m, {}).get("mindreading", {}).get("video_only")
+        if not eu or not mr:
+            continue
+        c_eu, t_eu = eu
+        c_mr, t_mr = mr
+        p_eu = c_eu / t_eu if t_eu else 0.0
+        p_mr = c_mr / t_mr if t_mr else 0.0
+        diff = p_mr - p_eu
+        z, p = two_proportion_z_test(p_eu, t_eu, p_mr, t_mr)
+        h = cohen_h(p_eu, p_mr)
+        cross_pvals.append(p)
+        cross_rows.append(
+            {
+                "model": m,
+                "eu_accuracy": p_eu,
+                "mindreading_accuracy": p_mr,
+                "difference": diff,
+                "z": z,
+                "p_value_raw": p,
+                "cohen_h": h,
+                "n_eu": t_eu,
+                "n_mr": t_mr,
+            }
+        )
+        print(
+            f"{m:<18} EU={p_eu*100:>6.2f}% MR={p_mr*100:>6.2f}% "
+            f"diff={diff*100:>+6.2f}pp z={z:>6.2f} p={p:>8.3g} h={h:>6.2f}"
+        )
+
+    if cross_pvals:
+        cross_corrected, cross_thresh = bonferroni_correct(cross_pvals, alpha=0.01)
+        for row, p_c in zip(cross_rows, cross_corrected):
+            row["p_value_bonferroni"] = p_c
+            row["alpha_threshold"] = cross_thresh
+    out["comparisons"]["cross_dataset_video_only"] = cross_rows
+
+    # Modality ablations for Gemini Flash (within-model, EU and MR)
+    print("\n=== Table: Modality ablations (gemini-3-flash) ===")
+    modality_rows: List[Dict[str, Any]] = []
+    modality_pvals: List[float] = []
+    flash_counts = counts.get("gemini-3-flash", {})
+    for dataset_name in ("eu_emotion", "mindreading"):
+        per_cond = flash_counts.get(dataset_name, {})
+        if len(per_cond) < 2:
+            continue
+        conds = sorted(per_cond.keys())
+        for i in range(len(conds)):
+            for j in range(i + 1, len(conds)):
+                c1, c2 = conds[i], conds[j]
+                n1, t1 = per_cond[c1]
+                n2, t2 = per_cond[c2]
+                p1 = n1 / t1 if t1 else 0.0
+                p2 = n2 / t2 if t2 else 0.0
+                z, p = two_proportion_z_test(p1, t1, p2, t2)
+                h = cohen_h(p1, p2)
+                modality_pvals.append(p)
+                modality_rows.append(
+                    {
+                        "dataset": dataset_name,
+                        "condition_a": c1,
+                        "condition_b": c2,
+                        "accuracy_a": p1,
+                        "accuracy_b": p2,
+                        "n_a": t1,
+                        "n_b": t2,
+                        "z": z,
+                        "p_value_raw": p,
+                        "cohen_h": h,
+                    }
+                )
+                print(
+                    f"{dataset_name:<12} {c1:<12} vs {c2:<12} "
+                    f"{p1*100:>6.2f}% vs {p2*100:>6.2f}% z={z:>6.2f} p={p:>8.3g} h={h:>6.2f}"
+                )
+
+    if modality_pvals:
+        mod_corrected, mod_thresh = bonferroni_correct(modality_pvals, alpha=0.005)
+        for row, p_c in zip(modality_rows, mod_corrected):
+            row["p_value_bonferroni"] = p_c
+            row["alpha_threshold"] = mod_thresh
+    out["comparisons"]["modality_ablations_gemini_flash"] = modality_rows
+
     return out
 
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
 
-    # Example usage with dummy counts (replace with real aggregated results).
-    # Conditions correspond to the evaluation `--condition` flag (video_only, audio_only, multimodal).
-    example_results = {
-        "gemini-3-pro": {
-            "eu_emotion": {"video_only": (96, 117), "audio_only": (90, 118), "multimodal": (98, 117)},
-            "mindreading": {"video_only": (376, 583), "audio_only": (500, 583), "multimodal": (510, 583)},
-        },
-        "gemini-3-flash": {
-            "eu_emotion": {"video_only": (91, 118), "audio_only": (88, 118), "multimodal": (92, 118)},
-            "mindreading": {"video_only": (392, 583), "audio_only": (505, 583), "multimodal": (512, 583)},
-        },
-        "gpt-5": {"eu_emotion": {"video_only": (85, 113)}, "mindreading": {"video_only": (376, 572)}},
-        "gpt-5-mini": {"eu_emotion": {"video_only": (85, 118)}, "mindreading": {"video_only": (365, 583)}},
-        "claude-opus-4-5": {"eu_emotion": {"video_only": (81, 111)}, "mindreading": {"video_only": (326, 583)}},
-    }
+    from pathlib import Path
 
-    run_all_analyses(example_results)
+    from analysis.load_results import load_results_from_summaries, summarize_loaded_results
+
+    repo_root = Path(__file__).resolve().parent.parent
+    results_dir = repo_root / "results" / "full_run"
+    if results_dir.exists():
+        results = load_results_from_summaries(results_dir)
+        print("Loaded results from:", results_dir)
+        print(summarize_loaded_results(results))
+        run_all_analyses(results)
+    else:
+        raise SystemExit(f"No results at {results_dir}. Run evaluations first, then: python analysis/run_study_analysis.py")
 

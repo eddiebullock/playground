@@ -36,7 +36,7 @@ from scripts.model_inference import _build_gemma4_content, generate_model_respon
 from scripts.multi_frame import prepare_images_for_model
 from scripts.prompts import build_finetune_prompt
 
-
+# setting up the lora config
 def setup_lora_config(
     model_key: str,
     r: int,
@@ -52,11 +52,11 @@ def setup_lora_config(
         "target_modules": target,
     }
 
-
+# which modality condition should we finetune on?
 def finetune_modality_for_model(model_key: str) -> str:
     return FINETUNE_MODALITY_BY_MODEL.get(model_key, FINETUNE_MODALITY)
 
-
+# loading the json file for finetuning data (train and val) into a list of dictionaries that represent each record
 def load_jsonl(path: Path) -> List[Dict[str, Any]]:
     rows: List[Dict[str, Any]] = []
     for line in path.read_text(encoding="utf-8").splitlines():
@@ -66,6 +66,7 @@ def load_jsonl(path: Path) -> List[Dict[str, Any]]:
     return rows
 
 
+# finding the video path for the record
 def record_video_path(rec: Dict[str, Any], data_root: Path) -> Path:
     if rec.get("video_path"):
         return Path(rec["video_path"])
@@ -77,16 +78,16 @@ def record_video_path(rec: Dict[str, Any], data_root: Path) -> Path:
         raise ValueError(f"Record missing media path: {rec}")
     return (data_root / rel).resolve()
 
-
+# finding the audio path for the record
 def record_audio_path(rec: Dict[str, Any]) -> Optional[Path]:
     ap = rec.get("audio_path")
     return Path(ap).resolve() if ap else None
 
-
+# normalizing the label to lowercase and removing extra spaces
 def normalize_label(text: str) -> str:
     return re.sub(r"\s+", " ", str(text).strip().casefold())
 
-
+# checking if the predicted label matches the true label
 def labels_match(pred: str, true_label: str) -> bool:
     p = normalize_label(pred)
     t = normalize_label(true_label)
@@ -96,7 +97,7 @@ def labels_match(pred: str, true_label: str) -> bool:
         return True
     return t in p or p in t
 
-
+# dataset class for finetuning
 class MindreadingFinetuneDataset(Dataset):
     def __init__(
         self,
@@ -131,7 +132,7 @@ class MindreadingFinetuneDataset(Dataset):
 def collate_single(batch: List[Dict[str, Any]]) -> Dict[str, Any]:
     return batch[0]
 
-
+# load HF processor for the model
 def load_processor(model_key: str, model_path: Path):
     from transformers import AutoProcessor
 
@@ -144,7 +145,7 @@ def load_processor(model_key: str, model_path: Path):
 
         return Gemma4Processor.from_pretrained(model_path)
 
-
+# resolve the target modules for the LoRA adapter
 def resolve_lora_target_modules(model: Any, model_key: str) -> List[str]:
     """Gemma 4 uses Gemma4ClippableLinear wrappers; target inner nn.Linear by full path."""
     import torch.nn as nn
@@ -166,7 +167,7 @@ def resolve_lora_target_modules(model: Any, model_key: str) -> List[str]:
         raise RuntimeError(f"No nn.Linear modules found for LoRA on {model_key}")
     return fallback
 
-
+# wrap model in peramiter efficient fine-tuning (PEFT) adapter
 def apply_lora(model: Any, model_key: str, r: int, alpha: int, dropout: float) -> Any:
     from peft import LoraConfig, get_peft_model, TaskType
 
@@ -191,7 +192,7 @@ def apply_lora(model: Any, model_key: str, r: int, alpha: int, dropout: float) -
         print("LoRA full-path targets failed; retrying with target_modules='all-linear'")
         return get_peft_model(model, _build_cfg("all-linear"))
 
-
+# build the training messages for the gemma4 model (user and assistant messages)    
 def _gemma_training_messages(
     prompt: str,
     label: str,
@@ -211,7 +212,7 @@ def _gemma_training_messages(
         {"role": "assistant", "content": label},
     ]
 
-
+# mask the labels for the single-sample fine-tuning step
 def _mask_labels_for_sft(input_ids: torch.Tensor, prompt_len: int) -> torch.Tensor:
     labels = input_ids.clone()
     if prompt_len > 0:

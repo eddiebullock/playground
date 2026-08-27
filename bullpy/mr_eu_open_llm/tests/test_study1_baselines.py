@@ -1,6 +1,7 @@
 import json
 from pathlib import Path
 
+from config import PROTOCOL_VERSION
 from scripts.study1_baselines import discover_canonical_baseline
 
 
@@ -8,7 +9,7 @@ def _write_eval(tmp_path: Path, model: str, *, n_scored: int, condition: str, en
     model_dir = tmp_path / model
     model_dir.mkdir(parents=True, exist_ok=True)
     obj = {
-        "protocol_version": "v2-study1-study2",
+        "protocol_version": PROTOCOL_VERSION,
         "model": model,
         "condition": condition,
         "n_scored": n_scored,
