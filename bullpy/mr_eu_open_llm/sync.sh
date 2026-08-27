@@ -24,6 +24,7 @@ RSYNC_EXCLUDES=(
   --exclude 'hf_cache/'
   --exclude '.venv/'
   --exclude 'venv/'
+  --exclude 'venvs/'
 )
 
 usage() {
@@ -102,6 +103,8 @@ case "${CMD}" in
       --include 'patching/**' \
       --include 'sae/' \
       --include 'sae/**' \
+      --include 'mech/' \
+      --include 'mech/**' \
       --include 'stats/' \
       --include 'stats/**' \
       --exclude '*' \

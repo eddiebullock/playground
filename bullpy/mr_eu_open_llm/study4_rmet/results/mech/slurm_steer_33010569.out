@@ -1,0 +1,2 @@
+C1 steer smoke MODEL=qwen3vl LAYER=4
+/var/spool/slurm/slurmd/job33010569/slurm_script: line 26: python: command not found

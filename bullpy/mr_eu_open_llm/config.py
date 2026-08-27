@@ -36,6 +36,11 @@ HPC_CPU_PROJECT = "BARON-COHEN-SL3-CPU"
 # Study 1/2 model set (InternVL2 excluded 2026-06: transformers 5.x load failures on CSD3).
 STUDY_MODELS = ("qwen2vl", "llavanext", "gemma4")
 
+# study3 tiers. Kept separate from STUDY_MODELS because study2 results depend on that
+# tuple (llavanext membership, and CONFIRMATORY_N_MODELS drives Bonferroni correction).
+STUDY3_BENCHMARK_MODELS = ("gemma4", "qwen3vl", "molmo2", "llama4")
+STUDY3_MECHANISTIC_MODELS = ("qwen3vl", "molmo2")
+
 # Model identifiers and local/HPC paths
 MODELS = {
     "qwen2vl": {
@@ -53,6 +58,22 @@ MODELS = {
         "local_path": LOCAL_MODELS_DIR / "gemma4",
         "hpc_path": HPC_MODELS_DIR / "gemma4",
     },
+    "qwen3vl": {
+        "hf_id": "Qwen/Qwen3-VL-8B-Instruct",
+        "local_path": LOCAL_MODELS_DIR / "qwen3vl",
+        "hpc_path": HPC_MODELS_DIR / "qwen3vl",
+    },
+    "molmo2": {
+        "hf_id": "allenai/Molmo2-O-7B",
+        "local_path": LOCAL_MODELS_DIR / "molmo2",
+        "hpc_path": HPC_MODELS_DIR / "molmo2",
+    },
+    "llama4": {
+        "hf_id": "meta-llama/Llama-4-Scout-17B-16E-Instruct",
+        "local_path": LOCAL_MODELS_DIR / "llama4",
+        "hpc_path": HPC_MODELS_DIR / "llama4",
+        "gated": True,
+    },
 }
 
 
@@ -61,6 +82,9 @@ LORA_TARGET_MODULES = {
     "qwen2vl": ["q_proj", "v_proj"],
     "llavanext": ["q_proj", "v_proj"],
     "gemma4": ["q_proj", "v_proj"],
+    "qwen3vl": ["q_proj", "v_proj"],
+    "molmo2": ["q_proj", "v_proj"],
+    "llama4": ["q_proj", "v_proj"],
 }
 
 
@@ -123,6 +147,20 @@ ENTROPY_SENSITIVITY_EMBEDDING_MODELS = (
     "sentence-transformers/all-MiniLM-L6-v2",
     "sentence-transformers/all-mpnet-base-v2",
 )
+
+# RQ1.1b forced-choice response entropy (primary calibration metric).
+# Sampled at temperature 1.0, not EVAL["temperature"]=0.1: at 0.1 the response
+# distribution is near-degenerate, so model entropy would be ~0 by construction and the
+# correlation against human entropy would be floored by the decoding setting.
+FORCED_CHOICE = {
+    "n_samples": 20,
+    "temperature": 1.0,
+    "sensitivity_temperatures": (0.7,),
+    # Options come from the human study's own per-item set (target + 4 controls +
+    # "None of the above") so RQ1.1b compares like with like; see scripts/human_entropy.py.
+    "use_human_option_sets": True,
+    "human_entropy_lookup": LOCAL_DATA_DIR / "eu_emotions_human_entropy.json",
+}
 
 # Two-stage evaluation
 CHAIN_STAGES = False
@@ -201,7 +239,10 @@ MODALITY_CONDITIONS = ("video_only", "audio_only", "multimodal")
 MODEL_AUDIO_CAPABILITIES = {
     "qwen2vl": False,  # Qwen2-VL: vision/video only (use Qwen2-Audio for speech)
     "llavanext": False,
-    "gemma4": True,  # Gemma 4 E4B-it: native audio (max ~30s per clip)
+    "gemma4": True,  # Gemma 4 E4B-it: native audio (audio_config present in checkpoint)
+    "qwen3vl": False,  # Qwen3-VL: text/image/video only (audio lives in Qwen3-Omni)
+    "molmo2": False,  # Molmo2-O: Olmo3 text + SigLIP2 vision/video; no audio tower
+    "llama4": False,  # Llama 4: early-fusion text+image; no audio input
 }
 
 # LoRA fine-tuning modality (Mindreading item-folder audio; never Emotions/Audio/).
@@ -210,6 +251,8 @@ FINETUNE_MODALITY_BY_MODEL = {
     "gemma4": "multimodal",
     "qwen2vl": "video_only",
     "llavanext": "video_only",
+    "qwen3vl": "video_only",
+    "molmo2": "video_only",
 }
 
 EU_EMOTION_LABELS_FILE = LOCAL_DATA_DIR / "eu_emotion_states_list.txt"
@@ -240,6 +283,8 @@ __all__ = [
     "HPC_GPU_PROJECT",
     "HPC_CPU_PROJECT",
     "STUDY_MODELS",
+    "STUDY3_BENCHMARK_MODELS",
+    "STUDY3_MECHANISTIC_MODELS",
     "MODELS",
     "LORA_TARGET_MODULES",
     "lora_alpha_for_rank",
@@ -256,6 +301,7 @@ __all__ = [
     "LAYER_DEPTH_FRACTIONS",
     "BEST_MODEL_KEY",
     "EVAL",
+    "FORCED_CHOICE",
     "LORA_DEFAULT",
     "LORA_SWEEP",
     "TRAINING_DEFAULTS",

@@ -25,6 +25,23 @@ AUDIO_EXTS = {".wav", ".mp3", ".m4a", ".ogg", ".aif", ".aiff"}
 VIDEO_EXTS = {".mov", ".mp4", ".m4v", ".avi", ".webm"}
 
 
+def resolve_mr_v_video_from_t_stimulus(stimulus_path: Path) -> Optional[Path]:
+    """
+    For Mindreading audio-only .mov files (T marker), locate the paired V video clip
+    in the same item folder (same code prefix + tail label).
+    """
+    try:
+        name = stimulus_path.name
+        if "T" not in name or "V" in name:
+            return None
+        prefix = name[:7]
+        tail = name.split("T", 1)[1]
+        candidates = sorted(stimulus_path.parent.glob(f"{prefix}*V{tail}"))
+        return candidates[0] if candidates else None
+    except Exception:
+        return None
+
+
 class LeakageAudioPathError(RuntimeError):
     pass
 

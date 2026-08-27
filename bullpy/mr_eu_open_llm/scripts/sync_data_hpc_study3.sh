@@ -39,7 +39,9 @@ if [[ "${REMOTE_BASE}" == ~* ]]; then
 fi
 
 EU_ROOT="${EU_ROOT:-/Users/eb2007/Library/CloudStorage/OneDrive-UniversityofCambridge/Documents/PhD/data/EU_Emotions}"
-EU_VOICES_SRC="${EU_VOICES_SRC:-${EU_ROOT}/EU Emotion - UK Voices/Fixed - amplified volume}"
+# UK Voices live under the separate EU_emotions_faces tree, not under EU_ROOT.
+EU_VOICES_ROOT="${EU_VOICES_ROOT:-/Users/eb2007/Library/CloudStorage/OneDrive-UniversityofCambridge/Documents/PhD/data/EU_emotions_faces/audio}"
+EU_VOICES_SRC="${EU_VOICES_SRC:-${EU_VOICES_ROOT}/Fixed - amplified volume}"
 MR_EMOTIONS_SRC="${MR_EMOTIONS_SRC:-/Users/eb2007/Library/CloudStorage/OneDrive-UniversityofCambridge/Documents/PhD/data/MindReading/Emotions}"
 
 SYNC_EU_PACKS="${SYNC_EU_PACKS:-1}"
@@ -77,6 +79,13 @@ if [[ "${SYNC_VOICES}" == "1" ]]; then
     echo "ERROR: EU_VOICES_SRC not found: ${EU_VOICES_SRC}" >&2
     exit 1
   fi
+  # OneDrive placeholders rsync as empty files; refuse to sync a dehydrated tree.
+  voice_files=$(find "${EU_VOICES_SRC}" -type f \( -iname '*.wav' -o -iname '*.mp3' -o -iname '*.m4a' \) | wc -l | tr -d ' ')
+  if [[ "${voice_files}" -lt 100 ]]; then
+    echo "ERROR: only ${voice_files} audio files under ${EU_VOICES_SRC}; hydrate OneDrive first." >&2
+    exit 1
+  fi
+  echo "UK Voices source OK: ${voice_files} audio files."
   echo ""
   echo "=== UK Voices (Fixed - amplified volume only) -> ${REMOTE_EU}/EU Emotion - UK Voices/Fixed - amplified volume/ ==="
   rsync -av --progress -e "${RSYNC_RSH}" \

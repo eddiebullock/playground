@@ -20,6 +20,7 @@ from config import (
     MODELS,
     DATASETS,
     EVAL,
+    FORCED_CHOICE,
     LOCAL_RESULTS_DIR,
     PROTOCOL_VERSION,
     FRAME_POLICY,
@@ -64,7 +65,12 @@ from scripts.emotion_parse import parse_emotion
 from scripts.prompts import build_free_response_prompt, build_4afc_prompt, build_finetune_prompt
 from scripts.frame_sampling import load_stimulus_as_images, frame_policy_tag
 from scripts.multi_frame import prepare_images_for_model
-from scripts.model_inference import generate_model_response
+from scripts.model_inference import (
+    generate_model_response,
+    generate_model_response_batch,
+    seed_generation,
+)
+from scripts.forced_choice_entropy import sample_forced_choice
 from scripts.semantic_entropy import (
     compute_entropy_bundle,
     load_or_compute_label_embeddings,
@@ -137,16 +143,6 @@ def resolve_frame_mode_policy(
     return fps, max_frames, bool(FRAME_POLICY.get("enforce_multi_frame", True)), mode_key
 
 
-    """
-    Load a multimodal model given a key in MODELS.
-
-    This stub should be replaced with actual transformers / model-loading logic.
-    """
-    model_cfg = MODELS[model_key]
-    _ = model_cfg
-    return None
-
-
 def resolve_model_path(model_key: str) -> Path:
     cfg = MODELS[model_key]
     hpc = Path(cfg["hpc_path"])
@@ -191,6 +187,29 @@ def load_hf_model_for_key(model_key: str, model_path: Path, device: str, dtype: 
 
             return _from_pretrained_with_device_fallback(
                 Qwen2VLForConditionalGeneration, model_path, device=device, dtype=dtype
+            )
+        except Exception:
+            pass
+
+    if model_key == "qwen3vl":
+        # Dense Qwen3-VL-8B-Instruct; the Moe class is for the A3B checkpoints.
+        for cls_name in ("Qwen3VLForConditionalGeneration", "Qwen3VLMoeForConditionalGeneration"):
+            try:
+                mod = __import__("transformers", fromlist=[cls_name])
+                cls = getattr(mod, cls_name)
+                return _from_pretrained_with_device_fallback(
+                    cls, model_path, device=device, dtype=dtype
+                )
+            except Exception:
+                pass
+
+    if model_key == "molmo2":
+        # Molmo2-O ships remote code; the card's reference loader is AutoModelForImageTextToText.
+        try:
+            from transformers import AutoModelForImageTextToText  # type: ignore
+
+            return _from_pretrained_with_device_fallback(
+                AutoModelForImageTextToText, model_path, device=device, dtype=dtype
             )
         except Exception:
             pass
@@ -249,7 +268,7 @@ def load_hf_model_for_key(model_key: str, model_path: Path, device: str, dtype: 
         pass
 
     # Last resort fallback (vision/multimodal keys must not use CausalLM).
-    if model_key in {"qwen2vl", "llavanext", "gemma4"}:
+    if model_key in {"qwen2vl", "llavanext", "gemma4", "qwen3vl", "molmo2", "llama4"}:
         raise RuntimeError(
             f"Failed to load {model_key} from {model_path}. "
             "Check model files and transformers version on the compute node."
@@ -474,6 +493,10 @@ def run_evaluation(
     stage2_prompt_mode: str = "4afc",
     frame_mode: Optional[str] = None,
     n_options: Optional[int] = None,
+    fc_samples: int = 1,
+    fc_temperature: float = FORCED_CHOICE["temperature"],
+    fc_batched: bool = True,
+    human_entropy_lookup: Optional[Path] = None,
 ) -> Dict[str, Any]:
     """
     Protocol v2 two-stage evaluation per trial.
@@ -616,15 +639,35 @@ def run_evaluation(
             rich_prompts=ENTROPY_USE_RICH_LABEL_EMBEDDINGS,
         )
 
+    human_options: Dict[str, Any] = {}
+    if human_entropy_lookup is not None:
+        lookup_path = Path(human_entropy_lookup)
+        if lookup_path.exists():
+            human_options = json.loads(lookup_path.read_text(encoding="utf-8")).get("trials", {})
+        else:
+            print(f"[warn] human entropy lookup not found, falling back to sampled foils: {lookup_path}")
+
     trials: List[Dict[str, Any]] = []
     n_correct = 0
     n_scored = 0
     entropies: List[float] = []
+    fc_entropies: List[float] = []
     pipe_cache: Dict[str, Any] = {}
     fp_tag = frame_policy_tag(fps, max_frames, frame_mode_key)
 
     for trial_idx, t in enumerate(trials_raw):
         trial_copy = dict(t)
+        # Pin the human study's own option set where available, so RQ1.1b compares the
+        # model against humans answering the same question rather than sampled foils.
+        options_source = "sampled_foils"
+        scoring_label = t["label"]
+        human_entry = human_options.get(str(t.get("trial_id")))
+        if human_entry and len(human_entry.get("human_options", [])) == n_options:
+            trial_copy["candidate_labels"] = list(human_entry["human_options"])
+            options_source = "human_option_set"
+            # The human option set names the target without the intensity qualifier, so
+            # score against that label or every low-intensity item is unanswerable.
+            scoring_label = human_entry.get("human_target_label") or scoring_label
         options = (
             resolve_candidate_labels(
                 trial_copy, emotion_pool, seed=seed, trial_index=trial_idx, n_options=n_options
@@ -732,38 +775,95 @@ def run_evaluation(
                     stage2_prompt = (
                         f"Prior description:\n{stage1_block['free_response_text']}\n\n{stage2_prompt}"
                     )
-                out_stage2 = generate_model_response(
-                    model_key=model_key,
-                    model=model,
-                    processor=processor,
-                    tokenizer=tokenizer,
-                    model_path=model_path,
-                    prompt=stage2_prompt,
-                    images=images,
-                    images_for_processor=images_for_processor,
-                    device=device,
-                    dtype=dtype,
-                    temperature=temperature,
-                    max_new_tokens=STAGE2_MAX_NEW_TOKENS,
-                    pipe_cache=pipe_cache,
-                    audio_path=audio_path,
-                    condition=condition,
-                    prefer_loaded_model=use_peft,
-                )
+                def _generate_stage2(draw_temperature: float) -> str:
+                    return generate_model_response(
+                        model_key=model_key,
+                        model=model,
+                        processor=processor,
+                        tokenizer=tokenizer,
+                        model_path=model_path,
+                        prompt=stage2_prompt,
+                        images=images,
+                        images_for_processor=images_for_processor,
+                        device=device,
+                        dtype=dtype,
+                        temperature=draw_temperature,
+                        max_new_tokens=STAGE2_MAX_NEW_TOKENS,
+                        pipe_cache=pipe_cache,
+                        audio_path=audio_path,
+                        condition=condition,
+                        prefer_loaded_model=use_peft,
+                    )
+
+                def _parse_stage2(text: str) -> Optional[str]:
+                    parsed, _, _ = parse_emotion_tolerant(
+                        text, options, full_label_pool=emotion_pool
+                    )
+                    if parsed is None and stage2_prompt_mode == "4afc":
+                        parsed, _ = parse_emotion(text, options)
+                    return parsed
+
+                def _generate_stage2_batch(draw_temperature: float, n: int) -> List[str]:
+                    return generate_model_response_batch(
+                        model_key=model_key,
+                        model=model,
+                        processor=processor,
+                        tokenizer=tokenizer,
+                        model_path=model_path,
+                        prompt=stage2_prompt,
+                        images=images,
+                        images_for_processor=images_for_processor,
+                        device=device,
+                        dtype=dtype,
+                        temperature=draw_temperature,
+                        max_new_tokens=STAGE2_MAX_NEW_TOKENS,
+                        pipe_cache=pipe_cache,
+                        num_return_sequences=n,
+                        audio_path=audio_path,
+                        condition=condition,
+                        prefer_loaded_model=use_peft,
+                    )
+
+                fc_block: Dict[str, Any] = {}
+                if fc_samples > 1:
+                    # RQ1.1b: repeated draws at fc_temperature, then the point estimate
+                    # below is taken from the same draws rather than a separate call.
+                    fc_block = sample_forced_choice(
+                        _generate_stage2,
+                        _parse_stage2,
+                        options,
+                        n_samples=fc_samples,
+                        temperature=fc_temperature,
+                        seed=seed,
+                        trial_id=str(t["trial_id"]),
+                        seed_fn=seed_generation,
+                        generate_batch=_generate_stage2_batch if fc_batched else None,
+                    )
+                    out_stage2 = fc_block["raw_outputs"][0]
+                else:
+                    seed_generation(seed, t["trial_id"], 0)
+                    out_stage2 = _generate_stage2(temperature)
+
                 pred, reasoning, parse_method = parse_emotion_tolerant(
                     out_stage2, options, full_label_pool=emotion_pool
                 )
                 if pred is None and stage2_prompt_mode == "4afc":
                     pred, reasoning = parse_emotion(out_stage2, options)
                     parse_method = "strict_4afc"
+                if fc_block:
+                    # Score the modal answer over the draws; a single draw at t=1.0 is a
+                    # noisy read of the model's choice, the mode is not.
+                    pred = fc_block["modal_prediction"] or pred
                 if pred is None:
                     correct = False
                 else:
-                    correct = pred == t["label"]
+                    correct = pred == scoring_label
                 n_scored += 1
                 n_correct += int(correct)
                 stage2_block = {
                     "options": options,
+                    "options_source": options_source,
+                    "scoring_label": scoring_label,
                     "prompt": stage2_prompt,
                     "prompt_mode": stage2_prompt_mode,
                     "prediction": pred,
@@ -772,6 +872,19 @@ def run_evaluation(
                     "parse_method": parse_method if stage2_prompt_mode == "finetune_label" else None,
                     "raw_model_output": out_stage2,
                 }
+                if fc_block:
+                    # RQ1.1b kept separate from RQ1.1a's stage1.semantic_entropy.
+                    stage2_block.update(
+                        {
+                            "forced_choice_entropy": fc_block["forced_choice_entropy"],
+                            "response_distribution": fc_block["response_distribution"],
+                            "fc_predictions": fc_block["predictions"],
+                            "fc_n_samples": fc_block["n_samples"],
+                            "fc_temperature": fc_block["temperature"],
+                            "fc_n_unparsed": fc_block["n_unparsed"],
+                        }
+                    )
+                    fc_entropies.append(fc_block["forced_choice_entropy"])
 
             trials.append(
                 {
@@ -862,9 +975,21 @@ def run_evaluation(
         "stage2_prompt_mode": stage2_prompt_mode,
         "n_options": n_options,
         "chance_level": chance_level,
+        # RQ1.1a (model-internal, secondary)
         "mean_semantic_entropy": mean_sem,
         "median_semantic_entropy": median_sem,
         "std_semantic_entropy": std_sem,
+        # RQ1.1b (forced choice, primary calibration metric); null when not sampled
+        "mean_forced_choice_entropy": (
+            sum(fc_entropies) / len(fc_entropies) if fc_entropies else None
+        ),
+        "n_forced_choice_scored": len(fc_entropies),
+        "forced_choice_n_samples": int(fc_samples),
+        "forced_choice_temperature": float(fc_temperature) if fc_samples > 1 else None,
+        "forced_choice_sampling_mode": ("batched" if fc_batched else "sequential") if fc_samples > 1 else None,
+        "forced_choice_options_source": (
+            "human_option_set" if human_options else "sampled_foils"
+        ),
         "n_trials": n_trials,
         "n_scored": n_scored,
         "n_correct": n_correct,
@@ -996,6 +1121,35 @@ def main() -> None:
         help="Stage-2 forced-choice size (default: manifest n_options if set, else 4). Use 6 for study3.",
     )
     parser.add_argument(
+        "--fc_samples",
+        type=int,
+        default=1,
+        help=(
+            "RQ1.1b: number of forced-choice draws per trial. 1 (default) keeps the "
+            f"existing single-answer path; {FORCED_CHOICE['n_samples']} for the calibration run."
+        ),
+    )
+    parser.add_argument(
+        "--fc_temperature",
+        type=float,
+        default=FORCED_CHOICE["temperature"],
+        help="Temperature for the RQ1.1b draws; deliberately higher than --temperature.",
+    )
+    parser.add_argument(
+        "--fc_sequential",
+        action="store_true",
+        help="Draw RQ1.1b samples one at a time instead of one batched generate call (slow; debugging).",
+    )
+    parser.add_argument(
+        "--human_options",
+        type=Path,
+        default=None,
+        help=(
+            "Human entropy lookup JSON. When given, each trial's options are pinned to the "
+            "option set actually shown to human participants (see scripts/human_entropy.py)."
+        ),
+    )
+    parser.add_argument(
         "--stage2_prompt_mode",
         type=str,
         default="4afc",
@@ -1057,6 +1211,10 @@ def main() -> None:
         stage2_prompt_mode=args.stage2_prompt_mode,
         frame_mode=args.frame_mode,
         n_options=args.n_options,
+        fc_samples=args.fc_samples,
+        fc_temperature=args.fc_temperature,
+        fc_batched=not args.fc_sequential,
+        human_entropy_lookup=args.human_options,
     )
 
     with args.output.open("w", encoding="utf-8") as f:

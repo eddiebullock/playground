@@ -9,7 +9,7 @@ cross-model summaries (mean/SD/min/max) to identify hardest/easiest states.
 
 import logging
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, Iterable, List, Optional, Tuple
 
 import pandas as pd
 
@@ -180,53 +180,22 @@ def identify_perfect_and_zero(
     return perfect.reset_index(drop=True), zero.reset_index(drop=True)
 
 
-def _load_results_csvs(results_dir: str) -> pd.DataFrame:
-    results_path = Path(results_dir)
-    if not results_path.exists():
-        raise FileNotFoundError(f"results_dir does not exist: {results_path}")
+def _load_results_csvs(results_dir: str, exclude_models: Optional[Iterable[str]] = None) -> pd.DataFrame:
+    from .load_results import load_results_csvs
 
-    csvs = sorted(results_path.glob("*_results.csv"))
-    if not csvs:
-        raise FileNotFoundError(f"No '*_results.csv' files found in: {results_path}")
-
-    frames: List[pd.DataFrame] = []
-    for p in csvs:
-        df = pd.read_csv(p)
-        df["source_file"] = p.name
-        frames.append(df)
-    return pd.concat(frames, ignore_index=True)
+    return load_results_csvs(results_dir, exclude_models=exclude_models)
 
 
-def generate_report(results_dir: str, output_path: str) -> None:
+def generate_report_from_dataframe(results_df: pd.DataFrame, output_path: str) -> None:
     """
-    Generate a per-emotion analysis report from model result CSVs.
-
-    This function:
-    - Loads all `*_results.csv` files from results_dir
-    - Combines them into a single DataFrame
-    - Computes per-mental-state accuracy per model
-    - Computes cross-model summary stats
-    - Identifies perfectly recognized and universally failed mental states
-    - Saves the full per-emotion breakdown to output_path as CSV
-    - Prints paper-style summary statistics:
-        - number of perfectly recognised states
-        - number of universally failed states
-        - top 5 and bottom 5 mental states by mean accuracy
-
-    Args:
-        results_dir: Directory containing per-model result CSVs.
-        output_path: File path to save per-emotion breakdown CSV.
+    Generate per-mental-state report from a combined results DataFrame.
     """
-    results_df = _load_results_csvs(results_dir)
-
-    # Try to infer mental_state if not explicitly present.
     if "mental_state" not in results_df.columns:
         if "correct_label" in results_df.columns:
             results_df = results_df.rename(columns={"correct_label": "mental_state"})
         else:
-            raise ValueError("Results CSVs must include 'mental_state' or 'correct_label' column.")
+            raise ValueError("Results must include 'mental_state' or 'correct_label' column.")
 
-    # Neutral is not a mental state; remove it from this report.
     results_df = remove_neutral(results_df)
 
     per_emotion = compute_per_emotion_accuracy(results_df)
@@ -252,7 +221,6 @@ def generate_report(results_dir: str, output_path: str) -> None:
     for _, r in bottom5.iterrows():
         print(f"- {r['mental_state']}: {r['mean_accuracy']*100:.2f}% (sd={r['sd_accuracy']*100:.2f}%)")
 
-    # Intensity analysis (EU-style labels)
     try:
         intens = intensity_summary(per_emotion)
         if not intens.empty:
@@ -266,6 +234,30 @@ def generate_report(results_dir: str, output_path: str) -> None:
                 )
     except Exception as e:
         logger.warning("Failed intensity summary: %s", str(e))
+
+
+def generate_report(results_dir: str, output_path: str) -> None:
+    """
+    Generate a per-emotion analysis report from model result CSVs.
+
+    This function:
+    - Loads all `*_results.csv` files from results_dir
+    - Combines them into a single DataFrame
+    - Computes per-mental-state accuracy per model
+    - Computes cross-model summary stats
+    - Identifies perfectly recognized and universally failed mental states
+    - Saves the full per-emotion breakdown to output_path as CSV
+    - Prints paper-style summary statistics:
+        - number of perfectly recognised states
+        - number of universally failed states
+        - top 5 and bottom 5 mental states by mean accuracy
+
+    Args:
+        results_dir: Directory containing per-model result CSVs.
+        output_path: File path to save per-emotion breakdown CSV.
+    """
+    results_df = _load_results_csvs(results_dir)
+    generate_report_from_dataframe(results_df, output_path)
 
 
 if __name__ == "__main__":

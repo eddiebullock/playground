@@ -9,11 +9,14 @@ from typing import Dict, List
 from config import LAYER_DEPTH_FRACTIONS, MODELS
 
 
-# Documented defaults when live model.config is unavailable (7B-class ~28-32 layers)
+# Documented defaults when live model.config is unavailable (7B-class ~28-32 layers).
+# Confirm against each checkpoint's config.json; gemma4 is 42 per text_config.
 _DEFAULT_N_LAYERS: Dict[str, int] = {
     "qwen2vl": 28,
     "llavanext": 28,
-    "gemma4": 34,
+    "gemma4": 42,
+    "qwen3vl": 36,
+    "molmo2": 32,
 }
 
 

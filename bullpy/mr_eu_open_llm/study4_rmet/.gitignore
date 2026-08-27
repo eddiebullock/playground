@@ -1,0 +1,11 @@
+# Temporary / bulky study4 artifacts — never push label-bearing debug pages.
+.tmp_rmet/
+data/rmet/_debug/
+__pycache__/
+*.pyc
+.DS_Store
+.mplconfig/
+.env
+.env.*
+!.env.example
+checkpoints/
