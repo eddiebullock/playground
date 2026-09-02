@@ -23,7 +23,7 @@ from __future__ import annotations
 import argparse
 import json
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 import numpy as np
 import pandas as pd
@@ -33,6 +33,13 @@ from sklearn.model_selection import LeaveOneOut
 from sklearn.preprocessing import StandardScaler
 
 from config import LOCAL_DATA_DIR, LOCAL_RESULTS_DIR, SEED
+from scripts.causal_eu_confusion_axes import (
+    default_pair_specs,
+    label_pair_tuple,
+    pair_trial_indices,
+    select_difficulty_matched_pairs,
+    trial_indices_for_label_pairs,
+)
 from scripts.probing import layer_index_from_path, list_activation_layers
 from scripts.rsa import compute_rdm, rsa_spearman
 
@@ -94,6 +101,61 @@ def perm_rsa_pvalue(model_rdm: np.ndarray, human_rdm: np.ndarray, *, n_perm: int
     return {"rho": float(rho_obs), "p_perm": p, "n_perm": float(n_perm)}
 
 
+def rsa_difficulty_matched(
+    X: np.ndarray,
+    human_rdm: np.ndarray,
+    rows: Sequence[Dict[str, Any]],
+    pair_specs: Sequence[Tuple[str, str]],
+    *,
+    n_perm: int,
+    seed: int,
+) -> Dict[str, Any]:
+    """RSA on confused-pair items plus difficulty-matched non-confused pair items."""
+    confused_keys = [label_pair_tuple(la, lb) for la, lb in pair_specs]
+    per_pair: List[Dict[str, Any]] = []
+    rhos: List[float] = []
+    for la, lb in pair_specs:
+        match_info = select_difficulty_matched_pairs(rows, la, lb, confused_keys)
+        confused_idx = pair_trial_indices(rows, la, lb)
+        control_keys = [
+            label_pair_tuple(m["label_a"], m["label_b"]) for m in match_info["matched_pairs"]
+        ]
+        control_idx = trial_indices_for_label_pairs(rows, control_keys)
+        subset_idx = sorted(set(confused_idx + control_idx))
+        if len(subset_idx) < 8:
+            per_pair.append(
+                {
+                    "pair": f"{la}/{lb}",
+                    "n_subset": len(subset_idx),
+                    "status": "insufficient_subset",
+                    **match_info,
+                }
+            )
+            continue
+        model_sub = compute_rdm(X[subset_idx])
+        human_sub = human_rdm[np.ix_(subset_idx, subset_idx)]
+        rsa = perm_rsa_pvalue(model_sub, human_sub, n_perm=n_perm, seed=seed)
+        rhos.append(rsa["rho"])
+        per_pair.append(
+            {
+                "pair": f"{la}/{lb}",
+                "n_subset": len(subset_idx),
+                "n_confused": len(confused_idx),
+                "n_control_items": len(control_idx),
+                "rsa_rho": rsa["rho"],
+                "rsa_p_perm": rsa["p_perm"],
+                **match_info,
+            }
+        )
+    valid = [r for r in rhos if r == r]
+    return {
+        "note": "Difficulty-controlled RSA: confused-pair items vs matched low-confusion pairs.",
+        "rho_mean": float(np.mean(valid)) if valid else float("nan"),
+        "n_pairs": len(per_pair),
+        "per_pair": per_pair,
+    }
+
+
 def run_model(
     model: str,
     activations_dir: Path,
@@ -102,12 +164,18 @@ def run_model(
     *,
     n_perm: int = 2000,
     seed: int = SEED,
+    pairs_json: Optional[Path] = None,
+    top_pairs: int = 3,
 ) -> Dict[str, Any]:
     human_trial_ids = list(meta["trial_ids"])
     per_item = {row["trial_id"]: row for row in meta["per_item"]}
     y_entropy = np.array([per_item[tid]["human_entropy"] for tid in human_trial_ids], float)
     y_confusability = np.array(
         [per_item[tid]["confusability_1_minus_p_target"] for tid in human_trial_ids], float
+    )
+    meta_rows = list(meta["per_item"])
+    pair_specs = default_pair_specs(
+        pairs_json or LOCAL_DATA_DIR / "human_confused_pairs.json", top_k=top_pairs
     )
 
     layers = list_activation_layers(activations_dir)
@@ -121,11 +189,16 @@ def run_model(
         rsa = perm_rsa_pvalue(model_rdm, human_rdm, n_perm=n_perm, seed=seed + layer_idx)
         probe_ent = loo_ridge_rho(X, y_entropy)
         probe_conf = loo_ridge_rho(X, y_confusability)
+        rsa_matched = rsa_difficulty_matched(
+            X, human_rdm, meta_rows, pair_specs, n_perm=n_perm, seed=seed + layer_idx + 1000
+        )
         layer_rows.append(
             {
                 "layer": layer_idx,
                 "rsa_human_confusion_rho": rsa["rho"],
                 "rsa_human_confusion_p_perm": rsa["p_perm"],
+                "rsa_human_confusion_note": "raw full-set RSA; not difficulty-controlled",
+                "rsa_difficulty_matched": rsa_matched,
                 "probe_human_entropy_rho": probe_ent["rho"],
                 "probe_confusability_rho": probe_conf["rho"],
                 "n_trials": int(X.shape[0]),
@@ -159,6 +232,8 @@ def main() -> None:
     ap.add_argument("--out", type=Path, default=None)
     ap.add_argument("--n_perm", type=int, default=2000)
     ap.add_argument("--seed", type=int, default=SEED)
+    ap.add_argument("--pairs_json", type=Path, default=LOCAL_DATA_DIR / "human_confused_pairs.json")
+    ap.add_argument("--top_pairs", type=int, default=3)
     args = ap.parse_args()
 
     if not args.human_rdm.exists() or not args.human_meta.exists():
@@ -176,6 +251,8 @@ def main() -> None:
         meta,
         n_perm=args.n_perm,
         seed=args.seed,
+        pairs_json=args.pairs_json,
+        top_pairs=args.top_pairs,
     )
 
     out = args.out or (
@@ -186,7 +263,13 @@ def main() -> None:
 
     csv_path = out.with_suffix(".csv")
     if result.get("layers"):
-        pd.DataFrame(result["layers"]).to_csv(csv_path, index=False)
+        flat = []
+        for row in result["layers"]:
+            flat_row = {k: v for k, v in row.items() if k != "rsa_difficulty_matched"}
+            matched = row.get("rsa_difficulty_matched") or {}
+            flat_row["rsa_difficulty_matched_rho_mean"] = matched.get("rho_mean")
+            flat.append(flat_row)
+        pd.DataFrame(flat).to_csv(csv_path, index=False)
 
     print(json.dumps({k: v for k, v in result.items() if k != "layers"}, indent=2))
     print(f"wrote {out}")
