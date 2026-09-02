@@ -4,8 +4,9 @@
 Outputs under results/figures/study3/ (PNG + PDF):
   fig1_behaviour.*       accuracy, entropy alignment, consensus calibration
   fig2_geometry.*        probe + RSA by layer (3 models)
-  fig3_steer.*           Qwen L4 causal steer Delta-JS
+  fig3_steer.*           Qwen L4 exploratory steer Delta-JS (pilot)
   fig4_axis_geometry.*   activation-space own-effect / reuse summary
+  fig5_ablation_dissociation.*  v2 primary causal: ablation double-dissociation
 """
 
 from __future__ import annotations
@@ -321,6 +322,70 @@ def fig4_axis_geometry() -> None:
     _save(fig, "fig4_axis_geometry")
 
 
+def fig5_ablation_dissociation() -> None:
+    summary_path = ROOT / "results" / "mech" / "ablate_summary_qwen3vl_layer4.csv"
+    if not summary_path.exists():
+        print(f"skip fig5: missing {summary_path}")
+        return
+
+    df = pd.read_csv(summary_path)
+    pair_axes = [
+        c for c in df["axis"].tolist()
+        if str(c).startswith("pair_") and c in df["axis"].values
+    ]
+    generic = [a for a in ("entropy", "random") if a in set(df["axis"])]
+
+    short = {
+        "entropy": "Entropy",
+        "random": "Random",
+        "pair_bored_unfriendly": "Bored–Unfriendly",
+        "pair_interested_kind": "Interested–Kind",
+        "pair_disappointed_worried": "Disappointed–Worried",
+    }
+    order = [a for a in generic + pair_axes if a in set(df["axis"])]
+
+    fig, axes = plt.subplots(1, 2, figsize=(11.0, 4.0), constrained_layout=True)
+
+    ax = axes[0]
+    x = np.arange(len(order))
+    w = 0.35
+    acc = [float(df[df.axis == a]["mean_delta_accuracy"].iloc[0]) for a in order]
+    ax.bar(x, acc, width=0.65, color="#1f4e79", edgecolor="none")
+    ax.axhline(0.0, color="#333333", lw=0.9)
+    ax.set_xticks(x)
+    ax.set_xticklabels([short.get(a, a) for a in order], rotation=20, ha="right")
+    ax.set_ylabel("Mean Δaccuracy (ablated − baseline)")
+    ax.set_title("A. Global ablation effect (Qwen L4)")
+
+    ax = axes[1]
+    pair_only = [a for a in order if a.startswith("pair_")]
+    x = np.arange(len(pair_only))
+    own_acc, oth_acc = [], []
+    for axis in pair_only:
+        row = df[df.axis == axis].iloc[0]
+        pk = axis
+        own_col = f"own_{pk}_mean_delta_accuracy"
+        own_acc.append(float(row[own_col]) if own_col in row and pd.notna(row[own_col]) else 0.0)
+        oth_acc.append(
+            float(row["reuse_other_pairs_mean_delta_accuracy"])
+            if pd.notna(row.get("reuse_other_pairs_mean_delta_accuracy"))
+            else 0.0
+        )
+    ax.bar(x - w / 2, own_acc, width=w, color="#1f4e79", label="Own pair trials", edgecolor="none")
+    ax.bar(x + w / 2, oth_acc, width=w, color="#9aa5b1", label="Other confused pairs", edgecolor="none")
+    if "random" in set(df["axis"]):
+        rand_acc = float(df[df.axis == "random"]["mean_delta_accuracy"].iloc[0])
+        ax.axhline(rand_acc, color="#c9a227", ls="--", lw=1, label=f"Random axis ({rand_acc:+.3f})")
+    ax.axhline(0.0, color="#333333", lw=0.9)
+    ax.set_xticks(x)
+    ax.set_xticklabels([short.get(a, a) for a in pair_only], rotation=20, ha="right")
+    ax.set_ylabel("Mean Δaccuracy")
+    ax.set_title("B. Pair-specific vs generic (ablation)")
+    ax.legend(loc="best", fontsize=8)
+
+    _save(fig, "fig5_ablation_dissociation")
+
+
 def fig_entropy_all_models() -> None:
     """Supplementary: entropy scatter for all three models."""
     rho, trials = _load_entropy_alignment()
@@ -351,6 +416,7 @@ def main() -> None:
     fig2_geometry()
     fig3_steer()
     fig4_axis_geometry()
+    fig5_ablation_dissociation()
     fig_entropy_all_models()
     print(f"\nAll figures in {OUT}")
 

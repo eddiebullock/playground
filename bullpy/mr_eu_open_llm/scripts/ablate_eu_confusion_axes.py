@@ -1,47 +1,42 @@
 #!/usr/bin/env python3
-"""Exploratory activation steering along EU confusion axes (study3 pilot / v2 secondary).
+"""Activation patching (necessity ablation) along EU confusion axes (study3 v2).
 
-Secondary / contingent test in study3 v2. Primary causal method is activation patching
-(ablate_eu_confusion_axes.py). This script performs additive steering (alpha * axis),
-NOT necessity ablation. Pilot results (medium steer, Qwen L4) were null — consistent
-with steering an entangled generic direction; do not treat as evidence of absence.
+Primary v2 causal test: mean-projection ablation replaces each item's projection onto
+a unit axis with the dataset mean projection (orthogonal component unchanged).
+This is activation patching / ablation — NOT additive steering (see steer_eu_confusion_axes.py).
 
-Intervention: add alpha * unit_axis to layer hidden states during 6AFC sampling.
-Readout: delta JS(model soft, human response distribution).
+Readout: delta accuracy and delta confusion rate (chose human top foil) vs unablated baseline.
+Double-dissociation: pair-axis ablation should degrade own-pair trials more than other
+confused pairs; entropy-axis ablation should degrade broadly. Random axis is the control.
 
 Requires causal_eu_confusion_axes.py outputs in results/mech/.
 
 Usage (HPC GPU):
   python -m scripts.causal_eu_confusion_axes --model qwen3vl --layer 4
-  python -m scripts.steer_eu_confusion_axes --model qwen3vl --layer 4 --smoke
-  python -m scripts.steer_eu_confusion_axes --model qwen3vl --layer 4 \\
-      --max_items 36 --n_samples 10 --alphas=-2,-1,1,2
+  python -m scripts.ablate_eu_confusion_axes --model qwen3vl --layer 4 --smoke
+  python -m scripts.ablate_eu_confusion_axes --model qwen3vl --layer 4 \\
+      --max_items 36 --top_pairs 3
 """
 
 from __future__ import annotations
 
 import argparse
 import json
-from collections import Counter
 from pathlib import Path
 from typing import Any, Dict, List, Literal, Optional, Sequence, Tuple
 
 import numpy as np
 
 from config import LOCAL_DATA_DIR, LOCAL_RESULTS_DIR, SEED
-from scripts.causal_eu_confusion_axes import pair_key, pair_trial_indices
+from scripts.causal_eu_confusion_axes import (
+    default_pair_specs,
+    load_activations,
+    pair_key,
+)
+from scripts.steer_eu_confusion_axes import load_trial_table, trial_pair_membership
 
-PatchMode = Literal["last_token", "all_tokens"]
+AblationMethod = Literal["mean_ablation", "zero_projection"]
 DEFAULT_MECH = LOCAL_RESULTS_DIR / "mech"
-
-
-def _js(p: np.ndarray, q: np.ndarray, eps: float = 1e-12) -> float:
-    p = np.asarray(p, float) + eps
-    q = np.asarray(q, float) + eps
-    p = p / p.sum()
-    q = q / q.sum()
-    m = 0.5 * (p + q)
-    return float(0.5 * (np.sum(p * np.log(p / m)) + np.sum(q * np.log(q / m))))
 
 
 def _unit(v: np.ndarray) -> np.ndarray:
@@ -49,18 +44,20 @@ def _unit(v: np.ndarray) -> np.ndarray:
     return v / n if n > 1e-12 else v
 
 
-class AxisSteerer:
-    """Add alpha * direction to hooked activations."""
+class AxisMeanAblator:
+    """Mean-projection ablation along a 1-D axis (activation patching, not steering)."""
 
     def __init__(
         self,
         direction: np.ndarray,
+        mean_projection: float,
         *,
-        alpha: float,
-        patch_mode: PatchMode = "last_token",
+        method: AblationMethod = "mean_ablation",
+        patch_mode: str = "last_token",
     ) -> None:
         self.direction = _unit(np.asarray(direction, dtype=np.float32).reshape(-1))
-        self.alpha = float(alpha)
+        self.mean_projection = float(mean_projection)
+        self.method = method
         self.patch_mode = patch_mode
         self.hook_calls = 0
         self._handle = None
@@ -69,23 +66,31 @@ class AxisSteerer:
     def attach(self, module: Any, device: Any, dtype: Any) -> None:
         import torch
 
-        steerer = self
-        steerer._dir_t = torch.tensor(steerer.direction, device=device, dtype=dtype)
+        ablator = self
+        ablator._dir_t = torch.tensor(ablator.direction, device=device, dtype=dtype)
 
         def hook(_mod, _inp, out):
-            steerer.hook_calls += 1
+            ablator.hook_calls += 1
             h = out[0] if isinstance(out, tuple) else out
             if not hasattr(h, "shape") or h.ndim < 2:
                 return out
-            d = steerer._dir_t
+            d = ablator._dir_t
             if d is None or d.shape[-1] != h.shape[-1]:
                 return out
-            delta = steerer.alpha * d
             h = h.clone()
-            if steerer.patch_mode == "last_token":
-                h[:, -1, :] = h[:, -1, :] + delta
+            if ablator.patch_mode == "last_token":
+                token = h[:, -1, :]
             else:
-                h = h + delta.view(1, 1, -1)
+                token = h
+            proj = (token * d).sum(dim=-1, keepdim=True)
+            if ablator.method == "mean_ablation":
+                token = token - (proj - ablator.mean_projection) * d
+            else:
+                token = token - proj * d
+            if ablator.patch_mode == "last_token":
+                h[:, -1, :] = token
+            else:
+                h = token
             if isinstance(out, tuple):
                 return (h,) + out[1:]
             return h
@@ -105,106 +110,34 @@ def load_axis(mech_dir: Path, kind: str, model: str, layer: int) -> np.ndarray:
     return _unit(np.load(path))
 
 
-def soft_from_preds(preds: Sequence[Optional[str]], options: Sequence[str]) -> np.ndarray:
-    counts = Counter(p for p in preds if p is not None)
-    dist = np.array([counts.get(o, 0) for o in options], dtype=float)
-    if dist.sum() <= 0:
-        return np.ones(len(options), dtype=float) / len(options)
-    return dist / dist.sum()
+def mean_projection_for_axis(
+    act_dir: Path,
+    layer: int,
+    trial_ids: Sequence[str],
+    axis: np.ndarray,
+) -> float:
+    X = load_activations(act_dir, layer, trial_ids)
+    return float((X @ _unit(axis)).mean())
 
 
-def human_dist_vector(entry: Dict[str, Any], options: Sequence[str]) -> np.ndarray:
-    dist = entry["human_response_distribution"]
-    return np.array([float(dist.get(o, 0.0)) for o in options], dtype=float)
-
-
-def trial_pair_membership(row: Dict[str, Any], label_a: str, label_b: str) -> bool:
-    return {row["human_target_label"], row["top_foil_label"]} == {label_a, label_b}
-
-
-def load_trial_table(
-    manifest_path: Path,
-    human_path: Path,
-    data_root: Path,
-    *,
-    max_items: Optional[int],
-    smoke: bool,
-    pair_specs: Sequence[Tuple[str, str]],
-) -> Tuple[List[Dict[str, Any]], Dict[str, Dict[str, Any]], List[Dict[str, Any]]]:
-    from scripts.evaluate import load_trials_from_manifest
-
-    manifest_trials, _ = load_trials_from_manifest(manifest_path, data_root)
-    human_lookup = json.loads(human_path.read_text(encoding="utf-8"))["trials"]
-    meta_rows = {
-        row["trial_id"]: row
-        for row in json.loads(
-            (LOCAL_DATA_DIR / "human_confusion_meta.json").read_text(encoding="utf-8")
-        )["per_item"]
-    }
-
-    trials: List[Dict[str, Any]] = []
-    for i, t in enumerate(manifest_trials):
-        tid = str(t["trial_id"])
-        he = human_lookup.get(tid)
-        if he is None:
-            continue
-        options = list(he["human_options"])
-        meta = meta_rows.get(tid, {})
-        trials.append(
-            {
-                "trial_id": tid,
-                "trial_index": i,
-                "stimulus_path": t["stimulus_path"],
-                "correct_label": t.get("correct_label") or t.get("label"),
-                "options": options,
-                "human_entry": he,
-                "human_target_label": meta.get("human_target_label", options[0]),
-                "top_foil_label": meta.get("top_foil_label", ""),
-            }
-        )
-
-    if smoke:
-        max_items = max_items or 3
-    if max_items is not None and len(trials) > int(max_items):
-        # Prefer pair-confused trials for mech readout, then fill.
-        selected: List[Dict[str, Any]] = []
-        seen = set()
-        for la, lb in pair_specs:
-            for tr in trials:
-                meta = meta_rows.get(tr["trial_id"], tr)
-                if trial_pair_membership(meta, la, lb) and tr["trial_id"] not in seen:
-                    selected.append(tr)
-                    seen.add(tr["trial_id"])
-        for tr in trials:
-            if len(selected) >= int(max_items):
-                break
-            if tr["trial_id"] not in seen:
-                selected.append(tr)
-                seen.add(tr["trial_id"])
-        trials = selected[: int(max_items)]
-
-    return trials, human_lookup, list(meta_rows.values())
-
-
-def run_steer(
+def run_ablate(
     *,
     model_key: str,
     layer: int,
     mech_dir: Path,
+    act_dir: Path,
     manifest_path: Path,
     data_root: Path,
     human_path: Path,
     outdir: Path,
-    alphas: List[float],
-    patch_modes: List[str],
     axis_names: List[str],
     pair_specs: Sequence[Tuple[str, str]],
-    n_samples: int,
-    sample_temperature: float,
     max_items: Optional[int],
     max_frames: int,
     seed: int,
     smoke: bool,
+    sample_temperature: float,
+    ablation_method: AblationMethod,
 ) -> Dict[str, Any]:
     import torch
     from transformers import AutoProcessor
@@ -228,22 +161,29 @@ def run_steer(
     dtype = torch.bfloat16 if device_s == "cuda" else torch.float32
     device = torch.device(device_s)
 
+    meta = json.loads((LOCAL_DATA_DIR / "human_confusion_meta.json").read_text(encoding="utf-8"))
+    all_trial_ids = list(meta["trial_ids"])
+
     if device_s != "cuda":
         proto = {
             "status": "planned_only_no_cuda",
             "model": model_key,
             "layer": layer,
             "n_trials": len(trials),
+            "intervention": "activation_patching_mean_ablation",
         }
         outdir.mkdir(parents=True, exist_ok=True)
-        (outdir / f"steer_protocol_{model_key}_layer{layer}.json").write_text(
+        (outdir / f"ablate_protocol_{model_key}_layer{layer}.json").write_text(
             json.dumps(proto, indent=2) + "\n", encoding="utf-8"
         )
         return proto
 
     axes: Dict[str, np.ndarray] = {}
+    mean_projs: Dict[str, float] = {}
     for name in axis_names:
-        axes[name] = load_axis(mech_dir, name, model_key, layer)
+        vec = load_axis(mech_dir, name, model_key, layer)
+        axes[name] = vec
+        mean_projs[name] = mean_projection_for_axis(act_dir, layer, all_trial_ids, vec)
 
     model_path = resolve_model_path(model_key)
     if model_key != "gemma4":
@@ -280,9 +220,8 @@ def run_steer(
     def generate_once(
         trial: Dict[str, Any],
         *,
-        steerer: Optional[AxisSteerer],
+        ablator: Optional[AxisMeanAblator],
         tag: str,
-        sample_i: int,
     ) -> Optional[str]:
         options = list(trial["options"])
         trial_copy = dict(trial)
@@ -303,10 +242,10 @@ def run_steer(
             path, model_key=model_key, fps=1.0, max_frames=max_frames
         )
         prompt = build_4afc_prompt(options, condition="video_only")
-        seed_generation(seed, model_key, f"eu_steer_{trial['trial_id']}_{tag}", sample_i)
-        if steerer is not None:
-            steerer.hook_calls = 0
-            steerer.attach(module, device, dtype)
+        seed_generation(seed, model_key, f"eu_ablate_{trial['trial_id']}_{tag}", 0)
+        if ablator is not None:
+            ablator.hook_calls = 0
+            ablator.attach(module, device, dtype)
         try:
             text = generate_model_response(
                 model_key=model_key,
@@ -326,72 +265,79 @@ def run_steer(
                 prefer_loaded_model=True,
             )
         finally:
-            if steerer is not None:
-                steerer.remove()
+            if ablator is not None:
+                ablator.remove()
         pred, _ = parse_emotion(text, options)
         return pred
 
-    conditions: List[Tuple[str, str, Optional[np.ndarray], float, str]] = [
-        ("baseline", "baseline", None, 0.0, "none"),
-    ]
-    for pm in patch_modes:
-        for axis_name, axis_vec in axes.items():
-            for a in alphas:
-                if abs(a) < 1e-12:
-                    continue
-                conditions.append(
-                    (f"{axis_name}_a{a:+g}_{pm}", axis_name, axis_vec, a, pm)
-                )
+    conditions: List[Tuple[str, str, Optional[str]]] = [("baseline", "baseline", None)]
+    for axis_name in axis_names:
+        conditions.append((f"ablate_{axis_name}", axis_name, axis_name))
 
     for trial in trials:
         tid = trial["trial_id"]
         options = list(trial["options"])
-        p_human = human_dist_vector(trial["human_entry"], options)
+        correct = trial.get("correct_label") or trial.get("label")
+        meta_row = meta_by_tid.get(tid, {})
+        top_foil = str(meta_row.get("top_foil_label", ""))
         membership = pair_tags.get(tid, "other")
-        print(f"steer {tid}", flush=True)
+        print(f"ablate {tid}", flush=True)
 
-        for cond_name, axis_label, axis_vec, alpha, pm in conditions:
-            steerer = None
-            if axis_vec is not None:
-                steerer = AxisSteerer(axis_vec, alpha=alpha, patch_mode=pm)  # type: ignore[arg-type]
-            preds: List[Optional[str]] = []
-            for s_i in range(int(n_samples)):
-                preds.append(generate_once(trial, steerer=steerer, tag=cond_name, sample_i=s_i))
-            soft = soft_from_preds(preds, options)
+        for cond_name, axis_label, axis_key in conditions:
+            ablator = None
+            if axis_key is not None:
+                ablator = AxisMeanAblator(
+                    axes[axis_key],
+                    mean_projs[axis_key],
+                    method=ablation_method,
+                )
+            pred = generate_once(trial, ablator=ablator, tag=cond_name)
+            confused = bool(pred is not None and top_foil and pred == top_foil)
             rows.append(
                 {
                     "trial_id": tid,
                     "condition": cond_name,
                     "axis": axis_label,
-                    "alpha": alpha,
-                    "patch_mode": pm,
-                    "js_human": _js(soft, p_human),
-                    "soft_dist": soft.tolist(),
-                    "n_parsed": int(sum(p is not None for p in preds)),
+                    "correct": bool(pred is not None and correct and pred == correct),
+                    "confused_with_top_foil": confused,
+                    "prediction": pred,
+                    "correct_label": correct,
+                    "top_foil_label": top_foil,
                     "pair_membership": membership,
                     "hook_module": module_name,
+                    "ablation_method": ablation_method if axis_key else "none",
                 }
             )
 
     import pandas as pd
 
     df = pd.DataFrame(rows)
-    csv_path = outdir / f"steer_trials_{model_key}_layer{layer}.csv"
+    csv_path = outdir / f"ablate_trials_{model_key}_layer{layer}.csv"
     df.to_csv(csv_path, index=False)
 
-    base = df[df["condition"] == "baseline"][["trial_id", "js_human"]].rename(
-        columns={"js_human": "js_human_base"}
+    base = df[df["condition"] == "baseline"][
+        ["trial_id", "correct", "confused_with_top_foil"]
+    ].rename(
+        columns={
+            "correct": "correct_base",
+            "confused_with_top_foil": "confused_base",
+        }
     )
     merged = df[df["condition"] != "baseline"].merge(base, on="trial_id", how="left")
-    merged["delta_js_human"] = merged["js_human"] - merged["js_human_base"]
+    merged["delta_correct"] = merged["correct"].astype(float) - merged["correct_base"].astype(float)
+    merged["delta_confusion_rate"] = (
+        merged["confused_with_top_foil"].astype(float) - merged["confused_base"].astype(float)
+    )
 
-    summary_rows = []
-    for (axis, alpha, pm), g in merged.groupby(["axis", "alpha", "patch_mode"]):
+    summary_rows: List[Dict[str, Any]] = []
+    for axis_name, g in merged.groupby("axis"):
+        if axis_name == "baseline":
+            continue
         row: Dict[str, Any] = {
-            "axis": axis,
-            "alpha": float(alpha),
-            "patch_mode": pm,
-            "mean_delta_js_human": float(g["delta_js_human"].mean()),
+            "axis": axis_name,
+            "ablation_method": ablation_method,
+            "mean_delta_accuracy": float(g["delta_correct"].mean()),
+            "mean_delta_confusion_rate": float(g["delta_confusion_rate"].mean()),
             "n_trials": int(g["trial_id"].nunique()),
         }
         for la, lb in pair_specs:
@@ -399,13 +345,19 @@ def run_steer(
             own = g[g["pair_membership"] == pk]
             other = g[(g["pair_membership"] != pk) & (g["pair_membership"] != "other")]
             if len(own):
-                row[f"own_{pk}_mean_delta_js"] = float(own["delta_js_human"].mean())
+                row[f"own_{pk}_mean_delta_accuracy"] = float(own["delta_correct"].mean())
+                row[f"own_{pk}_mean_delta_confusion_rate"] = float(
+                    own["delta_confusion_rate"].mean()
+                )
             if len(other):
-                row[f"reuse_other_pairs_mean_delta_js"] = float(other["delta_js_human"].mean())
+                row["reuse_other_pairs_mean_delta_accuracy"] = float(other["delta_correct"].mean())
+                row["reuse_other_pairs_mean_delta_confusion_rate"] = float(
+                    other["delta_confusion_rate"].mean()
+                )
         summary_rows.append(row)
 
     summary_df = pd.DataFrame(summary_rows)
-    summary_csv = outdir / f"steer_summary_{model_key}_layer{layer}.csv"
+    summary_csv = outdir / f"ablate_summary_{model_key}_layer{layer}.csv"
     summary_df.to_csv(summary_csv, index=False)
 
     result = {
@@ -413,22 +365,22 @@ def run_steer(
         "model": model_key,
         "layer": layer,
         "hook_module": module_name,
+        "intervention": "activation_patching_mean_ablation",
+        "ablation_method": ablation_method,
         "n_trials": len(trials),
-        "n_samples": n_samples,
-        "patch_modes": patch_modes,
-        "alphas": alphas,
         "axes": axis_names,
         "pair_specs": [{"label_a": a, "label_b": b} for a, b in pair_specs],
+        "mean_projections": mean_projs,
         "csv": str(csv_path),
         "summary_csv": str(summary_csv),
         "readout_note": (
-            "Negative mean_delta_js_human = model soft label moved closer to human distribution."
-            " Compare own pair vs other pair deltas for reuse."
+            "Negative mean_delta_accuracy = ablation hurt accuracy (necessity)."
+            " Positive mean_delta_confusion_rate = more top-foil choices after ablation."
+            " Compare own pair vs other pairs vs random axis."
         ),
     }
-    (outdir / f"steer_summary_{model_key}_layer{layer}.json").write_text(
-        json.dumps(result, indent=2, sort_keys=True) + "\n", encoding="utf-8"
-    )
+    json_path = outdir / f"{model_key}_eu_ablation_layer{layer}.json"
+    json_path.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     return result
 
 
@@ -437,54 +389,58 @@ def main() -> None:
     ap.add_argument("--model", required=True)
     ap.add_argument("--layer", type=int, required=True)
     ap.add_argument("--mech_dir", type=Path, default=DEFAULT_MECH)
+    ap.add_argument(
+        "--activations_dir",
+        type=Path,
+        default=None,
+        help="default: results/activations/baseline_{model}_6afc/{model}",
+    )
     ap.add_argument("--manifest", type=Path, default=LOCAL_DATA_DIR / "eu_emotions_full_manifest.json")
     ap.add_argument("--data_root", type=Path, default=LOCAL_DATA_DIR / "eu_emotions")
     ap.add_argument("--human", type=Path, default=LOCAL_DATA_DIR / "eu_emotions_human_entropy.json")
     ap.add_argument("--pairs_json", type=Path, default=LOCAL_DATA_DIR / "human_confused_pairs.json")
     ap.add_argument("--outdir", type=Path, default=DEFAULT_MECH)
-    ap.add_argument("--alphas", default="-1,1")
-    ap.add_argument("--patch_modes", default="last_token")
-    ap.add_argument("--n_samples", type=int, default=5)
-    ap.add_argument("--sample_temperature", type=float, default=1.0)
     ap.add_argument("--max_items", type=int, default=None)
     ap.add_argument("--max_frames", type=int, default=4)
-    ap.add_argument("--top_pairs", type=int, default=2)
+    ap.add_argument("--top_pairs", type=int, default=3)
     ap.add_argument("--seed", type=int, default=SEED)
     ap.add_argument("--smoke", action="store_true")
+    ap.add_argument("--sample_temperature", type=float, default=0.0)
+    ap.add_argument(
+        "--ablation_method",
+        choices=("mean_ablation", "zero_projection"),
+        default="mean_ablation",
+    )
     args = ap.parse_args()
 
-    from scripts.causal_eu_confusion_axes import default_pair_specs
-
     pair_specs = default_pair_specs(args.pairs_json, top_k=args.top_pairs)
-    axis_names = ["confusability", "entropy", "random"]
+    axis_names = ["entropy", "random"]
     for la, lb in pair_specs:
         pk = pair_key(la, lb)
-        axis_path = args.mech_dir / f"axis_{pk}_{args.model}_layer{args.layer}.npy"
-        if axis_path.exists():
+        if (args.mech_dir / f"axis_{pk}_{args.model}_layer{args.layer}.npy").exists():
             axis_names.append(pk)
 
-    alphas = [float(x) for x in args.alphas.split(",") if x.strip()]
-    patch_modes = [x.strip() for x in args.patch_modes.split(",") if x.strip()]
-    n_samples = 3 if args.smoke and args.n_samples == 5 else args.n_samples
+    act_dir = args.activations_dir or (
+        LOCAL_RESULTS_DIR / "activations" / f"baseline_{args.model}_6afc" / args.model
+    )
 
-    result = run_steer(
+    result = run_ablate(
         model_key=args.model,
         layer=args.layer,
         mech_dir=args.mech_dir,
+        act_dir=act_dir,
         manifest_path=args.manifest,
         data_root=args.data_root,
         human_path=args.human,
         outdir=args.outdir,
-        alphas=alphas,
-        patch_modes=patch_modes,
         axis_names=axis_names,
         pair_specs=pair_specs,
-        n_samples=n_samples,
-        sample_temperature=args.sample_temperature,
         max_items=args.max_items,
         max_frames=args.max_frames,
         seed=args.seed,
         smoke=bool(args.smoke),
+        sample_temperature=args.sample_temperature,
+        ablation_method=args.ablation_method,  # type: ignore[arg-type]
     )
     print(json.dumps(result, indent=2))
 

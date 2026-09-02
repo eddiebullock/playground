@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
-"""Build causal intervention axes for EU confusability mech-interp (study3).
+"""Build intervention axes for EU confusability mech-interp (study3 v2).
 
 Offline CPU: from saved activations + human_confusion_meta.json, build unit axes:
-  - confusability: mean(high 1-p_target) - mean(low)
-  - entropy: mean(high human_entropy) - mean(low)
+  - confusability: mean(high 1-p_target) - mean(low)  [generic; entangled with entropy]
+  - entropy: mean(high human_entropy) - mean(low)     [generic difficulty]
   - pair_<a>_<b>: mean(pair-confused trials) - mean(other trials)
-  - random: seeded unit vector (steer control)
+  - random: seeded unit vector (control)
 
-Reports reuse geometry (does confusability axis separate entropy classes?) before GPU steer.
+Also reports entanglement (pair vs generic axes), difficulty-matched non-confused pairs
+for RSA, and reuse geometry. Axes feed activation patching (ablation) and optional
+exploratory steering — patching is the primary v2 causal method.
 
 Usage:
   python -m scripts.causal_eu_confusion_axes --model qwen3vl --layer 4
@@ -19,6 +21,7 @@ import argparse
 import json
 import re
 from pathlib import Path
+from collections import defaultdict
 from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 import numpy as np
@@ -68,6 +71,105 @@ def pair_trial_indices(rows: Sequence[Dict[str, Any]], label_a: str, label_b: st
         if labels == want:
             out.append(i)
     return out
+
+
+def label_pair_tuple(label_a: str, label_b: str) -> Tuple[str, str]:
+    return tuple(sorted([label_a.strip(), label_b.strip()], key=str.casefold))
+
+
+def group_indices_by_label_pair(rows: Sequence[Dict[str, Any]]) -> Dict[Tuple[str, str], List[int]]:
+    groups: Dict[Tuple[str, str], List[int]] = defaultdict(list)
+    for i, row in enumerate(rows):
+        key = label_pair_tuple(row["human_target_label"], row["top_foil_label"])
+        groups[key].append(i)
+    return dict(groups)
+
+
+def axis_entanglement(pair_axis: np.ndarray, generic_axis: np.ndarray) -> Dict[str, float]:
+    """Subspace overlap between pair and generic (entropy) axes."""
+    pa = _unit(np.asarray(pair_axis, float))
+    ga = _unit(np.asarray(generic_axis, float))
+    cos = float(np.dot(pa, ga))
+    cos_abs = float(abs(cos))
+    spec = float(np.sqrt(max(0.0, 1.0 - cos_abs**2)))
+    return {
+        "cos_pair_vs_generic": cos,
+        "cos_abs_pair_vs_generic": cos_abs,
+        "specificity_ratio_vs_generic": spec,
+    }
+
+
+def select_difficulty_matched_pairs(
+    rows: Sequence[Dict[str, Any]],
+    label_a: str,
+    label_b: str,
+    confused_keys: Sequence[Tuple[str, str]],
+    *,
+    min_matches: int = 3,
+    tol_sd: float = 0.5,
+) -> Dict[str, Any]:
+    """Non-confused label-pairs matched on mean item entropy to a confused pair."""
+    groups = group_indices_by_label_pair(rows)
+    confused_set = set(confused_keys)
+    confused_idx = pair_trial_indices(rows, label_a, label_b)
+    if not confused_idx:
+        return {
+            "label_a": label_a,
+            "label_b": label_b,
+            "n_confused_items": 0,
+            "matched_pairs": [],
+            "matching_tolerance_sd": tol_sd,
+            "widened": False,
+        }
+    ent_vals = [float(r["human_entropy"]) for r in rows]
+    pool_sd = float(np.std(ent_vals))
+    if pool_sd < 1e-12:
+        pool_sd = 1.0
+    mean_h = float(np.mean([ent_vals[i] for i in confused_idx]))
+
+    def _matches(tolerance: float) -> List[Dict[str, Any]]:
+        out: List[Dict[str, Any]] = []
+        for key, idxs in sorted(groups.items()):
+            if key in confused_set:
+                continue
+            pair_mean = float(np.mean([ent_vals[i] for i in idxs]))
+            if abs(pair_mean - mean_h) <= tolerance * pool_sd:
+                out.append(
+                    {
+                        "label_a": key[0],
+                        "label_b": key[1],
+                        "n_items": len(idxs),
+                        "mean_human_entropy": pair_mean,
+                    }
+                )
+        return out
+
+    matched = _matches(tol_sd)
+    widened = False
+    if len(matched) < min_matches:
+        tol_sd = 1.0
+        matched = _matches(tol_sd)
+        widened = True
+    return {
+        "label_a": label_a,
+        "label_b": label_b,
+        "n_confused_items": len(confused_idx),
+        "mean_confused_entropy": mean_h,
+        "matched_pairs": matched,
+        "matching_tolerance_sd": tol_sd,
+        "widened": widened,
+    }
+
+
+def trial_indices_for_label_pairs(
+    rows: Sequence[Dict[str, Any]],
+    pair_keys: Sequence[Tuple[str, str]],
+) -> List[int]:
+    groups = group_indices_by_label_pair(rows)
+    out: List[int] = []
+    for key in pair_keys:
+        out.extend(groups.get(key, []))
+    return sorted(set(out))
 
 
 def load_activations(
@@ -143,6 +245,8 @@ def analyze_model_layer(
             continue
         ax_p = mean_diff_axis(X, pidx, rest)
         pr_p = project(X, ax_p)
+        entang = axis_entanglement(ax_p, axis_ent)
+        entang_conf = axis_entanglement(ax_p, axis_conf)
         pair_rows.append(
             {
                 "pair": pair_key(la, lb),
@@ -151,8 +255,16 @@ def analyze_model_layer(
                 "n_pair_trials": len(pidx),
                 "own_effect_pair_vs_rest": float(pr_p[pidx].mean() - pr_p[rest].mean()),
                 "reuse_on_entropy_high": float(pr_p[high_e].mean() - pr_p[low_e].mean()),
+                "entanglement_vs_entropy": entang,
+                "entanglement_vs_confusability": entang_conf,
             }
         )
+
+    confused_keys = [label_pair_tuple(la, lb) for la, lb in pair_specs]
+    difficulty_matched = [
+        select_difficulty_matched_pairs(rows, la, lb, confused_keys)
+        for la, lb in pair_specs
+    ]
 
     return {
         "model": model,
@@ -168,6 +280,7 @@ def analyze_model_layer(
             (np.sum(np.abs(rand_gaps) >= abs(own_conf)) + 1) / (len(rand_gaps) + 1)
         ),
         "pair_axes": pair_rows,
+        "difficulty_matched_control_pairs": difficulty_matched,
         "steer_patch_status": "axes_ready",
     }
 
