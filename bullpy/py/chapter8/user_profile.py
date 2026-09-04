@@ -1,5 +1,8 @@
+import pdb
+
 def build_profile(first, last, **user_info):
     """build a dict containing everything we know about user"""
+    breakpoint()
     profile = {}
     profile['first_name'] = first
     profile['last_name'] = last
