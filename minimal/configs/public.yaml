@@ -1,0 +1,43 @@
+# PUBLIC PRACTICE CONFIG
+# Swap to configs/team.yaml later. Do not point this file at proprietary assets.
+
+source: public_practice
+notes: >
+  Dummy / optional garage TransFuser++ weights, public Qwen2-VL, public dashcam frames.
+  Not the team's models or footage.
+
+driver:
+  backend: dummy          # dummy | garage
+  device: cpu
+  # Used only when backend=garage. Empty lidar BEV is injected on purpose.
+  checkpoint_dir: data/checkpoints/tfpp_seed0
+  garage_team_code: vendor/carla_garage/team_code
+  image_width: 1024
+  image_height: 256
+  n_waypoints: 8
+  default_speed_mps: 8.0
+  default_command: LANEFOLLOW
+
+thinker:
+  # Laptop talks to this URL. Tunnel HPC onto 127.0.0.1:8000.
+  url: http://127.0.0.1:8000
+  timeout_s: 8.0
+  model_id: Qwen/Qwen2-VL-2B-Instruct
+  prompt_version: v1
+
+combiner:
+  stale_ok: true
+  default_action: SLOW
+  default_speed_cap_mps: 3.0
+  nudge_y_m: 0.4
+  action_speed_caps_mps:
+    KEEP: null
+    SLOW: 3.0
+    STOP: 0.5
+    NUDGE_LEFT: null
+    NUDGE_RIGHT: null
+
+replay:
+  frames_dir: data/frames
+  log_dir: data/logs
+  max_frames: 120

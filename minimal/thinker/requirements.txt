@@ -1,0 +1,9 @@
+# HPC Thinker server only. Install this on the GPU node, not the login node.
+torch
+transformers>=4.45.0
+accelerate
+qwen-vl-utils
+Pillow>=10.0
+fastapi>=0.110
+uvicorn[standard]>=0.27
+python-multipart>=0.0.9

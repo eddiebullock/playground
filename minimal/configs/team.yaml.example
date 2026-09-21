@@ -1,0 +1,24 @@
+# Copy to team.yaml once you have internal access.
+# The replay harness / combiner / async client should not need code changes —
+# only this config and the two backend classes.
+
+source: team_internal
+notes: >
+  Point these paths at the team's Driver checkpoint, Thinker weights, and proprietary footage.
+
+driver:
+  backend: garage          # or a new driver/team_driver.py that implements Driver
+  device: cuda             # if the laptop ever has a GPU; otherwise cpu
+  checkpoint_dir: /REPLACE/ME/team_driver_ckpt
+  garage_team_code: /REPLACE/ME/team_repo/team_code
+  # When the team has real lidar, stop injecting zeros in driver/garage_driver.py
+
+thinker:
+  url: http://127.0.0.1:8000
+  timeout_s: 8.0
+  model_id: /REPLACE/ME/team_qwen_checkpoint
+  prompt_version: team     # keep the HAZARD=...; ACTION=... contract
+
+replay:
+  frames_dir: /REPLACE/ME/proprietary_frames
+  log_dir: data/logs

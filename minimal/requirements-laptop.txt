@@ -1,0 +1,12 @@
+# Laptop: Driver, combiner, replay harness, optional mock Thinker server.
+# No GPU required. Do not install transformers here unless you want a local mock-off test.
+numpy>=1.26
+opencv-python-headless>=4.8
+Pillow>=10.0
+PyYAML>=6.0
+requests>=2.31
+fastapi>=0.110
+uvicorn[standard]>=0.27
+python-multipart>=0.0.9
+# torch is already useful if you later load garage weights on CPU.
+# Install CPU torch from pytorch.org if it is missing.
