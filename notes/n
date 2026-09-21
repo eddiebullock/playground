@@ -1,0 +1,116 @@
+#!/usr/bin/env python3
+"""Tiny terminal notes app. Run with: ./n"""
+
+from datetime import datetime
+from pathlib import Path
+
+NOTES_FILE = Path(__file__).resolve().parent / "notes.txt"
+
+
+def load():
+    if not NOTES_FILE.exists():
+        return []
+    text = NOTES_FILE.read_text(encoding="utf-8")
+    return [line.rstrip("\n") for line in text.splitlines() if line.strip()]
+
+
+def save(notes):
+    NOTES_FILE.write_text("\n".join(notes) + ("\n" if notes else ""), encoding="utf-8")
+
+
+def show(notes):
+    print()
+    if not notes:
+        print("  (no notes yet)")
+    else:
+        for i, note in enumerate(notes, 1):
+            print(f"  {i}. {note}")
+    print()
+
+
+def help_text():
+    print(
+        "  type a note and press enter to add it\n"
+        "  l       list notes\n"
+        "  d N     delete note N\n"
+        "  e N     edit note N\n"
+        "  c       clear all notes\n"
+        "  q       quit\n"
+        "  h       help"
+    )
+
+
+def main():
+    notes = load()
+    print(f"notes  ({NOTES_FILE})")
+    print("saved after every change.  h for help.")
+    show(notes)
+
+    while True:
+        try:
+            raw = input("> ").strip()
+        except (EOFError, KeyboardInterrupt):
+            print("\nbye")
+            break
+
+        if not raw:
+            continue
+
+        cmd, *rest = raw.split(maxsplit=1)
+        arg = rest[0] if rest else ""
+
+        if cmd in {"q", "quit", "exit"}:
+            print("bye")
+            break
+
+        if cmd in {"h", "help", "?"}:
+            help_text()
+            continue
+
+        if cmd in {"l", "ls", "list"}:
+            show(notes)
+            continue
+
+        if cmd in {"c", "clear"}:
+            notes = []
+            save(notes)
+            print("cleared")
+            continue
+
+        if cmd in {"d", "del", "rm"}:
+            try:
+                i = int(arg) - 1
+                gone = notes.pop(i)
+            except (ValueError, IndexError):
+                print("usage: d N")
+                continue
+            save(notes)
+            print(f"deleted: {gone}")
+            continue
+
+        if cmd in {"e", "edit"}:
+            try:
+                i = int(arg.split(maxsplit=1)[0]) - 1
+                notes[i]
+            except (ValueError, IndexError):
+                print("usage: e N")
+                continue
+            try:
+                new = input(f"  [{notes[i]}] -> ").strip()
+            except (EOFError, KeyboardInterrupt):
+                print()
+                continue
+            if new:
+                notes[i] = new
+                save(notes)
+                print("updated")
+            continue
+
+        stamp = datetime.now().strftime("%Y-%m-%d %H:%M")
+        notes.append(f"[{stamp}] {raw}")
+        save(notes)
+        print(f"saved #{len(notes)}")
+
+
+if __name__ == "__main__":
+    main()
