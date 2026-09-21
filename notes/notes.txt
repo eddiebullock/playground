@@ -1,13 +1,3 @@
-[2026-09-21 14:16] This week
-[2026-09-21 14:16] o	Test on Orin
-Get hyperstack MCP server with claude
-[2026-09-21 14:16] o	Leo has a repo clone it and have a look – confirm TransfuserModel
-[2026-09-21 14:16] o	Research, Leo docs
-[2026-09-21 14:16] NEXT
-[2026-09-21 14:16] -	“Whats the most high value thing I could do or build in week/month 1 that would shock the founding team”
-[2026-09-21 14:16] -	What’s the models Leo is suggesting - Waiting for NVIDIA edge model October = focus remains on data collection and training pipeline model potentially
-[2026-09-21 14:16] -	Model research considering new spec/goal understanding
-[2026-09-21 14:16] -	data collection and training pipeline
-[2026-09-21 14:16] o	synthetic data and simulation
-[2026-09-21 14:16] -	Send team breakdown of my model selection ideas/suggestions and their hardware requirements/tradeoffs etc
-[2026-09-21 14:16] -	Can we set up a rig simply with cameras in the right position with accurate IMU, timestamps?
+set up call with ned + ask for AV contacts
+[2026-09-21 17:25] focus group reorganise
+[2026-09-21 19:04] contract

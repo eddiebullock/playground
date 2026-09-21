@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 """Tiny terminal notes app. Run with: ./n"""
 
+import re
 from datetime import datetime
 from pathlib import Path
 
 NOTES_FILE = Path(__file__).resolve().parent / "notes.txt"
+STAMP_RE = re.compile(r"^\[(\d{4}-\d{2}-\d{2} \d{2}:\d{2})\]\s*(.*)$")
 
 
 def load():
@@ -26,6 +28,20 @@ def show(notes):
         for i, note in enumerate(notes, 1):
             print(f"  {i}. {note}")
     print()
+
+
+def split_note(note):
+    match = STAMP_RE.match(note)
+    if match:
+        return match.group(1), match.group(2)
+    return None, note
+
+
+def apply_edit(old, new):
+    old_stamp, _ = split_note(old)
+    new_stamp, new_body = split_note(new)
+    stamp = new_stamp or old_stamp or datetime.now().strftime("%Y-%m-%d %H:%M")
+    return f"[{stamp}] {new_body}"
 
 
 def help_text():
@@ -96,12 +112,12 @@ def main():
                 print("usage: e N")
                 continue
             try:
-                new = input(f"  [{notes[i]}] -> ").strip()
+                new = input(f"  {notes[i]} -> ").strip()
             except (EOFError, KeyboardInterrupt):
                 print()
                 continue
             if new:
-                notes[i] = new
+                notes[i] = apply_edit(notes[i], new)
                 save(notes)
                 print("updated")
             continue
