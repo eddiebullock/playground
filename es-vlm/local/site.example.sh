@@ -29,6 +29,16 @@ ESVLM_RMET_DIR="/absolute/path/to/rmet/data"
 ESVLM_EU_EMOTIONS_DIR="/absolute/path/to/eu_emotions/data"
 ESVLM_MINDREADING_DIR="/absolute/path/to/mindreading/data"
 
+# Public, redistributable S-domain sets. Never mix with licensed trees.
+# Large video sets can live on a project store via ESVLM_CLEVRER_DIR.
+ESVLM_PUBLIC_DIR="${HPC_ROOT}/data/public"
+ESVLM_PHYSBENCH_DIR="${ESVLM_PUBLIC_DIR}/physbench/raw"
+ESVLM_PHYSBENCH_MANIFEST="${ESVLM_PUBLIC_DIR}/physbench/manifest.json"
+ESVLM_CLEVRER_DIR="${ESVLM_PUBLIC_DIR}/clevrer/raw"
+ESVLM_CLEVRER_MANIFEST="${ESVLM_PUBLIC_DIR}/clevrer/manifest.json"
+ESVLM_PIQA_DIR="${ESVLM_PUBLIC_DIR}/piqa/raw"
+ESVLM_PIQA_MANIFEST="${ESVLM_PUBLIC_DIR}/piqa/manifest.json"
+
 # Caches must be absolute paths on RDS. A quoted tilde over SSH creates a
 # literal ~ directory on $HOME (over quota).
 ESVLM_CACHE_ROOT="${HPC_ROOT}/cache"
@@ -47,6 +57,10 @@ export HPC_USER HPC_HOST HPC_SSH_CONTROL_PATH HPC_ROOT
 export HPC_GPU_ACCOUNT HPC_CPU_ACCOUNT HPC_GPU_PARTITION HPC_CPU_PARTITION
 export ESVLM_MODELS_DIR ESVLM_NEW_MODELS_DIR
 export ESVLM_RMET_DIR ESVLM_EU_EMOTIONS_DIR ESVLM_MINDREADING_DIR
+export ESVLM_PUBLIC_DIR
+export ESVLM_PHYSBENCH_DIR ESVLM_PHYSBENCH_MANIFEST
+export ESVLM_CLEVRER_DIR ESVLM_CLEVRER_MANIFEST
+export ESVLM_PIQA_DIR ESVLM_PIQA_MANIFEST
 export ESVLM_CACHE_ROOT
 export HPC_GPU_MEM_PER_CPU_MAX_MB HPC_CPU_MEM_PER_CPU_MAX_MB
 export SITE_DENYLIST

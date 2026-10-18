@@ -64,12 +64,38 @@ this Mac: MPS bf16, 12 synthetic items, layers 0 and 14, alphas
 (9.2 s/item), 27 option-tokens/item, peak allocated 4073 MB. Summary:
 `results/aggregate/smoke_mac_qwen3vl_2b.json`.
 
+## 2026-10-18 — Molmo2 dropped from the primary panel
+
+Dropped **before Phase 1**, because of loader/processor incompatibility
+(text-only residual extract). Not dropped because of an E/S finding:
+there are no Molmo E/S results. `env-molmo` stays on disk.
+
+## 2026-10-18 — S-domain defaults
+
+Locked public S-sets (never mixed with licensed stimuli trees):
+
+1. PhysBench dynamics / relationships, text A-D options only. Official
+   `test.json` has no answers; labels from `lmms-lab-eval/PhysBench`.
+2. CLEVRER validation explanatory / predictive / counterfactual MCQ.
+3. PIQA validation as the text-only backbone control.
+
+Rejected as the main visual S-set: 2001 Folk Physics Test; ScienceQA /
+AI2 ARC. Fetch via `slurm/fetch_sdomain.sbatch` into `$ESVLM_PUBLIC_DIR`.
+CLEVRER videos use `$ESVLM_CLEVRER_DIR` when the user RDS file cap is tight.
+
 ## 2026-10-18 — Framing
 
 Questionnaires generate hypotheses. They are not valid trait measures of
 models. Always say E-direction / S-direction.
 
-## 2026-10-18 — No steering until OSF preregistration
+## 2026-10-18 — OSF gates confirmatory steering only
 
-Milestone E is a go/no-go. Do not start Phase 3 sweeps until the user
-confirms the OSF preregistration is posted.
+OSF preregistration is a public, timestamped analysis plan. It is there
+so confirmatory steering results (Phase 3 / RQ2) cannot be quietly
+re-specified after seeing them.
+
+The user asked to continue without posting it. Unsteered Phase 1
+baselines and later RQ1 extraction proceed. `esvlm-steer` still refuses
+confirmatory sweeps unless `ESVLM_PREREG_POSTED=1` or
+`--allow-unpreregistered` (smoke only). Do not treat unsteered
+baselines as a double-dissociation result.

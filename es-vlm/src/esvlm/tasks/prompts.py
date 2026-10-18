@@ -74,6 +74,9 @@ TEMPLATES: dict[str, dict[str, str]] = {
     "mindreading": MINDREADING_TEMPLATES,
     "synthetic": SYNTHETIC_TEMPLATES,
     "s_task": S_TASK_TEMPLATES,
+    "physbench": S_TASK_TEMPLATES,
+    "clevrer": S_TASK_TEMPLATES,
+    "piqa": S_TASK_TEMPLATES,
 }
 
 

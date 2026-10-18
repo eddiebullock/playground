@@ -1,0 +1,11 @@
+name: piqa
+domain: S
+media_type: none
+max_frames: 0
+templates:
+  - mechanism
+  - system
+  - numbered
+# Text-only physical-commonsense control for the Qwen3 backbone.
+manifest: ${oc.env:ESVLM_PIQA_MANIFEST,""}
+stim_root: ${oc.env:ESVLM_PIQA_DIR,""}
