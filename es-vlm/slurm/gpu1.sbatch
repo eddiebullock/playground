@@ -14,7 +14,13 @@
 #   scripts/submit.sh --script slurm/gpu1.sbatch -J qwen3vl_8b_synthetic_smoke
 
 set -euo pipefail
-ESVLM_ROOT="${ESVLM_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
+if [ -z "${ESVLM_ROOT:-}" ]; then
+  if [ -n "${SLURM_SUBMIT_DIR:-}" ] && [ -f "${SLURM_SUBMIT_DIR}/slurm/_preamble.sh" ]; then
+    ESVLM_ROOT="${SLURM_SUBMIT_DIR}"
+  else
+    ESVLM_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+  fi
+fi
 # shellcheck disable=SC1091
 source "${ESVLM_ROOT}/slurm/_preamble.sh"
 # shellcheck disable=SC1091
@@ -42,6 +48,10 @@ if [ ! -f "${WEIGHTS}/config.json" ] && [ ! -f "${ESVLM_NEW_MODELS_DIR}/${MODEL}
   echo "ERROR: missing weights for ${MODEL}. Fetch with slurm/fetch_weights.sbatch" >&2
   exit 2
 fi
+MODELS_DIR_ARG="${ESVLM_MODELS_DIR:-}"
+if [ ! -f "${WEIGHTS}/config.json" ] && [ -f "${ESVLM_NEW_MODELS_DIR}/${MODEL}/config.json" ]; then
+  MODELS_DIR_ARG="${ESVLM_NEW_MODELS_DIR}"
+fi
 
 SCORE_ARGS=(
   --model "${MODEL}"
@@ -52,7 +62,7 @@ SCORE_ARGS=(
   --trial_limit "${TRIAL_LIMIT:-0}"
   --offline
 )
-if [ -n "${ESVLM_MODELS_DIR:-}" ]; then
-  SCORE_ARGS+=(--models-dir "${ESVLM_MODELS_DIR}")
+if [ -n "${MODELS_DIR_ARG}" ]; then
+  SCORE_ARGS+=(--models-dir "${MODELS_DIR_ARG}")
 fi
 python -m esvlm.cli.score "${SCORE_ARGS[@]}"

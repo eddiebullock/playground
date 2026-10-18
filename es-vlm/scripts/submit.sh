@@ -78,5 +78,6 @@ if [ -n "${MEM_PER_CPU}" ]; then
   SBATCH_ARGS+=(--mem-per-cpu="${MEM_PER_CPU}")
 fi
 
-echo "submit: sbatch ${SBATCH_ARGS[*]} ${EXTRA[*]} ${SCRIPT}"
+export ESVLM_ROOT="${ESVLM_ROOT:-${HPC_ROOT}}"
+echo "submit: ESVLM_ROOT=${ESVLM_ROOT} sbatch ${SBATCH_ARGS[*]} ${EXTRA[*]} ${SCRIPT}"
 sbatch "${SBATCH_ARGS[@]}" "${EXTRA[@]}" "${SCRIPT}"
