@@ -93,6 +93,14 @@ not a finding). If later panel models are also at floor, use the
 already-running CLEVRER shard as the fallback S-readout instead of
 fetching more benchmarks.
 
+## 2026-10-18 — E-task scoring wired
+
+Public S path is confirmed, so `esvlm-score` loads licensed E-sets in
+place: RMET (36, 4-AFC) and EU-Emotions full (243, 6-way from the
+entropy option set; never the 118-trial subset). Mind Reading jsonl has
+labels but no forced-choice options; it is not scored until a MCQ form
+exists. No stimuli are copied into the repo.
+
 ## 2026-10-18 — Framing
 
 Questionnaires generate hypotheses. They are not valid trait measures of

@@ -86,6 +86,32 @@ def test_eu_emotions_refuses_subset(tmp_path: Path) -> None:
         load_eu_emotions_items(path, tmp_path)
 
 
+def test_eu_emotions_uses_entropy_options(tmp_path: Path) -> None:
+    (tmp_path / "clip.mp4").write_bytes(b"x")
+    man = tmp_path / "eu_emotions_full_manifest.json"
+    ent = tmp_path / "entropy.json"
+    man.write_text(
+        '{"trials":[{"trial_id":"t1","label":"alpha","stimulus_path":"clip.mp4"}]}',
+        encoding="utf-8",
+    )
+    ent.write_text(
+        '{"trials":{"t1":{"human_options":["beta","alpha","gamma"],"human_entropy":0.1}}}',
+        encoding="utf-8",
+    )
+    items = load_eu_emotions_items(man, tmp_path, entropy_path=ent)
+    assert len(items) == 1
+    assert items[0].options == ("beta", "alpha", "gamma")
+    assert items[0].correct_idx == 1
+    assert Path(items[0].media).name == "clip.mp4"
+
+
+def test_resolve_media_uses_basename(tmp_path: Path) -> None:
+    from esvlm.tasks.items import resolve_media
+
+    (tmp_path / "item_01.png").write_bytes(b"x")
+    assert Path(resolve_media(tmp_path, "nested/item_01.png")).name == "item_01.png"
+
+
 def test_synthetic_items(synthetic_dir: Path) -> None:
     from esvlm.tasks.items import load_synthetic_items
 

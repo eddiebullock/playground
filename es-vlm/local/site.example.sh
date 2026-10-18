@@ -26,7 +26,11 @@ ESVLM_NEW_MODELS_DIR="${HPC_ROOT}/models"
 # Read-only stimuli already on the cluster. Load in place; copy nothing
 # into tracked locations.
 ESVLM_RMET_DIR="/absolute/path/to/rmet/data"
+ESVLM_RMET_MANIFEST="${ESVLM_RMET_DIR}/stimuli/manifest.json"
+ESVLM_RMET_ANSWER_KEY="${ESVLM_RMET_DIR}/answer_key/rmet_adult_answer_key.json"
 ESVLM_EU_EMOTIONS_DIR="/absolute/path/to/eu_emotions/data"
+ESVLM_EU_EMOTIONS_MANIFEST="/absolute/path/to/eu_emotions_full_manifest.json"
+ESVLM_EU_EMOTIONS_ENTROPY="/absolute/path/to/eu_emotions_human_entropy.json"
 ESVLM_MINDREADING_DIR="/absolute/path/to/mindreading/data"
 
 # Public, redistributable S-domain sets. Never mix with licensed trees.
@@ -56,7 +60,9 @@ SITE_DENYLIST="login.example.invalid,YOUR_HPC_USER,YOUR_GPU_ACCOUNT,YOUR_CPU_ACC
 export HPC_USER HPC_HOST HPC_SSH_CONTROL_PATH HPC_ROOT
 export HPC_GPU_ACCOUNT HPC_CPU_ACCOUNT HPC_GPU_PARTITION HPC_CPU_PARTITION
 export ESVLM_MODELS_DIR ESVLM_NEW_MODELS_DIR
-export ESVLM_RMET_DIR ESVLM_EU_EMOTIONS_DIR ESVLM_MINDREADING_DIR
+export ESVLM_RMET_DIR ESVLM_RMET_MANIFEST ESVLM_RMET_ANSWER_KEY
+export ESVLM_EU_EMOTIONS_DIR ESVLM_EU_EMOTIONS_MANIFEST ESVLM_EU_EMOTIONS_ENTROPY
+export ESVLM_MINDREADING_DIR
 export ESVLM_PUBLIC_DIR
 export ESVLM_PHYSBENCH_DIR ESVLM_PHYSBENCH_MANIFEST
 export ESVLM_CLEVRER_DIR ESVLM_CLEVRER_MANIFEST
