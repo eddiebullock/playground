@@ -4,14 +4,9 @@ Treat this repository as **public-safe** regardless of GitHub visibility.
 
 ## Visibility
 
-Checked 2026-10-18 via `gh repo view eddiebullock/playground --json visibility`.
-
-`gh` was not usable in that session: both stored accounts had invalid
-keyring tokens, and the active account was the work identity rather than
-`eddiebullock`. Visibility is therefore **unconfirmed**. Record the value
-here once `gh auth status` shows `eddiebullock` and the command succeeds.
-
-Until then, assume the repo is public.
+Checked 2026-10-18 via `gh repo view eddiebullock/playground --json visibility`
+with the `eddiebullock` account active. Visibility is **public**. Treat
+every commit as public-safe.
 
 ## Never track
 
