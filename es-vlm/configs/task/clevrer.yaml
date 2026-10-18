@@ -1,0 +1,16 @@
+name: clevrer
+domain: S
+media_type: video
+max_frames: 8
+templates:
+  - mechanism
+  - system
+  - numbered
+# Validation split only. Public set under $ESVLM_PUBLIC_DIR.
+manifest: ${oc.env:ESVLM_CLEVRER_MANIFEST,""}
+stim_root: ${oc.env:ESVLM_CLEVRER_DIR,""}
+keep:
+  question_types:
+    - explanatory
+    - predictive
+    - counterfactual

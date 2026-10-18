@@ -38,7 +38,7 @@ Verified via the Hugging Face models API on 2026-10-18 (not invented):
 | qwen3vl_2b | `Qwen/Qwen3-VL-2B-Instruct` | `89644892e4d85e24eaac8bacfd4f463576704203` | main | Mac smoke / scale ladder |
 | qwen3vl_32b | `Qwen/Qwen3-VL-32B-Instruct` | `0cfaf48183f594c314753d30a4c4974bc75f3ccb` | main | Fits one A100 in bf16 |
 | gemma4_e4b | `google/gemma-4-E4B-it` | `ee0ef6023621cff504d758262d4e04895a5af4a2` | main | On cluster |
-| molmo2 | `allenai/Molmo2-O-7B` | `784410650d12be9bc086118fdefa32d2c3bced86` | molmo | Open data; contamination check |
+| molmo2 | `allenai/Molmo2-O-7B` | `784410650d12be9bc086118fdefa32d2c3bced86` | molmo | Excluded 2026-10-18; not confirmatory |
 | qwen25vl_7b | `Qwen/Qwen2.5-VL-7B-Instruct` | `cc594898137f460bfe9f0759e9844b3ce807cfb5` | main | Published-steering replication |
 | qwen3_text | `Qwen/Qwen3-8B` | `b968826d9c46dd6066d109eabc6255188de91218` | main | Text-only control; matching 8B backbone |
 | internvl35_8b | `OpenGVLab/InternVL3_5-8B-HF` | `741a7d03020411e666c6109218ab71e08151ef86` | throwaway | Optional; drop after two load failures |
@@ -64,10 +64,44 @@ this Mac: MPS bf16, 12 synthetic items, layers 0 and 14, alphas
 (9.2 s/item), 27 option-tokens/item, peak allocated 4073 MB. Summary:
 `results/aggregate/smoke_mac_qwen3vl_2b.json`.
 
+## 2026-10-18 — Molmo2 dropped from the primary panel
+
+Dropped **before Phase 1**, because of loader/processor incompatibility
+(text-only residual extract: dummy image grid; `images=[]` then failed
+in the processor). Not dropped because of an E/S finding: there are no
+Molmo E/S results.
+
+The confirmatory panel is still Qwen3-VL at 2B/8B/32B, Qwen2.5-VL-7B,
+Qwen2-VL-7B, Gemma 4 E4B, and text-only Qwen3-8B. Gemma 4 remains the
+non-Qwen VLM. `env-molmo` stays on disk if we ever reconsider.
+
 ## 2026-10-18 — Framing
 
 Questionnaires generate hypotheses. They are not valid trait measures of
 models. Always say E-direction / S-direction.
+
+## 2026-10-18 — S-domain defaults
+
+Locked public S-sets (not licensed stimuli; never mixed with RMET /
+EU-Emotions / Mind Reading trees):
+
+1. **PhysBench** dynamics / relationships / phenomena items with
+   *textual* A-D options (Chow et al., ICLR 2025). The official HF
+   `test.json` has no answers; labels come from
+   `lmms-lab-eval/PhysBench`. Image-option items are dropped because
+   sequential option log-probs need text labels.
+2. **CLEVRER** validation explanatory / predictive / counterfactual
+   MCQ (Yi et al.). Causal-video complement.
+3. **PIQA** validation as the text-only physical-commonsense control
+   for the Qwen3 backbone.
+
+Rejected as the main visual S-set: 2001 Folk Physics Test (n=20,
+public-PDF contamination, licence); ScienceQA / AI2 ARC (school-science
+or text, not intuitive physics).
+
+Fetch into `$ESVLM_PUBLIC_DIR` via `slurm/fetch_sdomain.sbatch`.
+CLEVRER videos go under `$ESVLM_CLEVRER_DIR` on the project store
+because the user RDS file cap is too tight for thousands of mp4s.
 
 ## 2026-10-18 — No steering until OSF preregistration
 

@@ -35,7 +35,7 @@ Two Transformers stacks, each a uv project that installs `esvlm` editable:
 | Profile | Path | Transformers | Models |
 | --- | --- | --- | --- |
 | env-main | `envs/main/` | 5.x | Qwen3-VL, Gemma 4, Qwen2.5-VL, Qwen3 text |
-| env-molmo | `envs/molmo/` | 4.57 | Molmo2 only |
+| env-molmo | `envs/molmo/` | 4.57 | Molmo2 only (not in primary panel) |
 
 Mac (from this folder):
 
@@ -53,6 +53,10 @@ directly. Every launcher unsets `VIRTUAL_ENV` before activating an env.
 RMET, Multiracial RMET, Mind Reading, EU-Emotions faces/voices, EQ-60 / SQ-R
 item text, and all human item-level data stay out of git. Loaders read
 existing manifests in place. See `docs/DATA_GOVERNANCE.md`.
+
+Public S-domain sets (PhysBench, CLEVRER validation, PIQA) live under
+`$ESVLM_PUBLIC_DIR` in this study's tree, never in a licensed stimuli
+directory.
 
 ## Checkpoints
 

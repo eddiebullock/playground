@@ -34,6 +34,9 @@ Read-only reuse (never write, rsync or `sbatch` into those trees):
   into `$HPC_ROOT/models`.
 - Stimuli: RMET under `$ESVLM_RMET_DIR`; EU-Emotions and Mind Reading
   under `$ESVLM_EU_EMOTIONS_DIR` and `$ESVLM_MINDREADING_DIR`.
+- Public S-domain sets: `$ESVLM_PUBLIC_DIR` (PhysBench, CLEVRER
+  validation, PIQA). Fetch with `slurm/fetch_sdomain.sbatch`. Never
+  write these into a licensed tree.
 
 ## OS and Python
 
@@ -68,6 +71,8 @@ Read-only reuse (never write, rsync or `sbatch` into those trees):
   to `logs/%x_%j.out` with `--open-mode=append`.
 - Eval jobs set `HF_HUB_OFFLINE=1` and `TRANSFORMERS_OFFLINE=1`. Fetch
   weights with `slurm/fetch_weights.sbatch` on the CPU partition.
+  Fetch public S-domain sets with `slurm/fetch_sdomain.sbatch`
+  (`DATASET=physbench|clevrer|piqa`).
 
 Submit only through `scripts/submit.sh`. Never use plain `sbatch` in
 docs or habit.

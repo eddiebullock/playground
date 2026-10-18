@@ -20,6 +20,13 @@ every commit as public-safe.
   `local/site.sh` and `local/HPC_RUNBOOK.md`. Tracked docs say "the
   cluster" and use `$HPC_USER`, `$HPC_GPU_ACCOUNT`, `$HPC_ROOT`.
 
+## Public S-domain sets
+
+PhysBench, CLEVRER validation, and PIQA are public redistributable
+sets. They live under `$ESVLM_PUBLIC_DIR` in this study's tree. Do not
+copy them into a licensed stimuli directory. Do not commit media or
+raw JSON. Manifests stay on RDS.
+
 ## How loaders may read licensed material
 
 Loaders read existing manifests **in place** from paths supplied by

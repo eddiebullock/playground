@@ -34,7 +34,16 @@ item-level alignment.
 - RQ4: RSA + JSD vs human tertiles. The human workbook stays on the Mac.
 - Fairness: accuracy by face ethnicity x gender.
 
+## S-domain tasks
+
+- PhysBench dynamics / relationships / phenomena, text options only.
+- CLEVRER validation explanatory / predictive / counterfactual MCQ.
+- PIQA validation as the text-only backbone control.
+
 ## Exclusions
+
+Molmo2-O-7B is not in the confirmatory panel (infra/processor failure
+during setup; no E/S scores exist for it).
 
 Single-layer emotion-confusion steering is not a confirmatory analysis.
 Prior nulls at Qwen3-VL layer 4 (jobs 33776847, 33536702) are cited as

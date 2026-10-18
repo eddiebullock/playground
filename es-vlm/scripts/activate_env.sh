@@ -19,16 +19,17 @@ if [ -n "${CONDA_PREFIX:-}" ] && [ "${CONDA_SHLVL:-0}" != "0" ]; then
 fi
 
 ENV_DIR="${ESVLM_ROOT}/envs/${ESVLM_PROFILE}"
+VENV_DIR="${ESVLM_VENV_ROOT:-${ESVLM_ROOT}/envs}/${ESVLM_PROFILE}/.venv"
 if [ ! -d "${ENV_DIR}" ]; then
   echo "ERROR: missing env profile ${ENV_DIR}" >&2
   exit 2
 fi
 
-if [ -x "${ENV_DIR}/.venv/bin/python" ]; then
+if [ -x "${VENV_DIR}/bin/python" ]; then
   # shellcheck disable=SC1091
-  source "${ENV_DIR}/.venv/bin/activate"
+  source "${VENV_DIR}/bin/activate"
   return 0 2>/dev/null || exit 0
 fi
 
-echo "ERROR: ${ENV_DIR}/.venv not built. On the cluster, submit the CPU env-build job." >&2
+echo "ERROR: ${VENV_DIR} not built. On the cluster, submit the CPU env-build job." >&2
 exit 2

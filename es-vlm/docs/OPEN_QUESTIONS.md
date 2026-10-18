@@ -42,25 +42,14 @@ these before Phase 1 baselines lock.
    and Mind Reading item dirs should be confirmed against `$ESVLM_*_DIR`
    before the first cluster smoke.
 
-## S-domain tasks (for the user to choose; Phase 1)
+## S-domain tasks (Phase 1)
 
-Public physics / mechanical VQA candidates (licences and counts to be
-confirmed before download; none fetched yet):
+Accepted and fetched 2026-10-18. See `docs/DECISIONS.md`.
 
-1. **ScienceQA** (image subset, physical/science items) — CC-BY-NC.
-   ~21k QA pairs; filter to physical/mechanical diagrams.
-2. **AI2 Science Questions / ARC** (text; some illustrated releases) —
-   CC-BY. Challenge set ~2.6k. Text-only control more than visual S.
-3. **Physion / Physion++** (physical scene understanding, video) —
-   research licence. Hundreds of scenarios; not classic MCQ.
-4. **CLEVR** (synthetic compositional visual reasoning) — CC-BY.
-   ~100k questions; systematic but not mechanical-real-world.
-5. **Something-Something V2** (action/mechanics video) — research
-   licence; large. Would need an MCQ wrapper.
-
-Do not download any of these until the user picks a set and a licence
-that can sit next to the licensed clinical stimuli without mixing
-trees.
+Kept: PhysBench 3681 text-option dynamics/relationships items;
+CLEVRER validation 19804 explanatory/predictive/counterfactual MCQ;
+PIQA 1838 validation items. Image-option PhysBench items are out
+until we have multi-image scoring.
 
 ## huggingface_hub
 
@@ -70,3 +59,10 @@ trees.
 ## InternVL3.5
 
 7. Optional. Try only in a throwaway env. Drop after two load failures.
+
+## Molmo2
+
+9. Excluded from the primary panel on 2026-10-18 (processor / text-only
+   residual path). Reopen only if we need a third architectural family
+   and the adapter is rewritten. Do not treat a later Molmo run as
+   confirmatory unless it is added back in the OSF prereg.

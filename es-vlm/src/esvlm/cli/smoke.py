@@ -149,7 +149,14 @@ def _text_residuals(model, processor, module, texts: list[str], device):
     acts = []
     for text in texts:
         inputs = processor(text=text, return_tensors="pt")
-        inputs = {k: v.to(device) if hasattr(v, "to") else v for k, v in inputs.items()}
+        items = dict(inputs)
+        # Molmo2 text-only encode still emits a dummy image grid
+        # (AssertionError: Expected 0 image grids, but got 1).
+        for key in list(items):
+            low = key.lower()
+            if any(part in low for part in ("image", "pixel", "grid")):
+                items.pop(key)
+        inputs = {k: v.to(device) if hasattr(v, "to") else v for k, v in items.items()}
         catcher = ResidualCatcher([module])
         with torch.no_grad(), catcher:
             model(**inputs)

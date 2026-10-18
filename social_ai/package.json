@@ -1,0 +1,33 @@
+{
+  "name": "social-assistant-concepts",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port 5173 --strictPort",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "build:brief": "vite build --config vite.brief.config.ts && cp dist-brief/brief.html \"$HOME/Documents/Social-glasses-brief.html\"",
+    "build:offline": "vite build --config vite.offline.config.ts && rm -rf \"$HOME/Documents/Gloss-demo\" && cp -R dist-offline \"$HOME/Documents/Gloss-demo\"",
+    "render:scene-a": "tsx scripts/render-scene-a.ts",
+    "render:all": "tsx scripts/render-all.ts"
+  },
+  "dependencies": {
+    "@fontsource/libre-baskerville": "^5.2.5",
+    "@fontsource/public-sans": "^5.2.5",
+    "framer-motion": "^12.23.12",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.1.12",
+    "@types/react": "^19.1.12",
+    "@types/react-dom": "^19.1.9",
+    "@vitejs/plugin-react": "^5.0.2",
+    "playwright": "^1.55.0",
+    "tailwindcss": "^4.1.12",
+    "tsx": "^4.20.5",
+    "typescript": "^5.9.2",
+    "vite": "^7.1.4",
+    "vite-plugin-singlefile": "^2.3.3"
+  }
+}

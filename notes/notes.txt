@@ -1,3 +1,7 @@
-set up call with ned + ask for AV contacts
-[2026-09-21 17:25] focus group reorganise
-[2026-09-21 19:04] contract
+[2026-10-08 17:48] MNML 1. get bot moving anyhow (load transfuser into it) 2. build a cool looking simulation (unreal engine game) 3. data collection, testing env, training pipelines
+[2026-10-11 16:53] CAM social_ai agents 24-7, dream project, what makes headlines, acceptability study
+[2026-10-11 18:02] Stanford, Anthropic, Harvard, TypeSafe --backup
+[2026-10-15 13:30] outreach dennis stanford visit
+[2026-10-15 13:56] flexible funding outreach
+[2026-10-17 18:09] FRIDAY CAM mention standford collab to dennis
+[2026-10-18 15:31] MONDAY CAM meetings focus group etc + prepare for first cascade submission, SIM restart laptop & render & yes to above cpu/gpu jobs for cosmos, e2e | leos repo pull and merge e2e, bookend research, NeurIPS reg

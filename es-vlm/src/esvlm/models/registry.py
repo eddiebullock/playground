@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Literal
@@ -64,8 +65,8 @@ PANEL: dict[str, ModelSpec] = {
         "784410650d12be9bc086118fdefa32d2c3bced86",
         "molmo",
         "molmo2",
-        True,
-        "Transformers 4.57 only",
+        False,
+        "excluded 2026-10-18: processor API; no E/S results",
     ),
     "qwen25vl_7b": ModelSpec(
         "qwen25vl_7b",
@@ -126,10 +127,25 @@ def list_models() -> list[str]:
 
 
 def resolve_local_dir(spec: ModelSpec, models_dir: Path | None) -> Path | None:
-    if models_dir is None:
+    dirs: list[Path] = []
+    if models_dir is not None:
+        dirs.append(Path(models_dir))
+    for env_key in ("ESVLM_MODELS_DIR", "ESVLM_NEW_MODELS_DIR"):
+        raw = os.environ.get(env_key)
+        if raw:
+            path = Path(raw)
+            if path not in dirs:
+                dirs.append(path)
+    if not dirs:
         return None
-    for name in (spec.key, CLUSTER_KEY_ALIASES.get(spec.key, spec.key), spec.hf_id.split("/")[-1]):
-        candidate = models_dir / name
-        if (candidate / "config.json").is_file():
-            return candidate
+    names = [spec.key, spec.hf_id.split("/")[-1]]
+    for alias, key in CLUSTER_KEY_ALIASES.items():
+        if key == spec.key:
+            names.append(alias)
+    unique_names = list(dict.fromkeys(names))
+    for root in dirs:
+        for name in unique_names:
+            candidate = root / name
+            if (candidate / "config.json").is_file():
+                return candidate
     return None

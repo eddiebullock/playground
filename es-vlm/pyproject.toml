@@ -44,6 +44,7 @@ esvlm-smoke = "esvlm.cli.smoke:main"
 esvlm-score = "esvlm.cli.score:main"
 esvlm-extract = "esvlm.cli.extract:main"
 esvlm-steer = "esvlm.cli.steer:main"
+esvlm-fetch-sdomain = "esvlm.cli.fetch_sdomain:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

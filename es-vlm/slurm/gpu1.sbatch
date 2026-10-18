@@ -42,6 +42,10 @@ if [ ! -f "${WEIGHTS}/config.json" ] && [ ! -f "${ESVLM_NEW_MODELS_DIR}/${MODEL}
   echo "ERROR: missing weights for ${MODEL}. Fetch with slurm/fetch_weights.sbatch" >&2
   exit 2
 fi
+MODELS_DIR_ARG="${ESVLM_MODELS_DIR:-}"
+if [ ! -f "${WEIGHTS}/config.json" ] && [ -f "${ESVLM_NEW_MODELS_DIR}/${MODEL}/config.json" ]; then
+  MODELS_DIR_ARG="${ESVLM_NEW_MODELS_DIR}"
+fi
 
 SCORE_ARGS=(
   --model "${MODEL}"
@@ -52,7 +56,7 @@ SCORE_ARGS=(
   --trial_limit "${TRIAL_LIMIT:-0}"
   --offline
 )
-if [ -n "${ESVLM_MODELS_DIR:-}" ]; then
-  SCORE_ARGS+=(--models-dir "${ESVLM_MODELS_DIR}")
+if [ -n "${MODELS_DIR_ARG}" ]; then
+  SCORE_ARGS+=(--models-dir "${MODELS_DIR_ARG}")
 fi
 python -m esvlm.cli.score "${SCORE_ARGS[@]}"

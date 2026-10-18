@@ -6,6 +6,7 @@ requires-python = ">=3.10"
 dependencies = [
   "esvlm",
   "torch>=2.4",
+  "torchvision>=0.19",
   "transformers>=4.57,<4.58",
   "accelerate>=1.0",
   "nnsight>=0.4",

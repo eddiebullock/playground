@@ -1,0 +1,84 @@
+@import "@fontsource/public-sans/latin-400.css";
+@import "@fontsource/public-sans/latin-500.css";
+@import "@fontsource/public-sans/latin-600.css";
+@import "@fontsource/libre-baskerville/latin-400.css";
+@import "@fontsource/libre-baskerville/latin-700.css";
+@import "tailwindcss";
+
+:root {
+  --navy: #14213d;
+  --paper: #f7f5f0;
+  --orange: #e07a2f;
+  --blue: #3a7ca5;
+  --body: #4a5568;
+  --uncertain: #8a94a6;
+  --harbor: #1a2332;
+  --harbor-rail: #151d29;
+  --harbor-raised: #1e2938;
+  --harbor-tile: #243044;
+  --harbor-line: #314158;
+  --sea: #8aa899;
+  --paper-2: #efece4;
+  --danger: #8f4545;
+  --serif: "Libre Baskerville", Georgia, serif;
+  --sans: "Public Sans", "Avenir Next", "Segoe UI", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--harbor);
+  font-family: var(--sans);
+  color: var(--paper);
+}
+
+button,
+input {
+  font-family: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+.reduced-motion *,
+.reduced-motion *::before,
+.reduced-motion *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .respect-os-motion *,
+  .respect-os-motion *::before,
+  .respect-os-motion *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+.talk-beat {
+  transform-origin: center bottom;
+  animation: talk-beat 0.85s ease-in-out infinite;
+}
+
+@keyframes talk-beat {
+  0%,
+  100% {
+    transform: scaleY(0.35);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+

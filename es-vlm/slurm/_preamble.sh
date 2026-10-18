@@ -57,6 +57,10 @@ export PIP_CACHE_DIR="${CACHE}/pip"
 export UV_CACHE_DIR="${CACHE}/uv"
 export MPLCONFIGDIR="${CACHE}/mpl"
 export PYTHONNOUSERSITE=1
+# Parallel wheel extract on Lustre returned ENOSPC on a tiny package
+# while several 400 MB+ CUDA wheels were inflight (job 38749378).
+export UV_CONCURRENT_DOWNLOADS="${UV_CONCURRENT_DOWNLOADS:-2}"
+export UV_CONCURRENT_EXTRACTS="${UV_CONCURRENT_EXTRACTS:-1}"
 export PATH="${ESVLM_ROOT}/.local/bin:${PATH}"
 
 VERSION_FILE="${ESVLM_ROOT}/VERSION"
@@ -80,7 +84,7 @@ if [ -n "${SLURM_JOB_GPUS:-}${CUDA_VISIBLE_DEVICES:-}" ]; then
 fi
 
 # Echo every run argument. A previous job silently ran smoke because MODE was ignored.
-echo "args: MODEL=${MODEL:-} MODE=${MODE:-} TASK=${TASK:-} LAYER=${LAYER:-} LAYERS=${LAYERS:-} ALPHA=${ALPHA:-} ALPHAS=${ALPHAS:-} FRAMES=${FRAMES:-} N_SAMPLES=${N_SAMPLES:-} SHARD=${SHARD:-} VECTOR=${VECTOR:-} TRIAL_OFFSET=${TRIAL_OFFSET:-} TRIAL_LIMIT=${TRIAL_LIMIT:-}"
+echo "args: MODEL=${MODEL:-} MODE=${MODE:-} TASK=${TASK:-} DATASET=${DATASET:-} LAYER=${LAYER:-} LAYERS=${LAYERS:-} ALPHA=${ALPHA:-} ALPHAS=${ALPHAS:-} FRAMES=${FRAMES:-} N_SAMPLES=${N_SAMPLES:-} SHARD=${SHARD:-} VECTOR=${VECTOR:-} TRIAL_OFFSET=${TRIAL_OFFSET:-} TRIAL_LIMIT=${TRIAL_LIMIT:-}"
 
 # Misspelled / lowercase variants of known vars.
 for pair in model:MODEL mode:MODE layer:LAYER layers:LAYERS alpha:ALPHA alphas:ALPHAS frames:FRAMES n_samples:N_SAMPLES shard:SHARD task:TASK vector:VECTOR trial_offset:TRIAL_OFFSET trial_limit:TRIAL_LIMIT; do
