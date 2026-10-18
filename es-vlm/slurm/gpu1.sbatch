@@ -43,10 +43,16 @@ if [ ! -f "${WEIGHTS}/config.json" ] && [ ! -f "${ESVLM_NEW_MODELS_DIR}/${MODEL}
   exit 2
 fi
 
-python -m esvlm.cli.score \
-  --model "${MODEL}" \
-  --task "${TASK}" \
-  --out "outputs/${MODE}_${MODEL}_${TASK}_${SHARD}" \
-  --frames "${FRAMES}" \
-  --trial_offset "${TRIAL_OFFSET:-0}" \
+SCORE_ARGS=(
+  --model "${MODEL}"
+  --task "${TASK}"
+  --out "outputs/${MODE}_${MODEL}_${TASK}_${SHARD}"
+  --frames "${FRAMES}"
+  --trial_offset "${TRIAL_OFFSET:-0}"
   --trial_limit "${TRIAL_LIMIT:-0}"
+  --offline
+)
+if [ -n "${ESVLM_MODELS_DIR:-}" ]; then
+  SCORE_ARGS+=(--models-dir "${ESVLM_MODELS_DIR}")
+fi
+python -m esvlm.cli.score "${SCORE_ARGS[@]}"

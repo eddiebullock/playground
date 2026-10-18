@@ -57,6 +57,7 @@ export PIP_CACHE_DIR="${CACHE}/pip"
 export UV_CACHE_DIR="${CACHE}/uv"
 export MPLCONFIGDIR="${CACHE}/mpl"
 export PYTHONNOUSERSITE=1
+export PATH="${ESVLM_ROOT}/.local/bin:${PATH}"
 
 VERSION_FILE="${ESVLM_ROOT}/VERSION"
 GIT_COMMIT="unknown"

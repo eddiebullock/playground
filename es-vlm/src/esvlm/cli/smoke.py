@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import time
 from pathlib import Path
 
@@ -32,6 +33,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--max-items", type=int, default=12)
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--offline", action="store_true")
+    parser.add_argument(
+        "--models-dir",
+        type=Path,
+        default=Path(os.environ["ESVLM_MODELS_DIR"]) if os.environ.get("ESVLM_MODELS_DIR") else None,
+    )
     args = parser.parse_args(argv)
 
     log = setup_logging()
@@ -47,7 +53,7 @@ def main(argv: list[str] | None = None) -> int:
     from esvlm.models.loader import load_model, residual_modules
 
     t0 = time.perf_counter()
-    loaded = load_model(args.model, offline=args.offline)
+    loaded = load_model(args.model, models_dir=args.models_dir, offline=args.offline)
     load_s = time.perf_counter() - t0
     device = torch_device(loaded.device)
     layers = residual_modules(loaded)

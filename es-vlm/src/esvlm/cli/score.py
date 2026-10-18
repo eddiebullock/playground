@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import os
 from pathlib import Path
 
 from esvlm.utils.envcheck import check_job_env
@@ -20,22 +21,31 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--trial_limit", type=int, default=0)
     parser.add_argument("--frames", type=int, default=8)
     parser.add_argument("--seed", type=int, default=0)
+    parser.add_argument("--offline", action="store_true")
+    parser.add_argument(
+        "--models-dir",
+        type=Path,
+        default=Path(os.environ["ESVLM_MODELS_DIR"]) if os.environ.get("ESVLM_MODELS_DIR") else None,
+    )
     args = parser.parse_args(argv)
     log = setup_logging()
     echo_run_args(vars(args), log)
     if args.task == "synthetic":
         from esvlm.cli.smoke import main as smoke
 
-        return smoke(
-            [
-                "--model",
-                args.model,
-                "--out",
-                str(args.out),
-                "--seed",
-                str(args.seed),
-            ]
-        )
+        smoke_args = [
+            "--model",
+            args.model,
+            "--out",
+            str(args.out),
+            "--seed",
+            str(args.seed),
+        ]
+        if args.offline:
+            smoke_args.append("--offline")
+        if args.models_dir is not None:
+            smoke_args.extend(["--models-dir", str(args.models_dir)])
+        return smoke(smoke_args)
     raise SystemExit(
         f"task {args.task} needs a licensed manifest path from local/site.sh; "
         "not run in Milestone A/B"
