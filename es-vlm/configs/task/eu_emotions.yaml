@@ -1,0 +1,14 @@
+name: eu_emotions
+domain: E
+media_type: video
+max_frames: 8
+templates:
+  - direct
+  - clip
+  - numbered
+# Full manifest only. Never the 118-trial subset.
+manifest: ${oc.env:ESVLM_EU_EMOTIONS_MANIFEST,""}
+entropy: ${oc.env:ESVLM_EU_EMOTIONS_ENTROPY,""}
+stim_root: ${oc.env:ESVLM_EU_EMOTIONS_DIR,""}
+audio_source: uk_voices
+forbid_audio_dir: Emotions/Audio

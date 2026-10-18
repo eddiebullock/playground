@@ -1,0 +1,6 @@
+key: gemma4_e4b
+hf_id: google/gemma-4-E4B-it
+revision: "ee0ef6023621cff504d758262d4e04895a5af4a2"
+env: main
+adapter: gemma4
+max_frames: 8

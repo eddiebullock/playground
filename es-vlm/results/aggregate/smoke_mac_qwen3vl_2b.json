@@ -1,0 +1,14 @@
+{
+  "model": "qwen3vl_2b",
+  "revision": "89644892e4d85e24eaac8bacfd4f463576704203",
+  "device": "mps",
+  "dtype": "bfloat16",
+  "n_items": 12,
+  "n_rows": 72,
+  "load_seconds": 22.817,
+  "score_seconds": 109.861,
+  "seconds_per_item": 9.155,
+  "peak_mem_mb": 4072.9,
+  "tokens_per_item": 27.0,
+  "parquet": "outputs/smoke/synthetic__qwen3vl_2b__smoke.parquet"
+}

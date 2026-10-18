@@ -1,0 +1,6 @@
+key: qwen2vl_7b
+hf_id: Qwen/Qwen2-VL-7B-Instruct
+revision: "eed13092ef92e448dd6875b2a00151bd3f7db0ac"
+env: main
+adapter: qwen_vl
+max_frames: 8

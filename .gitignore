@@ -68,6 +68,9 @@ agent-transcripts/
 
 # Model artifacts and checkpoints
 models/
+# es-vlm source package (not weight dumps)
+!es-vlm/src/esvlm/models/
+!es-vlm/src/esvlm/models/**
 checkpoints/
 runs/
 wandb/

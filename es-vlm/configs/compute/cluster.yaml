@@ -1,0 +1,7 @@
+device: cuda
+offline: true
+gpu_mem_per_cpu_max_mb: 8000
+cpu_mem_per_cpu_max_mb: 3370
+walltime: 02:00:00
+signal_usr1_sec: 180
+env: main

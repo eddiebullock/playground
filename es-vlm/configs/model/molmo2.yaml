@@ -1,0 +1,6 @@
+key: molmo2
+hf_id: allenai/Molmo2-O-7B
+revision: "784410650d12be9bc086118fdefa32d2c3bced86"
+env: molmo
+adapter: molmo2
+max_frames: 8

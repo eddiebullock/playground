@@ -1,0 +1,66 @@
+# Local secrets, site details, and bulky artifacts. Treat the repo as public-safe.
+data/
+local/*
+!local/site.example.sh
+outputs/
+cache/
+.env
+.env.*
+!.env.example
+wandb/
+.venv/
+venv/
+envs/main/.venv/
+envs/molmo/.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+*.egg-info/
+dist/
+build/
+
+# Weights, activations, media
+*.npy
+*.npz
+*.pt
+*.pth
+*.safetensors
+*.ckpt
+/models/
+
+# Images / video / audio except committed synthetic fixtures
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.webp
+*.bmp
+*.tif
+*.tiff
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.webm
+*.mp3
+*.wav
+*.flac
+*.aac
+*.ogg
+!tests/fixtures/synthetic/**
+!results/aggregate/**
+
+# Parquet except small aggregate tables
+*.parquet
+!results/aggregate/**
+
+# Notebooks keep source; strip outputs via nbstripout
+.mplconfig/
+.DS_Store
+VERSION
+logs/
+hf_cache/
+uv.lock.bak
