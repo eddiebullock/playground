@@ -37,9 +37,11 @@ item-level alignment.
 
 ## S-domain tasks
 
-- PhysBench dynamics / relationships, text options only.
-- CLEVRER validation explanatory / predictive / counterfactual MCQ.
-- PIQA validation as the text-only backbone control.
+- Primary confirmatory visual S-set: PhysBench dynamics / relationships,
+  text options only.
+- Optional robustness, not required for the confirmatory contrast:
+  CLEVRER validation explanatory / predictive / counterfactual MCQ
+  (video), and PIQA validation as a text-only backbone control.
 
 ## Exclusions
 

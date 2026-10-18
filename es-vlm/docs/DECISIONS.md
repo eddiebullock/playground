@@ -76,12 +76,22 @@ Locked public S-sets (never mixed with licensed stimuli trees):
 
 1. PhysBench dynamics / relationships, text A-D options only. Official
    `test.json` has no answers; labels from `lmms-lab-eval/PhysBench`.
-2. CLEVRER validation explanatory / predictive / counterfactual MCQ.
-3. PIQA validation as the text-only backbone control.
+   This is the primary confirmatory visual S-set. One S-set is enough
+   for the direction x domain interaction; a benchmark battery is not.
+2. CLEVRER validation explanatory / predictive / counterfactual MCQ is
+   optional robustness / video S, not required. Do not run the full
+   19804 or the full model panel unless PhysBench is unusable (floor).
+3. PIQA validation is an optional text-only backbone control, not a
+   confirmatory S-task.
 
 Rejected as the main visual S-set: 2001 Folk Physics Test; ScienceQA /
 AI2 ARC. Fetch via `slurm/fetch_sdomain.sbatch` into `$ESVLM_PUBLIC_DIR`.
 CLEVRER videos use `$ESVLM_CLEVRER_DIR` when the user RDS file cap is tight.
+
+8B unsteered PhysBench accuracy was 0.2635 vs 0.25 chance (path check,
+not a finding). If later panel models are also at floor, use the
+already-running CLEVRER shard as the fallback S-readout instead of
+fetching more benchmarks.
 
 ## 2026-10-18 — Framing
 
