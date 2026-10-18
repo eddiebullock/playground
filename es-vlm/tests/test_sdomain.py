@@ -4,12 +4,14 @@ import json
 from pathlib import Path
 
 from esvlm.tasks.sdomain import (
+    clevrer_item_id,
     clevrer_to_trials,
     keep_physbench_item,
     load_sdomain_items,
     parse_lettered_options,
     physbench_to_trial,
     piqa_to_trial,
+    uniquify_clevrer_item_id,
     write_manifest,
 )
 
@@ -74,8 +76,32 @@ def test_clevrer_keeps_mcq_skips_descriptive() -> None:
     }
     trials = clevrer_to_trials(row)
     assert len(trials) == 1
-    assert trials[0]["item_id"] == "clevrer_e1"
+    assert trials[0]["item_id"] == "clevrer_video_10000_e1"
     assert trials[0]["correct_idx"] == 1
+
+
+def test_clevrer_item_ids_unique_across_videos() -> None:
+    questions = [
+        {
+            "question_id": 13,
+            "question_type": "predictive",
+            "question": "What happens next?",
+            "choices": [
+                {"choice": "they collide", "answer": "correct"},
+                {"choice": "they miss", "answer": "wrong"},
+            ],
+        }
+    ]
+    a = clevrer_to_trials({"video_index": 10000, "video_filename": "video_10000.mp4", "questions": questions})
+    b = clevrer_to_trials({"video_index": 10001, "video_filename": "video_10001.mp4", "questions": questions})
+    assert a[0]["item_id"] == "clevrer_video_10000_13"
+    assert b[0]["item_id"] == "clevrer_video_10001_13"
+    assert a[0]["item_id"] != b[0]["item_id"]
+    assert uniquify_clevrer_item_id("clevrer_13", "videos/video_10000-11000/video_10000.mp4") == (
+        "clevrer_video_10000_13"
+    )
+    assert uniquify_clevrer_item_id("clevrer_video_10000_13", "video_10000.mp4") == "clevrer_video_10000_13"
+    assert clevrer_item_id("videos/video_10000.mp4", 11) == "clevrer_video_10000_11"
 
 
 def test_piqa_and_loader(tmp_path: Path) -> None:

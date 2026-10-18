@@ -38,6 +38,26 @@ LETTER_RE = re.compile(r"(?m)^\s*([A-D])\.\s*(.*)$")
 IMAGE_ONLY = frozenset({"", "<image>", "<video>", "<image>.", "<video>."})
 
 
+def clevrer_item_id(media: str, qid: object) -> str:
+    """Stable id: CLEVRER question_id repeats inside every video."""
+
+    stem = Path(str(media)).stem or "video"
+    return f"clevrer_{stem}_{qid}"
+
+
+def uniquify_clevrer_item_id(item_id: str, media: str) -> str:
+    """Rewrite legacy `clevrer_<qid>` ids that collide across videos."""
+
+    stem = Path(str(media)).stem
+    if not stem:
+        return item_id
+    prefix = f"clevrer_{stem}_"
+    if item_id.startswith(prefix):
+        return item_id
+    qid = item_id.removeprefix("clevrer_")
+    return f"{prefix}{qid}"
+
+
 def _resolve_media_rel(media_root: Path, name: str) -> str:
     direct = media_root / name
     if direct.is_file():
@@ -172,10 +192,10 @@ def clevrer_to_trials(video_row: dict[str, Any]) -> list[dict[str, Any]]:
             continue
         if not all(is_text_option(t) for t in texts):
             continue
-        qid = q.get("question_id") or q.get("qid") or f"{video_index}_{len(out)}"
+        qid = q.get("question_id") or q.get("qid") or len(out)
         out.append(
             {
-                "item_id": f"clevrer_{qid}",
+                "item_id": clevrer_item_id(video_filename, qid),
                 "question": str(q.get("question") or "").strip(),
                 "options": texts,
                 "correct_idx": int(correct_idx),
@@ -235,9 +255,12 @@ def load_sdomain_items(
         media = str((media_root / media_rel).resolve()) if media_rel else ""
         if not media:
             media_type = "none"
+        item_id = str(trial["item_id"])
+        if task == "clevrer":
+            item_id = uniquify_clevrer_item_id(item_id, media_rel)
         items.append(
             MCQItem(
-                item_id=str(trial["item_id"]),
+                item_id=item_id,
                 task=task,
                 domain="S",
                 media=media,

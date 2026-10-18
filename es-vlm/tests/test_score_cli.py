@@ -6,7 +6,7 @@ import pytest
 
 from esvlm.cli.score import load_task_items, slice_items
 from esvlm.tasks.media import uniform_indices
-from esvlm.tasks.sdomain import piqa_to_trial, write_manifest
+from esvlm.tasks.sdomain import load_sdomain_items, piqa_to_trial, write_manifest
 
 
 def test_uniform_indices() -> None:
@@ -38,6 +38,27 @@ def test_slice_items_and_public_loader(tmp_path: Path, monkeypatch: pytest.Monke
     assert items[0].domain == "S"
     assert [i.item_id for i in slice_items(items, 2, 2)] == ["piqa_valid_2", "piqa_valid_3"]
     assert slice_items(items, 4, 0)[-1].item_id == "piqa_valid_4"
+
+
+def test_clevrer_loader_rewrites_colliding_ids(tmp_path: Path) -> None:
+    trials = [
+        {
+            "item_id": "clevrer_13",
+            "question": "What happens next?",
+            "options": ["collide", "miss"],
+            "correct_idx": 0,
+            "media": f"video_{idx}.mp4",
+            "media_type": "video",
+            "question_type": "predictive",
+        }
+        for idx in (10000, 10001)
+    ]
+    man = tmp_path / "manifest.json"
+    write_manifest(man, "clevrer", trials)
+    items = load_sdomain_items(man, tmp_path, task="clevrer")
+    ids = [it.item_id for it in items]
+    assert ids == ["clevrer_video_10000_13", "clevrer_video_10001_13"]
+    assert len(set(ids)) == 2
 
 
 def test_licensed_task_refused() -> None:

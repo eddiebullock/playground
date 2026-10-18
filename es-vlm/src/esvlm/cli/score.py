@@ -102,6 +102,11 @@ def main(argv: list[str] | None = None) -> int:
     items = slice_items(items, args.trial_offset, args.trial_limit)
     if not items:
         raise SystemExit(f"no items for task {args.task}")
+    n_unique = len({it.item_id for it in items})
+    if n_unique != len(items):
+        raise SystemExit(
+            f"duplicate item_id in {args.task} slice: {len(items)} items, {n_unique} unique"
+        )
 
     from esvlm.models.loader import load_model
     from esvlm.utils.device import torch_device
