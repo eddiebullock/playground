@@ -101,6 +101,30 @@ entropy option set; never the 118-trial subset). Mind Reading jsonl has
 labels but no forced-choice options; it is not scored until a MCQ form
 exists. No stimuli are copied into the repo.
 
+Schema work that was not just “read the manifest”:
+
+- RMET image fields are stale multi-part paths; files live as
+  `item_NN.png` under the stimuli dir. Loader resolves by basename.
+- RMET answer-key JSON is an `items` list, not an `answers` map. The
+  manifest already has `correct_label`, so the key is unused for scoring.
+- EU-Emotions trials have `stimulus_path` and no `options`. The 6-way
+  set comes from `human_options` in the entropy JSON (`trials` map).
+  48/243 labels were missing from that set; the manifest label is
+  prepended (6 or 7 options).
+- Mind Reading `val_full.jsonl` is open-set (one label, ~258 classes).
+  No foil policy is locked, so it is not scored.
+
+## 2026-10-18 — Overnight unsteered E-panel
+
+After the 8B EU-Emotions job, submit one 59-minute `PACK=e_panel`
+chain (intr is one job / one hour). Resume skips finished parquets.
+
+Run: RMET on 2B, Gemma, Qwen2-VL, Qwen2.5-VL, 32B, text-only Qwen3;
+then EU-Emotions on 2B and Gemma.
+
+Do not run: more CLEVRER, full PhysBench, Mind Reading, Molmo,
+confirmatory steering. PhysBench 64s were at chance on 8B / 2B / Gemma.
+
 ## 2026-10-18 — Framing
 
 Questionnaires generate hypotheses. They are not valid trait measures of
