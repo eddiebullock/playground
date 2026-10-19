@@ -202,7 +202,15 @@ OSF is not a gate. The sweep runner is real. First job is Qwen3-VL-8B
 layer 27, mode=add, alphas {-2,-1,0,1,2}, vectors E / S / E_minus_S.
 Tasks: RMET (36) then CLEVRER offset 0 limit 128 (overlaps the
 unsteered 6000). Not PhysBench (floor). Not Gemma. Not extra Qwens.
-Not ablate until add moves something. Not the old emotion-axis layer 4.
+Not the old emotion-axis layer 4.
+
+Job `38798228` completed (19:51, failed=0). Alpha 0 RMET 0.3889
+matches the unsteered 8B baseline. Every non-zero add **hurts** RMET
+(down to 0.22–0.33) on E, S, and E_minus_S alike. CLEVRER alpha 0 is
+0.2266 on this 128-slice; non-zero cells are 0.23–0.27 (noise; SE
+~0.04). No direction x domain dissociation. Next: L27 ablate, then
+add with position=all. Still no 2B / Gemma / extra layers unless one
+of those two moves as predicted.
 
 Persona job `38790120` (500 mundane texts, confirmatory four) completed.
 Raw `r(E, S)` is strongly positive, as the aligned directions predict.

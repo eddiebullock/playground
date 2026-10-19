@@ -32,16 +32,25 @@ PACK="${PACK:-first_causal}"
 LAYERS="${LAYERS:-27}"
 ALPHAS="${ALPHAS:--2,-1,0,1,2}"
 VECTORS="${VECTORS:-E,S,E_minus_S}"
-MODES="${MODES:-add}"
 SHARD="${SHARD:-0}"
 FRAMES="${FRAMES:-8}"
 
+# model:task:offset:limit:modes:position
 case "${PACK}" in
   first_causal)
-    # RMET all 36; CLEVRER first 128 of the already-scored 6000.
     JOBS=(
-      "qwen3vl_8b:rmet:0:0"
-      "qwen3vl_8b:clevrer:0:128"
+      "qwen3vl_8b:rmet:0:0:add:last_token"
+      "qwen3vl_8b:clevrer:0:128:add:last_token"
+    )
+    ;;
+  l27_followup)
+    # Ablate, then add at every residual token. Same 8B L27 vectors.
+    # Do not add models, layers, or PhysBench here.
+    JOBS=(
+      "qwen3vl_8b:rmet:0:0:ablate:last_token"
+      "qwen3vl_8b:clevrer:0:128:ablate:last_token"
+      "qwen3vl_8b:rmet:0:0:add:all"
+      "qwen3vl_8b:clevrer:0:128:add:all"
     )
     ;;
   *)
@@ -73,12 +82,7 @@ resolve_models_dir() {
 
 failed=0
 for spec in "${JOBS[@]}"; do
-  MODEL="${spec%%:*}"
-  rest="${spec#*:}"
-  TASK="${rest%%:*}"
-  rest="${rest#*:}"
-  OFFSET="${rest%%:*}"
-  LIMIT="${rest#*:}"
+  IFS=':' read -r MODEL TASK OFFSET LIMIT MODES POSITION <<<"${spec}"
   if ! MODELS_DIR_ARG="$(resolve_models_dir "${MODEL}")"; then
     echo "SKIP missing weights ${MODEL}" >&2
     failed=$((failed + 1))
@@ -90,7 +94,7 @@ for spec in "${JOBS[@]}"; do
     failed=$((failed + 1))
     continue
   fi
-  echo "===== steer ${MODEL} ${TASK} layers=${LAYERS} ====="
+  echo "===== steer ${MODEL} ${TASK} layers=${LAYERS} modes=${MODES} pos=${POSITION} ====="
   set +e
   python -m esvlm.cli.steer \
     --model "${MODEL}" \
@@ -99,6 +103,7 @@ for spec in "${JOBS[@]}"; do
     --alphas="${ALPHAS}" \
     --vectors "${VECTORS}" \
     --modes "${MODES}" \
+    --position "${POSITION}" \
     --directions "${DIR}" \
     --out "outputs/steer_${MODEL}_${TASK}_${SHARD}" \
     --trial_offset "${OFFSET}" \
@@ -108,7 +113,7 @@ for spec in "${JOBS[@]}"; do
     --models-dir "${MODELS_DIR_ARG}"
   rc=$?
   set -e
-  echo "steer_exit model=${MODEL} task=${TASK} rc=${rc}"
+  echo "steer_exit model=${MODEL} task=${TASK} modes=${MODES} pos=${POSITION} rc=${rc}"
   if [ "${rc}" -ne 0 ]; then
     failed=$((failed + 1))
   fi
