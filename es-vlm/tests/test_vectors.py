@@ -2,21 +2,40 @@ from __future__ import annotations
 
 import numpy as np
 
+from esvlm.cli.analyze_extract import cosine
 from esvlm.cli.extract import parse_layers
 from esvlm.vectors.extract import difference_of_means, directions_for_layers
-from esvlm.vectors.narratives import E_NARRATIVES, S_NARRATIVES
+from esvlm.vectors.contrasts import default_contrasts
+from esvlm.vectors.narratives import CONTROL_NARRATIVES, E_NARRATIVES, S_NARRATIVES
 from esvlm.vectors.validate import projection_auroc
 
 
 def test_narratives_are_original_and_long_enough() -> None:
     assert len(E_NARRATIVES) >= 40
     assert len(S_NARRATIVES) >= 40
-    assert len(set(E_NARRATIVES) & set(S_NARRATIVES)) == 0
+    assert len(CONTROL_NARRATIVES) >= 40
+    assert set(E_NARRATIVES).isdisjoint(S_NARRATIVES)
+    assert set(E_NARRATIVES).isdisjoint(CONTROL_NARRATIVES)
+    assert set(S_NARRATIVES).isdisjoint(CONTROL_NARRATIVES)
     # crude guard against pasted questionnaire items
     banned = ("I can easily tell if someone else wants to enter a conversation",)
-    blob = " ".join(E_NARRATIVES + S_NARRATIVES)
+    blob = " ".join(E_NARRATIVES + S_NARRATIVES + CONTROL_NARRATIVES)
     for phrase in banned:
         assert phrase not in blob
+
+
+def test_default_contrasts_share_control() -> None:
+    pairs = default_contrasts()
+    control = list(CONTROL_NARRATIVES)
+    assert pairs["E"].positive == list(E_NARRATIVES)
+    assert pairs["S"].positive == list(S_NARRATIVES)
+    assert pairs["E"].negative == control
+    assert pairs["S"].negative == control
+    assert pairs["E"].positive != pairs["S"].positive
+    assert pairs["E_minus_S"].positive == list(E_NARRATIVES)
+    assert pairs["E_minus_S"].negative == list(S_NARRATIVES)
+    assert pairs["E_template"].negative == pairs["S_template"].negative
+    assert pairs["E_template"].positive != pairs["S_template"].positive
 
 
 def test_difference_of_means_separates() -> None:
@@ -37,3 +56,6 @@ def test_parse_layers_and_stack() -> None:
     vecs = directions_for_layers(pos, neg)
     assert vecs.shape == (3, 8)
     assert np.allclose(np.linalg.norm(vecs, axis=1), 1.0)
+    a = np.array([1.0, 0.0])
+    assert abs(cosine(a, a) - 1.0) < 1e-6
+    assert abs(cosine(a, np.array([0.0, 1.0]))) < 1e-6

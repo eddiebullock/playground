@@ -61,6 +61,7 @@ def main(argv: list[str] | None = None) -> int:
     contrasts = default_contrasts()
     cap = args.max_texts if args.max_texts > 0 else None
     vectors: dict[str, np.ndarray] = {}
+    residuals: dict[str, tuple[np.ndarray, np.ndarray]] = {}
     t1 = time.perf_counter()
     for name, pair in contrasts.items():
         pos_texts = pair.positive[:cap]
@@ -68,6 +69,8 @@ def main(argv: list[str] | None = None) -> int:
         pos = text_residuals(loaded.model, loaded.processor, hooked, pos_texts, device)
         neg = text_residuals(loaded.model, loaded.processor, hooked, neg_texts, device)
         vectors[name] = directions_for_layers(pos, neg)
+        if name in {"E", "S", "E_minus_S"}:
+            residuals[name] = (pos, neg)
         log.info("extracted %s shape=%s", name, list(vectors[name].shape))
 
     rng = np.random.default_rng(args.seed)
@@ -81,6 +84,9 @@ def main(argv: list[str] | None = None) -> int:
     for offset, layer_i in enumerate(layer_ids):
         path = args.out / f"{loaded.spec.key}__layer_{layer_i:02d}.npz"
         payload = {name: vec[offset] for name, vec in vectors.items()}
+        for name, (pos, neg) in residuals.items():
+            payload[f"{name}_pos"] = pos[:, offset, :]
+            payload[f"{name}_neg"] = neg[:, offset, :]
         payload["meta_json"] = np.asarray(
             json.dumps(
                 {

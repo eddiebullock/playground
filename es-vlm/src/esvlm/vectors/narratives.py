@@ -98,7 +98,60 @@ S_NARRATIVES: list[str] = [
     "I would choose a clean mechanical explanation over a messy human motive when both are on offer.",
 ]
 
+# Shared control narratives: first-person passages on the same kinds of
+# scenes, without an E-emphasis (minds, feelings) or an S-emphasis
+# (rules, mechanisms). Both E and S subtract this set. They are not
+# questionnaire items.
+CONTROL_NARRATIVES: list[str] = [
+    "When two people fall quiet after a joke, I finish what is in my glass and look toward the window for a moment.",
+    "A colleague mentions a deadline. I write the date on a scrap of paper, put the scrap by the keyboard, and return to the page I was on.",
+    "In a crowded kitchen I pick up a plate, rinse it under the tap, and set it on the rack with the others.",
+    "A friend's messages arrive shorter than usual. I send a photograph of the street and leave the thread until later.",
+    "A stranger glances over on the pavement. I keep walking toward the crossing and wait for the light.",
+    "During an argument I stay in my chair, wait until it is my turn to speak, and then say the next thing I had prepared.",
+    "Birthdays sit on a list on the fridge. I buy a card on the way home and put it on the table.",
+    "A child hides a drawing under a book. I leave the book where it is and set the pencils back in the cup.",
+    "Someone is sitting quietly on the sofa. I sit in the same room and read the paper until it is time to go.",
+    "A group laughs at the end of a story. I smile, take another bite, and stay in my seat.",
+    "I send the email in the form I already have, mark it done, and open the next message in the list.",
+    "The film runs to the credits. I watch until the names finish and then stand up and put on my coat.",
+    "Someone moves a cup closer to my side of the table. I drink from it and put it back on the saucer.",
+    "The subject of the conversation changes. I follow the new subject and answer when I am asked.",
+    "There are faces in the room and diagrams on the wall. I look at whichever is nearer to where I am standing.",
+    "Two friends disagree about what happened. I hear both accounts and then we go outside for air.",
+    "Someone pauses at a phrase I used. I do not use that phrase again that evening.",
+    "In meetings I write down the agenda items as they are spoken and keep the page in front of me.",
+    "A task fails in the afternoon. I write down what happened, close the file, and try again later.",
+    "Praise is given in a room full of people. I clap, sit down, and wait for the next item.",
+    "The same sentence is said twice. I answer the second time and then we move on.",
+    "Someone brings food to the table. I thank them, eat what I am given, and clear my plate.",
+    "A joke is told near the door. I laugh if it lands and then we talk about the next thing.",
+    "A reply is late. I check the phone once more after dinner and set it face down.",
+    "Someone is misunderstood in a conversation. The talk continues the next day at the same table.",
+    "A stranger holds a door. I walk through, nod, and keep going down the corridor.",
+    "I keep a list of shops I use and the hours they close, and I buy what I went in for.",
+    "If a story has a villain, I finish the chapter, close the book, and turn off the light.",
+    "I walk beside someone at whatever pace we happen to be going and stop when they stop.",
+    "A raised voice comes through a wall. I put on a coat, take the keys, and go out for a walk.",
+    "We name what is on the table and then we decide who is cooking and who is setting places.",
+    "Someone over-explains a simple errand. I nod, pick up the bag, and we start the next task.",
+    "After a long conversation I wash the glasses, dry my hands, and go to bed.",
+    "I leave a room as I found it: chairs in, lights off, the door closed behind me.",
+    "A partner is quiet over dinner. I pass the salt, keep eating, and stay at the table.",
+    "I go to the places where I am expected at the time I said I would be there.",
+    "Watching sport, I watch the ball until the whistle and then stand with the rest of the crowd.",
+    "I thank the waiter when the plates arrive and again when they are taken away.",
+    "A good day for me is one in which the errands got done and I was home before dark.",
+    "When two accounts of the same afternoon are on offer, I write both down and leave the page on the desk.",
+]
+
 assert len(E_NARRATIVES) >= 40
 assert len(S_NARRATIVES) >= 40
+assert len(CONTROL_NARRATIVES) >= 40
 assert len(set(E_NARRATIVES)) == len(E_NARRATIVES)
 assert len(set(S_NARRATIVES)) == len(S_NARRATIVES)
+assert len(set(CONTROL_NARRATIVES)) == len(CONTROL_NARRATIVES)
+assert not (set(E_NARRATIVES) & set(S_NARRATIVES) & set(CONTROL_NARRATIVES))
+assert set(E_NARRATIVES).isdisjoint(S_NARRATIVES)
+assert set(E_NARRATIVES).isdisjoint(CONTROL_NARRATIVES)
+assert set(S_NARRATIVES).isdisjoint(CONTROL_NARRATIVES)

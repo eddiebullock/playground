@@ -9,8 +9,10 @@
 #SBATCH --open-mode=append
 #SBATCH -o logs/%x_%j.out
 #
-# PACK=panel_rest (default): extract every remaining panel model.
-# Submit via scripts/submit.sh.
+# PACK=confirmatory: 8B + 2B + Gemma + text Qwen3 (the paper panel).
+# PACK=core: 2B + Gemma + text (8B already done).
+# PACK=panel_rest: remaining models including extra Qwens; do not use
+# for the confirmatory paper. Submit via scripts/submit.sh.
 
 set -euo pipefail
 if [ -z "${ESVLM_ROOT:-}" ]; then
@@ -35,6 +37,12 @@ SHARD="${SHARD:-0}"
 case "${PACK}" in
   panel_rest)
     MODELS=(qwen3vl_2b gemma4_e4b qwen2vl_7b qwen25vl_7b qwen3_text)
+    ;;
+  core)
+    MODELS=(qwen3vl_2b gemma4_e4b qwen3_text)
+    ;;
+  confirmatory)
+    MODELS=(qwen3vl_8b qwen3vl_2b gemma4_e4b qwen3_text)
     ;;
   *)
     echo "ERROR: unknown PACK=${PACK}" >&2
@@ -65,7 +73,7 @@ resolve_models_dir() {
 
 failed=0
 for MODEL in "${MODELS[@]}"; do
-  if [ -f "outputs/extract_${MODEL}_${SHARD}/extract_summary.json" ]; then
+  if [ -z "${FORCE:-}" ] && [ -f "outputs/extract_${MODEL}_${SHARD}/extract_summary.json" ]; then
     echo "SKIP already extracted ${MODEL}"
     continue
   fi
