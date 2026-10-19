@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from esvlm.vectors.narratives import E_NARRATIVES, S_NARRATIVES
+from esvlm.vectors.narratives import CONTROL_NARRATIVES, E_NARRATIVES, S_NARRATIVES
 
 
 @dataclass(frozen=True)
@@ -54,13 +54,23 @@ HELP_NEG = [
     "Do not offer assistance.",
 ]
 
+# Shared control for the template pair. E_template and S_template both
+# subtract this set so they are not algebraic negatives of each other.
+CONTROL_TEMPLATES = [
+    "Write a plain description of what is in front of you.",
+    "Describe the scene in ordinary terms, without a special focus.",
+    "Note what is there and what happens next, in a straightforward way.",
+]
+
 
 def default_contrasts() -> dict[str, ContrastPair]:
+    control = list(CONTROL_NARRATIVES)
     return {
-        "E": ContrastPair("E", list(E_NARRATIVES), list(S_NARRATIVES)),
-        "S": ContrastPair("S", list(S_NARRATIVES), list(E_NARRATIVES)),
-        "E_template": ContrastPair("E_template", list(E_TEMPLATES), list(S_TEMPLATES)),
-        "S_template": ContrastPair("S_template", list(S_TEMPLATES), list(E_TEMPLATES)),
+        "E": ContrastPair("E", list(E_NARRATIVES), control),
+        "S": ContrastPair("S", list(S_NARRATIVES), control),
+        "E_minus_S": ContrastPair("E_minus_S", list(E_NARRATIVES), list(S_NARRATIVES)),
+        "E_template": ContrastPair("E_template", list(E_TEMPLATES), list(CONTROL_TEMPLATES)),
+        "S_template": ContrastPair("S_template", list(S_TEMPLATES), list(CONTROL_TEMPLATES)),
         "valence": ContrastPair("valence", VALENCE_POS, VALENCE_NEG),
         "emotion": ContrastPair("emotion", EMOTION_POS, EMOTION_NEG),
         "helpfulness": ContrastPair("helpfulness", HELP_POS, HELP_NEG),

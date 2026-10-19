@@ -43,6 +43,7 @@ dev = [
 esvlm-smoke = "esvlm.cli.smoke:main"
 esvlm-score = "esvlm.cli.score:main"
 esvlm-extract = "esvlm.cli.extract:main"
+esvlm-analyze-extract = "esvlm.cli.analyze_extract:main"
 esvlm-steer = "esvlm.cli.steer:main"
 esvlm-fetch-sdomain = "esvlm.cli.fetch_sdomain:main"
 

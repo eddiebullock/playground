@@ -12,9 +12,12 @@ item-level alignment.
 
 ## Hypotheses
 
-1. Residual-stream E-direction and S-direction are linearly separable
-   from each other and from valence, emotion, helpfulness, and a
-   matched-random null (held-out projection AUROC; 200-split null).
+1. Residual-stream E-direction and S-direction are each the difference
+   of means versus a shared control set (not versus each other). They
+   are linearly separable from each other and from valence, emotion,
+   helpfulness, and a matched-random null (held-out projection AUROC;
+   200-split null). The bipolar `E_minus_S` pair is a named one-axis
+   readout, not the definition of E or S.
 2. Across >=500 simulated personas the E and S scores are largely
    independent and at most weakly negatively correlated.
 3. Steering / ablating the E-direction changes visual mental-state

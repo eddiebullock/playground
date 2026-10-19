@@ -141,3 +141,27 @@ baselines and later RQ1 extraction proceed. `esvlm-steer` still refuses
 confirmatory sweeps unless `ESVLM_PREREG_POSTED=1` or
 `--allow-unpreregistered` (smoke only). Do not treat unsteered
 baselines as a double-dissociation result.
+
+## 2026-10-19 — Confirmatory panel is four models, not a Qwen sweep
+
+Paper robustness is 8B done properly, Gemma as an independent family,
+2B as a scale check, and text-only Qwen3 as a vision-ablated control.
+Qwen2-VL, Qwen2.5-VL, and 32B are the same family at nearby sizes.
+They are not independent replications. Do not extract or score them
+for the confirmatory panel. 32B only if 8B steering later works;
+Qwen2 / 2.5 only if a reviewer asks.
+
+## 2026-10-19 — E and S both vs a shared control
+
+The first extract defined E = mean(E_narr) − mean(S_narr) and
+S = mean(S_narr) − mean(E_narr). That makes S = −E, so cos(E, S) was
+−1.0 on every layer of every model (qwen3vl_8b / 2b, gemma4_e4b,
+qwen3_text). That is not a separability result.
+
+E and S now each subtract the same CONTROL narratives. `E_minus_S`
+keeps the bipolar pair as a named one-axis readout. Template E/S
+pairs use shared CONTROL_TEMPLATES for the same reason.
+
+Job 38787870 was cancelled mid-run because it was a FORCE re-extract
+with the broken contrast. Re-extract the confirmatory four after this
+fix. Existing `cos_E_S = -1` JSON is invalid for RQ1.
