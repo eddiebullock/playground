@@ -130,17 +130,9 @@ confirmatory steering. PhysBench 64s were at chance on 8B / 2B / Gemma.
 Questionnaires generate hypotheses. They are not valid trait measures of
 models. Always say E-direction / S-direction.
 
-## 2026-10-18 — OSF gates confirmatory steering only
+## 2026-10-18 — OSF was a steering gate (superseded 2026-10-19)
 
-OSF preregistration is a public, timestamped analysis plan. It is there
-so confirmatory steering results (Phase 3 / RQ2) cannot be quietly
-re-specified after seeing them.
-
-The user asked to continue without posting it. Unsteered Phase 1
-baselines and later RQ1 extraction proceed. `esvlm-steer` still refuses
-confirmatory sweeps unless `ESVLM_PREREG_POSTED=1` or
-`--allow-unpreregistered` (smoke only). Do not treat unsteered
-baselines as a double-dissociation result.
+OSF is not being posted. See 2026-10-19.
 
 ## 2026-10-19 — Confirmatory panel is four models, not a Qwen sweep
 
@@ -165,3 +157,97 @@ pairs use shared CONTROL_TEMPLATES for the same reason.
 Job 38787870 was cancelled mid-run because it was a FORCE re-extract
 with the broken contrast. Re-extract the confirmatory four after this
 fix. Existing `cos_E_S = -1` JSON is invalid for RQ1.
+
+## 2026-10-19 — OSF dropped
+
+Not posting an OSF preregistration. Remove the `ESVLM_PREREG_POSTED`
+gate. `--allow-unpreregistered` is ignored. Steering may run when the
+sweep runner exists. Results are still not a preregistered confirmatory
+claim; say path check / planned analysis.
+
+## 2026-10-19 — Next: RQ1 report, then personas, then steering
+
+No extra Qwens, no more CLEVRER / PhysBench / Mind Reading as new
+fetches. Steering is the next GPU work once the sweep runner is real.
+
+1. Finish RQ1 from the existing confirmatory extracts (CPU). The
+   headline that was missing is E-vs-S class separation
+   (`E_minus_S` held-out AUROC), plus the unique residual
+   `||E_⊥S|| / ||E||`. First look from the layer JSON: Qwen 8B / 2B /
+   text ~0.90–0.91; Gemma ~0.48 (chance). That is a path check until
+   `esvlm-report-rq1` writes the locked summary. Also pick a layer
+   shortlist for a later sweep; do not steer it yet.
+2. Hypothesis 2: 500 mundane persona texts (combinatorial, not
+   questionnaire items, not E/S-loaded). Extract residuals on the
+   confirmatory four, project onto E and S, and onto the residualized
+   unique directions. Report `r(E, S)` and `r(E_⊥S, S_⊥E)` by layer.
+
+`esvlm-report-rq1` on the confirmatory extracts (job 38788030), path
+check only:
+
+| Model | cos(E,S) | E vs ctrl | S vs ctrl | E vs S | unique E | layer |
+| --- | --- | --- | --- | --- | --- | --- |
+| qwen3vl_8b | 0.83 | 0.986 | 0.996 | 0.912 | 0.55 | 27 (0.99) |
+| qwen3vl_2b | 0.85 | 0.985 | 0.996 | 0.896 | 0.53 | 26 (0.98) |
+| qwen3_text | 0.82 | 0.984 | 0.994 | 0.913 | 0.57 | 32 (0.98) |
+| gemma4_e4b | 0.88 | 0.803 | 0.803 | 0.475 | 0.47 | 0 (0.74) |
+
+Qwen family: E and S texts are linearly separable even though the
+mean-difference directions are aligned. Gemma: E vs S is at chance;
+the layer-0 pick is not a usable unique axis.
+
+## 2026-10-19 — First causal sweep: 8B L27 add, RMET + CLEVRER 128
+
+OSF is not a gate. The sweep runner is real. First job is Qwen3-VL-8B
+layer 27, mode=add, alphas {-2,-1,0,1,2}, vectors E / S / E_minus_S.
+Tasks: RMET (36) then CLEVRER offset 0 limit 128 (overlaps the
+unsteered 6000). Not PhysBench (floor). Not Gemma. Not extra Qwens.
+Not the old emotion-axis layer 4.
+
+Job `38798228` completed (19:51, failed=0). Alpha 0 RMET 0.3889
+matches the unsteered 8B baseline. Every non-zero add **hurts** RMET
+(down to 0.22–0.33) on E, S, and E_minus_S alike. CLEVRER alpha 0 is
+0.2266 on this 128-slice; non-zero cells are 0.23–0.27 (noise; SE
+~0.04). No direction x domain dissociation. Next: L27 ablate, then
+add with position=all. Still no 2B / Gemma / extra layers unless one
+of those two moves as predicted.
+
+Job `38802498` completed (21:36, failed=0). **Ablate** last-token: RMET
+stays 0.3889 on E / S / E_minus_S; CLEVRER stays ~0.23. Removing the
+narrative direction does nothing. **Add position=all**: RMET still
+does not rise with E (E−1 drops to 0.17). CLEVRER can move (up to
+~0.34) but on every vector and both signs — a generic shove, not a
+dissociation. Narrative difference-in-means is closed as a causal
+target.
+
+## 2026-10-19 — Construct change: task-conditioned social vs mechanical
+
+Narrative E/S prose is retired for causal work. It measured writing
+style, then we steered that on visual tasks.
+
+New construct: last-token residual **while the model is asked the
+task**. Social stack = RMET (question + face). Mechanical stack =
+CLEVRER (question + video). Direction = mean(social) −
+mean(mechanical). Held-out AUROC on items not used to build it. Then
+steer that direction on held-out RMET and CLEVRER.
+
+This is still an E/S-mechanism study if E–S theory is treated as a
+prediction about separable social vs mechanistic computation, not as
+a claim that our stories are EQ/SQ. Say social-inference direction /
+mechanical-inference direction.
+
+`esvlm-extract-task` writes that pair. Do not go back to narrative
+add-sweeps. SAEs are a later decomposition of this task direction if
+it is real and causal, not a rescue of the prose axis.
+
+Persona job `38790120` (500 mundane texts, confirmatory four) completed.
+Raw `r(E, S)` is strongly positive, as the aligned directions predict.
+Residualized `r(E_⊥S, S_⊥E)` is strongly negative (a trade-off, not
+independence). Path check only; H2 as written is not supported.
+
+| Model | r(E,S) mean [min, max] | r unique mean | at candidate layer |
+| --- | --- | --- | --- |
+| qwen3vl_8b | 0.90 [0.65, 0.98] | -0.72 | L27 r=0.89 / r_u=-0.76 |
+| qwen3vl_2b | 0.86 [0.42, 0.95] | -0.84 | L26 r=0.64 / r_u=-0.89 |
+| qwen3_text | 0.80 [0.37, 0.98] | -0.78 | L32 r=0.49 / r_u=-0.87 |
+| gemma4_e4b | 0.90 [-0.30, 0.99] | -0.81 | L0 r=0.80 / r_u=-0.81 |

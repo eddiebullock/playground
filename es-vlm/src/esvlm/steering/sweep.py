@@ -27,10 +27,13 @@ def expand_grid(
     vectors: Sequence[str] = ("E", "S"),
     position: str = "last_token",
 ) -> list[SweepCell]:
+    """Ablate ignores alpha (one cell per layer x vector). Add uses every alpha."""
+
     cells: list[SweepCell] = []
     for layer in layers:
-        for alpha in alphas:
-            for mode in modes:
+        for mode in modes:
+            use_alphas: Sequence[float] = (0.0,) if mode == "ablate" else alphas
+            for alpha in use_alphas:
                 for vector in vectors:
                     cells.append(
                         SweepCell(

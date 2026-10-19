@@ -1,8 +1,7 @@
 # Preregistration draft
 
-**Status:** scaffold. Unsteered Phase 1 baselines may run without this
-being posted. Do not start confirmatory steering sweeps until the OSF
-preregistration is posted.
+**Status:** not using OSF. This file is only an internal analysis plan.
+Steering is not gated on posting it.
 
 ## Title
 
@@ -31,6 +30,11 @@ item-level alignment.
 
 ## Analysis (locked intent)
 
+- RQ1: E and S are each vs a shared control. Report held-out projection
+  AUROC vs control, vs each other (`E_minus_S`), vs valence / emotion /
+  helpfulness, and a 200-split matched-random null. Also report
+  `||E_⊥S|| / ||E||` and persona `r(E, S)` / `r(E_⊥S, S_⊥E)` across
+  500 mundane first-person sketches (not questionnaire items).
 - RQ2: `correct ~ direction * domain * alpha + (1|item) + (1|template)`
   with item-bootstrap CIs. Always report generic-VQA accuracy and
   perplexity per alpha.

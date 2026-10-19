@@ -56,7 +56,7 @@ existing manifests in place. See `docs/DATA_GOVERNANCE.md`.
 
 ## Checkpoints
 
-Steering sweeps do not start until the OSF preregistration is posted.
-Prior single-layer pilots at Qwen3-VL layer 4 were null (EU-Emotions job
+OSF preregistration is not part of this project. Prior single-layer
+pilots at Qwen3-VL layer 4 were null (EU-Emotions job
 33776847; RMET job 33536702). This project sweeps many layers with
 directions derived from E/S contrasts, not emotion-confusion axes.
