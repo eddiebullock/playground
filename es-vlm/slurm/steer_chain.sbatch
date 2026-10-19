@@ -96,7 +96,7 @@ for spec in "${JOBS[@]}"; do
     --model "${MODEL}" \
     --task "${TASK}" \
     --layers "${LAYERS}" \
-    --alphas "${ALPHAS}" \
+    --alphas="${ALPHAS}" \
     --vectors "${VECTORS}" \
     --modes "${MODES}" \
     --directions "${DIR}" \
