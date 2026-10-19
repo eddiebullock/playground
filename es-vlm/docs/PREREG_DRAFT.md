@@ -1,8 +1,7 @@
 # Preregistration draft
 
-**Status:** scaffold. Unsteered Phase 1 baselines may run without this
-being posted. Do not start confirmatory steering sweeps until the OSF
-preregistration is posted.
+**Status:** not using OSF. This file is only an internal analysis plan.
+Steering is not gated on posting it.
 
 ## Title
 

@@ -1,9 +1,8 @@
-"""Steering sweep CLI. Do not run confirmatory sweeps before OSF prereg."""
+"""Steering sweep CLI. OSF is not a gate."""
 
 from __future__ import annotations
 
 import argparse
-import os
 
 from esvlm.utils.envcheck import check_job_env
 from esvlm.utils.logging import echo_run_args, setup_logging
@@ -16,14 +15,13 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--task", required=True)
     parser.add_argument("--layers", required=True)
     parser.add_argument("--alphas", required=True)
-    parser.add_argument("--allow-unpreregistered", action="store_true")
+    parser.add_argument(
+        "--allow-unpreregistered",
+        action="store_true",
+        help="ignored; OSF is not required",
+    )
     args = parser.parse_args(argv)
     echo_run_args(vars(args), setup_logging())
-    if os.environ.get("ESVLM_PREREG_POSTED") != "1" and not args.allow_unpreregistered:
-        raise SystemExit(
-            "refusing steering sweep until ESVLM_PREREG_POSTED=1 "
-            "(OSF preregistration posted) or --allow-unpreregistered for smoke"
-        )
     raise SystemExit("confirmatory sweep runner is Milestone F")
 
 

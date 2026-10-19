@@ -130,17 +130,9 @@ confirmatory steering. PhysBench 64s were at chance on 8B / 2B / Gemma.
 Questionnaires generate hypotheses. They are not valid trait measures of
 models. Always say E-direction / S-direction.
 
-## 2026-10-18 — OSF gates confirmatory steering only
+## 2026-10-18 — OSF was a steering gate (superseded 2026-10-19)
 
-OSF preregistration is a public, timestamped analysis plan. It is there
-so confirmatory steering results (Phase 3 / RQ2) cannot be quietly
-re-specified after seeing them.
-
-The user asked to continue without posting it. Unsteered Phase 1
-baselines and later RQ1 extraction proceed. `esvlm-steer` still refuses
-confirmatory sweeps unless `ESVLM_PREREG_POSTED=1` or
-`--allow-unpreregistered` (smoke only). Do not treat unsteered
-baselines as a double-dissociation result.
+OSF is not being posted. See 2026-10-19.
 
 ## 2026-10-19 — Confirmatory panel is four models, not a Qwen sweep
 
@@ -166,10 +158,17 @@ Job 38787870 was cancelled mid-run because it was a FORCE re-extract
 with the broken contrast. Re-extract the confirmatory four after this
 fix. Existing `cos_E_S = -1` JSON is invalid for RQ1.
 
-## 2026-10-19 — Next: RQ1 report, then personas; no steering
+## 2026-10-19 — OSF dropped
 
-Confirmatory steering stays gated on OSF. No extra Qwens, no more
-CLEVRER / PhysBench / Mind Reading.
+Not posting an OSF preregistration. Remove the `ESVLM_PREREG_POSTED`
+gate. `--allow-unpreregistered` is ignored. Steering may run when the
+sweep runner exists. Results are still not a preregistered confirmatory
+claim; say path check / planned analysis.
+
+## 2026-10-19 — Next: RQ1 report, then personas, then steering
+
+No extra Qwens, no more CLEVRER / PhysBench / Mind Reading as new
+fetches. Steering is the next GPU work once the sweep runner is real.
 
 1. Finish RQ1 from the existing confirmatory extracts (CPU). The
    headline that was missing is E-vs-S class separation
