@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Wait for JOBID then run a remote command. ControlMaster only.
 set -u
-ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+ROOT="${ESVLM_LOCAL_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
 # shellcheck disable=SC1091
 source "${ROOT}/local/site.sh"
 JOB="${1:?jobid}"
