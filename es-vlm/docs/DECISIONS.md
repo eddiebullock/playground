@@ -279,6 +279,11 @@ with early layers deprioritised (Design B) before any steer.
 `scripts/activate_env.sh` now falls back to `$ESVLM_VENV_ROOT/<profile>/.venv`
 so a later rsync of `envs/main/` cannot hide the project-store venv.
 
+`resolve_local_dir` now inverts `CLUSTER_KEY_ALIASES` (disk `qwen3vl`
+-> panel `qwen3vl_8b`). Job `38815744` failed in 2m34s because it
+looked for `qwen3vl_8b/config.json` and skipped the on-disk `qwen3vl`
+folder. First fix; resubmit `PACK=paper8b` on 8B only.
+
 Next GPU job: `PACK=paper8b` on Qwen3-VL-8B only. Do not queue 2B,
 Gemma, or steer until those summaries are inspected.
 

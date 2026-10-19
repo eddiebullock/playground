@@ -57,6 +57,11 @@ MODELS_DIR_ARG="${ESVLM_MODELS_DIR:-}"
 if [ ! -f "${WEIGHTS}/config.json" ] && [ -f "${ESVLM_NEW_MODELS_DIR}/${MODEL}/config.json" ]; then
   MODELS_DIR_ARG="${ESVLM_NEW_MODELS_DIR}"
 fi
+if [ ! -f "${WEIGHTS}/config.json" ]; then
+  echo "ERROR: no config.json at ${WEIGHTS} or ${ESVLM_NEW_MODELS_DIR}/${MODEL}" >&2
+  exit 2
+fi
+echo "weights=${WEIGHTS} models_dir=${MODELS_DIR_ARG}"
 
 failed=0
 for DESIGN in "${DESIGNS[@]}"; do
