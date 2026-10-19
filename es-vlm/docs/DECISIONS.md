@@ -196,3 +196,15 @@ check only:
 Qwen family: E and S texts are linearly separable even though the
 mean-difference directions are aligned. Gemma: E vs S is at chance;
 the layer-0 pick is not a usable unique axis. Do not steer yet.
+
+Persona job `38790120` (500 mundane texts, confirmatory four) completed.
+Raw `r(E, S)` is strongly positive, as the aligned directions predict.
+Residualized `r(E_⊥S, S_⊥E)` is strongly negative (a trade-off, not
+independence). Path check only; H2 as written is not supported.
+
+| Model | r(E,S) mean [min, max] | r unique mean | at candidate layer |
+| --- | --- | --- | --- |
+| qwen3vl_8b | 0.90 [0.65, 0.98] | -0.72 | L27 r=0.89 / r_u=-0.76 |
+| qwen3vl_2b | 0.86 [0.42, 0.95] | -0.84 | L26 r=0.64 / r_u=-0.89 |
+| qwen3_text | 0.80 [0.37, 0.98] | -0.78 | L32 r=0.49 / r_u=-0.87 |
+| gemma4_e4b | 0.90 [-0.30, 0.99] | -0.81 | L0 r=0.80 / r_u=-0.81 |
