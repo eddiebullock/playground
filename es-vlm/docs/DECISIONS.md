@@ -212,6 +212,34 @@ matches the unsteered 8B baseline. Every non-zero add **hurts** RMET
 add with position=all. Still no 2B / Gemma / extra layers unless one
 of those two moves as predicted.
 
+Job `38802498` completed (21:36, failed=0). **Ablate** last-token: RMET
+stays 0.3889 on E / S / E_minus_S; CLEVRER stays ~0.23. Removing the
+narrative direction does nothing. **Add position=all**: RMET still
+does not rise with E (E−1 drops to 0.17). CLEVRER can move (up to
+~0.34) but on every vector and both signs — a generic shove, not a
+dissociation. Narrative difference-in-means is closed as a causal
+target.
+
+## 2026-10-19 — Construct change: task-conditioned social vs mechanical
+
+Narrative E/S prose is retired for causal work. It measured writing
+style, then we steered that on visual tasks.
+
+New construct: last-token residual **while the model is asked the
+task**. Social stack = RMET (question + face). Mechanical stack =
+CLEVRER (question + video). Direction = mean(social) −
+mean(mechanical). Held-out AUROC on items not used to build it. Then
+steer that direction on held-out RMET and CLEVRER.
+
+This is still an E/S-mechanism study if E–S theory is treated as a
+prediction about separable social vs mechanistic computation, not as
+a claim that our stories are EQ/SQ. Say social-inference direction /
+mechanical-inference direction.
+
+`esvlm-extract-task` writes that pair. Do not go back to narrative
+add-sweeps. SAEs are a later decomposition of this task direction if
+it is real and causal, not a rescue of the prose axis.
+
 Persona job `38790120` (500 mundane texts, confirmatory four) completed.
 Raw `r(E, S)` is strongly positive, as the aligned directions predict.
 Residualized `r(E_⊥S, S_⊥E)` is strongly negative (a trade-off, not
