@@ -20,6 +20,28 @@ def separability_matrix(directions: Mapping[str, np.ndarray]) -> np.ndarray:
     return mat
 
 
+def residualize(vector: np.ndarray, remove: np.ndarray) -> np.ndarray:
+    """Unit vector of ``vector`` after removing the component along ``remove``."""
+
+    u = remove / np.linalg.norm(remove)
+    leftover = vector - float(vector @ u) * u
+    norm = float(np.linalg.norm(leftover))
+    if norm < 1e-12:
+        raise ValueError("vector is collinear with the removed direction")
+    return leftover / norm
+
+
+def unique_fraction(vector: np.ndarray, other: np.ndarray) -> float:
+    """||vector_⊥other|| / ||vector||. 0 if parallel, 1 if orthogonal."""
+
+    u = other / np.linalg.norm(other)
+    leftover = vector - float(vector @ u) * u
+    denom = float(np.linalg.norm(vector))
+    if denom < 1e-12:
+        return float("nan")
+    return float(np.linalg.norm(leftover) / denom)
+
+
 def summarize_direction(
     pos: np.ndarray,
     neg: np.ndarray,

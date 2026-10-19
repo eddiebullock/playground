@@ -165,3 +165,34 @@ pairs use shared CONTROL_TEMPLATES for the same reason.
 Job 38787870 was cancelled mid-run because it was a FORCE re-extract
 with the broken contrast. Re-extract the confirmatory four after this
 fix. Existing `cos_E_S = -1` JSON is invalid for RQ1.
+
+## 2026-10-19 — Next: RQ1 report, then personas; no steering
+
+Confirmatory steering stays gated on OSF. No extra Qwens, no more
+CLEVRER / PhysBench / Mind Reading.
+
+1. Finish RQ1 from the existing confirmatory extracts (CPU). The
+   headline that was missing is E-vs-S class separation
+   (`E_minus_S` held-out AUROC), plus the unique residual
+   `||E_⊥S|| / ||E||`. First look from the layer JSON: Qwen 8B / 2B /
+   text ~0.90–0.91; Gemma ~0.48 (chance). That is a path check until
+   `esvlm-report-rq1` writes the locked summary. Also pick a layer
+   shortlist for a later sweep; do not steer it yet.
+2. Hypothesis 2: 500 mundane persona texts (combinatorial, not
+   questionnaire items, not E/S-loaded). Extract residuals on the
+   confirmatory four, project onto E and S, and onto the residualized
+   unique directions. Report `r(E, S)` and `r(E_⊥S, S_⊥E)` by layer.
+
+`esvlm-report-rq1` on the confirmatory extracts (job 38788030), path
+check only:
+
+| Model | cos(E,S) | E vs ctrl | S vs ctrl | E vs S | unique E | layer |
+| --- | --- | --- | --- | --- | --- | --- |
+| qwen3vl_8b | 0.83 | 0.986 | 0.996 | 0.912 | 0.55 | 27 (0.99) |
+| qwen3vl_2b | 0.85 | 0.985 | 0.996 | 0.896 | 0.53 | 26 (0.98) |
+| qwen3_text | 0.82 | 0.984 | 0.994 | 0.913 | 0.57 | 32 (0.98) |
+| gemma4_e4b | 0.88 | 0.803 | 0.803 | 0.475 | 0.47 | 0 (0.74) |
+
+Qwen family: E and S texts are linearly separable even though the
+mean-difference directions are aligned. Gemma: E vs S is at chance;
+the layer-0 pick is not a usable unique axis. Do not steer yet.

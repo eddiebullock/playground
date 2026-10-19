@@ -44,6 +44,8 @@ esvlm-smoke = "esvlm.cli.smoke:main"
 esvlm-score = "esvlm.cli.score:main"
 esvlm-extract = "esvlm.cli.extract:main"
 esvlm-analyze-extract = "esvlm.cli.analyze_extract:main"
+esvlm-report-rq1 = "esvlm.cli.report_rq1:main"
+esvlm-extract-personas = "esvlm.cli.extract_personas:main"
 esvlm-steer = "esvlm.cli.steer:main"
 esvlm-fetch-sdomain = "esvlm.cli.fetch_sdomain:main"
 
