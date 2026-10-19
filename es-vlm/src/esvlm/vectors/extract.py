@@ -21,6 +21,44 @@ def difference_of_means(pos: np.ndarray, neg: np.ndarray) -> np.ndarray:
     return unit_vector(vec)
 
 
+def text_residuals(
+    model: Any,
+    processor: Any,
+    modules: Sequence[Any],
+    texts: Sequence[str],
+    device: Any,
+) -> np.ndarray:
+    """Final-token residuals for each text at every hooked layer. [N, L, D]."""
+
+    import torch
+
+    acts: list[np.ndarray] = []
+    for text in texts:
+        inputs = processor(text=text, return_tensors="pt")
+        items = dict(inputs)
+        for key in list(items):
+            low = key.lower()
+            if any(part in low for part in ("image", "pixel", "grid")):
+                items.pop(key)
+        inputs = {k: v.to(device) if hasattr(v, "to") else v for k, v in items.items()}
+        catcher = ResidualCatcher(modules)
+        with torch.no_grad(), catcher:
+            model(**inputs)
+        acts.append(catcher.stacked())
+    return np.stack(acts, axis=0)
+
+
+def directions_for_layers(pos: np.ndarray, neg: np.ndarray) -> np.ndarray:
+    """``pos`` / ``neg`` are [N, L, D]. Returns unit vectors [L, D]."""
+
+    if pos.ndim != 3 or neg.ndim != 3:
+        raise ValueError("expected [N, L, D] arrays")
+    if pos.shape[1:] != neg.shape[1:]:
+        raise ValueError("layer/dim mismatch")
+    out = [difference_of_means(pos[:, i, :], neg[:, i, :]) for i in range(pos.shape[1])]
+    return np.stack(out, axis=0)
+
+
 def capture_final_token(module: Any, hidden_out: Any) -> np.ndarray:
     hidden = hidden_out[0] if isinstance(hidden_out, tuple) else hidden_out
     token = hidden[0, -1, :].detach().float().cpu().numpy()

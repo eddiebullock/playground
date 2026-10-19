@@ -48,6 +48,12 @@ case "${PACK}" in
       "gemma4_e4b:eu_emotions"
     )
     ;;
+  eu_rest)
+    PAIRS=(
+      "qwen2vl_7b:eu_emotions"
+      "qwen25vl_7b:eu_emotions"
+    )
+    ;;
   *)
     echo "ERROR: unknown PACK=${PACK}" >&2
     exit 2

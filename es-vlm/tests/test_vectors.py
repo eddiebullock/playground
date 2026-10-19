@@ -2,7 +2,8 @@ from __future__ import annotations
 
 import numpy as np
 
-from esvlm.vectors.extract import difference_of_means
+from esvlm.cli.extract import parse_layers
+from esvlm.vectors.extract import difference_of_means, directions_for_layers
 from esvlm.vectors.narratives import E_NARRATIVES, S_NARRATIVES
 from esvlm.vectors.validate import projection_auroc
 
@@ -25,3 +26,14 @@ def test_difference_of_means_separates() -> None:
     v = difference_of_means(pos, neg)
     assert abs(float(np.linalg.norm(v)) - 1.0) < 1e-5
     assert projection_auroc(pos, neg, v) > 0.9
+
+
+def test_parse_layers_and_stack() -> None:
+    assert parse_layers("all", 4) == [0, 1, 2, 3]
+    assert parse_layers("0,3", 4) == [0, 3]
+    rng = np.random.default_rng(1)
+    pos = rng.normal(size=(10, 3, 8)) + 1.0
+    neg = rng.normal(size=(10, 3, 8)) - 1.0
+    vecs = directions_for_layers(pos, neg)
+    assert vecs.shape == (3, 8)
+    assert np.allclose(np.linalg.norm(vecs, axis=1), 1.0)
