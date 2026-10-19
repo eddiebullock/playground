@@ -1,0 +1,6 @@
+key: qwen3_text
+hf_id: Qwen/Qwen3-8B
+revision: "b968826d9c46dd6066d109eabc6255188de91218"
+env: main
+adapter: qwen_vl
+max_frames: 0

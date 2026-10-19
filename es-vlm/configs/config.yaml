@@ -1,0 +1,11 @@
+defaults:
+  - model: qwen3vl_2b
+  - task: synthetic
+  - vectors: es_contrast
+  - steering: default
+  - compute: mac
+  - _self_
+
+seed: 0
+run_name: smoke
+output_dir: outputs/${run_name}

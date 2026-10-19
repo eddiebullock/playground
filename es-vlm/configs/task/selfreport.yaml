@@ -1,0 +1,10 @@
+name: selfreport
+domain: selfreport
+media_type: none
+max_frames: 0
+# Item text is licensed and never committed. Loaders read a local, git-ignored
+# questionnaire file supplied at run time.
+item_file: ${oc.env:ESVLM_QUESTIONNAIRE_FILE,""}
+instruments:
+  - EQ-60
+  - SQ-R

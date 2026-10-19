@@ -1,0 +1,17 @@
+name: physbench
+domain: S
+media_type: video
+max_frames: 8
+templates:
+  - mechanism
+  - system
+  - numbered
+# Public set under $ESVLM_PUBLIC_DIR. Never a licensed stimuli tree.
+manifest: ${oc.env:ESVLM_PHYSBENCH_MANIFEST,""}
+stim_root: ${oc.env:ESVLM_PHYSBENCH_DIR,""}
+keep:
+  task_types:
+    - relationships
+    - dynamics
+    - phenomena
+  text_options_only: true

@@ -1,0 +1,11 @@
+source: narratives
+hold_frac: 0.25
+n_null: 200
+n_personas: 500
+seed: 0
+directions:
+  - E
+  - S
+  - valence
+  - emotion
+  - helpfulness

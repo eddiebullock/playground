@@ -1,0 +1,16 @@
+name: rmet
+domain: E
+media_type: image
+max_frames: 1
+templates:
+  - classic
+  - forced_choice
+  - numbered
+transforms:
+  - upright
+  - invert
+  - scramble
+# Paths filled from local/site.sh at submit time. Never hard-code cluster paths.
+manifest: ${oc.env:ESVLM_RMET_MANIFEST,""}
+answer_key: ${oc.env:ESVLM_RMET_ANSWER_KEY,""}
+stim_root: ${oc.env:ESVLM_RMET_DIR,""}

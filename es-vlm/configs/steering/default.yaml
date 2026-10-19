@@ -1,0 +1,7 @@
+mode: add
+position: last_token
+scale: mean_norm
+layers: [4, 8, 12, 16, 20]
+alphas: [-2.0, -1.0, 0.0, 1.0, 2.0]
+# Confirmatory sweeps require ESVLM_PREREG_POSTED=1.
+require_prereg: true

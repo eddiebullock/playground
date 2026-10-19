@@ -1,0 +1,25 @@
+[project]
+name = "esvlm-env-molmo"
+version = "0.1.0"
+description = "Transformers 4.57 stack for Molmo2 only (processor uses optional_attributes)."
+requires-python = ">=3.10"
+dependencies = [
+  "esvlm",
+  "torch>=2.4",
+  "transformers>=4.57,<4.58",
+  "accelerate>=1.0",
+  "nnsight>=0.4",
+  "huggingface_hub>=0.34,<2.0",
+  "av>=13.0",
+  "imageio-ffmpeg>=0.5",
+  "einops>=0.8",
+]
+
+[project.optional-dependencies]
+dev = ["esvlm[dev]"]
+
+[tool.uv]
+package = false
+
+[tool.uv.sources]
+esvlm = { path = "../..", editable = true }

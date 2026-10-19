@@ -1,0 +1,11 @@
+name: mindreading
+domain: E
+media_type: audio+video
+max_frames: 8
+templates:
+  - direct
+  - classic_style
+  - numbered
+stim_root: ${oc.env:ESVLM_MINDREADING_DIR,""}
+audio_source: item_folder_t_files
+forbid_audio_dir: Emotions/Audio

@@ -1,0 +1,7 @@
+key: internvl35_8b
+hf_id: OpenGVLab/InternVL3_5-8B-HF
+revision: "741a7d03020411e666c6109218ab71e08151ef86"
+env: throwaway
+adapter: internvl
+max_frames: 8
+status: optional

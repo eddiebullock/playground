@@ -1,0 +1,9 @@
+name: synthetic
+domain: control
+media_type: image
+max_frames: 1
+templates:
+  - color
+  - shape
+  - numbered
+transform: upright

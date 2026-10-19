@@ -1,0 +1,143 @@
+# Decisions
+
+Dated log. Conventional commits should point here when a choice is
+non-obvious.
+
+## 2026-10-18 — Layer sweep, not a single early layer
+
+Prior pilots in this PhD steered at **one early layer** (Qwen3-VL layer 4)
+along **emotion-confusion / diagnosticity axes**, not E/S contrasts:
+
+- EU-Emotions pilot, job 33776847: null.
+- RMET study, job 33536702: near-null / non-specific (~84% zero ΔJS;
+  largest mean shift on the random axis).
+
+Those results motivate this project. We extract E-direction and
+S-direction from contrastive text, then **sweep many layers**. We do not
+re-use emotion-confusion axes at one early layer, and we do not treat
+those nulls as evidence that no E/S mechanism exists anywhere.
+
+## 2026-10-18 — Two Transformers stacks
+
+Gemma 4 needs Transformers 5.x. Molmo2's processor uses
+`optional_attributes`, which 5.x dropped. InternVL2-8B failed to load on
+Transformers 5.10 and is out of the panel. Profiles:
+
+- `env-main`: Transformers 5.x
+- `env-molmo`: Transformers 4.57
+
+One model per process, one model per GPU job.
+
+## 2026-10-18 — Pinned Hugging Face revisions
+
+Verified via the Hugging Face models API on 2026-10-18 (not invented):
+
+| Key | HF id | Revision | Env | Notes |
+| --- | --- | --- | --- | --- |
+| qwen3vl_8b | `Qwen/Qwen3-VL-8B-Instruct` | `0c351dd01ed87e9c1b53cbc748cba10e6187ff3b` | main | On cluster; primary |
+| qwen3vl_2b | `Qwen/Qwen3-VL-2B-Instruct` | `89644892e4d85e24eaac8bacfd4f463576704203` | main | Mac smoke / scale ladder |
+| qwen3vl_32b | `Qwen/Qwen3-VL-32B-Instruct` | `0cfaf48183f594c314753d30a4c4974bc75f3ccb` | main | Fits one A100 in bf16 |
+| gemma4_e4b | `google/gemma-4-E4B-it` | `ee0ef6023621cff504d758262d4e04895a5af4a2` | main | On cluster |
+| molmo2 | `allenai/Molmo2-O-7B` | `784410650d12be9bc086118fdefa32d2c3bced86` | molmo | Open data; contamination check |
+| qwen25vl_7b | `Qwen/Qwen2.5-VL-7B-Instruct` | `cc594898137f460bfe9f0759e9844b3ce807cfb5` | main | Published-steering replication |
+| qwen3_text | `Qwen/Qwen3-8B` | `b968826d9c46dd6066d109eabc6255188de91218` | main | Text-only control; matching 8B backbone |
+| internvl35_8b | `OpenGVLab/InternVL3_5-8B-HF` | `741a7d03020411e666c6109218ab71e08151ef86` | throwaway | Optional; drop after two load failures |
+| qwen2vl_7b | `Qwen/Qwen2-VL-7B-Instruct` | `eed13092ef92e448dd6875b2a00151bd3f7db0ac` | main | On cluster; not a primary panel model |
+
+`Qwen/Qwen3-8B-Instruct` returned HTTP 401 from the public API on this
+date, so the text-only control is pinned to the public `Qwen/Qwen3-8B`
+checkpoint (same 8B backbone family). Re-check Instruct if access
+appears later.
+
+## 2026-10-18 — huggingface_hub pin relaxed
+
+The brief asked for `huggingface_hub>=0.34,<1.0`. Current Transformers 5.x
+requires `huggingface_hub>=1.3` (5.18+ wants >=1.31). The lock cannot
+satisfy both. Pinned `huggingface_hub>=0.34,<2.0` so env-main can exist.
+Revisit if a future 5.x wheel returns to hub 0.x.
+
+## 2026-10-18 — Mac smoke (Milestone B)
+
+Qwen3-VL-2B-Instruct (`89644892e4d85e24eaac8bacfd4f463576704203`) on
+this Mac: MPS bf16, 12 synthetic items, layers 0 and 14, alphas
+{-1, 0, 1}, 72 scored rows. Load 22.8 s (warm cache), score 109.9 s
+(9.2 s/item), 27 option-tokens/item, peak allocated 4073 MB. Summary:
+`results/aggregate/smoke_mac_qwen3vl_2b.json`.
+
+## 2026-10-18 — Molmo2 dropped from the primary panel
+
+Dropped **before Phase 1**, because of loader/processor incompatibility
+(text-only residual extract). Not dropped because of an E/S finding:
+there are no Molmo E/S results. `env-molmo` stays on disk.
+
+## 2026-10-18 — S-domain defaults
+
+Locked public S-sets (never mixed with licensed stimuli trees):
+
+1. PhysBench dynamics / relationships, text A-D options only. Official
+   `test.json` has no answers; labels from `lmms-lab-eval/PhysBench`.
+   This is the primary confirmatory visual S-set. One S-set is enough
+   for the direction x domain interaction; a benchmark battery is not.
+2. CLEVRER validation explanatory / predictive / counterfactual MCQ is
+   optional robustness / video S, not required. Do not run the full
+   19804 or the full model panel unless PhysBench is unusable (floor).
+3. PIQA validation is an optional text-only backbone control, not a
+   confirmatory S-task.
+
+Rejected as the main visual S-set: 2001 Folk Physics Test; ScienceQA /
+AI2 ARC. Fetch via `slurm/fetch_sdomain.sbatch` into `$ESVLM_PUBLIC_DIR`.
+CLEVRER videos use `$ESVLM_CLEVRER_DIR` when the user RDS file cap is tight.
+
+8B unsteered PhysBench accuracy was 0.2635 vs 0.25 chance (path check,
+not a finding). If later panel models are also at floor, use the
+already-running CLEVRER shard as the fallback S-readout instead of
+fetching more benchmarks.
+
+## 2026-10-18 — E-task scoring wired
+
+Public S path is confirmed, so `esvlm-score` loads licensed E-sets in
+place: RMET (36, 4-AFC) and EU-Emotions full (243, 6-way from the
+entropy option set; never the 118-trial subset). Mind Reading jsonl has
+labels but no forced-choice options; it is not scored until a MCQ form
+exists. No stimuli are copied into the repo.
+
+Schema work that was not just “read the manifest”:
+
+- RMET image fields are stale multi-part paths; files live as
+  `item_NN.png` under the stimuli dir. Loader resolves by basename.
+- RMET answer-key JSON is an `items` list, not an `answers` map. The
+  manifest already has `correct_label`, so the key is unused for scoring.
+- EU-Emotions trials have `stimulus_path` and no `options`. The 6-way
+  set comes from `human_options` in the entropy JSON (`trials` map).
+  48/243 labels were missing from that set; the manifest label is
+  prepended (6 or 7 options).
+- Mind Reading `val_full.jsonl` is open-set (one label, ~258 classes).
+  No foil policy is locked, so it is not scored.
+
+## 2026-10-18 — Overnight unsteered E-panel
+
+After the 8B EU-Emotions job, submit one 59-minute `PACK=e_panel`
+chain (intr is one job / one hour). Resume skips finished parquets.
+
+Run: RMET on 2B, Gemma, Qwen2-VL, Qwen2.5-VL, 32B, text-only Qwen3;
+then EU-Emotions on 2B and Gemma.
+
+Do not run: more CLEVRER, full PhysBench, Mind Reading, Molmo,
+confirmatory steering. PhysBench 64s were at chance on 8B / 2B / Gemma.
+
+## 2026-10-18 — Framing
+
+Questionnaires generate hypotheses. They are not valid trait measures of
+models. Always say E-direction / S-direction.
+
+## 2026-10-18 — OSF gates confirmatory steering only
+
+OSF preregistration is a public, timestamped analysis plan. It is there
+so confirmatory steering results (Phase 3 / RQ2) cannot be quietly
+re-specified after seeing them.
+
+The user asked to continue without posting it. Unsteered Phase 1
+baselines and later RQ1 extraction proceed. `esvlm-steer` still refuses
+confirmatory sweeps unless `ESVLM_PREREG_POSTED=1` or
+`--allow-unpreregistered` (smoke only). Do not treat unsteered
+baselines as a double-dissociation result.

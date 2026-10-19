@@ -1,0 +1,26 @@
+[project]
+name = "esvlm-env-main"
+version = "0.1.0"
+description = "Transformers 5.x stack for Qwen3-VL, Gemma 4, Qwen2.5-VL, and text-only Qwen3."
+requires-python = ">=3.10"
+dependencies = [
+  "esvlm",
+  "torch>=2.4",
+  "transformers>=5.0,<6.0",
+  "accelerate>=1.0",
+  "nnsight>=0.4",
+  "qwen-vl-utils>=0.0.10",
+  "huggingface_hub>=0.34,<2.0",
+  "av>=13.0",
+  "imageio-ffmpeg>=0.5",
+  "einops>=0.8",
+]
+
+[project.optional-dependencies]
+dev = ["esvlm[dev]"]
+
+[tool.uv]
+package = false
+
+[tool.uv.sources]
+esvlm = { path = "../..", editable = true }

@@ -1,0 +1,5 @@
+device: auto
+offline: false
+mem_per_cpu_mb: 0
+walltime: local
+env: main

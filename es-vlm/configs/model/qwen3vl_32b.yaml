@@ -1,0 +1,6 @@
+key: qwen3vl_32b
+hf_id: Qwen/Qwen3-VL-32B-Instruct
+revision: "0cfaf48183f594c314753d30a4c4974bc75f3ccb"
+env: main
+adapter: qwen_vl
+max_frames: 8
