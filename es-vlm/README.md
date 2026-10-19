@@ -1,26 +1,36 @@
 # es-vlm
 
-Empathizing (E) and systemizing (S) representations inside open-weight
-vision-language models. Questionnaires generate hypotheses; they are not
-treated as valid trait measures of models.
+Whether open-weight VLMs have separable, causally usable
+social-inference and mechanical-inference residual directions
+(Baron-Cohen E–S as a computational prediction, not a trait label).
 
 This folder is a self-contained package inside `eddiebullock/playground`.
 It has its own `pyproject.toml` and is not a nested git repo.
 
 ## What this tests
 
-- **RQ1 Separability.** E vs S vs valence / emotion / helpfulness vs a
-  matched-random null; E-S correlation across simulated personas.
-- **RQ2 Double dissociation (core).** Direction x task-domain interaction
-  under steering and ablation, swept over layers.
-- **RQ3 Self-report vs competence.** Standardised slopes of questionnaire
-  log-prob scores vs task accuracy across alpha.
-- **RQ4 Human alignment.** RSA / Jensen-Shannon of item-level errors vs
-  human EQ / SQ-R tertiles (Mac only; the workbook never leaves this
-  machine).
+One paper, see `docs/PROPOSAL.md` and `docs/PLAN.md`.
 
-Say "E-direction / S-direction". Never label a model or condition
-"autistic" or "low-empathy".
+- **Construct.** Last-token residual while the model is asked the task.
+  Say social-inference / mechanical-inference direction. Never "the
+  model is empathic", "autistic", or "low-empathy".
+- **Design A.** Same RMET faces: mental-state vs appearance, then
+  residualize against text-only. If the leftover is chance, it was
+  wording.
+- **Design B.** EU-Emotions video vs CLEVRER video. Layer-0 AUROC is
+  the confound check.
+- **Design C (closed).** RMET vs CLEVRER is image-vs-video (AUROC 1.0
+  including layer 0). Do not steer it.
+- **Causal.** Steer the train direction on hold items at a layer locked
+  from the extract. Only if the extract is non-degenerate.
+- **Transfer.** 8B first, then 2B and Gemma only if 8B steering works.
+
+Narrative E/S prose, personas, EQ/SQ-R slopes, human RSA, SAEs, and
+extra Qwens are not this paper. The prose chapter is a closed causal
+null (writing-style leftover, no dissociation).
+
+Questionnaires generate hypotheses; they are not trait measures of
+models.
 
 ## Layout
 

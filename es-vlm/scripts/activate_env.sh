@@ -24,11 +24,18 @@ if [ ! -d "${ENV_DIR}" ]; then
   exit 2
 fi
 
-if [ -x "${ENV_DIR}/.venv/bin/python" ]; then
-  # shellcheck disable=SC1091
-  source "${ENV_DIR}/.venv/bin/activate"
-  return 0 2>/dev/null || exit 0
+# User RDS inode cap: cluster venvs live under $ESVLM_VENV_ROOT when set.
+CANDIDATES=("${ENV_DIR}/.venv")
+if [ -n "${ESVLM_VENV_ROOT:-}" ]; then
+  CANDIDATES+=("${ESVLM_VENV_ROOT}/${ESVLM_PROFILE}/.venv")
 fi
+for venv in "${CANDIDATES[@]}"; do
+  if [ -x "${venv}/bin/python" ]; then
+    # shellcheck disable=SC1091
+    source "${venv}/bin/activate"
+    return 0 2>/dev/null || exit 0
+  fi
+done
 
 echo "ERROR: ${ENV_DIR}/.venv not built. On the cluster, submit the CPU env-build job." >&2
 exit 2

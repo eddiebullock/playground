@@ -236,7 +236,9 @@ prediction about separable social vs mechanistic computation, not as
 a claim that our stories are EQ/SQ. Say social-inference direction /
 mechanical-inference direction.
 
-`esvlm-extract-task` writes that pair. Do not go back to narrative
+`esvlm-extract-task` writes that pair. The first RMET-vs-CLEVRER
+extract was Design C (confound); the paper uses same-image and
+matched-video designs instead. Do not go back to narrative
 add-sweeps. SAEs are a later decomposition of this task direction if
 it is real and causal, not a rescue of the prose axis.
 
@@ -251,3 +253,33 @@ independence). Path check only; H2 as written is not supported.
 | qwen3vl_2b | 0.86 [0.42, 0.95] | -0.84 | L26 r=0.64 / r_u=-0.89 |
 | qwen3_text | 0.80 [0.37, 0.98] | -0.78 | L32 r=0.49 / r_u=-0.87 |
 | gemma4_e4b | 0.90 [-0.30, 0.99] | -0.81 | L0 r=0.80 / r_u=-0.81 |
+
+## 2026-10-19 — Design C is a confound, not a finding
+
+Job `38807101` (RMET faces vs CLEVRER videos) completed. Hold-out
+AUROC was 1.0 at every layer, including layer 0. That is
+image-versus-video, not a social/mechanical mechanism. Keep it as
+Design C (negative control). Do not steer it. Do not treat it as
+evidence for an E/S direction.
+
+## 2026-10-19 — One paper: matched-modality task directions
+
+Not everything from the "what would be exciting" list is one paper.
+In: Design A (same-image RMET vs appearance + text residualize),
+Design B (EU video vs CLEVRER video), confirmatory steer on hold
+items if `steer_ok`, then 2B / Gemma transfer only if 8B steering
+moves as predicted. Out of this paper: SAEs, old RQ3/RQ4, extra
+Qwens, Mind Reading, more narrative add-sweeps.
+
+`esvlm-extract-task` now writes train/hold ids, projection AUROC on
+hold, a visual leftover for Design A, and `steer_ok`. Candidate
+layer is locked from that leftover (Design A) or from hold AUROC
+with early layers deprioritised (Design B) before any steer.
+
+`scripts/activate_env.sh` now falls back to `$ESVLM_VENV_ROOT/<profile>/.venv`
+so a later rsync of `envs/main/` cannot hide the project-store venv.
+
+Next GPU job: `PACK=paper8b` on Qwen3-VL-8B only. Do not queue 2B,
+Gemma, or steer until those summaries are inspected.
+
+See `docs/PROPOSAL.md` and `docs/PLAN.md`.

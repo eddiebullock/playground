@@ -9,7 +9,7 @@
 #SBATCH --open-mode=append
 #SBATCH -o logs/%x_%j.out
 #
-# Task-conditioned social vs mechanical residuals.
+# DESIGN=same_image_rmet | video_eu_clevrer | paper8b
 # Submit via scripts/submit.sh.
 
 set -euo pipefail
@@ -29,11 +29,21 @@ cd "${ESVLM_ROOT}"
 mkdir -p logs outputs
 
 MODEL="${MODEL:-qwen3vl_8b}"
-TASKS="${TASKS:-rmet,clevrer}"
+PACK="${PACK:-paper8b}"
 SHARD="${SHARD:-0}"
 FRAMES="${FRAMES:-8}"
 SOC_LIM="${TRIAL_LIMIT_SOCIAL:-0}"
 MECH_LIM="${TRIAL_LIMIT_MECHANICAL:-256}"
+
+case "${PACK}" in
+  same_image_rmet) DESIGNS=(same_image_rmet) ;;
+  video_eu_clevrer) DESIGNS=(video_eu_clevrer) ;;
+  paper8b) DESIGNS=(same_image_rmet video_eu_clevrer) ;;
+  *)
+    echo "ERROR: unknown PACK=${PACK}" >&2
+    exit 2
+    ;;
+esac
 
 WEIGHTS="${ESVLM_MODELS_DIR}/${MODEL}"
 if [ ! -f "${WEIGHTS}/config.json" ]; then
@@ -48,12 +58,27 @@ if [ ! -f "${WEIGHTS}/config.json" ] && [ -f "${ESVLM_NEW_MODELS_DIR}/${MODEL}/c
   MODELS_DIR_ARG="${ESVLM_NEW_MODELS_DIR}"
 fi
 
-python -m esvlm.cli.extract_task \
-  --model "${MODEL}" \
-  --tasks "${TASKS}" \
-  --out "outputs/task_extract_${MODEL}_${SHARD}" \
-  --trial_limit_social "${SOC_LIM}" \
-  --trial_limit_mechanical "${MECH_LIM}" \
-  --frames "${FRAMES}" \
-  --offline \
-  --models-dir "${MODELS_DIR_ARG}"
+failed=0
+for DESIGN in "${DESIGNS[@]}"; do
+  echo "===== task extract ${MODEL} ${DESIGN} ====="
+  set +e
+  python -m esvlm.cli.extract_task \
+    --model "${MODEL}" \
+    --design "${DESIGN}" \
+    --out "outputs/task_extract_${MODEL}_${DESIGN}_${SHARD}" \
+    --trial_limit_social "${SOC_LIM}" \
+    --trial_limit_mechanical "${MECH_LIM}" \
+    --frames "${FRAMES}" \
+    --offline \
+    --models-dir "${MODELS_DIR_ARG}"
+  rc=$?
+  set -e
+  echo "task_extract_exit design=${DESIGN} rc=${rc}"
+  if [ "${rc}" -ne 0 ]; then
+    failed=$((failed + 1))
+  fi
+done
+echo "extract_task_done pack=${PACK} failed=${failed}"
+if [ "${failed}" -gt 0 ]; then
+  exit 1
+fi

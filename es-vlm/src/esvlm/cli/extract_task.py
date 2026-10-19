@@ -1,4 +1,10 @@
-"""Task-conditioned residual directions. Not narrative E/S prose."""
+"""Task-conditioned residual directions. Not narrative E/S prose.
+
+same_image_rmet: mental-state vs appearance on the same faces, plus a
+text-only control so a layer-0 AUROC of 1.0 is not mistaken for a
+social mechanism. video_eu_clevrer: modality-matched video pair.
+cross_modal_rmet_clevrer: faces vs videos; treat as a confound check.
+"""
 
 from __future__ import annotations
 
@@ -10,14 +16,16 @@ from pathlib import Path
 
 import numpy as np
 
+from esvlm.analysis.separability import residualize, unique_fraction
 from esvlm.cli.score import DEFAULT_TEMPLATE, load_task_items, slice_items
 from esvlm.scoring.logprob import _encode
+from esvlm.tasks.items import drop_media, rmet_appearance_items
 from esvlm.tasks.media import load_media
 from esvlm.utils.envcheck import check_job_env
 from esvlm.utils.logging import echo_run_args, setup_logging
 from esvlm.utils.seeding import seed_everything
 from esvlm.vectors.extract import ResidualCatcher, difference_of_means, directions_for_layers
-from esvlm.vectors.validate import held_out_auroc
+from esvlm.vectors.validate import projection_auroc
 
 
 def item_residuals(model, processor, modules, item, images, device) -> np.ndarray:
@@ -33,20 +41,11 @@ def item_residuals(model, processor, modules, item, images, device) -> np.ndarra
     return catcher.stacked()
 
 
-def stack_task(
-    model,
-    processor,
-    modules,
-    items,
-    device,
-    *,
-    frames: int,
-    log,
-) -> tuple[np.ndarray, list[str]]:
+def stack_task(model, processor, modules, items, device, *, frames: int, log) -> tuple[np.ndarray, list[str]]:
     acts = []
     ids = []
     for item in items:
-        media = load_media(item, frames=frames)
+        media = load_media(item, frames=frames) if item.media_type != "none" else []
         acts.append(item_residuals(model, processor, modules, item, media or None, device))
         ids.append(item.item_id)
         if len(ids) % 32 == 0:
@@ -54,18 +53,102 @@ def stack_task(
     return np.stack(acts, axis=0), ids
 
 
+def train_hold_idx(n: int, *, hold_frac: float, seed: int) -> tuple[np.ndarray, np.ndarray]:
+    rng = np.random.default_rng(seed)
+    perm = rng.permutation(n)
+    n_hold = max(4, int(n * hold_frac))
+    n_hold = min(n_hold, n - 4)
+    return np.sort(perm[n_hold:]), np.sort(perm[:n_hold])
+
+
+def paired_unit_dirs(pos: np.ndarray, neg: np.ndarray) -> np.ndarray:
+    """pos/neg [N, L, D] aligned. Unit mean(pos-neg) per layer."""
+
+    from esvlm.steering.hooks import unit_vector
+
+    delta = pos - neg
+    return np.stack([unit_vector(delta[:, i, :].mean(axis=0)) for i in range(delta.shape[1])], axis=0)
+
+
+def leftover_dirs(vecs: np.ndarray, remove: np.ndarray) -> tuple[np.ndarray, list[bool]]:
+    """Residualize each layer direction against ``remove``. Zeros if collinear."""
+
+    out = []
+    collinear = []
+    for i in range(len(vecs)):
+        try:
+            out.append(residualize(vecs[i], remove[i]))
+            collinear.append(False)
+        except ValueError:
+            out.append(np.zeros_like(vecs[i]))
+            collinear.append(True)
+    return np.stack(out, axis=0), collinear
+
+
+def safe_projection_auroc(pos: np.ndarray, neg: np.ndarray, direction: np.ndarray) -> float:
+    if float(np.linalg.norm(direction)) < 1e-12:
+        return float("nan")
+    return projection_auroc(pos, neg, direction)
+
+
+def pick_candidate_layer(scores: np.ndarray, *, min_layer: int = 4) -> int:
+    """Lock the steer layer from hold-out AUROC before any steer is run."""
+
+    if scores.size == 0:
+        raise ValueError("no layer scores")
+    eligible = [i for i in range(len(scores)) if i >= min_layer and np.isfinite(scores[i])]
+    if not eligible:
+        eligible = [i for i in range(len(scores)) if np.isfinite(scores[i])]
+    if not eligible:
+        return 0
+    return int(max(eligible, key=lambda i: scores[i]))
+
+
+def is_modality_confound(layer0: float, *, threshold: float = 0.95) -> bool:
+    return bool(np.isfinite(layer0) and layer0 >= threshold)
+
+
+def load_design_items(design: str, args) -> tuple[list, list, str, str, bool]:
+    if design == "same_image_rmet":
+        social, _ = load_task_items("rmet", None, template_id="classic")
+        social = slice_items(social, 0, args.trial_limit_social)
+        return social, rmet_appearance_items(social), "rmet_classic", "rmet_appearance", True
+    if design == "video_eu_clevrer":
+        social, _ = load_task_items("eu_emotions", None, template_id=DEFAULT_TEMPLATE["eu_emotions"])
+        mech, _ = load_task_items("clevrer", None, template_id=DEFAULT_TEMPLATE["clevrer"])
+        return (
+            slice_items(social, 0, args.trial_limit_social),
+            slice_items(mech, 0, args.trial_limit_mechanical),
+            "eu_emotions",
+            "clevrer",
+            False,
+        )
+    if design == "cross_modal_rmet_clevrer":
+        social, _ = load_task_items("rmet", None, template_id="classic")
+        mech, _ = load_task_items("clevrer", None, template_id=DEFAULT_TEMPLATE["clevrer"])
+        return (
+            slice_items(social, 0, args.trial_limit_social),
+            slice_items(mech, 0, args.trial_limit_mechanical),
+            "rmet",
+            "clevrer",
+            False,
+        )
+    raise SystemExit(f"unknown design {design}")
+
+
 def main(argv: list[str] | None = None) -> int:
     check_job_env()
     parser = argparse.ArgumentParser()
     parser.add_argument("--model", required=True)
     parser.add_argument(
-        "--tasks",
-        default="rmet,clevrer",
-        help="comma-separated; first is treated as social, second as mechanical",
+        "--design",
+        default="same_image_rmet",
+        choices=("same_image_rmet", "video_eu_clevrer", "cross_modal_rmet_clevrer"),
     )
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--trial_limit_social", type=int, default=0)
     parser.add_argument("--trial_limit_mechanical", type=int, default=256)
+    parser.add_argument("--hold_frac", type=float, default=0.33)
     parser.add_argument("--frames", type=int, default=8)
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--offline", action="store_true")
@@ -79,20 +162,9 @@ def main(argv: list[str] | None = None) -> int:
     echo_run_args(vars(args), log)
     seed_everything(args.seed)
 
-    names = [t.strip() for t in args.tasks.split(",") if t.strip()]
-    if len(names) != 2:
-        raise SystemExit("need exactly two tasks: social,mechanical")
-    social_task, mech_task = names
-    social_items, _ = load_task_items(
-        social_task, None, template_id=DEFAULT_TEMPLATE.get(social_task, "")
-    )
-    mech_items, _ = load_task_items(
-        mech_task, None, template_id=DEFAULT_TEMPLATE.get(mech_task, "")
-    )
-    social_items = slice_items(social_items, 0, args.trial_limit_social)
-    mech_items = slice_items(mech_items, 0, args.trial_limit_mechanical)
-    if len(social_items) < 8 or len(mech_items) < 8:
-        raise SystemExit("need at least 8 items per task")
+    social_items, other_items, social_name, other_name, paired = load_design_items(args.design, args)
+    if len(social_items) < 8 or len(other_items) < 8:
+        raise SystemExit("need at least 8 items per side")
 
     from esvlm.models.loader import load_model, residual_modules
     from esvlm.utils.device import torch_device
@@ -107,52 +179,143 @@ def main(argv: list[str] | None = None) -> int:
     social, social_ids = stack_task(
         loaded.model, loaded.processor, modules, social_items, device, frames=args.frames, log=log
     )
-    mech, mech_ids = stack_task(
-        loaded.model, loaded.processor, modules, mech_items, device, frames=args.frames, log=log
+    other, other_ids = stack_task(
+        loaded.model, loaded.processor, modules, other_items, device, frames=args.frames, log=log
     )
-    vecs = directions_for_layers(social, mech)
+    train_i, hold_i = train_hold_idx(len(social_ids), hold_frac=args.hold_frac, seed=args.seed)
+    if paired and len(other_ids) != len(social_ids):
+        raise SystemExit("paired design length mismatch")
+    if not paired:
+        other_train, other_hold = train_hold_idx(len(other_ids), hold_frac=args.hold_frac, seed=args.seed + 1)
+    else:
+        other_train, other_hold = train_i, hold_i
+
+    if paired:
+        vecs = paired_unit_dirs(social[train_i], other[other_train])
+    else:
+        vecs = directions_for_layers(social[train_i], other[other_train])
+
     held = [
-        held_out_auroc(social[:, i, :], mech[:, i, :], seed=args.seed) for i in range(vecs.shape[0])
+        safe_projection_auroc(social[hold_i, i, :], other[other_hold, i, :], vecs[i])
+        for i in range(vecs.shape[0])
     ]
-    best = int(np.argmax(np.asarray(held)))
-    args.out.mkdir(parents=True, exist_ok=True)
-    np.savez_compressed(
-        args.out / f"{loaded.spec.key}__task_residuals.npz",
-        social=social,
-        mechanical=mech,
-        social_minus_mechanical=vecs,
-        social_ids=np.asarray(social_ids),
-        mechanical_ids=np.asarray(mech_ids),
-    )
-    for i in range(vecs.shape[0]):
-        np.savez_compressed(
-            args.out / f"{loaded.spec.key}__layer_{i:02d}.npz",
-            social_minus_mechanical=vecs[i],
-            E=vecs[i],
-            S=difference_of_means(mech[:, i, :], social[:, i, :]),
+
+    text_held: list[float] | None = None
+    visual_held: list[float] | None = None
+    visual_dirs = None
+    text_collinear: list[bool] | None = None
+    unique_vs_text: list[float] | None = None
+    if args.design == "same_image_rmet":
+        social_txt, _ = stack_task(
+            loaded.model,
+            loaded.processor,
+            modules,
+            drop_media(social_items),
+            device,
+            frames=args.frames,
+            log=log,
         )
+        other_txt, _ = stack_task(
+            loaded.model,
+            loaded.processor,
+            modules,
+            drop_media(other_items),
+            device,
+            frames=args.frames,
+            log=log,
+        )
+        text_dirs = paired_unit_dirs(social_txt[train_i], other_txt[other_train])
+        visual_dirs, text_collinear = leftover_dirs(vecs, text_dirs)
+        text_held = [
+            safe_projection_auroc(social_txt[hold_i, i, :], other_txt[other_hold, i, :], text_dirs[i])
+            for i in range(vecs.shape[0])
+        ]
+        visual_held = [
+            safe_projection_auroc(social[hold_i, i, :], other[other_hold, i, :], visual_dirs[i])
+            for i in range(vecs.shape[0])
+        ]
+        unique_vs_text = [unique_fraction(vecs[i], text_dirs[i]) for i in range(vecs.shape[0])]
+
+    layer0 = float(held[0]) if held else float("nan")
+    pick_scores = np.asarray(visual_held if visual_held is not None else held, dtype=np.float64)
+    confound_score = float(pick_scores[0]) if pick_scores.size else layer0
+    confound = is_modality_confound(confound_score)
+    best = pick_candidate_layer(pick_scores)
+    degenerate = bool(not np.isfinite(pick_scores[best]) or pick_scores[best] < 0.60)
+
+    args.out.mkdir(parents=True, exist_ok=True)
+    payload = {
+        "social": social,
+        "other": other,
+        "social_minus_other": vecs,
+        "social_ids": np.asarray(social_ids),
+        "other_ids": np.asarray(other_ids),
+        "train_idx": train_i,
+        "hold_idx": hold_i,
+        "other_hold_idx": other_hold,
+    }
+    if visual_dirs is not None:
+        payload["visual_minus_text"] = visual_dirs
+    np.savez_compressed(args.out / f"{loaded.spec.key}__task_residuals.npz", **payload)
+
+    for i in range(vecs.shape[0]):
+        layer_payload = {
+            "social_minus_mechanical": vecs[i],
+            "E": visual_dirs[i] if visual_dirs is not None else vecs[i],
+            "S": difference_of_means(other[other_train, i, :], social[train_i, i, :]),
+        }
+        if visual_dirs is not None:
+            layer_payload["E_visual"] = visual_dirs[i]
+            layer_payload["E_raw"] = vecs[i]
+        np.savez_compressed(args.out / f"{loaded.spec.key}__layer_{i:02d}.npz", **layer_payload)
+
+    hold_social_ids = [social_ids[int(i)] for i in hold_i]
+    hold_other_ids = [other_ids[int(i)] for i in other_hold]
+    train_social_ids = [social_ids[int(i)] for i in train_i]
+    candidate_score = float(pick_scores[best]) if pick_scores.size else float("nan")
     summary = {
         "model": loaded.spec.key,
         "revision": loaded.spec.revision,
         "construct": "task_conditioned",
-        "social_task": social_task,
-        "mechanical_task": mech_task,
+        "design": args.design,
+        "social_task": social_name,
+        "mechanical_task": other_name,
+        "paired": paired,
         "n_social": len(social_ids),
-        "n_mechanical": len(mech_ids),
+        "n_other": len(other_ids),
+        "n_train": int(len(train_i)),
+        "n_hold": int(len(hold_i)),
         "n_layers": int(vecs.shape[0]),
         "dim": int(vecs.shape[-1]),
+        "train_social_ids": train_social_ids,
+        "hold_social_ids": hold_social_ids,
+        "hold_other_ids": hold_other_ids,
         "held_out_auroc_by_layer": [float(x) for x in held],
-        "held_out_auroc_mean": float(np.mean(held)),
+        "held_out_auroc_mean": float(np.nanmean(held)),
+        "held_out_auroc_layer0": layer0,
+        "confound_score": confound_score,
+        "wording_only": bool(
+            visual_held is not None
+            and np.isfinite(layer0)
+            and layer0 >= 0.95
+            and float(np.nanmean(pick_scores)) < 0.60
+        ),
+        "text_only_auroc_by_layer": [float(x) for x in text_held] if text_held is not None else None,
+        "visual_residual_auroc_by_layer": [float(x) for x in visual_held] if visual_held is not None else None,
+        "unique_vs_text_by_layer": [float(x) for x in unique_vs_text] if unique_vs_text is not None else None,
+        "text_collinear_layers": [i for i, flag in enumerate(text_collinear or []) if flag],
+        "modality_confound": confound,
+        "degenerate": degenerate,
         "candidate_layer": best,
-        "candidate_held_out_auroc": float(held[best]),
+        "candidate_held_out_auroc": candidate_score,
+        "candidate_score_source": "visual_residual" if visual_held is not None else "raw_hold",
+        "steer_ok": bool(not confound and not degenerate),
         "load_seconds": round(load_s, 3),
         "extract_seconds": round(time.perf_counter() - t1, 3),
         "out": str(args.out),
-        "note": "question-only last-token residual; not narrative E/S",
+        "note": "train-only directions; projection AUROC on hold; not narrative E/S",
     }
-    (args.out / "task_extract_summary.json").write_text(
-        json.dumps(summary, indent=2), encoding="utf-8"
-    )
+    (args.out / "task_extract_summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
     log.info("task_extract_summary %s", json.dumps(summary))
     return 0
 

@@ -5,7 +5,14 @@ from pathlib import Path
 
 import pytest
 
-from esvlm.tasks.items import load_eu_emotions_items, load_rmet_items, parse_manifest_trial
+from esvlm.tasks.items import (
+    APPEARANCE_OPTIONS,
+    drop_media,
+    load_eu_emotions_items,
+    load_rmet_items,
+    parse_manifest_trial,
+    rmet_appearance_items,
+)
 from esvlm.tasks.prompts import RMET_TEMPLATES, render_prompt
 from esvlm.types import MCQItem
 
@@ -77,6 +84,35 @@ def test_rmet_loader_and_classic_prompt(tmp_path: Path) -> None:
     assert "Choose which word best describes what the person in the picture is thinking or feeling" in classic
     rendered = render_prompt("rmet", "classic", ["a", "b"])
     assert "Choose which word best describes" in rendered
+    appearance = render_prompt("rmet", "appearance", APPEARANCE_OPTIONS)
+    assert "What kind of image is this?" in appearance
+    assert "thinking or feeling" not in appearance
+
+
+def test_rmet_appearance_and_drop_media() -> None:
+    item = MCQItem(
+        item_id="01",
+        task="rmet",
+        domain="E",
+        media="/tmp/01.png",
+        media_type="image",
+        prompt_text="mental",
+        options=("worried", "calm"),
+        correct_idx=0,
+        meta={"template_id": "classic"},
+    )
+    foil = rmet_appearance_items([item])[0]
+    assert foil.item_id == "01__appearance"
+    assert foil.media == item.media
+    assert foil.domain == "control"
+    assert foil.options == APPEARANCE_OPTIONS
+    assert foil.correct_idx == 0
+    assert "What kind of image" in foil.prompt_text
+    text = drop_media([item, foil])
+    assert [t.media_type for t in text] == ["none", "none"]
+    assert text[0].item_id == "01__text"
+    assert text[0].prompt_text == item.prompt_text
+    assert text[1].options == APPEARANCE_OPTIONS
 
 
 def test_eu_emotions_refuses_subset(tmp_path: Path) -> None:
