@@ -194,7 +194,15 @@ check only:
 
 Qwen family: E and S texts are linearly separable even though the
 mean-difference directions are aligned. Gemma: E vs S is at chance;
-the layer-0 pick is not a usable unique axis. Do not steer yet.
+the layer-0 pick is not a usable unique axis.
+
+## 2026-10-19 — First causal sweep: 8B L27 add, RMET + CLEVRER 128
+
+OSF is not a gate. The sweep runner is real. First job is Qwen3-VL-8B
+layer 27, mode=add, alphas {-2,-1,0,1,2}, vectors E / S / E_minus_S.
+Tasks: RMET (36) then CLEVRER offset 0 limit 128 (overlaps the
+unsteered 6000). Not PhysBench (floor). Not Gemma. Not extra Qwens.
+Not ablate until add moves something. Not the old emotion-axis layer 4.
 
 Persona job `38790120` (500 mundane texts, confirmatory four) completed.
 Raw `r(E, S)` is strongly positive, as the aligned directions predict.
