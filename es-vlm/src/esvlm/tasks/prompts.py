@@ -20,6 +20,11 @@ RMET_TEMPLATES: dict[str, str] = {
         "Pick the single best label.\n\n{numbered}\n\n"
         "Answer with the label text, not the number."
     ),
+    # Same images as classic RMET. Not a mental-state question.
+    "appearance": (
+        "Look at the picture. What kind of image is this?\n\n{options}\n\n"
+        "Reply with the label only."
+    ),
 }
 
 EU_EMOTIONS_TEMPLATES: dict[str, str] = {

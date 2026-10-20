@@ -9,8 +9,9 @@
 #SBATCH --open-mode=append
 #SBATCH -o logs/%x_%j.out
 #
-# PACK=first_causal (default): 8B layer 27 add-sweep, RMET then CLEVRER 128.
-# Resume skips finished item_ids. Submit via scripts/submit.sh.
+# PACK=first_causal (default): closed narrative L27 add-sweep. Do not resubmit.
+# PACK=task_same_image | task_video: steer hold-out items from a task extract
+# only if that extract is non-degenerate. Submit via scripts/submit.sh.
 
 set -euo pipefail
 if [ -z "${ESVLM_ROOT:-}" ]; then
@@ -53,6 +54,9 @@ case "${PACK}" in
       "qwen3vl_8b:clevrer:0:128:add:all"
     )
     ;;
+  task_same_image|task_video)
+    JOBS=()
+    ;;
   *)
     echo "ERROR: unknown PACK=${PACK}" >&2
     exit 2
@@ -79,6 +83,79 @@ resolve_models_dir() {
   fi
   return 1
 }
+
+summary_field() {
+  python -c "import json,sys; print(json.load(open(sys.argv[1]))[sys.argv[2]])" "$1" "$2"
+}
+
+if [ "${PACK}" = "task_same_image" ] || [ "${PACK}" = "task_video" ]; then
+  MODEL="${MODEL:-qwen3vl_8b}"
+  if [ "${PACK}" = "task_same_image" ]; then
+    DESIGN="same_image_rmet"
+    # Appearance hold IDs are not CLEVRER. Mechanical readout is a CLEVRER shard.
+    SPECS=("rmet:hold_social_ids:0:ids" "clevrer::128:all")
+  else
+    DESIGN="video_eu_clevrer"
+    SPECS=("eu_emotions:hold_social_ids:0:ids" "clevrer:hold_other_ids:0:ids")
+  fi
+  DIR="outputs/task_extract_${MODEL}_${DESIGN}_${SHARD}"
+  SUMMARY="${DIR}/task_extract_summary.json"
+  if [ ! -f "${SUMMARY}" ]; then
+    echo "ERROR: missing ${SUMMARY}" >&2
+    exit 2
+  fi
+  STEER_OK="$(summary_field "${SUMMARY}" steer_ok)"
+  CAND="$(summary_field "${SUMMARY}" candidate_layer)"
+  CONFOUND="$(summary_field "${SUMMARY}" modality_confound)"
+  WORDING="$(summary_field "${SUMMARY}" wording_only)"
+  echo "task_steer_gate pack=${PACK} steer_ok=${STEER_OK} confound=${CONFOUND} wording_only=${WORDING} layer=${CAND}"
+  if [ "${STEER_OK}" != "True" ] || [ "${WORDING}" = "True" ]; then
+    echo "SKIP degenerate, confounded, or wording-only extract; not steering"
+    echo "steer_chain_done pack=${PACK} failed=0 skipped=1"
+    exit 0
+  fi
+  if ! MODELS_DIR_ARG="$(resolve_models_dir "${MODEL}")"; then
+    echo "ERROR: missing weights ${MODEL}" >&2
+    exit 2
+  fi
+  VECTORS="${VECTORS:-E,S}"
+  failed=0
+  for spec in "${SPECS[@]}"; do
+    IFS=':' read -r TASK ID_KEY LIMIT FILTER <<<"${spec}"
+    echo "===== task steer ${MODEL} ${TASK} layer=${CAND} ====="
+    ID_ARGS=()
+    if [ "${FILTER}" = "ids" ]; then
+      ID_ARGS+=(--item-ids "${SUMMARY}" --item-ids-key "${ID_KEY}")
+    fi
+    set +e
+    python -m esvlm.cli.steer \
+      --model "${MODEL}" \
+      --task "${TASK}" \
+      --layers "${CAND}" \
+      --alphas="${ALPHAS}" \
+      --vectors "${VECTORS}" \
+      --modes add \
+      --position last_token \
+      --directions "${DIR}" \
+      --out "outputs/steer_task_${MODEL}_${DESIGN}_${TASK}_${SHARD}" \
+      "${ID_ARGS[@]}" \
+      --trial_limit "${LIMIT}" \
+      --frames "${FRAMES}" \
+      --offline \
+      --models-dir "${MODELS_DIR_ARG}"
+    rc=$?
+    set -e
+    echo "steer_exit task=${TASK} rc=${rc}"
+    if [ "${rc}" -ne 0 ]; then
+      failed=$((failed + 1))
+    fi
+  done
+  echo "steer_chain_done pack=${PACK} failed=${failed}"
+  if [ "${failed}" -gt 0 ]; then
+    exit 1
+  fi
+  exit 0
+fi
 
 failed=0
 for spec in "${JOBS[@]}"; do

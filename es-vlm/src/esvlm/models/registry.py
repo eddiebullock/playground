@@ -125,10 +125,27 @@ def list_models() -> list[str]:
     return list(PANEL)
 
 
+def disk_names_for(spec: ModelSpec) -> list[str]:
+    """On-disk folder names that may hold this spec.
+
+    Cluster trees store the 8B Qwen as ``qwen3vl``, not ``qwen3vl_8b``.
+    ``CLUSTER_KEY_ALIASES`` is disk-name -> panel key; invert it here.
+    """
+
+    names = [spec.key]
+    for disk, key in CLUSTER_KEY_ALIASES.items():
+        if key == spec.key and disk not in names:
+            names.append(disk)
+    hf_name = spec.hf_id.split("/")[-1]
+    if hf_name not in names:
+        names.append(hf_name)
+    return names
+
+
 def resolve_local_dir(spec: ModelSpec, models_dir: Path | None) -> Path | None:
     if models_dir is None:
         return None
-    for name in (spec.key, CLUSTER_KEY_ALIASES.get(spec.key, spec.key), spec.hf_id.split("/")[-1]):
+    for name in disk_names_for(spec):
         candidate = models_dir / name
         if (candidate / "config.json").is_file():
             return candidate

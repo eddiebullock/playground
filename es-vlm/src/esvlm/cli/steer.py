@@ -44,6 +44,21 @@ def _parse_csv(spec: str) -> list[str]:
     return [x.strip() for x in spec.split(",") if x.strip()]
 
 
+def load_item_id_filter(path: Path, *, key: str = "hold_social_ids") -> set[str]:
+    """JSON list of ids, or an extract summary with ``key``."""
+
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    if isinstance(payload, list):
+        ids = payload
+    elif isinstance(payload, dict):
+        ids = payload.get(key)
+        if ids is None:
+            raise SystemExit(f"{path} has no {key}")
+    else:
+        raise SystemExit(f"{path} is not a JSON list or object")
+    return {str(x) for x in ids}
+
+
 def resolve_direction(vecs: dict[str, np.ndarray], name: str) -> np.ndarray:
     if name in vecs:
         return vecs[name]
@@ -80,6 +95,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--manifest", type=Path)
     parser.add_argument("--trial_offset", type=int, default=0)
     parser.add_argument("--trial_limit", type=int, default=0)
+    parser.add_argument("--item-ids", type=Path)
+    parser.add_argument("--item-ids-key", default="hold_social_ids")
     parser.add_argument("--frames", type=int, default=8)
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--offline", action="store_true")
@@ -111,6 +128,9 @@ def main(argv: list[str] | None = None) -> int:
     )
     items, manifest = load_task_items(args.task, args.manifest, template_id=args.template)
     items = slice_items(items, args.trial_offset, args.trial_limit)
+    if args.item_ids is not None:
+        keep = load_item_id_filter(args.item_ids, key=args.item_ids_key)
+        items = [it for it in items if it.item_id in keep]
     if not items:
         raise SystemExit(f"no items for task {args.task}")
     n_unique = len({it.item_id for it in items})

@@ -243,3 +243,51 @@ def load_mindreading_items(
             )
         )
     return items
+
+
+APPEARANCE_OPTIONS = ("photograph", "line drawing", "sculpture", "medical scan")
+
+
+def rmet_appearance_items(items: list[MCQItem]) -> list[MCQItem]:
+    """Same RMET faces, physical-image question. Not a mental-state item."""
+
+    from esvlm.tasks.prompts import render_prompt
+
+    out: list[MCQItem] = []
+    for it in items:
+        prompt = render_prompt("rmet", "appearance", APPEARANCE_OPTIONS)
+        out.append(
+            MCQItem(
+                item_id=f"{it.item_id}__appearance",
+                task="rmet",
+                domain="control",
+                media=it.media,
+                media_type=it.media_type,
+                prompt_text=prompt,
+                options=APPEARANCE_OPTIONS,
+                correct_idx=0,
+                meta={**it.meta, "template_id": "appearance", "source_item": it.item_id},
+            )
+        )
+    return out
+
+
+def drop_media(items: list[MCQItem]) -> list[MCQItem]:
+    """Text-only clones for a question-text control."""
+
+    out: list[MCQItem] = []
+    for it in items:
+        out.append(
+            MCQItem(
+                item_id=f"{it.item_id}__text",
+                task=it.task,
+                domain=it.domain,
+                media="",
+                media_type="none",
+                prompt_text=it.prompt_text,
+                options=it.options,
+                correct_idx=it.correct_idx,
+                meta={**it.meta, "source_item": it.item_id, "text_only": True},
+            )
+        )
+    return out
