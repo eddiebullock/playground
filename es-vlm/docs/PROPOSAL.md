@@ -1,11 +1,9 @@
 # Social versus mechanical residual directions in open-weight VLMs
 
-**Status:** one paper. The core (Design A + B, documented Design C
-confound, confirmatory steer if non-degenerate, 2B/Gemma transfer
-only if 8B moves) is a single robust claim. Bolting SAEs, old RQ3/RQ4,
-extra Qwens, or Mind Reading onto it is a second project, not more
-impact. Narrative E/S prose is a closed pilot, not a confirmatory
-analysis. Execution order is `docs/PLAN.md`.
+**Status:** closed chapter. Design A was wording; B and C were
+modality/content confounds; narrative E/S was writing style. The
+live program is two public-item papers in `docs/PUBLIC_PAPERS.md`.
+Do not steer these designs. Execution history is `docs/PLAN.md`.
 
 ## One-sentence claim
 

@@ -1,9 +1,9 @@
 """Task-conditioned residual directions. Not narrative E/S prose.
 
-same_image_rmet: mental-state vs appearance on the same faces, plus a
-text-only control so a layer-0 AUROC of 1.0 is not mistaken for a
-social mechanism. video_eu_clevrer: modality-matched video pair.
-cross_modal_rmet_clevrer: faces vs videos; treat as a confound check.
+Live: same_scene_nextqa (NExT-QA CW vs descriptive, text residualize)
+and mmtom_vs_piqa (MMToM text vs PIQA). Closed licensed designs
+(same_image_rmet, video_eu_clevrer, cross_modal_rmet_clevrer) stay
+callable but are not the live program.
 """
 
 from __future__ import annotations
@@ -26,6 +26,15 @@ from esvlm.utils.logging import echo_run_args, setup_logging
 from esvlm.utils.seeding import seed_everything
 from esvlm.vectors.extract import ResidualCatcher, difference_of_means, directions_for_layers
 from esvlm.vectors.validate import projection_auroc
+
+TEXT_RESIDUALIZE_DESIGNS = frozenset({"same_image_rmet", "same_scene_nextqa"})
+DESIGNS = (
+    "same_scene_nextqa",
+    "mmtom_vs_piqa",
+    "same_image_rmet",
+    "video_eu_clevrer",
+    "cross_modal_rmet_clevrer",
+)
 
 
 def item_residuals(model, processor, modules, item, images, device) -> np.ndarray:
@@ -152,6 +161,27 @@ def decide_gates(
 
 
 def load_design_items(design: str, args) -> tuple[list, list, str, str, bool]:
+    if design == "same_scene_nextqa":
+        social, _ = load_task_items("nextqa_social", None, template_id="direct")
+        other, _ = load_task_items("nextqa_physical", None, template_id="direct")
+        lim = args.trial_limit_social
+        return (
+            slice_items(social, 0, lim),
+            slice_items(other, 0, lim),
+            "nextqa_social",
+            "nextqa_physical",
+            True,
+        )
+    if design == "mmtom_vs_piqa":
+        social, _ = load_task_items("mmtom", None, template_id=DEFAULT_TEMPLATE["mmtom"])
+        mech, _ = load_task_items("piqa", None, template_id=DEFAULT_TEMPLATE["piqa"])
+        return (
+            slice_items(social, 0, args.trial_limit_social),
+            slice_items(mech, 0, args.trial_limit_mechanical),
+            "mmtom",
+            "piqa",
+            False,
+        )
     if design == "same_image_rmet":
         social, _ = load_task_items("rmet", None, template_id="classic")
         social = slice_items(social, 0, args.trial_limit_social)
@@ -185,12 +215,17 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--model", required=True)
     parser.add_argument(
         "--design",
-        default="same_image_rmet",
-        choices=("same_image_rmet", "video_eu_clevrer", "cross_modal_rmet_clevrer"),
+        default="same_scene_nextqa",
+        choices=DESIGNS,
     )
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--trial_limit_social", type=int, default=0)
     parser.add_argument("--trial_limit_mechanical", type=int, default=256)
+    parser.add_argument(
+        "--allow-missing-media",
+        action="store_true",
+        help="Paper 1 text control: allow NExT-QA pairs with no mp4 on disk",
+    )
     parser.add_argument("--hold_frac", type=float, default=0.33)
     parser.add_argument("--frames", type=int, default=8)
     parser.add_argument("--seed", type=int, default=0)
@@ -208,6 +243,12 @@ def main(argv: list[str] | None = None) -> int:
     social_items, other_items, social_name, other_name, paired = load_design_items(args.design, args)
     if len(social_items) < 8 or len(other_items) < 8:
         raise SystemExit("need at least 8 items per side")
+    n_missing = sum(1 for it in social_items if it.media_type == "none")
+    if args.design == "same_scene_nextqa" and n_missing and not args.allow_missing_media:
+        raise SystemExit(
+            f"same_scene_nextqa: {n_missing}/{len(social_items)} videos missing; "
+            "fetch mp4s or pass --allow-missing-media for the text control"
+        )
 
     from esvlm.models.loader import load_model, residual_modules
     from esvlm.utils.device import torch_device
@@ -248,7 +289,7 @@ def main(argv: list[str] | None = None) -> int:
     visual_dirs = None
     text_collinear: list[bool] | None = None
     unique_vs_text: list[float] | None = None
-    if args.design == "same_image_rmet":
+    if args.design in TEXT_RESIDUALIZE_DESIGNS:
         social_txt, _ = stack_task(
             loaded.model,
             loaded.processor,
@@ -356,6 +397,8 @@ def main(argv: list[str] | None = None) -> int:
         "candidate_held_out_auroc": candidate_score,
         "candidate_score_source": "visual_residual" if visual_held is not None else "raw_hold",
         "steer_ok": steer_ok,
+        "n_social_missing_media": n_missing,
+        "allow_missing_media": bool(args.allow_missing_media),
         "load_seconds": round(load_s, 3),
         "extract_seconds": round(time.perf_counter() - t1, 3),
         "out": str(args.out),

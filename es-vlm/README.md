@@ -9,34 +9,29 @@ It has its own `pyproject.toml` and is not a nested git repo.
 
 ## What this tests
 
-One paper, see `docs/PROPOSAL.md` and `docs/PLAN.md`.
+Live program: two public-item papers in parallel, see
+`docs/PUBLIC_PAPERS.md` and `docs/PLAN.md`.
 
 - **Construct.** Last-token residual while the model is asked the task.
-  Say social-inference / mechanical-inference direction. Never "the
-  model is empathic", "autistic", or "low-empathy".
-- **Design A.** Same RMET faces: mental-state vs appearance, then
-  residualize against text-only. If the leftover is chance, it was
-  wording.
-- **Design B.** EU-Emotions video vs CLEVRER video. Layer-0 AUROC is
-  the confound check.
-- **Design C (closed).** RMET vs CLEVRER is image-vs-video (AUROC 1.0
-  including layer 0). Do not steer it.
-- **Causal.** Steer the train direction on hold items at a layer locked
-  from the extract. Only if the extract is non-degenerate.
-- **Transfer.** 8B first, then 2B and Gemma only if 8B steering works.
-
-Narrative E/S prose, personas, EQ/SQ-R slopes, human RSA, SAEs, and
-extra Qwens are not this paper. The prose chapter is a closed causal
-null (writing-style leftover, no dissociation).
+  Say social-inference / mechanical-inference / belief-inference
+  direction. Never "the model is empathic", "autistic", or
+  "low-empathy".
+- **Paper 1.** Same NExT-QA video: published CW vs descriptive
+  (DO/DC/DL), then residualize against text. Licensed RMET appearance
+  is not this design.
+- **Paper 2.** MMToM-QA text-only (600 public items) vs PIQA. The
+  257GB video zip is not fetched until the text control is done.
+- **Closed chapter.** Narrative E/S and Designs A–C (RMET / EU /
+  CLEVRER) are a controlled null. Do not steer them.
 
 Questionnaires generate hypotheses; they are not trait measures of
 models.
 
 ## Layout
 
-See `docs/` for the proposal placeholder, data governance, cluster notes,
-preregistration draft, and dated decisions. Site-specific values live in
-git-ignored `local/site.sh` (copy `local/site.example.sh`).
+See `docs/` for the live public-item proposal, the closed E–S chapter,
+data governance, cluster notes, and dated decisions. Site-specific
+values live in git-ignored `local/site.sh` (copy `local/site.example.sh`).
 
 ## Environments
 

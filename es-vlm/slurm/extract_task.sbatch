@@ -9,8 +9,10 @@
 #SBATCH --open-mode=append
 #SBATCH -o logs/%x_%j.out
 #
-# DESIGN=same_image_rmet | video_eu_clevrer | paper8b
+# PACK=same_scene_nextqa | mmtom_vs_piqa | public_papers
+# Closed: same_image_rmet | video_eu_clevrer | paper8b
 # Submit via scripts/submit.sh.
+# ALLOW_MISSING_MEDIA=1 for Paper 1 text control before videos exist.
 
 set -euo pipefail
 if [ -z "${ESVLM_ROOT:-}" ]; then
@@ -29,13 +31,17 @@ cd "${ESVLM_ROOT}"
 mkdir -p logs outputs
 
 MODEL="${MODEL:-qwen3vl_8b}"
-PACK="${PACK:-paper8b}"
+PACK="${PACK:-public_papers}"
 SHARD="${SHARD:-0}"
 FRAMES="${FRAMES:-8}"
 SOC_LIM="${TRIAL_LIMIT_SOCIAL:-0}"
 MECH_LIM="${TRIAL_LIMIT_MECHANICAL:-256}"
+ALLOW_MISSING_MEDIA="${ALLOW_MISSING_MEDIA:-0}"
 
 case "${PACK}" in
+  same_scene_nextqa) DESIGNS=(same_scene_nextqa) ;;
+  mmtom_vs_piqa) DESIGNS=(mmtom_vs_piqa) ;;
+  public_papers) DESIGNS=(same_scene_nextqa mmtom_vs_piqa) ;;
   same_image_rmet) DESIGNS=(same_image_rmet) ;;
   video_eu_clevrer) DESIGNS=(video_eu_clevrer) ;;
   paper8b) DESIGNS=(same_image_rmet video_eu_clevrer) ;;
@@ -67,6 +73,10 @@ failed=0
 for DESIGN in "${DESIGNS[@]}"; do
   echo "===== task extract ${MODEL} ${DESIGN} ====="
   set +e
+  extra=()
+  if [ "${ALLOW_MISSING_MEDIA}" = "1" ] && [ "${DESIGN}" = "same_scene_nextqa" ]; then
+    extra+=(--allow-missing-media)
+  fi
   python -m esvlm.cli.extract_task \
     --model "${MODEL}" \
     --design "${DESIGN}" \
@@ -75,7 +85,8 @@ for DESIGN in "${DESIGNS[@]}"; do
     --trial_limit_mechanical "${MECH_LIM}" \
     --frames "${FRAMES}" \
     --offline \
-    --models-dir "${MODELS_DIR_ARG}"
+    --models-dir "${MODELS_DIR_ARG}" \
+    "${extra[@]}"
   rc=$?
   set -e
   echo "task_extract_exit design=${DESIGN} rc=${rc}"

@@ -306,3 +306,28 @@ controlled null: narrative leftover is writing style; task residuals
 are wording (A) or modality/content (B, C).
 
 See `docs/PROPOSAL.md` and `docs/PLAN.md`.
+
+## 2026-10-20 — Leave E–S. Two public-item papers in parallel
+
+The licensed task-conditioned paper is a controlled null, not a
+highly cited benchmark. Rebuild onto public items. Run both papers
+on the same stack.
+
+Paper 1: NExT-QA same-video pairs. Social = type CW only (not CH).
+Physical = DO, then DC, then DL; lowest qid. Published questions.
+Val lock: 461 pairs from 4996 trials (228 DO, 108 DC, 125 DL).
+Videos `{video}.mp4` are not fetched in the annotation job. Missing
+mp4 loads as `media_type=none` plus `meta.media_rel`. Design
+`same_scene_nextqa` residualizes against text. `--allow-missing-media`
+is the wording control and may run before videos exist.
+
+Paper 2: MMToM-QA text-only (MIT, 600 items) versus PIQA. Official
+`answer_list` is `["a","b"]`; parse `(a)` / `(b)` from the question.
+Do not download the 257GB video zip. Design `mmtom_vs_piqa`.
+
+RMET appearance is not this rebuild: licensed, n=36, author-written
+foil, syntax-mismatched, already `wording_only`. CLEVRER has no
+social demand.
+
+Fetch via `esvlm-fetch-public` into `$ESVLM_PUBLIC_DIR`. Annotations
+only. See `docs/PUBLIC_PAPERS.md`.
