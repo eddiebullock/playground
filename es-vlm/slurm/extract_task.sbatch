@@ -30,6 +30,16 @@ source "${ESVLM_ROOT}/scripts/activate_env.sh" "${ESVLM_PROFILE:-main}"
 cd "${ESVLM_ROOT}"
 mkdir -p logs outputs
 
+# Repair public manifests if site.sh expanded an empty $ESVLM_PUBLIC_DIR.
+if [ ! -f "${ESVLM_NEXTQA_MANIFEST:-}" ] && [ -f "${ESVLM_PUBLIC_DIR}/nextqa/pairs_val.json" ]; then
+  export ESVLM_NEXTQA_MANIFEST="${ESVLM_PUBLIC_DIR}/nextqa/pairs_val.json"
+  export ESVLM_NEXTQA_DIR="${ESVLM_PUBLIC_DIR}/nextqa/videos"
+fi
+if [ ! -f "${ESVLM_MMTOM_MANIFEST:-}" ] && [ -f "${ESVLM_PUBLIC_DIR}/mmtom/manifest.json" ]; then
+  export ESVLM_MMTOM_MANIFEST="${ESVLM_PUBLIC_DIR}/mmtom/manifest.json"
+fi
+echo "nextqa_manifest=${ESVLM_NEXTQA_MANIFEST:-} mmtom_manifest=${ESVLM_MMTOM_MANIFEST:-} allow_missing_media=${ALLOW_MISSING_MEDIA:-0} pack=${PACK:-}"
+
 MODEL="${MODEL:-qwen3vl_8b}"
 PACK="${PACK:-public_papers}"
 SHARD="${SHARD:-0}"

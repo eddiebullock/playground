@@ -331,3 +331,12 @@ social demand.
 
 Fetch via `esvlm-fetch-public` into `$ESVLM_PUBLIC_DIR`. Annotations
 only. See `docs/PUBLIC_PAPERS.md`.
+
+Job `38884808` (Paper 1 text extract on interactive QOS) failed in
+2m25s. Job `38884839` (Paper 2) was cancelled when the run was
+paused. Likely cause: cluster `site.sh` public-item paths were
+appended from a login shell where `$ESVLM_PUBLIC_DIR` was empty, so
+the job looked for `/nextqa/pairs_val.json`. Loaders now fall back
+to `$ESVLM_PUBLIC_DIR/<rel>`. The extract launcher prints the
+resolved manifests before the model loads. First fix; do not
+resubmit until that log line is present.

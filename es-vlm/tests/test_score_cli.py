@@ -171,6 +171,51 @@ def test_nextqa_and_mmtom_public_loaders(tmp_path: Path, monkeypatch: pytest.Mon
     assert items[0].correct_idx == 0
 
 
+def test_public_manifest_falls_back_when_site_var_is_empty(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    from esvlm.cli.score import _public_file
+    from esvlm.tasks.nextqa import pair_same_video, parse_nextqa_row, write_pair_manifest
+
+    public = tmp_path / "public"
+    dest = public / "nextqa"
+    dest.mkdir(parents=True)
+    cw = parse_nextqa_row(
+        {
+            "video": "5",
+            "qid": "1",
+            "question": "why",
+            "answer": "0",
+            "type": "CW",
+            "a0": "a",
+            "a1": "b",
+            "a2": "c",
+            "a3": "d",
+            "a4": "e",
+        }
+    )
+    do = parse_nextqa_row(
+        {
+            "video": "5",
+            "qid": "2",
+            "question": "what",
+            "answer": "1",
+            "type": "DO",
+            "a0": "a",
+            "a1": "b",
+            "a2": "c",
+            "a3": "d",
+            "a4": "e",
+        }
+    )
+    assert cw is not None and do is not None
+    write_pair_manifest(dest / "pairs_val.json", pair_same_video([cw, do]))
+    monkeypatch.setenv("ESVLM_PUBLIC_DIR", str(public))
+    monkeypatch.setenv("ESVLM_NEXTQA_MANIFEST", "/nextqa/pairs_val.json")
+    man = _public_file("ESVLM_NEXTQA_MANIFEST", "nextqa/pairs_val.json")
+    social, used = load_task_items("nextqa_social", None)
+    assert used == man
+    assert len(social) == 1
+
+
 def test_mindreading_requires_mcq_options(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     man = tmp_path / "val_full.jsonl"
     man.write_text('{"trial_id":"x","label":"alpha","stimulus_path":"x.mov"}\n', encoding="utf-8")

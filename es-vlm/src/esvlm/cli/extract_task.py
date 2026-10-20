@@ -241,9 +241,20 @@ def main(argv: list[str] | None = None) -> int:
     seed_everything(args.seed)
 
     social_items, other_items, social_name, other_name, paired = load_design_items(args.design, args)
+    n_missing = sum(1 for it in social_items if it.media_type == "none")
+    log.info(
+        "design_loaded %s",
+        {
+            "design": args.design,
+            "n_social": len(social_items),
+            "n_other": len(other_items),
+            "n_missing_media": n_missing,
+            "allow_missing_media": bool(args.allow_missing_media),
+            "social0": social_items[0].item_id if social_items else None,
+        },
+    )
     if len(social_items) < 8 or len(other_items) < 8:
         raise SystemExit("need at least 8 items per side")
-    n_missing = sum(1 for it in social_items if it.media_type == "none")
     if args.design == "same_scene_nextqa" and n_missing and not args.allow_missing_media:
         raise SystemExit(
             f"same_scene_nextqa: {n_missing}/{len(social_items)} videos missing; "
