@@ -94,6 +94,9 @@ def test_load_mmtom_items_from_jsonl(tmp_path: Path) -> None:
     path = tmp_path / "questions.jsonl"
     path.write_text("".join(json.dumps(r) + "\n" for r in rows), encoding="utf-8")
     assert len(load_mmtom_jsonl(path)) == 2
+    listed = tmp_path / "questions.json"
+    listed.write_text(json.dumps(rows), encoding="utf-8")
+    assert len(load_mmtom_jsonl(listed)) == 2
 
     items = load_mmtom_items(path)
     assert len(items) == 2
