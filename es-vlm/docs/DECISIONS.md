@@ -284,7 +284,25 @@ so a later rsync of `envs/main/` cannot hide the project-store venv.
 looked for `qwen3vl_8b/config.json` and skipped the on-disk `qwen3vl`
 folder. First fix; resubmit `PACK=paper8b` on 8B only.
 
-Next GPU job: `PACK=paper8b` on Qwen3-VL-8B only. Do not queue 2B,
-Gemma, or steer until those summaries are inspected.
+Job `38817548` completed (16:01, failed=0). Gate 1 is closed.
+
+Design A (same-image RMET, n=36/36, hold 11): raw and text-only
+AUROC 1.0 at every layer. `unique_vs_text` is ~0. Visual leftover
+AUROC is 0 or undefined except a last-layer 1.0 spike on 11 items.
+`wording_only=true`. That spike is a collinear leftover, not a
+visual mechanism. Do not steer. `steer_ok` must be false when
+`wording_only` is true or unique fraction is ~0.
+
+Design B (EU vs CLEVRER, 243/256): hold AUROC 1.0 including layer 0.
+`modality_confound=true`, `steer_ok=false`. Faces-in-video vs
+objects-in-video is still a content confound.
+
+Cosine of the new 8B task directions with the closed narrative E
+vector is near 0 (Design A mean -0.05; Design B mean 0.02). The
+construct actually changed; it is still not a causal social axis.
+
+No 8B causal job. No 2B / Gemma transfer. No SAEs. The paper is a
+controlled null: narrative leftover is writing style; task residuals
+are wording (A) or modality/content (B, C).
 
 See `docs/PROPOSAL.md` and `docs/PLAN.md`.

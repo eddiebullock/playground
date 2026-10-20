@@ -7,6 +7,7 @@ import pytest
 
 from esvlm.analysis.separability import residualize
 from esvlm.cli.extract_task import (
+    decide_gates,
     is_modality_confound,
     leftover_dirs,
     paired_unit_dirs,
@@ -67,6 +68,33 @@ def test_visual_leftover_and_confound_gate() -> None:
     scores = np.array([0.99, 0.99, 0.99, 0.99, 0.71, 0.88, 0.80])
     assert pick_candidate_layer(scores) == 5
     assert pick_candidate_layer(np.array([0.4, 0.9, np.nan]), min_layer=2) == 1
+
+
+def test_wording_only_blocks_steer_on_collinear_leftover() -> None:
+    visual = np.array([0.0] * 35 + [1.0])
+    unique = [1e-7] * 36
+    gates = decide_gates(raw_layer0=1.0, pick_scores=visual, unique_vs_text=unique)
+    assert gates["wording_only"] is True
+    assert gates["degenerate"] is True
+    assert gates["steer_ok"] is False
+
+
+def test_video_layer0_confound_blocks_steer() -> None:
+    held = np.ones(36)
+    gates = decide_gates(raw_layer0=1.0, pick_scores=held, unique_vs_text=None)
+    assert gates["modality_confound"] is True
+    assert gates["wording_only"] is False
+    assert gates["steer_ok"] is False
+
+
+def test_real_visual_leftover_can_steer() -> None:
+    visual = np.array([0.52] * 4 + [0.81] + [0.70] * 31)
+    unique = [0.4] * 36
+    gates = decide_gates(raw_layer0=0.55, pick_scores=visual, unique_vs_text=unique)
+    assert gates["wording_only"] is False
+    assert gates["modality_confound"] is False
+    assert gates["steer_ok"] is True
+    assert gates["candidate_layer"] == 4
 
 
 def test_residualize_matches_leftover_helper() -> None:

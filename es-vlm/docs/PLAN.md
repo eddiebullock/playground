@@ -21,21 +21,20 @@ items if the extract is non-degenerate. Transfer is 2B + Gemma only if
 - Design C (RMET faces vs CLEVRER videos), job 38807101: hold-out
   AUROC 1.0 at every layer including 0. Confound check. Do not steer.
 
-## Gate 1 — 8B extract (now)
+## Gate 1 — 8B extract (closed, job 38817548)
 
-One GPU hour, `PACK=paper8b`, `MODEL=qwen3vl_8b`:
+1. Design A: wording only. Raw and text-only AUROC 1.0; unique vs
+   text ~0; leftover AUROC chance except a last-layer spike on n=11.
+   Do not steer.
+2. Design B: layer-0 AUROC 1.0. Content/modality confound. Do not
+   steer.
 
-1. Design A: same-image RMET classic vs appearance, plus text-only
-   residualize. Inspect `visual_residual_auroc_by_layer`,
-   `wording_only`, `steer_ok`.
-2. Design B: EU-Emotions video vs CLEVRER video. Inspect layer-0
-   AUROC and `steer_ok`.
+## Gate 2 — 8B causal (skipped)
 
-Do not queue 2B, Gemma, or steer in the same wave.
+Would have run only if a design had `steer_ok=true` and not
+`wording_only`. Neither did.
 
-## Gate 2 — 8B causal (only if Gate 1 is non-degenerate)
-
-If a design has `steer_ok=true` (candidate hold AUROC >= 0.60 and the
+If a later extract is non-degenerate (candidate hold AUROC >= 0.60 and the
 score used to pick the layer is not a layer-0 0.95+ confound):
 
 - `PACK=task_same_image` and/or `PACK=task_video`
@@ -48,10 +47,10 @@ Predicted: social+ raises the social task more than the mechanical
 task; mechanical+ does the reverse. If the leftover is real but
 steering is null, that is still the paper.
 
-## Gate 3 — transfer (only if Gate 2 moves as predicted)
+## Gate 3 — transfer (skipped)
 
-Repeat extract + steer on Qwen3-VL-2B and Gemma 4 E4B. Stop if 8B
-steering is null or generic.
+8B extract did not produce a steerable direction. Do not run 2B or
+Gemma.
 
 ## Stop rules
 

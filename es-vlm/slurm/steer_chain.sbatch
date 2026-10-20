@@ -107,9 +107,10 @@ if [ "${PACK}" = "task_same_image" ] || [ "${PACK}" = "task_video" ]; then
   STEER_OK="$(summary_field "${SUMMARY}" steer_ok)"
   CAND="$(summary_field "${SUMMARY}" candidate_layer)"
   CONFOUND="$(summary_field "${SUMMARY}" modality_confound)"
-  echo "task_steer_gate pack=${PACK} steer_ok=${STEER_OK} confound=${CONFOUND} layer=${CAND}"
-  if [ "${STEER_OK}" != "True" ]; then
-    echo "SKIP degenerate or confounded extract; not steering"
+  WORDING="$(summary_field "${SUMMARY}" wording_only)"
+  echo "task_steer_gate pack=${PACK} steer_ok=${STEER_OK} confound=${CONFOUND} wording_only=${WORDING} layer=${CAND}"
+  if [ "${STEER_OK}" != "True" ] || [ "${WORDING}" = "True" ]; then
+    echo "SKIP degenerate, confounded, or wording-only extract; not steering"
     echo "steer_chain_done pack=${PACK} failed=0 skipped=1"
     exit 0
   fi

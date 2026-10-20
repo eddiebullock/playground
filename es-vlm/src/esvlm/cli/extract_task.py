@@ -108,6 +108,49 @@ def is_modality_confound(layer0: float, *, threshold: float = 0.95) -> bool:
     return bool(np.isfinite(layer0) and layer0 >= threshold)
 
 
+def decide_gates(
+    *,
+    raw_layer0: float,
+    pick_scores: np.ndarray,
+    unique_vs_text: list[float] | None = None,
+    min_unique: float = 1e-3,
+    auroc_min: float = 0.60,
+) -> dict[str, object]:
+    """Lock steer_ok. A last-layer AUROC spike on a ~0 leftover is not a mechanism."""
+
+    raw = np.asarray(pick_scores, dtype=np.float64)
+    scores = raw.copy()
+    visual_mean = float(np.nanmean(raw)) if raw.size else float("nan")
+    wording_only = bool(
+        unique_vs_text is not None
+        and np.isfinite(raw_layer0)
+        and raw_layer0 >= 0.95
+        and np.isfinite(visual_mean)
+        and visual_mean < auroc_min
+    )
+    if unique_vs_text is not None:
+        uniq = np.asarray(unique_vs_text, dtype=np.float64)
+        if uniq.shape == scores.shape:
+            scores[uniq < min_unique] = np.nan
+        confound_score = float(raw[0]) if raw.size else float("nan")
+    else:
+        confound_score = float(raw[0]) if raw.size else raw_layer0
+    confound = is_modality_confound(confound_score)
+    best = pick_candidate_layer(scores)
+    cand = float(scores[best]) if scores.size and np.isfinite(scores[best]) else float("nan")
+    degenerate = bool(not np.isfinite(cand) or cand < auroc_min)
+    return {
+        "pick_scores": scores,
+        "confound_score": confound_score,
+        "modality_confound": confound,
+        "wording_only": wording_only,
+        "candidate_layer": best,
+        "candidate_held_out_auroc": cand,
+        "degenerate": degenerate,
+        "steer_ok": bool(not confound and not degenerate and not wording_only),
+    }
+
+
 def load_design_items(design: str, args) -> tuple[list, list, str, str, bool]:
     if design == "same_image_rmet":
         social, _ = load_task_items("rmet", None, template_id="classic")
@@ -238,10 +281,18 @@ def main(argv: list[str] | None = None) -> int:
 
     layer0 = float(held[0]) if held else float("nan")
     pick_scores = np.asarray(visual_held if visual_held is not None else held, dtype=np.float64)
-    confound_score = float(pick_scores[0]) if pick_scores.size else layer0
-    confound = is_modality_confound(confound_score)
-    best = pick_candidate_layer(pick_scores)
-    degenerate = bool(not np.isfinite(pick_scores[best]) or pick_scores[best] < 0.60)
+    gates = decide_gates(
+        raw_layer0=layer0,
+        pick_scores=pick_scores,
+        unique_vs_text=unique_vs_text,
+    )
+    pick_scores = np.asarray(gates["pick_scores"], dtype=np.float64)
+    confound_score = float(gates["confound_score"])
+    confound = bool(gates["modality_confound"])
+    best = int(gates["candidate_layer"])
+    degenerate = bool(gates["degenerate"])
+    wording_only = bool(gates["wording_only"])
+    steer_ok = bool(gates["steer_ok"])
 
     args.out.mkdir(parents=True, exist_ok=True)
     payload = {
@@ -294,12 +345,7 @@ def main(argv: list[str] | None = None) -> int:
         "held_out_auroc_mean": float(np.nanmean(held)),
         "held_out_auroc_layer0": layer0,
         "confound_score": confound_score,
-        "wording_only": bool(
-            visual_held is not None
-            and np.isfinite(layer0)
-            and layer0 >= 0.95
-            and float(np.nanmean(pick_scores)) < 0.60
-        ),
+        "wording_only": wording_only,
         "text_only_auroc_by_layer": [float(x) for x in text_held] if text_held is not None else None,
         "visual_residual_auroc_by_layer": [float(x) for x in visual_held] if visual_held is not None else None,
         "unique_vs_text_by_layer": [float(x) for x in unique_vs_text] if unique_vs_text is not None else None,
@@ -309,7 +355,7 @@ def main(argv: list[str] | None = None) -> int:
         "candidate_layer": best,
         "candidate_held_out_auroc": candidate_score,
         "candidate_score_source": "visual_residual" if visual_held is not None else "raw_hold",
-        "steer_ok": bool(not confound and not degenerate),
+        "steer_ok": steer_ok,
         "load_seconds": round(load_s, 3),
         "extract_seconds": round(time.perf_counter() - t1, 3),
         "out": str(args.out),
