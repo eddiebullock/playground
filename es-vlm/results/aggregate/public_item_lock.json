@@ -1,0 +1,38 @@
+{
+  "nextqa_pairs": 461,
+  "nextqa_videos": 461,
+  "physical_types": {
+    "DL": 125,
+    "DO": 228,
+    "DC": 108
+  },
+  "cw_words": {
+    "n": 461,
+    "mean": 11.5,
+    "median": 11.0,
+    "min": 4,
+    "max": 24
+  },
+  "phys_words": {
+    "n": 461,
+    "mean": 7.7,
+    "median": 7.0,
+    "min": 4,
+    "max": 20
+  },
+  "identical_question_text": 0,
+  "mmtom_n": 600,
+  "mmtom_question_types": {
+    "1.1": 100,
+    "1.2": 100,
+    "1.3": 100,
+    "2.1": 75,
+    "2.2": 75,
+    "2.3": 75,
+    "2.4": 75
+  },
+  "mmtom_2way": 600,
+  "expected_nextqa_pairs": 461,
+  "expected_mmtom": 600,
+  "note": "Locked from published NExT-QA val.csv and MMToM-QA questions.json. No item text. Cluster check_public rewrites this file."
+}

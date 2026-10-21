@@ -42,6 +42,11 @@ ESVLM_CLEVRER_DIR="${ESVLM_PUBLIC_DIR}/clevrer/raw"
 ESVLM_CLEVRER_MANIFEST="${ESVLM_PUBLIC_DIR}/clevrer/manifest.json"
 ESVLM_PIQA_DIR="${ESVLM_PUBLIC_DIR}/piqa/raw"
 ESVLM_PIQA_MANIFEST="${ESVLM_PUBLIC_DIR}/piqa/manifest.json"
+# Paper 1/2 public annotations. Videos are optional; missing mp4 is
+# the NExT-QA text control. Never point MMToM at a 257GB video zip.
+ESVLM_NEXTQA_DIR="${ESVLM_PUBLIC_DIR}/nextqa/videos"
+ESVLM_NEXTQA_MANIFEST="${ESVLM_PUBLIC_DIR}/nextqa/pairs_val.json"
+ESVLM_MMTOM_MANIFEST="${ESVLM_PUBLIC_DIR}/mmtom/manifest.json"
 
 # Caches must be absolute paths on RDS. A quoted tilde over SSH creates a
 # literal ~ directory on $HOME (over quota).
@@ -67,6 +72,7 @@ export ESVLM_PUBLIC_DIR
 export ESVLM_PHYSBENCH_DIR ESVLM_PHYSBENCH_MANIFEST
 export ESVLM_CLEVRER_DIR ESVLM_CLEVRER_MANIFEST
 export ESVLM_PIQA_DIR ESVLM_PIQA_MANIFEST
+export ESVLM_NEXTQA_DIR ESVLM_NEXTQA_MANIFEST ESVLM_MMTOM_MANIFEST
 export ESVLM_CACHE_ROOT
 export HPC_GPU_MEM_PER_CPU_MAX_MB HPC_CPU_MEM_PER_CPU_MAX_MB
 export SITE_DENYLIST

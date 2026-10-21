@@ -20,6 +20,12 @@ every commit as public-safe.
   `local/site.sh` and `local/HPC_RUNBOOK.md`. Tracked docs say "the
   cluster" and use `$HPC_USER`, `$HPC_GPU_ACCOUNT`, `$HPC_ROOT`.
 
+## Public sets for papers 1 and 2
+
+NExT-QA CSVs and MMToM-QA `questions.json` are MIT-licensed. Fetch
+them into `$ESVLM_PUBLIC_DIR` via `esvlm-fetch-public`. Do not commit
+the files. Do not download the MMToM video archive into this tree.
+
 ## How loaders may read licensed material
 
 Loaders read existing manifests **in place** from paths supplied by

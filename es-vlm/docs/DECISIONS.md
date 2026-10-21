@@ -306,3 +306,54 @@ controlled null: narrative leftover is writing style; task residuals
 are wording (A) or modality/content (B, C).
 
 See `docs/PROPOSAL.md` and `docs/PLAN.md`.
+
+## 2026-10-20 — Leave E–S. Two public-item papers in parallel
+
+The licensed task-conditioned paper is a controlled null, not a
+highly cited benchmark. Rebuild onto public items. Run both papers
+on the same stack.
+
+Paper 1: NExT-QA same-video pairs. Social = type CW only (not CH).
+Physical = DO, then DC, then DL; lowest qid. Published questions.
+Val lock: 461 pairs from 4996 trials (228 DO, 108 DC, 125 DL).
+Videos `{video}.mp4` are not fetched in the annotation job. Missing
+mp4 loads as `media_type=none` plus `meta.media_rel`. Design
+`same_scene_nextqa` residualizes against text. `--allow-missing-media`
+is the wording control and may run before videos exist.
+
+Paper 2: MMToM-QA text-only (MIT, 600 items) versus PIQA. Official
+`answer_list` is `["a","b"]`; parse `(a)` / `(b)` from the question.
+Do not download the 257GB video zip. Design `mmtom_vs_piqa`.
+
+RMET appearance is not this rebuild: licensed, n=36, author-written
+foil, syntax-mismatched, already `wording_only`. CLEVRER has no
+social demand.
+
+Fetch via `esvlm-fetch-public` into `$ESVLM_PUBLIC_DIR`. Annotations
+only. See `docs/PUBLIC_PAPERS.md`.
+
+Job `38884808` (Paper 1 text extract on interactive QOS) failed in
+2m25s. Job `38884839` (Paper 2) was cancelled when the run was
+paused. Likely cause: cluster `site.sh` public-item paths were
+appended from a login shell where `$ESVLM_PUBLIC_DIR` was empty, so
+the job looked for `/nextqa/pairs_val.json`. Loaders now fall back
+to `$ESVLM_PUBLIC_DIR/<rel>`. The extract launcher prints the
+resolved manifests before the model loads. First fix; do not
+resubmit until that log line is present.
+
+## 2026-10-21 — Public item lock and CPU preflight
+
+Val lock confirmed: 461 pairs (461 videos; 228 DO, 108 DC, 125 DL).
+CW questions are longer than descriptive (mean 11.5 vs 7.7 words).
+No pair shares identical question text. MMToM: 600 items, all 2-way,
+types 1.1–1.3 (100 each) and 2.1–2.4 (75 each). Counts live in
+`results/aggregate/public_item_lock.json`.
+
+`esvlm-check-public` loads those items on CPU and rewrites the lock
+file. Do not download NExTVideo.zip or the MMToM video archive in
+this job. Official NExT-QA videos are the upstream `NExTVideo` zip,
+not the unofficial 1fps Hugging Face mirror. Fetch videos only after
+the text extract, onto the project store, not user RDS.
+
+GPU extracts stay on the low-priority GPU QOS. Do not move them onto
+the interactive QOS. Do not cancel jobs whose names contain `cas`.

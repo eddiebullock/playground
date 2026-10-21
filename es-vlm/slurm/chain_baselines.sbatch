@@ -54,6 +54,17 @@ case "${PACK}" in
       "qwen25vl_7b:eu_emotions"
     )
     ;;
+  mmtom_text)
+    PAIRS=(
+      "qwen3vl_8b:mmtom"
+    )
+    ;;
+  nextqa_text)
+    PAIRS=(
+      "qwen3vl_8b:nextqa_social"
+      "qwen3vl_8b:nextqa_physical"
+    )
+    ;;
   *)
     echo "ERROR: unknown PACK=${PACK}" >&2
     exit 2

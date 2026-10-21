@@ -19,7 +19,8 @@ from esvlm.utils.io import append_score_rows, finished_item_ids, parquet_shard_p
 from esvlm.utils.logging import echo_run_args, setup_logging
 from esvlm.utils.seeding import seed_everything
 
-PUBLIC_TASKS = frozenset({"physbench", "clevrer", "piqa"})
+SDOMAIN_TASKS = frozenset({"physbench", "clevrer", "piqa"})
+PUBLIC_TASKS = SDOMAIN_TASKS | {"nextqa_social", "nextqa_physical", "mmtom"}
 E_TASKS = frozenset({"rmet", "eu_emotions", "mindreading"})
 DEFAULT_TEMPLATE = {
     "physbench": "mechanism",
@@ -28,6 +29,9 @@ DEFAULT_TEMPLATE = {
     "rmet": "classic",
     "eu_emotions": "direct",
     "mindreading": "direct",
+    "nextqa_social": "direct",
+    "nextqa_physical": "direct",
+    "mmtom": "direct",
 }
 FLUSH_EVERY = 8
 _STOP = False
@@ -45,17 +49,59 @@ def _env_path(name: str) -> Path:
     return Path(raw)
 
 
+def _public_file(env_name: str, rel: str) -> Path:
+    """Resolve a public manifest. Fall back if site.sh expanded an empty root."""
+
+    raw = os.environ.get(env_name, "")
+    if raw:
+        path = Path(raw)
+        if path.is_file():
+            return path
+    public = os.environ.get("ESVLM_PUBLIC_DIR", "")
+    if public:
+        cand = Path(public) / rel
+        if cand.is_file():
+            return cand
+    raise SystemExit(f"{env_name} missing or not a file (also tried $ESVLM_PUBLIC_DIR/{rel})")
+
+
+def _public_dir(env_name: str, rel: str, *, manifest: Path) -> Path:
+    raw = os.environ.get(env_name, "")
+    if raw:
+        path = Path(raw)
+        if path.is_dir() or path.exists():
+            return path
+    public = os.environ.get("ESVLM_PUBLIC_DIR", "")
+    if public:
+        cand = Path(public) / rel
+        if cand.exists() or cand.parent.is_dir():
+            return cand
+    return manifest.parent
+
+
 def load_task_items(
     task: str, manifest: Path | None, *, template_id: str = ""
 ) -> tuple[list[MCQItem], Path | None]:
     tid = template_id or DEFAULT_TEMPLATE.get(task, "mechanism")
     if task == "synthetic":
         return [], None
-    if task in PUBLIC_TASKS:
+    if task in SDOMAIN_TASKS:
         key = task.upper()
         man = manifest or _env_path(f"ESVLM_{key}_MANIFEST")
         media_root = _env_path(f"ESVLM_{key}_DIR")
         return load_sdomain_items(man, media_root, task=task, template_id=tid), man
+    if task in {"nextqa_social", "nextqa_physical"}:
+        from esvlm.tasks.nextqa import load_nextqa_side_items
+
+        man = manifest or _public_file("ESVLM_NEXTQA_MANIFEST", "nextqa/pairs_val.json")
+        media_root = _public_dir("ESVLM_NEXTQA_DIR", "nextqa/videos", manifest=man)
+        side = "social" if task == "nextqa_social" else "physical"
+        return load_nextqa_side_items(man, media_root, side=side, template_id=tid), man
+    if task == "mmtom":
+        from esvlm.tasks.mmtom import load_mmtom_items
+
+        man = manifest or _public_file("ESVLM_MMTOM_MANIFEST", "mmtom/manifest.json")
+        return load_mmtom_items(man, template_id=tid), man
     if task == "rmet":
         man = manifest or _env_path("ESVLM_RMET_MANIFEST")
         return (

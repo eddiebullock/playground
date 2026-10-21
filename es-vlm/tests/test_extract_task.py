@@ -7,9 +7,11 @@ import pytest
 
 from esvlm.analysis.separability import residualize
 from esvlm.cli.extract_task import (
+    TEXT_RESIDUALIZE_DESIGNS,
     decide_gates,
     is_modality_confound,
     leftover_dirs,
+    load_design_items,
     paired_unit_dirs,
     pick_candidate_layer,
     safe_projection_auroc,
@@ -103,6 +105,99 @@ def test_residualize_matches_leftover_helper() -> None:
     got, flags = leftover_dirs(raw[None, :], drop[None, :])
     assert flags == [False]
     assert np.allclose(got[0], residualize(raw, drop))
+
+
+def test_public_designs_load_and_residualize_flag(tmp_path, monkeypatch) -> None:
+    from argparse import Namespace
+
+    from esvlm.tasks.mmtom import mmtom_to_trial
+    from esvlm.tasks.nextqa import pair_same_video, parse_nextqa_row, write_pair_manifest
+    from esvlm.tasks.sdomain import piqa_to_trial, write_manifest
+
+    assert "same_scene_nextqa" in TEXT_RESIDUALIZE_DESIGNS
+    assert "mmtom_vs_piqa" not in TEXT_RESIDUALIZE_DESIGNS
+
+    cw = parse_nextqa_row(
+        {
+            "video": "5",
+            "qid": "1",
+            "question": "why did they sit",
+            "answer": "0",
+            "type": "CW",
+            "a0": "tired",
+            "a1": "late",
+            "a2": "lost",
+            "a3": "cold",
+            "a4": "hungry",
+        }
+    )
+    do = parse_nextqa_row(
+        {
+            "video": "5",
+            "qid": "2",
+            "question": "what is on the table",
+            "answer": "1",
+            "type": "DO",
+            "a0": "cup",
+            "a1": "book",
+            "a2": "bag",
+            "a3": "phone",
+            "a4": "key",
+        }
+    )
+    assert cw is not None and do is not None
+    nextqa_man = tmp_path / "pairs_val.json"
+    write_pair_manifest(nextqa_man, pair_same_video([cw, do]))
+    monkeypatch.setenv("ESVLM_NEXTQA_MANIFEST", str(nextqa_man))
+    monkeypatch.setenv("ESVLM_NEXTQA_DIR", str(tmp_path))
+
+    mm_trials = [
+        mmtom_to_trial(
+            {
+                "question": (
+                    f"Question: If agent {i} wants a plate, which is more likely? "
+                    "(a) in the fridge. (b) not in the fridge."
+                ),
+                "answer": "a",
+                "episode": i,
+                "answer_list": ["a", "b"],
+            },
+            idx=i,
+        )
+        for i in range(8)
+    ]
+    mm_man = tmp_path / "mmtom.json"
+    write_manifest(mm_man, "mmtom", mm_trials)
+    monkeypatch.setenv("ESVLM_MMTOM_MANIFEST", str(mm_man))
+
+    piqa_trials = []
+    for i in range(8):
+        trial = piqa_to_trial(
+            {"goal": f"g{i}", "sol1": "a", "sol2": "b", "label": 0},
+            split="valid",
+            idx=i,
+        )
+        assert trial is not None
+        piqa_trials.append(trial)
+    piqa_man = tmp_path / "piqa.json"
+    write_manifest(piqa_man, "piqa", piqa_trials)
+    monkeypatch.setenv("ESVLM_PIQA_MANIFEST", str(piqa_man))
+    monkeypatch.setenv("ESVLM_PIQA_DIR", str(tmp_path))
+
+    args = Namespace(trial_limit_social=0, trial_limit_mechanical=0)
+    social, other, sname, oname, paired = load_design_items("same_scene_nextqa", args)
+    assert paired is True
+    assert sname == "nextqa_social"
+    assert oname == "nextqa_physical"
+    assert len(social) == 1
+    assert social[0].media_type == "none"
+
+    tom, phys, tname, pname, tom_paired = load_design_items("mmtom_vs_piqa", args)
+    assert tom_paired is False
+    assert tname == "mmtom"
+    assert pname == "piqa"
+    assert len(tom) == 8
+    assert len(phys) == 8
 
 
 def test_load_item_id_filter(tmp_path) -> None:

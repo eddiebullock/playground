@@ -49,6 +49,8 @@ esvlm-extract-personas = "esvlm.cli.extract_personas:main"
 esvlm-extract-task = "esvlm.cli.extract_task:main"
 esvlm-steer = "esvlm.cli.steer:main"
 esvlm-fetch-sdomain = "esvlm.cli.fetch_sdomain:main"
+esvlm-fetch-public = "esvlm.cli.fetch_public:main"
+esvlm-check-public = "esvlm.cli.check_public:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

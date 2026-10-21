@@ -73,6 +73,32 @@ S_TASK_TEMPLATES: dict[str, str] = {
     ),
 }
 
+NEXTQA_TEMPLATES: dict[str, str] = {
+    "direct": "{options}\n\nReply with the label only.",
+    "video": (
+        "Watch the clip. Choose the single best answer.\n\n{options}\n\n"
+        "Reply with the label only."
+    ),
+    "numbered": (
+        "Video question. {n} options:\n\n{numbered}\n\nAnswer with the label."
+    ),
+}
+
+MMTOM_TEMPLATES: dict[str, str] = {
+    "direct": (
+        "Which statement is more likely to be true?\n\n{options}\n\n"
+        "Reply with the label only."
+    ),
+    "belief": (
+        "Choose the more likely belief or knowledge statement.\n\n{options}\n\n"
+        "Reply with the label only."
+    ),
+    "numbered": (
+        "Theory-of-mind forced choice. {n} options:\n\n{numbered}\n\n"
+        "Answer with the label."
+    ),
+}
+
 TEMPLATES: dict[str, dict[str, str]] = {
     "rmet": RMET_TEMPLATES,
     "eu_emotions": EU_EMOTIONS_TEMPLATES,
@@ -82,6 +108,8 @@ TEMPLATES: dict[str, dict[str, str]] = {
     "physbench": S_TASK_TEMPLATES,
     "clevrer": S_TASK_TEMPLATES,
     "piqa": S_TASK_TEMPLATES,
+    "nextqa": NEXTQA_TEMPLATES,
+    "mmtom": MMTOM_TEMPLATES,
 }
 
 
