@@ -9,15 +9,16 @@ SAEs, EQ/SQ-R slopes, human RSA, extra Qwens, or Mind Reading.
 ### Paper 1 (NExT-QA same scene)
 
 1. Fetch val/train CSVs. Pair CW vs DO/DC/DL. No videos in this job.
+   Locked: 461 pairs. CPU check: `slurm/check_public.sbatch`.
 2. Text extract `DESIGN=same_scene_nextqa` with `--allow-missing-media`.
-   This is the wording control.
+   This is the wording control. GPU jobs wait on the low-priority QOS.
 3. Fetch `{video}.mp4` only after the pair list is locked. Then visual
    extract without `--allow-missing-media`.
 4. Steer hold pairs only if `steer_ok` and not `wording_only`.
 
 ### Paper 2 (MMToM text control)
 
-1. Fetch `questions.json`. No 257GB video zip.
+1. Fetch `questions.json`. No 257GB video zip. Locked: 600 items.
 2. Unsteered 8B score on MMToM text (`PACK=mmtom_text`).
 3. Extract `DESIGN=mmtom_vs_piqa` (text vs PIQA).
 4. Video ToM stage only if the text leftover is incomplete.

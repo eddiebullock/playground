@@ -340,3 +340,20 @@ the job looked for `/nextqa/pairs_val.json`. Loaders now fall back
 to `$ESVLM_PUBLIC_DIR/<rel>`. The extract launcher prints the
 resolved manifests before the model loads. First fix; do not
 resubmit until that log line is present.
+
+## 2026-10-21 — Public item lock and CPU preflight
+
+Val lock confirmed: 461 pairs (461 videos; 228 DO, 108 DC, 125 DL).
+CW questions are longer than descriptive (mean 11.5 vs 7.7 words).
+No pair shares identical question text. MMToM: 600 items, all 2-way,
+types 1.1–1.3 (100 each) and 2.1–2.4 (75 each). Counts live in
+`results/aggregate/public_item_lock.json`.
+
+`esvlm-check-public` loads those items on CPU and rewrites the lock
+file. Do not download NExTVideo.zip or the MMToM video archive in
+this job. Official NExT-QA videos are the upstream `NExTVideo` zip,
+not the unofficial 1fps Hugging Face mirror. Fetch videos only after
+the text extract, onto the project store, not user RDS.
+
+GPU extracts stay on the low-priority GPU QOS. Do not move them onto
+the interactive QOS. Do not cancel jobs whose names contain `cas`.
