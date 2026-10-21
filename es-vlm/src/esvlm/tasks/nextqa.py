@@ -25,6 +25,9 @@ OPTION_KEYS = ("a0", "a1", "a2", "a3", "a4")
 
 VAL_CSV_URL = "https://raw.githubusercontent.com/doc-doc/NExT-QA/main/dataset/nextqa/val.csv"
 TRAIN_CSV_URL = "https://raw.githubusercontent.com/doc-doc/NExT-QA/main/dataset/nextqa/train.csv"
+MAP_URL = "https://raw.githubusercontent.com/doc-doc/NExT-QA/main/dataset/nextqa/map_vid_vidorID.json"
+# Official raw-video zip from the NExT-QA README (Google Drive).
+NEXTQA_VIDEO_GDRIVE_ID = "1jTcRCrVHS66ckOUfWRb-rXdzJ52XAWQH"
 
 
 def _download(url: str, dest: Path) -> None:
@@ -173,6 +176,38 @@ def nextqa_trials_from_pairs(pairs: list[dict], side: str) -> list[dict]:
     return [pair[side] for pair in pairs]
 
 
+def load_vidor_map(path: Path) -> dict[str, str]:
+    if not Path(path).is_file():
+        return {}
+    data = json.loads(Path(path).read_text(encoding="utf-8"))
+    if not isinstance(data, dict):
+        return {}
+    return {str(k): str(v) for k, v in data.items() if k not in (None, "") and v not in (None, "")}
+
+
+def resolve_nextqa_media(
+    video: str, media_root: Path, vidor_map: dict[str, str] | None = None
+) -> tuple[str, MediaType, str]:
+    """Return (abs_path or '', media_type, relative name)."""
+
+    rels = [f"{video}.mp4"]
+    mapped = (vidor_map or {}).get(str(video))
+    if mapped:
+        rels.append(f"{mapped}.mp4")
+        rels.append(mapped)
+        if not str(mapped).endswith(".mp4"):
+            rels.append(f"{mapped}.mp4")
+    seen: set[str] = set()
+    for rel in rels:
+        if rel in seen:
+            continue
+        seen.add(rel)
+        path = Path(media_root) / rel
+        if path.is_file():
+            return str(path.resolve()), "video", rel
+    return "", "none", f"{video}.mp4"
+
+
 def fetch_nextqa_annotations(root: Path, log) -> Path:
     """Download NExT-QA CSVs and write val same-scene pairs. No videos."""
 
@@ -185,12 +220,46 @@ def fetch_nextqa_annotations(root: Path, log) -> Path:
         _download(TRAIN_CSV_URL, raw / "train.csv")
     except Exception as exc:  # noqa: BLE001
         log.warning("nextqa train.csv failed: %s", exc)
+    try:
+        log.info("nextqa map %s", MAP_URL)
+        _download(MAP_URL, raw / "map_vid_vidorID.json")
+    except Exception as exc:  # noqa: BLE001
+        log.warning("nextqa map failed: %s", exc)
     trials = load_nextqa_csv(val_path)
     pairs = pair_same_video(trials)
     dest = Path(root) / "nextqa" / "pairs_val.json"
     write_pair_manifest(dest, pairs)
     log.info("nextqa val pairs %s from %s trials", len(pairs), len(trials))
     return dest
+
+
+def fetch_nextqa_videos(video_root: Path, log) -> Path:
+    """Download the official NExTVideo zip onto the project store. Not user RDS."""
+
+    dest_root = Path(video_root)
+    dest_root.mkdir(parents=True, exist_ok=True)
+    zpath = dest_root / "NExTVideo.zip"
+    log.info("nextqa videos gdrive id %s -> %s", NEXTQA_VIDEO_GDRIVE_ID, zpath)
+    if not (zpath.exists() and zpath.stat().st_size > 1_000_000):
+        try:
+            import gdown
+
+            gdown.download(id=NEXTQA_VIDEO_GDRIVE_ID, output=str(zpath), quiet=False)
+        except Exception as exc:  # noqa: BLE001
+            raise RuntimeError(f"nextqa video download failed: {exc}") from exc
+    if not zpath.is_file() or zpath.stat().st_size < 1_000_000:
+        raise FileNotFoundError(f"nextqa zip missing or tiny at {zpath}")
+    unpacked = dest_root / "videos"
+    if not any(unpacked.rglob("*.mp4")):
+        import zipfile
+
+        unpacked.mkdir(parents=True, exist_ok=True)
+        log.info("nextqa unzip %s", zpath)
+        with zipfile.ZipFile(zpath) as zf:
+            zf.extractall(unpacked)
+    n = len(list(unpacked.rglob("*.mp4")))
+    log.info("nextqa videos on disk %s", n)
+    return unpacked
 
 
 def _render_nextqa_prompt(question: str, template_id: str, options: tuple[str, ...]) -> str:
@@ -215,18 +284,17 @@ def load_nextqa_side_items(
     trials = nextqa_trials_from_pairs(pairs, side)
     domain: Domain = "E" if side == "social" else "S"
     media_root = Path(media_root)
+    map_path = media_root.parent / "raw" / "map_vid_vidorID.json"
+    if not map_path.is_file():
+        map_path = Path(manifest_path).parent / "raw" / "map_vid_vidorID.json"
+    vidor_map = load_vidor_map(map_path)
     items: list[MCQItem] = []
     for trial in trials:
         options = tuple(str(o) for o in trial["options"])
         prompt = _render_nextqa_prompt(str(trial.get("question") or "").strip(), template_id, options)
-        media_rel = str(trial.get("media") or "")
-        media_file = media_root / media_rel if media_rel else None
-        if media_file is not None and media_file.is_file():
-            media = str(media_file.resolve())
-            media_type: MediaType = "video"
-        else:
-            media = ""
-            media_type = "none"
+        media, media_type, media_rel = resolve_nextqa_media(
+            str(trial.get("video") or ""), media_root, vidor_map
+        )
         meta: dict[str, Any] = {
             "template_id": template_id,
             "video": trial.get("video"),

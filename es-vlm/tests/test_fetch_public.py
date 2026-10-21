@@ -38,7 +38,7 @@ def test_fetch_public_dispatches(tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     assert main(["--dataset", "nextqa", "--root", str(tmp_path)]) == 0
     assert seen == [f"nextqa:{tmp_path}"]
     with pytest.raises(SystemExit, match="unknown dataset"):
-        main(["--dataset", "videos", "--root", str(tmp_path)])
+        main(["--dataset", "clevrer", "--root", str(tmp_path)])
 
 
 def test_fetch_public_requires_root(monkeypatch: pytest.MonkeyPatch) -> None:

@@ -27,5 +27,9 @@ if [ -z "${ESVLM_PUBLIC_DIR:-}" ]; then
   exit 2
 fi
 mkdir -p "${ESVLM_PUBLIC_DIR}" logs
-python -m esvlm.cli.fetch_public --dataset "${DATASET}" --root "${ESVLM_PUBLIC_DIR}"
-echo "ok dataset=${DATASET} root=${ESVLM_PUBLIC_DIR}"
+VIDEO_ROOT="${ESVLM_PROJECT_DATA:-${ESVLM_PUBLIC_DIR}}"
+if [ "${DATASET}" = "nextqa_videos" ]; then
+  python -c "import gdown" 2>/dev/null || python -m pip install --quiet gdown
+fi
+python -m esvlm.cli.fetch_public --dataset "${DATASET}" --root "${ESVLM_PUBLIC_DIR}" --video-root "${VIDEO_ROOT}"
+echo "ok dataset=${DATASET} root=${ESVLM_PUBLIC_DIR} video_root=${VIDEO_ROOT}"

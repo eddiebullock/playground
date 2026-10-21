@@ -357,3 +357,8 @@ the text extract, onto the project store, not user RDS.
 
 GPU extracts stay on the low-priority GPU QOS. Do not move them onto
 the interactive QOS. Do not cancel jobs whose names contain `cas`.
+
+CPU check `38945708` completed: 461/600/1838 items load; 27 public-item
+tests passed. Annotation refresh `38945549` completed. Official
+NExTVideo zip (Google Drive id in `nextqa.py`) may be fetched on the
+CPU partition onto `$ESVLM_PROJECT_DATA`, never the 257GB MMToM zip.
