@@ -362,3 +362,19 @@ CPU check `38945708` completed: 461/600/1838 items load; 27 public-item
 tests passed. Annotation refresh `38945549` completed. Official
 NExTVideo zip (Google Drive id in `nextqa.py`) may be fetched on the
 CPU partition onto `$ESVLM_PROJECT_DATA`, never the 257GB MMToM zip.
+Job `38947339` (video zip) failed in 4s; do not retry until the log
+is read. First failure.
+
+## 2026-10-22 — Paper 1 text extract is a wording leftover
+
+Job `38984286` Design `same_scene_nextqa` on 8B (461/461, hold 152,
+no videos, `--allow-missing-media`). Raw hold AUROC mean 0.96,
+layer 0 0.92. Text-only AUROC matches raw at every layer.
+`unique_vs_text` is ~0. Visual leftover AUROC is chance or
+undefined except collinear spikes. `steer_ok=false`,
+`degenerate=true`. Do not steer. The `wording_only` flag stayed
+false because layer-0 AUROC was 0.92 not 0.95; treat it as wording
+anyway. Summary: `results/aggregate/same_scene_nextqa_8b.json`.
+
+Paper 2 `mmtom_vs_piqa` was still running in the same job. Score
+job `38984287` waits on `gpu2` until that job ends.
