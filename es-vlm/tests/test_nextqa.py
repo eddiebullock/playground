@@ -6,6 +6,7 @@ import logging
 from pathlib import Path
 
 from esvlm.tasks.nextqa import (
+    MAP_URL,
     PHYSICAL_TYPES,
     SOCIAL_TYPES,
     TRAIN_CSV_URL,
@@ -16,6 +17,7 @@ from esvlm.tasks.nextqa import (
     nextqa_trials_from_pairs,
     pair_same_video,
     parse_nextqa_row,
+    resolve_nextqa_media,
     write_pair_manifest,
 )
 
@@ -195,8 +197,23 @@ def test_fetch_nextqa_annotations_does_not_hit_network(tmp_path: Path, monkeypat
     assert dest == tmp_path / "nextqa" / "pairs_val.json"
     assert VAL_CSV_URL in seen
     assert TRAIN_CSV_URL in seen
+    assert MAP_URL in seen
     assert VAL_CSV_URL == "https://raw.githubusercontent.com/doc-doc/NExT-QA/main/dataset/nextqa/val.csv"
     assert TRAIN_CSV_URL == "https://raw.githubusercontent.com/doc-doc/NExT-QA/main/dataset/nextqa/train.csv"
     payload = json.loads(dest.read_text(encoding="utf-8"))
     assert payload["n"] == 1
     assert payload["pairs"][0]["video"] == "111"
+
+
+def test_resolve_nextqa_media_uses_vidor_map(tmp_path: Path) -> None:
+    mapped = tmp_path / "0101" / "2909445186.mp4"
+    mapped.parent.mkdir()
+    mapped.write_bytes(b"x")
+    path, kind, rel = resolve_nextqa_media("2909445186", tmp_path, {"2909445186": "0101/2909445186"})
+    assert kind == "video"
+    assert path.endswith("2909445186.mp4")
+    assert rel == "0101/2909445186.mp4"
+    empty, none_kind, fallback = resolve_nextqa_media("111", tmp_path, {})
+    assert empty == ""
+    assert none_kind == "none"
+    assert fallback == "111.mp4"
