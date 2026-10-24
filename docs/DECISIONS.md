@@ -55,3 +55,14 @@ Dated, with the evidence. Newest last.
   temperature was fitted on test items, not on Gloss's own generated
   readings. Study 5 checks the transfer by comparing diary ratings across
   clarity bands.
+- **E1b, pragmatic-stance instruction (the largest effect so far):**
+  qwen3:8b 0.692 -> 0.781 [0.716, 0.840] order-averaged. Irony 0.51 -> 0.85.
+  AUROC 0.72 -> 0.82. Most-confident-half accuracy 0.95. Literal errors
+  182 -> 98, other errors 86 -> 88, so there is no rise in non-literal
+  mistakes on these items. Calibrated (T = 3.4, ECE 0.044): a cut at >= 0.7
+  covers 71% of items at 0.91 accuracy, above the human mean of 0.86.
+  qwen3:4b 0.548 -> 0.646 per trial.
+  **Caveat:** every Hu item has a non-literal correct answer, so this cannot
+  detect over-reading of sincere messages. The MUStARD stance run (50%
+  sincere) decides whether the product adopts the stance prompt. Watch the
+  sincere-item false positives.
