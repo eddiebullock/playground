@@ -75,8 +75,23 @@ def generate(model, prompt, num_predict, logprobs=False, stop=None, timeout=600)
     return resp
 
 
+CHECK_INSTR = ("\n\nFirst, in one or two short sentences, say what the situation shows is actually true, "
+               "and whether the speaker's words match it. Then write \"Answer:\" and the option number.")
+
+
 def chat(model, prompt, mode="direct"):
     fam = family(model)
+    if mode == "check":
+        head = TURN[fam].format(s=SYSTEM_STANCE, u=prompt + CHECK_INSTR)
+        if fam == "qwen":
+            head += "<think>\n\n</think>\n\n"
+        thought = generate(model, head, 120, stop=["Answer:"])
+        text = thought["response"].strip()
+        resp = generate(model, head + text + "\nAnswer: ", 2, logprobs=True)
+        resp["reasoning"] = text
+        resp["total_duration"] = resp.get("total_duration", 0) + thought.get("total_duration", 0)
+        resp["reason_tokens"] = thought.get("eval_count", 0)
+        return resp
     if mode in ("direct", "stance"):
         head = TURN[fam].format(s=SYSTEM if mode == "direct" else SYSTEM_STANCE, u=prompt + "\n\nReply with the option number only.")
         if fam == "qwen":
@@ -181,7 +196,7 @@ def main():
     ap.add_argument("--model", required=True)
     ap.add_argument("--task", choices=["hu", "mustard"], required=True)
     ap.add_argument("--seeds", type=int, default=5)
-    ap.add_argument("--mode", choices=["direct", "reason", "stance"], default="direct")
+    ap.add_argument("--mode", choices=["direct", "reason", "stance", "check"], default="direct")
     args = ap.parse_args()
 
     OUT.mkdir(parents=True, exist_ok=True)
