@@ -265,138 +265,142 @@
  },
  "hu_qwen3-8b": {
   "overall": {
-   "n": 232,
-   "acc": 0.6724137931034483,
+   "n": 845,
+   "acc": 0.6828402366863905,
    "acc_ci": [
-    0.6163793103448276,
-    0.7327586206896551
+    0.650887573964497,
+    0.7124260355029586
    ],
-   "auroc_conf": 0.6718960863697706,
-   "ece": 0.2861623000631371,
-   "sel_acc_80": 0.745945945945946,
-   "sel_acc_50": 0.7931034482758621,
-   "mean_conf": 0.9585760931665854,
+   "auroc_conf": 0.693991049949559,
+   "ece": 0.28537509655349813,
+   "sel_acc_80": 0.7440828402366864,
+   "sel_acc_50": 0.8127962085308057,
+   "mean_conf": 0.9682153332398886,
    "human_acc_mean_of_tasks": 0.8633689839572193,
-   "item_rho_pcorrect": 0.4055466612816483,
-   "item_rho_entropy": 0.3198449086109687,
+   "item_rho_pcorrect": 0.445254260149008,
+   "item_rho_entropy": 0.36475506497369126,
    "n_items_entropy": 105
   },
   "tasks": {
    "Irony": {
-    "n": 50,
-    "acc": 0.5,
+    "n": 125,
+    "acc": 0.512,
     "acc_ci": [
-     0.36,
-     0.64
+     0.424,
+     0.6
     ],
-    "auroc_conf": 0.5888,
-    "ece": 0.4833443873403487,
-    "sel_acc_80": 0.55,
-    "sel_acc_50": 0.56,
-    "mean_conf": 0.9833443873403488,
+    "auroc_conf": 0.5399590163934426,
+    "ece": 0.4762641936990546,
+    "sel_acc_80": 0.51,
+    "sel_acc_50": 0.5645161290322581,
+    "mean_conf": 0.9882641936990548,
     "human_acc": 0.9194652406417113,
-    "item_rho_pcorrect": 0.5013496782202017
+    "item_rho_pcorrect": 0.5275539657828257
    },
    "IndirectSpeech": {
-    "n": 40,
-    "acc": 0.825,
+    "n": 100,
+    "acc": 0.81,
     "acc_ci": [
-     0.7,
-     0.925
+     0.73,
+     0.88
     ],
-    "auroc_conf": 0.8571428571428571,
-    "ece": 0.09990614809191833,
-    "sel_acc_80": 0.90625,
-    "sel_acc_50": 1.0,
-    "mean_conf": 0.9149535583168504,
+    "auroc_conf": 0.7264457439896036,
+    "ece": 0.13002134985641156,
+    "sel_acc_80": 0.875,
+    "sel_acc_50": 0.92,
+    "mean_conf": 0.9400213498564116,
     "human_acc": 0.8859625668449198,
-    "item_rho_pcorrect": 0.14996270425044472
+    "item_rho_pcorrect": 0.21778503280592224
    },
    "Deceits": {
-    "n": 38,
-    "acc": 0.7894736842105263,
+    "n": 100,
+    "acc": 0.76,
     "acc_ci": [
-     0.6578947368421053,
-     0.9210526315789473
+     0.67,
+     0.84
     ],
-    "auroc_conf": 0.3333333333333333,
-    "ece": 0.1850726524144275,
-    "sel_acc_80": 0.7666666666666667,
-    "sel_acc_50": 0.6842105263157895,
-    "mean_conf": 0.9745463366249538,
+    "auroc_conf": 0.6036184210526315,
+    "ece": 0.21523842163132217,
+    "sel_acc_80": 0.8,
+    "sel_acc_50": 0.78,
+    "mean_conf": 0.975238421631322,
     "human_acc": 0.8419786096256685,
-    "item_rho_pcorrect": 0.7077849315879352
+    "item_rho_pcorrect": 0.5513351273687105
    },
    "Maxims": {
-    "n": 19,
-    "acc": 0.5263157894736842,
+    "n": 95,
+    "acc": 0.5894736842105263,
     "acc_ci": [
-     0.3157894736842105,
-     0.7368421052631579
+     0.49473684210526314,
+     0.6842105263157895
     ],
-    "auroc_conf": 0.7,
-    "ece": 0.39905245100989595,
-    "sel_acc_80": 0.6666666666666666,
-    "sel_acc_50": 0.6666666666666666,
-    "mean_conf": 0.92536824048358,
+    "auroc_conf": 0.6414835164835165,
+    "ece": 0.3711722406333382,
+    "sel_acc_80": 0.6447368421052632,
+    "sel_acc_50": 0.7021276595744681,
+    "mean_conf": 0.9564792573283845,
     "human_acc": 0.7958556149732621,
-    "item_rho_pcorrect": 0.4971457982002652
+    "item_rho_pcorrect": 0.6508569548876263
    },
    "Metaphor": {
-    "n": 20,
-    "acc": 0.85,
+    "n": 100,
+    "acc": 0.8,
     "acc_ci": [
-     0.7,
-     1.0
+     0.72,
+     0.87
     ],
-    "auroc_conf": 0.5686274509803921,
-    "ece": 0.14987898989852277,
-    "sel_acc_80": 0.875,
-    "sel_acc_50": 0.9,
-    "mean_conf": 0.9998789898985228,
+    "auroc_conf": 0.7625,
+    "ece": 0.19133079677782783,
+    "sel_acc_80": 0.8875,
+    "sel_acc_50": 0.88,
+    "mean_conf": 0.9913307967778279,
     "human_acc": 0.8967914438502674,
-    "item_rho_pcorrect": 0.37081612250037416
+    "item_rho_pcorrect": 0.37984207274379095
    },
    "Humour": {
-    "n": 25,
-    "acc": 0.48,
+    "n": 125,
+    "acc": 0.56,
     "acc_ci": [
-     0.28,
-     0.68
+     0.472,
+     0.648
     ],
-    "auroc_conf": 0.8141025641025641,
-    "ece": 0.4591532006186453,
-    "sel_acc_80": 0.55,
-    "sel_acc_50": 0.6666666666666666,
-    "mean_conf": 0.9290273938607925,
+    "auroc_conf": 0.7675324675324675,
+    "ece": 0.38679914667729903,
+    "sel_acc_80": 0.64,
+    "sel_acc_50": 0.7903225806451613,
+    "mean_conf": 0.946799146677299,
     "human_acc": 0.8468449197860963,
-    "item_rho_pcorrect": 0.24052341894659165
+    "item_rho_pcorrect": 0.1608620625914805
    },
    "CoherenceInference": {
-    "n": 40,
-    "acc": 0.725,
+    "n": 200,
+    "acc": 0.75,
     "acc_ci": [
-     0.575,
-     0.85
+     0.69,
+     0.805
     ],
-    "auroc_conf": 0.8150470219435737,
-    "ece": 0.24465674773824544,
-    "sel_acc_80": 0.8125,
-    "sel_acc_50": 0.95,
-    "mean_conf": 0.9696567477382454,
+    "auroc_conf": 0.8242666666666667,
+    "ece": 0.2330431937341062,
+    "sel_acc_80": 0.81875,
+    "sel_acc_50": 0.94,
+    "mean_conf": 0.973672263839545,
     "human_acc": 0.8566844919786096,
-    "item_rho_pcorrect": 0.3145793532839907
+    "item_rho_pcorrect": 0.4245695090264839
    }
   },
   "error_types": {
-   "IncorrectLiteral": 48,
-   "IncorrectStraightforward": 7,
-   "IncorrectCoherent": 6,
-   "FunnyNonSequitur": 5,
-   "IncorrectIncoherent": 5,
-   "IncorrectAssociate": 2,
-   "IncorrectPlausibleLiteral": 2,
-   "NeutralNonSequitur": 1
+   "IncorrectLiteral": 142,
+   "IncorrectStraightforward": 29,
+   "IncorrectCoherent": 28,
+   "FunnyNonSequitur": 22,
+   "IncorrectIncoherent": 22,
+   "IncorrectPlausibleLiteral": 11,
+   "IncorrectAssociate": 7,
+   "NeutralNonSequitur": 3,
+   "IncorrectNonLiteralSocialConvention": 1,
+   "IncorrectNonLiteral": 1,
+   "IncorrectNonSequitur": 1,
+   "AssociativeNonSequitur": 1
   },
   "unparsed": 0
  },
@@ -426,6 +430,31 @@
    "FRIENDS": 0.5096153846153846,
    "GOLDENGIRLS": 0.8181818181818182,
    "SARCASMOHOLICS": 0.0
+  },
+  "unparsed": 0
+ },
+ "mustard_qwen3-8b": {
+  "overall": {
+   "n": 18,
+   "acc": 0.5555555555555556,
+   "acc_ci": [
+    0.3333333333333333,
+    0.7777777777777778
+   ],
+   "auroc_conf": 0.5125,
+   "ece": 0.43536475535207875,
+   "sel_acc_80": 0.5,
+   "sel_acc_50": 0.5555555555555556,
+   "mean_conf": 0.9909203109076343,
+   "sarcasm_f1": 0.7142857142857143,
+   "precision": 0.5882352941176471,
+   "recall": 0.9090909090909091
+  },
+  "by_seed": {
+   "0": 0.5555555555555556
+  },
+  "by_show": {
+   "BBT": 0.5555555555555556
   },
   "unparsed": 0
  }

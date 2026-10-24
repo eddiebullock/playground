@@ -32,3 +32,17 @@ Dated, with the evidence. Newest last.
   and other sessions are writing.
 - **Provisional thresholds:** "clear" when the top reading has p >= 0.75,
   abstain below 0.5. To be re-set from the E1/E2 selective-accuracy curves.
+- **E1/E2, qwen3:8b direct (169 x 5 orders):** accuracy 0.683 [0.651, 0.712]
+  per trial, 0.692 [0.621, 0.763] order-averaged, about the level of
+  text-davinci-002. AUROC 0.72, ECE 0.21. Item entropy alignment with humans
+  rho 0.37 (4B: 0.14). Overconfident: 67% of items get >= 0.9 confidence and
+  0.78 of those are right. **Irony is unsolved at 0.51** (humans 0.92), and
+  53% of errors are still literal. Model size helps calibration and most
+  phenomena but not literalism.
+  Implication: the 8B model is the floor for Study 5. Thresholds must be set
+  on 8B after calibration fixes, because the provisional 0.75 cut would give
+  only 0.73 accuracy.
+- **E1, qwen3:4b MUStARD (balanced 200 x 2):** 0.515, chance. Recall 0.955,
+  precision 0.508: it over-calls sarcasm when the question names it.
+- **Style note:** 4B echoes the user's text back; 8B writes a usable,
+  reader-facing note. A third sign that the 4B tier is below the product bar.
