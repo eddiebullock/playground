@@ -31,6 +31,11 @@ SYSTEM = "Answer with the number of the best option only. No other text."
 HU_TASKS = ["Irony", "IndirectSpeech", "Deceits", "Maxims", "Metaphor", "Humour", "CoherenceInference"]
 
 
+SYSTEM_STANCE = (
+    "People often mean something other than their literal words: irony, sarcasm, politeness, hints, jokes, "
+    "white lies. They also often mean exactly what they say. Use the situation to decide what the speaker most "
+    "plausibly meant. Answer with the number of the best option only. No other text."
+)
 SYSTEM_REASON = "Think briefly about what the speaker really means, then give the number of the best option."
 
 # Raw templates. The answer is read after an "Answer: " prefill, so the next
@@ -72,8 +77,8 @@ def generate(model, prompt, num_predict, logprobs=False, stop=None, timeout=600)
 
 def chat(model, prompt, mode="direct"):
     fam = family(model)
-    if mode == "direct":
-        head = TURN[fam].format(s=SYSTEM, u=prompt + "\n\nReply with the option number only.")
+    if mode in ("direct", "stance"):
+        head = TURN[fam].format(s=SYSTEM if mode == "direct" else SYSTEM_STANCE, u=prompt + "\n\nReply with the option number only.")
         if fam == "qwen":
             head += "<think>\n\n</think>\n\n"
         return generate(model, head + "Answer: ", 2, logprobs=True)
@@ -135,9 +140,23 @@ def hu_items(task, seed):
         }
 
 
+def mustard_subset(n_per_class=100):
+    """Fixed balanced random subset, so runs stay comparable across conditions."""
+    import random
+    data = json.load(open(MUSTARD))
+    keys = sorted(data)
+    rnd = random.Random(42)
+    sar = [k for k in keys if data[k]["sarcasm"]]
+    sin = [k for k in keys if not data[k]["sarcasm"]]
+    return set(rnd.sample(sar, n_per_class) + rnd.sample(sin, n_per_class))
+
+
 def mustard_items(seed):
     data = json.load(open(MUSTARD))
+    keep = mustard_subset()
     for key, d in data.items():
+        if key not in keep:
+            continue
         ctx = "\n".join(f"{s.title()}: {u}" for s, u in zip(d["context_speakers"], d["context"]))
         opts = ["Sarcastic: they mean something different from, often the opposite of, what they literally say.",
                 "Sincere: they mean what they literally say."]
@@ -162,11 +181,11 @@ def main():
     ap.add_argument("--model", required=True)
     ap.add_argument("--task", choices=["hu", "mustard"], required=True)
     ap.add_argument("--seeds", type=int, default=5)
-    ap.add_argument("--mode", choices=["direct", "reason"], default="direct")
+    ap.add_argument("--mode", choices=["direct", "reason", "stance"], default="direct")
     args = ap.parse_args()
 
     OUT.mkdir(parents=True, exist_ok=True)
-    out = OUT / f"{args.task}_{args.model.replace(':', '-').replace('/', '-')}{'' if args.mode == 'direct' else '_reason'}.jsonl"
+    out = OUT / f"{args.task}_{args.model.replace(':', '-').replace('/', '-')}{'' if args.mode == 'direct' else '_' + args.mode}.jsonl"
     done = set()
     if out.exists():
         done = {(r["id"], r["seed"]) for r in map(json.loads, open(out))}
@@ -190,7 +209,7 @@ def main():
                 rec.update({"reasoning": resp["reasoning"], "reason_tokens": resp["reason_tokens"]})
             f.write(json.dumps(rec) + "\n")
             f.flush()
-            if i % (50 if args.mode == "direct" else 10) == 0:
+            if i % (10 if args.mode == "reason" else 50) == 0:
                 print(f"{i}/{len(items)} {time.time() - t0:.0f}s", flush=True)
     print("done", out)
 

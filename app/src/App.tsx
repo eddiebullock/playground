@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { DEFAULT_BASE, listModels } from "./engine/llm.ts";
-import { reflect, type Mode, type ReflectInput, type ReflectResult } from "./engine/reflect.ts";
+import { reflect, styleNote, type ReflectInput, type ReflectResult } from "./engine/reflect.ts";
 import { addEntry, clearEntries, exportEntries, loadEntries, type Verdict } from "./log.ts";
 
 const RELATIONS = ["", "friend", "colleague", "manager", "partner", "family member", "someone I just met", "teacher or tutor"];
@@ -34,8 +34,32 @@ function store(key: string, value: string) {
   }
 }
 
+type Tab = "them" | "me" | "style";
+
+function About({ onClose }: { onClose: () => void }) {
+  return (
+    <section className="card about" aria-label="About Gloss">
+      <h2>About Gloss</h2>
+      <ul>
+        <li>Gloss offers a few possible readings of a message or moment, and says how clear or open it seems. It does not know the people involved. You do.</li>
+        <li>It always keeps the plain reading in view, because many messages mean exactly what they say.</li>
+        <li>It can also show how your own message might come across. You do not have to change anything. Different people communicate differently, and that goes both ways.</li>
+        <li>Everything runs on this computer. Nothing you type is sent anywhere.</li>
+        <li>It is a research prototype, and it can be wrong. It is not a medical or support service.</li>
+      </ul>
+      <button className="primary" onClick={onClose}>
+        Got it
+      </button>
+    </section>
+  );
+}
+
 export default function App() {
-  const [mode, setMode] = useState<Mode>("them");
+  const [tab, setTab] = useState<Tab>("them");
+  const mode = tab === "me" ? "me" : "them";
+  const [showAbout, setShowAbout] = useState(() => readStored("gloss.seenAbout", "") !== "1");
+  const [style, setStyle] = useState("");
+  const [note, setNoteText] = useState("");
   const [person, setPerson] = useState("");
   const [relation, setRelation] = useState("");
   const [channel, setChannel] = useState("");
@@ -47,7 +71,7 @@ export default function App() {
   const [lastInput, setLastInput] = useState<ReflectInput | null>(null);
   const [error, setError] = useState("");
   const [verdict, setVerdict] = useState<Verdict | null>(null);
-  const [note, setNote] = useState("");
+  const [comment, setComment] = useState("");
   const [base, setBase] = useState(() => readStored("gloss.base", DEFAULT_BASE));
   const [model, setModel] = useState(() => readStored("gloss.model", "qwen3:4b"));
   const [models, setModels] = useState<string[]>([]);
@@ -74,7 +98,7 @@ export default function App() {
     setError("");
     setResult(null);
     setVerdict(null);
-    setNote("");
+    setComment("");
     try {
       const r = await reflect(base, model, input, abort.current.signal, setBusy);
       setResult(r);
@@ -86,10 +110,25 @@ export default function App() {
     }
   }
 
+  async function runStyle() {
+    if (!style.trim() || busy) return;
+    abort.current = new AbortController();
+    setError("");
+    setNoteText("");
+    setBusy("writing");
+    try {
+      setNoteText(await styleNote(base, model, { style, relation, channel }, abort.current.signal));
+    } catch (e) {
+      if ((e as Error).name !== "AbortError") setError(String((e as Error).message ?? e));
+    } finally {
+      setBusy(null);
+    }
+  }
+
   function give(v: Verdict) {
     if (!result || !lastInput) return;
     setVerdict(v);
-    setSaved(addEntry({ at: new Date().toISOString(), input: lastInput, result, verdict: v, note }));
+    setSaved(addEntry({ at: new Date().toISOString(), input: lastInput, result, verdict: v, note: comment }));
   }
 
   const isThem = mode === "them";
@@ -104,11 +143,23 @@ export default function App() {
         </div>
         <div className="top-right">
           <span className="tag">Research prototype. Runs on this computer.</span>
+          <button className="link" onClick={() => setShowAbout(true)}>
+            About
+          </button>
           <button className="link" onClick={() => setShowSettings((s) => !s)} aria-expanded={showSettings}>
             Settings
           </button>
         </div>
       </header>
+
+      {showAbout && (
+        <About
+          onClose={() => {
+            setShowAbout(false);
+            store("gloss.seenAbout", "1");
+          }}
+        />
+      )}
 
       {showSettings && (
         <section className="card settings" aria-label="Settings">
@@ -145,14 +196,80 @@ export default function App() {
       )}
 
       <div className="mode" role="tablist" aria-label="What do you want to read?">
-        <button role="tab" aria-selected={isThem} onClick={() => setMode("them")}>
+        <button role="tab" aria-selected={tab === "them"} onClick={() => setTab("them")}>
           What did they mean?
         </button>
-        <button role="tab" aria-selected={!isThem} onClick={() => setMode("me")}>
+        <button role="tab" aria-selected={tab === "me"} onClick={() => setTab("me")}>
           How might my message read?
+        </button>
+        <button role="tab" aria-selected={tab === "style"} onClick={() => setTab("style")}>
+          Explain my style
         </button>
       </div>
 
+      {tab === "style" ? (
+        <main className="grid">
+          <section className="card form" aria-label="Your communication style">
+            <label>
+              How do you communicate? <span className="hint">in your own words</span>
+              <textarea
+                id="style"
+                rows={5}
+                value={style}
+                onChange={(e) => setStyle(e.target.value)}
+                placeholder="For example: I write short messages and get to the point. I don't use many emojis. If I don't reply straight away, I'm usually just busy."
+              />
+            </label>
+            <div className="pair two">
+              <label>
+                For my
+                <select value={relation} onChange={(e) => setRelation(e.target.value)}>
+                  {RELATIONS.map((r) => (
+                    <option key={r} value={r}>
+                      {r || "(anyone)"}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label>
+                Where
+                <select value={channel} onChange={(e) => setChannel(e.target.value)}>
+                  {CHANNELS.map((c) => (
+                    <option key={c} value={c}>
+                      {c || "(anywhere)"}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </div>
+            <div className="row">
+              <button className="primary" onClick={runStyle} disabled={!style.trim() || !!busy}>
+                {busy ? "Writing..." : "Write a style note"}
+              </button>
+            </div>
+            <p className="privacy">Optional. Some people find that a short note about how they communicate heads off misunderstandings. Sharing it is up to you.</p>
+          </section>
+          <section className="card result" aria-live="polite" aria-label="Style note">
+            {error && <p className="error">{error}</p>}
+            {!note && !error && <p className="empty">Your note appears here. Edit it freely before using it.</p>}
+            {note && (
+              <>
+                <span className="label">A note you could share</span>
+                <textarea id="note-out" rows={5} value={note} onChange={(e) => setNoteText(e.target.value)} />
+                <div className="row">
+                  <button
+                    onClick={() => {
+                      navigator.clipboard?.writeText(note).catch(() => undefined);
+                    }}
+                  >
+                    Copy
+                  </button>
+                </div>
+              </>
+            )}
+          </section>
+        </main>
+      ) : (
       <main className="grid">
         <section className="card form" aria-label="Your situation">
           <div className="pair">
@@ -266,8 +383,8 @@ export default function App() {
                 <input
                   className="note"
                   placeholder="Anything to add? (optional, saved only here)"
-                  value={note}
-                  onChange={(e) => setNote(e.target.value)}
+                  value={comment}
+                  onChange={(e) => setComment(e.target.value)}
                   onBlur={() => verdict && give(verdict)}
                 />
               </div>
@@ -278,6 +395,7 @@ export default function App() {
           )}
         </section>
       </main>
+      )}
     </div>
   );
 }

@@ -116,7 +116,7 @@ Give:
 ${intended ? `\nWhat I mean by it: ${intended}\n` : ""}
 Give:
 - literal: one sentence saying what my words themselves say.
-- readings: 2 to 4 different ways ${input.person || "they"} could read my message, most likely first. The FIRST reading must be the meaning I intend${intended ? "" : " (my words taken sincerely)"}. Only add readings a reasonable person might actually take from it. Each reading is one sentence starting with "They might think" and has up to 3 short cues: the words in my message that could lead to that reading.
+- readings: 2 to 4 different ways ${input.person || "they"} could read my message, most likely first. The FIRST reading must be the meaning I intend${intended ? "" : " (my words taken sincerely)"}. Then add readings a reasonable person might actually take from it, about the content or about the tone (for example warm, neutral, brief, curt, annoyed, joking). Different people read short or direct messages differently, so include a tone reading when the message is short or direct. Each reading is one sentence starting with "They might think" and has up to 3 short cues: the words in my message, or what is missing from it, that could lead to that reading.
 - check_question: one short sentence I could add, if I want to, that makes my meaning explicit in my own direct style.`;
 }
 
@@ -185,4 +185,33 @@ export async function reflect(
     model,
     ms: Date.now() - t0,
   };
+}
+
+const SCHEMA_NOTE = {
+  type: "object",
+  properties: { note: { type: "string" } },
+  required: ["note"],
+};
+
+/**
+ * A short note, in the user's own voice, that explains how they communicate.
+ * Optional and user-initiated. Disclosure of communication style has been
+ * found to improve rapport between autistic and non-autistic people
+ * (Crompton et al., Nature Human Behaviour 2025).
+ */
+export async function styleNote(
+  base: string,
+  model: string,
+  input: { style: string; relation?: string; channel?: string },
+  signal?: AbortSignal,
+): Promise<string> {
+  const user = `Write a short, friendly note (one or two sentences, first person) that I could share with ${
+    input.relation ? `a ${input.relation}` : "people I message"
+  }${input.channel ? ` on ${input.channel}` : ""} to explain how I communicate.
+
+How I communicate, in my words: ${input.style}
+
+Rewrite it as a message to them: speak to the reader as "you", and say what my style does and does not mean for them (for example "if I reply briefly, it doesn't mean I'm annoyed with you"). Keep my meaning and my directness. Do not apologise for it, do not mention any diagnosis unless I did, and do not promise to change. Plain words. Do not copy my description word for word.`;
+  const r = await json<{ note: string }>(base, model, SYSTEM_GEN, user, SCHEMA_NOTE, signal);
+  return r.note.trim();
 }
