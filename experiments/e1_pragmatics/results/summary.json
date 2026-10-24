@@ -596,26 +596,30 @@
  },
  "mustard_qwen3-4b_stance": {
   "overall": {
-   "n": 18,
-   "acc": 0.5555555555555556,
+   "n": 372,
+   "acc": 0.5,
    "acc_ci": [
-    0.3333333333333333,
-    0.7777777777777778
+    0.4489247311827957,
+    0.5510752688172043
    ],
-   "auroc_conf": 0.7,
-   "ece": 0.4207495952742097,
-   "sel_acc_80": 0.6428571428571429,
-   "sel_acc_50": 0.6666666666666666,
-   "mean_conf": 0.9763051508297652,
-   "sarcasm_f1": 0.7142857142857143,
-   "precision": 0.5882352941176471,
-   "recall": 0.9090909090909091
+   "auroc_conf": 0.5950976991559718,
+   "ece": 0.4745256863364075,
+   "sel_acc_80": 0.5218855218855218,
+   "sel_acc_50": 0.5645161290322581,
+   "mean_conf": 0.9745256863364076,
+   "sarcasm_f1": 0.6477272727272728,
+   "precision": 0.49279538904899134,
+   "recall": 0.9447513812154696
   },
   "by_seed": {
-   "0": 0.5555555555555556
+   "0": 0.52,
+   "1": 0.47674418604651164
   },
   "by_show": {
-   "BBT": 0.5555555555555556
+   "BBT": 0.4880952380952381,
+   "FRIENDS": 0.5,
+   "GOLDENGIRLS": 0.7272727272727273,
+   "SARCASMOHOLICS": 0.0
   },
   "unparsed": 0
  },
@@ -645,6 +649,48 @@
    "FRIENDS": 0.5432692307692307,
    "GOLDENGIRLS": 0.8181818181818182,
    "SARCASMOHOLICS": 0.0
+  },
+  "unparsed": 0
+ },
+ "sincere_qwen3-8b": {
+  "overall": {
+   "n": 125,
+   "acc": 0.976,
+   "acc_ci": [
+    0.944,
+    1.0
+   ],
+   "auroc_conf": 0.9863387978142076,
+   "ece": 0.027172706887938998,
+   "sel_acc_80": 1.0,
+   "sel_acc_50": 1.0,
+   "mean_conf": 0.9941613264002893
+  },
+  "chosen": {
+   "IncorrectLiteral": 122,
+   "IncorrectAssociate": 2,
+   "CorrectNonLiteral": 1
+  },
+  "unparsed": 0
+ },
+ "sincere_qwen3-8b_stance": {
+  "overall": {
+   "n": 125,
+   "acc": 0.904,
+   "acc_ci": [
+    0.848,
+    0.952
+   ],
+   "auroc_conf": 0.9564896755162242,
+   "ece": 0.08364069652363024,
+   "sel_acc_80": 0.99,
+   "sel_acc_50": 1.0,
+   "mean_conf": 0.9876406965236303
+  },
+  "chosen": {
+   "IncorrectLiteral": 113,
+   "CorrectNonLiteral": 10,
+   "IncorrectAssociate": 2
   },
   "unparsed": 0
  }

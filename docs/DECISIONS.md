@@ -66,3 +66,18 @@ Dated, with the evidence. Newest last.
   detect over-reading of sincere messages. The MUStARD stance run (50%
   sincere) decides whether the product adopts the stance prompt. Watch the
   sincere-item false positives.
+- **Sincere minimal pairs (25 irony items with the context rewritten so the
+  remark is sincere; written by Claude, not yet human-validated):** 8B direct
+  0.976, with stance 0.904. Balanced accuracy over the irony/sincere pairs:
+  direct 0.74, stance 0.88. The over-readings cluster on remarks that
+  conventionally signal sarcasm ("their generosity knows no bounds", "I see
+  your revision is going well"). **Decision: the product scorer uses the
+  stance prompt, with T = 3.4 (8B) and 1.8 (4B).** MUStARD stays at chance
+  for 8B direct (0.535, recall 0.96). TV sarcasm without audio or visual
+  context is a weak test; E5 (prosody) would address it.
+- **Generation fix:** readings must differ in what they mean for the user, and
+  the first is the plain meaning in its ordinary, kind sense. Before the fix,
+  near-paraphrased readings split the probability, and clear messages were
+  wrongly flagged "Hard to tell". After it, the three development cases read
+  correctly (sarcasm 0.93; sincere work messages 0.87 and 0.89). These three
+  cases are a development set, not an evaluation.

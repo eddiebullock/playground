@@ -184,13 +184,21 @@ def main():
         recs = [r for r in map(json.loads, open(f)) if r["p"]]
         n_all = sum(1 for _ in open(f))
         key = f.stem
-        summary[key] = analyse_hu(recs) if key.startswith("hu_") else analyse_mustard(recs)
+        if key.startswith("hu_"):
+            summary[key] = analyse_hu(recs)
+        elif key.startswith("sincere_"):
+            summary[key] = {"overall": calib_block(recs), "chosen": dict(Counter(
+                r["labels"][r["p"].index(max(r["p"]))] for r in recs))}
+        else:
+            summary[key] = analyse_mustard(recs)
         summary[key]["unparsed"] = n_all - len(recs)
         o = summary[key]["overall"]
         print(f"\n== {key}  n={o['n']} unparsed={summary[key]['unparsed']}")
         print(f"acc {o['acc']:.3f} [{o['acc_ci'][0]:.3f},{o['acc_ci'][1]:.3f}]  AUROC(conf->correct) {o['auroc_conf']:.3f}  "
               f"ECE {o['ece']:.3f}  sel@80% {o['sel_acc_80']:.3f}  sel@50% {o['sel_acc_50']:.3f}")
-        if "tasks" in summary[key]:
+        if "chosen" in summary[key]:
+            print("  chosen option types:", summary[key]["chosen"])
+        elif "tasks" in summary[key]:
             print(f"human acc (mean of tasks) {o['human_acc_mean_of_tasks']:.3f}  item rho P(correct) {o['item_rho_pcorrect']:.3f}  "
                   f"item rho entropy {o['item_rho_entropy']:.3f} (n={o['n_items_entropy']})")
             for t, b in summary[key]["tasks"].items():

@@ -46,16 +46,17 @@ export type ReflectResult = {
   ms: number;
 };
 
-// Per-model temperature, fitted by 5-fold CV on the E1 items
-// (experiments/e1_pragmatics/tempscale.py). Raw option probabilities are
+// Per-model temperature for the stance scorer, fitted by 5-fold CV on the E1
+// items (experiments/e1_pragmatics/tempscale.py). Raw option probabilities are
 // overconfident; scaling brings expected calibration error for qwen3:8b from
-// 0.21 to 0.08. These were fitted on test items, not on Gloss's own generated
+// 0.14 to 0.04. These were fitted on test items, not on Gloss's own generated
 // readings, so whether they transfer is checked in Study 5 (diary ratings by
 // clarity band).
-const TEMPERATURE: Record<string, number> = { "qwen3:8b": 4.4, "qwen3:4b": 1.7 };
+const TEMPERATURE: Record<string, number> = { "qwen3:8b": 3.4, "qwen3:4b": 1.8 };
 
-// Thresholds on the calibrated top reading. With qwen3:8b on the E1 items,
-// >= 0.7 covered 56% of items at 0.82 accuracy (humans 0.86).
+// Thresholds on the calibrated top reading. With qwen3:8b and the stance
+// scorer on the E1 items, >= 0.7 covered 71% of items at 0.91 accuracy
+// (humans 0.86).
 export const CLEAR_AT = 0.7;
 export const ABSTAIN_BELOW = 0.5;
 
@@ -73,7 +74,14 @@ const SYSTEM_GEN = [
   "Never give advice about body language, eye contact, or how to look or seem.",
 ].join(" ");
 
-const SYSTEM_SCORE = "Answer with the number of the best option only. No other text.";
+// Pragmatic-stance scorer (E1b). On the E1 items with qwen3:8b it lifted
+// accuracy 0.69 -> 0.78 and irony 0.51 -> 0.85. On sincere minimal pairs it cost
+// 0.98 -> 0.90, mostly on remarks that sound conventionally sarcastic
+// (docs/DECISIONS.md).
+const SYSTEM_SCORE =
+  "People often mean something other than their literal words: irony, sarcasm, politeness, hints, jokes, " +
+  "white lies. They also often mean exactly what they say. Use the situation to decide what the speaker most " +
+  "plausibly meant. Answer with the number of the best option only. No other text.";
 
 type Generated = {
   literal: string;
@@ -123,7 +131,7 @@ function generationPrompt(input: ReflectInput): string {
 
 Give:
 - literal: one sentence saying what the words themselves say.
-- readings: 2 to 4 different things they could have meant, most likely first. The FIRST reading must be that they meant it sincerely and literally, stated concretely. Only add other readings that the situation genuinely supports. Each reading is one sentence starting with "${input.person?.trim() || "They"}", says what they meant about me or the situation, and has up to 3 short cues: words or facts from the situation that support it.
+- readings: 2 to 4 different things they could have meant. The FIRST reading is the plain one: they meant exactly what they said, in its ordinary, neutral or kind sense, stated concretely. Every other reading must change what I would understand or do next (for example: they are annoyed, they are joking, they are hinting at a request). Never give two readings that mean nearly the same thing. If the situation does not genuinely support another reading, give only one alternative. Each reading is one sentence starting with "${input.person?.trim() || "They"}", says what they meant about me or the situation, and has up to 3 short cues: words or facts from the situation that support it.
 - check_question: one short, friendly, direct question I could ask them to check what they meant.`;
   }
   const intended = input.intended?.trim();

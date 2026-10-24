@@ -155,6 +155,23 @@ def hu_items(task, seed):
         }
 
 
+SINCERE = ROOT / "data/sincere_irony.json"
+
+
+def sincere_items(seed):
+    """Minimal pairs: Irony items with the context rewritten so the remark is
+    sincere. Correct answer = the item's original literal option."""
+    new = json.load(open(SINCERE))
+    for it in hu_items("Irony", seed):
+        iid = it["id"].split(":")[1]
+        row = next(r for r in csv.DictReader(open(HU / f"prompts/Irony_prompts_seed{seed}_examples0.csv")) if r["item_id"] == iid)
+        old = row["content"].strip()
+        assert old in it["prompt"], iid
+        it = dict(it, id=f"Sincere:{iid}", task="Sincere", prompt=it["prompt"].replace(old, new[iid]))
+        it["true"] = it["labels"].index("IncorrectLiteral") + 1
+        yield it
+
+
 def mustard_subset(n_per_class=100):
     """Fixed balanced random subset, so runs stay comparable across conditions."""
     import random
@@ -194,7 +211,7 @@ def mustard_items(seed):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--model", required=True)
-    ap.add_argument("--task", choices=["hu", "mustard"], required=True)
+    ap.add_argument("--task", choices=["hu", "mustard", "sincere"], required=True)
     ap.add_argument("--seeds", type=int, default=5)
     ap.add_argument("--mode", choices=["direct", "reason", "stance", "check"], default="direct")
     args = ap.parse_args()
@@ -207,6 +224,8 @@ def main():
 
     if args.task == "hu":
         items = [it for s in range(args.seeds) for t in HU_TASKS for it in hu_items(t, s)]
+    elif args.task == "sincere":
+        items = [it for s in range(args.seeds) for it in sincere_items(s)]
     else:
         items = [it for s in range(min(args.seeds, 2)) for it in mustard_items(s)]
 
