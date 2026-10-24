@@ -1,0 +1,77 @@
+{
+ "hu_qwen3-4b": {
+  "overall": {
+   "n": 62,
+   "acc": 0.5161290322580645,
+   "acc_ci": [
+    0.3870967741935484,
+    0.6451612903225806
+   ],
+   "auroc_conf": 0.6395833333333333,
+   "ece": 0.2656705173068594,
+   "sel_acc_80": 0.5714285714285714,
+   "sel_acc_50": 0.5806451612903226,
+   "mean_conf": 0.7817995495649239,
+   "human_acc_mean_of_tasks": 0.8824688057040998,
+   "item_rho_pcorrect": 0.2523716977857329,
+   "item_rho_entropy": 0.014821763602251407,
+   "n_items_entropy": 40
+  },
+  "tasks": {
+   "Irony": {
+    "n": 25,
+    "acc": 0.4,
+    "acc_ci": [
+     0.2,
+     0.6
+    ],
+    "auroc_conf": 0.6066666666666667,
+    "ece": 0.3476318560299201,
+    "sel_acc_80": 0.45,
+    "sel_acc_50": 0.4166666666666667,
+    "mean_conf": 0.7476318560299201,
+    "human_acc": 0.9194652406417113,
+    "item_rho_pcorrect": 0.3329485949133392
+   },
+   "IndirectSpeech": {
+    "n": 20,
+    "acc": 0.6,
+    "acc_ci": [
+     0.4,
+     0.8
+    ],
+    "auroc_conf": 0.71875,
+    "ece": 0.25088216506053396,
+    "sel_acc_80": 0.6875,
+    "sel_acc_50": 0.7,
+    "mean_conf": 0.817206332228827,
+    "human_acc": 0.8859625668449198,
+    "item_rho_pcorrect": 0.2215529399478932
+   },
+   "Deceits": {
+    "n": 17,
+    "acc": 0.5882352941176471,
+    "acc_ci": [
+     0.35294117647058826,
+     0.8235294117647058
+    ],
+    "auroc_conf": 0.5714285714285714,
+    "ece": 0.24743072493262508,
+    "sel_acc_80": 0.6153846153846154,
+    "sel_acc_50": 0.5,
+    "mean_conf": 0.7903911192765144,
+    "human_acc": 0.8419786096256685,
+    "item_rho_pcorrect": 0.4488044988263006
+   }
+  },
+  "error_types": {
+   "IncorrectLiteral": 23,
+   "IncorrectNonSequitur": 2,
+   "IncorrectLexicalOverlap": 2,
+   "IncorrectAssociative": 1,
+   "IncorrectNonLiteralSocialConvention": 1,
+   "IncorrectNonLiteralLexicalOverlap": 1
+  },
+  "unparsed": 0
+ }
+}

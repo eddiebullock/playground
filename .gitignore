@@ -1,0 +1,12 @@
+node_modules/
+.venv/
+__pycache__/
+data/raw/
+data/licensed/
+*.mp4
+*.wav
+.DS_Store
+dist/
+experiments/*/results/*.jsonl
+experiments/*/*.log
+experiments/*/log_*.txt
