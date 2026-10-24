@@ -46,3 +46,12 @@ Dated, with the evidence. Newest last.
   precision 0.508: it over-calls sarcasm when the question names it.
 - **Style note:** 4B echoes the user's text back; 8B writes a usable,
   reader-facing note. A third sign that the 4B tier is below the product bar.
+- **E3, temperature scaling (5-fold CV over items):** qwen3:8b T = 4.4 (folds
+  4.0-4.7), ECE 0.21 -> 0.08. With calibrated cuts: >= 0.7 covers 56% of items
+  at 0.82 accuracy, and >= 0.6 covers 66% at 0.79. qwen3:4b T = 1.7, but its
+  ranking is too weak (AUROC 0.62) for any cut to reach 0.7 accuracy.
+  **Product change:** per-model temperature in the engine, "clear" at
+  calibrated >= 0.7, abstain below 0.5, default model qwen3:8b. Caveat: the
+  temperature was fitted on test items, not on Gloss's own generated
+  readings. Study 5 checks the transfer by comparing diary ratings across
+  clarity bands.

@@ -73,7 +73,7 @@ export default function App() {
   const [verdict, setVerdict] = useState<Verdict | null>(null);
   const [comment, setComment] = useState("");
   const [base, setBase] = useState(() => readStored("gloss.base", DEFAULT_BASE));
-  const [model, setModel] = useState(() => readStored("gloss.model", "qwen3:4b"));
+  const [model, setModel] = useState(() => readStored("gloss.model", "qwen3:8b"));
   const [models, setModels] = useState<string[]>([]);
   const [showSettings, setShowSettings] = useState(false);
   const [saved, setSaved] = useState(() => loadEntries().length);

@@ -46,10 +46,25 @@ export type ReflectResult = {
   ms: number;
 };
 
-// Thresholds on the top reading's probability. Provisional; set from the E1
-// selective-accuracy curves (docs/DECISIONS.md records the current values).
-export const CLEAR_AT = 0.75;
+// Per-model temperature, fitted by 5-fold CV on the E1 items
+// (experiments/e1_pragmatics/tempscale.py). Raw option probabilities are
+// overconfident; scaling brings expected calibration error for qwen3:8b from
+// 0.21 to 0.08. These were fitted on test items, not on Gloss's own generated
+// readings, so whether they transfer is checked in Study 5 (diary ratings by
+// clarity band).
+const TEMPERATURE: Record<string, number> = { "qwen3:8b": 4.4, "qwen3:4b": 1.7 };
+
+// Thresholds on the calibrated top reading. With qwen3:8b on the E1 items,
+// >= 0.7 covered 56% of items at 0.82 accuracy (humans 0.86).
+export const CLEAR_AT = 0.7;
 export const ABSTAIN_BELOW = 0.5;
+
+export function calibrate(p: number[], model: string): number[] {
+  const t = TEMPERATURE[model] ?? 1;
+  const q = p.map((x) => Math.max(x, 1e-9) ** (1 / t));
+  const z = q.reduce((a, b) => a + b, 0);
+  return q.map((x) => x / z);
+}
 
 const SYSTEM_GEN = [
   "You help people understand messages and conversations.",
@@ -169,7 +184,7 @@ export async function reflect(
   const gen = await json<Generated>(base, model, SYSTEM_GEN, generationPrompt(input), SCHEMA, signal);
   const raw = gen.readings.filter((r) => r.meaning?.trim()).slice(0, 4);
   onStep?.("weighing");
-  const p = await scoreOptions(base, model, input, raw.map((r) => r.meaning), undefined, signal);
+  const p = calibrate(await scoreOptions(base, model, input, raw.map((r) => r.meaning), undefined, signal), model);
   const readings = raw
     .map((r, i) => ({ meaning: r.meaning.trim(), cues: r.cues ?? [], p: p[i], literal: i === 0 }))
     .sort((a, b) => b.p - a.p);
