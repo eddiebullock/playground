@@ -1,0 +1,970 @@
+## c0000 | Sam is sunning himself on the porch. Peter comes out of the house and forgets to close the screen door. Sam says: "Peter, there are many flies and mosquitoes outside."
+INTENDED: He wants Peter to close the screen door.
+  0. They are informing Peter about the presence of flies and mosquitoes.
+  1. They are hinting that Peter should stay inside to avoid the insects.
+  2. They are annoyed by the insects and want Peter to know.
+## c0001 | Janet was telling her friend about the show that she saw last night. Janet said: "The dancers were butterflies."
+INTENDED: The dancers flitted around the stage.
+  0. Janet is comparing the dancers to butterflies, perhaps to suggest they were light, fast, or magical in their movement.
+  1. Janet is describing the dancers as looking like butterflies, maybe because they moved gracefully or looked delicate.
+  2. Janet is using a metaphor to say the dancers were beautiful or ethereal, maybe in a poetic way.
+## c0002 | Jane and her best friend, Arthur, were selling chocolates door to door to raise money for a charity event. Jane and Arthur approached a house and tried to sell their candy to a mean couple. As they walked away, Jane comments: "People in this community are so nice!"
+INTENDED: It is an unfriendly community.
+  0. Jane is genuinely surprised and pleased that the people in this community are kind.
+  1. Jane is sarcastic or ironic, meaning the opposite of what she said.
+  2. Jane is trying to be polite and avoid conflict, even though she may not believe it.
+## c0003 | Laura and Lynn were having coffee at a local café. They were talking about a date that Laura had had the night before. They had gone hot-air ballooning at sunset and then to a surprise concert. Lynn said: "That sounds so exciting."
+INTENDED: Laura had a thrilling experience.
+  0. Lynn is hinting that they might want to go on a similar date themselves.
+  1. Lynn is being sarcastic or unimpressed, maybe even annoyed.
+  2. Lynn is genuinely impressed by Laura's date and is being kind.
+## c0004 | Janet was telling her friend about the show that she saw last night. Janet said: "The dancers were butterflies."
+INTENDED: The dancers flitted around the stage.
+  0. Janet is disappointed with the performance, comparing the dancers to butterflies as a way of saying they were not impressive.
+  1. Janet is describing the dancers as resembling butterflies, perhaps because they moved gracefully or looked delicate.
+  2. Janet is using a metaphor to describe how the dancers moved, maybe in a dreamy or magical way.
+## c0005 | Mark gave his former colleague Krista tickets to a lecture where he was a guest speaker. The audience sat completely still for the whole hour and gave him a standing ovation. The next day Krista talked to Mary about the lecture. Krista said: "Oh, Mark held the audience's attention so well."
+INTENDED: Mark is a great speaker.
+  0. Krista is complimenting Mark on how well he kept the audience engaged during his lecture.
+  1. Krista is hinting that Mark's lecture was impressive, possibly in a way that could be interpreted as a subtle compliment to me.
+  2. Krista is being polite but may not have liked the lecture, though she doesn't want to say so directly.
+## c0006 | s with Mrs. Smith, who is the mother of her best friend Ellie. Mrs. Smith typically lectures from the textbook to the class, and gives difficult multiple-choice exams. One day Ellie asks Lisa what she thinks about the class that her mom teaches. Lisa responds: "She is an awesome teacher."
+INTENDED: She does not want to hurt her friend by criticizing her mother.
+  0. Lisa is annoyed with the class, but she’s trying to sound positive to avoid conflict.
+  1. Lisa is hinting that she might want to talk about the class or ask for help, but she’s not sure how to start.
+  2. Lisa is trying to be polite, maybe because she doesn’t want to say she didn’t like the class.
+  3. Lisa is saying Mrs. Smith is a good teacher, probably because she thinks she is.
+## c0007 | John told his fiance: "You are the tomato sauce to my pasta."
+INTENDED: They are meant to be together.
+  0. John is trying to be romantic or affectionate by comparing me to something that goes well with him.
+  1. John is using a metaphor to say that I complement him, like tomato sauce enhances pasta.
+  2. John might be annoyed or frustrated, using the metaphor to express that I am overbearing or too much.
+## c0008 | Samantha is talking with her dad about her fiance. Samantha notes: "John is an innocent person." Her dad replies: "Undoubtedly, as innocent as a saint."
+INTENDED: Samantha's dad thinks that Samantha has an incorrect view of her fiance.
+  0. Samantha is comparing John's innocence to that of a religious figure, possibly to emphasize his purity or goodness.
+  1. Samantha is expressing that John is very innocent, like a saint.
+  2. Samantha is being sarcastic, implying John is not actually as innocent as he seems.
+## c0009 | Mary and Ken are having breakfast. Ken asks Mary: "How would you like your tea, dear?" Mary responds: "In a cup."
+INTENDED: Mary is irritated with Ken.
+  0. Mary is hinting that she would prefer not to have tea at all.
+  1. Mary is simply stating her preference for tea in a cup.
+  2. Mary is being short or dismissive, possibly annoyed with the question.
+## c0010 | Mark entered a golf tournament where he played brilliantly and won by six shots. His friend Hal watched the tournament and afterwards he said to Mark: "You sure are a good golfer."
+INTENDED: Mark is an exceptional player.
+  0. Hal is being sarcastic or unimpressed, even though Mark did well.
+  1. Hal is complimenting Mark on his golf skills.
+  2. Hal is trying to be polite but doesn’t really think Mark is that good.
+## c0011 | Janet was telling her friend about the show that she saw last night. Janet said: "The dancers were butterflies."
+INTENDED: The dancers flitted around the stage.
+  0. Janet is trying to be poetic or dramatic, and may not be entirely serious about what she said.
+  1. Janet is describing the dancers as looking like butterflies, possibly because they moved gracefully or looked delicate.
+  2. Janet is using a metaphor to describe how the dancers moved, maybe in a way that felt magical or dreamlike.
+## c0012 | Callie promised to bring a salad to Jason's dinner party. Callie had been working long shifts all week and had warned Jason she might not make it, but she arrived on time, salad in hand. Jason said: "I'm so glad that you were able to fit us into your busy schedule."
+INTENDED: He is happy that Callie made it to the party.
+  0. Jason is subtly annoyed that Callie had to rearrange her schedule to come.
+  1. Jason is hinting that Callie should have made time for the dinner party, even though she warned she might not.
+  2. Jason is genuinely happy that Callie made time for the dinner party.
+## c0013 | Callie promised to bring a salad to Jason's dinner party. Callie had been working long shifts all week and had warned Jason she might not make it, but she arrived on time, salad in hand. Jason said: "I'm so glad that you were able to fit us into your busy schedule."
+INTENDED: He is happy that Callie made it to the party.
+  0. Jason is trying to avoid talking about the fact that Callie was late or had a hard time making it.
+  1. Jason is genuinely happy that Callie made time for the dinner party.
+  2. Jason is subtly suggesting that Callie should have made more time for the dinner party.
+## c0014 | Peter's mother wants them to start eating healthier, and tells him that they will eat boiled sprouts tonight. Peter tells his mother: "I don't think I can eat, I have a terrible stomach-ache."
+INTENDED: He wants to avoid eating boiled sprouts.
+  0. Peter is genuinely unable to eat because of a stomach-ache.
+  1. Peter is avoiding eating the boiled sprouts his mother prepared.
+  2. Peter is hinting that he doesn't want to eat the sprouts.
+  3. Peter is being polite and is actually okay to eat.
+## c0015 | During a business meeting, the general manager of the company said to the financial manager: "The new accountant that you hired is a juggler."
+INTENDED: The newly hired person is good at manipulating many things at once.
+  0. They are describing the new accountant as someone who juggles things, possibly implying they handle multiple tasks at once.
+  1. They are suggesting the new accountant is not reliable or is overextending themselves.
+  2. They are making a metaphorical comment about the new accountant being busy or handling many responsibilities.
+## c0016 | It is a holiday. Stefan and Kim are sitting in the backseat of the car. They are fighting all the time. Their father says: "Oh, it is so pleasant here."
+INTENDED: He does not want to listen to his kids' arguments.
+  0. They are commenting on the comfort of the car ride.
+  1. They are trying to be polite despite the tension.
+  2. They are sarcastic and not really enjoying the situation.
+## c0017 | her favorite takeout restaurants when her partner Derek invites her over to his house for dinner for the third time this week. Derek tells her excitedly that his mom cooked her special spaghetti recipe and is eager to have her taste it again. Brianna responds: "I am looking forward to it."
+INTENDED: She wants to keep a good relationship with Derek and his family.
+  0. Brianna is genuinely excited to try Derek's mom's spaghetti.
+  1. Brianna is hinting that she might not be interested in going over again.
+  2. Brianna is being polite but not very enthusiastic.
+## c0018 | Mark asked his mom what she thought about his new girlfriend. She replied: "This young lady is 100% polyester."
+INTENDED: His girlfriend's behavior was not very natural.
+  0. They are not comfortable talking about the girlfriend and are avoiding the topic by making a strange comment.
+  1. They are describing the girlfriend as being made entirely of polyester, likely meaning she is artificial or not genuine.
+  2. They are joking about the girlfriend, suggesting she is fake or not real in some way.
+## c0019 | Mark saw a lady at the party and said to his friend: "This lady's jewels are bursting stars."
+INTENDED: The lady's jewelry is shining very brightly.
+  0. Mark is describing the lady's jewels as shiny and bright, like stars that are exploding.
+  1. Mark is trying to compliment the lady, suggesting her jewelry is very noticeable and eye-catching.
+  2. Mark is being sarcastic, implying the lady's jewelry is over-the-top or flashy.
+## c0020 | John told his fiance: "You are the tomato sauce to my pasta."
+INTENDED: They are meant to be together.
+  0. John is saying that I complement him, like tomato sauce enhances pasta.
+  1. John is hinting that he wants me to be more involved in his life, like how tomato sauce is essential to pasta.
+  2. John is annoyed that I am taking up too much space or attention in his life.
+## c0021 | Patrick and Jon like to eat at restaurants. One afternoon, they are at a restaurant eating lunch. Patrick orders a bowl of noodles and Jon orders a rice dish. While eating his meal, Patrick spills some noodles on his shirt. Jon says: "You are so graceful."
+INTENDED: Patrick is careless.
+  0. Jon is being sarcastic, implying that Patrick's spill was anything but graceful.
+  1. Jon is complimenting Patrick on how gracefully he handled the noodles spilling on his shirt.
+  2. Jon is trying to change the subject and avoid talking about the spill.
+## c0022 | Cindy wanted to paint a picture. She got her paints, paper and brushes ready. She has a meeting to go to in 10 minutes. Her dad said to her: "I am not sure that now is the best time for painting."
+INTENDED: He does not want Cindy to start painting.
+  0. They are being polite about not wanting to interrupt.
+  1. They are concerned about Cindy's time management.
+  2. They are suggesting Cindy wait until later.
+## c0023 | Robert and his wife are discussing their neighbor. Robert said: "Our neighbor is a sheep."
+INTENDED: Their neigbor is a follower.
+  0. Robert is annoyed with their neighbor, comparing them to a sheep in a way that suggests they are foolish or unthinking.
+  1. Robert is describing their neighbor as a sheep, perhaps in a literal sense, like a person who is meek or passive.
+  2. Robert is joking, and the comment is meant to be lighthearted or humorous, not taken seriously.
+## c0024 | It has been a hot day. Juan's wife is leaving the house and says to him: "Can you water the lawn?"
+INTENDED: She wants to know whether he has time and a desire to water the lawn.
+  0. They are reminding you to water the lawn before she leaves.
+  1. They are testing if you are responsible for watering the lawn.
+  2. They are asking you to water the lawn.
+## c0025 | e called in sick at work. At the game, Oscar was having so much fun that he didn't notice his boss sitting a few rows behind him. The next day at work, the boss called Oscar into his office. He asked Oscar, "Did you get a lot of rest yesterday?" Oscar replied: "Yes, the day of bed rest cured me."
+INTENDED: He did not want to get in trouble with his boss by admitting that he lied to him.
+  0. Oscar is being sarcastic and implying he didn't really rest and is still feeling the effects of skipping work.
+  1. Oscar is trying to explain that he was at the game and didn't rest, but he's making up an excuse.
+  2. Oscar was joking about getting bed rest and feeling better after the hockey game.
+## c0026 | Patrick and Jon like to eat at restaurants. One afternoon, they are at a restaurant eating lunch. Patrick orders a bowl of noodles and Jon orders a rice dish. While eating his meal, Patrick spills some noodles on his shirt. Jon says: "You are so graceful."
+INTENDED: Patrick is careless.
+  0. Jon is being sarcastic or mocking Patrick for the spilled noodles.
+  1. Jon is complimenting Patrick for being graceful, possibly in how he handled the spilled noodles.
+  2. Jon is hinting that Patrick should be more careful with his food.
+## c0027 | One night at a party Lucy and her best friend Mary are talking with some acquaintances. Mary tells a long story to a group of people and a few of them smile. Afterwards, Mary asks Lucy whether she thought her joke was funny. Lucy says: "Of course, you know I think you're funny!"
+INTENDED: Lucy did not want Mary to feel awkward at this party.
+  0. Lucy is annoyed that Mary asked for her opinion, and is brushing it off with a compliment.
+  1. Lucy is trying to avoid directly saying whether the joke was funny, maybe to not hurt Mary's feelings.
+  2. Lucy is being supportive and genuine, affirming Mary's humor.
+## c0028 | Mark entered a golf tournament where he played badly and kept missing very easy shots. His friend Hal watched the tournament and afterwards he said to Mark: "You sure are a good golfer."
+INTENDED: Mark isn't a good player.
+  0. Hal is being genuinely complimentary about Mark's golf skills.
+  1. Hal is trying to be encouraging, acknowledging Mark's effort despite the poor performance.
+  2. Hal is being sarcastic or ironic, implying Mark is not actually good at golf.
+## c0029 | Mike said to his expectant wife: "Our baby is a lovebird's egg."
+INTENDED: Mike and his wife are very much in love with each other.
+  0. Mike is describing the baby as something delicate and precious, like a lovebird's egg.
+  1. Mike is making a metaphor about the baby being rare or special, like a lovebird's egg.
+  2. Mike is trying to be poetic or sentimental about the baby's arrival.
+## c0030 | her favorite takeout restaurants when her partner Derek invites her over to his house for dinner for the third time this week. Derek tells her excitedly that his mom cooked her special spaghetti recipe and is eager to have her taste it again. Brianna responds: "I am looking forward to it."
+INTENDED: She wants to keep a good relationship with Derek and his family.
+  0. Brianna is trying to be polite but is not very interested.
+  1. Brianna is genuinely excited to try Derek's mom's spaghetti.
+  2. Brianna is tired of Derek inviting her over so often.
+## c0031 | Jane and her best friend, Arthur, were selling chocolates door to door to raise money for a charity event. Jane and Arthur approached a house where a kind couple bought three boxes and offered them lemonade. As they walked away, Jane comments: "People in this community are so nice!"
+INTENDED: It is an amicable community.
+  0. Jane is trying to make me feel better about the community.
+  1. Jane is happy and surprised that the couple was kind.
+  2. Jane is hinting that more people should be like the couple.
+## c0032 | The teacher told Sam: "You have too much on your plate."
+INTENDED: Sam has too many things to take care of.
+  0. They are telling me I have too much to do right now.
+  1. They are being sarcastic or annoyed with me.
+  2. They are suggesting I need to prioritize or ask for help.
+## c0033 | One night at a party Lucy and her best friend Mary are talking with some acquaintances. Mary tells a long story to a group of people and a few of them smile. Afterwards, Mary asks Lucy whether she thought her joke was funny. Lucy says: "Of course, you know I think you're funny!"
+INTENDED: Lucy did not want Mary to feel awkward at this party.
+  0. Lucy is being supportive and complimentary.
+  1. Lucy is annoyed that Mary asked for her opinion on the joke.
+  2. Lucy is trying to deflect or avoid giving a direct opinion on the joke.
+## c0034 | Jane and her best friend, Arthur, were selling chocolates door to door to raise money for a charity event. Jane and Arthur approached a house and tried to sell their candy to a mean couple. As they walked away, Jane comments: "People in this community are so nice!"
+INTENDED: It is an unfriendly community.
+  0. Jane is sarcastic and actually thinks the people in the community are not nice.
+  1. Jane is hinting that she wants to stay in the community and keep selling chocolates.
+  2. Jane is genuinely surprised by how kind the people in the community are.
+## c0035 | Kelsey is in a bad mood. Every minor thing irritates her. When she sees her husband watching a football game, she yells: "Can you turn off the TV?" Her husband replies: "Beer and chips would be awesome. Thanks!"
+INTENDED: He pretends that he did not understand his wife's comment because he wants to watch the game.
+  0. Kelsey is being sarcastic and is not actually happy.
+  1. Kelsey is annoyed and wants me to get beer and chips.
+  2. Kelsey is happy and wants to enjoy beer and chips.
+## c0036 | Richard came to visit his friend, Alex. Alex is an artist. Richard brought one of his artworks to Alex and asked Alex: "What do you think of my painting?" Alex responds: "Have you noticed that I painted the walls?"
+INTENDED: Alex thinks that Richard's painting is mediocre.
+  0. Alex is pointing out that they painted the walls, not the artwork.
+  1. Alex is annoyed that Richard brought a painting instead of showing their own work.
+  2. Alex is hinting that they want Richard to focus on their own art instead of his.
+## c0037 | Christian is Shane's big brother. One day, Christian is helping Shane with his homework. Christian explains the homework to Shane. When Shane starts the assignment, he does not follow Christian's instructions. Christian says: "You are such a wonderful listener."
+INTENDED: Shane was not paying attention when Christian was talking.
+  0. Christian is hinting that Shane should pay more attention or follow directions better, even though he's saying it in a kind way.
+  1. Christian is frustrated with Shane for not following instructions, and is trying to acknowledge Shane's ability to listen, even though it didn't help.
+  2. Christian is complimenting me for being a good listener during the homework session.
+## c0038 | Annie and Kelly are discussing their plans for summer. Annie asks Kelly: "How many books do you plan to read this summer?" Kelly responds: "A million."
+INTENDED: Kelly plans to devote a lot of time to reading this summer.
+  0. Kelly is being vague and doesn’t want to give a real number.
+  1. Kelly is exaggerating to show they love reading a lot.
+  2. Kelly is joking and doesn’t really mean a million books.
+  3. Kelly is annoyed and doesn’t want to talk about how many books they’ll read.
+## c0039 | Patrick and Jon like to eat at restaurants. One afternoon, they are at a restaurant eating lunch. Patrick orders a bowl of noodles and Jon orders a rice dish. While eating his meal, Patrick spills some noodles on his shirt. Jon says: "You are so graceful."
+INTENDED: Patrick is careless.
+  0. Jon is hinting that Patrick should be more careful with his food.
+  1. Jon is being sarcastic, implying Patrick's spill was clumsy or ungraceful.
+  2. Jon is complimenting Patrick on how gracefully he handled spilling noodles.
+## c0040 | e called in sick at work. At the game, Oscar was having so much fun that he didn't notice his boss sitting a few rows behind him. The next day at work, the boss called Oscar into his office. He asked Oscar, "Did you get a lot of rest yesterday?" Oscar replied: "Yes, the day of bed rest cured me."
+INTENDED: He did not want to get in trouble with his boss by admitting that he lied to him.
+  0. Oscar was joking about resting and being cured, probably because he was having a great time at the hockey game.
+  1. Oscar is trying to avoid talking about the game or his absence from work.
+  2. Oscar is being sarcastic or defensive about his absence, possibly implying he didn’t need to call in sick.
+## c0041 | It has been a hot day. Juan's wife is leaving the house and says to him: "Can you water the lawn?"
+INTENDED: She wants to know whether he has time and a desire to water the lawn.
+  0. They are asking me to take care of the lawn, probably because they are busy.
+  1. They may not want to do it themselves, but they don’t want to say so directly.
+  2. They asked if I can water the lawn.
+## c0042 | her apartment. Jane notices that Anthony threw out lots of things which were creating clutter, including an old photo that she had always kept on the coffee table. Anthony is worried that something is troubling Jane and asks if anything is wrong. Jane answers: "Everything is fine, dear. You did a great job of cleaning the apartment."
+INTENDED: She wants to show that she appreciates that Anthony has cleaned the apartment.
+  0. Jane is genuinely happy that Anthony cleaned and is pleased with the result.
+  1. Jane is annoyed with Anthony for throwing out things without asking, but is too polite to say so.
+  2. Jane is trying to end the conversation and does not want to talk about the cleaning or the photo.
+  3. Jane is upset about the photo being thrown out but is trying to avoid confrontation.
+## c0043 | Mike and Melissa are arguing about the state of secondary education in their state. Mike states: "Standardized test scores are up 42% in our schools." Melissa responds: "And 47% of the kids didn't use the right pencil, 6% were chewing gum during the exam, and 32% yawned while completing their exams."
+INTENDED: Melissa thinks that statistical information is useless in this debate.
+  0. Melissa is hinting that Mike's data might be misleading or incomplete.
+  1. Melissa is pointing out that the test results might not be reliable because of distractions and poor test conditions.
+  2. Melissa is annoyed that Mike is using test scores as proof without considering other factors.
+## c0044 | Berta often forgets to return money that she borrows from her friends. One day Berta asks her friend Freddie for $500. Freddie responds: "Of course, but only when I fly to space."
+INTENDED: Freddie will never give Berta any money.
+  0. Freddie is being literal and is not planning to give the money anytime soon.
+  1. Freddie is testing Berta's patience or seriousness about the loan.
+  2. Freddie is joking and doesn't really intend to give the money.
+## c0045 | Callie promised to bring a salad to Jason's dinner party. Callie had been working long shifts all week and had warned Jason she might not make it, but she arrived on time, salad in hand. Jason said: "I'm so glad that you were able to fit us into your busy schedule."
+INTENDED: He is happy that Callie made it to the party.
+  0. Jason is subtly hinting that Callie should have made more time for the dinner party.
+  1. Jason is genuinely happy that Callie made time for the dinner party despite her busy schedule.
+  2. Jason is being sarcastic about Callie's ability to manage her schedule.
+## c0046 | Laura and Lynn were having coffee at a local café. They were talking about a date that Laura had had the night before. They had gone hot-air ballooning at sunset and then to a surprise concert. Lynn said: "That sounds so exciting."
+INTENDED: Laura had a thrilling experience.
+  0. Lynn is genuinely impressed by Laura's date and is being kind.
+  1. Lynn is trying to be polite but doesn't really care about Laura's date.
+  2. Lynn is hinting that they would like to go on a similar date themselves.
+## c0047 | Adam and Bill are working together on a project. Adam decides to take a break, and opens a window. A cold breeze blows in. Bill says: "I am getting cold."
+INTENDED: He wants Adam to close the window.
+  0. They are hinting that they want to leave the window open or go inside.
+  1. They are annoyed with the cold breeze and want it to stop.
+  2. They are physically cold and need warmth.
+## c0048 | Brad is interested in basketball and wants to join his school's basketball team. One day he comes to the basketball court and asks the players there: "Do you think I can play basketball with you?"
+INTENDED: He wants to join their game.
+  0. They are testing if you're confident enough to join them.
+  1. They are unsure if you're ready to play with them.
+  2. They are asking if you think you're capable of playing with them.
+  3. They are looking for your opinion on whether you're suitable to play with them.
+## c0049 | eeth removed, which Betty remembers was painful for her. Her partner is often anxious about medical matters. The night before his appointment, he tells Betty that he heard that the procedure can be painful. He asks Betty what her experience was like. She says: "It wasn't bad at all."
+INTENDED: Betty does not want to put additional stress on her partner by telling him the truth.
+  0. Betty may have been trying to reassure her partner that the procedure isn't as bad as he thinks.
+  1. Betty meant that the procedure was not painful or unpleasant for her.
+  2. Betty might have been avoiding talking about how much it hurt, even if it was painful.
+## c0050 | her apartment. Jane notices that Anthony threw out lots of things which were creating clutter, including an old photo that she had always kept on the coffee table. Anthony is worried that something is troubling Jane and asks if anything is wrong. Jane answers: "Everything is fine, dear. You did a great job of cleaning the apartment."
+INTENDED: She wants to show that she appreciates that Anthony has cleaned the apartment.
+  0. Jane is genuinely happy with the cleaning and is being polite.
+  1. Jane is annoyed and is trying to be diplomatic.
+  2. Jane is upset about the photo being thrown out but is trying to hide it.
+## c0051 | Natalie returns home to find that her partner, Alex, created a big mess on the table. Natalie says: "Alex, my parents are going to be here any minute"
+INTENDED: She wants Alex to clean the mess.
+  0. They are trying to get me to clean up the mess before the parents arrive.
+  1. They are informing me that Alex made a mess and that Alex’s parents will be arriving soon.
+  2. They are annoyed with Alex and are reminding me that the parents are coming soon.
+## c0052 | Callie promised to bring a salad to Jason's dinner party. She arrived two hours late. Jason said: "I'm so glad that you were able to fit us into your busy schedule."
+INTENDED: He is annoyed that Callie showed up late.
+  0. Jason is genuinely happy that Callie made it to the dinner party.
+  1. Jason is annoyed that Callie was late and is trying to make light of the situation.
+  2. Jason is being polite and is actually disappointed that Callie was late.
+## c0053 | Tom, who is who is a gourmet chef, was offered a job at a new restaurant. Tom's potential employer offered him really low pay and no benefits. When you ask Tom what he thinks of the offer he says: "Well, their generosity knows no bounds."
+INTENDED: He is disappointed with the job offer.
+  0. Tom is being sarcastic and is actually upset about the low pay and no benefits.
+  1. Tom is confused about the offer and is trying to make sense of it.
+  2. Tom is trying to be polite and is not wanting to offend the employer.
+## c0054 | Tom, who is a gourmet chef, was offered a job at a new restaurant. Tom's potential employer offered him twice his current pay, extra holiday and full benefits. When you ask Tom what he thinks of the offer he says: "Well, their generosity knows no bounds."
+INTENDED: He is excited about the job offer.
+  0. Tom is genuinely impressed by the employer's offer and is happy about it.
+  1. Tom is hinting that he might be looking for something even better than this offer.
+  2. Tom is being sarcastic and is actually unimpressed or even annoyed by the offer.
+## c0055 | Jane and her best friend, Arthur, were selling chocolates door to door to raise money for a charity event. Jane and Arthur approached a house where a kind couple bought three boxes and offered them lemonade. As they walked away, Jane comments: "People in this community are so nice!"
+INTENDED: It is an amicable community.
+  0. Jane is trying to sound positive but may be feeling frustrated with the overall experience.
+  1. Jane is hinting that she wants more people to be as kind as the couple.
+  2. Jane is genuinely happy about the positive interaction with the couple.
+## c0056 | During a business meeting, the general manager of the company said to the financial manager: "The new accountant that you hired is a juggler."
+INTENDED: The newly hired person is good at manipulating many things at once.
+  0. They are describing the new accountant as someone who juggles, possibly implying they handle multiple tasks at once.
+  1. They are suggesting the new accountant is not serious or reliable, as jugglers are often seen as playful or unstable.
+  2. They are making a metaphorical comment, possibly implying the new accountant is overworked or managing many responsibilities.
+## c0057 | John told his fiance: "You are the tomato sauce to my pasta."
+INTENDED: They are meant to be together.
+  0. John is hinting that he wants me to be more involved or noticeable in his life.
+  1. John is being overly sentimental or trying too hard to impress me.
+  2. John is trying to be romantic or affectionate.
+  3. John is saying that I complement him, like tomato sauce enhances pasta.
+## c0058 | ck and Jon like to eat at restaurants. One afternoon, they are at a restaurant eating lunch. Patrick orders a bowl of noodles and Jon orders a rice dish. A waiter trips beside them, and Patrick calmly catches the falling tray without spilling a drop. Jon says: "You are so graceful."
+INTENDED: Patrick is very cautious.
+  0. Jon is subtly suggesting that Patrick should act more naturally or not overdo it.
+  1. Jon is complimenting Patrick's calm and skillful action.
+  2. Jon is being sarcastic, implying that Patrick's action was unnecessary or showy.
+## c0059 | Mark entered a golf tournament where he played badly and kept missing very easy shots. His friend Hal watched the tournament and afterwards he said to Mark: "You sure are a good golfer."
+INTENDED: Mark isn't a good player.
+  0. Hal is being sarcastic and is actually mocking Mark's poor performance.
+  1. Hal is trying to be polite but is frustrated with Mark's performance.
+  2. Hal is being kind and is trying to encourage Mark.
+## c0060 | Mary said to her granddaughter: "The queen is our nation's aunt."
+INTENDED: The queen cares about you from afar.
+  0. Mary is telling her granddaughter a fact about royal family relationships.
+  1. Mary is trying to explain the queen's position in a way that feels more relatable or familiar.
+  2. Mary is hinting that the queen has a special connection to their family or country.
+## c0061 | Christian is Shane's big brother. One day, Christian is helping Shane with his homework. Christian explains the homework to Shane. When Shane starts the assignment, he follows every one of Christian's instructions exactly. Christian says: "You are such a wonderful listener."
+INTENDED: Shane was paying attention when Christian was talking.
+  0. Christian is hinting that Shane should focus more on understanding the material rather than just copying instructions.
+  1. Christian is complimenting Shane for paying close attention and following instructions carefully.
+## c0062 | The teacher said that she was feeling sick today and asked the kids to work in groups quietly. Matt kept talking loudly with his friends. The teacher said: "Matt, I think you are being unfair to me now."
+INTENDED: She wants him to stop talking.
+  0. The teacher is frustrated that Matt is not respecting her authority and is disrupting the class.
+  1. The teacher thinks Matt is being unfair to her by talking loudly when she asked for quiet.
+  2. The teacher is upset that Matt is not following her instructions and is being rude to her.
+## c0063 | Melissa's friend convinces her to accompany her to a nightclub that her friend says is "super hot". When they arrive, the heating is turned up so high that everyone is sweating and fanning themselves. Melissa turns to her friend and says: "The heat is really on in here."
+INTENDED: It is too hot.
+  0. Melissa is annoyed with the heat and wants it to be cooler.
+  1. Melissa is making a comment about the club being too hot, maybe hinting that it's not what she expected.
+  2. Melissa is describing the uncomfortable heat in the club.
+## c0064 | It was the night before her exam and Tilly had read none of the course texts. Her brother said: "I see your revision is going well."
+INTENDED: Tilly is unready for the exam.
+  0. They are being kind and noticing that I'm preparing for the exam.
+  1. They are annoyed that I haven't studied at all and are pretending to be supportive.
+  2. They are hinting that I should start studying now, but don't want to say it directly.
+## c0065 | One night at a party Lucy and her best friend Mary are talking with some acquaintances. Mary tells a long story to a group of people and a few of them smile. Afterwards, Mary asks Lucy whether she thought her joke was funny. Lucy says: "Of course, you know I think you're funny!"
+INTENDED: Lucy did not want Mary to feel awkward at this party.
+  0. Lucy is trying to avoid directly saying whether Mary's joke was funny.
+  1. Lucy is annoyed that Mary asked her opinion on the joke.
+  2. Lucy is being kind and supportive of Mary.
+## c0066 | Berta often forgets to return money that she borrows from her friends. One day Berta asks her friend Freddie for $500. Freddie responds: "Of course, but only when I fly to space."
+INTENDED: Freddie will never give Berta any money.
+  0. Freddie is joking and doesn't really intend to give the money, possibly to avoid the request.
+  1. Freddie is being literal and is not planning to give Berta the money unless he actually goes to space.
+  2. Freddie is testing Berta's patience or trying to make her wait for the money.
+## c0067 | John finished the race way ahead of the other competitors. His friend laughed and said to him: "You are so slow!"
+INTENDED: John is an outstanding runner.
+  0. They were teasing me about how fast I ran.
+  1. They meant that I was slow in finishing the race.
+  2. They were surprised I finished so quickly.
+## c0068 | Annie and Kelly are discussing their plans for summer. Annie asks Kelly: "How many books do you plan to read this summer?" Kelly responds: "A million."
+INTENDED: Kelly plans to devote a lot of time to reading this summer.
+  0. Kelly is being overly dramatic or hyperbolic about their reading goals.
+  1. Kelly is joking and doesn’t really mean to read a million books.
+  2. Kelly is annoyed and wants to end the conversation about reading goals.
+## c0069 | Tom, who is who is a gourmet chef, was offered a job at a new restaurant. Tom's potential employer offered him really low pay and no benefits. When you ask Tom what he thinks of the offer he says: "Well, their generosity knows no bounds."
+INTENDED: He is disappointed with the job offer.
+  0. Tom is trying to be polite and avoid confrontation.
+  1. Tom is genuinely impressed by the employer's generosity.
+  2. Tom is being sarcastic and means the opposite — the pay is very low.
+## c0070 | John finished the race far behind all the other competitors, having walked most of it. His friend shook his head and said to him: "You are so slow!"
+INTENDED: John is not a good runner.
+  0. They are teasing me about how slow I am.
+  1. They are disappointed in my performance.
+  2. They are worried about my fitness or health.
+## c0071 | The boys were playing around. Dan accidentally tripped Scott. Scott got very angry about falling. Dan said: "Everybody's being wild."
+INTENDED: It was not his fault.
+  0. They are trying to lighten the mood after Scott got angry.
+  1. They are describing the general behavior of the group as playful and energetic.
+  2. They are annoyed with the group's behavior and are trying to downplay it.
+## c0072 | Christian is Shane's big brother. One day, Christian is helping Shane with his homework. Christian explains the homework to Shane. When Shane starts the assignment, he follows every one of Christian's instructions exactly. Christian says: "You are such a wonderful listener."
+INTENDED: Shane was paying attention when Christian was talking.
+  0. Christian is complimenting Shane for paying close attention during the homework explanation.
+  1. Christian is subtly encouraging Shane to keep up the good work.
+  2. Christian is being sarcastic, implying Shane is only listening to please him.
+## c0073 | It's Robert's birthday. Robert dresses very casually. On his birthday, he always receives a tie from Monica. He opens the package and finds a tie. He says: "Thanks. Really, I love it."
+INTENDED: He does not want to hurt Monica by saying that he dislikes the gift.
+  0. Robert is genuinely happy with the tie and appreciative of the gift.
+  1. Robert is hinting that he might want a different gift next time.
+  2. Robert is trying to be polite but may not actually like the tie.
+## c0074 | s with Mrs. Smith, who is the mother of her best friend Ellie. Mrs. Smith typically lectures from the textbook to the class, and gives difficult multiple-choice exams. One day Ellie asks Lisa what she thinks about the class that her mom teaches. Lisa responds: "She is an awesome teacher."
+INTENDED: She does not want to hurt her friend by criticizing her mother.
+  0. Lisa is genuinely complimenting Mrs. Smith's teaching ability.
+  1. Lisa is being sarcastic or insincere about Mrs. Smith's teaching.
+  2. Lisa is trying to impress Ellie by praising Mrs. Smith.
+## c0075 | Christian is Shane's big brother. One day, Christian is helping Shane with his homework. Christian explains the homework to Shane. When Shane starts the assignment, he does not follow Christian's instructions. Christian says: "You are such a wonderful listener."
+INTENDED: Shane was not paying attention when Christian was talking.
+  0. Christian is complimenting me on my ability to listen during the homework session.
+  1. Christian is annoyed that I didn't follow his instructions, but is trying to be polite by praising my listening skills.
+  2. Christian is hinting that I should pay more attention to what he says, even though he didn't say it directly.
+## c0076 | Adam and Bill are working together on a project. Adam decides to take a break, and opens a window. A cold breeze blows in. Bill says: "I am getting cold."
+INTENDED: He wants Adam to close the window.
+  0. They are hinting they want to close the window.
+  1. They are annoyed with the cold breeze.
+  2. They are physically cold and need warmth.
+## c0077 | Sam is sunning himself on the porch. Peter comes out of the house and forgets to close the screen door. Sam says: "Peter, there are many flies and mosquitoes outside."
+INTENDED: He wants Peter to close the screen door.
+  0. They are annoyed by the insects and want me to know it's unpleasant outside.
+  1. They are hinting that I should stay inside to avoid the bugs.
+  2. They are informing me about the presence of flies and mosquitoes outside.
+## c0078 | Jessica was giving a talk that her mom attended. After the talk, Jessica's mom called her husband and said: "Jessica sailed towards the finish."
+INTENDED: Jessica finished her talk successfully.
+  0. They are annoyed or frustrated with Jessica's performance or behavior during the talk.
+  1. They are describing Jessica's movement during the talk, possibly in a metaphorical or literal sense.
+  2. They are hinting that Jessica may have acted in a way that was not appropriate or finished the talk in a way that was unsatisfactory.
+## c0079 | Mike said to his expectant wife: "Our baby is a lovebird's egg."
+INTENDED: Mike and his wife are very much in love with each other.
+  0. Mike is trying to be funny or playful, comparing the baby to a lovebird's egg in a lighthearted way.
+  1. Mike is describing the baby as something that looks like a lovebird's egg, maybe in terms of size, shape, or color.
+  2. Mike is making a metaphor, suggesting the baby is delicate, precious, or fragile, like a lovebird's egg.
+## c0080 | It is a holiday. Stefan and Kim are sitting in the backseat of the car. They are fighting all the time. Their father says: "Oh, it is so pleasant here."
+INTENDED: He does not want to listen to his kids' arguments.
+  0. They are annoyed but trying to keep the peace.
+  1. They are trying to be polite despite the tension.
+  2. They are commenting on the comfort of the car ride.
+## c0081 | The teacher said that she was feeling sick today and asked the kids to work in groups quietly. Matt kept talking loudly with his friends. The teacher said: "Matt, I think you are being unfair to me now."
+INTENDED: She wants him to stop talking.
+  0. The teacher is upset that Matt is not following the quiet rule and is being disruptive.
+  1. The teacher is frustrated that Matt is not treating the class fairly by talking loudly.
+  2. The teacher is trying to get Matt to stop talking without directly confronting him.
+## c0082 | Lucy discusses her trip to Paris with her mom. Lucy says: "I'd like to visit Vincent when I am in Paris. Where does he live?" Her mom responds: "Somewhere in France."
+INTENDED: Lucy's mom does not know where exactly Vincent lives.
+  0. Lucy's mom gave a vague answer about where Vincent lives.
+  1. Lucy's mom is being cryptic about Vincent's location.
+  2. Lucy's mom might not know the exact location of Vincent.
+## c0083 | Melissa's friend convinces her to accompany her to a nightclub that her friend says is "super hot". When they arrive, it is so cold inside that they can see their breath. Melissa turns to her friend and says: "The heat is really on in here."
+INTENDED: It is too cold.
+  0. Melissa is hinting that she feels uncomfortable or maybe even a little chilly.
+  1. Melissa is sarcastically commenting on how cold it is, implying it's not actually hot.
+  2. Melissa is describing the cold temperature in the nightclub.
+## c0084 | Jessica was giving a talk that her mom attended. After the talk, Jessica's mom called her husband and said: "Jessica sailed towards the finish."
+INTENDED: Jessica finished her talk successfully.
+  0. Jessica is being compared to a sailor, maybe in a metaphor for her life or career.
+  1. Jessica was moving toward the end of something, like a race or competition.
+  2. Jessica is being overly confident or dramatic about her performance.
+## c0085 | Hiroshi and Taro are very close friends and they usually play together. Taro takes very good care of all his toys. One day Hiroshi was careless and broke Taro's remote control car. Taro said to Hirosho: "Don't worry about it, I don't care."
+INTENDED: Friendship was more important for Taro than a broken remote control car.
+  0. Taro is upset but doesn't want to show it, so he says he doesn't care.
+  1. Taro is hinting that Hiroshi should fix the car or replace it.
+  2. Taro is trying to comfort Hiroshi by saying he doesn't mind the broken toy.
+## c0086 | ernoon in the kitchen trying to follow the recipe, and told her friend Lars about the time it took. Marika gives Lars a piece of her pie. Lars takes a big bite but doesn't finish the slice. Later in the day, Marika asks: "Do you like my apple pie?", Lars says: "Oh, yes, it was really tasty."
+INTENDED: He does not want Marika to feel bad about her mediocre baking skills.
+  0. Lars is avoiding giving a real opinion, maybe because he didn’t like it.
+  1. Lars genuinely enjoyed the pie and is being polite.
+  2. Lars is trying to be kind but isn’t sure if the pie was good.
+## c0087 | Lucy discusses her trip to Paris with her mom. Lucy says: "I'd like to visit Vincent when I am in Paris. Where does he live?" Her mom responds: "Somewhere in France."
+INTENDED: Lucy's mom does not know where exactly Vincent lives.
+  0. Lucy's mom is trying to keep the conversation light and not get into details.
+  1. Lucy's mom is giving a vague answer about where her dad lives.
+  2. Lucy's mom is avoiding giving a specific address.
+## c0088 | ernoon in the kitchen trying to follow the recipe, and told her friend Lars about the time it took. Marika gives Lars a piece of her pie. Lars takes a big bite but doesn't finish the slice. Later in the day, Marika asks: "Do you like my apple pie?", Lars says: "Oh, yes, it was really tasty."
+INTENDED: He does not want Marika to feel bad about her mediocre baking skills.
+  0. Lars is being overly kind and may not actually like the pie.
+  1. Lars genuinely enjoyed the pie and is being polite.
+  2. Lars is trying to avoid giving a real opinion about the pie.
+## c0089 | Robert and his wife are discussing their neighbor. Robert said: "Our neighbor is a sheep."
+INTENDED: Their neigbor is a follower.
+  0. Robert is joking about their neighbor, implying they are passive or easily influenced.
+  1. Robert is describing their neighbor as a sheep, perhaps in a literal or metaphorical way.
+  2. Robert is annoyed with their neighbor, comparing them to a sheep for some behavior.
+## c0090 | Mark entered a golf tournament where he played badly and kept missing very easy shots. His friend Hal watched the tournament and afterwards he said to Mark: "You sure are a good golfer."
+INTENDED: Mark isn't a good player.
+  0. Hal is trying to avoid talking about Mark's performance and is changing the subject.
+  1. Hal is being sarcastic and is actually criticizing Mark's poor performance.
+  2. Hal is being kind and is trying to encourage Mark after a bad performance.
+## c0091 | Samantha is talking with her dad about her fiance. Samantha notes: "John is an innocent person." Her dad replies: "Undoubtedly, as innocent as a saint."
+INTENDED: Samantha's dad thinks that Samantha has an incorrect view of her fiance.
+  0. Samantha is being sarcastic or dismissive, suggesting John is not as innocent as he seems.
+  1. Samantha is trying to avoid discussing John's character further, using the comparison to change the subject.
+  2. Samantha is trying to emphasize that John is very innocent, perhaps to reassure her dad.
+## c0092 | Mary and Ken are having breakfast. Ken asks Mary: "How would you like your tea, dear?" Mary responds: "In a cup."
+INTENDED: Mary is irritated with Ken.
+  0. Mary is annoyed that Ken is asking her how she wants her tea, as if it's something she should already know.
+  1. Mary is being sarcastic, implying that she doesn't care how her tea is served, or that Ken is being overly attentive.
+  2. Mary is simply stating her preference for her tea to be served in a cup.
+## c0093 | Annie and Kelly are discussing their plans for summer. Annie asks Kelly: "How many books do you plan to read this summer?" Kelly responds: "A million."
+INTENDED: Kelly plans to devote a lot of time to reading this summer.
+  0. Kelly is hinting they want to read with me.
+  1. Kelly is joking about how much they'll read.
+  2. Kelly is exaggerating to show they love reading.
+## c0094 | Berta often forgets to return money that she borrows from her friends. One day Berta asks her friend Freddie for $500. Freddie responds: "Of course, but only when I fly to space."
+INTENDED: Freddie will never give Berta any money.
+  0. Freddie is joking and is not serious about lending the money.
+  1. Freddie is testing Berta's patience or trying to avoid the request.
+  2. Freddie is being literal and is not planning to give the money anytime soon.
+## c0095 | Chad and Matt were walking. The sidewalk was being fixed and there was lots of shattered glass on the sidewalk. Matt was not paying attention to the sidewalk. Chad said: "I guess you like walking on shattered glass."
+INTENDED: Matt should look around where he is walking.
+  0. They are commenting on my choice to walk on the broken glass.
+  1. They are annoyed that I didn’t notice the broken glass.
+  2. They are hinting that I should be more careful.
+## c0096 | Tom, who is who is a gourmet chef, was offered a job at a new restaurant. Tom's potential employer offered him really low pay and no benefits. When you ask Tom what he thinks of the offer he says: "Well, their generosity knows no bounds."
+INTENDED: He is disappointed with the job offer.
+  0. Tom is confused or unaware that the offer is low, and is taking it at face value.
+  1. Tom is trying to be polite and avoid hurting the employer's feelings.
+  2. Tom is being sarcastic and means the opposite — the offer is actually very poor.
+## c0097 | The boys were playing around. Dan accidentally tripped Scott. Scott got very angry about falling. Dan said: "Everybody's being wild."
+INTENDED: It was not his fault.
+  0. They are annoyed by the group's behavior and are trying to point it out.
+  1. They are trying to downplay the situation and suggest it's not a big deal.
+  2. They are describing the general behavior of the group as energetic and playful.
+## c0098 | It is a holiday. Stefan and Kim are sitting in the backseat of the car. They are fighting all the time. Their father says: "Oh, it is so pleasant here."
+INTENDED: He does not want to listen to his kids' arguments.
+  0. They are annoyed but don’t want to say so.
+  1. They are trying to be polite despite the tension.
+  2. They are commenting on the comfort of the car ride.
+## c0099 | Natalie returns home to find that her partner, Alex, created a big mess on the table. Natalie says: "Alex, my parents are going to be here any minute"
+INTENDED: She wants Alex to clean the mess.
+  0. They are trying to get me to help clean up the mess before Alex’s parents arrive.
+  1. They are informing me that Alex made a mess on the table and that Alex’s parents are coming soon.
+  2. They are annoyed with Alex for making a mess and are reminding me that Alex’s parents are coming soon.
+## c0100 | Christian is Shane's big brother. One day, Christian is helping Shane with his homework. Christian explains the homework to Shane. When Shane starts the assignment, he does not follow Christian's instructions. Christian says: "You are such a wonderful listener."
+INTENDED: Shane was not paying attention when Christian was talking.
+  0. Christian is being sarcastic or ironic.
+  1. Christian is complimenting me on my ability to listen.
+  2. Christian is annoyed that I didn't follow his instructions.
+## c0101 | The teacher told Sam: "You have too much on your plate."
+INTENDED: Sam has too many things to take care of.
+  0. They are annoyed with how much you're handling.
+  1. They are avoiding the topic by being vague.
+  2. They are suggesting you take a break or ask for help.
+  3. They are concerned about your workload.
+## c0102 | It was the night before her exam and Tilly had read none of the course texts. Her brother said: "I see your revision is going well."
+INTENDED: Tilly is unready for the exam.
+  0. They are being polite and noticing that I'm studying.
+  1. They are mocking me for not studying.
+  2. They are trying to encourage me to study harder.
+## c0103 | Mary said to her granddaughter: "The queen is our nation's aunt."
+INTENDED: The queen cares about you from afar.
+  0. Mary is using a metaphor or analogy to describe something else, like a close relationship or a figure of authority.
+  1. Mary is trying to explain a complex family relationship in a simple way, possibly to help her granddaughter understand a historical or royal connection.
+  2. Mary is telling her granddaughter that the queen is related to her nation, specifically as an aunt.
+## c0104 | eeth removed, which Betty remembers was painful for her. Her partner is often anxious about medical matters. The night before his appointment, he tells Betty that he heard that the procedure can be painful. He asks Betty what her experience was like. She says: "It wasn't bad at all."
+INTENDED: Betty does not want to put additional stress on her partner by telling him the truth.
+  0. Betty is downplaying her own experience to avoid making her partner feel worse.
+  1. Betty is trying to be kind by not sharing details that might make her partner more nervous.
+  2. Betty is trying to reassure her partner that the procedure isn't as bad as he thinks.
+## c0105 | Mary and Ken are having breakfast. Ken asks Mary: "How would you like your tea, dear?" Mary responds: "In a cup."
+INTENDED: Mary is irritated with Ken.
+  0. Mary is annoyed and wants to end the conversation.
+  1. Mary is being sarcastic and doesn't actually want tea in a cup.
+  2. Mary is simply stating her preference for tea in a cup.
+## c0106 | Cindy wanted to paint a picture. She got her paints, paper and brushes ready. She has a meeting to go to in 10 minutes. Her dad said to her: "I am not sure that now is the best time for painting."
+INTENDED: He does not want Cindy to start painting.
+  0. They are hinting that they might not want to paint right now, maybe because of the meeting.
+  1. They are suggesting that painting might not be the best use of time right now.
+  2. They are unsure if painting is a good idea right now.
+## c0107 | Jane and her best friend, Arthur, were selling chocolates door to door to raise money for a charity event. Jane and Arthur approached a house and tried to sell their candy to a mean couple. As they walked away, Jane comments: "People in this community are so nice!"
+INTENDED: It is an unfriendly community.
+  0. Jane is trying to avoid talking about the mean couple.
+  1. Jane is annoyed that the couple they tried to sell to were not nice.
+  2. Jane is being kind and is trying to be positive about the experience.
+## c0108 | John finished the race way ahead of the other competitors. His friend laughed and said to him: "You are so slow!"
+INTENDED: John is an outstanding runner.
+  0. They are upset that I won the race and are trying to make me feel bad.
+  1. They meant that I ran slowly in the race.
+  2. They are teasing me about how slow I was in the race.
+## c0109 | It was the night before her exam and Tilly had read all of the course texts twice and finished every practice paper. Her brother said: "I see your revision is going well."
+INTENDED: Tilly is ready for the exam.
+  0. They are hinting that I should take a break or not overdo it.
+  1. They are acknowledging that I am working hard and preparing well.
+  2. They are being sarcastic or unimpressed with my effort.
+## c0110 | Chad and Matt were walking. The sidewalk was being fixed and there was lots of shattered glass on the sidewalk. Matt was not paying attention to the sidewalk. Chad said: "I guess you like walking on shattered glass."
+INTENDED: Matt should look around where he is walking.
+  0. They are suggesting I might enjoy the sensation of walking on glass.
+  1. They are commenting on my choice to walk on the broken glass.
+  2. They are teasing me for not noticing the broken glass.
+## c0111 | Lenny comes to the kitchen and asks his wife, Marcie: "What will we have for breakfast?" Marcie responds: "A hard-boiled egg cooked in hot water and toast that is toasted evenly on both sides."
+INTENDED: Marcie thinks that her husband's expectations about breakfast are too high.
+  0. Marcie is simply stating what they plan to eat.
+  1. Marcie is giving a very detailed and possibly unenthusiastic description of their breakfast plan.
+  2. Marcie is being very specific and precise about how they want breakfast prepared.
+## c0112 | Kelsey is in a bad mood. Every minor thing irritates her. When she sees her husband watching a football game, she yells: "Can you turn off the TV?" Her husband replies: "Beer and chips would be awesome. Thanks!"
+INTENDED: He pretends that he did not understand his wife's comment because he wants to watch the game.
+  0. Kelsey is happy and wants to enjoy beer and chips.
+  1. Kelsey is sarcastic and is actually upset about something else.
+  2. Kelsey is annoyed and wants her husband to stop watching TV and get beer and chips.
+## c0113 | her favorite takeout restaurants when her partner Derek invites her over to his house for dinner for the third time this week. Derek tells her excitedly that his mom cooked her special spaghetti recipe and is eager to have her taste it again. Brianna responds: "I am looking forward to it."
+INTENDED: She wants to keep a good relationship with Derek and his family.
+  0. Brianna is trying to be polite but doesn’t really want to go.
+  1. Brianna is genuinely excited to try Derek’s mom’s spaghetti.
+  2. Brianna is tired of Derek asking her over for dinner repeatedly.
+## c0114 | Hiroshi and Taro are very close friends and they usually play together. Taro takes very good care of all his toys. One day Hiroshi was careless and broke Taro's remote control car. Taro said to Hirosho: "Don't worry about it, I don't care."
+INTENDED: Friendship was more important for Taro than a broken remote control car.
+  0. Taro is trying to comfort Hiroshi by saying he doesn't mind the broken toy.
+  1. Taro is annoyed and wants Hiroshi to feel bad about breaking the toy.
+  2. Taro is being sarcastic and actually does care, but is trying to hide it.
+## c0115 | ck and Jon like to eat at restaurants. One afternoon, they are at a restaurant eating lunch. Patrick orders a bowl of noodles and Jon orders a rice dish. A waiter trips beside them, and Patrick calmly catches the falling tray without spilling a drop. Jon says: "You are so graceful."
+INTENDED: Patrick is very cautious.
+  0. Jon is complimenting me on how calmly I caught the tray.
+  1. Jon is being sarcastic, maybe because I didn’t catch the tray as well as Patrick did.
+  2. Jon is trying to get me to act more confident or perform better in front of others.
+## c0116 | It is a holiday. Stefan and Kim are sitting in the backseat of the car. They are singing along to their father's favourite songs and laughing together. Their father says: "Oh, it is so pleasant here."
+INTENDED: He enjoys listening to his kids fighting.
+  0. They are enjoying the peaceful, comfortable atmosphere in the car.
+  1. They are hinting that they would rather be somewhere else, but don’t want to say it directly.
+  2. They are annoyed by the noise or heat in the car and are trying to be polite.
+## c0117 | Mark entered a golf tournament where he played brilliantly and won by six shots. His friend Hal watched the tournament and afterwards he said to Mark: "You sure are a good golfer."
+INTENDED: Mark is an exceptional player.
+  0. Hal is complimenting Mark on his golf skills.
+  1. Hal is hinting that Mark should teach him how to play.
+  2. Hal is being sarcastic or unimpressed.
+## c0118 | Laura and Lynn were having coffee at a local caf&eacute;. They were talking about a boring date that Laura had had the night before. They had watched old reruns of cartoons all evening. Lynn said: "That sounds so exciting."
+INTENDED: Laura had a dull experience.
+  0. Lynn is being sarcastic or disinterested, and the date actually sounded dull to them.
+  1. Lynn is genuinely interested in Laura's story and finds it engaging.
+  2. Lynn is trying to be polite but doesn't really care about the story.
+## c0119 | Mike comes home from school. His mom asks him: "What did you do at school today?" Mike responds: "some schoolwork."
+INTENDED: He does not want to talk about school with his mom.
+  0. Mike did some schoolwork at school today.
+  1. Mike is annoyed and doesn’t feel like explaining further.
+  2. Mike is being vague and doesn’t want to talk about what he did.
+## c0120 | Richard came to visit his friend, Alex. Alex is an artist. Richard brought one of his artworks to Alex and asked Alex: "What do you think of my painting?" Alex responds: "Have you noticed that I painted the walls?"
+INTENDED: Alex thinks that Richard's painting is mediocre.
+  0. Alex is pointing out that they painted the walls, not the artwork Richard brought.
+  1. Alex is being sarcastic or dismissive of Richard's painting.
+  2. Alex is hinting that they would rather not talk about the painting.
+## c0121 | The boys were playing around. Dan accidentally tripped Scott. Scott got very angry about falling. Dan said: "Everybody's being wild."
+INTENDED: It was not his fault.
+  0. They are describing the general behavior of the group as playful and energetic.
+  1. They are annoyed by the group's behavior but are trying to sound neutral.
+  2. They are trying to downplay the incident and shift focus away from Dan.
+## c0122 | Peter's mother wants them to start eating healthier, and tells him that they will eat boiled sprouts tonight. Peter tells his mother: "I don't think I can eat, I have a terrible stomach-ache."
+INTENDED: He wants to avoid eating boiled sprouts.
+  0. Peter is genuinely unwell and doesn't want to eat.
+  1. Peter is trying to avoid eating the sprouts his mother wants him to eat.
+  2. Peter is frustrated with the idea of eating sprouts and is making an excuse.
+## c0123 | Matt was telling Cindy about a scary movie that he saw. Cindy was listening to him for a while and then responded: "Can we talk about something else?"
+INTENDED: She wishes that he stopped telling her about the movie.
+  0. They are feeling uncomfortable and want to end the conversation.
+  1. They are bored with the story and want to move on.
+  2. They want to change the subject to something else.
+## c0124 | Matt was telling Cindy about a scary movie that he saw. Cindy was listening to him for a while and then responded: "Can we talk about something else?"
+INTENDED: She wishes that he stopped telling her about the movie.
+  0. They are avoiding the topic because it upset them.
+  1. They want to change the subject.
+  2. They are tired of the conversation.
+## c0125 | Laura and Lynn were having coffee at a local caf&eacute;. They were talking about a boring date that Laura had had the night before. They had watched old reruns of cartoons all evening. Lynn said: "That sounds so exciting."
+INTENDED: Laura had a dull experience.
+  0. Lynn is being sarcastic or disinterested, and doesn't really find the date exciting.
+  1. Lynn is genuinely interested in Laura's story and finds it engaging.
+  2. Lynn is trying to keep the conversation going but isn't fully engaged.
+## c0126 | It was the night before her exam and Tilly had read all of the course texts twice and finished every practice paper. Her brother said: "I see your revision is going well."
+INTENDED: Tilly is ready for the exam.
+  0. They are acknowledging that I've been working hard and are happy to see it.
+  1. They are subtly reminding me that I still need to stay focused and not get complacent.
+  2. They are being polite but are actually concerned about how much I've been studying.
+## c0127 | Laura and Lynn were having coffee at a local caf&eacute;. They were talking about a boring date that Laura had had the night before. They had watched old reruns of cartoons all evening. Lynn said: "That sounds so exciting."
+INTENDED: Laura had a dull experience.
+  0. Lynn is trying to be polite and avoid saying they found the date boring.
+  1. Lynn is being sarcastic and actually finds the date dull.
+  2. Lynn is genuinely interested in Laura's story and finds it engaging.
+## c0128 | e called in sick at work. At the game, Oscar was having so much fun that he didn't notice his boss sitting a few rows behind him. The next day at work, the boss called Oscar into his office. He asked Oscar, "Did you get a lot of rest yesterday?" Oscar replied: "Yes, the day of bed rest cured me."
+INTENDED: He did not want to get in trouble with his boss by admitting that he lied to him.
+  0. Oscar meant he rested the day he stayed in bed, which is what he did.
+  1. Oscar is making a joke about resting so much that he 'cured' himself of something, maybe being sick or tired.
+  2. Oscar is hinting that he was sick and needed to rest, but he's not sure if the boss knows or if he should explain further.
+## c0129 | Mark entered a golf tournament where he played brilliantly and won by six shots. His friend Hal watched the tournament and afterwards he said to Mark: "You sure are a good golfer."
+INTENDED: Mark is an exceptional player.
+  0. Hal is trying to start a conversation or get Mark to talk about the tournament.
+  1. Hal is complimenting Mark on his golf skills.
+  2. Hal is being sarcastic or unimpressed despite Mark's success.
+## c0130 | Brad is interested in basketball and wants to join his school's basketball team. One day he comes to the basketball court and asks the players there: "Do you think I can play basketball with you?"
+INTENDED: He wants to join their game.
+  0. They are testing if I think they're good enough to join the team.
+  1. They are asking for my opinion on whether they are capable of playing with the team.
+  2. They are unsure if they're welcome or if they fit in with the group.
+  3. They are trying to get me to invite them to play.
+## c0131 | Hiroshi and Taro are very close friends and they usually play together. Taro takes very good care of all his toys. One day Hiroshi was careless and broke Taro's remote control car. Taro said to Hirosho: "Don't worry about it, I don't care."
+INTENDED: Friendship was more important for Taro than a broken remote control car.
+  0. Taro is trying to comfort Hiroshi by saying he doesn't mind the broken toy.
+  1. Taro is upset but is trying to hide it by saying he doesn't care.
+  2. Taro is hinting that Hiroshi should fix the toy or make it up to him.
+## c0132 | Tom, who is a gourmet chef, was offered a job at a new restaurant. Tom's potential employer offered him twice his current pay, extra holiday and full benefits. When you ask Tom what he thinks of the offer he says: "Well, their generosity knows no bounds."
+INTENDED: He is excited about the job offer.
+  0. Tom is hinting that he might be considering the offer, but wants to be careful or think it over.
+  1. Tom is being sarcastic or ironic about the offer, possibly implying it's not as good as it seems.
+  2. Tom is genuinely impressed by the employer's generous offer.
+## c0133 | ck and Jon like to eat at restaurants. One afternoon, they are at a restaurant eating lunch. Patrick orders a bowl of noodles and Jon orders a rice dish. A waiter trips beside them, and Patrick calmly catches the falling tray without spilling a drop. Jon says: "You are so graceful."
+INTENDED: Patrick is very cautious.
+  0. Jon is being sarcastic and doesn't really think I was graceful.
+  1. Jon is complimenting me on how calmly I caught the tray.
+  2. Jon is trying to make me feel good about myself after the incident.
+## c0134 | Callie promised to bring a salad to Jason's dinner party. She arrived two hours late. Jason said: "I'm so glad that you were able to fit us into your busy schedule."
+INTENDED: He is annoyed that Callie showed up late.
+  0. Jason is genuinely happy that Callie made time to come, even though she was late.
+  1. Jason is being polite and is actually disappointed that Callie was late.
+  2. Jason is annoyed that Callie was late and is trying to hide it by pretending to be happy.
+## c0135 | eeth removed, which Betty remembers was painful for her. Her partner is often anxious about medical matters. The night before his appointment, he tells Betty that he heard that the procedure can be painful. He asks Betty what her experience was like. She says: "It wasn't bad at all."
+INTENDED: Betty does not want to put additional stress on her partner by telling him the truth.
+  0. Betty is being honest about how her procedure went.
+  1. Betty is downplaying her own pain to make her partner feel better.
+  2. Betty is trying to reassure her partner that the procedure isn't as bad as he thinks.
+## c0136 | Jane and her best friend, Arthur, were selling chocolates door to door to raise money for a charity event. Jane and Arthur approached a house where a kind couple bought three boxes and offered them lemonade. As they walked away, Jane comments: "People in this community are so nice!"
+INTENDED: It is an amicable community.
+  0. Jane is genuinely happy that the couple was kind and bought chocolates.
+  1. Jane is hinting that she wants more people to be as kind as the couple.
+  2. Jane is surprised that the couple was kind, since she expected people to be less generous.
+## c0137 | Brad is interested in basketball and wants to join his school's basketball team. One day he comes to the basketball court and asks the players there: "Do you think I can play basketball with you?"
+INTENDED: He wants to join their game.
+  0. They are being polite and giving Brad a chance to prove himself.
+  1. They are asking Brad if he believes he has the ability to play with them.
+  2. They are testing Brad's confidence in his basketball skills.
+## c0138 | It was the night before her exam and Tilly had read all of the course texts twice and finished every practice paper. Her brother said: "I see your revision is going well."
+INTENDED: Tilly is ready for the exam.
+  0. They are being polite but not really paying attention to how much I've studied, maybe even surprised that I've done so much.
+  1. They are acknowledging that I have been working hard and preparing well for the exam.
+  2. They are subtly encouraging me to keep up the good work, maybe even hinting that I should take a break now that I'm prepared.
+## c0139 | Melissa's friend convinces her to accompany her to a nightclub that her friend says is "super hot". When they arrive, it is so cold inside that they can see their breath. Melissa turns to her friend and says: "The heat is really on in here."
+INTENDED: It is too cold.
+  0. Melissa is hinting that she feels uncomfortable or wants to leave.
+  1. Melissa is noticing that the nightclub is very warm.
+  2. Melissa is sarcastically commenting on how the nightclub is not actually hot, but cold.
+## c0140 | Chad and Matt were walking. The sidewalk was being fixed and there was lots of shattered glass on the sidewalk. Matt was not paying attention to the sidewalk. Chad said: "I guess you like walking on shattered glass."
+INTENDED: Matt should look around where he is walking.
+  0. They are making a neutral observation about my choice to walk on the broken glass.
+  1. They are annoyed that I didn’t notice the broken glass and are pointing it out.
+  2. They are joking about me being careless or not paying attention to the sidewalk.
+## c0141 | Lenny comes to the kitchen and asks his wife, Marcie: "What will we have for breakfast?" Marcie responds: "A hard-boiled egg cooked in hot water and toast that is toasted evenly on both sides."
+INTENDED: Marcie thinks that her husband's expectations about breakfast are too high.
+  0. Marcie is simply stating the breakfast plan in a neutral, straightforward way.
+  1. Marcie may be annoyed or frustrated with the choice, but is not expressing it directly.
+  2. Marcie is being overly specific, possibly to avoid making a choice or to control the situation.
+## c0142 | Samantha is talking with her dad about her fiance. Samantha notes: "John is an innocent person." Her dad replies: "Undoubtedly, as innocent as a saint."
+INTENDED: Samantha's dad thinks that Samantha has an incorrect view of her fiance.
+  0. Samantha is being sarcastic, implying John might not be as innocent as he seems.
+  1. Samantha is comparing John to a saint, possibly in a way that suggests he is too perfect or unrealistic.
+  2. Samantha is expressing that John is very innocent, like a saint.
+## c0143 | Mark asked his mom what she thought about his new girlfriend. She replied: "This young lady is 100% polyester."
+INTENDED: His girlfriend's behavior was not very natural.
+  0. They are commenting on the girlfriend’s clothing material, likely in a neutral or practical way.
+  1. They are hinting that they don’t approve of the relationship or the girlfriend’s qualities.
+  2. They are making a sarcastic or dismissive comment about the girlfriend’s personality or character.
+## c0144 | Mike and Melissa are arguing about the state of secondary education in their state. Mike states: "Standardized test scores are up 42% in our schools." Melissa responds: "And 47% of the kids didn't use the right pencil, 6% were chewing gum during the exam, and 32% yawned while completing their exams."
+INTENDED: Melissa thinks that statistical information is useless in this debate.
+  0. Melissa is suggesting that the rise in test scores might not be due to improved education, but to other factors like poor test conditions.
+  1. Melissa is annoyed that Mike is celebrating test score increases without considering the flaws in how the tests were taken.
+  2. Melissa is pointing out that there were distractions and poor test-taking conditions that might have affected the results.
+## c0145 | Robert and his wife are discussing their neighbor. Robert said: "Our neighbor is a sheep."
+INTENDED: Their neigbor is a follower.
+  0. Robert is annoyed with their neighbor, comparing them to a sheep in a way that suggests they are foolish or untrustworthy.
+  1. Robert is describing their neighbor as a sheep, perhaps in a literal sense, like a person who is meek or passive.
+  2. Robert is joking about their neighbor, implying they act in a silly or predictable way, like a sheep follows the herd.
+## c0146 | Mark gave his former colleague Krista tickets to a lecture where he was a guest speaker. Within the first 20 minutes of the lecture, the audience started to leave. The next day Krista talked to Mary about the lecture. Krista said: "Oh, Mark held the audience's attention so well."
+INTENDED: Mark's speaking skills leave much to be desired.
+  0. Krista is annoyed that the audience left early, and she's trying to downplay it by saying Mark was good.
+  1. Krista is complimenting Mark for keeping the audience engaged during the lecture.
+  2. Krista is hinting that she wanted to leave early but stayed because she thought Mark was good.
+## c0147 | It is a holiday. Stefan and Kim are sitting in the backseat of the car. They are singing along to their father's favourite songs and laughing together. Their father says: "Oh, it is so pleasant here."
+INTENDED: He enjoys listening to his kids fighting.
+  0. They are annoyed by something about the current situation, but are trying to sound polite.
+  1. They are enjoying the peaceful, comfortable atmosphere in the car.
+  2. They are hinting that they would rather be somewhere else, but are not ready to say it outright.
+## c0148 | Mike said to his expectant wife: "Our baby is a lovebird's egg."
+INTENDED: Mike and his wife are very much in love with each other.
+  0. Mike is hinting that he doesn’t want to take on the responsibility of caring for the baby.
+  1. Mike is annoyed and is trying to make a point about the baby being fragile or difficult to care for.
+  2. Mike is describing the baby as something delicate and precious, like a lovebird's egg.
+## c0149 | Melissa's friend convinces her to accompany her to a nightclub that her friend says is "super hot". When they arrive, the heating is turned up so high that everyone is sweating and fanning themselves. Melissa turns to her friend and says: "The heat is really on in here."
+INTENDED: It is too hot.
+  0. Melissa is describing the physical heat in the club.
+  1. Melissa is making a comment about the club being too hot, possibly hinting that it’s not the place she expected.
+  2. Melissa is annoyed by the heat and wants to leave.
+## c0150 | Lucy discusses her trip to Paris with her mom. Lucy says: "I'd like to visit Vincent when I am in Paris. Where does he live?" Her mom responds: "Somewhere in France."
+INTENDED: Lucy's mom does not know where exactly Vincent lives.
+  0. Lucy doesn’t know exactly where Vincent lives.
+  1. Lucy is trying to avoid giving more details about Vincent’s location.
+  2. Lucy told me where Vincent lives in France.
+## c0151 | Jessica was giving a talk that her mom attended. After the talk, Jessica's mom called her husband and said: "Jessica sailed towards the finish."
+INTENDED: Jessica finished her talk successfully.
+  0. Jessica is moving toward a conclusion or final stage in a task or event.
+  1. Jessica was moving toward the end of something, like a race or competition.
+  2. Jessica is being overly dramatic or exaggerated in her actions.
+## c0152 | Mark gave his former colleague Krista tickets to a lecture where he was a guest speaker. The audience sat completely still for the whole hour and gave him a standing ovation. The next day Krista talked to Mary about the lecture. Krista said: "Oh, Mark held the audience's attention so well."
+INTENDED: Mark is a great speaker.
+  0. Krista is hinting that Mark might be more interesting than she expected.
+  1. Krista is trying to make it sound like she was impressed, even if she wasn't.
+  2. Krista is complimenting Mark on how well he engaged the audience.
+## c0153 | It is a holiday. Stefan and Kim are sitting in the backseat of the car. They are singing along to their father's favourite songs and laughing together. Their father says: "Oh, it is so pleasant here."
+INTENDED: He enjoys listening to his kids fighting.
+  0. They are annoyed by the noise or the situation, but are trying to sound polite.
+  1. They are enjoying the peaceful and comfortable atmosphere in the car.
+  2. They are hinting that they would rather be somewhere else, but are not ready to say it directly.
+## c0154 | Melissa's friend convinces her to accompany her to a nightclub that her friend says is "super hot". When they arrive, it is so cold inside that they can see their breath. Melissa turns to her friend and says: "The heat is really on in here."
+INTENDED: It is too cold.
+  0. Melissa is hinting that she wants to leave or is uncomfortable.
+  1. Melissa is sarcastically commenting on the lack of heat.
+  2. Melissa is describing the intense cold in the nightclub.
+## c0155 | The teacher told Sam: "You have too much on your plate."
+INTENDED: Sam has too many things to take care of.
+  0. They are annoyed with how much you're handling.
+  1. They are hinting that you need to ask for help.
+  2. They are concerned about your workload.
+## c0156 | Mark asked his mom what she thought about his new girlfriend. She replied: "This young lady is 100% polyester."
+INTENDED: His girlfriend's behavior was not very natural.
+  0. They are commenting on the girlfriend's clothing material.
+  1. They are making a negative comment about the girlfriend's appearance or personality.
+  2. They are joking about the girlfriend being fake or inauthentic.
+## c0157 | Mark saw a lady at the party and said to his friend: "This lady's jewels are bursting stars."
+INTENDED: The lady's jewelry is shining very brightly.
+  0. Mark is trying to impress the lady by complimenting her jewelry.
+  1. Mark is annoyed with the lady for wearing too much jewelry.
+  2. Mark is describing the lady's jewels as shiny and bright, like stars that are exploding.
+## c0158 | s with Mrs. Smith, who is the mother of her best friend Ellie. Mrs. Smith typically lectures from the textbook to the class, and gives difficult multiple-choice exams. One day Ellie asks Lisa what she thinks about the class that her mom teaches. Lisa responds: "She is an awesome teacher."
+INTENDED: She does not want to hurt her friend by criticizing her mother.
+  0. Lisa is saying that Mrs. Smith is a good teacher.
+  1. Lisa is trying to be polite about how much she dislikes Mrs. Smith's teaching style.
+  2. Lisa is hinting that she wants to talk about the class or Mrs. Smith.
+## c0159 | Christian is Shane's big brother. One day, Christian is helping Shane with his homework. Christian explains the homework to Shane. When Shane starts the assignment, he follows every one of Christian's instructions exactly. Christian says: "You are such a wonderful listener."
+INTENDED: Shane was paying attention when Christian was talking.
+  0. Christian is hinting that Shane should focus more on understanding rather than just copying instructions.
+  1. Christian is complimenting Shane for paying close attention during the homework session.
+## c0160 | Callie promised to bring a salad to Jason's dinner party. She arrived two hours late. Jason said: "I'm so glad that you were able to fit us into your busy schedule."
+INTENDED: He is annoyed that Callie showed up late.
+  0. Jason is being sarcastic about Callie's lateness.
+  1. Jason is annoyed that Callie was late.
+  2. Jason is genuinely happy that Callie made time to come.
+## c0161 | Matt was telling Cindy about a scary movie that he saw. Cindy was listening to him for a while and then responded: "Can we talk about something else?"
+INTENDED: She wishes that he stopped telling her about the movie.
+  0. They are annoyed with the topic.
+  1. They are hinting they want to ask me something.
+  2. They are done talking about the scary movie.
+## c0162 | Laura and Lynn were having coffee at a local café. They were talking about a date that Laura had had the night before. They had gone hot-air ballooning at sunset and then to a surprise concert. Lynn said: "That sounds so exciting."
+INTENDED: Laura had a thrilling experience.
+  0. Lynn is genuinely impressed by Laura's date.
+  1. Lynn is being sarcastic and doesn't really think the date was that great.
+  2. Lynn is trying to compliment Laura but is unsure how to phrase it.
+## c0163 | It's Robert's birthday. Robert dresses very casually. On his birthday, he always receives a tie from Monica. He opens the package and finds a tie. He says: "Thanks. Really, I love it."
+INTENDED: He does not want to hurt Monica by saying that he dislikes the gift.
+  0. Robert is genuinely happy with the tie and appreciative of Monica's gift.
+  1. Robert is hinting that he would prefer a different kind of gift next time.
+  2. Robert is trying to be polite but may not actually like the tie.
+## c0164 | Cindy wanted to paint a picture. She got her paints, paper and brushes ready. She has a meeting to go to in 10 minutes. Her dad said to her: "I am not sure that now is the best time for painting."
+INTENDED: He does not want Cindy to start painting.
+  0. They are suggesting that painting might not be a good idea at this moment.
+  1. They are unsure if painting is a good idea right now.
+  2. They may be trying to delay or stop Cindy from painting.
+## c0165 | Melissa's friend convinces her to accompany her to a nightclub that her friend says is "super hot". When they arrive, the heating is turned up so high that everyone is sweating and fanning themselves. Melissa turns to her friend and says: "The heat is really on in here."
+INTENDED: It is too hot.
+  0. Melissa is joking about the heat being intense.
+  1. Melissa is annoyed by the uncomfortable heat.
+  2. Melissa is describing the high temperature in the nightclub.
+## c0166 | John finished the race way ahead of the other competitors. His friend laughed and said to him: "You are so slow!"
+INTENDED: John is an outstanding runner.
+  0. They are annoyed with me because I didn’t run as fast as they expected.
+  1. They are joking and don’t really think I’m slow.
+  2. They are being kind and are trying to encourage me to run faster.
+## c0167 | During a business meeting, the general manager of the company said to the financial manager: "The new accountant that you hired is a juggler."
+INTENDED: The newly hired person is good at manipulating many things at once.
+  0. They are making a joke about the new accountant being a juggler, possibly in a lighthearted or teasing way.
+  1. They are describing the new accountant as someone who juggles things, possibly implying they handle multiple tasks at once.
+  2. They are suggesting the new accountant is not serious or reliable, possibly implying they are not focused on their job.
+## c0168 | John finished the race far behind all the other competitors, having walked most of it. His friend shook his head and said to him: "You are so slow!"
+INTENDED: John is not a good runner.
+  0. They are suggesting I need to train more.
+  1. They are disappointed in my performance.
+  2. They are teasing me about being slow.
+## c0169 | Adam and Bill are working together on a project. Adam decides to take a break, and opens a window. A cold breeze blows in. Bill says: "I am getting cold."
+INTENDED: He wants Adam to close the window.
+  0. They are hinting they want to move closer to the heat source.
+  1. They are physically cold and need warmth.
+  2. They are annoyed with the cold breeze.
+  3. They are being polite and don’t want to say they’re uncomfortable.
+## c0170 | John finished the race far behind all the other competitors, having walked most of it. His friend shook his head and said to him: "You are so slow!"
+INTENDED: John is not a good runner.
+  0. They are frustrated that you didn’t finish the race quickly.
+  1. They are comparing your speed to the other competitors.
+  2. They are trying to encourage you to run faster next time.
+  3. They are pointing out that you moved very slowly during the race.
+## c0171 | The teacher said that she was feeling sick today and asked the kids to work in groups quietly. Matt kept talking loudly with his friends. The teacher said: "Matt, I think you are being unfair to me now."
+INTENDED: She wants him to stop talking.
+  0. The teacher is feeling targeted by Matt's behavior and is trying to address it directly.
+  1. The teacher is frustrated that Matt is not respecting her request for quiet and is being disruptive.
+  2. The teacher is upset that Matt is being unfair to her by talking loudly when she asked for quiet.
+## c0172 | Mark gave his former colleague Krista tickets to a lecture where he was a guest speaker. The audience sat completely still for the whole hour and gave him a standing ovation. The next day Krista talked to Mary about the lecture. Krista said: "Oh, Mark held the audience's attention so well."
+INTENDED: Mark is a great speaker.
+  0. Krista is complimenting Mark on his ability to keep the audience engaged during his lecture.
+  1. Krista is subtly suggesting that Mark should speak more often or in public.
+  2. Krista is being sarcastic, implying that Mark's lecture was boring despite the standing ovation.
+## c0173 | Natalie returns home to find that her partner, Alex, created a big mess on the table. Natalie says: "Alex, my parents are going to be here any minute"
+INTENDED: She wants Alex to clean the mess.
+  0. Alex is telling me that their parents are coming soon.
+  1. Alex is trying to get me to clean up the mess before their parents arrive.
+  2. Alex is annoyed about the mess and wants me to know their parents are coming soon.
+## c0174 | Peter's mother wants them to start eating healthier, and tells him that they will eat boiled sprouts tonight. Peter tells his mother: "I don't think I can eat, I have a terrible stomach-ache."
+INTENDED: He wants to avoid eating boiled sprouts.
+  0. Peter is avoiding the meal as a way to resist his mother's request to eat healthier.
+  1. Peter is frustrated with the idea of eating boiled sprouts and is expressing that clearly.
+  2. Peter is genuinely unable to eat because of a stomach-ache.
+## c0175 | Mike comes home from school. His mom asks him: "What did you do at school today?" Mike responds: "some schoolwork."
+INTENDED: He does not want to talk about school with his mom.
+  0. Mike didn’t want to talk about what he did at school.
+  1. Mike did some schoolwork at school today.
+  2. Mike is tired and doesn’t want to go into detail.
+## c0176 | It was the night before her exam and Tilly had read none of the course texts. Her brother said: "I see your revision is going well."
+INTENDED: Tilly is unready for the exam.
+  0. They are annoyed that I haven’t studied at all.
+  1. They are being kind and noticing that I'm preparing for the exam.
+  2. They are trying to be encouraging but are actually worried about me.
+## c0177 | Tom, who is a gourmet chef, was offered a job at a new restaurant. Tom's potential employer offered him twice his current pay, extra holiday and full benefits. When you ask Tom what he thinks of the offer he says: "Well, their generosity knows no bounds."
+INTENDED: He is excited about the job offer.
+  0. Tom is hinting that he might accept the offer, but is testing how I react.
+  1. Tom is genuinely impressed by the employer's offer.
+  2. Tom is being sarcastic about the offer, possibly implying it's too good to be true.
+## c0178 | It's Robert's birthday. Robert dresses very casually. On his birthday, he always receives a tie from Monica. He opens the package and finds a tie. He says: "Thanks. Really, I love it."
+INTENDED: He does not want to hurt Monica by saying that he dislikes the gift.
+  0. Robert is genuinely happy with the tie and appreciative of the gift.
+  1. Robert is being polite but may not actually like the tie.
+  2. Robert is hinting that he wants more gifts or more attention.
+## c0179 | Mike comes home from school. His mom asks him: "What did you do at school today?" Mike responds: "some schoolwork."
+INTENDED: He does not want to talk about school with his mom.
+  0. Mike did some schoolwork at school today.
+  1. Mike is annoyed with schoolwork.
+  2. Mike is avoiding talking about his day.
+  3. Mike didn’t want to talk about what he did at school.
+## c0180 | ernoon in the kitchen trying to follow the recipe, and told her friend Lars about the time it took. Marika gives Lars a piece of her pie. Lars takes a big bite but doesn't finish the slice. Later in the day, Marika asks: "Do you like my apple pie?", Lars says: "Oh, yes, it was really tasty."
+INTENDED: He does not want Marika to feel bad about her mediocre baking skills.
+  0. Lars is being sarcastic or insincere about liking the pie.
+  1. Lars genuinely enjoyed the pie and is being polite.
+  2. Lars is trying to be kind but is unsure if the pie was good.
+## c0181 | It has been a hot day. Juan's wife is leaving the house and says to him: "Can you water the lawn?"
+INTENDED: She wants to know whether he has time and a desire to water the lawn.
+  0. They are hinting that I should take care of the lawn, maybe because they’re busy.
+  1. They are annoyed that I haven’t watered the lawn yet.
+  2. They need the lawn watered and are asking if I can do it.
+## c0182 | her apartment. Jane notices that Anthony threw out lots of things which were creating clutter, including an old photo that she had always kept on the coffee table. Anthony is worried that something is troubling Jane and asks if anything is wrong. Jane answers: "Everything is fine, dear. You did a great job of cleaning the apartment."
+INTENDED: She wants to show that she appreciates that Anthony has cleaned the apartment.
+  0. Jane is annoyed and is trying to be polite without expressing her frustration.
+  1. Jane is upset about the photo being thrown out but is trying to hide her feelings.
+  2. Jane is genuinely happy that Anthony cleaned and is appreciative of his effort.
+## c0183 | Mark gave his former colleague Krista tickets to a lecture where he was a guest speaker. Within the first 20 minutes of the lecture, the audience started to leave. The next day Krista talked to Mary about the lecture. Krista said: "Oh, Mark held the audience's attention so well."
+INTENDED: Mark's speaking skills leave much to be desired.
+  0. Krista is implying that Mark's lecture was so good that people left early, even though it was only 20 minutes in.
+  1. Krista is complimenting Mark on how well he kept the audience engaged during the lecture.
+  2. Krista is suggesting that Mark's lecture was so compelling that it made people leave, which might be a subtle way of saying it was too long or intense.
+## c0184 | Lenny comes to the kitchen and asks his wife, Marcie: "What will we have for breakfast?" Marcie responds: "A hard-boiled egg cooked in hot water and toast that is toasted evenly on both sides."
+INTENDED: Marcie thinks that her husband's expectations about breakfast are too high.
+  0. Marcie is describing the exact breakfast she wants to prepare.
+  1. Marcie is hinting that she wants to prepare breakfast, possibly implying she wants to be in charge of it.
+  2. Marcie is being very specific and may be annoyed that Lenny is asking what they will have.
+## c0185 | Mark gave his former colleague Krista tickets to a lecture where he was a guest speaker. Within the first 20 minutes of the lecture, the audience started to leave. The next day Krista talked to Mary about the lecture. Krista said: "Oh, Mark held the audience's attention so well."
+INTENDED: Mark's speaking skills leave much to be desired.
+  0. Krista is hinting that she would have preferred a different speaker or topic, but is not saying so directly.
+  1. Krista is complimenting Mark on how well he kept the audience engaged during the lecture.
+  2. Krista is annoyed that the audience left early, but is trying to be polite by praising Mark.
+## c0186 | Mark saw a lady at the party and said to his friend: "This lady's jewels are bursting stars."
+INTENDED: The lady's jewelry is shining very brightly.
+  0. Mark is describing the lady's jewels as very bright and eye-catching, like stars bursting into view.
+  1. Mark is avoiding talking about the lady or the jewels, and is using a metaphor to change the subject.
+  2. Mark is trying to compliment the lady by saying her jewels are dazzling, but he may be being overly dramatic or insincere.
+## c0187 | Kelsey is in a bad mood. Every minor thing irritates her. When she sees her husband watching a football game, she yells: "Can you turn off the TV?" Her husband replies: "Beer and chips would be awesome. Thanks!"
+INTENDED: He pretends that he did not understand his wife's comment because he wants to watch the game.
+  0. Kelsey is trying to change the subject and avoid talking about her mood.
+  1. Kelsey is happy and wants to enjoy beer and chips.
+  2. Kelsey is sarcastic and doesn’t really want beer or chips.
+  3. Kelsey is annoyed and wants to stop the football game.
+## c0188 | Mike and Melissa are arguing about the state of secondary education in their state. Mike states: "Standardized test scores are up 42% in our schools." Melissa responds: "And 47% of the kids didn't use the right pencil, 6% were chewing gum during the exam, and 32% yawned while completing their exams."
+INTENDED: Melissa thinks that statistical information is useless in this debate.
+  0. Melissa is mocking Mike's claim by suggesting that the test results might not be reliable due to poor test-taking conditions.
+  1. Melissa is implying that Mike's focus on test scores ignores the real issues students face in school.
+  2. Melissa is pointing out that many students were distracted or unprepared during the exams, which may have affected their performance.
+## c0189 | Mary said to her granddaughter: "The queen is our nation's aunt."
+INTENDED: The queen cares about you from afar.
+  0. Mary is using a metaphor to describe the queen's role or relationship to their country.
+  1. Mary is telling me that the queen is related to them as an aunt, possibly in a royal family tree.
+  2. Mary is trying to explain the queen's position in a way that makes it more relatable to me.
+## c0190 | Sam is sunning himself on the porch. Peter comes out of the house and forgets to close the screen door. Sam says: "Peter, there are many flies and mosquitoes outside."
+INTENDED: He wants Peter to close the screen door.
+  0. They are telling Peter about the insects outside.
+  1. They are reminding Peter to close the screen door.
+  2. They are annoyed about the insects and the open door.
+## c0191 | Richard came to visit his friend, Alex. Alex is an artist. Richard brought one of his artworks to Alex and asked Alex: "What do you think of my painting?" Alex responds: "Have you noticed that I painted the walls?"
+INTENDED: Alex thinks that Richard's painting is mediocre.
+  0. Alex is pointing out that they painted the walls in the artwork.
+  1. Alex is annoyed that Richard brought a painting instead of something else.
+  2. Alex is hinting that they want Richard to paint something else.
