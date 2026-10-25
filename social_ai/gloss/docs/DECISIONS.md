@@ -401,3 +401,10 @@ Dated, with the evidence. Newest last.
   v2 and the width change, and a new labeller. The clean test is E8 (same
   engine with and without width, external items). A relabel of the old odd
   sheet by a second fresh labeller measures labeller drift.
+- **Labeller consistency.** A second, fresh Claude labeller relabelled the
+  old odd-half sheet blind (`experiments/e4_product/blind/relabel_odd/`):
+  agreement 0.959 on 387 readings, kappa 0.91, positive rate 0.395 vs 0.385.
+  No sign of labeller drift between sessions, so the development-half gain
+  above is not a labelling artefact. Both raters are the same model family,
+  so this is reliability, not validity: human raters are still needed for
+  the papers (Paper 1 section 3, `docs/PUBLICATION_STRATEGY.md`).
