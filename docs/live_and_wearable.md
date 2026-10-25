@@ -1,7 +1,18 @@
 # Live mode, deployment and the wearable path
 
-Status: design. Built after Reflect, gated by E6 (latency) and by the focus
-groups [FG]. Technical sources: `docs/research/02_tech.md`.
+Status: design. Built after Reflect, gated by E6 (latency). Focus-group
+findings folded in on 2026-10-25 (`docs/research/04_focus_groups.md`, T11).
+Technical sources: `docs/research/02_tech.md`.
+
+**What the focus groups changed.** Most participants were uneasy about
+glasses: personal discomfort, the media stigma, privacy for themselves and
+others, varifocal lenses, and workplace bans on recording. Live text or a
+voice in the ear was seen as distracting. The preferred forms were a phone
+app, an earpiece, and a ring or wristband that vibrates as a "pause and
+think" cue, with input from a small microphone. Live mode therefore defaults
+to the lightest possible cue (a haptic tap or a one-word chip), with details
+on demand after the moment, and an earpiece option. The camera path is not
+built for Study 5.
 
 ## 1. One pipeline, three hosts
 
@@ -78,8 +89,8 @@ Ollama and a 5 GB model. Options, in order of preference:
   work is the use the EU AI Act bans.
 - **Outward, carefully.** Eye-contact and attention estimation from a
   head-worn camera works at expert level (Chong et al. 2020), but gaze
-  coaching is the feature autistic critics object to most. Only build it if
-  the focus groups ask for it [FG], and frame it as information, not
-  instruction.
+  coaching is the feature autistic critics object to most. The focus
+  groups did not ask for it, and one participant explicitly did not want to
+  be expected to learn eye contact (S2). Not planned.
 - Research continuity: Studies 2-3 (open-weight VLM probing and calibration)
   become the multimodal scorer for this host.

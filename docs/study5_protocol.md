@@ -1,8 +1,9 @@
 # Study 5 draft protocol: feasibility and acceptability of Gloss
 
 Draft for Eddie and the supervisors. Built on `docs/research/03_study_spinout.md`.
-Items marked **[FG]** wait on the focus-group findings (Study 4). Items marked
-**[E2]** wait on the model-hosting decision.
+Focus-group findings (Study 4, sessions 2-4) were folded in on 2026-10-25
+(`docs/research/04_focus_groups.md`, themes T1-T11). Items marked **[E2]**
+wait on the model-hosting decision.
 
 ## Title
 
@@ -56,8 +57,23 @@ Gloss Reflect and Two-way, installed locally. Everything runs on the
 participant's computer. No raw audio or video is captured. Participants paste
 or type the messages or summaries they choose, and are told to use initials
 for other people. Optional: one lab session with Gloss Live on a video call
-with a consenting researcher or confederate. **[FG]** decides which features
-and wording ship.
+with a consenting researcher or confederate.
+
+Features that ship, and the focus-group theme behind each:
+- Possible readings with an honest clarity rating, the plain reading always
+  included, and the cues behind each (T2, T3).
+- "How might my message read?" and "Explain my style" (T4: two-way).
+- Optional **your reading first**: the participant writes their own reading
+  before seeing Gloss's, and it is weighed alongside them (T5: learning by
+  choice). Off by default; participants choose.
+- **Add your own reading** when none fits, which is the correction route (T3).
+- Optional private **notes about a person**, kept only on the device (T6).
+- Optional **ideas for replying**, each with how it might land, always
+  including "ask what they meant" (T8).
+- A calm reminder that the participant can say no, shown only when a message
+  pushes past a refusal (T10).
+- Never: advice to talk less about interests, to mask, or to change how the
+  participant comes across (T9).
 
 ## Measures
 
@@ -65,8 +81,9 @@ and wording ship.
 |---|---|
 | Baseline | Demographics; AQ-10 or RAADS-14 (descriptive only); CAT-Q; UCLA-m; ASQoL; a list of social situations ranked by frequency and distress (this fills the prevalence gap found in the literature); prospective TFA |
 | During use | Event diary after any interaction where Gloss was used (in-app, about 30 s): effort of the interaction 0-10; was the reading right / partly / wrong / not sure; did you act on it; any distress. Usage logs stay on the device, and the participant exports them and chooses what to share. |
+| During use (read-first users) | Agreement between the participant's own reading and Gloss's top reading, per use and over the 6 weeks. This is an exploratory learning and self-efficacy signal (T5). |
 | Week 3 | Short check-in call or message (participant chooses the mode) |
-| Week 6 | Retrospective TFA; SUS (all-positive version); UEQ-S; CAT-Q; UCLA-m; ASQoL; semi-structured exit interview structured by the TFA, with questions sent in advance and a choice of video, audio, text or email |
+| Week 6 | Dependence: two items, "I could have worked most of these out without Gloss" and "I worry I rely on it" (T5, agree-disagree); retrospective TFA; SUS (all-positive version); UEQ-S; CAT-Q; UCLA-m; ASQoL; semi-structured exit interview structured by the TFA, with questions sent in advance and a choice of video, audio, text or email |
 
 ## Pre-registered progression criteria (Avery et al. 2017 traffic light)
 
@@ -100,7 +117,11 @@ authorship criteria.
 - PREC. DPIA through the University Information Compliance Office.
   Lawful basis: public task, plus Art. 9(2)(j) research.
 - Third parties: no recording. Participants enter only their own summaries or
-  messages, and are asked to redact names. No raw media is stored. Diaries are
+  messages, and are asked to redact names. Person notes are free text the
+  participant writes about people they know. They stay in the browser on
+  the participant's device, are excluded from the diary export by default,
+  and the DPIA covers them as third-party personal data that the
+  participant controls (T6 raised the fairness question). No raw media is stored. Diaries are
   exported by the participant.
 - Risk: a reading could cause distress, for example by suggesting someone was
   unkind. Mitigations: the literal reading is always shown; hedged wording;
@@ -115,7 +136,7 @@ authorship criteria.
 
 | Month | Step |
 |---|---|
-| 0-1 | Fold in the focus-group findings; advisory group; finalise model hosting [E2] |
+| 0-1 | Advisory group review of the shipped features and wording; seek endorsement or review from an autistic-led organisation (T1); finalise model hosting [E2] |
 | 1-2 | PREC submission; DPIA; pilot with 3-5 advisory members |
 | 3-5 | Recruit and run in rolling cohorts |
 | 6 | Analysis; progression decision; Study 6 design with Emteq |
