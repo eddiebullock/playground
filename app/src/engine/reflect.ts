@@ -338,7 +338,7 @@ export async function waysToReply(
 Possible readings of what ${input.person?.trim() || "they"} meant:
 ${readings}
 
-Give 2 or 3 different ways I could respond, if I want to respond at all. Keep each reply short and in plain, direct words I might use myself. One must simply ask what they meant or check. If not replying, or replying later, is reasonable, one can be that. Do not tell me to apologise unless I clearly did something wrong. Do not tell me to change how I come across.
+Give 2 or 3 different ways I could respond, if I want to respond at all. Keep each reply short and in plain, direct words I might use myself. One must simply ask what they meant or check. If not replying, or replying later, is reasonable, one can be that. Base the replies on what happened, not on how I feel or anything I have said about myself: do not suggest apologising, reassuring them or explaining myself unless I clearly did something wrong. Do not tell me to change how I come across.
 For each, might_land: one sentence on how ${input.person?.trim() || "they"} might take it, given the readings above.`;
   const r = await json<{ replies: Reply[] }>(base, model, SYSTEM_GEN, user, SCHEMA_REPLIES, signal);
   return r.replies.filter((x) => x.reply?.trim()).slice(0, 3);
