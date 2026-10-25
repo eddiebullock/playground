@@ -96,7 +96,7 @@ Fixed design rules (from the concept scenes, the research and calibrated deferra
 | E1 | Can free on-device LLMs read non-literal language at human level, and does their confidence track their own errors and human disagreement? (Hu et al. 2023 items with 374-person human data; MUStARD sarcasm) | Running. First signal: 4B models answering directly are well below humans, and their errors are mostly **literal readings**. |
 | E2 | Scaling and reasoning: what model size and mode reaches human level with calibrated deferral? Sets the minimum hardware for Study 5. | Next (8B local; larger needs CSD3 with Eddie's go-ahead). |
 | E3 | Selective prediction: with an abstain rule, what accuracy does the tool reach on the readings it does show, and at what coverage? This is the "calibrated deferral" headline. | From E1/E2 data. |
-| E4 | Product-level eval: does Gloss Reflect's top reading match the intended meaning, and does its ambiguity rating match human disagreement? Stereotype audit. | Harness built 2026-10-25 (`app/scripts/eval.ts`); 8B run in progress. |
+| E4 | Product-level eval: does Gloss Reflect's top reading match the intended meaning, and does its ambiguity rating match human disagreement? Stereotype audit. | Done 2026-10-25 (blind hand labels). Top-1 0.53 (baseline), 0.56 with prompt v2 on held-out items; below the predicted 0.65-0.75, generation is the bottleneck. Audit: no avoidance drift for autism disclosure; anxiety +5 points apologetic replies, fix re-audit running. |
 | E5 | Multimodal sarcasm: does prosody add to text (MUStARD audio)? Decides whether Live needs audio models. | Needs 1.4 GB of video and disk space. |
 | E6 | Live latency on the M3: VAD, ASR and interpretation at turn ends inside a browser extension. | After Reflect. |
 | E7 | Autistic-rater ground truth: do autistic and non-autistic raters disagree on items, and does the model align with either? (Online survey, needs ethics.) | Study 5 add-on. |
@@ -159,14 +159,22 @@ Done on 2026-10-24: E1/E2/E3 (4B and 8B, direct, stance, calibration), Reflect
 v0, Study 5 protocol draft. Done on 2026-10-25: focus groups read and folded
 in; the features they asked for; E4 harness.
 
+Done on 2026-10-25 (afternoon): E4 on three engines with blind hand labels;
+prompt v2 adopted; replies audit with a 3-seed noise floor; latency (first
+reading 9 s, done 27 s); "How good is it?" panel now quotes product-level E4
+numbers instead of E1.
+
 Next, in order:
-1. E4 product eval on 8B: does the full pipeline get the intended meaning, and
-   does its clarity track human disagreement? Fix what it shows.
-2. E4 stereotype audit (disclosure must not shift readings).
-3. Latency on the M3 (the focus groups asked for speed; Reflect's 8B pipeline
-   takes about a minute).
-4. An "How good is it?" panel in the app with the E1/E4 numbers (T1: trust
-   needs evidence).
+1. Re-audit replies with the anxiety fix (running). Then the same
+   "judge the words, not the reader" check for the readings scorer (8B
+   shifted towards reassurance under anxiety disclosure).
+2. Generation is the bottleneck: the remaining misses are white-lie motives,
+   metaphors, and speaker confusion in three-person stories. Each prompt change
+   is developed on the odd half and tested on the even half, then confirmed on
+   new items (the even half has now been used once).
+3. Latency: cache the fixed prompt; check question on demand.
+4. New held-out items for confirmation (E4 has none left that Claude has not
+   seen).
 5. Brief and summary for Eddie.
 
 ## 9. Decisions needed from Eddie

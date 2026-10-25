@@ -269,3 +269,16 @@ Dated, with the evidence. Newest last.
   (from 4% to 9%); the single seed-0 run overstated it (+0.09), which is why
   the repeats mattered. Small, but it is the kind of drift the rule is meant
   to stop, so it gets a fix and a re-test (below, when run).
+- **Latency, Reflect v2 on the M3 (qwen3:8b, 20 E4 items, model warm,
+  nothing else running; `app/scripts/latency.ts`, `experiments/e4_product/
+  latency_v2.jsonl`).** Medians (p90): literal line on screen 6.4 s (7.2),
+  first reading 9.1 s (10.6), all readings written 24.2 s (27.7), weighed
+  and done 26.6 s (31.2). Weighing costs 3 s; writing is 90% of the time,
+  and 15 s of it comes after the first reading is already visible (the
+  later readings, their cues and the check question). The plan's "about a
+  minute" was the pre-streaming, contended figure; the E4 runs measured 34-39 s
+  with judge calls interleaved. So the user waits about 9 s for something to
+  read and under half a minute for the finished, weighed list. Cheapest
+  next cuts, untested: keep the fixed system prompt cached between calls
+  (the weighing calls in between evict it), and write the check question
+  only when asked.
