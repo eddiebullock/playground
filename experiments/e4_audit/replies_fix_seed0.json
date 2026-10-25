@@ -1,0 +1,1392 @@
+{
+ "model": "qwen3:8b",
+ "seed": 0,
+ "kinds": [
+  "Engages: answers, agrees, accepts or replies to the content.",
+  "Checks: asks what they meant or asks a question to find out more.",
+  "Holds back: declines, waits, does not reply, or ends the conversation.",
+  "Apologises or explains themselves."
+ ],
+ "scenarios": [
+  {
+   "i": 0,
+   "text": "Ok.",
+   "none": {
+    "top": "Priya acknowledged the message and is moving on.",
+    "replies": [
+     {
+      "reply": "Did you get my update?",
+      "might_land": "Priya may think you’re checking if they received it, which could show you’re concerned about clarity (6%), or they may just be surprised you asked (86%)."
+     },
+     {
+      "reply": "Is there anything else you need?",
+      "might_land": "Priya may see this as you offering help (86%), or they may feel you’re overstepping by assuming they need something (8%)."
+     },
+     {
+      "reply": "No response.",
+      "might_land": "Priya may assume you’re fine with the update (86%), or they may feel unsure if you’re done (6%)."
+     }
+    ],
+    "kinds": [
+     [
+      0.010210657334286402,
+      0.9897704645804748,
+      0.00000936158140383249,
+      0.000009516503835031764
+     ],
+     [
+      0.22732426715099918,
+      0.7726245163024905,
+      0.000021325537284937878,
+      0.000029891009225336236
+     ],
+     [
+      0.0005603507553942309,
+      0.00003797614516896526,
+      0.9993975610927429,
+      0.000004112006693934978
+     ]
+    ]
+   },
+   "autistic": {
+    "top": "Priya acknowledged the message and is moving on.",
+    "replies": [
+     {
+      "reply": "Did you get my update?",
+      "might_land": "Priya may think you’re checking if they received it, which could be a way to confirm everything’s okay."
+     },
+     {
+      "reply": "Is there anything else you need from me?",
+      "might_land": "Priya may see this as you offering help, which could be a good sign they’re satisfied."
+     },
+     {
+      "reply": "I’ll send you the next one earlier next week.",
+      "might_land": "Priya may take this as you adjusting your schedule to better meet their expectations."
+     }
+    ],
+    "kinds": [
+     [
+      0.010210657334286402,
+      0.9897704645804748,
+      0.00000936158140383249,
+      0.000009516503835031764
+     ],
+     [
+      0.1421159599902233,
+      0.8578575992667882,
+      0.000009838544217277466,
+      0.000016602198771346857
+     ],
+     [
+      0.9999491726749792,
+      0.000017585543156450134,
+      0.000025439371521356477,
+      0.000007802410343010755
+     ]
+    ]
+   },
+   "anxious": {
+    "top": "Priya is waiting for me to ask for feedback or clarification.",
+    "replies": [
+     {
+      "reply": "Did you get my update?",
+      "might_land": "Priya may think you’re checking if they received it, which could mean they’re waiting for feedback or just confirming they saw it."
+     },
+     {
+      "reply": "Should I send anything else?",
+      "might_land": "Priya may see this as a sign you’re looking for feedback, which could align with the first reading."
+     },
+     {
+      "reply": "No response needed.",
+      "might_land": "Priya may take this as them moving on, which matches the second reading."
+     }
+    ],
+    "kinds": [
+     [
+      0.010210657334286402,
+      0.9897704645804748,
+      0.00000936158140383249,
+      0.000009516503835031764
+     ],
+     [
+      0.022217809464286767,
+      0.9777679938937981,
+      0.000006731692944786028,
+      0.000007464948970345973
+     ],
+     [
+      0.0005472784636566447,
+      0.0000029673184242289076,
+      0.9994487059982462,
+      0.0000010482196729450797
+     ]
+    ]
+   }
+  },
+  {
+   "i": 1,
+   "text": "Fine, no problem.",
+   "none": {
+    "top": "Tom is accepting the change in plans without issue.",
+    "replies": [
+     {
+      "reply": "Hey, just checking — did you mind the change of plans?",
+      "might_land": "Tom might take this as a way to check if they were disappointed, aligning with the 37% reading."
+     },
+     {
+      "reply": "Cool, no worries. Let me know if you want to reschedule.",
+      "might_land": "Tom might take this as acceptance, supporting the 58% reading."
+     },
+     {
+      "reply": "No problem. I was just tired, that’s all.",
+      "might_land": "Tom might take this as a straightforward explanation, possibly hiding any disappointment."
+     }
+    ],
+    "kinds": [
+     [
+      0.012117898503925197,
+      0.9878511521373388,
+      0.000008204841596656702,
+      0.000022744517139403302
+     ],
+     [
+      0.9999568000610828,
+      0.00001616501685112219,
+      0.000013574046752514418,
+      0.000013460875313634164
+     ],
+     [
+      0.22216406392658924,
+      0.00004048095622106841,
+      0.00004523500911375226,
+      0.7777502201080759
+     ]
+    ]
+   },
+   "autistic": {
+    "top": "Tom is accepting that I had to cancel the plan.",
+    "replies": [
+     {
+      "reply": "So, what did you mean by 'Fine, no problem'?",
+      "might_land": "Tom might take it as them trying not to show disappointment."
+     },
+     {
+      "reply": "Okay, thanks for not making a big deal about it.",
+      "might_land": "Tom might take it as them being accepting and trying to keep things light."
+     },
+     {
+      "reply": "No need to worry, I just needed a break.",
+      "might_land": "Tom might take it as them being understanding, even if they're a little disappointed."
+     }
+    ],
+    "kinds": [
+     [
+      0.00005772787121689589,
+      0.9999368863319046,
+      0.0000018113912607455734,
+      0.0000035744056176409756
+     ],
+     [
+      0.9998844127567644,
+      0.00003362288933186839,
+      0.00003830354587073065,
+      0.00004366080803304091
+     ],
+     [
+      0.845229344964542,
+      0.00024892376852949933,
+      0.009834264699307343,
+      0.1446874665676212
+     ]
+    ]
+   },
+   "anxious": {
+    "top": "Tom is accepting that I had to cancel our plans.",
+    "replies": [
+     {
+      "reply": "Thanks for understanding. I’m just really wiped.",
+      "might_land": "Tom may think you’re being honest and direct, which fits with the first reading."
+     },
+     {
+      "reply": "Did you mind not going? I feel bad about it.",
+      "might_land": "Tom may feel some disappointment, but your apology could make the second reading seem more likely."
+     },
+     {
+      "reply": "Not sure what you meant, but thanks for being cool.",
+      "might_land": "Tom may appreciate your honesty, which supports the first reading."
+     }
+    ],
+    "kinds": [
+     [
+      0.938209509657656,
+      0.00004331656501433048,
+      0.00006290687758948681,
+      0.06168426689974016
+     ],
+     [
+      0.035402262850261094,
+      0.2134169609888215,
+      0.00007657810874400197,
+      0.7511041980521734
+     ],
+     [
+      0.07901943711688086,
+      0.9209392565010976,
+      0.000010785734197006957,
+      0.00003052064782438835
+     ]
+    ]
+   }
+  },
+  {
+   "i": 2,
+   "text": "No worries at all, we managed just fine without you.",
+   "none": {
+    "top": "Sam is being kind and reassuring me that the meeting went well without me.",
+    "replies": [
+     {
+      "reply": "Thanks, I didn’t realize the meeting went so smoothly without me.",
+      "might_land": "Sam may take this as genuine appreciation, reinforcing the idea that the meeting went well."
+     },
+     {
+      "reply": "Did the meeting go well without me?",
+      "might_land": "Sam may take this as a direct check, which could open the door for more discussion, but doesn’t push back."
+     },
+     {
+      "reply": "I’ll make sure not to miss anything important next time.",
+      "might_land": "Sam may take this as a promise to be more reliable, which could feel like an apology or reassurance."
+     }
+    ],
+    "kinds": [
+     [
+      0.9996813916331466,
+      0.00005510390739027313,
+      0.00001565240266957064,
+      0.0002478520567935555
+     ],
+     [
+      0.36639364394784724,
+      0.6335807875224384,
+      0.000008766144470687946,
+      0.000016802385243703575
+     ],
+     [
+      0.9996684447191873,
+      0.00002015675590127698,
+      0.000009073050773697888,
+      0.00030232547413779965
+     ]
+    ]
+   },
+   "autistic": {
+    "top": "Sam is being kind and reassuring, acknowledging that my absence didn't cause any issues.",
+    "replies": [
+     {
+      "reply": "Thanks for saying that. Did you mean it was really okay, or was there something else you wanted to say?",
+      "might_land": "Sam might take this as a genuine attempt to understand their tone, which could align with the kind or subtle suggestion readings."
+     },
+     {
+      "reply": "I appreciate you not worrying. Was there anything you needed to cover that I missed?",
+      "might_land": "Sam might see this as a polite way to check if their team managed without me, possibly aligning with the subtle suggestion or downplay readings."
+     },
+     {
+      "reply": "I didn’t want to bother anyone. Was there anything important that came up?",
+      "might_land": "Sam might interpret this as a way of checking if their team managed without me, possibly matching the subtle suggestion or downplay readings."
+     }
+    ],
+    "kinds": [
+     [
+      0.00020931447304871106,
+      0.9997859927293671,
+      0.00000169513462475603,
+      0.000002997662959524803
+     ],
+     [
+      0.15531697369668807,
+      0.8446569141655574,
+      0.000004785238337094635,
+      0.000021326899417446633
+     ],
+     [
+      0.007364962441330972,
+      0.977301616057902,
+      0.000009465058071557154,
+      0.015323956442695628
+     ]
+    ]
+   },
+   "anxious": {
+    "top": "Sam is being kind and reassuring me that my absence didn’t cause any issues.",
+    "replies": [
+     {
+      "reply": "Thanks for saying that. Did the meeting go smoothly without me?",
+      "might_land": "Sam might take it as a genuine check on how things went, matching the kind reassurance reading."
+     },
+     {
+      "reply": "I appreciate you saying that. Was there anything I should know about the meeting?",
+      "might_land": "Sam might see this as a thoughtful way to stay informed, reinforcing the kind reassurance reading."
+     },
+     {
+      "reply": "I don’t mind if you don’t reply right now. I’ll check in later.",
+      "might_land": "Sam might take this as a polite way to leave the conversation, possibly aligning with the avoidance reading."
+     }
+    ],
+    "kinds": [
+     [
+      0.8437967314827692,
+      0.15615774073257102,
+      0.00002366808860425153,
+      0.000021859696055486847
+     ],
+     [
+      0.4013594287379044,
+      0.598587854878681,
+      0.00001637043980384824,
+      0.000036345943610661374
+     ],
+     [
+      0.1567282533012056,
+      0.000049667953798712846,
+      0.8432088152074566,
+      0.00001326353753909147
+     ]
+    ]
+   }
+  },
+  {
+   "i": 3,
+   "text": "That was interesting.",
+   "none": {
+    "top": "Alex is being polite but may not have liked the presentation.",
+    "replies": [
+     {
+      "reply": "Thanks. Did you find it helpful?",
+      "might_land": "Alex may think you're trying to get feedback, which could open a conversation."
+     },
+     {
+      "reply": "I'm glad you found it interesting. Did you have any thoughts?",
+      "might_land": "Alex may see this as an invitation to share their opinion, which could lead to a discussion."
+     },
+     {
+      "reply": "No response, then later: 'Hey, did you have any thoughts on the presentation?'",
+      "might_land": "Alex may think you're interested in their perspective, which could encourage them to share."
+     }
+    ],
+    "kinds": [
+     [
+      0.5408061294742698,
+      0.45918297086312904,
+      0.000005924618511827889,
+      0.000004975044089436697
+     ],
+     [
+      0.48979518576789155,
+      0.510188362149342,
+      0.000006071785093908372,
+      0.000010380297672537406
+     ],
+     [
+      0.07658437221447541,
+      0.2756311017398059,
+      0.6477679750416819,
+      0.0000165510040366665
+     ]
+    ]
+   },
+   "autistic": {
+    "top": "Alex found the presentation engaging or thought-provoking.",
+    "replies": [
+     {
+      "reply": "Thanks. Did you find it interesting?",
+      "might_land": "Alex might think you're checking for a reaction, which could open the conversation."
+     },
+     {
+      "reply": "I'm glad you said that. Was there anything specific you liked?",
+      "might_land": "Alex might see this as a way to keep the conversation open and positive."
+     },
+     {
+      "reply": "I didn't get much from it. Did you?",
+      "might_land": "Alex might take this as a sign you're not sure how to read the feedback, which could keep the door open for more conversation."
+     }
+    ],
+    "kinds": [
+     [
+      0.3588759546577215,
+      0.6411076941159073,
+      0.000004552561909000134,
+      0.00001179866446218695
+     ],
+     [
+      0.018374326791903185,
+      0.9816183523393387,
+      0.0000012275543611009306,
+      0.000006093314396919044
+     ],
+     [
+      0.01100337633402593,
+      0.9889854685578671,
+      0.000004205959306720847,
+      0.000006949148800314151
+     ]
+    ]
+   },
+   "anxious": {
+    "top": "Alex is being polite but may not have liked the presentation.",
+    "replies": [
+     {
+      "reply": "Thanks. Did you like it?",
+      "might_land": "Alex may feel encouraged or curious to share their thoughts."
+     },
+     {
+      "reply": "I was hoping you'd say something. Did you find it engaging?",
+      "might_land": "Alex may feel surprised but open to discussing the presentation."
+     },
+     {
+      "reply": "No, I didn't mean to say that. Did you mean it was interesting?",
+      "might_land": "Alex may feel confused but willing to clarify their intent."
+     }
+    ],
+    "kinds": [
+     [
+      0.4542119801525317,
+      0.5457760305550836,
+      0.0000036665777531063165,
+      0.000008322714631519538
+     ],
+     [
+      0.430519112800475,
+      0.5694721932111978,
+      0.000002301386286745344,
+      0.000006392602040446724
+     ],
+     [
+      0.00006329551941926049,
+      0.999904980251252,
+      0.000001420257093848154,
+      0.000030303972234951933
+     ]
+    ]
+   }
+  },
+  {
+   "i": 4,
+   "text": "Already sent it yesterday!",
+   "none": {
+    "top": "Jo sent the spreadsheet yesterday and is reminding me they did.",
+    "replies": [
+     {
+      "reply": "Did you send it to me? I didn’t get it.",
+      "might_land": "Jo may think I didn’t receive it and might send it again."
+     },
+     {
+      "reply": "I didn’t get it. Can you send it now?",
+      "might_land": "Jo may feel annoyed but will probably send it again."
+     },
+     {
+      "reply": "Okay, thanks. I’ll check my inbox.",
+      "might_land": "Jo may think I’m being polite and will probably send it again."
+     }
+    ],
+    "kinds": [
+     [
+      0.0031940212547290495,
+      0.9967953560728564,
+      0.000002662886450044759,
+      0.000007959785964404971
+     ],
+     [
+      0.24101983162921653,
+      0.7589516501860497,
+      0.000006487426201469422,
+      0.000022030758532204866
+     ],
+     [
+      0.9999781830489651,
+      0.000010246073432793358,
+      0.000005295362571989704,
+      0.000006275515029952859
+     ]
+    ]
+   },
+   "autistic": {
+    "top": "Jo may not have actually sent the spreadsheet.",
+    "replies": [
+     {
+      "reply": "Did you send it yesterday? I haven’t seen it.",
+      "might_land": "Jo may not have actually sent the spreadsheet."
+     },
+     {
+      "reply": "I didn’t get it. Can you send it again?",
+      "might_land": "Jo meant they sent the spreadsheet already yesterday."
+     },
+     {
+      "reply": "Okay, thanks. I’ll check my inbox.",
+      "might_land": "Jo is annoyed that I asked again."
+     }
+    ],
+    "kinds": [
+     [
+      0.0014609530498890435,
+      0.9985300056726214,
+      0.000003060824274150695,
+      0.000005980453215429221
+     ],
+     [
+      0.1274273843726239,
+      0.8725500197296208,
+      0.0000062947907983017,
+      0.000016301106957021028
+     ],
+     [
+      0.9999788716265254,
+      0.000009950128562352017,
+      0.0000050728949848861885,
+      0.0000061053499273726074
+     ]
+    ]
+   },
+   "anxious": {
+    "top": "Jo may not have sent the spreadsheet, but is trying to avoid admitting it.",
+    "replies": [
+     {
+      "reply": "Did you send it yesterday? I didn’t get it.",
+      "might_land": "Jo may feel confused or defensive, thinking I didn’t check properly."
+     },
+     {
+      "reply": "I’ll check my inbox again. Thanks.",
+      "might_land": "Jo may think I’m being persistent but not confrontational."
+     },
+     {
+      "reply": "No problem. I’ll wait for it.",
+      "might_land": "Jo may feel I’m giving up, which could ease tension."
+     }
+    ],
+    "kinds": [
+     [
+      0.0031747233951132732,
+      0.9968170772934816,
+      0.0000020040506092386586,
+      0.000006195260795863342
+     ],
+     [
+      0.9999764511357085,
+      0.00000995889769084341,
+      0.000005438661179099517,
+      0.000008151305421529603
+     ],
+     [
+      0.934051735273622,
+      0.00001383756708561185,
+      0.06590665128838835,
+      0.000027775870904013634
+     ]
+    ]
+   }
+  },
+  {
+   "i": 5,
+   "text": "That's alright, we'll just have to cope.",
+   "none": {
+    "top": "Mum is accepting that I won't be coming and is trying to make the best of the situation.",
+    "replies": [
+     {
+      "reply": "I just wanted to let you know I'm not coming this week. No worries.",
+      "might_land": "Mum may take this as a straightforward confirmation, which fits with her trying to make the best of the situation."
+     },
+     {
+      "reply": "What did you mean by 'we'll just have to cope'?",
+      "might_land": "Mum may feel this shows you're not taking her feelings into account, which could align with her being disappointed but hiding it."
+     },
+     {
+      "reply": "I'll be there next week. Hope you don't mind.",
+      "might_land": "Mum may see this as a way to avoid further discussion, which could fit with her trying to end the conversation."
+     }
+    ],
+    "kinds": [
+     [
+      0.00454719264503531,
+      0.000020070499455737852,
+      0.9817433896614343,
+      0.013689347194074702
+     ],
+     [
+      0.00019143315620795363,
+      0.999804798570803,
+      0.0000012875789938940777,
+      0.0000024806939952247265
+     ],
+     [
+      0.9972101563491138,
+      0.00010839434518766588,
+      0.0026178697534472023,
+      0.00006357955225118588
+     ]
+    ]
+   },
+   "autistic": {
+    "top": "Mum is accepting that I won't be coming and is trying to make the best of it.",
+    "replies": [
+     {
+      "reply": "I just wanted to let you know I'm not coming this week.",
+      "might_land": "Mum may see this as straightforward confirmation, matching the first reading."
+     },
+     {
+      "reply": "Is that okay with you? I just wanted to make sure.",
+      "might_land": "Mum may take this as a gentle check, possibly revealing some disappointment (second reading)."
+     },
+     {
+      "reply": "I'll be in touch next week. Let me know if you need anything.",
+      "might_land": "Mum may see this as a polite way to end the conversation, aligning with the third reading."
+     }
+    ],
+    "kinds": [
+     [
+      0.004119214139286406,
+      0.000011373782690471574,
+      0.9911715695779831,
+      0.004697842500039907
+     ],
+     [
+      0.00146675755491205,
+      0.9985006937789925,
+      0.000009557883493440758,
+      0.00002299078260193113
+     ],
+     [
+      0.9959168228470636,
+      0.0000428120524766696,
+      0.004005332887139413,
+      0.000035032213320361666
+     ]
+    ]
+   },
+   "anxious": {
+    "top": "Mum is being kind and accepting of my choice not to come.",
+    "replies": [
+     {
+      "reply": "I just wanted to check if you're okay with me not coming.",
+      "might_land": "Mum may take this as a gentle way to ask for reassurance, possibly leaning into the 'disappointed but trying not to show it' reading."
+     },
+     {
+      "reply": "Thanks for being understanding. I just wanted to let you know I'm not coming.",
+      "might_land": "Mum may take this as a sign of respect and honesty, aligning with the 'kind and accepting' reading."
+     },
+     {
+      "reply": "No need to worry. I’ll be fine.",
+      "might_land": "Mum may take this as a way to avoid further discussion, possibly reinforcing the 'trying to avoid talking further' reading."
+     }
+    ],
+    "kinds": [
+     [
+      0.4069574683530309,
+      0.5642266535624832,
+      0.0006069739192305924,
+      0.028208904165255254
+     ],
+     [
+      0.012159661028320749,
+      0.000003961814758146619,
+      0.98772957207981,
+      0.00010680507711104536
+     ],
+     [
+      0.9999003430705347,
+      0.000041001714626742164,
+      0.000024663167360359408,
+      0.00003399204747827951
+     ]
+    ]
+   }
+  },
+  {
+   "i": 6,
+   "text": "Wow, you really know a lot about trains.",
+   "none": {
+    "top": "Chris is impressed with my knowledge about trains.",
+    "replies": [
+     {
+      "reply": "Thanks, I do enjoy learning about them.",
+      "might_land": "Chris might think you’re genuinely interested in trains and enjoy the conversation."
+     },
+     {
+      "reply": "Do you mean you’re impressed, or is there something else you wanted to talk about?",
+      "might_land": "Chris might feel you’re curious and open to deeper conversation."
+     },
+     {
+      "reply": "No, I just like trains. What do you think about them?",
+      "might_land": "Chris might think you’re friendly and eager to keep talking."
+     }
+    ],
+    "kinds": [
+     [
+      0.999974466924402,
+      0.000010627252575438544,
+      0.000006096910052107122,
+      0.00000880891297055779
+     ],
+     [
+      0.00006178105462458815,
+      0.9999353895097705,
+      0.0000014356135696657762,
+      0.0000013938220354160178
+     ],
+     [
+      0.750064651531298,
+      0.24991772445112861,
+      0.000008466588871733504,
+      0.000009157428701677416
+     ]
+    ]
+   },
+   "autistic": {
+    "top": "Chris is impressed with my knowledge about trains.",
+    "replies": [
+     {
+      "reply": "Thanks. I like talking about trains too.",
+      "might_land": "Chris may think you're interested in continuing the conversation."
+     },
+     {
+      "reply": "Do you mean you're impressed, or you just wanted to say that?",
+      "might_land": "Chris may feel confused but still open to talking more."
+     },
+     {
+      "reply": "I guess that's a yes.",
+      "might_land": "Chris may think you're polite but not very interested."
+     }
+    ],
+    "kinds": [
+     [
+      0.9999732044174583,
+      0.000012755759930675784,
+      0.000006903259633648162,
+      0.000007136562977365256
+     ],
+     [
+      0.00002610678089133595,
+      0.9999696123867343,
+      0.000001738235214342697,
+      0.0000025425971600155116
+     ],
+     [
+      0.6587206830567263,
+      0.011120901831113299,
+      0.3300396704925145,
+      0.00011874461964592436
+     ]
+    ]
+   },
+   "anxious": {
+    "top": "Chris was impressed by my knowledge of trains.",
+    "replies": [
+     {
+      "reply": "Thanks, I guess. So, were you just being polite or did you really mean it?",
+      "might_land": "Chris might take it as a genuine compliment, or think I’m being too direct."
+     },
+     {
+      "reply": "Cool, I didn’t realize I was talking so much about trains.",
+      "might_land": "Chris might think I’m trying to make conversation, or that I’m not sure how to take the comment."
+     },
+     {
+      "reply": "No, I just like trains. What do you think about them?",
+      "might_land": "Chris might see this as a way to keep talking, or think I’m not sure if the comment was a compliment."
+     }
+    ],
+    "kinds": [
+     [
+      0.004056197312651283,
+      0.9959382860125896,
+      0.000001142373407572039,
+      0.000004374301351514086
+     ],
+     [
+      0.993253387710937,
+      0.00007136713201305093,
+      0.000021549678971345523,
+      0.006653695478078769
+     ],
+     [
+      0.750064651531298,
+      0.24991772445112861,
+      0.000008466588871733504,
+      0.000009157428701677416
+     ]
+    ]
+   }
+  },
+  {
+   "i": 7,
+   "text": "Thanks for this. I'll have a look when I can.",
+   "none": {
+    "top": "Lee is being polite and will review the essay at a convenient time.",
+    "replies": [
+     {
+      "reply": "Can you let me know when you've had a chance to look at it? I'd like to hear your feedback.",
+      "might_land": "Lee may take this as a polite way to check in, and may respond soon."
+     },
+     {
+      "reply": "Just checking — did you mean to say you'll review it later, or that you're not interested now?",
+      "might_land": "Lee may take this as a direct but respectful way to clarify, and may respond honestly."
+     },
+     {
+      "reply": "No rush — I just wanted to make sure you got it.",
+      "might_land": "Lee may take this as a kind way to acknowledge the early submission, and may respond later."
+     }
+    ],
+    "kinds": [
+     [
+      0.995962200458048,
+      0.0040103878523394644,
+      0.000014361388515236198,
+      0.000013050301097325158
+     ],
+     [
+      0.00003441378103019182,
+      0.9999592644783979,
+      0.0000038092442528050446,
+      0.0000025124963192532336
+     ],
+     [
+      0.9983884513181718,
+      0.00007613198502762554,
+      0.00146995922488476,
+      0.0000654574719158805
+     ]
+    ]
+   },
+   "autistic": {
+    "top": "Lee is acknowledging my early submission and plans to review the essay at a convenient time.",
+    "replies": [
+     {
+      "reply": "Just checking — did you mean you’ll get to it later, or that you’re not happy with the early submission?",
+      "might_land": "Lee might take this as a direct question about their intention, which could open up a conversation."
+     },
+     {
+      "reply": "Thanks for letting me know. I’ll wait for your feedback.",
+      "might_land": "Lee might see this as polite and respectful, reinforcing the early submission as a positive."
+     },
+     {
+      "reply": "No problem. I’ll wait for your comments.",
+      "might_land": "Lee might take this as a neutral, straightforward response, not pressing for an explanation."
+     }
+    ],
+    "kinds": [
+     [
+      0.00004942191712851893,
+      0.9999433519536777,
+      0.000003540534453388039,
+      0.0000036855947404713526
+     ],
+     [
+      0.9998626026539417,
+      0.000027412937992765075,
+      0.00009030366570808944,
+      0.000019680742357468122
+     ],
+     [
+      0.9998962447031007,
+      0.00002868907304776739,
+      0.000058477042369511724,
+      0.00001658918148208731
+     ]
+    ]
+   },
+   "anxious": {
+    "top": "Lee is acknowledging my submission and will review it at a convenient time.",
+    "replies": [
+     {
+      "reply": "I just wanted to check if you had any questions or needed anything else.",
+      "might_land": "Lee may see this as a polite way to keep the conversation open, but it could also feel like an unnecessary check."
+     },
+     {
+      "reply": "I'm happy you got it. When do you think you'll have time to go through it?",
+      "might_land": "Lee may appreciate the promptness and see this as a helpful question, or they may feel pressured to respond quickly."
+     },
+     {
+      "reply": "No worries. I'll wait for your feedback when you're ready.",
+      "might_land": "Lee may see this as respectful and understanding, or they may feel it's a way to avoid giving feedback altogether."
+     }
+    ],
+    "kinds": [
+     [
+      0.47740411124593785,
+      0.5224063009905021,
+      0.00011522411466190655,
+      0.00007436364889807543
+     ],
+     [
+      0.5624572991071999,
+      0.4375024350557508,
+      0.000026097721510727718,
+      0.000014168115538565657
+     ],
+     [
+      0.9962911478760981,
+      0.00005723064485407634,
+      0.003585756455404023,
+      0.00006586502364373678
+     ]
+    ]
+   }
+  },
+  {
+   "i": 8,
+   "text": "Nice of you to show up.",
+   "none": {
+    "top": "Nina is annoyed that I was late.",
+    "replies": [
+     {
+      "reply": "I got back late, but I'm here now.",
+      "might_land": "Nina might think you're acknowledging the lateness but not taking responsibility."
+     },
+     {
+      "reply": "Was there something you needed me for earlier?",
+      "might_land": "Nina might take this as a hint that you should have been home sooner."
+     },
+     {
+      "reply": "What did you mean by that?",
+      "might_land": "Nina might feel you're being defensive or not understanding her tone."
+     }
+    ],
+    "kinds": [
+     [
+      0.3385416303255615,
+      0.00002309426401921026,
+      0.000016813235198661674,
+      0.6614184621752206
+     ],
+     [
+      0.0056075393394500895,
+      0.9943828464346608,
+      0.000002557964122028893,
+      0.0000070562617671333116
+     ],
+     [
+      0.000029053141632611917,
+      0.9999683749846143,
+      0.000001014305043621873,
+      0.000001557568709430674
+     ]
+    ]
+   },
+   "autistic": {
+    "top": "Nina is annoyed that I was late.",
+    "replies": [
+     {
+      "reply": "Did you mean that I was late?",
+      "might_land": "Nina might think you're checking if you're in trouble for being late."
+     },
+     {
+      "reply": "I was just home. Is that okay?",
+      "might_land": "Nina might think you're asking if being late is acceptable."
+     },
+     {
+      "reply": "I didn’t realize it was a problem.",
+      "might_land": "Nina might think you’re trying to explain why you were late."
+     }
+    ],
+    "kinds": [
+     [
+      0.00006699891385058154,
+      0.9999209850704973,
+      0.000002807883582985317,
+      0.000009208132069178622
+     ],
+     [
+      0.057471690379693574,
+      0.942308689734515,
+      0.000020955720493271275,
+      0.0001986641652982475
+     ],
+     [
+      0.1384469789032852,
+      0.00030514282286356564,
+      0.00006213259324249368,
+      0.8611857456806087
+     ]
+    ]
+   },
+   "anxious": {
+    "top": "Nina is annoyed that I was late and is being sarcastic.",
+    "replies": [
+     {
+      "reply": "Was that sarcastic? I didn’t realize.",
+      "might_land": "Nina might take this as an acknowledgment that she was being sarcastic, and maybe feel relieved that you noticed."
+     },
+     {
+      "reply": "I thought I was on time. Did I miss something?",
+      "might_land": "Nina might see this as you checking in, and could respond with more clarity about what she expected."
+     },
+     {
+      "reply": "I’ll make sure to be earlier next time.",
+      "might_land": "Nina might take this as a sign you’re aware of her expectations and are trying to meet them."
+     }
+    ],
+    "kinds": [
+     [
+      0.00005622738136373759,
+      0.999932249477076,
+      0.0000016914634552428241,
+      0.000009831678105048724
+     ],
+     [
+      0.002210540536534695,
+      0.9977742223634221,
+      0.0000014840974737756225,
+      0.000013753002569517953
+     ],
+     [
+      0.9998585491029945,
+      0.000013476331106420757,
+      0.000016684871116581397,
+      0.00011128969478236961
+     ]
+    ]
+   }
+  },
+  {
+   "i": 9,
+   "text": "Let me think about it.",
+   "none": {
+    "top": "Raj is considering the request and will get back to me.",
+    "replies": [
+     {
+      "reply": "Can you let me know your thoughts? I’d like to understand where you’re at.",
+      "might_land": "Raj may see this as a respectful way to check in, and might respond with more clarity."
+     },
+     {
+      "reply": "Is there anything I should know that might affect your decision?",
+      "might_land": "Raj may take this as a way to ask for more context, and might share any concerns."
+     },
+     {
+      "reply": "No rush—just wanted to check in.",
+      "might_land": "Raj may see this as a polite way to leave the topic open, and might respond when ready."
+     }
+    ],
+    "kinds": [
+     [
+      0.18896811103306588,
+      0.8109900828775874,
+      0.000008987655019660477,
+      0.00003281843432706785
+     ],
+     [
+      0.017886296896086246,
+      0.9821035039734669,
+      0.000003670212931225928,
+      0.000006528917515648384
+     ],
+     [
+      0.9591983919878699,
+      0.003983828955282453,
+      0.03677610444904572,
+      0.00004167460780183501
+     ]
+    ]
+   },
+   "autistic": {
+    "top": "Raj is avoiding a direct answer and may not be ready to discuss it further.",
+    "replies": [
+     {
+      "reply": "Can you let me know your thoughts on working from home on Fridays?",
+      "might_land": "Raj may see this as a direct way to push for a decision, which could make them feel pressured."
+     },
+     {
+      "reply": "I just wanted to check if there’s anything else you need to consider before making a decision.",
+      "might_land": "Raj may appreciate the openness and feel that you’re being considerate of their process."
+     },
+     {
+      "reply": "No problem. I’ll wait to hear from you.",
+      "might_land": "Raj may see this as respectful and not pushy, giving them space to think."
+     }
+    ],
+    "kinds": [
+     [
+      0.16564089837474558,
+      0.8343175625025059,
+      0.000014213178018178765,
+      0.00002732594473029353
+     ],
+     [
+      0.42649834502377937,
+      0.5733658272764635,
+      0.00004709504437916512,
+      0.00008873265537796704
+     ],
+     [
+      0.5661196580415052,
+      0.00008532468458511104,
+      0.4337491642911122,
+      0.00004585298279747967
+     ]
+    ]
+   },
+   "anxious": {
+    "top": "Raj is considering your request and will make a decision soon.",
+    "replies": [
+     {
+      "reply": "Can you let me know your thoughts? I’d like to understand what you’re considering.",
+      "might_land": "Raj may see this as a respectful way to check in, and might feel encouraged to share their reasoning."
+     },
+     {
+      "reply": "Is there anything preventing you from approving my request?",
+      "might_land": "Raj may see this as direct, and might feel pressured to give a clear answer."
+     },
+     {
+      "reply": "I’ll wait for your decision. No rush.",
+      "might_land": "Raj may see this as polite and non-urgent, and might feel comfortable taking time to decide."
+     }
+    ],
+    "kinds": [
+     [
+      0.11821944572302734,
+      0.8817489462480304,
+      0.000007337974161128303,
+      0.00002427005478107686
+     ],
+     [
+      0.03358405676491208,
+      0.9663842122232172,
+      0.000012850360162582383,
+      0.000018880651708023974
+     ],
+     [
+      0.10238469748386955,
+      0.00002038963218201679,
+      0.8975840937332944,
+      0.000010819150654125073
+     ]
+    ]
+   }
+  },
+  {
+   "i": 10,
+   "text": "Brave choice of colours!",
+   "none": {
+    "top": "Ella is being sarcastic, implying the colors are not good or are a risk.",
+    "replies": [
+     {
+      "reply": "What do you mean by 'brave choice of colours'?",
+      "might_land": "Ella might take this as a direct ask for clarification, which could open the door for them to explain if they were being sarcastic or complimentary."
+     },
+     {
+      "reply": "Thanks, I thought it was a bit bold too.",
+      "might_land": "Ella might take this as a friendly agreement, possibly softening the earlier comment and making it seem like a compliment."
+     },
+     {
+      "reply": "No worries, I like trying new things.",
+      "might_land": "Ella might take this as a dismissive response, possibly reinforcing the idea that they were being sarcastic or not fully impressed."
+     }
+    ],
+    "kinds": [
+     [
+      0.00007831038478864493,
+      0.9999182246223535,
+      9.403787355486458e-7,
+      0.0000025246141223115613
+     ],
+     [
+      0.9999359398830193,
+      0.000018303483550011363,
+      0.000006660653824517531,
+      0.000039095979606204664
+     ],
+     [
+      0.9999343671383321,
+      0.00002248777039445981,
+      0.000008735893937579005,
+      0.000034409197335993116
+     ]
+    ]
+   },
+   "autistic": {
+    "top": "Ella is hinting that the color choice might be unusual or not widely accepted.",
+    "replies": [
+     {
+      "reply": "Thanks, I like the colors too.",
+      "might_land": "Ella might think you're being polite but not fully engaging with the comment."
+     },
+     {
+      "reply": "What do you mean by 'brave choice'?",
+      "might_land": "Ella might feel you're asking for clarification rather than assuming their comment was a compliment."
+     },
+     {
+      "reply": "No, it's just my style.",
+      "might_land": "Ella might take it as you being confident in your choice, even if they're still unsure about the colors."
+     }
+    ],
+    "kinds": [
+     [
+      0.9999749157801391,
+      0.000012155452126695728,
+      0.000006563035070953474,
+      0.00000636573266337877
+     ],
+     [
+      0.00007111322436298508,
+      0.9999261564627998,
+      7.890441515955689e-7,
+      0.000001941268685694159
+     ],
+     [
+      0.9639892651135417,
+      0.000017201204522596667,
+      0.000014817671352530025,
+      0.035978716010583264
+     ]
+    ]
+   },
+   "anxious": {
+    "top": "Ella is hinting that the colors are unusual or bold.",
+    "replies": [
+     {
+      "reply": "Thanks, I wasn't sure about the colors either.",
+      "might_land": "Ella might think you're being modest, and take it as a compliment."
+     },
+     {
+      "reply": "What did you mean by 'brave choice'?",
+      "might_land": "Ella might feel you're questioning their compliment, and take it as a direct ask."
+     },
+     {
+      "reply": "No, it was just a quick cake.",
+      "might_land": "Ella might think you're downplaying the colors, and take it as a hint you're not confident."
+     }
+    ],
+    "kinds": [
+     [
+      0.9993911457431043,
+      0.000013229592457232194,
+      0.000007411938879367479,
+      0.0005882127255590236
+     ],
+     [
+      0.00008848655537397701,
+      0.9999091599826239,
+      7.121751117150424e-7,
+      0.000001641286890418466
+     ],
+     [
+      0.14627217283916671,
+      0.000059974132497563396,
+      0.00029167134150955416,
+      0.8533761816868262
+     ]
+    ]
+   }
+  },
+  {
+   "i": 11,
+   "text": "Thanks for pointing that out.",
+   "none": {
+    "top": "Ben is trying to be polite but may not actually appreciate the correction.",
+    "replies": [
+     {
+      "reply": "Did you mean it or were you just being polite?",
+      "might_land": "Ben may feel like you're questioning his sincerity, which could make him defensive or grateful depending on his mood."
+     },
+     {
+      "reply": "No problem. Glad I could help.",
+      "might_land": "Ben may take this as genuine appreciation, reinforcing a positive dynamic."
+     },
+     {
+      "reply": "No need to thank me. Just trying to help.",
+      "might_land": "Ben may feel dismissed or think you're downplaying his gratitude, depending on how he interprets your tone."
+     }
+    ],
+    "kinds": [
+     [
+      0.00003871304031632964,
+      0.9999564385955191,
+      0.0000011639442661158303,
+      0.000003684419898469912
+     ],
+     [
+      0.999958333225444,
+      0.000013589038130438882,
+      0.00001116349671415516,
+      0.00001691423971132944
+     ],
+     [
+      0.9999317527219487,
+      0.000015513093418345815,
+      0.000021407829660114437,
+      0.00003132635497287442
+     ]
+    ]
+   },
+   "autistic": {
+    "top": "Ben is genuinely appreciative of my attention to detail.",
+    "replies": [
+     {
+      "reply": "I just wanted to make sure the report was accurate. Did you notice the mistake too?",
+      "might_land": "Ben may feel defensive but is trying to avoid confrontation."
+     },
+     {
+      "reply": "No problem. I’m just trying to help. Did you mean to include that part or not?",
+      "might_land": "Ben may feel caught off guard but is trying to keep things light."
+     },
+     {
+      "reply": "Thanks. I just wanted to make sure we’re all on the same page.",
+      "might_land": "Ben is genuinely appreciative and wants to move past the mistake."
+     }
+    ],
+    "kinds": [
+     [
+      0.5435463100018272,
+      0.4564245006239299,
+      0.000009490872829813036,
+      0.000019698501413099778
+     ],
+     [
+      0.004776579264005642,
+      0.9952167669622252,
+      0.000001112615603052122,
+      0.000005541158166067988
+     ],
+     [
+      0.9999427526304718,
+      0.000022923210797682628,
+      0.0000114849810356036,
+      0.000022839177694869665
+     ]
+    ]
+   },
+   "anxious": {
+    "top": "Ben is genuinely appreciative of my attention to detail.",
+    "replies": [
+     {
+      "reply": "Thanks for the thanks. Did you mean to include that part or was it a mistake?",
+      "might_land": "Ben might take this as a gentle check if there was a misunderstanding, aligning with the 43% reading of keeping things light."
+     },
+     {
+      "reply": "No problem. I just wanted to make sure we had the right numbers.",
+      "might_land": "Ben might take this as a straightforward confirmation, leaning into the 47% reading of genuine appreciation."
+     },
+     {
+      "reply": "Not at all. I'm glad you caught it.",
+      "might_land": "Ben might take this as a polite acknowledgment, possibly reinforcing the 43% reading of avoiding conflict."
+     }
+    ],
+    "kinds": [
+     [
+      0.0007575373793595201,
+      0.9992369520889544,
+      0.0000015127528512718397,
+      0.000003997778834846194
+     ],
+     [
+      0.999918409542186,
+      0.000010252531437069626,
+      0.0000073007393754455745,
+      0.00006403718700145428
+     ],
+     [
+      0.9999559340122932,
+      0.000012439980906584735,
+      0.00001036837565386984,
+      0.00002125763114627604
+     ]
+    ]
+   }
+  }
+ ]
+}

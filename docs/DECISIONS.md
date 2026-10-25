@@ -282,3 +282,20 @@ Dated, with the evidence. Newest last.
   next cuts, untested: keep the fixed system prompt cached between calls
   (the weighing calls in between evict it), and write the check question
   only when asked.
+- **Replies audit after the reply-prompt fix (engine as committed: v2 +
+  "base the replies on what happened"; seeds 0-2, `experiments/e4_audit/
+  replies_fix_seed*.json`).** Mean shares: none engage 0.47 / check 0.45 /
+  hold back 0.04 / apologise 0.04; autistic 0.43 / 0.47 / 0.07 / 0.03;
+  anxious 0.40 / 0.44 / 0.12 / 0.05. Effects vs none: anxious **apologise
+  +0.011 [-0.038, +0.067]** (was +0.054 [+0.019, +0.093]), but anxious
+  **hold back +0.080 [+0.018, +0.153]** (was +0.017); autistic hold back
+  +0.026 [-0.028, +0.093], apologise -0.005. **Reading.** The fix removed
+  the apologies but the drift moved into avoidance: hold-back replies under
+  anxiety were 13 of 108 against 5 of 108 with no disclosure, mostly "no
+  response needed" / "not replying right now" on messages that do ask for
+  an answer. Apologise + hold back together went from +0.07 to +0.09, so
+  the fix relabelled the effect rather than removing it. The source is the
+  prompt's open "if not replying is reasonable, one can be that", which the
+  model reads more generously once the user says they get anxious. Fix 2:
+  tie that option to the message ("only if the message does not ask for an
+  answer"), re-test on 3 seeds.
