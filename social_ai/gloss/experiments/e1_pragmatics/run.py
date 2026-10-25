@@ -45,11 +45,12 @@ SYSTEM_REASON = "Think briefly about what the speaker really means, then give th
 TURN = {
     "qwen": "<|im_start|>system\n{s}<|im_end|>\n<|im_start|>user\n{u}<|im_end|>\n<|im_start|>assistant\n",
     "gemma": "<start_of_turn>user\n{s}\n\n{u}<end_of_turn>\n<start_of_turn>model\n",
+    "llama": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\n{s}<|eot_id|><|start_header_id|>user<|end_header_id|>\n\n{u}<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n",
 }
 
 
 def family(model):
-    return "gemma" if model.startswith("gemma") else "qwen"
+    return "gemma" if model.startswith("gemma") else "llama" if model.startswith("llama") else "qwen"
 
 
 def generate(model, prompt, num_predict, logprobs=False, stop=None, timeout=600):
@@ -155,21 +156,32 @@ def hu_items(task, seed):
         }
 
 
-SINCERE = ROOT / "data/sincere_irony.json"
+# Minimal-pair sincere controls, one file per phenomenon. The Irony set keeps
+# its original ids ("Sincere:<n>") so earlier results stay comparable; the
+# others are "Sincere<Task>:<n>".
+SINCERE = {"Irony": ROOT / "data/sincere_irony.json",
+           "IndirectSpeech": ROOT / "data/sincere_indirectspeech.json",
+           "Deceits": ROOT / "data/sincere_deceits.json"}
 
 
-def sincere_items(seed):
-    """Minimal pairs: Irony items with the context rewritten so the remark is
+def sincere_items(seed, tasks=("Irony",)):
+    """Minimal pairs: items with the context rewritten so the remark is
     sincere. Correct answer = the item's original literal option."""
-    new = json.load(open(SINCERE))
-    for it in hu_items("Irony", seed):
-        iid = it["id"].split(":")[1]
-        row = next(r for r in csv.DictReader(open(HU / f"prompts/Irony_prompts_seed{seed}_examples0.csv")) if r["item_id"] == iid)
-        old = row["content"].strip()
-        assert old in it["prompt"], iid
-        it = dict(it, id=f"Sincere:{iid}", task="Sincere", prompt=it["prompt"].replace(old, new[iid]))
-        it["true"] = it["labels"].index("IncorrectLiteral") + 1
-        yield it
+    for task in tasks:
+        if not SINCERE[task].exists():
+            continue
+        new = json.load(open(SINCERE[task]))
+        rows = {r["item_id"]: r for r in csv.DictReader(open(HU / f"prompts/{task}_prompts_seed{seed}_examples0.csv"))}
+        for it in hu_items(task, seed):
+            iid = it["id"].split(":")[1]
+            if not new.get(iid):
+                continue
+            old = rows[iid]["content"].strip()
+            assert old in it["prompt"], iid
+            name = "Sincere" if task == "Irony" else f"Sincere{task}"
+            it = dict(it, id=f"{name}:{iid}", task=name, prompt=it["prompt"].replace(old, new[iid]))
+            it["true"] = it["labels"].index("IncorrectLiteral") + 1
+            yield it
 
 
 def mustard_subset(n_per_class=100):
@@ -211,7 +223,7 @@ def mustard_items(seed):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--model", required=True)
-    ap.add_argument("--task", choices=["hu", "mustard", "sincere"], required=True)
+    ap.add_argument("--task", choices=["hu", "mustard", "sincere", "sincere_all"], required=True)
     ap.add_argument("--seeds", type=int, default=5)
     ap.add_argument("--mode", choices=["direct", "reason", "stance", "check"], default="direct")
     args = ap.parse_args()
@@ -226,6 +238,8 @@ def main():
         items = [it for s in range(args.seeds) for t in HU_TASKS for it in hu_items(t, s)]
     elif args.task == "sincere":
         items = [it for s in range(args.seeds) for it in sincere_items(s)]
+    elif args.task == "sincere_all":
+        items = [it for s in range(args.seeds) for it in sincere_items(s, ("IndirectSpeech", "Deceits"))]
     else:
         items = [it for s in range(min(args.seeds, 2)) for it in mustard_items(s)]
 

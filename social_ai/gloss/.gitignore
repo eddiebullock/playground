@@ -11,3 +11,4 @@ experiments/*/results/*.jsonl
 experiments/*/*.log
 experiments/*/log_*.txt
 app/*.png
+experiments/e8_isarcasm/items.json
