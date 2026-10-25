@@ -85,6 +85,9 @@ def analyse(path):
     out["rho_spread_vs_human_disagreement"] = f"{spearman(*zip(*pairs)):.3f} (n={len(pairs)})"
     ms = sorted(r["ms"] for r in recs)
     out["latency_s_median_p90"] = f"{ms[len(ms) // 2] / 1000:.0f} / {ms[int(0.9 * len(ms))] / 1000:.0f}"
+    gen = sorted(r["ms_gen"] for r in recs if r.get("ms_gen"))
+    if gen:
+        out["writing_s_median"] = f"{gen[len(gen) // 2] / 1000:.0f}"
     out["n_readings_mean"] = round(sum(len(r["readings"]) for r in recs) / len(recs), 2)
     out["boundary_shown"] = sum(1 for r in recs if r.get("boundary"))
     return out

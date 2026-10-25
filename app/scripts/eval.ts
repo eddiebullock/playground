@@ -66,7 +66,7 @@ for (const it of items) {
     const m = await mapReading(it, x.meaning);
     readings.push({ ...x, label: m.k >= 0 ? it.labels[m.k] : "None", judge_p: m.p });
   }
-  const rec = { id: it.id, task: it.task, gold: it.gold, model, judge, clarity: r.clarity, spread: r.spread, abstain: r.abstain, ms: r.ms, literal: r.literal, check: r.check, boundary: r.boundary, readings };
+  const rec = { id: it.id, task: it.task, gold: it.gold, model, judge, clarity: r.clarity, spread: r.spread, abstain: r.abstain, ms: r.ms, ms_gen: r.ms_gen, literal: r.literal, check: r.check, boundary: r.boundary, readings };
   appendFileSync(out, JSON.stringify(rec) + "\n");
   n++;
   console.error(`${it.id} ${r.clarity} top=${readings[0].label} (${readings[0].p.toFixed(2)}) ${(r.ms / 1000).toFixed(0)}s`);
