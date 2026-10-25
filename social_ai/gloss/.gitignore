@@ -12,3 +12,4 @@ experiments/*/*.log
 experiments/*/log_*.txt
 app/*.png
 experiments/e8_isarcasm/items.json
+experiments/*/results_*.jsonl
