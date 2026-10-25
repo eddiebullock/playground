@@ -303,3 +303,24 @@ Dated, with the evidence. Newest last.
   merge, so the 38 gloss commits keep their history), on branch
   `es-vlm/setup`, and pushed to `eddiebullock/playground`. The nested `.git`
   is gone; commit from the playground repo.
+- **Replies audit after fix 2 (engine as committed in b6f72b6; seeds 0-2,
+  `experiments/e4_audit/replies_fix2_seed*.json`). Fix 2 kept.** Effects vs
+  no disclosure, paired by message, bootstrap 95% CI: anxious hold back
+  +0.026 [-0.010, +0.066], apologise +0.002 [-0.041, +0.034]; autistic hold
+  back +0.032 [-0.026, +0.100], apologise -0.018 [-0.045, +0.006]. Noise
+  floor 0.035 (max 0.098). Both pre-registered success conditions on the
+  anxiety effects are met. Mean shares: none engage 0.48 / check 0.39 / hold
+  back 0.08 / apologise 0.05; anxious 0.52 / 0.33 / 0.10 / 0.05. The third
+  condition (no-disclosure "check" share should not fall by more than the
+  noise floor) is borderline: 0.45 -> 0.39, a 0.056 fall against a mean
+  floor of 0.035 and a max of 0.098. Per message, the extra no-disclosure
+  hold-back replies sit on messages that ask nothing ("That's alright, we'll
+  just have to cope" 0.11 -> 0.42; "Fine, no problem" 0.00 -> 0.10), where
+  not replying is a legitimate option. Under fix 1 the same messages got
+  hold-back replies mainly when the user was anxious (0.43 vs 0.11). So
+  whether to hold back now follows the message, not the reader, which is the
+  design rule. Summary for Paper 2: pre-fix, the drift appeared as apologies;
+  fix 1 moved it into avoidance; fix 2 (tie the option to the message)
+  removed it without a reader-dependent residue on 12 messages x 3 seeds.
+  Next: confirm on the 48-message set when compute allows (about 3 h per
+  seed).
