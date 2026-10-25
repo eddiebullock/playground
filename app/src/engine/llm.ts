@@ -35,7 +35,16 @@ async function post<T>(base: string, path: string, body: unknown, signal?: Abort
   return (await res.json()) as T;
 }
 
-/** Structured output that matches a JSON schema. */
+// Keep the model loaded between requests for a while, so the second question
+// in a session does not pay the load time again. Short enough to free the
+// memory soon after the user stops.
+const KEEP_ALIVE = "15m";
+
+/**
+ * Structured output that matches a JSON schema. With onText, the reply is
+ * streamed and onText gets the text so far after each chunk, so the caller
+ * can show partial results while the model is still writing.
+ */
 export async function json<T>(
   base: string,
   model: string,
@@ -43,24 +52,50 @@ export async function json<T>(
   user: string,
   schema: object,
   signal?: AbortSignal,
+  onText?: (soFar: string) => void,
 ): Promise<T> {
-  const r = await post<{ message: { content: string } }>(
-    base,
-    "/api/chat",
-    {
-      model,
-      messages: [
-        { role: "system", content: system },
-        { role: "user", content: user },
-      ],
-      stream: false,
-      think: false,
-      format: schema,
-      options: { temperature: 0.3, seed: 0, num_predict: 700 },
-    },
+  const body = {
+    model,
+    messages: [
+      { role: "system", content: system },
+      { role: "user", content: user },
+    ],
+    stream: !!onText,
+    think: false,
+    format: schema,
+    keep_alive: KEEP_ALIVE,
+    options: { temperature: 0.3, seed: 0, num_predict: 700 },
+  };
+  if (!onText) {
+    const r = await post<{ message: { content: string } }>(base, "/api/chat", body, signal);
+    return JSON.parse(r.message.content) as T;
+  }
+  const res = await fetch(base + "/api/chat", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
     signal,
-  );
-  return JSON.parse(r.message.content) as T;
+  });
+  if (!res.ok || !res.body) throw new Error(`Ollama /api/chat ${res.status}: ${await res.text()}`);
+  const reader = res.body.getReader();
+  const dec = new TextDecoder();
+  let buf = "";
+  let text = "";
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (value) buf += dec.decode(value, { stream: true });
+    const lines = buf.split("\n");
+    buf = done ? "" : lines.pop()!;
+    for (const line of lines) {
+      if (!line.trim()) continue;
+      const chunk = JSON.parse(line) as { message?: { content?: string }; error?: string };
+      if (chunk.error) throw new Error(`Ollama /api/chat: ${chunk.error}`);
+      text += chunk.message?.content ?? "";
+    }
+    onText(text);
+    if (done) break;
+  }
+  return JSON.parse(text) as T;
 }
 
 /** Probability over options 1..n, from the first answer token. */
@@ -83,6 +118,7 @@ export async function optionDist(
       stream: false,
       logprobs: true,
       top_logprobs: 20,
+      keep_alive: KEEP_ALIVE,
       options: { temperature: 0, num_predict: 2, seed: 0 },
     },
     signal,

@@ -50,6 +50,8 @@ export type ReflectResult = {
   boundary: string;
   model: string;
   ms: number;
+  /** Time spent writing the readings, before weighing. */
+  ms_gen?: number;
 };
 
 // Per-model temperature for the stance scorer, fitted by 5-fold CV on the E1
@@ -193,22 +195,56 @@ export async function scoreOptions(
   return acc.map((x) => x / used);
 }
 
+/** What has been written so far, shown before the readings are weighed. */
+export type Draft = { literal: string; meanings: string[] };
+
+const STR = String.raw`"((?:[^"\\]|\\.)*)"`;
+
+/**
+ * Pull the finished strings out of a partial generation reply: the literal
+ * line and each reading's meaning, once its closing quote has arrived.
+ * Tolerant by design; anything unfinished is simply left out.
+ */
+export function draftFrom(partial: string): Draft {
+  const str = (m: string) => {
+    try {
+      return JSON.parse(`"${m}"`) as string;
+    } catch {
+      return "";
+    }
+  };
+  const lit = new RegExp(`"literal"\\s*:\\s*${STR}`).exec(partial);
+  const meanings = [...partial.matchAll(new RegExp(`"meaning"\\s*:\\s*${STR}`, "g"))]
+    .map((m) => str(m[1]).trim())
+    .filter(Boolean);
+  return { literal: lit ? str(lit[1]) : "", meanings };
+}
+
 export async function reflect(
   base: string,
   model: string,
   input: ReflectInput,
   signal?: AbortSignal,
-  onStep?: (step: "writing" | "weighing") => void,
+  onStep?: (step: "writing" | "weighing", draft?: Draft) => void,
 ): Promise<ReflectResult> {
   const t0 = Date.now();
   onStep?.("writing");
-  const gen = await json<Generated>(base, model, SYSTEM_GEN, generationPrompt(input), SCHEMA, signal);
+  const gen = await json<Generated>(
+    base,
+    model,
+    SYSTEM_GEN,
+    generationPrompt(input),
+    SCHEMA,
+    signal,
+    onStep && ((t) => onStep("writing", draftFrom(t))),
+  );
   const raw: Omit<Reading, "p">[] = gen.readings
     .filter((r) => r.meaning?.trim())
     .slice(0, 4)
     .map((r, i) => ({ meaning: r.meaning.trim(), cues: r.cues ?? [], literal: i === 0 }));
   if (input.own?.trim()) raw.push({ meaning: input.own.trim(), cues: [], literal: false, own: true });
-  onStep?.("weighing");
+  onStep?.("weighing", { literal: gen.literal, meanings: raw.map((r) => r.meaning) });
+  const ms_gen = Date.now() - t0;
   const readings = await weigh(base, model, input, raw, signal);
   return summarise(readings, {
     literal: gen.literal,
@@ -216,6 +252,7 @@ export async function reflect(
     boundary: input.mode === "them" ? (gen.boundary ?? "").trim() : "",
     model,
     ms: Date.now() - t0,
+    ms_gen,
   });
 }
 

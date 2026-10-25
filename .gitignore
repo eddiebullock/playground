@@ -10,3 +10,4 @@ dist/
 experiments/*/results/*.jsonl
 experiments/*/*.log
 experiments/*/log_*.txt
+app/*.png

@@ -32,7 +32,11 @@ async function fake(route) {
   if (u.endsWith("/api/chat")) {
     const body = JSON.parse(route.request().postData());
     const isReplies = body.messages[1].content.includes("ways I could respond");
-    return route.fulfill({ json: { message: { content: JSON.stringify(isReplies ? REPLIES : GEN) } } });
+    const content = JSON.stringify(isReplies ? REPLIES : GEN);
+    if (!body.stream) return route.fulfill({ json: { message: { content } } });
+    // Streamed: NDJSON in a few chunks, as Ollama sends it.
+    const parts = content.match(/[\s\S]{1,40}/g).map((c) => JSON.stringify({ message: { content: c } }));
+    return route.fulfill({ contentType: "application/x-ndjson", body: parts.join("\n") + '\n{"done":true}\n' });
   }
   if (u.endsWith("/api/generate")) {
     const n = (JSON.parse(route.request().postData()).prompt.match(/^\d\) /gm) || []).length || 3;

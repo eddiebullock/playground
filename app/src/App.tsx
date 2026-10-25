@@ -5,6 +5,7 @@ import {
   reflect,
   styleNote,
   waysToReply,
+  type Draft,
   type Reply,
   type ReflectInput,
   type ReflectResult,
@@ -121,6 +122,7 @@ export default function App() {
   const [replies, setReplies] = useState<Reply[] | null>(null);
   const [busy, setBusy] = useState<null | "writing" | "weighing" | "replies">(null);
   const [result, setResult] = useState<ReflectResult | null>(null);
+  const [draft, setDraft] = useState<Draft | null>(null);
   const [lastInput, setLastInput] = useState<ReflectInput | null>(null);
   const [error, setError] = useState("");
   const [verdict, setVerdict] = useState<Verdict | null>(null);
@@ -174,8 +176,12 @@ export default function App() {
     setComment("");
     setReplies(null);
     setExtra("");
+    setDraft(null);
     try {
-      const r = await reflect(base, model, input, abort.current.signal, setBusy);
+      const r = await reflect(base, model, input, abort.current.signal, (step, d) => {
+        setBusy(step);
+        if (d) setDraft(d);
+      });
       setResult(r);
       setLastInput(input);
     } catch (e) {
@@ -465,7 +471,30 @@ export default function App() {
                 : "Paste a message you plan to send. Gloss shows how it might come across, so you can decide whether to change anything. You do not have to."}
             </p>
           )}
-          {busy && !result && <p className="empty">Thinking it through. This can take up to a minute on a laptop.</p>}
+          {busy && !result && !draft?.meanings.length && (
+            <p className="empty">Thinking it through. This can take up to a minute on a laptop.</p>
+          )}
+          {busy && !result && draft && draft.meanings.length > 0 && (
+            <div className="draft">
+              {draft.literal && (
+                <p className="literal">
+                  <span className="label">The words say</span>
+                  {draft.literal}
+                </p>
+              )}
+              <ol className="readings">
+                {draft.meanings.map((m, i) => (
+                  <li key={i}>
+                    <div className="reading-head">
+                      <span className="likelihood pending">{busy === "weighing" ? "Weighing..." : "Not weighed yet"}</span>
+                      {i === 0 && <span className="face">{isThem ? "Taken at face value" : "As you mean it"}</span>}
+                    </div>
+                    <p>{m}</p>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          )}
           {result && (
             <>
               <div className={`clarity clarity-${result.clarity}`}>

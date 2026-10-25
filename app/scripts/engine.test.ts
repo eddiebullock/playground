@@ -3,8 +3,8 @@
 
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { optionDist } from "../src/engine/llm.ts";
-import { calibrate, normEntropy, scoreOptions } from "../src/engine/reflect.ts";
+import { json, optionDist } from "../src/engine/llm.ts";
+import { calibrate, draftFrom, normEntropy, scoreOptions } from "../src/engine/reflect.ts";
 
 const close = (a: number[], b: number[]) => a.forEach((x, i) => assert.ok(Math.abs(x - b[i]) < 1e-6, `${a} vs ${b}`));
 
@@ -50,4 +50,34 @@ test("scoreOptions undoes the rotation, so position bias cancels", async () => {
     { token: "1", logprob: Math.log(0.7) }, { token: "2", logprob: Math.log(0.2) }, { token: "3", logprob: Math.log(0.1) }] }] }]);
   const p = await scoreOptions("http://x", "qwen3:8b", { mode: "them", text: "hi" }, ["a", "b", "c"], 3);
   close(p, [1 / 3, 1 / 3, 1 / 3]);
+});
+
+test("draftFrom keeps only finished strings", () => {
+  const partial = '{"literal": "She says \\"fine\\".", "readings": [{"meaning": "She is fine.", "cues": ["fine"]}, {"meaning": "She is a bit ann';
+  const d = draftFrom(partial);
+  assert.equal(d.literal, 'She says "fine".');
+  assert.deepEqual(d.meanings, ["She is fine."]);
+  assert.deepEqual(draftFrom("").meanings, []);
+});
+
+test("json streams chunks to onText and parses the whole reply", async () => {
+  const lines = ['{"message":{"content":"{\\"a\\": "}}\n', '{"message":{"content":"1}"}}\n{"done":true}\n'];
+  const real = globalThis.fetch;
+  globalThis.fetch = (async () =>
+    new Response(
+      new ReadableStream({
+        start(c) {
+          for (const l of lines) c.enqueue(new TextEncoder().encode(l));
+          c.close();
+        },
+      }),
+    )) as typeof fetch;
+  try {
+    const seen: string[] = [];
+    const r = await json<{ a: number }>("http://x", "qwen3:8b", "s", "u", {}, undefined, (t) => seen.push(t));
+    assert.deepEqual(r, { a: 1 });
+    assert.equal(seen.at(-1), '{"a": 1}');
+  } finally {
+    globalThis.fetch = real;
+  }
 });
