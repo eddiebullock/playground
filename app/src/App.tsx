@@ -1,6 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import { DEFAULT_BASE, listModels } from "./engine/llm.ts";
-import { reflect, styleNote, type ReflectInput, type ReflectResult } from "./engine/reflect.ts";
+import {
+  addOwnReading,
+  reflect,
+  styleNote,
+  waysToReply,
+  type Reply,
+  type ReflectInput,
+  type ReflectResult,
+} from "./engine/reflect.ts";
 import { addEntry, clearEntries, exportEntries, loadEntries, type Verdict } from "./log.ts";
 
 const RELATIONS = ["", "friend", "colleague", "manager", "partner", "family member", "someone I just met", "teacher or tutor"];
@@ -11,6 +19,32 @@ const CLARITY_TEXT = {
   some: { word: "Somewhat open", detail: "One reading leads, but others are possible." },
   high: { word: "Hard to tell", detail: "The words alone do not settle it. Asking is reasonable." },
 } as const;
+
+// In "my message" mode the question is whether it will read as meant.
+const CLARITY_TEXT_ME = {
+  clear: { word: "Fairly clear", detail: "Most people would read it one way." },
+  some: { word: "Somewhat open", detail: "One reading leads, but people could take it differently." },
+  high: { word: "Open to different readings", detail: "People could take this in more than one way." },
+} as const;
+
+// Private notes about people, keyed by the name the user typed. They never
+// leave this computer and are only added as context when that name is used.
+function loadPeople(): Record<string, string> {
+  try {
+    return JSON.parse(localStorage.getItem("gloss.people") ?? "{}") as Record<string, string>;
+  } catch {
+    return {};
+  }
+}
+
+function savePerson(name: string, note: string) {
+  const key = name.trim().toLowerCase();
+  if (!key) return;
+  const all = loadPeople();
+  if (note.trim()) all[key] = note.trim();
+  else delete all[key];
+  store("gloss.people", JSON.stringify(all));
+}
 
 function likelihood(p: number): string {
   if (p >= 0.6) return "Likely";
@@ -66,7 +100,12 @@ export default function App() {
   const [context, setContext] = useState("");
   const [text, setText] = useState("");
   const [intended, setIntended] = useState("");
-  const [busy, setBusy] = useState<null | "writing" | "weighing">(null);
+  const [about, setAbout] = useState("");
+  const [own, setOwn] = useState("");
+  const [extra, setExtra] = useState("");
+  const [readFirst, setReadFirst] = useState(() => readStored("gloss.readFirst", "") === "1");
+  const [replies, setReplies] = useState<Reply[] | null>(null);
+  const [busy, setBusy] = useState<null | "writing" | "weighing" | "replies">(null);
   const [result, setResult] = useState<ReflectResult | null>(null);
   const [lastInput, setLastInput] = useState<ReflectInput | null>(null);
   const [error, setError] = useState("");
@@ -90,15 +129,37 @@ export default function App() {
 
   useEffect(() => store("gloss.model", model), [model]);
   useEffect(() => store("gloss.base", base), [base]);
+  useEffect(() => store("gloss.readFirst", readFirst ? "1" : ""), [readFirst]);
+  // Fill the person note when a known name is typed. Only replace text that
+  // was loaded from a note, never what the user is typing.
+  const loadedAbout = useRef("");
+  useEffect(() => {
+    const note = loadPeople()[person.trim().toLowerCase()] ?? "";
+    setAbout((cur) => (note || cur === loadedAbout.current ? note : cur));
+    loadedAbout.current = note;
+  }, [person]);
 
   async function run() {
     if (!text.trim() || busy) return;
-    const input: ReflectInput = { mode, text, context, person, relation, channel, intended: mode === "me" ? intended : undefined };
+    const input: ReflectInput = {
+      mode,
+      text,
+      context,
+      person,
+      relation,
+      channel,
+      about,
+      intended: mode === "me" ? intended : undefined,
+      own: mode === "them" && readFirst ? own : undefined,
+    };
+    savePerson(person, about);
     abort.current = new AbortController();
     setError("");
     setResult(null);
     setVerdict(null);
     setComment("");
+    setReplies(null);
+    setExtra("");
     try {
       const r = await reflect(base, model, input, abort.current.signal, setBusy);
       setResult(r);
@@ -118,6 +179,35 @@ export default function App() {
     setBusy("writing");
     try {
       setNoteText(await styleNote(base, model, { style, relation, channel }, abort.current.signal));
+    } catch (e) {
+      if ((e as Error).name !== "AbortError") setError(String((e as Error).message ?? e));
+    } finally {
+      setBusy(null);
+    }
+  }
+
+  async function runExtra() {
+    if (!extra.trim() || !result || !lastInput || busy) return;
+    abort.current = new AbortController();
+    setBusy("weighing");
+    try {
+      const r = await addOwnReading(base, lastInput, result, extra, abort.current.signal);
+      setResult(r);
+      setLastInput({ ...lastInput, own: extra });
+      setExtra("");
+    } catch (e) {
+      if ((e as Error).name !== "AbortError") setError(String((e as Error).message ?? e));
+    } finally {
+      setBusy(null);
+    }
+  }
+
+  async function runReplies() {
+    if (!result || !lastInput || busy) return;
+    abort.current = new AbortController();
+    setBusy("replies");
+    try {
+      setReplies(await waysToReply(base, model, lastInput, result, abort.current.signal));
     } catch (e) {
       if ((e as Error).name !== "AbortError") setError(String((e as Error).message ?? e));
     } finally {
@@ -170,6 +260,10 @@ export default function App() {
                 <option key={m}>{m}</option>
               ))}
             </select>
+          </label>
+          <label className="check-row">
+            <input type="checkbox" checked={readFirst} onChange={(e) => setReadFirst(e.target.checked)} />
+            Let me write my own reading first, before Gloss shows its readings
           </label>
           <label>
             Local model server
@@ -298,6 +392,16 @@ export default function App() {
               </select>
             </label>
           </div>
+          {person.trim() && (
+            <label>
+              What you know about {person.trim()} <span className="hint">optional, remembered for this name on this computer only</span>
+              <input
+                value={about}
+                onChange={(e) => setAbout(e.target.value)}
+                placeholder="For example: always brief on Slack; we get on well"
+              />
+            </label>
+          )}
           <label>
             What came before <span className="hint">optional: earlier messages, or what was happening</span>
             <textarea rows={4} value={context} onChange={(e) => setContext(e.target.value)} />
@@ -319,9 +423,15 @@ export default function App() {
               <input value={intended} onChange={(e) => setIntended(e.target.value)} />
             </label>
           )}
+          {isThem && readFirst && (
+            <label>
+              Your reading first <span className="hint">optional: what do you think {who} meant?</span>
+              <input value={own} onChange={(e) => setOwn(e.target.value)} />
+            </label>
+          )}
           <div className="row">
             <button className="primary" onClick={run} disabled={!text.trim() || !!busy}>
-              {busy ? (busy === "writing" ? "Writing possible readings..." : "Weighing them...") : "Read it"}
+              {busy === "writing" ? "Writing possible readings..." : busy === "weighing" ? "Weighing them..." : "Read it"}
             </button>
             {busy && (
               <button className="link" onClick={() => abort.current?.abort()}>
@@ -341,12 +451,12 @@ export default function App() {
                 : "Paste a message you plan to send. Gloss shows how it might come across, so you can decide whether to change anything. You do not have to."}
             </p>
           )}
-          {busy && <p className="empty">Thinking it through. This can take up to a minute on a laptop.</p>}
+          {busy && !result && <p className="empty">Thinking it through. This can take up to a minute on a laptop.</p>}
           {result && (
             <>
               <div className={`clarity clarity-${result.clarity}`}>
-                <strong>{CLARITY_TEXT[result.clarity].word}</strong>
-                <span>{CLARITY_TEXT[result.clarity].detail}</span>
+                <strong>{(isThem ? CLARITY_TEXT : CLARITY_TEXT_ME)[result.clarity].word}</strong>
+                <span>{(isThem ? CLARITY_TEXT : CLARITY_TEXT_ME)[result.clarity].detail}</span>
               </div>
               <p className="literal">
                 <span className="label">The words say</span>
@@ -361,17 +471,61 @@ export default function App() {
                         <span style={{ width: `${Math.round(r.p * 100)}%` }} />
                       </span>
                       {r.literal && <span className="face">{isThem ? "Taken at face value" : "As you mean it"}</span>}
+                      {r.own && <span className="face own">Your reading</span>}
                     </div>
                     <p>{r.meaning}</p>
                     {r.cues.length > 0 && <p className="cues">Based on: {r.cues.join("; ")}</p>}
                   </li>
                 ))}
               </ol>
+              {isThem && (
+                <div className="row add-own">
+                  <input
+                    aria-label="Add your own reading"
+                    placeholder={result.readings.some((r) => r.own) ? "Try a different reading of your own" : "None of these? Add your own reading"}
+                    value={extra}
+                    onChange={(e) => setExtra(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") runExtra();
+                    }}
+                  />
+                  <button onClick={runExtra} disabled={!extra.trim() || !!busy}>
+                    {busy === "weighing" ? "Weighing..." : "Weigh it"}
+                  </button>
+                </div>
+              )}
+              {result.boundary && (
+                <p className="boundary">
+                  <span className="label">Worth remembering</span>
+                  {result.boundary}
+                </p>
+              )}
               {result.check && (
                 <p className="check">
                   <span className="label">{isThem ? "To check, you could ask" : "If you want, you could add"}</span>
                   {result.check}
                 </p>
+              )}
+              {isThem && !replies && (
+                <div className="row">
+                  <button onClick={runReplies} disabled={!!busy}>
+                    {busy === "replies" ? "Thinking of replies..." : "Ideas for replying (optional)"}
+                  </button>
+                </div>
+              )}
+              {replies && (
+                <div className="replies">
+                  <span className="label">Ways you could reply, if you want to</span>
+                  <ul>
+                    {replies.map((x, i) => (
+                      <li key={i}>
+                        <p>{x.reply}</p>
+                        <p className="cues">How it might land: {x.might_land}</p>
+                      </li>
+                    ))}
+                  </ul>
+                  <p className="meta">These are options, not advice. Your own words are fine.</p>
+                </div>
               )}
               <div className="feedback">
                 <span>Was this helpful?</span>

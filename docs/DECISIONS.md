@@ -107,3 +107,12 @@ Dated, with the evidence. Newest last.
   sincere < 0.7, makes reading generation the bottleneck and the next work is
   the generation prompt, not the UI. High recall but low top-1 points at the
   scorer instead.
+- **E1 runs finished after the interruption.** MUStARD with the stance
+  instruction stays at chance for both sizes: 8B 0.530 [0.477, 0.580],
+  recall 0.98, precision 0.52; 4B 0.510. When the question itself names
+  sarcasm, both models say "sarcastic" to almost every TV line, with or
+  without the instruction. This supports the product's design of never asking
+  "is this sarcastic?" and instead weighing concrete readings, one of which is
+  always the plain one. It also leaves E5 (prosody) as the only route to the
+  TV-sarcasm question. Sincere minimal pairs on 4B: direct 0.832, stance 0.888
+  (the stance helps 4B on sincere items, unlike 8B: 0.976 -> 0.904).

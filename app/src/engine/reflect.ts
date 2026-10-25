@@ -27,9 +27,13 @@ export type ReflectInput = {
   channel?: string;
   /** Me mode: what the user means by it. */
   intended?: string;
+  /** What the user knows about this person, from their own private notes. */
+  about?: string;
+  /** The user's own reading, scored alongside Gloss's (never shown to the generator). */
+  own?: string;
 };
 
-export type Reading = { meaning: string; cues: string[]; p: number; literal: boolean };
+export type Reading = { meaning: string; cues: string[]; p: number; literal: boolean; own?: boolean };
 
 export type Clarity = "clear" | "some" | "high";
 
@@ -42,6 +46,8 @@ export type ReflectResult = {
   /** True when Gloss should not pick a favourite. */
   abstain: boolean;
   check: string;
+  /** Set only when the other person seems to be pushing past a "no": a reminder that the user can say no. */
+  boundary: string;
   model: string;
   ms: number;
 };
@@ -72,6 +78,8 @@ const SYSTEM_GEN = [
   "You offer possible readings of what someone meant. Many messages mean exactly what they say, so never assume a hidden meaning.",
   "Write in plain, concrete English. Be brief. Do not judge either person.",
   "Never give advice about body language, eye contact, or how to look or seem.",
+  "Never suggest talking less about an interest, hiding how you are, or acting more typical.",
+  "Read the words the way most people would take them in this situation. Never call anyone a liar: when words may not match the facts, say what the person may want instead (to be kind, to avoid trouble, to end the topic).",
 ].join(" ");
 
 // Pragmatic-stance scorer (E1b). On the E1 items with qwen3:8b it lifted
@@ -87,6 +95,7 @@ type Generated = {
   literal: string;
   readings: { meaning: string; cues: string[] }[];
   check_question: string;
+  boundary?: string;
 };
 
 const SCHEMA = {
@@ -107,6 +116,7 @@ const SCHEMA = {
       },
     },
     check_question: { type: "string" },
+    boundary: { type: "string" },
   },
   required: ["literal", "readings", "check_question"],
 };
@@ -116,6 +126,7 @@ function scene(input: ReflectInput): string {
   const lines: string[] = [
     `Roles: "I" and "me" are the person asking for help. ${input.mode === "them" ? who : input.person || "They"} is the other person.`,
   ];
+  if (input.about?.trim()) lines.push(`What I know about ${input.person?.trim() || "them"}: ${input.about.trim()}`);
   if (input.relation) lines.push(`Relationship: ${input.mode === "them" ? `${who} is my ${input.relation}` : `${input.person || "They"} is my ${input.relation}`}.`);
   if (input.channel) lines.push(`Where: ${input.channel}.`);
   if (input.context?.trim()) lines.push(`What came before:\n${input.context.trim()}`);
@@ -132,7 +143,9 @@ function generationPrompt(input: ReflectInput): string {
 Give:
 - literal: one sentence saying what the words themselves say.
 - readings: 2 to 4 different things they could have meant. The FIRST reading is the plain one: they meant exactly what they said, in its ordinary, neutral or kind sense, stated concretely. Every other reading must change what I would understand or do next (for example: they are annoyed, they are joking, they are hinting at a request). Never give two readings that mean nearly the same thing. If the situation does not genuinely support another reading, give only one alternative. Each reading is one sentence starting with "${input.person?.trim() || "They"}", says what they meant about me or the situation, and has up to 3 short cues: words or facts from the situation that support it.
-- check_question: one short, friendly, direct question I could ask them to check what they meant.`;
+If their reaction seems bigger than the situation explains, one reading can be that it is about something on their side, not about me.
+- check_question: one short, friendly, direct question I could ask them to check what they meant.
+- boundary: leave empty, unless I have already said no (or clearly do not want to) and they keep pushing, or the situation sounds unsafe. Then one calm sentence reminding me that I can say no or leave, without judging them.`;
   }
   const intended = input.intended?.trim();
   return `${s}
@@ -190,24 +203,107 @@ export async function reflect(
   const t0 = Date.now();
   onStep?.("writing");
   const gen = await json<Generated>(base, model, SYSTEM_GEN, generationPrompt(input), SCHEMA, signal);
-  const raw = gen.readings.filter((r) => r.meaning?.trim()).slice(0, 4);
+  const raw: Omit<Reading, "p">[] = gen.readings
+    .filter((r) => r.meaning?.trim())
+    .slice(0, 4)
+    .map((r, i) => ({ meaning: r.meaning.trim(), cues: r.cues ?? [], literal: i === 0 }));
+  if (input.own?.trim()) raw.push({ meaning: input.own.trim(), cues: [], literal: false, own: true });
   onStep?.("weighing");
-  const p = calibrate(await scoreOptions(base, model, input, raw.map((r) => r.meaning), undefined, signal), model);
-  const readings = raw
-    .map((r, i) => ({ meaning: r.meaning.trim(), cues: r.cues ?? [], p: p[i], literal: i === 0 }))
-    .sort((a, b) => b.p - a.p);
-  const top = readings[0]?.p ?? 0;
-  const clarity: Clarity = top >= CLEAR_AT ? "clear" : top >= ABSTAIN_BELOW ? "some" : "high";
-  return {
+  const readings = await weigh(base, model, input, raw, signal);
+  return summarise(readings, {
     literal: gen.literal,
-    readings,
-    clarity,
-    spread: normEntropy(readings.map((r) => r.p)),
-    abstain: top < ABSTAIN_BELOW,
     check: gen.check_question,
+    boundary: input.mode === "them" ? (gen.boundary ?? "").trim() : "",
     model,
     ms: Date.now() - t0,
+  });
+}
+
+async function weigh(
+  base: string,
+  model: string,
+  input: ReflectInput,
+  raw: Omit<Reading, "p">[],
+  signal?: AbortSignal,
+): Promise<Reading[]> {
+  const p = calibrate(await scoreOptions(base, model, input, raw.map((r) => r.meaning), undefined, signal), model);
+  return raw.map((r, i) => ({ ...r, p: p[i] })).sort((a, b) => b.p - a.p);
+}
+
+function summarise(
+  readings: Reading[],
+  rest: Omit<ReflectResult, "readings" | "clarity" | "spread" | "abstain">,
+): ReflectResult {
+  const top = readings[0]?.p ?? 0;
+  return {
+    ...rest,
+    readings,
+    clarity: top >= CLEAR_AT ? "clear" : top >= ABSTAIN_BELOW ? "some" : "high",
+    spread: normEntropy(readings.map((r) => r.p)),
+    abstain: top < ABSTAIN_BELOW,
   };
+}
+
+/**
+ * Add the user's own reading to an existing result and weigh all readings
+ * again. The scorer is not told which reading is the user's.
+ */
+export async function addOwnReading(
+  base: string,
+  input: ReflectInput,
+  result: ReflectResult,
+  own: string,
+  signal?: AbortSignal,
+): Promise<ReflectResult> {
+  const t0 = Date.now();
+  const raw = result.readings.filter((r) => !r.own).map(({ p: _p, ...r }) => r);
+  raw.push({ meaning: own.trim(), cues: [], literal: false, own: true });
+  const readings = await weigh(base, result.model, { ...input, own }, raw, signal);
+  return summarise(readings, { ...result, ms: result.ms + Date.now() - t0 });
+}
+
+export type Reply = { reply: string; might_land: string };
+
+const SCHEMA_REPLIES = {
+  type: "object",
+  properties: {
+    replies: {
+      type: "array",
+      minItems: 2,
+      maxItems: 3,
+      items: {
+        type: "object",
+        properties: { reply: { type: "string" }, might_land: { type: "string" } },
+        required: ["reply", "might_land"],
+      },
+    },
+  },
+  required: ["replies"],
+};
+
+/**
+ * Opt-in: two or three ways the user could respond, each with how it might
+ * land. Asked for in the focus groups (options with their likely
+ * consequences, choose-your-own-adventure). One option always checks what they
+ * meant, so the user is never pushed to act on a guess.
+ */
+export async function waysToReply(
+  base: string,
+  model: string,
+  input: ReflectInput,
+  result: ReflectResult,
+  signal?: AbortSignal,
+): Promise<Reply[]> {
+  const readings = result.readings.map((r) => `- ${r.meaning} (${Math.round(r.p * 100)}%)`).join("\n");
+  const user = `${scene(input)}
+
+Possible readings of what ${input.person?.trim() || "they"} meant:
+${readings}
+
+Give 2 or 3 different ways I could respond, if I want to respond at all. Keep each reply short and in plain, direct words I might use myself. One must simply ask what they meant or check. If not replying, or replying later, is reasonable, one can be that. Do not tell me to apologise unless I clearly did something wrong. Do not tell me to change how I come across.
+For each, might_land: one sentence on how ${input.person?.trim() || "they"} might take it, given the readings above.`;
+  const r = await json<{ replies: Reply[] }>(base, model, SYSTEM_GEN, user, SCHEMA_REPLIES, signal);
+  return r.replies.filter((x) => x.reply?.trim()).slice(0, 3);
 }
 
 const SCHEMA_NOTE = {
