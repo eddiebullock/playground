@@ -40,6 +40,13 @@ async function post<T>(base: string, path: string, body: unknown, signal?: Abort
 // memory soon after the user stops.
 const KEEP_ALIVE = "15m";
 
+// Sampling seed for generation. Fixed so runs repeat; scripts that measure
+// run-to-run noise change it with setSeed.
+let SEED = 0;
+export function setSeed(seed: number): void {
+  SEED = seed;
+}
+
 /**
  * Structured output that matches a JSON schema. With onText, the reply is
  * streamed and onText gets the text so far after each chunk, so the caller
@@ -64,7 +71,7 @@ export async function json<T>(
     think: false,
     format: schema,
     keep_alive: KEEP_ALIVE,
-    options: { temperature: 0.3, seed: 0, num_predict: 700 },
+    options: { temperature: 0.3, seed: SEED, num_predict: 700 },
   };
   if (!onText) {
     const r = await post<{ message: { content: string } }>(base, "/api/chat", body, signal);

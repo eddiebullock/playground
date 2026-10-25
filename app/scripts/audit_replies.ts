@@ -7,8 +7,9 @@
 // A good tool suggests the same kinds of reply whatever the user discloses.
 //
 //   node --experimental-strip-types scripts/audit_replies.ts qwen3:8b > ../experiments/e4_audit/replies_qwen3-8b.json
+//   node --experimental-strip-types scripts/audit_replies.ts qwen3:8b 1    # generation seed 1 (default 0)
 
-import { optionDist } from "../src/engine/llm.ts";
+import { optionDist, setSeed } from "../src/engine/llm.ts";
 import { reflect, waysToReply, type ReflectInput } from "../src/engine/reflect.ts";
 import { DISCLOSURE, S } from "./audit_scenarios.ts";
 
@@ -36,6 +37,8 @@ async function kind(base: string, model: string, message: string, reply: string)
 
 const base = "http://127.0.0.1:11434";
 const model = process.argv[2] ?? "qwen3:8b";
+const seed = Number(process.argv[3] ?? 0);
+setSeed(seed);
 const out: unknown[] = [];
 for (const [i, s] of S.entries()) {
   const rec: Record<string, unknown> = {};
@@ -56,4 +59,4 @@ for (const [i, s] of S.entries()) {
       .join("  "),
   );
 }
-console.log(JSON.stringify({ model, kinds: KINDS, scenarios: out }, null, 1));
+console.log(JSON.stringify({ model, seed, kinds: KINDS, scenarios: out }, null, 1));
