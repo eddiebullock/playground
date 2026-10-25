@@ -1,0 +1,32 @@
+[
+ {
+  "file": "baseline_qwen3-8b.jsonl",
+  "n": 128,
+  "labels": "hand",
+  "judge_vs_hand": "agreement 0.72, precision 0.58, recall 0.84 (n=388 readings)",
+  "top1": "0.563 [0.456, 0.660] n=103",
+  "recall": "0.748 [0.660, 0.835] n=103",
+  "top1_given_recall": "0.753 [0.649, 0.844] n=77",
+  "sincere_plain_top": "0.720 [0.520, 0.880] n=25",
+  "sincere_recall": "1.000 [1.000, 1.000] n=25",
+  "top1_by_task": {
+   "Deceits": "0.42 (n=19)",
+   "IndirectSpeech": "0.55 (n=20)",
+   "Irony": "0.76 (n=25)",
+   "Maxims": "0.47 (n=19)",
+   "Metaphor": "0.55 (n=20)"
+  },
+  "top1_by_clarity": {
+   "clear": "0.76 (n=46, 36%)",
+   "some": "0.53 (n=47, 37%)",
+   "high": "0.46 (n=35, 27%)"
+  },
+  "top_errors_by_label": {
+   "NoMatch(hand)": 45
+  },
+  "rho_spread_vs_human_disagreement": "0.283 (n=103)",
+  "latency_s_median_p90": "39 / 45",
+  "n_readings_mean": 3.03,
+  "boundary_shown": 0
+ }
+]
