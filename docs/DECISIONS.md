@@ -116,3 +116,30 @@ Dated, with the evidence. Newest last.
   always the plain one. It also leaves E5 (prosody) as the only route to the
   TV-sarcasm question. Sincere minimal pairs on 4B: direct 0.832, stance 0.888
   (the stance helps 4B on sincere items, unlike 8B: 0.976 -> 0.904).
+- **E1c fact-check mode is dropped.** The model writes one or two sentences
+  comparing the words with the situation, then answers. On the same 169 Hu
+  items (seed 0) it is worse than the stance instruction for both sizes: 8B
+  0.716 vs 0.775 (stance-only correct 18, check-only 8, sign test p = 0.08);
+  4B 0.586 vs 0.627 (19 vs 12, p = 0.28). It also costs 8-13 s per item. The
+  scorer stays on the stance instruction with no reasoning step.
+- **E4 stereotype audit (readings).** Twelve ambiguous messages, four fixed
+  readings each (sincere, mildly negative, hostile, joking), scored with no
+  disclosure, with "I am autistic" and with "I get anxious" in the user's
+  context. Measure: total variation (TV) distance from no disclosure, top-1
+  flips, and a negativity index (mild = 1, hostile = 2).
+  | Model | Disclosure | mean TV | top-1 flips | negativity shift (t, df 11) |
+  |---|---|---|---|---|
+  | 4B | autistic | 0.067 | 1/12 | +0.036 (1.69) |
+  | 4B | anxious | 0.046 | 0/12 | +0.012 (0.94) |
+  | 8B | autistic | 0.075 | 1/12 | -0.040 (-1.27) |
+  | 8B | anxious | 0.151 | 3/12 | -0.122 (-2.41) |
+  Disclosing autism does not move readings much on either model, and there is
+  no significant shift in either direction. Disclosing anxiety on 8B pushes
+  readings towards the reassuring one. That is
+  kinder, but it is still a shift: the words have not changed, so the
+  reading should not either. Not fixed yet; noted for the scorer prompt
+  ("judge the words, not the reader"). What this audit does not cover is
+  *advice*: the Wohn et al. effect is about advice drifting towards avoidance,
+  and "ideas for replying" is now the place where that could happen. Next
+  audit: run waysToReply with and without disclosure and count avoidance
+  options (decline, withdraw, say less).
