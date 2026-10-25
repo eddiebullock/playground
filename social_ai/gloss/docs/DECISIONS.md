@@ -358,3 +358,36 @@ Dated, with the evidence. Newest last.
   weigh readings, then re-run this audit (expect TV near 0 by construction
   for that field) and check what free-text disclosures in "what came
   before" still do.
+- **Minimal pairs across three phenomena (64 pairs: 25 irony, 20 indirect
+  requests, 19 deceits; pairs written by Claude, not yet human-validated;
+  `experiments/e1_pragmatics/sdt.py`, `results/sdt_summary.json`).**
+  Hypothesis (from the irony pairs): the literal tendency is a criterion
+  effect everywhere, and the stance prompt moves the criterion, not d'.
+  | Model / prompt | phenomenon | acc non-literal | acc sincere | d' | c (+ = literal) |
+  |---|---|---|---|---|---|
+  | 8B direct | Irony | 0.56 | 0.96 | 2.21 | **+0.96** |
+  | 8B direct | Indirect | 0.85 | 0.75 | 1.60 | -0.17 |
+  | 8B direct | Deceits | 0.74 | 0.74 | 1.20 | 0.00 |
+  | 8B stance | Irony | 0.84 | 0.92 | 2.25 | +0.18 |
+  | 8B stance | Indirect | 0.90 | 0.65 | 1.55 | -0.41 |
+  | 8B stance | Deceits | 0.90 | **0.47** | 1.09 | **-0.61 [-1.21, -0.14]** |
+  | 4B direct | All 64 | 0.53 | 0.83 | 1.18 | +0.40 |
+  | 4B stance | All 64 | 0.69 | 0.83 | 1.47 | +0.25 |
+  **Partly confirmed, and more interesting than predicted.** d' barely moves
+  with the prompt in any phenomenon (8B all pairs 1.51 -> 1.65). But the
+  literal bias is specific to irony: on indirect requests and deceits 8B is
+  already unbiased when asked directly, and the stance prompt pushes it into a
+  non-literal bias. On sincere deceit pairs (the person is telling the truth)
+  stance-prompted 8B picks the deceptive or excusing motive on 53% of items.
+  So a single "people often don't mean what they say" instruction fixes
+  irony by moving a criterion that is, for other phenomena, already in the
+  right place. For Paper 1, the headline becomes: criteria are
+  phenomenon-specific, prompts move them globally, and sensitivity is the
+  stable property. **Product implication (Gloss scorer uses the stance
+  prompt):** risk of over-reading truthful statements as white lies or
+  hints. The E4 sincere controls were irony-only, so this was never tested at
+  product level. Morning: add deceit and indirect-request sincere versions to
+  the product eval, and test a phenomenon-neutral stance wording on the odd
+  half. Caveat: the subagent flagged deceit pairs 11, 16 and 19 as weaker
+  (the non-literal motive is unnecessary rather than impossible); validate
+  before claiming.
