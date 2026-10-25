@@ -391,3 +391,13 @@ Dated, with the evidence. Newest last.
   half. Caveat: the subagent flagged deceit pairs 11, 16 and 19 as weaker
   (the non-literal motive is unnecessary rather than impossible); validate
   before claiming.
+- **Write more, show fewer (E4_WIDE=6, prompt v2), development (odd) half,
+  blind labels by a fresh Claude labeller.** Hypothesis: recall rises, top-1
+  does not fall. Allowed six, qwen3:8b wrote 4 readings on 43 items, 5 on 18,
+  3 on 3; only 18 readings were hidden. Results (51 Hu + 13 sincere):
+  top-1 0.608 [0.471, 0.745], recall 0.765, top-1 when written 0.795,
+  sincere plain top 0.69. Against the current engine on the same items:
+  7 better, 4 worse (sign test p = 0.55). Provisional only: it mixes prompt
+  v2 and the width change, and a new labeller. The clean test is E8 (same
+  engine with and without width, external items). A relabel of the old odd
+  sheet by a second fresh labeller measures labeller drift.

@@ -1,0 +1,657 @@
+{
+"c0000": {
+"run": "qwen3-8b_v2wide",
+"id": "IndirectSpeech:19",
+"perm": [
+3,
+2,
+1,
+0
+]
+},
+"c0001": {
+"run": "qwen3-8b_v2wide",
+"id": "Metaphor:15",
+"perm": [
+1,
+3,
+2,
+0,
+4
+]
+},
+"c0002": {
+"run": "qwen3-8b_v2wide",
+"id": "Irony:21",
+"perm": [
+2,
+3,
+1,
+0
+]
+},
+"c0003": {
+"run": "qwen3-8b_v2wide",
+"id": "IndirectSpeech:5",
+"perm": [
+1,
+2,
+0,
+3
+]
+},
+"c0004": {
+"run": "qwen3-8b_v2wide",
+"id": "IndirectSpeech:9",
+"perm": [
+0,
+1,
+3,
+2
+]
+},
+"c0005": {
+"run": "qwen3-8b_v2wide",
+"id": "Deceits:19",
+"perm": [
+1,
+0,
+2
+]
+},
+"c0006": {
+"run": "qwen3-8b_v2wide",
+"id": "Sincere:1",
+"perm": [
+3,
+1,
+4,
+0,
+2
+]
+},
+"c0007": {
+"run": "qwen3-8b_v2wide",
+"id": "Irony:19",
+"perm": [
+1,
+0,
+4,
+3,
+2
+]
+},
+"c0008": {
+"run": "qwen3-8b_v2wide",
+"id": "IndirectSpeech:3",
+"perm": [
+2,
+1,
+0,
+3
+]
+},
+"c0009": {
+"run": "qwen3-8b_v2wide",
+"id": "Metaphor:3",
+"perm": [
+4,
+1,
+3,
+2,
+0
+]
+},
+"c0010": {
+"run": "qwen3-8b_v2wide",
+"id": "Maxims:1",
+"perm": [
+3,
+1,
+2,
+0
+]
+},
+"c0011": {
+"run": "qwen3-8b_v2wide",
+"id": "Maxims:19",
+"perm": [
+1,
+2,
+3,
+0
+]
+},
+"c0012": {
+"run": "qwen3-8b_v2wide",
+"id": "Deceits:9",
+"perm": [
+2,
+3,
+1,
+0
+]
+},
+"c0013": {
+"run": "qwen3-8b_v2wide",
+"id": "Metaphor:1",
+"perm": [
+0,
+4,
+1,
+2,
+3
+]
+},
+"c0014": {
+"run": "qwen3-8b_v2wide",
+"id": "Sincere:7",
+"perm": [
+2,
+3,
+4,
+1,
+0
+]
+},
+"c0015": {
+"run": "qwen3-8b_v2wide",
+"id": "Deceits:13",
+"perm": [
+0,
+1,
+3,
+2
+]
+},
+"c0016": {
+"run": "qwen3-8b_v2wide",
+"id": "Sincere:15",
+"perm": [
+2,
+0,
+1,
+3
+]
+},
+"c0017": {
+"run": "qwen3-8b_v2wide",
+"id": "IndirectSpeech:7",
+"perm": [
+0,
+1,
+3,
+2
+]
+},
+"c0018": {
+"run": "qwen3-8b_v2wide",
+"id": "Maxims:11",
+"perm": [
+0,
+2,
+1,
+3
+]
+},
+"c0019": {
+"run": "qwen3-8b_v2wide",
+"id": "IndirectSpeech:13",
+"perm": [
+0,
+1,
+2,
+3
+]
+},
+"c0020": {
+"run": "qwen3-8b_v2wide",
+"id": "Irony:5",
+"perm": [
+1,
+2,
+0
+]
+},
+"c0021": {
+"run": "qwen3-8b_v2wide",
+"id": "Sincere:11",
+"perm": [
+3,
+0,
+1,
+2
+]
+},
+"c0022": {
+"run": "qwen3-8b_v2wide",
+"id": "Metaphor:9",
+"perm": [
+4,
+2,
+1,
+3,
+0
+]
+},
+"c0023": {
+"run": "qwen3-8b_v2wide",
+"id": "Irony:3",
+"perm": [
+0,
+3,
+4,
+2,
+1
+]
+},
+"c0024": {
+"run": "qwen3-8b_v2wide",
+"id": "Sincere:9",
+"perm": [
+3,
+1,
+0,
+2
+]
+},
+"c0025": {
+"run": "qwen3-8b_v2wide",
+"id": "Irony:11",
+"perm": [
+0,
+1,
+3,
+2
+]
+},
+"c0026": {
+"run": "qwen3-8b_v2wide",
+"id": "Deceits:1",
+"perm": [
+2,
+0,
+1,
+3
+]
+},
+"c0027": {
+"run": "qwen3-8b_v2wide",
+"id": "Maxims:5",
+"perm": [
+0,
+3,
+1,
+2
+]
+},
+"c0028": {
+"run": "qwen3-8b_v2wide",
+"id": "Irony:17",
+"perm": [
+3,
+0,
+4,
+2,
+1
+]
+},
+"c0029": {
+"run": "qwen3-8b_v2wide",
+"id": "IndirectSpeech:15",
+"perm": [
+0,
+2,
+3,
+1
+]
+},
+"c0030": {
+"run": "qwen3-8b_v2wide",
+"id": "Irony:7",
+"perm": [
+2,
+1,
+0,
+3
+]
+},
+"c0031": {
+"run": "qwen3-8b_v2wide",
+"id": "Sincere:19",
+"perm": [
+4,
+0,
+1,
+3,
+2
+]
+},
+"c0032": {
+"run": "qwen3-8b_v2wide",
+"id": "IndirectSpeech:1",
+"perm": [
+1,
+2,
+0,
+3
+]
+},
+"c0033": {
+"run": "qwen3-8b_v2wide",
+"id": "Irony:25",
+"perm": [
+0,
+2,
+3,
+1
+]
+},
+"c0034": {
+"run": "qwen3-8b_v2wide",
+"id": "Metaphor:11",
+"perm": [
+0,
+3,
+2,
+4,
+1
+]
+},
+"c0035": {
+"run": "qwen3-8b_v2wide",
+"id": "Metaphor:17",
+"perm": [
+0,
+1,
+2,
+4,
+3
+]
+},
+"c0036": {
+"run": "qwen3-8b_v2wide",
+"id": "Deceits:7",
+"perm": [
+1,
+2,
+0,
+3
+]
+},
+"c0037": {
+"run": "qwen3-8b_v2wide",
+"id": "Metaphor:13",
+"perm": [
+3,
+1,
+0,
+2
+]
+},
+"c0038": {
+"run": "qwen3-8b_v2wide",
+"id": "Maxims:3",
+"perm": [
+1,
+0,
+2,
+3
+]
+},
+"c0039": {
+"run": "qwen3-8b_v2wide",
+"id": "Sincere:13",
+"perm": [
+2,
+0,
+3,
+1
+]
+},
+"c0040": {
+"run": "qwen3-8b_v2wide",
+"id": "Sincere:3",
+"perm": [
+1,
+2,
+3,
+0
+]
+},
+"c0041": {
+"run": "qwen3-8b_v2wide",
+"id": "Sincere:23",
+"perm": [
+2,
+0,
+4,
+1,
+3
+]
+},
+"c0042": {
+"run": "qwen3-8b_v2wide",
+"id": "Maxims:7",
+"perm": [
+0,
+2,
+3,
+1
+]
+},
+"c0043": {
+"run": "qwen3-8b_v2wide",
+"id": "Metaphor:7",
+"perm": [
+3,
+2,
+0,
+1
+]
+},
+"c0044": {
+"run": "qwen3-8b_v2wide",
+"id": "Sincere:17",
+"perm": [
+3,
+0,
+2,
+1,
+4
+]
+},
+"c0045": {
+"run": "qwen3-8b_v2wide",
+"id": "Deceits:5",
+"perm": [
+2,
+1,
+3,
+0
+]
+},
+"c0046": {
+"run": "qwen3-8b_v2wide",
+"id": "Deceits:11",
+"perm": [
+1,
+2,
+0,
+3
+]
+},
+"c0047": {
+"run": "qwen3-8b_v2wide",
+"id": "Irony:13",
+"perm": [
+3,
+2,
+1,
+0
+]
+},
+"c0048": {
+"run": "qwen3-8b_v2wide",
+"id": "Maxims:9",
+"perm": [
+0,
+3,
+1,
+2
+]
+},
+"c0049": {
+"run": "qwen3-8b_v2wide",
+"id": "Sincere:21",
+"perm": [
+3,
+2,
+1,
+0
+]
+},
+"c0050": {
+"run": "qwen3-8b_v2wide",
+"id": "Irony:23",
+"perm": [
+0,
+2,
+3,
+1
+]
+},
+"c0051": {
+"run": "qwen3-8b_v2wide",
+"id": "Deceits:3",
+"perm": [
+0,
+1,
+2,
+3
+]
+},
+"c0052": {
+"run": "qwen3-8b_v2wide",
+"id": "Metaphor:5",
+"perm": [
+3,
+4,
+2,
+1,
+0
+]
+},
+"c0053": {
+"run": "qwen3-8b_v2wide",
+"id": "Irony:1",
+"perm": [
+1,
+2,
+0
+]
+},
+"c0054": {
+"run": "qwen3-8b_v2wide",
+"id": "Sincere:5",
+"perm": [
+1,
+3,
+2,
+0
+]
+},
+"c0055": {
+"run": "qwen3-8b_v2wide",
+"id": "IndirectSpeech:17",
+"perm": [
+1,
+3,
+0,
+2
+]
+},
+"c0056": {
+"run": "qwen3-8b_v2wide",
+"id": "Sincere:25",
+"perm": [
+0,
+3,
+2,
+1
+]
+},
+"c0057": {
+"run": "qwen3-8b_v2wide",
+"id": "IndirectSpeech:11",
+"perm": [
+2,
+0,
+3,
+1
+]
+},
+"c0058": {
+"run": "qwen3-8b_v2wide",
+"id": "Maxims:17",
+"perm": [
+0,
+3,
+2,
+1
+]
+},
+"c0059": {
+"run": "qwen3-8b_v2wide",
+"id": "Irony:9",
+"perm": [
+0,
+1,
+3,
+2
+]
+},
+"c0060": {
+"run": "qwen3-8b_v2wide",
+"id": "Deceits:17",
+"perm": [
+4,
+1,
+2,
+3,
+0
+]
+},
+"c0061": {
+"run": "qwen3-8b_v2wide",
+"id": "Metaphor:19",
+"perm": [
+2,
+0,
+4,
+3,
+1
+]
+},
+"c0062": {
+"run": "qwen3-8b_v2wide",
+"id": "Maxims:15",
+"perm": [
+0,
+4,
+2,
+3,
+1
+]
+},
+"c0063": {
+"run": "qwen3-8b_v2wide",
+"id": "Irony:15",
+"perm": [
+1,
+0,
+2,
+3
+]
+}
+}
