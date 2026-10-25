@@ -1,5 +1,7 @@
 # Gloss: master plan
 
+> State at the 2026-10-25 restart and the interrupted job: see `docs/HANDOVER.md`.
+
 Working name kept from the October concept scenes. A gloss is a note in the
 margin that explains what a passage means. That is the product.
 
