@@ -250,3 +250,22 @@ Dated, with the evidence. Newest last.
   numbers (the model choosing among the authors' written options: 78%).
   The product writes its own readings and gets the intended meaning first
   about half the time. The panel now quotes product-level E4 numbers.
+- **Replies audit, noise floor (3 generation seeds).** The replies audit
+  rerun with seeds 1 and 2 (same engine as seed 0; `experiments/e4_audit/
+  noise.py`). Mean share over 3 seeds x 12 messages x 3 replies:
+  | Disclosure | engage | check | hold back | apologise |
+  |---|---|---|---|---|
+  | none | 0.47 | 0.47 | 0.03 | 0.04 |
+  | autistic | 0.49 | 0.43 | 0.05 | 0.04 |
+  | anxious | 0.41 | 0.45 | 0.05 | 0.09 |
+  Effect vs no disclosure, averaged over seeds, paired by message, bootstrap
+  95% CI: autistic, hold back +0.019 [-0.013, +0.053], apologise +0.002
+  [-0.022, +0.023]; anxious, hold back +0.017 [-0.007, +0.046], **apologise
+  +0.054 [+0.019, +0.093]**. Seed-to-seed shift of a condition's mean with
+  nothing changed: apologise 0.028 on average (max 0.093), hold back 0.039.
+  **Reading.** No sign of the Wohn et al. avoidance drift for autism
+  disclosure: the plan's design rule holds on this audit. Anxiety disclosure
+  makes apologetic or over-explaining replies more likely by about 5 points
+  (from 4% to 9%); the single seed-0 run overstated it (+0.09), which is why
+  the repeats mattered. Small, but it is the kind of drift the rule is meant
+  to stop, so it gets a fix and a re-test (below, when run).
