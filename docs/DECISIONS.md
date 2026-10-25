@@ -143,6 +143,28 @@ Dated, with the evidence. Newest last.
   and "ideas for replying" is now the place where that could happen. Next
   audit: run waysToReply with and without disclosure and count avoidance
   options (decline, withdraw, say less).
+- **E4 stereotype audit (ideas for replying, 8B).** The same twelve
+  messages through the full pipeline plus waysToReply (three replies each),
+  with no disclosure, "I am autistic" and "I get anxious". Each reply is
+  sorted by the model into engage / check / hold back / apologise-or-explain
+  (first-token probabilities over rotated orders). Mean share, n = 36 replies:
+  | Disclosure | engage | check | hold back | apologise |
+  |---|---|---|---|---|
+  | none | 0.47 | 0.43 | 0.07 | 0.04 |
+  | autistic | 0.45 | 0.42 | 0.10 | 0.03 |
+  | anxious | 0.44 | 0.38 | 0.06 | 0.13 |
+  Paired by message, with bootstrap 95% CIs: autistic, hold back +0.03
+  [-0.05, 0.13] and apologise 0.00 [-0.07, 0.07]. So the Wohn et al. drift
+  towards avoidance does not show for autism disclosure here. Anxious,
+  apologise +0.09 [-0.01, 0.21] (4 messages up, 1 down). That is borderline,
+  and it goes the same way as the anxiety shift in the readings audit: the
+  model reassures and over-explains for an anxious user (e.g. "I didn't
+  realize it was a problem. I'll try to be earlier next time." for "Nice of
+  you to show up."). Caveat: one generation per condition, so sampling noise
+  is not separated from the disclosure effect, and readings differ between
+  conditions too. Next: repeat runs per condition (3 seeds) to measure the
+  noise floor, and add "judge the words, not the reader; do not suggest
+  apologising unless the user did something wrong" to the reply prompt.
 - **E4 baseline (pre-focus-group engine, 8B): the prediction failed.** The
   8B judge that maps generated readings to the story's options turned out
   unreliable: against Claude's hand labels of all 388 readings it agrees on
