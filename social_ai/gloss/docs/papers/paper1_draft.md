@@ -19,13 +19,17 @@ On such benchmarks a model that is simply biased towards literal readings is
 indistinguishable from one that cannot detect non-literal intent. We
 introduce minimal-pair sincere controls for the Hu et al. (2023)
 pragmatics items: the same remark, with the situation rewritten so that it
-is meant literally. Signal-detection analysis across [ON: 5] open models
-from 3 families shows that [ON: the literal tendency is mainly a criterion
-effect]: on irony, qwen3:8b distinguishes ironic from sincere versions almost
-perfectly (paired AUC 0.96), yet chooses the literal reading for half of the
-ironic ones. A one-line instruction that people often mean something other
-than their words moves the criterion from c = 0.96 to 0.18 with no change in
-sensitivity (d' 2.21 vs 2.25), raising irony accuracy from 0.51 to 0.85. The
+is meant literally, for irony, indirect requests and deceits (64 pairs).
+Signal-detection analysis across [ON: 5] open models from 3 families shows
+that the literal tendency is a criterion effect specific to irony: qwen3:8b
+distinguishes ironic from sincere versions almost perfectly (paired AUC
+0.96), yet chooses the literal reading for half of the ironic ones. A
+one-line instruction that people often mean something other than their
+words moves the irony criterion from c = 0.96 to 0.18 with no change in
+sensitivity (d' 2.21 vs 2.25), raising irony accuracy from 0.51 to 0.85. On
+indirect requests and deceits, where the model's criterion was already
+neutral, the same instruction creates a non-literal bias: truthful
+statements are read as deceptive on 53% of sincere deceit pairs. The
 same lens explains a second artefact. When the question names the construct
 ("is this sarcastic?"), models answer yes to almost every line in MUStARD.
 After temperature scaling, abstaining below a calibrated 0.7 gives 0.91
@@ -108,12 +112,25 @@ qwen3:8b by phenomenon, direct -> stance: Irony 0.51 -> 0.85; Indirect
 | qwen3:4b stance | 0.64 | 0.96 | 1.92 [1.33, 2.74] | 0.61 [0.23, 1.06] | 1.00 |
 | qwen3:8b direct | 0.56 | 0.96 | 2.21 [1.73, 2.74] | 0.96 [0.70, 1.21] | 0.96 |
 | qwen3:8b stance | 0.84 | 0.92 | 2.25 [1.62, 3.37] | 0.18 [-0.25, 0.70] | 1.00 |
-[ON: all 64 pairs, by phenomenon, 5 models.]
+All 64 pairs by phenomenon, qwen3:8b (2026-10-25 overnight):
+| Prompt | phenomenon (pairs) | acc non-literal | acc sincere | d' | c |
+|---|---|---|---|---|---|
+| direct | Irony (25) | 0.56 | 0.96 | 2.21 | +0.96 |
+| direct | Indirect requests (20) | 0.85 | 0.75 | 1.60 | -0.17 |
+| direct | Deceits (19) | 0.74 | 0.74 | 1.20 | 0.00 |
+| stance | Irony | 0.84 | 0.92 | 2.25 | +0.18 |
+| stance | Indirect requests | 0.90 | 0.65 | 1.55 | -0.41 |
+| stance | Deceits | 0.90 | 0.47 | 1.09 | -0.61 [-1.21, -0.14] |
+| direct / stance | All 64 | 0.70 / 0.88 | 0.83 / 0.70 | 1.51 / 1.65 | +0.23 / -0.30 |
+qwen3:4b, all 64: d' 1.18 -> 1.47, c +0.40 -> +0.25. [ON: llama3.1:8b,
+gemma3:4b, gemma3:12b.]
 
-Reading: for 8B the instruction is a pure criterion shift. For 4B it moves
-both, but the 4B criterion stays literal. Prediction for the overnight data:
-the criterion effect generalises across families; sensitivity grows with
-size.
+Reading: the prompt barely changes sensitivity anywhere. The literal bias is
+specific to irony; for indirect requests and deceits the direct criterion is
+already near neutral, and the global instruction pushes it past neutral, so
+that truthful statements are read as deceptive or excusing on half the
+sincere deceit pairs. Criteria are phenomenon-specific; a prompt moves them
+all together. This is the paper's main claim.
 
 ### 4.3 Naming the construct
 MUStARD, "is this line sarcastic or sincere?": accuracy 0.51-0.54 for every

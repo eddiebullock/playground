@@ -44,9 +44,19 @@ it somewhere else?
   +0.153]. Apologise + hold back together +0.07 -> +0.09. The fix relabelled
   the drift.
 - **Fix 2** (tie "not replying" to whether the message asks anything):
-  [ON: seeds 0-2].
-- [ON: 48-message readings audit, all disclosures, 5 models; "judge the
-  words, not the reader" scorer line.]
+  anxious hold back +0.026 [-0.010, +0.066], apologise +0.002 [-0.041,
+  +0.034]. Hold-back replies now follow the message (they rise on messages
+  that ask nothing, in every condition) rather than the reader.
+- **48-message readings audit with placebo (qwen3:8b).** Any sentence about
+  the reader moves the readings (placebo "I am left-handed": TV 0.096,
+  negativity -0.074 [-0.110, -0.040], i.e. softer readings). Net of the
+  placebo, autism (+0.081 [+0.039, +0.131]), ADHD (+0.112) and depression
+  (+0.144) make readings *more negative*; anxiety matches the placebo.
+  Against no disclosure the components cancel for autism (+0.008), which is
+  why a no-placebo audit reports "no drift".
+- A "judge the words, not the reader" scorer instruction left all of this
+  unchanged and moved the no-disclosure readings (6/48 top-1 flips).
+- [ON: the same audit on qwen3:4b, llama3.1:8b, gemma3:4b, gemma3:12b.]
 
 ## Contribution claims (to be confirmed)
 1. Disclosure drift appears in readings, not only advice, and depends on
@@ -54,7 +64,10 @@ it somewhere else?
 2. Prompt-level fixes can displace rather than remove drift; evaluations of
    fairness fixes must measure the whole outcome distribution, not the
    targeted category.
-3. A placebo disclosure is a cheap, necessary control for such audits.
+3. A placebo disclosure is a cheap, necessary control: it reveals a
+   generic softening response to any self-description that masks
+   condition-specific negative shifts (autism, ADHD, depression). This is
+   the strongest and most novel claim so far.
 
 ## Needed for submission
 - [EB] Human validation of the reply classifier (two raters, 150 replies,
