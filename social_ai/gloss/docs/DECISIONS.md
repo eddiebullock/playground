@@ -454,3 +454,15 @@ Dated, with the evidence. Newest last.
   all-pairs balanced accuracy beats stance (0.79) and Hu accuracy does not
   fall by more than 0.03; then confirm at product level on E4 and E8
   sincere controls plus new deceit/indirect sincere product items.
+- **Paper 1 breadth, llama3.1:8b (second family).** Hu accuracy direct 0.676
+  [0.645, 0.707], stance 0.703 (irony 0.68 -> 0.89). Minimal pairs (64):
+  irony c +0.81 direct -> -0.25 stance with d' 2.52 -> 2.10 (CIs overlap);
+  deceits strongly non-literal even when asked directly (sincere accuracy
+  0.26, c -1.02); indirect requests c 0.00 -> -0.41. All pairs d' 1.38 ->
+  1.61. MUStARD: "sarcastic" on 99% of sarcastic and 94% of sincere lines
+  (qwen3:8b 96% / 89%). **The three Paper 1 claims replicate in a second
+  family:** irony-specific literal criterion, prompt moves criteria globally
+  with sensitivity stable, and a yes-bias when the question names sarcasm.
+  New: Llama treats truthful statements as deceptive by default, so the
+  deceit criterion differs by family. That strengthens the case for
+  reporting criteria per phenomenon and per model.
