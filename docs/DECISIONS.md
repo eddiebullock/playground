@@ -203,3 +203,50 @@ Dated, with the evidence. Newest last.
   the UI. Caveat: Claude has now seen failures across all items, so any
   prompt change made after this is checked on the even-numbered items only
   (odd = development) and should be confirmed on new items.
+- **E4 blind labels, current engine, and generation prompt v2.** All
+  readings from three runs were hand-labelled blind (`experiments/e4_product/
+  blind.py`: runs mixed, cases shuffled, readings shuffled within a case, no
+  engine, rank or probability shown). Label rule: 1 if the reading gives the
+  speaker the intended belief or motive, even when framed as hidden or
+  polite; for indirect requests the reading must contain the request.
+  Test-retest: the 388 baseline readings relabelled blind agree with the
+  earlier unblinded labels on 0.93 (kappa 0.85); one rater, so this is
+  consistency, not validity. The 8B judge still agrees with hand labels on
+  only 0.74 (precision 0.62).
+  Current engine (after the focus-group changes) against the baseline, all
+  128 items, blind labels:
+  | Measure | Baseline | Current |
+  |---|---|---|
+  | Top reading = intended (103 Hu) | 0.534 [0.437, 0.631] | 0.495 [0.398, 0.592] |
+  | Some reading = intended | 0.738 | 0.680 |
+  | Sincere: plain reading top (25) | 0.720 | 0.720 |
+  | Sincere: plain reading offered | 0.960 | 0.960 |
+  | Clarity "Fairly clear": top-1 | 0.74 (36% of items) | 0.67 (30%) |
+  | Spread vs human disagreement (rho) | 0.28 | 0.30 |
+  Paired on the odd half: no significant difference (top-1 5 vs 3, recall
+  6 vs 1, p = 0.13). The focus-group changes did not cost or gain accuracy;
+  generation is still the bottleneck.
+  **Prompt v2** (one generic Gricean instruction: read what was not said;
+  if the reply dodges, or gives far more or less detail than asked, one
+  reading must say what that suggests; say plainly what a figure of speech
+  means; `experiments/e4_product/gen_v2.diff`). Written from the odd-half
+  failures, tested on the held-out even half (52 Hu + 12 sincere):
+  | Measure (even half) | Baseline | Current | v2 |
+  |---|---|---|---|
+  | Top-1 (52 Hu) | 0.481 | 0.442 [0.308, 0.577] | **0.558** [0.423, 0.692] |
+  | Recall | 0.712 | 0.692 | 0.769 |
+  | Maxims top-1 (10) | 0.30 | 0.30 | 0.50 |
+  | Sincere plain top (12) | 0.83 | 0.67 | 0.75 |
+  | Sincere plain offered | 1.00 | 1.00 | 1.00 |
+  v2 vs current, paired: top-1 10 vs 4 (sign test p = 0.18), recall 9 vs 5
+  (p = 0.42). **Decision: adopt v2.** It moves every Hu measure the right
+  way on held-out items, costs nothing on the sincere controls, and is
+  generic rather than item-specific. The gain is not significant at this n,
+  so it is a trend to confirm on new items, not a result to claim. Still
+  well below the pre-registered 0.65-0.75; the next lever is the remaining
+  misses (white-lie motives, metaphors glossed near-literally, speaker
+  confusion in three-person stories).
+  **Consequence for the app.** The "How good is it?" panel quoted E1
+  numbers (the model choosing among the authors' written options: 78%).
+  The product writes its own readings and gets the intended meaning first
+  about half the time. The panel now quotes product-level E4 numbers.

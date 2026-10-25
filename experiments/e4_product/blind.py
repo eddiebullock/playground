@@ -1,7 +1,7 @@
 """Blind hand-labelling for E4: mix readings from several runs into one sheet.
 
   python blind.py make sheet_dir results/a.jsonl results/b.jsonl ...
-  python blind.py split sheet_dir labels.txt
+  python blind.py split sheet_dir labels.txt   # merges into existing files
 
 `make` writes sheet_dir/sheet.txt (cases in random order, readings within a
 case in random order, no engine name, no rank or probability) and
@@ -61,8 +61,12 @@ def split(sheet_dir, labels):
     print("unlabelled cases:", len(missing))
     (HERE / "hand_labels").mkdir(exist_ok=True)
     for run, rows in out.items():
-        (HERE / "hand_labels" / f"{run}_blind.txt").write_text("\n".join(rows) + "\n")
-        print(run, len(rows))
+        # Merge with labels from other sheets (e.g. the odd and even halves).
+        path = HERE / "hand_labels" / f"{run}_blind.txt"
+        merged = dict(l.split() for l in open(path) if l.strip()) if path.exists() else {}
+        merged.update(r.split() for r in rows)
+        path.write_text("".join(f"{k} {v}\n" for k, v in merged.items()))
+        print(run, len(rows), "->", len(merged))
 
 
 if __name__ == "__main__":

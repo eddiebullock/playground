@@ -1,0 +1,12 @@
+diff --git a/app/src/engine/reflect.ts b/app/src/engine/reflect.ts
+index 7837de7..215a59b 100644
+--- a/app/src/engine/reflect.ts
++++ b/app/src/engine/reflect.ts
+@@ -145,6 +145,7 @@ function generationPrompt(input: ReflectInput): string {
+ Give:
+ - literal: one sentence saying what the words themselves say.
+ - readings: 2 to 4 different things they could have meant. The FIRST reading is the plain one: they meant exactly what they said, in its ordinary, neutral or kind sense, stated concretely. Every other reading must change what I would understand or do next (for example: they are annoyed, they are joking, they are hinting at a request). Never give two readings that mean nearly the same thing. If the situation does not genuinely support another reading, give only one alternative. Each reading is one sentence starting with "${input.person?.trim() || "They"}", says what they meant about me or the situation, and has up to 3 short cues: words or facts from the situation that support it.
++Look at what they did not say as well as what they said. If the words do not answer what was asked, or give far more or far less detail than needed, one reading must say what that suggests (for example: they would rather not talk about it, or they did not like it but do not want to say so). If they used a figure of speech, say plainly what it means about the person or thing it describes.
+ If their reaction seems bigger than the situation explains, one reading can be that it is about something on their side, not about me.
+ - check_question: one short, friendly, direct question I could ask them to check what they meant.
+ - boundary: leave empty, unless I have already said no (or clearly do not want to) and they keep pushing, or the situation sounds unsafe. Then one calm sentence reminding me that I can say no or leave, without judging them.`;
