@@ -506,7 +506,7 @@ export default function App() {
                 {result.literal}
               </p>
               <ol className="readings">
-                {result.readings.map((r, i) => (
+                {result.readings.filter((r) => !r.hidden).map((r, i) => (
                   <li key={i}>
                     <div className="reading-head">
                       <span className="likelihood">{result.abstain ? "Possible" : likelihood(r.p)}</span>

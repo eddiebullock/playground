@@ -19,6 +19,7 @@ rng = random.Random(20261025)
 pick = [("Sarcastic", r) for r in rng.sample(sar, 80)] + [("Sincere", r) for r in rng.sample(sin, 80)]
 rng.shuffle(pick)
 items = [{"id": f"isarc:{r['']}", "task": kind, "text": r["tweet"].strip(),
-          "intended": r["rephrase"].strip() if kind == "Sarcastic" else "The author means what the tweet says."}
+          "intended": r["rephrase"].strip() if kind == "Sarcastic" else "The author means what the tweet says.",
+          "context": "Someone I follow posted this.", "channel": "social media", "person": None, "gold": "Intended"}
          for kind, r in pick]
 json.dump(items, sys.stdout, indent=1, ensure_ascii=False)

@@ -10,16 +10,19 @@
 // E4_HALF=even|odd runs only items with even or odd item numbers (odd is the
 // development half, even is held out); E4_JUDGE=0 skips the judge, for runs
 // that will be hand-labelled (the judge agreed with hand labels on only 0.72
-// of readings, docs/DECISIONS.md).
+// of readings, docs/DECISIONS.md). E4_WIDE=6 writes up to 6 readings and
+// shows the top 4 (setWidth). E4_ITEMS=<path to items.json> runs another item
+// set (E8: experiments/e8_isarcasm/items.json); results go next to it.
 
 import { appendFileSync, existsSync, mkdirSync, readFileSync } from "node:fs";
 import { optionDist } from "../src/engine/llm.ts";
-import { reflect } from "../src/engine/reflect.ts";
+import { reflect, setWidth } from "../src/engine/reflect.ts";
 
 type Item = {
   id: string;
   task: string;
-  person: string | null;
+  person?: string | null;
+  channel?: string;
   context: string;
   text: string;
   options: string[];
@@ -30,8 +33,10 @@ type Item = {
 const BASE = "http://127.0.0.1:11434";
 const model = process.argv[2] ?? "qwen3:8b";
 const judge = process.argv[3] ?? "qwen3:8b";
-const dir = new URL("../../experiments/e4_product/", import.meta.url);
-const items: Item[] = JSON.parse(readFileSync(new URL("items.json", dir), "utf8"));
+const itemsPath = process.env.E4_ITEMS ? new URL(process.env.E4_ITEMS, `file://${process.cwd()}/`) : new URL("../../experiments/e4_product/items.json", import.meta.url);
+const dir = new URL("./", itemsPath);
+const items: Item[] = JSON.parse(readFileSync(itemsPath, "utf8"));
+if (process.env.E4_WIDE) setWidth(Number(process.env.E4_WIDE));
 mkdirSync(new URL("results/", dir), { recursive: true });
 const tag = process.env.E4_TAG ? `_${process.env.E4_TAG}` : "";
 const half = process.env.E4_HALF;
@@ -70,10 +75,10 @@ for (const it of items) {
   if (done.has(it.id)) continue;
   const num = Number(it.id.split(":")[1]);
   if (half && (num % 2 === 0) !== (half === "even")) continue;
-  const r = await reflect(BASE, model, { mode: "them", person: it.person ?? undefined, context: it.context, text: it.text });
+  const r = await reflect(BASE, model, { mode: "them", person: it.person ?? undefined, context: it.context, text: it.text, channel: it.channel });
   const readings = [];
   for (const x of r.readings) {
-    const m = useJudge ? await mapReading(it, x.meaning) : { k: -1, p: 0 };
+    const m = useJudge && it.options ? await mapReading(it, x.meaning) : { k: -1, p: 0 };
     readings.push({ ...x, label: m.k >= 0 ? it.labels[m.k] : "None", judge_p: m.p });
   }
   const rec = { id: it.id, task: it.task, gold: it.gold, model, judge, clarity: r.clarity, spread: r.spread, abstain: r.abstain, ms: r.ms, ms_gen: r.ms_gen, literal: r.literal, check: r.check, boundary: r.boundary, readings };
