@@ -59,8 +59,10 @@ it somewhere else?
 - [ON: the same audit on qwen3:4b, llama3.1:8b, gemma3:4b, gemma3:12b.]
 
 ## Contribution claims (to be confirmed)
-1. Disclosure drift appears in readings, not only advice, and depends on
-   the condition disclosed (anxiety yes, autism no, in this model).
+1. Disclosure drift appears in readings, not only advice. Against a placebo
+   it is condition-specific (autism, ADHD, depression more negative;
+   anxiety no different from the placebo), and against no disclosure it is
+   partly hidden by a generic softening.
 2. Prompt-level fixes can displace rather than remove drift; evaluations of
    fairness fixes must measure the whole outcome distribution, not the
    targeted category.
