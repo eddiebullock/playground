@@ -33,19 +33,28 @@ const done = new Set(
   existsSync(out) ? readFileSync(out, "utf8").trim().split("\n").filter(Boolean).map((l) => JSON.parse(l).id) : [],
 );
 
-const JUDGE_SYSTEM =
-  "You compare the meaning of statements. Pick the option that says the same thing as the statement, " +
-  "or the last option if none does. Answer with the number only.";
+const JUDGE_SYSTEM = "You compare the meaning of statements. Answer with the number only.";
 
-/** Which original option (index) a reading means, or -1 for none. */
+/**
+ * Which original option (index) a reading means, or -1 for none. Options are
+ * rotated and averaged to cancel position bias; "none" always comes last.
+ * Without rotation and the note on "me", qwen3:8b chose "none" for clear
+ * matches (smoke test, 2026-10-25).
+ */
 async function mapReading(it: Item, reading: string): Promise<{ k: number; p: number }> {
-  const opts = [...it.options, "None of these says the same thing."];
-  const user = `Story: ${it.context} "${it.text}"\n\nStatement: ${reading}\n\nWhich option says the same thing as the statement?\n${opts
-    .map((o, i) => `${i + 1}) ${o}`)
-    .join("\n")}`;
-  const p = (await optionDist(BASE, judge, JUDGE_SYSTEM, user, opts.length)) ?? opts.map(() => 1 / opts.length);
-  const k = p.indexOf(Math.max(...p));
-  return { k: k === opts.length - 1 ? -1 : k, p: p[k] };
+  const all = [...it.options, "None of the above."];
+  const n = it.options.length;
+  const acc = new Array<number>(all.length).fill(0);
+  for (let rot = 0; rot < n; rot++) {
+    const order = it.options.map((_, i) => (i + rot) % n).concat([n]);
+    const user = `Story: ${it.context} "${it.text}"\n\nIn the statement below, "I" and "me" mean the person the remark was said to.\nStatement: ${reading}\n\nWhich option is closest to what the statement says the speaker meant? Choose the last option only if none of them is close.\n${order
+      .map((k, i) => `${i + 1}) ${all[k]}`)
+      .join("\n")}`;
+    const p = (await optionDist(BASE, judge, JUDGE_SYSTEM, user, all.length)) ?? all.map(() => 1 / all.length);
+    order.forEach((k, pos) => (acc[k] += p[pos] / n));
+  }
+  const k = acc.indexOf(Math.max(...acc));
+  return { k: k === n ? -1 : k, p: acc[k] };
 }
 
 let n = 0;
