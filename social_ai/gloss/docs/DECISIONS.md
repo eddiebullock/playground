@@ -408,3 +408,35 @@ Dated, with the evidence. Newest last.
   above is not a labelling artefact. Both raters are the same model family,
   so this is reliability, not validity: human raters are still needed for
   the papers (Paper 1 section 3, `docs/PUBLICATION_STRATEGY.md`).
+- **E8, external held-out: 160 real tweets from iSarcasmEval (80 sarcastic
+  with the author's own statement of what they meant, 80 sincere; frozen
+  before any run, sha256 in `experiments/e8_isarcasm/items.sha256`; blind
+  labels from two fresh Claude labellers, runs mixed and shuffled).**
+  Hypothesis: the shipped engine replicates its E4 level (top-1 about 0.5);
+  write-6-show-4 raises recall and top-1 as on the development half.
+  | Measure | Shipped (v2) | Wide (6 written, 4 shown) |
+  |---|---|---|
+  | Sarcastic: author's meaning first (80) | 0.487 [0.375, 0.600] | 0.463 [0.350, 0.575] |
+  | Sarcastic: written at all | 0.762 | 0.713 |
+  | Sarcastic: first when written | 0.639 | 0.649 |
+  | Sincere: plain reading first (80) | 0.738 [0.637, 0.825] | 0.812 [0.725, 0.900] |
+  | Correct, "Fairly clear" band | 0.66 (31%) | 0.59 (24%) |
+  | Correct, other bands | 0.59 | 0.62-0.69 |
+  Paired: sarcastic 7 better / 9 worse (p = 0.80); sincere 11 / 5 (p = 0.21).
+  **Wide is not adopted**: the development-half gain did not replicate on
+  external items. The shipped engine replicates: on real tweets with no
+  context it puts the author's meaning first 0.49 of the time, the same as
+  on the Hu stories (0.50-0.56), and writes it somewhere 0.76 of the time.
+  **Calibration does not transfer to real tweets**: the clarity bands barely
+  separate (0.66 vs 0.59), unlike E4 (0.74 vs 0.46-0.53). The temperatures
+  were fitted on the E1 option sets. Caveats: tweets carry no context and
+  authors' intended sarcasm is hard for third-party humans too (Oprea and
+  Magdy 2020), so these are hard items; LLM labellers.
+  **Consequences.** (1) For Study 5, the "Fairly clear" label must not be
+  presented as a strong signal on real messages until it is re-fitted on
+  Gloss's own readings with human-rated messages; the About panel should
+  quote 0.49/0.74 alongside E4. (2) The bottleneck is now ranking as much as
+  writing: on tweets, when the author's meaning is written it comes first
+  only 64% of the time (E4: 75%). Next lever: the scorer, i.e. the
+  phenomenon-neutral stance wording (also motivated by the deceit over-reading
+  in the minimal pairs).
