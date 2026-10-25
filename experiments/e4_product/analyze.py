@@ -1,6 +1,11 @@
 """E4 analysis: does Gloss Reflect's full pipeline get the intended meaning?
 
   python analyze.py results/baseline_qwen3-8b.jsonl [more.jsonl ...]
+  python analyze.py results/baseline_qwen3-8b.jsonl --hand hand_labels/baseline_qwen3-8b.txt
+
+With --hand, each reading's match is taken from hand labels (one line per
+item: "<id> <0/1 per reading, in stored order>") instead of the judge, and
+judge agreement with the hand labels is reported.
 
 Per file: top-1 match (top reading maps to the intended option), recall (any
 reading maps to it), plain-reading-top rate on the sincere controls,
@@ -56,13 +61,41 @@ def fmt(xs):
     return f"{sum(xs) / len(xs):.3f} [{lo:.3f}, {hi:.3f}] n={len(xs)}"
 
 
-def analyse(path):
+def load_hand(path):
+    lab = {}
+    for line in open(path):
+        if line.strip():
+            k, v = line.split()
+            lab[k] = [c == "1" for c in v]
+    return lab
+
+
+def apply_hand(recs, lab, out):
+    agree = n = tp = fp = fn = 0
+    for r in recs:
+        hs = lab[r["id"]]
+        assert len(hs) == len(r["readings"]), r["id"]
+        for x, h in zip(r["readings"], hs):
+            j = x["label"] == r["gold"]
+            n += 1
+            agree += j == h
+            tp += j and h
+            fp += j and not h
+            fn += h and not j
+            x["label"] = r["gold"] if h else "NoMatch(hand)"
+    out["judge_vs_hand"] = f"agreement {agree / n:.2f}, precision {tp / max(1, tp + fp):.2f}, recall {tp / max(1, tp + fn):.2f} (n={n} readings)"
+
+
+def analyse(path, hand=None):
     recs = [json.loads(l) for l in open(path)]
     hu = [r for r in recs if r["task"] != "Sincere"]
     sin = [r for r in recs if r["task"] == "Sincere"]
     top = lambda r: int(r["readings"][0]["label"] == r["gold"])
     anyr = lambda r: int(any(x["label"] == r["gold"] for x in r["readings"]))
     out = {"file": Path(path).name, "n": len(recs)}
+    if hand:
+        out["labels"] = "hand"
+        apply_hand(recs, load_hand(hand), out)
     out["top1"] = fmt([top(r) for r in hu])
     out["recall"] = fmt([anyr(r) for r in hu])
     out["top1_given_recall"] = fmt([top(r) for r in hu if anyr(r)])
@@ -94,6 +127,14 @@ def analyse(path):
 
 
 if __name__ == "__main__":
-    res = [analyse(p) for p in sys.argv[1:]]
+    args, jobs = sys.argv[1:], []
+    while args:
+        f = args.pop(0)
+        hand = None
+        if args[:1] == ["--hand"]:
+            hand = args[1]
+            args = args[2:]
+        jobs.append((f, hand))
+    res = [analyse(f, h) for f, h in jobs]
     print(json.dumps(res, indent=1))
     json.dump(res, open(HERE / "results/summary.json", "w"), indent=1)

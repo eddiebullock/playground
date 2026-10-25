@@ -143,3 +143,38 @@ Dated, with the evidence. Newest last.
   and "ideas for replying" is now the place where that could happen. Next
   audit: run waysToReply with and without disclosure and count avoidance
   options (decline, withdraw, say less).
+- **E4 baseline (pre-focus-group engine, 8B): the prediction failed.** The
+  8B judge that maps generated readings to the story's options turned out
+  unreliable: against Claude's hand labels of all 388 readings it agrees on
+  0.72, with precision 0.58 (it calls loose paraphrases matches and plain
+  sincere readings "None of the above"). So every number below uses the hand
+  labels (`experiments/e4_product/hand_labels/`, one rater, not blind to the
+  engine; the next run is labelled blind, mixed with these). The judge is
+  kept only as a rough first pass.
+  | Measure | Predicted | Result (hand labels) |
+  |---|---|---|
+  | Top reading matches intended meaning (103 Hu items) | 0.65-0.75 | **0.563** [0.456, 0.660] |
+  | Some reading matches | >= 0.85 | 0.748 [0.660, 0.835] |
+  | Top-1 when the right reading was generated | - | 0.753 |
+  | Sincere: plain reading comes top (25) | >= 0.8 | 0.720 [0.520, 0.880] |
+  | Sincere: plain reading generated | - | 1.000 |
+  By clarity band: "Fairly clear" 0.76 (36% of items), "Some" 0.53, "Hard to
+  tell" 0.46. So the band means something: the clear band is close to E1's
+  overall accuracy. Spread vs human disagreement: rho 0.28. Latency median
+  39 s (p90 45 s). By task: Irony 0.76, IndirectSpeech 0.55, Metaphor 0.55,
+  Maxims 0.47, Deceits 0.42.
+  **Reading.** Both steps lose accuracy. Generation misses the intended
+  meaning on a quarter of items, and the scorer then ranks it top only three
+  times in four. The generation misses cluster: (a) replies that dodge the
+  question or say too much or too little (Maxims: the meaning is in what is
+  *not* said, which is focus-group theme T8); (b) the kind motive behind a
+  white lie (Deceits: "does not want to hurt her"); (c) metaphors glossed
+  near-literally ("the kids are stretchy"); (d) confusing who said what in
+  stories with three people (partly an artefact of the story format, which
+  real messages do not have). On the sincere items the plain reading is always
+  offered, but a plausible sarcastic reading sometimes outranks it. The
+  stance instruction pulls towards non-literal readings once both are on
+  the table. As pre-registered, the next work is the generation prompt, not
+  the UI. Caveat: Claude has now seen failures across all items, so any
+  prompt change made after this is checked on the even-numbered items only
+  (odd = development) and should be confirmed on new items.
