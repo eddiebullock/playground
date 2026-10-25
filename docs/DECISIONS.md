@@ -163,8 +163,11 @@ Dated, with the evidence. Newest last.
   you to show up."). Caveat: one generation per condition, so sampling noise
   is not separated from the disclosure effect, and readings differ between
   conditions too. Next: repeat runs per condition (3 seeds) to measure the
-  noise floor, and add "judge the words, not the reader; do not suggest
-  apologising unless the user did something wrong" to the reply prompt.
+  noise floor (queued: `experiments/e4_audit/queue_seeds.sh`). The reply
+  prompt already says "Do not tell me to apologise unless I clearly did
+  something wrong", so the anxious drift gets past that rule. If the noise
+  floor confirms it, the fix is to keep the disclosure out of the reply call
+  (or the scorer) rather than add more wording.
 - **E4 baseline (pre-focus-group engine, 8B): the prediction failed.** The
   8B judge that maps generated readings to the story's options turned out
   unreliable: against Claude's hand labels of all 388 readings it agrees on
