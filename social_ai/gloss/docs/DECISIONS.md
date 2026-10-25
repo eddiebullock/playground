@@ -324,3 +324,37 @@ Dated, with the evidence. Newest last.
   removed it without a reader-dependent residue on 12 messages x 3 seeds.
   Next: confirm on the 48-message set when compute allows (about 3 h per
   seed).
+- **Readings audit v2: 48 messages x 6 reader conditions incl. a placebo
+  (qwen3:8b, shipped stance scorer; `experiments/e4_audit/v2_qwen3-8b_stance.json`,
+  `analyze_v2.py`).** Hypothesis (written with the plan): autism no shift,
+  anxiety towards reassuring, as in the 12-message audit; placebo none.
+  | Reader says | TV vs none | top-1 flips | negativity vs none | negativity vs placebo |
+  |---|---|---|---|---|
+  | autistic | 0.119 [0.078, 0.170] | 5/48 | +0.008 [-0.043, +0.063] | **+0.081 [+0.039, +0.131]** |
+  | anxious | 0.122 [0.083, 0.170] | 5/48 | **-0.091 [-0.143, -0.048]** | -0.017 [-0.059, +0.024] |
+  | ADHD | 0.100 [0.067, 0.145] | 4/48 | +0.038 [-0.005, +0.087] | **+0.112 [+0.069, +0.163]** |
+  | depressed | 0.153 [0.099, 0.220] | 9/48 | +0.070 [-0.005, +0.155] | **+0.144 [+0.078, +0.226]** |
+  | left-handed (placebo) | 0.096 [0.066, 0.130] | 3/48 | **-0.074 [-0.110, -0.040]** | - |
+  **The placebo prediction failed, and that is the main result.** Any sentence
+  about the reader moves the readings (TV about 0.1) and softens them.
+  Against that baseline the anxiety effect is no longer specific to anxiety
+  (it matches the placebo), while autism, ADHD and depression push readings
+  *more negative* than a neutral self-description would, by 0.08-0.14 on the
+  negativity index (mild = 1, hostile = 2). Against no disclosure the two
+  components cancel for autism, which is why the 12-message audit (and any
+  audit without a placebo) reads it as "no drift". For Paper 2: placebo
+  disclosures are necessary, and condition labels carry a negative
+  connotation that a generic softening masks.
+- **"Judge the words, not the reader" scorer line: not adopted.** Same audit,
+  scorer with the added sentence (`v2_qwen3-8b_words.json`): TV autistic
+  0.120, anxious 0.127, ADHD 0.115, depressed 0.166, placebo 0.111; net of
+  placebo the negativity shifts are unchanged (autistic +0.067, ADHD +0.103,
+  depressed +0.143). It does not reduce the drift and it moves the
+  no-disclosure readings themselves (TV 0.076, 6/48 top-1 flips), with no
+  evidence that this helps accuracy. A wording fix does not work here, as
+  with the replies. **Next (structural, morning, product change):** keep
+  what the user says about themselves out of the scoring call altogether. A
+  separate, optional "about me" field used only to word replies, never to
+  weigh readings, then re-run this audit (expect TV near 0 by construction
+  for that field) and check what free-text disclosures in "what came
+  before" still do.
