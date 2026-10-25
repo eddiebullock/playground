@@ -167,7 +167,7 @@ function scoringPrompt(input: ReflectInput, options: string[]): string {
 export function normEntropy(p: number[]): number {
   if (p.length < 2) return 0;
   const h = -p.reduce((a, x) => (x > 0 ? a + x * Math.log(x) : a), 0);
-  return h / Math.log(p.length);
+  return Math.max(0, h / Math.log(p.length));
 }
 
 /** Score options from first-token probabilities, averaged over cyclic rotations. */

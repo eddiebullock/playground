@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite --host 127.0.0.1",
     "build": "tsc --noEmit && vite build",
-    "eval": "node --experimental-strip-types scripts/eval.ts"
+    "eval": "node --experimental-strip-types scripts/eval.ts",
+    "test": "node --experimental-strip-types --test scripts/engine.test.ts"
   },
   "dependencies": {
     "@fontsource/libre-baskerville": "^5.2.5",
