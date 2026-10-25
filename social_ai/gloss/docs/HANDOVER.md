@@ -11,7 +11,8 @@ the work below is done.
   off the machine, contacting people, committing to the main playground
   repo, deleting files Claude did not create.
 - No emojis anywhere. Free resources only; mind disk (about 25 GB free).
-- `gloss` has its own nested git repo; commit there. `experiments/*/results/
+- `gloss` is now part of the playground repo (merged with history on
+  2026-10-25, branch `es-vlm/setup`); commit there, only under `social_ai/gloss`. `experiments/*/results/
   *.jsonl` and `*.log` are gitignored on purpose.
 - Commit trailer: `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`.
 
@@ -79,8 +80,6 @@ After analysis:
 5. Keep the brief in step.
 
 ## Open questions for Eddie (in the brief)
-- Should `gloss` merge into the playground repo or get its own GitHub repo?
-  Nothing has been pushed.
 - Should a review pack be prepared for an autistic-led organisation before
   Study 5? Contacting them is his call.
 - The direction (language first, reflective first, faces last) still needs

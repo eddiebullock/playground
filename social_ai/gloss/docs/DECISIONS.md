@@ -299,3 +299,7 @@ Dated, with the evidence. Newest last.
   model reads more generously once the user says they get anxious. Fix 2:
   tie that option to the message ("only if the message does not ask for an
   answer"), re-test on 3 seeds.
+- **`gloss` merged into the playground repo** at Eddie's request (subtree
+  merge, so the 38 gloss commits keep their history), on branch
+  `es-vlm/setup`, and pushed to `eddiebullock/playground`. The nested `.git`
+  is gone; commit from the playground repo.

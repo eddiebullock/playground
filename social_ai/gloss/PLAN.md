@@ -147,7 +147,8 @@ recruitment, to avoid HRA.
 - **Stop and ask Eddie**: spending money, cluster jobs (the runbook requires an
   explicit yes per command), anything touching licensed data (Mindreading,
   EU-Emotions), anything sent outside the machine, contacting people,
-  committing to the main playground repo, deleting files Claude did not create.
+  committing outside `social_ai/gloss` in the playground repo, pushing,
+  deleting files Claude did not create.
 - **Resources**: M3, 16 GB RAM, about 9 GB free disk (check `df -h` before
   each download; delete models no longer needed). No paid APIs.
 - **Record keeping**: every run writes JSONL plus a summary. Every decision
@@ -191,7 +192,5 @@ Next, in order:
 5. Should Gloss seek review or endorsement from an autistic-led organisation
    (for example the NAS) before Study 5? The focus groups named this as a
    condition of trust (T1). It means contacting people, so it is your call.
-6. The `gloss` folder now sits inside `playground/social_ai` but is still its
-   own git repository with no remote. Merge it into the playground repo with
-   history (`git subtree`), or give it its own GitHub repository? Nothing has
-   been pushed.
+6. Resolved 2026-10-25: `gloss` was merged into the playground repo with its
+   history (branch `es-vlm/setup`) and pushed to `eddiebullock/playground`.
