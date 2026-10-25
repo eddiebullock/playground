@@ -36,6 +36,15 @@ SYSTEM_STANCE = (
     "white lies. They also often mean exactly what they say. Use the situation to decide what the speaker most "
     "plausibly meant. Answer with the number of the best option only. No other text."
 )
+# "Fit" stance (pre-registered 2026-10-25 23:10, docs/DECISIONS.md): instead
+# of a global push towards non-literal readings, tie the non-literal reading
+# to a clash between the words and the situation.
+SYSTEM_FIT = (
+    "First decide whether the speaker's words fit the situation. If they clearly clash with it, the speaker "
+    "probably means something other than the literal words (irony, a hint, a polite excuse or a white lie). If "
+    "they fit, the speaker probably means exactly what they say. Answer with the number of the best option only. "
+    "No other text."
+)
 SYSTEM_REASON = "Think briefly about what the speaker really means, then give the number of the best option."
 
 # Raw templates. The answer is read after an "Answer: " prefill, so the next
@@ -93,8 +102,8 @@ def chat(model, prompt, mode="direct"):
         resp["total_duration"] = resp.get("total_duration", 0) + thought.get("total_duration", 0)
         resp["reason_tokens"] = thought.get("eval_count", 0)
         return resp
-    if mode in ("direct", "stance"):
-        head = TURN[fam].format(s=SYSTEM if mode == "direct" else SYSTEM_STANCE, u=prompt + "\n\nReply with the option number only.")
+    if mode in ("direct", "stance", "fit"):
+        head = TURN[fam].format(s={"direct": SYSTEM, "stance": SYSTEM_STANCE, "fit": SYSTEM_FIT}[mode], u=prompt + "\n\nReply with the option number only.")
         if fam == "qwen":
             head += "<think>\n\n</think>\n\n"
         return generate(model, head + "Answer: ", 2, logprobs=True)
@@ -225,7 +234,7 @@ def main():
     ap.add_argument("--model", required=True)
     ap.add_argument("--task", choices=["hu", "mustard", "sincere", "sincere_all"], required=True)
     ap.add_argument("--seeds", type=int, default=5)
-    ap.add_argument("--mode", choices=["direct", "reason", "stance", "check"], default="direct")
+    ap.add_argument("--mode", choices=["direct", "reason", "stance", "check", "fit"], default="direct")
     args = ap.parse_args()
 
     OUT.mkdir(parents=True, exist_ok=True)

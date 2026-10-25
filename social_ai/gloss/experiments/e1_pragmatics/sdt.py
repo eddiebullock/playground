@@ -82,7 +82,7 @@ def run():
     files = {p.stem: p for p in OUT.glob("*.jsonl")}
     res = {}
     for stem, path in sorted(files.items()):
-        m = re.match(r"hu_(.+?)(_stance)?$", stem)
+        m = re.match(r"hu_(.+?)(_stance|_fit)?$", stem)
         if not m:
             continue
         model, mode = m.group(1), m.group(2) or ""
@@ -103,7 +103,7 @@ def run():
                 (q(h), q(d), float(top(h) == "CorrectNonLiteral"), float(top(d) == "IncorrectLiteral")))
         if not by_task:
             continue
-        key = f"{model}{' stance' if mode else ' direct'}"
+        key = f"{model} {mode[1:] if mode else 'direct'}"
         res[key] = {}
         everything = [p for v in by_task.values() for p in v]
         for task, pairs in [("All", everything)] + sorted(by_task.items()):

@@ -440,3 +440,17 @@ Dated, with the evidence. Newest last.
   only 64% of the time (E4: 75%). Next lever: the scorer, i.e. the
   phenomenon-neutral stance wording (also motivated by the deceit over-reading
   in the minimal pairs).
+- **Pre-registration (2026-10-25 23:10, before any run): "fit" stance
+  wording.** Motivation: the stance prompt fixes irony by moving a global
+  criterion, which over-reads truthful statements (8B sincere deceits
+  0.47). New system line (`SYSTEM_FIT` in `experiments/e1_pragmatics/run.py`):
+  decide whether the words fit the situation; if they clearly clash, the
+  speaker probably means something else; if they fit, they probably mean what
+  they say. Single shot, no tuning, on qwen3:8b and 4B (Hu items, 64 pairs;
+  `queue_overnight3.sh`). **Predictions for 8B:** d' unchanged (within the
+  CI of stance, 1.65 all pairs); irony c stays below +0.4 (stance +0.18,
+  direct +0.96); deceits sincere accuracy >= 0.65 (stance 0.47); Hu accuracy
+  within 0.03 of stance (0.780). **Adopt for the product scorer only if**
+  all-pairs balanced accuracy beats stance (0.79) and Hu accuracy does not
+  fall by more than 0.03; then confirm at product level on E4 and E8
+  sincere controls plus new deceit/indirect sincere product items.
