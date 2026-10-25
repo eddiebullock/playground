@@ -1,6 +1,6 @@
 # Prompt for an autonomous Gloss work session
 
-Paste this into a new Claude Code session started in `~/playground/gloss`, or
+Paste this into a new Claude Code session started in `~/playground/social_ai/gloss`, or
 use it as the prompt for a scheduled agent. It assumes no one is available to
 answer questions during the session.
 

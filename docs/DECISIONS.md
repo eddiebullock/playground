@@ -81,3 +81,29 @@ Dated, with the evidence. Newest last.
   wrongly flagged "Hard to tell". After it, the three development cases read
   correctly (sarcasm 0.93; sincere work messages 0.87 and 0.89). These three
   cases are a development set, not an evaluation.
+- **Moved to `~/playground/social_ai/gloss` (2026-10-25)** at Eddie's request, so
+  the work lives under the personal `eddiebullock/playground` GitHub repo rather
+  than the work `minimal` repo. The earlier "separate repo" entry above is superseded.
+
+## 2026-10-25
+
+- **Focus groups 2-4 read** (`docs/research/04_focus_groups.md`, participants
+  coded, no quotes). The decisions it drives are tabled there. Biggest changes:
+  an optional "your read first" step (learning and autonomy without forcing
+  either), a way to correct Gloss with your own reading, private people notes
+  as context, opt-in ways to reply with how each might land, boundary
+  affirmation, and a guardrail against ever advising the user to suppress
+  interests or mask. Glasses are disliked by most of this group; phone first,
+  haptics or earpiece for live.
+- **E4 product eval, hypothesis (written before running).** The full Reflect
+  pipeline (generate readings, then weigh them) on 103 Hu stories that look
+  like messages (Irony, IndirectSpeech, Deceits, Maxims, Metaphor) plus the 25
+  sincere minimal pairs. Each generated reading is mapped to the story's
+  original options by a judge call, and Claude hand-checks a sample of the
+  judge. Prediction: top reading matches the intended meaning on 0.65-0.75 of
+  Hu items (below E1's 0.78, because generation can miss the right reading),
+  some reading matches it on >= 0.85, and the plain reading comes top on
+  >= 0.8 of the sincere items. **What would change the plan:** top-1 < 0.6, or
+  sincere < 0.7, makes reading generation the bottleneck and the next work is
+  the generation prompt, not the UI. High recall but low top-1 points at the
+  scorer instead.

@@ -1,6 +1,6 @@
 #!/bin/zsh
 # Sequential, priority order: one model resident at a time on 16 GB.
-cd /Users/eb2007/playground/gloss/experiments/e1_pragmatics
+cd /Users/eb2007/playground/social_ai/gloss/experiments/e1_pragmatics
 python3 run.py --model qwen3:8b --task hu
 python3 run.py --model qwen3:4b --task mustard
 python3 run.py --model qwen3:8b --task mustard
