@@ -6,6 +6,11 @@
 //   npm run eval -- qwen3:8b            # writes experiments/e4_product/results/<model>.jsonl
 //
 // Resumable: items already in the output are skipped.
+// Options (environment): E4_TAG=v2 adds a suffix to the output name;
+// E4_HALF=even|odd runs only items with even or odd item numbers (odd is the
+// development half, even is held out); E4_JUDGE=0 skips the judge, for runs
+// that will be hand-labelled (the judge agreed with hand labels on only 0.72
+// of readings, docs/DECISIONS.md).
 
 import { appendFileSync, existsSync, mkdirSync, readFileSync } from "node:fs";
 import { optionDist } from "../src/engine/llm.ts";
@@ -28,7 +33,10 @@ const judge = process.argv[3] ?? "qwen3:8b";
 const dir = new URL("../../experiments/e4_product/", import.meta.url);
 const items: Item[] = JSON.parse(readFileSync(new URL("items.json", dir), "utf8"));
 mkdirSync(new URL("results/", dir), { recursive: true });
-const out = new URL(`results/${model.replace(/[:/]/g, "-")}.jsonl`, dir);
+const tag = process.env.E4_TAG ? `_${process.env.E4_TAG}` : "";
+const half = process.env.E4_HALF;
+const useJudge = process.env.E4_JUDGE !== "0";
+const out = new URL(`results/${model.replace(/[:/]/g, "-")}${tag}.jsonl`, dir);
 const done = new Set(
   existsSync(out) ? readFileSync(out, "utf8").trim().split("\n").filter(Boolean).map((l) => JSON.parse(l).id) : [],
 );
@@ -60,10 +68,12 @@ async function mapReading(it: Item, reading: string): Promise<{ k: number; p: nu
 let n = 0;
 for (const it of items) {
   if (done.has(it.id)) continue;
+  const num = Number(it.id.split(":")[1]);
+  if (half && (num % 2 === 0) !== (half === "even")) continue;
   const r = await reflect(BASE, model, { mode: "them", person: it.person ?? undefined, context: it.context, text: it.text });
   const readings = [];
   for (const x of r.readings) {
-    const m = await mapReading(it, x.meaning);
+    const m = useJudge ? await mapReading(it, x.meaning) : { k: -1, p: 0 };
     readings.push({ ...x, label: m.k >= 0 ? it.labels[m.k] : "None", judge_p: m.p });
   }
   const rec = { id: it.id, task: it.task, gold: it.gold, model, judge, clarity: r.clarity, spread: r.spread, abstain: r.abstain, ms: r.ms, ms_gen: r.ms_gen, literal: r.literal, check: r.check, boundary: r.boundary, readings };
