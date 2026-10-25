@@ -6,16 +6,20 @@ export const EVIDENCE = {
   updated: "2026-10-25",
   points: [
     {
-      head: "On published test stories, it picks the intended meaning about 4 times in 5.",
-      body: "On 169 short stories with irony, hints, white lies and figures of speech (Hu et al. 2023), it chose the meaning the authors intended 78% of the time. 374 people answering the same stories averaged 86%.",
+      head: "Its first reading matches the intended meaning about half the time.",
+      body: "On 52 short stories with irony, hints, white lies and figures of speech that were held back for testing (Hu et al. 2023), the meaning the authors intended was Gloss's top reading 56% of the time, and one of its readings 77% of the time. That is why it shows several readings, not one answer. People choosing from the authors' options averaged 86%.",
     },
     {
-      head: "When it says \"Fairly clear\", it is usually right.",
-      body: "On those stories, about 7 in 10 came out \"Fairly clear\", and 91% of those were right. The rest are shown as \"Somewhat open\" or \"Hard to tell\" instead of a confident guess.",
+      head: "When it says \"Fairly clear\", it is right about 7 times in 10.",
+      body: "About 4 in 10 stories came out \"Fairly clear\", and the top reading was right on 18 of those 25. The rest are shown as \"Somewhat open\" or \"Hard to tell\" instead of a confident guess.",
     },
     {
-      head: "It does not assume a hidden meaning.",
-      body: "When the same remarks were rewritten to be sincere, it took them at face value 90% of the time. The plain reading is always on the list.",
+      head: "It keeps the plain reading in view.",
+      body: "When the same remarks were rewritten to be sincere, the plain reading was on the list every time (12 of 12) and came first 9 times in 12.",
+    },
+    {
+      head: "It is weakest on kind white lies and figures of speech.",
+      body: "It put the intended meaning first on only 4 in 10 of those stories. It often takes a kind white lie at face value, and it can miss what a figure of speech says about the person or thing it describes.",
     },
     {
       head: "It is weak on TV-style sarcasm from text alone.",
