@@ -53,9 +53,9 @@ Noise floor (seed-to-seed shift of a condition mean): about 0.03 on average,
 max about 0.07-0.09. Autism disclosure has shown no drift in every run.
 Success for fix 2: anxious hold back and apologise CIs both include 0, and
 the "check" and "engage" shares under no disclosure do not drop by more than
-the noise floor (fix 1 none: engage 0.47, check 0.45). Also eyeball the
-hold-back replies per condition (the snippet in the 2026-10-25 DECISIONS
-entry logic: replies whose kind argmax is index 2). If fix 2 fails, consider
+the noise floor (fix 1 none: engage 0.47, check 0.45). Also read the
+hold-back replies per condition (replies whose `kinds` argmax is index 2,
+under `scenarios[i][condition]`). If fix 2 fails, consider
 reverting to fix 1 or trying a different wording, then re-audit.
 
 After analysis:
@@ -64,8 +64,8 @@ After analysis:
    (audit paragraph in the "What the product itself gets right" section,
    and the E4 audit row in the programme table, now reading "autism clear;
    anxiety fix 2 re-testing"). From a new session: Artifact `read` with that
-   url first, then publish with `url`. The local source was in the old
-   session's scratchpad and will not survive the restart.
+   url first, then publish with `url`. A copy of the source as
+   published (Version 4) is `docs/brief_snapshot.html`.
 
 ## Next steps after that (PLAN.md Sequence)
 1. Readings-scorer anxiety check: does disclosure change the stance
