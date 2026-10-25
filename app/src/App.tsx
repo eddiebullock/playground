@@ -9,6 +9,7 @@ import {
   type ReflectInput,
   type ReflectResult,
 } from "./engine/reflect.ts";
+import { EVIDENCE } from "./evidence.ts";
 import { addEntry, clearEntries, exportEntries, loadEntries, type Verdict } from "./log.ts";
 
 const RELATIONS = ["", "friend", "colleague", "manager", "partner", "family member", "someone I just met", "teacher or tutor"];
@@ -81,6 +82,19 @@ function About({ onClose }: { onClose: () => void }) {
         <li>Everything runs on this computer. Nothing you type is sent anywhere.</li>
         <li>It is a research prototype, and it can be wrong. It is not a medical or support service.</li>
       </ul>
+      <details className="evidence">
+        <summary>How good is it?</summary>
+        <ul>
+          {EVIDENCE.points.map((x) => (
+            <li key={x.head}>
+              <strong>{x.head}</strong> {x.body}
+            </li>
+          ))}
+        </ul>
+        <p className="meta">
+          Tested with {EVIDENCE.model} on public research items, {EVIDENCE.updated}. Not yet tested with autistic adults' own messages; that is what the study is for.
+        </p>
+      </details>
       <button className="primary" onClick={onClose}>
         Got it
       </button>

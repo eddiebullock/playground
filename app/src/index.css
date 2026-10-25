@@ -128,3 +128,6 @@ button[aria-pressed="true"] { border-color: var(--calm); box-shadow: inset 0 0 0
   .top-right { gap: 8px 12px; }
   .tag { flex-basis: 100%; }
 }
+.evidence { margin: 0 0 14px; }
+.evidence summary { cursor: pointer; font-weight: 600; color: var(--ink); }
+.evidence ul { margin-top: 8px; }
