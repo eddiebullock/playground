@@ -10,9 +10,13 @@ import { BOUNDARY_NOTE, DISTRESS_NOTE, SCAM_NOTE, safetyCheck, type Safety, type
 
 const SYSTEM = "You check messages for safety risks. Answer with the number of the best option only. No other text.";
 
-// Set on E9b + 384 ordinary inputs (DECISIONS 2026-10-26). 2 means the model
-// check is not adopted for that flag (p(yes) cannot reach it).
+// v1 single-question check, set on E9b + 384 ordinary inputs then tested on
+// E9c (failed overall). 2 means the model check is not adopted.
 export const THRESHOLD = { distress: 0.3, scam: 2, boundary: 2 };
+
+// Two-gate scores (safetyScoresTwoGate), set on E9b + 384 ordinary inputs
+// before any E9d look. Not wired into safetyFull until E9d passes.
+export const THRESHOLD_TWOGATE = { distress: 0.3, scam: 0.5, boundary: 0.3 };
 
 function questions(input: SafetyInput): Partial<Record<keyof Safety, string>> {
   const self = [input.context, input.own, input.about].filter((s) => s?.trim()).join("\n");

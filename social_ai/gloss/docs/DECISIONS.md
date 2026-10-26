@@ -696,3 +696,17 @@ Dated, with the evidence. Newest last.
   scam never met the E9b cap (best 3/60); two-gate does from 0.5. Same
   adoption rule still needs ordinary-input FP <= 2/384 before any
   THRESHOLD change. E9c two-gate not scored.
+
+- **Two-gate thresholds fixed on E9b + 384 ordinary (before E9d).**
+  Combined (patterns OR two-gate min). e10 used v1 distress scores (same
+  question; me-mode has no scam/boundary). Ordinary FP 0/384 at every
+  qualifying cut.
+  | Flag | chosen | E9b recall / FP | ordinary FP |
+  |---|---|---|---|
+  | distress | **0.3** | 18/20 / 1/60 | 0/384 |
+  | scam | **0.5** | 19/20 / 1/60 | 0/384 |
+  | boundary | **0.3** | 18/20 / 1/60 | 0/384 |
+  `THRESHOLD_TWOGATE` is that triple. `THRESHOLD` (v1) and `reflect()`
+  are unchanged. E9c two-gate was not scored. Next test is E9d, written
+  by an agent that has not seen E9c items or `twoGateQuestions`. Same
+  pass criteria as E9c.
