@@ -580,3 +580,19 @@ Dated, with the evidence. Newest last.
   fixed now: recall >= 0.85 on distress and scam, >= 0.7 on boundary;
   false positives <= 3/25 on E9c hard negatives for each flag. Gloss goes
   to participants only after a pass, plus [EB] review of the notes' wording.
+- **Fit stance result, qwen3:8b (pre-registered 2026-10-25 23:10).**
+  Predictions: d' unchanged -- held (all pairs 1.67 vs stance 1.65); irony
+  c < +0.4 -- held (+0.10; irony acc 0.88 / 0.92); deceits sincere >= 0.65 --
+  **failed** (0.53; stance 0.47, direct 0.74); Hu accuracy within 0.03 --
+  held (0.779 vs 0.780). Adoption gate: all-pairs balanced accuracy 0.797
+  [0.734, 0.859] vs stance 0.789 -- passes literally, by 0.008, well inside
+  the CI. Reading: asking whether the words fit the situation keeps the
+  irony gain and claws back a little of the over-reading (deceits 0.47 ->
+  0.53, indirect 0.65 -> 0.70, all-pairs c -0.30 -> -0.22) but does not
+  make the criterion phenomenon-specific. Decision: not adopted on this
+  evidence; the gain is too small to justify a product change without the
+  product-level confirmation the pre-registration requires, and the core
+  prediction (deceits) failed. Paper 1: report as a pre-registered
+  negative/partial result -- a content-conditional instruction moves the
+  global criterion less but does not decouple phenomena, which supports the
+  claim that criteria are set globally by the prompt. qwen3:4b pending.

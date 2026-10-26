@@ -145,6 +145,14 @@ that truthful statements are read as deceptive or excusing on half the
 sincere deceit pairs. Criteria are phenomenon-specific; a prompt moves them
 all together. This is the paper's main claim.
 
+Pre-registered follow-up (qwen3:8b): a content-conditional instruction
+("decide whether the words fit the situation; if they clash, the speaker
+probably means something else; if they fit, they mean what they say") keeps
+the irony gain (c +0.10, d' 2.41) and recovers little on sincere items
+(deceits 0.47 -> 0.53, predicted >= 0.65; all-pairs c -0.30 -> -0.22).
+Telling the model *when* to read non-literally does not make its criterion
+phenomenon-specific. [ON: qwen3:4b.]
+
 ### 4.3 Naming the construct
 MUStARD, "is this line sarcastic or sincere?": accuracy 0.51-0.54 for every
 Qwen model and prompt; "sarcastic" recall 0.95-0.98, precision 0.51-0.52. The
