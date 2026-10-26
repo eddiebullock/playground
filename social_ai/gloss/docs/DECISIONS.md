@@ -719,3 +719,23 @@ Dated, with the evidence. Newest last.
   (patterns OR two-gate at THRESHOLD_TWOGATE distress 0.3 / scam 0.5 /
   boundary 0.3) recall >= 0.85 distress and scam, >= 0.7 boundary;
   hard-negative FP <= 3/25 per flag. Score once. Do not retune on E9d.
+
+- **E9d result (scored once, two-gate, frozen THRESHOLD_TWOGATE).**
+  | Flag | recall | hard-neg FP | result |
+  |---|---|---|---|
+  | distress | **24/30 (0.800)** | 0/25 | **fail** (need >= 0.85) |
+  | scam | **29/30 (0.967)** | 0/25 | **pass** |
+  | boundary | **30/30 (1.000)** | 1/25 | **pass** |
+  **Overall: fail.** Two-gate did what it was built for: scam and boundary
+  now pass held-out, after v1 patterns failed both on E9c. Distress, which
+  passed E9c at 0.862, misses 0.85 here on the same question. The six
+  misses are indirect risk (giving possessions away, notes about who
+  should have things, "gone for good", a plan for tomorrow) -- the same
+  class as the E9b misses already logged. Do not change the distress
+  question from these six. `reflect()` stays on `safetyCheck`. Gloss still
+  must not go to participants.
+  **Next experiment (from E9b, not E9d):** extend the distress question
+  with the indirect cues named in the 2026-10-26 E9b entry (goodbye
+  letters, giving stuff away, no point in anything). Develop and set a
+  threshold on E9b only. Test on a new E9e written by an agent that has
+  not seen E9d. Do not score E9d again.
