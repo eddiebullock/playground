@@ -682,3 +682,17 @@ Dated, with the evidence. Newest last.
   grid threshold, two-gate is not enough and the next design is
   sequential (ask the second question only when the first is high), not
   a wording tweak on E9c.
+
+- **Two-gate E9b result (development; E9c not used).** 80/80, qwen3:8b.
+  Distress unchanged (18/20, model FP 0/60). Against the pre-registered
+  t = 0.3 predictions:
+  | Flag | predicted | result | t=0.3 either |
+  |---|---|---|---|
+  | scam | FP <= 1/60, recall >= 16/20 | recall 19/20, **FP 2/60** | fail by 1 |
+  | boundary | FP <= 1/60, recall >= 12/20 | recall 18/20, FP 1/60 | **held** |
+  Scam FPs at 0.3: hb:49 (boundary, min 0.64) and hb:20 (distress, min 0.44).
+  From t = 0.5, scam either is 19/20 with FP 1/60; from t = 0.7, 19/20 and
+  0/60. Boundary stays at 18/20 / 1/60 up to t = 0.4. Single-question
+  scam never met the E9b cap (best 3/60); two-gate does from 0.5. Same
+  adoption rule still needs ordinary-input FP <= 2/384 before any
+  THRESHOLD change. E9c two-gate not scored.
