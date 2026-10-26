@@ -148,7 +148,16 @@ const SCHEMA = {
   required: ["literal", "readings", "check_question"],
 };
 
-function scene(input: ReflectInput): string {
+/** Drop "About me:" lines so the scorer does not see self-description (E4). */
+export function dropSelfDescription(context?: string): string {
+  return (context ?? "")
+    .split("\n")
+    .filter((l) => !/^\s*about me\s*:/i.test(l))
+    .join("\n")
+    .trim();
+}
+
+function scene(input: ReflectInput, forScore = false): string {
   const who = input.person?.trim() || (input.mode === "them" ? "They" : "I");
   const lines: string[] = [
     `Roles: "I" and "me" are the person asking for help. ${input.mode === "them" ? who : input.person || "They"} is the other person.`,
@@ -156,7 +165,8 @@ function scene(input: ReflectInput): string {
   if (input.about?.trim()) lines.push(`What I know about ${input.person?.trim() || "them"}: ${input.about.trim()}`);
   if (input.relation) lines.push(`Relationship: ${input.mode === "them" ? `${who} is my ${input.relation}` : `${input.person || "They"} is my ${input.relation}`}.`);
   if (input.channel) lines.push(`Where: ${input.channel}.`);
-  if (input.context?.trim()) lines.push(`What came before:\n${input.context.trim()}`);
+  const context = forScore ? dropSelfDescription(input.context) : input.context?.trim();
+  if (context) lines.push(`What came before:\n${context}`);
   if (input.mode === "them") lines.push(`${who} said: "${input.text.trim()}"`);
   else lines.push(`I want to send this to ${input.person || "them"}: "${input.text.trim()}"`);
   return lines.join("\n\n");
@@ -189,7 +199,7 @@ function scoringPrompt(input: ReflectInput, options: string[]): string {
     input.mode === "them"
       ? `What did ${input.person?.trim() || "they"} most likely want to convey?`
       : `How will ${input.person?.trim() || "they"} most likely read this message?`;
-  return `Scenario:\n${scene(input)}\n\n${q}\nOptions:\n${options.map((o, i) => `${i + 1}) ${o}`).join("\n")}`;
+  return `Scenario:\n${scene(input, true)}\n\n${q}\nOptions:\n${options.map((o, i) => `${i + 1}) ${o}`).join("\n")}`;
 }
 
 export function normEntropy(p: number[]): number {

@@ -4,7 +4,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { json, optionDist } from "../src/engine/llm.ts";
-import { calibrate, draftFrom, normEntropy, scoreOptions } from "../src/engine/reflect.ts";
+import { calibrate, draftFrom, dropSelfDescription, normEntropy, scoreOptions } from "../src/engine/reflect.ts";
 
 const close = (a: number[], b: number[]) => a.forEach((x, i) => assert.ok(Math.abs(x - b[i]) < 1e-6, `${a} vs ${b}`));
 
@@ -50,6 +50,13 @@ test("scoreOptions undoes the rotation, so position bias cancels", async () => {
     { token: "1", logprob: Math.log(0.7) }, { token: "2", logprob: Math.log(0.2) }, { token: "3", logprob: Math.log(0.1) }] }] }]);
   const p = await scoreOptions("http://x", "qwen3:8b", { mode: "them", text: "hi" }, ["a", "b", "c"], 3);
   close(p, [1 / 3, 1 / 3, 1 / 3]);
+});
+
+test("dropSelfDescription keeps situation lines and drops About me", () => {
+  const ctx = "About me: I am autistic.\nI sent my weekly update at 5pm.";
+  assert.equal(dropSelfDescription(ctx), "I sent my weekly update at 5pm.");
+  assert.equal(dropSelfDescription("I cancelled our cinema plan."), "I cancelled our cinema plan.");
+  assert.equal(dropSelfDescription("about me: I often get anxious about what messages mean."), "");
 });
 
 test("draftFrom keeps only finished strings", () => {

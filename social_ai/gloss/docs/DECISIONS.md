@@ -832,3 +832,19 @@ Dated, with the evidence. Newest last.
   Raw jsonl is local (gitignored as results_*.jsonl). Summary:
   experiments/e9_safety/grade/e9_twogate_official.txt.
   Gloss still stays off participants until Eddie reviews the notes.
+
+- **Pre-registration: scorer drops "About me:" lines (before any new audit).**
+  The "judge the words, not the reader" sentence did not remove disclosure
+  drift. Structural change: `scoringPrompt` uses `dropSelfDescription`, so
+  lines matching `/^\s*about me\s*:/i` never reach the scorer. Generation
+  and replies still see them. E1 items have no such line, so they should
+  not move.
+  **Confirmation (not a 48x6 tautology):** on the first 5 v2 scenarios,
+  all six DISCLOSURE2 conditions must produce identical option
+  distributions (max TV 0). If any differ, the strip leaked and is not
+  adopted.
+  **Leftover-drift audit (after confirmation):** same 48 x 6, but the
+  disclosure sentence is placed in "what came before" *without* the
+  "About me:" prefix. Prediction: TV vs none stays in the shipped range
+  (~0.10). That number is a finding, not a reason to put self-description
+  back into the scorer. Do not tune the strip on that run.

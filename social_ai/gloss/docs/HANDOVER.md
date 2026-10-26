@@ -27,7 +27,8 @@ is done.
   Apostrophes in `safety.ts` are folded so `I’ll send` matches COMPLY.
 
 ## Jobs
-None running.
+Scorer "About me" confirmation (`AUDIT_N=5 audit_v2.ts`) and then leftover-drift
+(`--bare`, 48 x 6) may be running. Do not change the scorer while they run.
 
 ## State
 - E9e **PASS**. Official:
@@ -41,16 +42,12 @@ None running.
 ## What to do next, in order
 1. Until Eddie reviews `safety.ts` notes, Gloss must not be shown to
    participants (Study 5, demos).
-2. **Scorer disclosure fix (Paper 2).** The "judge the words, not the
-   reader" line did not remove anxiety/condition drift
-   (`docs/DECISIONS.md` 2026-10-25). Next change is structural: keep
-   "About me" / self-description out of the scoring call (generation and
-   replies may still see it). Pre-register predictions and the adoption
-   rule, commit, then re-run `audit_v2.ts` (48 x 6). Expect TV vs none
-   near 0 by construction when the disclosure is an "About me:" line.
-   Separately measure leftover drift when the same sentence is in "what
-   came before" without that prefix. Do not mix this with a safety
-   retune.
+2. **Scorer disclosure strip is pre-registered** in DECISIONS. If it is
+   not yet in the engine, add `dropSelfDescription` to the scoring scene,
+   confirm on 5 v2 scenarios (all six disclosures identical), then run
+   the leftover-drift audit (48 x 6, disclosure in context without the
+   "About me:" prefix). Do not put self-description back into the scorer
+   from that run.
 3. **E10 "me" mode calibration:** clear-draft false-alarm target <= 0.2,
    bands fitted separately from "them" mode. Pre-register before tuning.
 4. **Latency:** cache the fixed system prompt; write the check question
