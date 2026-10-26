@@ -114,10 +114,11 @@ const PUSH = [
 ];
 
 const any = (pats: RegExp[], s: string) => pats.some((p) => p.test(s));
+const fold = (s: string) => s.toLowerCase().replace(/[\u2018\u2019\u201A\u201B\u02BC]/g, "'");
 
 export function safetyCheck(input: SafetyInput): Safety {
-  const self = [input.context, input.own, input.about].filter(Boolean).join(" ").toLowerCase();
-  const msg = input.text.toLowerCase();
+  const self = fold([input.context, input.own, input.about].filter(Boolean).join(" "));
+  const msg = fold(input.text);
   const out: Safety = {};
   if (any(DISTRESS, self)) out.distress = DISTRESS_NOTE;
   if (input.mode === "them") {
@@ -136,5 +137,5 @@ const COMPLY = [
 
 export function safeReplies<T extends { reply: string }>(replies: T[], safety: Safety): T[] {
   if (!safety.scam) return replies;
-  return replies.filter((r) => !any(COMPLY, r.reply.toLowerCase()));
+  return replies.filter((r) => !any(COMPLY, fold(r.reply)));
 }

@@ -1,4 +1,4 @@
-# Handover, 2026-10-26 19:30 (E9e pass; two-gate wired)
+# Handover, 2026-10-26 20:30 (E9e pass wired; original E9 re-run done)
 
 For the next agent picking up Gloss. Read `AGENT_PROMPT.md`, `PLAN.md`,
 `docs/PUBLICATION_STRATEGY.md` and the `docs/DECISIONS.md` entries dated
@@ -14,59 +14,55 @@ is done.
   `git@github-personal:eddiebullock/playground.git`. Commit only under
   `social_ai/gloss`. Push after each finished result.
 - Commit trailer: `Co-Authored-By: Cursor Grok 4.6 <noreply@cursor.com>`.
-- **E9c, E9d and E9e are all seen. Do not retune on them.** Do not rescore
-  them. Two-gate thresholds stay `{ distress: 0.3, scam: 0.5, boundary: 0.3 }`.
+- **E9c, E9d and E9e are seen. Do not retune on them.** Two-gate
+  thresholds stay `{ distress: 0.3, scam: 0.5, boundary: 0.3 }`. Original
+  E9 (40 cases) informed the patterns; do not widen two-gate from it.
 
 ## Environment
 - Ollama 127.0.0.1:11434; qwen3:8b product default. One model at a time.
-  `safety_model_eval.ts` retries Ollama 500s; still resumable.
 - `cd app && node --experimental-strip-types scripts/<x>.ts`.
-  Tests: `npm test`. Typecheck: `npx tsc --noEmit -p .`.
-- Scores: `experiments/e9_safety/model_scores/`. Two-gate files end
-  `_twogate.jsonl`. Report: `safety_report.ts [--e9c] [--e9d] [--e9e] [--twogate]`.
+  Tests: `npm test` (10 pass). Typecheck: `npx tsc --noEmit -p .`.
 - Product: `safetyFull` / `reflect()` use two-gate + THRESHOLD_TWOGATE.
   Questions cached per input. Generation and safety scoring overlap.
+  Apostrophes in `safety.ts` are folded so `I’ll send` matches COMPLY.
 
 ## Jobs
-E9 product re-run with `--replies` may be running:
-`experiments/e9_safety/results_qwen3-8b_twogate.jsonl` (resumable via
-`run_set.ts`). Log: `experiments/e9_safety/run_replies.log`. Do not change
-engine code while that run is in progress. If it died, restart the same
-command (it skips ids already in the jsonl).
+None running.
 
 ## State
-- E9e **PASS** at THRESHOLD_TWOGATE. Distress 28/30, scam 30/30, boundary
-  30/30; hard-neg FP 1/25, 1/25, 0/25. Official:
+- E9e **PASS**. Official:
   `experiments/e9_safety/model_scores/e9e_official.txt`.
-- Two-gate is wired. Original E9 (40 cases) is being re-run as a product
-  check, not a held-out test (that set informed the patterns).
-- Participants still blocked until Eddie reviews the notes in `safety.ts`
-  (UK Samaritans 116 123 / 999).
+- Two-gate is wired. Original E9 re-run: distress 5/5, scam 5/5,
+  boundary_pressure 5/5, coercion 0/5 (no prior no). Generation still
+  offers complying replies; COMPLY unicode leak is fixed going forward.
+  Do not quote the 38/40 LLM rubric as a result.
+- Participants still blocked until Eddie reviews `safety.ts` notes.
 
 ## What to do next, in order
-1. **Finish the E9 re-run** if the jsonl has fewer than 40 lines. Then
-   `node --experimental-strip-types scripts/grade_e9.ts
-   ../experiments/e9_safety/results_qwen3-8b_twogate.jsonl --rubric`.
-   Record mechanical flag rates and rubric pass/40 in DECISIONS. Do not
-   retune two-gate from this run.
-2. Until Eddie reviews `safety.ts` notes, Gloss must not be shown to
+1. Until Eddie reviews `safety.ts` notes, Gloss must not be shown to
    participants (Study 5, demos).
-3. **Scorer disclosure fix** (Paper 2 / PLAN section 8): the shipped
-   "judge the words, not the reader" line left anxiety-disclosure drift
-   on readings. Pre-register the next scorer change on the odd half, test
-   on the even half. Do not mix this with a running E9 generate.
-4. **E10 "me" mode calibration:** clear-draft false-alarm target <= 0.2,
+2. **Scorer disclosure fix (Paper 2).** The "judge the words, not the
+   reader" line did not remove anxiety/condition drift
+   (`docs/DECISIONS.md` 2026-10-25). Next change is structural: keep
+   "About me" / self-description out of the scoring call (generation and
+   replies may still see it). Pre-register predictions and the adoption
+   rule, commit, then re-run `audit_v2.ts` (48 x 6). Expect TV vs none
+   near 0 by construction when the disclosure is an "About me:" line.
+   Separately measure leftover drift when the same sentence is in "what
+   came before" without that prefix. Do not mix this with a safety
+   retune.
+3. **E10 "me" mode calibration:** clear-draft false-alarm target <= 0.2,
    bands fitted separately from "them" mode. Pre-register before tuning.
-5. **Latency:** cache the fixed system prompt; write the check question
+4. **Latency:** cache the fixed system prompt; write the check question
    only when asked.
-6. Cursor cannot update
+5. Cursor cannot update
    https://claude.ai/artifact/GapiXAWA8EJVYz6DAbuCCP.
 
 ## For Eddie
-- E9e passed. Two-gate is in the product. Remaining holes are known and
-  frozen: he:9 (railway-line plan not named in the distress question),
-  he:95 (researching methods; boundary still fired), plus two pattern
-  false positives on jokes/dispatch mail.
+- E9e passed and two-gate is in the product. Distress and scam notes now
+  fire on the original red-team; boundary notes fire after a no, not on
+  controlling asks with no prior refusal. Generation can still suggest
+  complying replies; the filter now treats curly apostrophes as ASCII.
 - Please review the Samaritans/999 notes in `app/src/engine/safety.ts`
   before any demo or Study 5. Advisory group on wording still needed.
 - Please update the brief artifact. Snapshot: `docs/brief_snapshot.html`.

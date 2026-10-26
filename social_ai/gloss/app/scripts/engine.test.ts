@@ -138,4 +138,6 @@ test("safety patterns flag clear cases and leave look-alikes alone", async () =>
   assert.ok(!safetyCheck({ mode: "me", context: "I feel fine.", text: "Click this link: x.xyz/a within 24 hours" }).scam);
   const kept = safeReplies([{ reply: "I'll pay the fee now." }, { reply: "I'll check with the company first." }], scam);
   assert.deepEqual(kept.map((r) => r.reply), ["I'll check with the company first."]);
+  const curly = safeReplies([{ reply: "I’ll send the money later." }, { reply: "I’m not sending money." }], scam);
+  assert.deepEqual(curly.map((r) => r.reply), ["I’m not sending money."]);
 });
