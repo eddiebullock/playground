@@ -1997,6 +1997,228 @@
    }
   }
  },
+ "qwen3-8b fit": {
+  "All": {
+   "H": 0.854,
+   "F": 0.269,
+   "dprime": 1.668,
+   "c": -0.219,
+   "auc": 0.938,
+   "q_nonliteral": 0.862,
+   "q_sincere": 0.268,
+   "acc_nonliteral": 0.859,
+   "acc_sincere": 0.734,
+   "balanced_acc": 0.797,
+   "n_pairs": 64,
+   "ci": {
+    "H": [
+     0.762,
+     0.931
+    ],
+    "F": [
+     0.162,
+     0.377
+    ],
+    "dprime": [
+     1.252,
+     2.178
+    ],
+    "c": [
+     -0.522,
+     0.056
+    ],
+    "auc": [
+     0.875,
+     0.984
+    ],
+    "q_nonliteral": [
+     0.788,
+     0.929
+    ],
+    "q_sincere": [
+     0.182,
+     0.364
+    ],
+    "acc_nonliteral": [
+     0.766,
+     0.938
+    ],
+    "acc_sincere": [
+     0.625,
+     0.844
+    ],
+    "balanced_acc": [
+     0.734,
+     0.859
+    ]
+   }
+  },
+  "Deceits": {
+   "H": 0.825,
+   "F": 0.475,
+   "dprime": 0.997,
+   "c": -0.436,
+   "auc": 0.895,
+   "q_nonliteral": 0.847,
+   "q_sincere": 0.456,
+   "acc_nonliteral": 0.842,
+   "acc_sincere": 0.526,
+   "balanced_acc": 0.684,
+   "n_pairs": 19,
+   "ci": {
+    "H": [
+     0.675,
+     0.975
+    ],
+    "F": [
+     0.275,
+     0.675
+    ],
+    "dprime": [
+     0.437,
+     1.893
+    ],
+    "c": [
+     -1.019,
+     0.068
+    ],
+    "auc": [
+     0.737,
+     1.0
+    ],
+    "q_nonliteral": [
+     0.69,
+     0.969
+    ],
+    "q_sincere": [
+     0.296,
+     0.608
+    ],
+    "acc_nonliteral": [
+     0.684,
+     1.0
+    ],
+    "acc_sincere": [
+     0.316,
+     0.737
+    ],
+    "balanced_acc": [
+     0.579,
+     0.789
+    ]
+   }
+  },
+  "IndirectSpeech": {
+   "H": 0.833,
+   "F": 0.31,
+   "dprime": 1.465,
+   "c": -0.235,
+   "auc": 0.9,
+   "q_nonliteral": 0.883,
+   "q_sincere": 0.336,
+   "acc_nonliteral": 0.85,
+   "acc_sincere": 0.7,
+   "balanced_acc": 0.775,
+   "n_pairs": 20,
+   "ci": {
+    "H": [
+     0.69,
+     0.976
+    ],
+    "F": [
+     0.119,
+     0.5
+    ],
+    "dprime": [
+     0.879,
+     2.433
+    ],
+    "c": [
+     -0.807,
+     0.235
+    ],
+    "auc": [
+     0.75,
+     1.0
+    ],
+    "q_nonliteral": [
+     0.766,
+     0.982
+    ],
+    "q_sincere": [
+     0.176,
+     0.512
+    ],
+    "acc_nonliteral": [
+     0.7,
+     1.0
+    ],
+    "acc_sincere": [
+     0.5,
+     0.9
+    ],
+    "balanced_acc": [
+     0.675,
+     0.875
+    ]
+   }
+  },
+  "Irony": {
+   "H": 0.865,
+   "F": 0.096,
+   "dprime": 2.409,
+   "c": 0.099,
+   "auc": 1.0,
+   "q_nonliteral": 0.857,
+   "q_sincere": 0.071,
+   "acc_nonliteral": 0.88,
+   "acc_sincere": 0.92,
+   "balanced_acc": 0.9,
+   "n_pairs": 25,
+   "ci": {
+    "H": [
+     0.75,
+     0.981
+    ],
+    "F": [
+     0.019,
+     0.212
+    ],
+    "dprime": [
+     1.743,
+     3.644
+    ],
+    "c": [
+     -0.383,
+     0.634
+    ],
+    "auc": [
+     1.0,
+     1.0
+    ],
+    "q_nonliteral": [
+     0.735,
+     0.956
+    ],
+    "q_sincere": [
+     0.0,
+     0.164
+    ],
+    "acc_nonliteral": [
+     0.76,
+     1.0
+    ],
+    "acc_sincere": [
+     0.8,
+     1.0
+    ],
+    "balanced_acc": [
+     0.82,
+     0.98
+    ]
+   }
+  }
+ },
  "qwen3-8b stance": {
   "All": {
    "H": 0.869,
