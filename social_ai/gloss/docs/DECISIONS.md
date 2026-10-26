@@ -848,3 +848,9 @@ Dated, with the evidence. Newest last.
   "About me:" prefix. Prediction: TV vs none stays in the shipped range
   (~0.10). That number is a finding, not a reason to put self-description
   back into the scorer. Do not tune the strip on that run.
+
+- **Scorer "About me" strip, confirmation (adopted).** First 5 v2
+  scenarios, six DISCLOSURE2 conditions: max TV vs none **0**. Distributions
+  identical. Strip leaked nothing. Adopted. File:
+  experiments/e4_audit/v2_qwen3-8b_noscoredself.json. Leftover-drift audit
+  (`audit_v2.ts --bare`) is the next measurement, not a retune.

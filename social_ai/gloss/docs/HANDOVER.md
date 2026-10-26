@@ -27,8 +27,9 @@ is done.
   Apostrophes in `safety.ts` are folded so `I’ll send` matches COMPLY.
 
 ## Jobs
-Scorer "About me" confirmation (`AUDIT_N=5 audit_v2.ts`) and then leftover-drift
-(`--bare`, 48 x 6) may be running. Do not change the scorer while they run.
+Leftover-drift audit may be running: `audit_v2.ts qwen3:8b stance --bare`
+writing `experiments/e4_audit/v2_qwen3-8b_bare.json`. Do not change the
+scorer while it runs. If it died, restart the same command.
 
 ## State
 - E9e **PASS**. Official:
@@ -42,12 +43,10 @@ Scorer "About me" confirmation (`AUDIT_N=5 audit_v2.ts`) and then leftover-drift
 ## What to do next, in order
 1. Until Eddie reviews `safety.ts` notes, Gloss must not be shown to
    participants (Study 5, demos).
-2. **Scorer disclosure strip is pre-registered** in DECISIONS. If it is
-   not yet in the engine, add `dropSelfDescription` to the scoring scene,
-   confirm on 5 v2 scenarios (all six disclosures identical), then run
-   the leftover-drift audit (48 x 6, disclosure in context without the
-   "About me:" prefix). Do not put self-description back into the scorer
-   from that run.
+2. **Finish leftover-drift** (`v2_qwen3-8b_bare.json`, 48 scenarios).
+   Analyse with `python3 experiments/e4_audit/analyze_v2.py`. Record TV
+   vs none. Do not put self-description back into the scorer from that
+   run. Then E10 me-mode calibration.
 3. **E10 "me" mode calibration:** clear-draft false-alarm target <= 0.2,
    bands fitted separately from "them" mode. Pre-register before tuning.
 4. **Latency:** cache the fixed system prompt; write the check question
