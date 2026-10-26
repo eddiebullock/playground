@@ -38,11 +38,8 @@ it when the work below is done.
 These are background shells of that session and may have stopped if it was
 closed. Check with `tail experiments/overnight.log` and `ps aux | grep -E
 "run.py|safety_model_eval"`.
-1. `experiments/queue_overnight3.sh`: fit stance on qwen3:4b (hu, sincere
-   done; sincere_all running), then logs `QUEUE3_DONE`. If it died, run
-   `cd experiments/e1_pragmatics && python3 run.py --model qwen3:4b --task
-   sincere_all --mode fit` (resumable) and append `[HH:MM] QUEUE3_DONE` to
-   the log yourself.
+1. Queue 3 (fit stance) finished at 08:35 and is analysed (step 1 below
+   is done).
 2. `experiments/queue_overnight4.sh`: waits for QUEUE3_DONE, then scores the
    model-based safety check (`app/scripts/safety_model_eval.ts`) on e9b, e9,
    audit, e10, e4, e8, then e9c; writes
@@ -51,10 +48,7 @@ closed. Check with `tail experiments/overnight.log` and `ps aux | grep -E
    finished cases). Roughly 1-3 h.
 
 ## What to do next, in order
-1. **qwen3:4b fit result.** `python3 sdt.py | grep "qwen3-4b"` and
-   `analyze.py` (hu_qwen3-4b_fit). Add to the "Fit stance result" entry in
-   DECISIONS (8B: partial; deceits prediction failed; not adopted) and
-   replace the `[ON: qwen3:4b.]` slot in `docs/papers/paper1_draft.md` 4.2.
+1. Done: qwen3:4b fit result recorded (same as 8B; fit not adopted).
 2. **Safety thresholds on E9b only.** `node --experimental-strip-types
    scripts/safety_report.ts` prints recall / false positives for patterns,
    model and either, at thresholds 0.3-0.9. Rule (pre-registered in

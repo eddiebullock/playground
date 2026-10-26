@@ -596,3 +596,9 @@ Dated, with the evidence. Newest last.
   negative/partial result -- a content-conditional instruction moves the
   global criterion less but does not decouple phenomena, which supports the
   claim that criteria are set globally by the prompt. qwen3:4b pending.
+- **Fit stance result, qwen3:4b.** Hu accuracy 0.660 (stance 0.646, direct
+  0.548). All pairs: d' 1.53 (stance 1.47), c +0.10 (stance +0.25), balanced
+  accuracy 0.766 (stance 0.758). Irony acc 0.72 vs stance 0.64, sincere 0.96
+  both; deceits sincere 0.58 (stance 0.68). Same picture as 8B: small
+  all-pairs gain inside the CI, no decoupling of phenomena (here fit
+  over-reads deceits more than stance). Fit stance not adopted.

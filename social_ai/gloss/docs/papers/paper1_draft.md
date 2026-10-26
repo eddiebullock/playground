@@ -151,7 +151,8 @@ probably means something else; if they fit, they mean what they say") keeps
 the irony gain (c +0.10, d' 2.41) and recovers little on sincere items
 (deceits 0.47 -> 0.53, predicted >= 0.65; all-pairs c -0.30 -> -0.22).
 Telling the model *when* to read non-literally does not make its criterion
-phenomenon-specific. [ON: qwen3:4b.]
+phenomenon-specific. qwen3:4b shows the same: balanced accuracy 0.758 ->
+0.766, irony up, sincere deceits down (0.68 -> 0.58).
 
 ### 4.3 Naming the construct
 MUStARD, "is this line sarcastic or sincere?": accuracy 0.51-0.54 for every
