@@ -11,6 +11,7 @@
 
 import { json, optionDist } from "./llm.ts";
 import { safeReplies, safetyCheck, type Safety } from "./safety.ts";
+import { safetyFull } from "./safety_model.ts";
 
 export type Mode = "them" | "me";
 
@@ -49,7 +50,7 @@ export type ReflectResult = {
   check: string;
   /** Set only when the other person seems to be pushing past a "no": a reminder that the user can say no. */
   boundary: string;
-  /** Fixed notes from the safety layer (safety.ts), independent of the model. */
+  /** Notes from the safety layer (patterns OR two-gate model). */
   safety: Safety;
   model: string;
   ms: number;
@@ -254,6 +255,7 @@ export async function reflect(
 ): Promise<ReflectResult> {
   const t0 = Date.now();
   onStep?.("writing");
+  const safetyP = safetyFull(base, model, input, signal);
   const gen = await json<Generated>(
     base,
     model,
@@ -271,7 +273,12 @@ export async function reflect(
   onStep?.("weighing", { literal: gen.literal, meanings: raw.map((r) => r.meaning) });
   const ms_gen = Date.now() - t0;
   const readings = shown(await weigh(base, model, input, raw, signal));
-  const safety = safetyCheck(input);
+  let safety: Safety;
+  try {
+    safety = await safetyP;
+  } catch {
+    safety = safetyCheck(input);
+  }
   return summarise(readings, {
     literal: gen.literal,
     check: gen.check_question,

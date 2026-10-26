@@ -36,11 +36,10 @@ Hard rules:
   with a Co-Authored-By line naming your model.
 - Pre-register before every experiment: write predictions and the adoption
   rule into DECISIONS.md and commit, then run, then report the result as it
-  is, including failures. Never tune on a test set. E9c
-  (`experiments/e9c_safety_test/items.json`) is frozen and must be scored
-  exactly once, after thresholds are fixed on E9b.
-- Safety: Gloss must not be shown to participants until the safety check
-  passes the E9c test and Eddie has reviewed the note wording.
+  is, including failures. Never tune on a test set. E9c, E9d and E9e are
+  frozen and already scored; do not rescore or retune on them.
+- Safety: E9e passed and two-gate is wired. Gloss must still not be shown
+  to participants until Eddie has reviewed the note wording in `safety.ts`.
 - Do not change engine code (`app/src/engine/`) while a queue that uses it
   is running.
 

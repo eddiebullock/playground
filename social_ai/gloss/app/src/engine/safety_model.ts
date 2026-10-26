@@ -15,7 +15,7 @@ const SYSTEM = "You check messages for safety risks. Answer with the number of t
 export const THRESHOLD = { distress: 0.3, scam: 2, boundary: 2 };
 
 // Two-gate scores (safetyScoresTwoGate). Distress cut re-checked after the
-// E9b cue expansion (still 0.3). Not wired into safetyFull until E9e passes.
+// E9b cue expansion (still 0.3). Wired into safetyFull after E9e passed.
 export const THRESHOLD_TWOGATE = { distress: 0.3, scam: 0.5, boundary: 0.3 };
 
 function questions(input: SafetyInput): Partial<Record<keyof Safety, string>> {
@@ -97,23 +97,39 @@ Does this message push, pressure, guilt-trip or ignore a no?`;
   return q;
 }
 
+const scoreCache = new Map<string, Promise<Record<string, number>>>();
+function scoreKey(input: SafetyInput) {
+  return JSON.stringify({ mode: input.mode, text: input.text, context: input.context, own: input.own, about: input.about });
+}
+
 export async function safetyScoresTwoGate(base: string, model: string, input: SafetyInput, signal?: AbortSignal) {
-  const q = twoGateQuestions(input);
-  const out: Record<string, number> = {};
-  for (const [k, text] of Object.entries(q)) out[k] = await pYes(base, model, text, signal);
-  if (out.scam_ask != null && out.scam_cue != null) out.scam = Math.min(out.scam_ask, out.scam_cue);
-  if (out.boundary_no != null && out.boundary_push != null) out.boundary = Math.min(out.boundary_no, out.boundary_push);
-  return out;
+  const key = `${model}|${scoreKey(input)}`;
+  const hit = scoreCache.get(key);
+  if (hit) return hit;
+  const work = (async () => {
+    const q = twoGateQuestions(input);
+    const out: Record<string, number> = {};
+    for (const [k, text] of Object.entries(q)) out[k] = await pYes(base, model, text, signal);
+    if (out.scam_ask != null && out.scam_cue != null) out.scam = Math.min(out.scam_ask, out.scam_cue);
+    if (out.boundary_no != null && out.boundary_push != null) out.boundary = Math.min(out.boundary_no, out.boundary_push);
+    return out;
+  })();
+  scoreCache.set(key, work);
+  work.catch(() => {
+    if (scoreCache.get(key) === work) scoreCache.delete(key);
+  });
+  if (scoreCache.size > 80) scoreCache.delete(scoreCache.keys().next().value!);
+  return work;
 }
 
 const NOTE = { distress: DISTRESS_NOTE, scam: SCAM_NOTE, boundary: BOUNDARY_NOTE };
 
-/** Patterns OR model. */
+/** Patterns OR two-gate model. */
 export async function safetyFull(base: string, model: string, input: SafetyInput, signal?: AbortSignal): Promise<Safety> {
   const s = safetyCheck(input);
-  const p = await safetyScores(base, model, input, signal);
+  const p = await safetyScoresTwoGate(base, model, input, signal);
   for (const k of ["distress", "scam", "boundary"] as const) {
-    if (!s[k] && (p[k] ?? 0) >= THRESHOLD[k]) s[k] = NOTE[k];
+    if (!s[k] && (p[k] ?? 0) >= THRESHOLD_TWOGATE[k]) s[k] = NOTE[k];
   }
   return s;
 }

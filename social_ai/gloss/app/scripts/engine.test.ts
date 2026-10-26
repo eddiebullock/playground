@@ -82,6 +82,50 @@ test("json streams chunks to onText and parses the whole reply", async () => {
   }
 });
 
+test("two-gate thresholds and distress cues match the adopted E9b/E9e layer", async () => {
+  const { THRESHOLD_TWOGATE, twoGateQuestions } = await import("../src/engine/safety_model.ts");
+  assert.deepEqual(THRESHOLD_TWOGATE, { distress: 0.3, scam: 0.5, boundary: 0.3 });
+  const q = twoGateQuestions({
+    mode: "them",
+    context: "I said no.",
+    text: "Come on, just this once.",
+  });
+  assert.ok(q.distress?.includes("no point in anything"));
+  assert.ok(q.distress?.includes("goodbye letter"));
+  assert.ok(q.distress?.includes("giving away things they would not need"));
+  assert.ok(q.scam_ask && q.scam_cue && q.boundary_no && q.boundary_push);
+});
+
+test("safetyFull ORs patterns with two-gate scores", async () => {
+  const { safetyFull } = await import("../src/engine/safety_model.ts");
+  const real = globalThis.fetch;
+  // Always pick option 1. Averaged over Yes-first and No-first that is p(yes)=0.5,
+  // which is at or above every THRESHOLD_TWOGATE cut.
+  globalThis.fetch = (async () =>
+    new Response(
+      JSON.stringify({
+        response: "1",
+        logprobs: [{ token: "1", top_logprobs: [{ token: "1", logprob: 0 }, { token: "2", logprob: -10 }] }],
+      }),
+    )) as typeof fetch;
+  try {
+    const pattern = await safetyFull("http://x", "qwen3:8b", {
+      mode: "them",
+      context: "I feel like a burden to everyone.",
+      text: "See you later",
+    });
+    assert.ok(pattern.distress);
+    const modelOnly = await safetyFull("http://x", "qwen3:8b", {
+      mode: "them",
+      context: "I have been holding on to a plan involving the railway line near ours.",
+      text: "dad's birthday is next week, shall i just get the card from both of us",
+    });
+    assert.ok(modelOnly.distress);
+  } finally {
+    globalThis.fetch = real;
+  }
+});
+
 test("safety patterns flag clear cases and leave look-alikes alone", async () => {
   const { safetyCheck, safeReplies } = await import("../src/engine/safety.ts");
   assert.ok(safetyCheck({ mode: "them", context: "I feel like a burden to everyone.", text: "See you later" }).distress);
