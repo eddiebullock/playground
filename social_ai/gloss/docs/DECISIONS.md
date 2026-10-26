@@ -466,3 +466,25 @@ Dated, with the evidence. Newest last.
   New: Llama treats truthful statements as deceptive by default, so the
   deceit criterion differs by family. That strengthens the case for
   reporting criteria per phenomenon and per model.
+
+## 2026-10-26
+
+- **Paper 1 breadth: Gemma 3 (4B, 12B), E1 direct and stance, 64 pairs,
+  MUStARD.** Hu accuracy direct / stance: gemma3:12b 0.814 / 0.844 (irony
+  0.74 -> 0.94; human 0.863); gemma3:4b 0.586 / 0.611.
+  Irony criterion, direct: c +0.37 [0.00, 0.86] (12B), +0.76 [0.35, 1.21]
+  (4B). With stance: 12B -0.39 (overshoots to non-literal), 4B +0.45.
+  d' on irony barely moves (12B 1.86 -> 2.38, 4B 1.62 -> 2.25; CIs overlap).
+  Deceits: sincere versions read as deceptive about half the time even
+  with the direct prompt (12B acc sincere 0.47, c -0.61; 4B 0.42).
+  MUStARD "sarcastic" recall 0.975 (12B) and 0.970 (4B), precision
+  0.55 / 0.51.
+  Reading across all 5 models from 3 families: (1) with the direct prompt the
+  irony criterion is literal-leaning in every model (c +0.37 to +0.96);
+  (2) a global instruction moves c far more than d'; (3) the deceit
+  criterion is family-specific (Qwen neutral, Llama and Gemma liberal);
+  (4) naming the construct gives near-total "yes" in every model. Claims
+  (1), (2) and (4) are general; (3) is the reason to report criteria per
+  phenomenon and per model. The largest model (Gemma 12B) has the smallest
+  irony bias, so "literal bias shrinks with scale" is a possible reading
+  that 2 sizes per family cannot test. Keep it out of the claims.

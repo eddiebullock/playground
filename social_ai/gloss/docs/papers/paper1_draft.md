@@ -20,7 +20,7 @@ indistinguishable from one that cannot detect non-literal intent. We
 introduce minimal-pair sincere controls for the Hu et al. (2023)
 pragmatics items: the same remark, with the situation rewritten so that it
 is meant literally, for irony, indirect requests and deceits (64 pairs).
-Signal-detection analysis across [ON: 5] open models from 3 families shows
+Signal-detection analysis across 5 open models from 3 families shows
 that the literal tendency is a criterion effect specific to irony: qwen3:8b
 distinguishes ironic from sincere versions almost perfectly (paired AUC
 0.96), yet chooses the literal reading for half of the ironic ones. A
@@ -77,7 +77,7 @@ real tweets, iSarcasmEval.]
 - Option probabilities from first-token log-probs after an "Answer:"
   prefill, averaged over orders (removes position bias). Local inference
   (Ollama, temperature 0).
-- Models: qwen3 4B, 8B; [ON: llama3.1 8B; gemma3 4B, 12B].
+- Models: qwen3 4B, 8B; llama3.1 8B; gemma3 4B, 12B.
 - Prompts: direct ("Answer with the number..."); stance (one sentence:
   people often mean something other than their words, and often exactly
   what they say). The stance sentence was written after the E1 direct
@@ -99,7 +99,9 @@ real tweets, iSarcasmEval.]
 |---|---|---|---|
 | qwen3:4b | 0.548 | 0.646 | 0.863 |
 | qwen3:8b | 0.683 | 0.780 | 0.863 |
-| [ON] llama3.1:8b, gemma3:4b, gemma3:12b | | | |
+| llama3.1:8b | 0.676 | 0.703 | 0.863 |
+| gemma3:4b | 0.586 | 0.611 | 0.863 |
+| gemma3:12b | 0.814 | 0.844 | 0.863 |
 
 qwen3:8b by phenomenon, direct -> stance: Irony 0.51 -> 0.85; Indirect
 0.81 -> 0.91; Deceits 0.76 -> 0.87; Maxims 0.59 -> 0.74; Metaphor 0.80 ->
@@ -122,8 +124,19 @@ All 64 pairs by phenomenon, qwen3:8b (2026-10-25 overnight):
 | stance | Indirect requests | 0.90 | 0.65 | 1.55 | -0.41 |
 | stance | Deceits | 0.90 | 0.47 | 1.09 | -0.61 [-1.21, -0.14] |
 | direct / stance | All 64 | 0.70 / 0.88 | 0.83 / 0.70 | 1.51 / 1.65 | +0.23 / -0.30 |
-qwen3:4b, all 64: d' 1.18 -> 1.47, c +0.40 -> +0.25. [ON: llama3.1:8b,
-gemma3:4b, gemma3:12b.]
+qwen3:4b, all 64: d' 1.18 -> 1.47, c +0.40 -> +0.25.
+
+Across all five models (direct -> stance):
+| Model | Irony c | Irony d' | Deceits acc sincere (direct) | All-64 balanced acc |
+|---|---|---|---|---|
+| qwen3:4b | +0.81 -> +0.61 | 1.53 -> 1.92 | 0.74 | 0.68 -> 0.76 |
+| qwen3:8b | +0.96 -> +0.18 | 2.21 -> 2.25 | 0.74 | 0.77 -> 0.79 |
+| llama3.1:8b | +0.81 -> -0.25 | 2.52 -> 2.11 | 0.26 | 0.75 -> 0.76 |
+| gemma3:4b | +0.76 -> +0.45 | 1.62 -> 2.25 | 0.42 | 0.68 -> 0.74 |
+| gemma3:12b | +0.37 -> -0.39 | 1.86 -> 2.38 | 0.47 | 0.79 -> 0.81 |
+The direct irony criterion is literal-leaning in every model; the deceit
+criterion is family-specific (Qwen neutral; Llama and Gemma read truthful
+statements as deceptive by default).
 
 Reading: the prompt barely changes sensitivity anywhere. The literal bias is
 specific to irony; for indirect requests and deceits the direct criterion is
@@ -137,7 +150,8 @@ MUStARD, "is this line sarcastic or sincere?": accuracy 0.51-0.54 for every
 Qwen model and prompt; "sarcastic" recall 0.95-0.98, precision 0.51-0.52. The
 models' c is strongly liberal here, the opposite sign to 4.2 on the same
 kind of content. Interpretation: naming sarcasm in the question licenses it.
-[ON: llama, gemma.]
+Replicates in every family: "sarcastic" recall 0.97-0.99 for llama3.1:8b,
+gemma3:4b and gemma3:12b.
 
 ### 4.4 Calibration and abstention (qwen3:8b stance)
 ECE 0.19 raw -> 0.044 after temperature scaling (T = 3.4). At calibrated

@@ -1,4 +1,892 @@
 {
+ "gemma3-12b direct": {
+  "All": {
+   "H": 0.808,
+   "F": 0.238,
+   "dprime": 1.581,
+   "c": -0.079,
+   "auc": 1.0,
+   "q_nonliteral": 0.829,
+   "q_sincere": 0.226,
+   "acc_nonliteral": 0.812,
+   "acc_sincere": 0.766,
+   "balanced_acc": 0.789,
+   "n_pairs": 64,
+   "ci": {
+    "H": [
+     0.715,
+     0.9
+    ],
+    "F": [
+     0.146,
+     0.346
+    ],
+    "dprime": [
+     1.2,
+     2.086
+    ],
+    "c": [
+     -0.359,
+     0.192
+    ],
+    "auc": [
+     1.0,
+     1.0
+    ],
+    "q_nonliteral": [
+     0.74,
+     0.915
+    ],
+    "q_sincere": [
+     0.134,
+     0.325
+    ],
+    "acc_nonliteral": [
+     0.719,
+     0.906
+    ],
+    "acc_sincere": [
+     0.656,
+     0.859
+    ],
+    "balanced_acc": [
+     0.727,
+     0.852
+    ]
+   }
+  },
+  "Deceits": {
+   "H": 0.875,
+   "F": 0.525,
+   "dprime": 1.088,
+   "c": -0.607,
+   "auc": 1.0,
+   "q_nonliteral": 0.905,
+   "q_sincere": 0.5,
+   "acc_nonliteral": 0.895,
+   "acc_sincere": 0.474,
+   "balanced_acc": 0.684,
+   "n_pairs": 19,
+   "ci": {
+    "H": [
+     0.725,
+     0.975
+    ],
+    "F": [
+     0.325,
+     0.725
+    ],
+    "dprime": [
+     0.481,
+     1.897
+    ],
+    "c": [
+     -1.207,
+     -0.151
+    ],
+    "auc": [
+     1.0,
+     1.0
+    ],
+    "q_nonliteral": [
+     0.769,
+     1.0
+    ],
+    "q_sincere": [
+     0.29,
+     0.705
+    ],
+    "acc_nonliteral": [
+     0.737,
+     1.0
+    ],
+    "acc_sincere": [
+     0.263,
+     0.684
+    ],
+    "balanced_acc": [
+     0.579,
+     0.789
+    ]
+   }
+  },
+  "IndirectSpeech": {
+   "H": 0.833,
+   "F": 0.167,
+   "dprime": 1.935,
+   "c": -0.0,
+   "auc": 1.0,
+   "q_nonliteral": 0.864,
+   "q_sincere": 0.156,
+   "acc_nonliteral": 0.85,
+   "acc_sincere": 0.85,
+   "balanced_acc": 0.85,
+   "n_pairs": 20,
+   "ci": {
+    "H": [
+     0.69,
+     0.976
+    ],
+    "F": [
+     0.024,
+     0.31
+    ],
+    "dprime": [
+     1.289,
+     2.948
+    ],
+    "c": [
+     -0.507,
+     0.507
+    ],
+    "auc": [
+     1.0,
+     1.0
+    ],
+    "q_nonliteral": [
+     0.72,
+     0.979
+    ],
+    "q_sincere": [
+     0.034,
+     0.307
+    ],
+    "acc_nonliteral": [
+     0.7,
+     1.0
+    ],
+    "acc_sincere": [
+     0.7,
+     1.0
+    ],
+    "balanced_acc": [
+     0.75,
+     0.95
+    ]
+   }
+  },
+  "Irony": {
+   "H": 0.712,
+   "F": 0.096,
+   "dprime": 1.862,
+   "c": 0.373,
+   "auc": 1.0,
+   "q_nonliteral": 0.744,
+   "q_sincere": 0.073,
+   "acc_nonliteral": 0.72,
+   "acc_sincere": 0.92,
+   "balanced_acc": 0.82,
+   "n_pairs": 25,
+   "ci": {
+    "H": [
+     0.519,
+     0.865
+    ],
+    "F": [
+     0.019,
+     0.212
+    ],
+    "dprime": [
+     1.286,
+     2.871
+    ],
+    "c": [
+     -0.0,
+     0.863
+    ],
+    "auc": [
+     1.0,
+     1.0
+    ],
+    "q_nonliteral": [
+     0.576,
+     0.912
+    ],
+    "q_sincere": [
+     0.0,
+     0.186
+    ],
+    "acc_nonliteral": [
+     0.52,
+     0.88
+    ],
+    "acc_sincere": [
+     0.8,
+     1.0
+    ],
+    "balanced_acc": [
+     0.72,
+     0.92
+    ]
+   }
+  }
+ },
+ "gemma3-12b stance": {
+  "All": {
+   "H": 0.931,
+   "F": 0.315,
+   "dprime": 1.962,
+   "c": -0.5,
+   "auc": 0.938,
+   "q_nonliteral": 0.923,
+   "q_sincere": 0.324,
+   "acc_nonliteral": 0.938,
+   "acc_sincere": 0.688,
+   "balanced_acc": 0.812,
+   "n_pairs": 64,
+   "ci": {
+    "H": [
+     0.869,
+     0.977
+    ],
+    "F": [
+     0.208,
+     0.438
+    ],
+    "dprime": [
+     1.518,
+     2.656
+    ],
+    "c": [
+     -0.84,
+     -0.224
+    ],
+    "auc": [
+     0.875,
+     0.984
+    ],
+    "q_nonliteral": [
+     0.859,
+     0.976
+    ],
+    "q_sincere": [
+     0.225,
+     0.427
+    ],
+    "acc_nonliteral": [
+     0.875,
+     0.984
+    ],
+    "acc_sincere": [
+     0.562,
+     0.797
+    ],
+    "balanced_acc": [
+     0.75,
+     0.875
+    ]
+   }
+  },
+  "Deceits": {
+   "H": 0.925,
+   "F": 0.525,
+   "dprime": 1.377,
+   "c": -0.751,
+   "auc": 0.947,
+   "q_nonliteral": 0.932,
+   "q_sincere": 0.55,
+   "acc_nonliteral": 0.947,
+   "acc_sincere": 0.474,
+   "balanced_acc": 0.711,
+   "n_pairs": 19,
+   "ci": {
+    "H": [
+     0.825,
+     0.975
+    ],
+    "F": [
+     0.325,
+     0.725
+    ],
+    "dprime": [
+     0.697,
+     2.279
+    ],
+    "c": [
+     -1.279,
+     -0.308
+    ],
+    "auc": [
+     0.842,
+     1.0
+    ],
+    "q_nonliteral": [
+     0.827,
+     1.0
+    ],
+    "q_sincere": [
+     0.392,
+     0.718
+    ],
+    "acc_nonliteral": [
+     0.842,
+     1.0
+    ],
+    "acc_sincere": [
+     0.263,
+     0.684
+    ],
+    "balanced_acc": [
+     0.605,
+     0.816
+    ]
+   }
+  },
+  "IndirectSpeech": {
+   "H": 0.881,
+   "F": 0.262,
+   "dprime": 1.817,
+   "c": -0.271,
+   "auc": 0.85,
+   "q_nonliteral": 0.879,
+   "q_sincere": 0.237,
+   "acc_nonliteral": 0.9,
+   "acc_sincere": 0.75,
+   "balanced_acc": 0.825,
+   "n_pairs": 20,
+   "ci": {
+    "H": [
+     0.738,
+     0.976
+    ],
+    "F": [
+     0.071,
+     0.452
+    ],
+    "dprime": [
+     1.158,
+     2.93
+    ],
+    "c": [
+     -0.807,
+     0.194
+    ],
+    "auc": [
+     0.7,
+     1.0
+    ],
+    "q_nonliteral": [
+     0.748,
+     0.981
+    ],
+    "q_sincere": [
+     0.09,
+     0.409
+    ],
+    "acc_nonliteral": [
+     0.75,
+     1.0
+    ],
+    "acc_sincere": [
+     0.55,
+     0.95
+    ],
+    "balanced_acc": [
+     0.725,
+     0.925
+    ]
+   }
+  },
+  "Irony": {
+   "H": 0.942,
+   "F": 0.212,
+   "dprime": 2.376,
+   "c": -0.387,
+   "auc": 1.0,
+   "q_nonliteral": 0.95,
+   "q_sincere": 0.222,
+   "acc_nonliteral": 0.96,
+   "acc_sincere": 0.8,
+   "balanced_acc": 0.88,
+   "n_pairs": 25,
+   "ci": {
+    "H": [
+     0.865,
+     0.981
+    ],
+    "F": [
+     0.058,
+     0.365
+    ],
+    "dprime": [
+     1.743,
+     3.374
+    ],
+    "c": [
+     -0.863,
+     -0.0
+    ],
+    "auc": [
+     1.0,
+     1.0
+    ],
+    "q_nonliteral": [
+     0.86,
+     1.0
+    ],
+    "q_sincere": [
+     0.08,
+     0.388
+    ],
+    "acc_nonliteral": [
+     0.88,
+     1.0
+    ],
+    "acc_sincere": [
+     0.64,
+     0.96
+    ],
+    "balanced_acc": [
+     0.8,
+     0.96
+    ]
+   }
+  }
+ },
+ "gemma3-4b direct": {
+  "All": {
+   "H": 0.623,
+   "F": 0.269,
+   "dprime": 0.929,
+   "c": 0.151,
+   "auc": 0.969,
+   "q_nonliteral": 0.634,
+   "q_sincere": 0.231,
+   "acc_nonliteral": 0.625,
+   "acc_sincere": 0.734,
+   "balanced_acc": 0.68,
+   "n_pairs": 64,
+   "ci": {
+    "H": [
+     0.5,
+     0.731
+    ],
+    "F": [
+     0.162,
+     0.377
+    ],
+    "dprime": [
+     0.628,
+     1.295
+    ],
+    "c": [
+     -0.11,
+     0.435
+    ],
+    "auc": [
+     0.922,
+     1.0
+    ],
+    "q_nonliteral": [
+     0.525,
+     0.734
+    ],
+    "q_sincere": [
+     0.146,
+     0.316
+    ],
+    "acc_nonliteral": [
+     0.5,
+     0.734
+    ],
+    "acc_sincere": [
+     0.625,
+     0.844
+    ],
+    "balanced_acc": [
+     0.625,
+     0.742
+    ]
+   }
+  },
+  "Deceits": {
+   "H": 0.725,
+   "F": 0.575,
+   "dprime": 0.409,
+   "c": -0.393,
+   "auc": 1.0,
+   "q_nonliteral": 0.716,
+   "q_sincere": 0.491,
+   "acc_nonliteral": 0.737,
+   "acc_sincere": 0.421,
+   "balanced_acc": 0.579,
+   "n_pairs": 19,
+   "ci": {
+    "H": [
+     0.525,
+     0.875
+    ],
+    "F": [
+     0.375,
+     0.775
+    ],
+    "dprime": [
+     0.0,
+     0.945
+    ],
+    "c": [
+     -0.953,
+     0.128
+    ],
+    "auc": [
+     1.0,
+     1.0
+    ],
+    "q_nonliteral": [
+     0.525,
+     0.895
+    ],
+    "q_sincere": [
+     0.298,
+     0.673
+    ],
+    "acc_nonliteral": [
+     0.526,
+     0.895
+    ],
+    "acc_sincere": [
+     0.211,
+     0.632
+    ],
+    "balanced_acc": [
+     0.5,
+     0.658
+    ]
+   }
+  },
+  "IndirectSpeech": {
+   "H": 0.643,
+   "F": 0.262,
+   "dprime": 1.004,
+   "c": 0.136,
+   "auc": 0.9,
+   "q_nonliteral": 0.697,
+   "q_sincere": 0.245,
+   "acc_nonliteral": 0.65,
+   "acc_sincere": 0.75,
+   "balanced_acc": 0.7,
+   "n_pairs": 20,
+   "ci": {
+    "H": [
+     0.452,
+     0.833
+    ],
+    "F": [
+     0.119,
+     0.452
+    ],
+    "dprime": [
+     0.486,
+     1.759
+    ],
+    "c": [
+     -0.363,
+     0.65
+    ],
+    "auc": [
+     0.75,
+     1.0
+    ],
+    "q_nonliteral": [
+     0.519,
+     0.874
+    ],
+    "q_sincere": [
+     0.11,
+     0.4
+    ],
+    "acc_nonliteral": [
+     0.45,
+     0.85
+    ],
+    "acc_sincere": [
+     0.55,
+     0.9
+    ],
+    "balanced_acc": [
+     0.6,
+     0.825
+    ]
+   }
+  },
+  "Irony": {
+   "H": 0.519,
+   "F": 0.058,
+   "dprime": 1.623,
+   "c": 0.763,
+   "auc": 1.0,
+   "q_nonliteral": 0.522,
+   "q_sincere": 0.021,
+   "acc_nonliteral": 0.52,
+   "acc_sincere": 0.96,
+   "balanced_acc": 0.74,
+   "n_pairs": 25,
+   "ci": {
+    "H": [
+     0.327,
+     0.712
+    ],
+    "F": [
+     0.019,
+     0.135
+    ],
+    "dprime": [
+     1.057,
+     2.414
+    ],
+    "c": [
+     0.349,
+     1.207
+    ],
+    "auc": [
+     1.0,
+     1.0
+    ],
+    "q_nonliteral": [
+     0.341,
+     0.705
+    ],
+    "q_sincere": [
+     0.0,
+     0.062
+    ],
+    "acc_nonliteral": [
+     0.32,
+     0.72
+    ],
+    "acc_sincere": [
+     0.88,
+     1.0
+    ],
+    "balanced_acc": [
+     0.64,
+     0.84
+    ]
+   }
+  }
+ },
+ "gemma3-4b stance": {
+  "All": {
+   "H": 0.746,
+   "F": 0.269,
+   "dprime": 1.278,
+   "c": -0.024,
+   "auc": 0.969,
+   "q_nonliteral": 0.746,
+   "q_sincere": 0.267,
+   "acc_nonliteral": 0.75,
+   "acc_sincere": 0.734,
+   "balanced_acc": 0.742,
+   "n_pairs": 64,
+   "ci": {
+    "H": [
+     0.638,
+     0.854
+    ],
+    "F": [
+     0.162,
+     0.377
+    ],
+    "dprime": [
+     0.945,
+     1.689
+    ],
+    "c": [
+     -0.286,
+     0.25
+    ],
+    "auc": [
+     0.922,
+     1.0
+    ],
+    "q_nonliteral": [
+     0.648,
+     0.834
+    ],
+    "q_sincere": [
+     0.176,
+     0.36
+    ],
+    "acc_nonliteral": [
+     0.641,
+     0.859
+    ],
+    "acc_sincere": [
+     0.625,
+     0.844
+    ],
+    "balanced_acc": [
+     0.68,
+     0.805
+    ]
+   }
+  },
+  "Deceits": {
+   "H": 0.775,
+   "F": 0.525,
+   "dprime": 0.693,
+   "c": -0.409,
+   "auc": 0.895,
+   "q_nonliteral": 0.814,
+   "q_sincere": 0.568,
+   "acc_nonliteral": 0.789,
+   "acc_sincere": 0.474,
+   "balanced_acc": 0.632,
+   "n_pairs": 19,
+   "ci": {
+    "H": [
+     0.575,
+     0.925
+    ],
+    "F": [
+     0.325,
+     0.725
+    ],
+    "dprime": [
+     0.256,
+     1.353
+    ],
+    "c": [
+     -1.011,
+     0.068
+    ],
+    "auc": [
+     0.737,
+     1.0
+    ],
+    "q_nonliteral": [
+     0.655,
+     0.957
+    ],
+    "q_sincere": [
+     0.368,
+     0.757
+    ],
+    "acc_nonliteral": [
+     0.579,
+     0.947
+    ],
+    "acc_sincere": [
+     0.263,
+     0.684
+    ],
+    "balanced_acc": [
+     0.553,
+     0.737
+    ]
+   }
+  },
+  "IndirectSpeech": {
+   "H": 0.69,
+   "F": 0.31,
+   "dprime": 0.994,
+   "c": -0.0,
+   "auc": 1.0,
+   "q_nonliteral": 0.726,
+   "q_sincere": 0.27,
+   "acc_nonliteral": 0.7,
+   "acc_sincere": 0.7,
+   "balanced_acc": 0.7,
+   "n_pairs": 20,
+   "ci": {
+    "H": [
+     0.5,
+     0.881
+    ],
+    "F": [
+     0.119,
+     0.5
+    ],
+    "dprime": [
+     0.482,
+     1.706
+    ],
+    "c": [
+     -0.516,
+     0.469
+    ],
+    "auc": [
+     1.0,
+     1.0
+    ],
+    "q_nonliteral": [
+     0.545,
+     0.9
+    ],
+    "q_sincere": [
+     0.132,
+     0.431
+    ],
+    "acc_nonliteral": [
+     0.5,
+     0.9
+    ],
+    "acc_sincere": [
+     0.5,
+     0.9
+    ],
+    "balanced_acc": [
+     0.6,
+     0.8
+    ]
+   }
+  },
+  "Irony": {
+   "H": 0.75,
+   "F": 0.058,
+   "dprime": 2.249,
+   "c": 0.45,
+   "auc": 1.0,
+   "q_nonliteral": 0.711,
+   "q_sincere": 0.036,
+   "acc_nonliteral": 0.76,
+   "acc_sincere": 0.96,
+   "balanced_acc": 0.86,
+   "n_pairs": 25,
+   "ci": {
+    "H": [
+     0.596,
+     0.904
+    ],
+    "F": [
+     0.019,
+     0.135
+    ],
+    "dprime": [
+     1.648,
+     3.175
+    ],
+    "c": [
+     -0.0,
+     0.913
+    ],
+    "auc": [
+     1.0,
+     1.0
+    ],
+    "q_nonliteral": [
+     0.552,
+     0.856
+    ],
+    "q_sincere": [
+     0.0,
+     0.092
+    ],
+    "acc_nonliteral": [
+     0.6,
+     0.92
+    ],
+    "acc_sincere": [
+     0.88,
+     1.0
+    ],
+    "balanced_acc": [
+     0.78,
+     0.94
+    ]
+   }
+  }
+ },
  "llama3.1-8b direct": {
   "All": {
    "H": 0.792,
