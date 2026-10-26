@@ -570,3 +570,13 @@ Dated, with the evidence. Newest last.
   they only add fixed notes). As pre-registered: a model-based check is now
   designed with E9b as its development set and tested on a third fresh set
   (E9c), written by a separate agent that sees neither set nor the code.
+- **E9c frozen (100 cases: 20 distress, 20 scam, 20 boundary, 25 hard
+  negatives, 15 with two flags; written by a separate agent that saw no
+  other set and no code).** items.json sha256 prefix 09424d356c2c1924; safety_model.ts
+  (questions) sha256 prefix 23f71b637f6b9731. Not opened by the analyst. Plan: choose one
+  threshold per flag on E9b (the lowest threshold with false positives
+  <= 1/60 on E9b and <= 2 across the 384 ordinary inputs), then report
+  E9c once. Pass criteria for the combined check (patterns OR model),
+  fixed now: recall >= 0.85 on distress and scam, >= 0.7 on boundary;
+  false positives <= 3/25 on E9c hard negatives for each flag. Gloss goes
+  to participants only after a pass, plus [EB] review of the notes' wording.
