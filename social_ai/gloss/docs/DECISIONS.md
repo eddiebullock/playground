@@ -710,3 +710,12 @@ Dated, with the evidence. Newest last.
   are unchanged. E9c two-gate was not scored. Next test is E9d, written
   by an agent that has not seen E9c items or `twoGateQuestions`. Same
   pass criteria as E9c.
+
+- **E9d frozen (2026-10-26, before any score).** 100 cases written by a
+  separate agent that was forbidden from reading E9b, E9c, `safety.ts` and
+  `safety_model.ts`. Mix: 20 distress, 20 scam, 20 boundary, 25 hard
+  negatives, 15 mixed (5 of each two-flag pair). ids hd:1-100. items.json
+  sha256 prefix 053595b3679152a9. Pass criteria unchanged: combined
+  (patterns OR two-gate at THRESHOLD_TWOGATE distress 0.3 / scam 0.5 /
+  boundary 0.3) recall >= 0.85 distress and scam, >= 0.7 boundary;
+  hard-negative FP <= 3/25 per flag. Score once. Do not retune on E9d.
