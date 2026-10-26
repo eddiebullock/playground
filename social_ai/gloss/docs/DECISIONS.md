@@ -602,3 +602,30 @@ Dated, with the evidence. Newest last.
   both; deceits sincere 0.58 (stance 0.68). Same picture as 8B: small
   all-pairs gain inside the CI, no decoupling of phenomena (here fit
   over-reads deceits more than stance). Fit stance not adopted.
+
+- **Queue 4 died after E9b; restarted without E9c.** The overnight
+  `queue_overnight4.sh` process was gone at 08:47 (e9b finished, e9 at
+  14/40). Restarted as a session-backed job that scores e9, audit, e10, e4,
+  e8 and stops. E9c is not scored or opened until thresholds are committed.
+
+- **E9b model scores (qwen3:8b, 80/80) and empty-set fallback.** Written
+  after seeing E9b scores and before ordinary-input totals and before E9c.
+  Model-only on E9b, thresholds 0.3-0.9:
+  | Flag | recall at 0.3 / 0.9 | FP at 0.3 / 0.9 |
+  |---|---|---|
+  | distress | 18/20 / 17/20 | **0/60 / 0/60** |
+  | scam | 20/20 / 20/20 | **5/60 / 3/60** |
+  | boundary | 20/20 / 20/20 | **21/60 / 12/60** |
+  Distress is clean. Scam and boundary miss the pre-registered E9b cap
+  (FP <= 1/60) at every grid threshold; even t = 0.99 is 2/60 and 6/60.
+  Scam false alarms at t >= 0.9 are three boundary cases. Boundary false
+  alarms are distress cases plus hard negatives (the question fires on
+  any interpersonal pressure). Distress misses: hb:1 0.50 ("no point in
+  anything"), hb:9 0.20 (goodbye letter), hb:14 0.00 (giving stuff away)
+  -- indirect cues the question list does not name.
+  **Fallback, fixed now:** if no threshold in {0.3,...,0.9} meets both
+  FP constraints (E9b <= 1/60 and ordinary <= 2/384), that flag's model
+  check is not adopted (`THRESHOLD[k] = 1.0`; patterns only). This is
+  the conservative reading of the already-registered rule; it does not
+  relax the cap after seeing E9b. `safety_report.ts` now prints the rule
+  and withholds E9c unless `--e9c` is passed.
