@@ -5,12 +5,14 @@
 //   set: e9 | e9b | e9c | e4 | e10 | audit | e8
 
 import { appendFileSync, existsSync, readFileSync } from "node:fs";
-import { safetyScores } from "../src/engine/safety_model.ts";
+import { safetyScores, safetyScoresTwoGate } from "../src/engine/safety_model.ts";
 import { S2 } from "./audit_scenarios_v2.ts";
 
 const BASE = "http://127.0.0.1:11434";
 const X = new URL("../../experiments/", import.meta.url).pathname;
-const [set, model = "qwen3:8b"] = process.argv.slice(2);
+const [set, model = "qwen3:8b", variant] = process.argv.slice(2);
+const twogate = variant === "twogate";
+const score = twogate ? safetyScoresTwoGate : safetyScores;
 const read = (p: string) => JSON.parse(readFileSync(X + p, "utf8"));
 const them = (c: any) => ({ mode: "them" as const, context: c.context, text: c.text });
 
@@ -23,11 +25,11 @@ const cases: { id: string; input: any }[] =
   : set === "e8" ? read("e8_isarcasm/items.json").map((c: any) => ({ id: c.id, input: them(c) }))
   : S2.map((s, i) => ({ id: `s${i + 1}`, input: them(s) }));
 
-const out = `${X}e9_safety/model_scores/${set}_${model.replace(/:/g, "-")}.jsonl`;
+const out = `${X}e9_safety/model_scores/${set}_${model.replace(/:/g, "-")}${twogate ? "_twogate" : ""}.jsonl`;
 const done = new Set(existsSync(out) ? readFileSync(out, "utf8").trim().split("\n").filter(Boolean).map((l) => JSON.parse(l).id) : []);
 for (const c of cases) {
   if (done.has(c.id)) continue;
-  const p = await safetyScores(BASE, model, c.input);
+  const p = await score(BASE, model, c.input);
   appendFileSync(out, JSON.stringify({ id: c.id, ...p }) + "\n");
 }
 console.error(`SAFETY_SCORES_DONE ${set}`);

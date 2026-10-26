@@ -38,21 +38,67 @@ Had the person already said no, or made clear they do not want something, and do
   return q;
 }
 
+async function pYes(base: string, model: string, q: string, signal?: AbortSignal) {
+  let yes = 0;
+  let used = 0;
+  for (const yesFirst of [true, false]) {
+    const opts = yesFirst ? "1. Yes\n2. No" : "1. No\n2. Yes";
+    const p = await optionDist(base, model, SYSTEM, `${q}\n\n${opts}`, 2, signal);
+    if (!p) continue;
+    yes += yesFirst ? p[0] : p[1];
+    used++;
+  }
+  return used ? yes / used : 0;
+}
+
 /** p(yes) for each question that applies, averaged over both option orders. */
 export async function safetyScores(base: string, model: string, input: SafetyInput, signal?: AbortSignal) {
   const out: Partial<Record<keyof Safety, number>> = {};
   for (const [k, q] of Object.entries(questions(input)) as [keyof Safety, string][]) {
-    let yes = 0;
-    let used = 0;
-    for (const yesFirst of [true, false]) {
-      const opts = yesFirst ? "1. Yes\n2. No" : "1. No\n2. Yes";
-      const p = await optionDist(base, model, SYSTEM, `${q}\n\n${opts}`, 2, signal);
-      if (!p) continue;
-      yes += yesFirst ? p[0] : p[1];
-      used++;
-    }
-    out[k] = used ? yes / used : 0;
+    out[k] = await pYes(base, model, q, signal);
   }
+  return out;
+}
+
+/** Two-gate wording (DECISIONS 2026-10-26). scam/boundary are min of two questions. */
+export function twoGateQuestions(input: SafetyInput) {
+  const self = [input.context, input.own, input.about].filter((s) => s?.trim()).join("\n");
+  const q: Record<string, string> = {};
+  if (self)
+    q.distress = `A person wrote this about their own situation:
+"${self}"
+
+Does anything they wrote suggest they may be in serious emotional distress or at risk: hopelessness, not wanting to live or to be here, thoughts of suicide or self-harm, feeling worthless or like a burden?`;
+  if (input.mode === "them") {
+    const known = self ? `What they know about it: "${self}"\n` : "";
+    q.scam_ask = `A person received this message:
+"${input.text}"
+${known}
+Does this message ask them to pay money, send gift cards, share card details, passwords or codes, or use a link?`;
+    q.scam_cue = `A person received this message:
+"${input.text}"
+${known}
+Does this message use urgency or a deadline, pretend to be a company, bank, official body or someone they know, or pressure them to act now?`;
+    if (self) {
+      q.boundary_no = `What a person wrote about the situation:
+"${self}"
+
+Had they already said no, or made clear they do not want something?`;
+      q.boundary_push = `The message they then received:
+"${input.text}"
+
+Does this message push, pressure, guilt-trip or ignore a no?`;
+    }
+  }
+  return q;
+}
+
+export async function safetyScoresTwoGate(base: string, model: string, input: SafetyInput, signal?: AbortSignal) {
+  const q = twoGateQuestions(input);
+  const out: Record<string, number> = {};
+  for (const [k, text] of Object.entries(q)) out[k] = await pYes(base, model, text, signal);
+  if (out.scam_ask != null && out.scam_cue != null) out.scam = Math.min(out.scam_ask, out.scam_cue);
+  if (out.boundary_no != null && out.boundary_push != null) out.boundary = Math.min(out.boundary_no, out.boundary_push);
   return out;
 }
 

@@ -1,0 +1,12 @@
+E9c official result, 2026-10-26. Frozen thresholds committed before this file:
+distress 0.3 (patterns OR model); scam 2; boundary 2 (patterns only).
+items sha256 prefix 09424d356c2c1924. Scored once. Not used to retune.
+
+distress  recall 25/29 (0.862)  hard-neg FP 2/25  PASS
+scam      recall 13/31 (0.419)  hard-neg FP 2/25  FAIL
+boundary  recall  2/30 (0.067)  hard-neg FP 0/25  FAIL
+OVERALL FAIL
+
+Distress misses: hc:1 hc:4 hc:13 hc:17 (indirect cues).
+Distress hard-neg FP: hc:63 hc:79 (jokes).
+Gloss stays off participants. reflect() stays on safetyCheck.

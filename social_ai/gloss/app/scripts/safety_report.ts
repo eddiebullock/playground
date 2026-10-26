@@ -3,7 +3,7 @@
 // at thresholds 0.3-0.9. E9c is held back until --e9c is passed, after
 // thresholds are fixed on E9b and the ordinary-input sets.
 //
-//   node --experimental-strip-types scripts/safety_report.ts [model] [--e9c]
+//   node --experimental-strip-types scripts/safety_report.ts [model] [--e9c] [--twogate]
 
 import { existsSync, readFileSync } from "node:fs";
 import { safetyCheck } from "../src/engine/safety.ts";
@@ -12,14 +12,15 @@ import { S2 } from "./audit_scenarios_v2.ts";
 const X = new URL("../../experiments/", import.meta.url).pathname;
 const args = process.argv.slice(2);
 const includeE9c = args.includes("--e9c");
-const model = (args.find((a) => a !== "--e9c") ?? "qwen3:8b").replace(/:/g, "-");
+const twogate = args.includes("--twogate");
+const model = (args.find((a) => a !== "--e9c" && a !== "--twogate") ?? "qwen3:8b").replace(/:/g, "-");
 const KINDS = ["distress", "scam", "boundary"] as const;
 const THS = [0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9];
 const ORDINARY = ["audit", "e10", "e4", "e8"] as const;
 const read = (p: string) => JSON.parse(readFileSync(X + p, "utf8"));
 const them = (c: any) => ({ mode: "them" as const, context: c.context, text: c.text });
 const scores = (set: string): Record<string, any> => {
-  const f = `${X}e9_safety/model_scores/${set}_${model}.jsonl`;
+  const f = `${X}e9_safety/model_scores/${set}_${model}${twogate ? "_twogate" : ""}.jsonl`;
   if (!existsSync(f)) return {};
   return Object.fromEntries(readFileSync(f, "utf8").trim().split("\n").filter(Boolean).map((l) => [JSON.parse(l).id, JSON.parse(l)]));
 };
