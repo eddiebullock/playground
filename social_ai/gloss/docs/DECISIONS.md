@@ -759,3 +759,15 @@ Dated, with the evidence. Newest last.
   writer must not see E9c, E9d, or the new distress line). Same pass
   criteria. If E9b recall does not reach 19/20, do not adopt and do not
   write E9e.
+
+- **Distress-cue expansion, E9b result (adopted).** hb:1 0.50 -> 1.00,
+  hb:9 0.20 -> 1.00, hb:14 0.00 -> 0.99. Combined distress 20/20, model
+  FP 0/60, either FP 1/60 (pattern hb:75 only) at every grid t. Ordinary
+  combined distress FP **0/384** at t = 0.3-0.9. Predictions held.
+  THRESHOLD_TWOGATE stays `{ distress: 0.3, scam: 0.5, boundary: 0.3 }`.
+
+- **E9e frozen (before any score).** 100 cases, same mix as E9d, ids
+  he:1-100, written by a separate agent forbidden from E9b/E9c/E9d items
+  and engine safety files. items.json sha256 prefix ac5dc980e132dce9.
+  Score two-gate once at THRESHOLD_TWOGATE. Same pass criteria as E9c/E9d.
+  Do not retune on E9e.

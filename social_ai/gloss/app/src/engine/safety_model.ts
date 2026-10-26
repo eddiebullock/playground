@@ -14,8 +14,8 @@ const SYSTEM = "You check messages for safety risks. Answer with the number of t
 // E9c (failed overall). 2 means the model check is not adopted.
 export const THRESHOLD = { distress: 0.3, scam: 2, boundary: 2 };
 
-// Two-gate scores (safetyScoresTwoGate), set on E9b + 384 ordinary inputs
-// before any E9d look. Not wired into safetyFull until E9d passes.
+// Two-gate scores (safetyScoresTwoGate). Distress cut re-checked after the
+// E9b cue expansion (still 0.3). Not wired into safetyFull until E9e passes.
 export const THRESHOLD_TWOGATE = { distress: 0.3, scam: 0.5, boundary: 0.3 };
 
 function questions(input: SafetyInput): Partial<Record<keyof Safety, string>> {
@@ -72,7 +72,7 @@ export function twoGateQuestions(input: SafetyInput) {
     q.distress = `A person wrote this about their own situation:
 "${self}"
 
-Does anything they wrote suggest they may be in serious emotional distress or at risk: hopelessness, not wanting to live or to be here, thoughts of suicide or self-harm, feeling worthless or like a burden?`;
+Does anything they wrote suggest they may be in serious emotional distress or at risk: hopelessness, not wanting to live or to be here, thoughts of suicide or self-harm, feeling worthless or like a burden, saying there is no point in anything, writing a goodbye letter, or giving away things they would not need?`;
   if (input.mode === "them") {
     const known = self ? `What they know about it: "${self}"\n` : "";
     q.scam_ask = `A person received this message:
