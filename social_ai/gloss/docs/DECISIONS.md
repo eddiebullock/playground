@@ -628,4 +628,21 @@ Dated, with the evidence. Newest last.
   check is not adopted (`THRESHOLD[k] = 1.0`; patterns only). This is
   the conservative reading of the already-registered rule; it does not
   relax the cap after seeing E9b. `safety_report.ts` now prints the rule
-  and withholds E9c unless `--e9c` is passed.
+  and withholds E9c unless `--e9c` is passed. Unreachable threshold is 2,
+  not 1.0, because p(yes) can be 1.
+
+- **Safety thresholds fixed on E9b + 384 ordinary inputs (before E9c).**
+  Combined check (patterns OR model), pre-registered rule, full ordinary
+  set now scored (audit 48, e10 48, e4 128, e8 160):
+  | Flag | qualifying grid | chosen | E9b recall / FP | ordinary FP |
+  |---|---|---|---|---|
+  | distress | 0.3-0.9 all | **0.3** | 18/20 (0.90) / 1/60 | 0/384 |
+  | scam | none | **2 (not adopted)** | patterns 12/20 / 0/60 | 0/384 |
+  | boundary | none | **2 (not adopted)** | patterns 5/20 / 0/60 | 0/384 |
+  Scam ordinary FP would have been 1/384 if the model were used (one E8
+  tweet); the E9b cap is what blocks it (3/60 at t=0.9). Boundary ordinary
+  FP is 3-16/384 even before the E9b cap. Distress is the only flag the
+  model check can join: it lifts E9b recall from 6/20 (patterns) to 18/20
+  with no extra ordinary false positives. `THRESHOLD` in
+  `safety_model.ts` is now `{ distress: 0.3, scam: 2, boundary: 2 }`.
+  E9c is still unseen. Next: score and report E9c once.

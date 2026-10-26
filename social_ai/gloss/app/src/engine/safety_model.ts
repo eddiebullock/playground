@@ -10,7 +10,9 @@ import { BOUNDARY_NOTE, DISTRESS_NOTE, SCAM_NOTE, safetyCheck, type Safety, type
 
 const SYSTEM = "You check messages for safety risks. Answer with the number of the best option only. No other text.";
 
-export const THRESHOLD = { distress: 0.5, scam: 0.5, boundary: 0.5 };
+// Set on E9b + 384 ordinary inputs (DECISIONS 2026-10-26). 2 means the model
+// check is not adopted for that flag (p(yes) cannot reach it).
+export const THRESHOLD = { distress: 0.3, scam: 2, boundary: 2 };
 
 function questions(input: SafetyInput): Partial<Record<keyof Safety, string>> {
   const self = [input.context, input.own, input.about].filter((s) => s?.trim()).join("\n");

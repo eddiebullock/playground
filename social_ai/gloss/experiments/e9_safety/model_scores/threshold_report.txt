@@ -1,0 +1,326 @@
+
+e9 (scored 40/40)
+  distress
+    patterns recall 5/5 fp 0/35
+    model>=0.3 recall 5/5 fp 0/35
+    model>=0.4 recall 5/5 fp 0/35
+    model>=0.5 recall 5/5 fp 0/35
+    model>=0.6 recall 5/5 fp 0/35
+    model>=0.7 recall 5/5 fp 0/35
+    model>=0.8 recall 5/5 fp 0/35
+    model>=0.9 recall 5/5 fp 0/35
+    either>=0.3 recall 5/5 fp 0/35
+    either>=0.4 recall 5/5 fp 0/35
+    either>=0.5 recall 5/5 fp 0/35
+    either>=0.6 recall 5/5 fp 0/35
+    either>=0.7 recall 5/5 fp 0/35
+    either>=0.8 recall 5/5 fp 0/35
+    either>=0.9 recall 5/5 fp 0/35
+  scam
+    patterns recall 5/5 fp 0/35
+    model>=0.3 recall 5/5 fp 2/35
+    model>=0.4 recall 5/5 fp 2/35
+    model>=0.5 recall 5/5 fp 2/35
+    model>=0.6 recall 5/5 fp 2/35
+    model>=0.7 recall 5/5 fp 2/35
+    model>=0.8 recall 5/5 fp 2/35
+    model>=0.9 recall 5/5 fp 1/35
+    either>=0.3 recall 5/5 fp 2/35
+    either>=0.4 recall 5/5 fp 2/35
+    either>=0.5 recall 5/5 fp 2/35
+    either>=0.6 recall 5/5 fp 2/35
+    either>=0.7 recall 5/5 fp 2/35
+    either>=0.8 recall 5/5 fp 2/35
+    either>=0.9 recall 5/5 fp 1/35
+  boundary
+    patterns recall 5/5 fp 0/35
+    model>=0.3 recall 5/5 fp 8/35
+    model>=0.4 recall 5/5 fp 5/35
+    model>=0.5 recall 5/5 fp 5/35
+    model>=0.6 recall 5/5 fp 5/35
+    model>=0.7 recall 5/5 fp 5/35
+    model>=0.8 recall 5/5 fp 4/35
+    model>=0.9 recall 5/5 fp 2/35
+    either>=0.3 recall 5/5 fp 8/35
+    either>=0.4 recall 5/5 fp 5/35
+    either>=0.5 recall 5/5 fp 5/35
+    either>=0.6 recall 5/5 fp 5/35
+    either>=0.7 recall 5/5 fp 5/35
+    either>=0.8 recall 5/5 fp 4/35
+    either>=0.9 recall 5/5 fp 2/35
+
+e9b (scored 80/80)
+  distress
+    patterns recall 6/20 fp 1/60
+    model>=0.3 recall 18/20 fp 0/60
+    model>=0.4 recall 18/20 fp 0/60
+    model>=0.5 recall 17/20 fp 0/60
+    model>=0.6 recall 17/20 fp 0/60
+    model>=0.7 recall 17/20 fp 0/60
+    model>=0.8 recall 17/20 fp 0/60
+    model>=0.9 recall 17/20 fp 0/60
+    either>=0.3 recall 18/20 fp 1/60
+    either>=0.4 recall 18/20 fp 1/60
+    either>=0.5 recall 17/20 fp 1/60
+    either>=0.6 recall 17/20 fp 1/60
+    either>=0.7 recall 17/20 fp 1/60
+    either>=0.8 recall 17/20 fp 1/60
+    either>=0.9 recall 17/20 fp 1/60
+  scam
+    patterns recall 12/20 fp 0/60
+    model>=0.3 recall 20/20 fp 5/60
+    model>=0.4 recall 20/20 fp 4/60
+    model>=0.5 recall 20/20 fp 4/60
+    model>=0.6 recall 20/20 fp 4/60
+    model>=0.7 recall 20/20 fp 4/60
+    model>=0.8 recall 20/20 fp 4/60
+    model>=0.9 recall 20/20 fp 3/60
+    either>=0.3 recall 20/20 fp 5/60
+    either>=0.4 recall 20/20 fp 4/60
+    either>=0.5 recall 20/20 fp 4/60
+    either>=0.6 recall 20/20 fp 4/60
+    either>=0.7 recall 20/20 fp 4/60
+    either>=0.8 recall 20/20 fp 4/60
+    either>=0.9 recall 20/20 fp 3/60
+  boundary
+    patterns recall 5/20 fp 0/60
+    model>=0.3 recall 20/20 fp 21/60
+    model>=0.4 recall 20/20 fp 19/60
+    model>=0.5 recall 20/20 fp 17/60
+    model>=0.6 recall 20/20 fp 15/60
+    model>=0.7 recall 20/20 fp 15/60
+    model>=0.8 recall 20/20 fp 14/60
+    model>=0.9 recall 20/20 fp 12/60
+    either>=0.3 recall 20/20 fp 21/60
+    either>=0.4 recall 20/20 fp 19/60
+    either>=0.5 recall 20/20 fp 17/60
+    either>=0.6 recall 20/20 fp 15/60
+    either>=0.7 recall 20/20 fp 15/60
+    either>=0.8 recall 20/20 fp 14/60
+    either>=0.9 recall 20/20 fp 12/60
+
+audit (scored 48/48)
+  distress
+    patterns flagged 0
+    model>=0.3 flagged 0
+    model>=0.4 flagged 0
+    model>=0.5 flagged 0
+    model>=0.6 flagged 0
+    model>=0.7 flagged 0
+    model>=0.8 flagged 0
+    model>=0.9 flagged 0
+    either>=0.3 flagged 0
+    either>=0.4 flagged 0
+    either>=0.5 flagged 0
+    either>=0.6 flagged 0
+    either>=0.7 flagged 0
+    either>=0.8 flagged 0
+    either>=0.9 flagged 0
+  scam
+    patterns flagged 0
+    model>=0.3 flagged 0
+    model>=0.4 flagged 0
+    model>=0.5 flagged 0
+    model>=0.6 flagged 0
+    model>=0.7 flagged 0
+    model>=0.8 flagged 0
+    model>=0.9 flagged 0
+    either>=0.3 flagged 0
+    either>=0.4 flagged 0
+    either>=0.5 flagged 0
+    either>=0.6 flagged 0
+    either>=0.7 flagged 0
+    either>=0.8 flagged 0
+    either>=0.9 flagged 0
+  boundary
+    patterns flagged 0
+    model>=0.3 flagged 1
+    model>=0.4 flagged 1
+    model>=0.5 flagged 1
+    model>=0.6 flagged 1
+    model>=0.7 flagged 1
+    model>=0.8 flagged 1
+    model>=0.9 flagged 1
+    either>=0.3 flagged 1
+    either>=0.4 flagged 1
+    either>=0.5 flagged 1
+    either>=0.6 flagged 1
+    either>=0.7 flagged 1
+    either>=0.8 flagged 1
+    either>=0.9 flagged 1
+
+e10 (scored 48/48)
+  distress
+    patterns flagged 0
+    model>=0.3 flagged 0
+    model>=0.4 flagged 0
+    model>=0.5 flagged 0
+    model>=0.6 flagged 0
+    model>=0.7 flagged 0
+    model>=0.8 flagged 0
+    model>=0.9 flagged 0
+    either>=0.3 flagged 0
+    either>=0.4 flagged 0
+    either>=0.5 flagged 0
+    either>=0.6 flagged 0
+    either>=0.7 flagged 0
+    either>=0.8 flagged 0
+    either>=0.9 flagged 0
+  scam
+    patterns flagged 0
+    model>=0.3 flagged 0
+    model>=0.4 flagged 0
+    model>=0.5 flagged 0
+    model>=0.6 flagged 0
+    model>=0.7 flagged 0
+    model>=0.8 flagged 0
+    model>=0.9 flagged 0
+    either>=0.3 flagged 0
+    either>=0.4 flagged 0
+    either>=0.5 flagged 0
+    either>=0.6 flagged 0
+    either>=0.7 flagged 0
+    either>=0.8 flagged 0
+    either>=0.9 flagged 0
+  boundary
+    patterns flagged 0
+    model>=0.3 flagged 0
+    model>=0.4 flagged 0
+    model>=0.5 flagged 0
+    model>=0.6 flagged 0
+    model>=0.7 flagged 0
+    model>=0.8 flagged 0
+    model>=0.9 flagged 0
+    either>=0.3 flagged 0
+    either>=0.4 flagged 0
+    either>=0.5 flagged 0
+    either>=0.6 flagged 0
+    either>=0.7 flagged 0
+    either>=0.8 flagged 0
+    either>=0.9 flagged 0
+
+e4 (scored 128/128)
+  distress
+    patterns flagged 0
+    model>=0.3 flagged 0
+    model>=0.4 flagged 0
+    model>=0.5 flagged 0
+    model>=0.6 flagged 0
+    model>=0.7 flagged 0
+    model>=0.8 flagged 0
+    model>=0.9 flagged 0
+    either>=0.3 flagged 0
+    either>=0.4 flagged 0
+    either>=0.5 flagged 0
+    either>=0.6 flagged 0
+    either>=0.7 flagged 0
+    either>=0.8 flagged 0
+    either>=0.9 flagged 0
+  scam
+    patterns flagged 0
+    model>=0.3 flagged 0
+    model>=0.4 flagged 0
+    model>=0.5 flagged 0
+    model>=0.6 flagged 0
+    model>=0.7 flagged 0
+    model>=0.8 flagged 0
+    model>=0.9 flagged 0
+    either>=0.3 flagged 0
+    either>=0.4 flagged 0
+    either>=0.5 flagged 0
+    either>=0.6 flagged 0
+    either>=0.7 flagged 0
+    either>=0.8 flagged 0
+    either>=0.9 flagged 0
+  boundary
+    patterns flagged 0
+    model>=0.3 flagged 11
+    model>=0.4 flagged 6
+    model>=0.5 flagged 5
+    model>=0.6 flagged 3
+    model>=0.7 flagged 3
+    model>=0.8 flagged 2
+    model>=0.9 flagged 2
+    either>=0.3 flagged 11
+    either>=0.4 flagged 6
+    either>=0.5 flagged 5
+    either>=0.6 flagged 3
+    either>=0.7 flagged 3
+    either>=0.8 flagged 2
+    either>=0.9 flagged 2
+
+e8 (scored 160/160)
+  distress
+    patterns flagged 0
+    model>=0.3 flagged 0
+    model>=0.4 flagged 0
+    model>=0.5 flagged 0
+    model>=0.6 flagged 0
+    model>=0.7 flagged 0
+    model>=0.8 flagged 0
+    model>=0.9 flagged 0
+    either>=0.3 flagged 0
+    either>=0.4 flagged 0
+    either>=0.5 flagged 0
+    either>=0.6 flagged 0
+    either>=0.7 flagged 0
+    either>=0.8 flagged 0
+    either>=0.9 flagged 0
+  scam
+    patterns flagged 0
+    model>=0.3 flagged 1
+    model>=0.4 flagged 1
+    model>=0.5 flagged 1
+    model>=0.6 flagged 1
+    model>=0.7 flagged 1
+    model>=0.8 flagged 1
+    model>=0.9 flagged 1
+    either>=0.3 flagged 1
+    either>=0.4 flagged 1
+    either>=0.5 flagged 1
+    either>=0.6 flagged 1
+    either>=0.7 flagged 1
+    either>=0.8 flagged 1
+    either>=0.9 flagged 1
+  boundary
+    patterns flagged 0
+    model>=0.3 flagged 4
+    model>=0.4 flagged 4
+    model>=0.5 flagged 2
+    model>=0.6 flagged 2
+    model>=0.7 flagged 1
+    model>=0.8 flagged 1
+    model>=0.9 flagged 0
+    either>=0.3 flagged 4
+    either>=0.4 flagged 4
+    either>=0.5 flagged 2
+    either>=0.6 flagged 2
+    either>=0.7 flagged 1
+    either>=0.8 flagged 1
+    either>=0.9 flagged 0
+
+threshold rule (E9b scored 80/80; ordinary scored 384/384)
+  distress t=0.3 e9b-fp 1/60 ordinary-fp 0/384  QUALIFIES
+  distress t=0.4 e9b-fp 1/60 ordinary-fp 0/384  QUALIFIES
+  distress t=0.5 e9b-fp 1/60 ordinary-fp 0/384  QUALIFIES
+  distress t=0.6 e9b-fp 1/60 ordinary-fp 0/384  QUALIFIES
+  distress t=0.7 e9b-fp 1/60 ordinary-fp 0/384  QUALIFIES
+  distress t=0.8 e9b-fp 1/60 ordinary-fp 0/384  QUALIFIES
+  distress t=0.9 e9b-fp 1/60 ordinary-fp 0/384  QUALIFIES
+  distress chosen 0.3
+  scam t=0.3 e9b-fp 5/60 ordinary-fp 1/384
+  scam t=0.4 e9b-fp 4/60 ordinary-fp 1/384
+  scam t=0.5 e9b-fp 4/60 ordinary-fp 1/384
+  scam t=0.6 e9b-fp 4/60 ordinary-fp 1/384
+  scam t=0.7 e9b-fp 4/60 ordinary-fp 1/384
+  scam t=0.8 e9b-fp 4/60 ordinary-fp 1/384
+  scam t=0.9 e9b-fp 3/60 ordinary-fp 1/384
+  scam chosen 2 (none qualify; model not adopted)
+  boundary t=0.3 e9b-fp 21/60 ordinary-fp 16/384
+  boundary t=0.4 e9b-fp 19/60 ordinary-fp 11/384
+  boundary t=0.5 e9b-fp 17/60 ordinary-fp 8/384
+  boundary t=0.6 e9b-fp 15/60 ordinary-fp 6/384
+  boundary t=0.7 e9b-fp 15/60 ordinary-fp 5/384
+  boundary t=0.8 e9b-fp 14/60 ordinary-fp 4/384
+  boundary t=0.9 e9b-fp 12/60 ordinary-fp 3/384
+  boundary chosen 2 (none qualify; model not adopted)

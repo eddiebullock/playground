@@ -84,6 +84,6 @@ for (const k of KINDS) {
     if (pass) ok.push(t);
     console.log(`  ${k} t=${t} e9b-fp ${fpE9b}/${e9bNeg.length} ordinary-fp ${fpOrd}/${ordinary.length}${pass ? "  QUALIFIES" : ""}`);
   }
-  const chosen = ok.length ? Math.min(...ok) : 1.0;
+  const chosen = ok.length ? Math.min(...ok) : 2;
   console.log(`  ${k} chosen ${chosen}${ok.length ? "" : " (none qualify; model not adopted)"}`);
 }
