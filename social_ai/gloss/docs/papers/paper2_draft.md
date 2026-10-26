@@ -30,7 +30,7 @@ it somewhere else?
 - Advice audit: the full pipeline writes readings and 2-3 replies; each
   reply is classed engage / check / hold back / apologise-or-explain.
   Three generation seeds per condition give a noise floor.
-- Models: qwen3 4B and 8B, [ON: llama3.1 8B, gemma3 4B and 12B]. [EB:
+- Models: qwen3 4B and 8B, llama3.1 8B, gemma3 4B and 12B. [EB:
   frontier models need paid APIs.]
 
 ## Results so far (qwen3:8b, 12 development messages)
@@ -56,20 +56,25 @@ it somewhere else?
   why a no-placebo audit reports "no drift".
 - A "judge the words, not the reader" scorer instruction left all of this
   unchanged and moved the no-disclosure readings (6/48 top-1 flips).
-- [ON: the same audit on qwen3:4b, llama3.1:8b, gemma3:4b, gemma3:12b.]
+- **Across 5 models** (negativity vs placebo; see DECISIONS 2026-10-26):
+  depression more negative in all 5 (+0.03 to +0.14, every CI excludes 0);
+  autism more negative only in qwen3:8b (+0.081) and llama3.1:8b (+0.038),
+  null in qwen3:4b and both Gemmas; ADHD positive in 3 of 5; anxiety softer
+  or null in all 5 (significantly softer in qwen3:4b and gemma3:12b). The
+  placebo's own softening is large only in qwen3:8b (-0.074).
 
 ## Contribution claims (to be confirmed)
 1. Disclosure drift appears in readings, not only advice. Against a placebo
-   it is condition-specific (autism, ADHD, depression more negative;
-   anxiety no different from the placebo), and against no disclosure it is
-   partly hidden by a generic softening.
+   it is condition-specific and partly model-specific: depression makes
+   readings more negative in every model tested, autism in 2 of 5, anxiety
+   makes them softer or leaves them unchanged.
 2. Prompt-level fixes can displace rather than remove drift; evaluations of
    fairness fixes must measure the whole outcome distribution, not the
    targeted category.
-3. A placebo disclosure is a cheap, necessary control: it reveals a
-   generic softening response to any self-description that masks
-   condition-specific negative shifts (autism, ADHD, depression). This is
-   the strongest and most novel claim so far.
+3. A placebo disclosure is a cheap, necessary control. In the shipped
+   model it reveals a generic softening response to any self-description
+   that hides the autism shift; this masking is large in one of five
+   models, so audits cannot assume it away or assume it is present.
 
 ## Needed for submission
 - [EB] Human validation of the reply classifier (two raters, 150 replies,

@@ -488,3 +488,29 @@ Dated, with the evidence. Newest last.
   phenomenon and per model. The largest model (Gemma 12B) has the smallest
   irony bias, so "literal bias shrinks with scale" is a possible reading
   that 2 sizes per family cannot test. Keep it out of the claims.
+
+- **Paper 2: readings audit v2 across 5 models (48 messages x 6 reader
+  conditions, scorer as shipped).** Negativity shift vs placebo [95% CI]:
+  | Model | autism | anxiety | ADHD | depression | placebo vs none |
+  |---|---|---|---|---|---|
+  | qwen3:8b | +0.081 [0.039, 0.131] | -0.017 | +0.112 [0.069, 0.163] | +0.144 [0.078, 0.226] | -0.074 |
+  | qwen3:4b | +0.012 [-0.008, 0.034] | -0.047 [-0.084, -0.015] | +0.015 | +0.032 [0.001, 0.069] | -0.003 |
+  | llama3.1:8b | +0.038 [0.026, 0.052] | -0.006 | +0.039 [0.026, 0.052] | +0.074 [0.053, 0.098] | -0.022 |
+  | gemma3:12b | -0.012 [-0.047, 0.026] | -0.060 [-0.099, -0.026] | +0.032 [0.012, 0.055] | +0.045 [0.008, 0.088] | -0.020 |
+  | gemma3:4b | +0.015 [-0.012, 0.046] | -0.029 | -0.002 | +0.039 [0.002, 0.077] | +0.011 |
+  Corrections to the Paper 2 claims drafted from qwen3:8b alone:
+  (1) The robust, general effect is **depression**: readings more negative
+  than placebo in all 5 models (CIs exclude 0 in every model). (2) The
+  autism effect is model-dependent: present in qwen3:8b and llama3.1:8b,
+  absent in qwen3:4b and both Gemmas. Do not claim "autism disclosure makes
+  readings more negative" in general. (3) Anxiety goes the other way (softer
+  or no different) in every model; the models seem to reassure anxious
+  readers. (4) The generic placebo softening that hid the autism effect is
+  large only in qwen3:8b (-0.074; others -0.02 to +0.01). The placebo is
+  still the right control (it changes the conclusion for the shipped
+  model), but "masking" is not a general finding.
+  Paper 2 now leads with: a placebo-controlled readings audit; condition-
+  specific shifts (depression general, autism model-dependent, anxiety
+  reassuring); a fix-displacement result in the advice audit. Product: the
+  shipped model (qwen3:8b) shows the autism shift, so the structural fix
+  (self-description kept out of the scorer) stays the next step.
