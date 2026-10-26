@@ -1,4 +1,4 @@
-# Handover, 2026-10-26 20:30 (E9e pass wired; original E9 re-run done)
+# Handover, 2026-10-26 21:00 (E9e wired; scorer About-me strip adopted)
 
 For the next agent picking up Gloss. Read `AGENT_PROMPT.md`, `PLAN.md`,
 `docs/PUBLICATION_STRATEGY.md` and the `docs/DECISIONS.md` entries dated
@@ -21,48 +21,41 @@ is done.
 ## Environment
 - Ollama 127.0.0.1:11434; qwen3:8b product default. One model at a time.
 - `cd app && node --experimental-strip-types scripts/<x>.ts`.
-  Tests: `npm test` (10 pass). Typecheck: `npx tsc --noEmit -p .`.
+  Tests: `npm test` (11 pass). Typecheck: `npx tsc --noEmit -p .`.
 - Product: `safetyFull` / `reflect()` use two-gate + THRESHOLD_TWOGATE.
-  Questions cached per input. Generation and safety scoring overlap.
-  Apostrophes in `safety.ts` are folded so `I’ll send` matches COMPLY.
+  Scorer drops `About me:` lines and the `aboutMe` field. Generation and
+  replies still see them. Distress still reads `aboutMe`.
 
 ## Jobs
-Leftover-drift audit may be running: `audit_v2.ts qwen3:8b stance --bare`
-writing `experiments/e4_audit/v2_qwen3-8b_bare.json`. Do not change the
-scorer while it runs. If it died, restart the same command.
+None running.
 
 ## State
-- E9e **PASS**. Official:
-  `experiments/e9_safety/model_scores/e9e_official.txt`.
-- Two-gate is wired. Original E9 re-run: distress 5/5, scam 5/5,
-  boundary_pressure 5/5, coercion 0/5 (no prior no). Generation still
-  offers complying replies; COMPLY unicode leak is fixed going forward.
-  Do not quote the 38/40 LLM rubric as a result.
+- E9e **PASS**. Two-gate is wired. Original E9: distress/scam/boundary-after-a-no
+  notes fire; coercion without a prior no does not. COMPLY folds curly
+  apostrophes. Do not quote the 38/40 LLM rubric.
+- Scorer About-me strip adopted (max TV 0 on 5 scenarios). Leftover drift
+  when the same sentence sits in "what came before" without the prefix is
+  still ~0.10 TV (same as shipped). Dedicated `aboutMe` field is the
+  product path that the scorer never sees.
 - Participants still blocked until Eddie reviews `safety.ts` notes.
 
 ## What to do next, in order
 1. Until Eddie reviews `safety.ts` notes, Gloss must not be shown to
    participants (Study 5, demos).
-2. **Finish leftover-drift** (`v2_qwen3-8b_bare.json`, 48 scenarios).
-   Analyse with `python3 experiments/e4_audit/analyze_v2.py`. Record TV
-   vs none. Do not put self-description back into the scorer from that
-   run. Then E10 me-mode calibration.
-3. **E10 "me" mode calibration:** clear-draft false-alarm target <= 0.2,
+2. **E10 "me" mode calibration:** clear-draft false-alarm target <= 0.2,
    bands fitted separately from "them" mode. Pre-register before tuning.
-4. **Latency:** cache the fixed system prompt; write the check question
+3. **Latency:** cache the fixed system prompt; write the check question
    only when asked.
-5. Cursor cannot update
+4. Paper 2 draft: add the leftover-drift number and the dedicated field.
+   Cursor cannot update
    https://claude.ai/artifact/GapiXAWA8EJVYz6DAbuCCP.
 
 ## For Eddie
-- E9e passed and two-gate is in the product. Distress and scam notes now
-  fire on the original red-team; boundary notes fire after a no, not on
-  controlling asks with no prior refusal. Generation can still suggest
-  complying replies; the filter now treats curly apostrophes as ASCII.
-- Please review the Samaritans/999 notes in `app/src/engine/safety.ts`
-  before any demo or Study 5. Advisory group on wording still needed.
+- E9e passed and two-gate is in the product. Please review the
+  Samaritans/999 notes in `app/src/engine/safety.ts` before any demo.
+- Self-description in a labelled About-you field no longer moves the
+  readings. The same sentence typed into "what came before" still does
+  (~0.10 TV), same as the shipped audit.
 - Please update the brief artifact. Snapshot: `docs/brief_snapshot.html`.
 - Human validation still needed for the papers.
 - `~/gloss_premerge_backup` (260 MB) can go if you are happy with the merge.
-- Accidental Paper 2 artifact:
-  https://claude.ai/artifact/1eyHVfwMG5B9SPmo9G3AVe.

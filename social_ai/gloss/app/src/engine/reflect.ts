@@ -33,6 +33,8 @@ export type ReflectInput = {
   about?: string;
   /** The user's own reading, scored alongside Gloss's (never shown to the generator). */
   own?: string;
+  /** What the user says about themselves. Generation and replies see it; the scorer does not. */
+  aboutMe?: string;
 };
 
 export type Reading = { meaning: string; cues: string[]; p: number; literal: boolean; own?: boolean; hidden?: boolean };
@@ -163,6 +165,7 @@ function scene(input: ReflectInput, forScore = false): string {
     `Roles: "I" and "me" are the person asking for help. ${input.mode === "them" ? who : input.person || "They"} is the other person.`,
   ];
   if (input.about?.trim()) lines.push(`What I know about ${input.person?.trim() || "them"}: ${input.about.trim()}`);
+  if (!forScore && input.aboutMe?.trim()) lines.push(`About me: ${input.aboutMe.trim()}`);
   if (input.relation) lines.push(`Relationship: ${input.mode === "them" ? `${who} is my ${input.relation}` : `${input.person || "They"} is my ${input.relation}`}.`);
   if (input.channel) lines.push(`Where: ${input.channel}.`);
   const context = forScore ? dropSelfDescription(input.context) : input.context?.trim();

@@ -56,6 +56,11 @@ it somewhere else?
   why a no-placebo audit reports "no drift".
 - A "judge the words, not the reader" scorer instruction left all of this
   unchanged and moved the no-disclosure readings (6/48 top-1 flips).
+- **Structural fix (2026-10-26):** dropping "About me:" lines from the
+  scorer makes those six conditions identical (max TV 0 on 5 scenarios).
+  The same sentences placed unmarked in "what came before" still move
+  readings (autistic TV 0.116, placebo 0.091), so the product keeps
+  self-description in a dedicated field the scorer never sees.
 - **Across 5 models** (negativity vs placebo; see DECISIONS 2026-10-26):
   depression more negative in all 5 (+0.03 to +0.14, every CI excludes 0);
   autism more negative only in qwen3:8b (+0.081) and llama3.1:8b (+0.038),

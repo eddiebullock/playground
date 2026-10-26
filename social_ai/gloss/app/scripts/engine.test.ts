@@ -136,6 +136,7 @@ test("safetyFull ORs patterns with two-gate scores", async () => {
 test("safety patterns flag clear cases and leave look-alikes alone", async () => {
   const { safetyCheck, safeReplies } = await import("../src/engine/safety.ts");
   assert.ok(safetyCheck({ mode: "them", context: "I feel like a burden to everyone.", text: "See you later" }).distress);
+  assert.ok(safetyCheck({ mode: "them", aboutMe: "I feel like a burden to everyone.", text: "See you later" }).distress);
   assert.ok(!safetyCheck({ mode: "them", context: "I'm dead tired, this week is killing me.", text: "See you later" }).distress);
   const scam = safetyCheck({ mode: "them", text: "Your account will be suspended. Verify your account within 24 hours: secure-bank.xyz/login" });
   assert.ok(scam.scam);

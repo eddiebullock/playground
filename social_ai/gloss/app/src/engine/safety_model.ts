@@ -19,7 +19,7 @@ export const THRESHOLD = { distress: 0.3, scam: 2, boundary: 2 };
 export const THRESHOLD_TWOGATE = { distress: 0.3, scam: 0.5, boundary: 0.3 };
 
 function questions(input: SafetyInput): Partial<Record<keyof Safety, string>> {
-  const self = [input.context, input.own, input.about].filter((s) => s?.trim()).join("\n");
+  const self = [input.context, input.own, input.about, input.aboutMe].filter((s) => s?.trim()).join("\n");
   const q: Partial<Record<keyof Safety, string>> = {};
   if (self)
     q.distress = `A person wrote this about their own situation:
@@ -66,7 +66,7 @@ export async function safetyScores(base: string, model: string, input: SafetyInp
 
 /** Two-gate wording (DECISIONS 2026-10-26). scam/boundary are min of two questions. */
 export function twoGateQuestions(input: SafetyInput) {
-  const self = [input.context, input.own, input.about].filter((s) => s?.trim()).join("\n");
+  const self = [input.context, input.own, input.about, input.aboutMe].filter((s) => s?.trim()).join("\n");
   const q: Record<string, string> = {};
   if (self)
     q.distress = `A person wrote this about their own situation:
@@ -99,7 +99,7 @@ Does this message push, pressure, guilt-trip or ignore a no?`;
 
 const scoreCache = new Map<string, Promise<Record<string, number>>>();
 function scoreKey(input: SafetyInput) {
-  return JSON.stringify({ mode: input.mode, text: input.text, context: input.context, own: input.own, about: input.about });
+  return JSON.stringify({ mode: input.mode, text: input.text, context: input.context, own: input.own, about: input.about, aboutMe: input.aboutMe });
 }
 
 export async function safetyScoresTwoGate(base: string, model: string, input: SafetyInput, signal?: AbortSignal) {

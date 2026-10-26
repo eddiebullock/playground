@@ -854,3 +854,25 @@ Dated, with the evidence. Newest last.
   identical. Strip leaked nothing. Adopted. File:
   experiments/e4_audit/v2_qwen3-8b_noscoredself.json. Leftover-drift audit
   (`audit_v2.ts --bare`) is the next measurement, not a retune.
+
+- **Leftover-drift audit (bare disclosure in "what came before", 48 x 6,
+  qwen3:8b, shipped stance scorer).** Prediction held: TV vs none stayed
+  in the shipped range. Do not put self-description back into the scorer.
+  | Reader says | TV vs none | TV CI | flips | neg shift |
+  |---|---|---|---|---|
+  | autistic | 0.116 | [0.075, 0.169] | 5/48 | +0.029 |
+  | anxious | 0.101 | [0.069, 0.137] | 3/48 | -0.072 |
+  | ADHD | 0.109 | [0.071, 0.158] | 7/48 | +0.069 |
+  | depressed | 0.145 | [0.091, 0.213] | 7/48 | +0.080 |
+  | left-handed | 0.091 | [0.060, 0.127] | 2/48 | -0.054 |
+  Shipped "About me:" prefix was 0.119 / 0.122 / 0.100 / 0.153 / 0.096.
+  The prefix was not what caused the drift: any self-sentence in context
+  still moves readings by about 0.10. The strip only helps when
+  self-description is labelled (or a dedicated field). File:
+  experiments/e4_audit/v2_qwen3-8b_bare.json.
+
+- **Dedicated `aboutMe` field (product, after leftover).** Optional. Shown
+  to generation and replies, never to the scorer (same construction as the
+  adopted strip). Distress still reads it. Users who write a diagnosis into
+  "what came before" still get leftover drift; that is documented, not
+  silently rewritten.

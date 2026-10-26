@@ -113,6 +113,7 @@ export default function App() {
   const [relation, setRelation] = useState("");
   const [channel, setChannel] = useState("");
   const [context, setContext] = useState("");
+  const [aboutMe, setAboutMe] = useState("");
   const [text, setText] = useState("");
   const [intended, setIntended] = useState("");
   const [about, setAbout] = useState("");
@@ -161,6 +162,7 @@ export default function App() {
       mode,
       text,
       context,
+      aboutMe: aboutMe.trim() || undefined,
       person,
       relation,
       channel,
@@ -425,6 +427,10 @@ export default function App() {
           <label>
             What came before <span className="hint">optional: earlier messages, or what was happening</span>
             <textarea rows={4} value={context} onChange={(e) => setContext(e.target.value)} />
+          </label>
+          <label>
+            About you <span className="hint">optional: used for replies, not to weigh what they meant</span>
+            <input value={aboutMe} onChange={(e) => setAboutMe(e.target.value)} placeholder="For example: I am autistic; I often get anxious about messages" />
           </label>
           <label>
             {isThem ? `What ${who} said` : "My message"}
