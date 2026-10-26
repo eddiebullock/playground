@@ -10,6 +10,7 @@
 //    the user has a measured calibration behind it.
 
 import { json, optionDist } from "./llm.ts";
+import { safeReplies, safetyCheck, type Safety } from "./safety.ts";
 
 export type Mode = "them" | "me";
 
@@ -33,7 +34,7 @@ export type ReflectInput = {
   own?: string;
 };
 
-export type Reading = { meaning: string; cues: string[]; p: number; literal: boolean; own?: boolean };
+export type Reading = { meaning: string; cues: string[]; p: number; literal: boolean; own?: boolean; hidden?: boolean };
 
 export type Clarity = "clear" | "some" | "high";
 
@@ -48,6 +49,8 @@ export type ReflectResult = {
   check: string;
   /** Set only when the other person seems to be pushing past a "no": a reminder that the user can say no. */
   boundary: string;
+  /** Fixed notes from the safety layer (safety.ts), independent of the model. */
+  safety: Safety;
   model: string;
   ms: number;
   /** Time spent writing the readings, before weighing. */
@@ -67,6 +70,16 @@ const TEMPERATURE: Record<string, number> = { "qwen3:8b": 3.4, "qwen3:4b": 1.8 }
 // (humans 0.86).
 export const CLEAR_AT = 0.7;
 export const ABSTAIN_BELOW = 0.5;
+
+// How many readings to write, and how many to show. Writing more than are
+// shown ("write more, show fewer") targets the E4 finding that generation
+// misses the intended reading on a quarter of items. Default is the shipped
+// behaviour (write 2-4, show all); experiments change it with setWidth.
+let WRITE_MAX = 4;
+export const SHOW_MAX = 4;
+export function setWidth(n: number): void {
+  WRITE_MAX = Math.max(2, n);
+}
 
 export function calibrate(p: number[], model: string): number[] {
   const t = TEMPERATURE[model] ?? 1;
@@ -92,6 +105,17 @@ const SYSTEM_SCORE =
   "People often mean something other than their literal words: irony, sarcasm, politeness, hints, jokes, " +
   "white lies. They also often mean exactly what they say. Use the situation to decide what the speaker most " +
   "plausibly meant. Answer with the number of the best option only. No other text.";
+
+// "Judge the words, not the reader" (E4 audit: disclosing anxiety moved 8B
+// towards the reassuring reading, TV 0.15). Off until the audit and the E1
+// regression check say it helps; experiments switch it on with setScorer.
+const WORDS_NOT_READER =
+  " What the person asking says about themselves (their feelings, worries or diagnoses) tells you nothing about what " +
+  "the speaker meant, so do not let it change your answer.";
+let SCORER_SYSTEM = SYSTEM_SCORE;
+export function setScorer(variant: "stance" | "words"): void {
+  SCORER_SYSTEM = variant === "words" ? SYSTEM_SCORE.replace(" Answer with", WORDS_NOT_READER + " Answer with") : SYSTEM_SCORE;
+}
 
 type Generated = {
   literal: string;
@@ -144,7 +168,7 @@ function generationPrompt(input: ReflectInput): string {
 
 Give:
 - literal: one sentence saying what the words themselves say.
-- readings: 2 to 4 different things they could have meant. The FIRST reading is the plain one: they meant exactly what they said, in its ordinary, neutral or kind sense, stated concretely. Every other reading must change what I would understand or do next (for example: they are annoyed, they are joking, they are hinting at a request). Never give two readings that mean nearly the same thing. If the situation does not genuinely support another reading, give only one alternative. Each reading is one sentence starting with "${input.person?.trim() || "They"}", says what they meant about me or the situation, and has up to 3 short cues: words or facts from the situation that support it.
+- readings: 2 to ${WRITE_MAX} different things they could have meant. The FIRST reading is the plain one: they meant exactly what they said, in its ordinary, neutral or kind sense, stated concretely. Every other reading must change what I would understand or do next (for example: they are annoyed, they are joking, they are hinting at a request). Never give two readings that mean nearly the same thing. If the situation does not genuinely support another reading, give only one alternative. Each reading is one sentence starting with "${input.person?.trim() || "They"}", says what they meant about me or the situation, and has up to 3 short cues: words or facts from the situation that support it.
 Look at what they did not say as well as what they said. If the words do not answer what was asked, or give far more or far less detail than needed, one reading must say what that suggests (for example: they would rather not talk about it, or they did not like it but do not want to say so). If they used a figure of speech, say plainly what it means about the person or thing it describes.
 If their reaction seems bigger than the situation explains, one reading can be that it is about something on their side, not about me.
 - check_question: one short, friendly, direct question I could ask them to check what they meant.
@@ -187,7 +211,7 @@ export async function scoreOptions(
   let used = 0;
   for (let r = 0; r < rotations; r++) {
     const order = options.map((_, i) => (i + r) % n);
-    const p = await optionDist(base, model, SYSTEM_SCORE, scoringPrompt(input, order.map((i) => options[i])), n, signal);
+    const p = await optionDist(base, model, SCORER_SYSTEM, scoringPrompt(input, order.map((i) => options[i])), n, signal);
     if (!p) continue;
     order.forEach((orig, pos) => (acc[orig] += p[pos]));
     used++;
@@ -235,22 +259,24 @@ export async function reflect(
     model,
     SYSTEM_GEN,
     generationPrompt(input),
-    SCHEMA,
+    { ...SCHEMA, properties: { ...SCHEMA.properties, readings: { ...SCHEMA.properties.readings, maxItems: WRITE_MAX } } },
     signal,
     onStep && ((t) => onStep("writing", draftFrom(t))),
   );
   const raw: Omit<Reading, "p">[] = gen.readings
     .filter((r) => r.meaning?.trim())
-    .slice(0, 4)
+    .slice(0, WRITE_MAX)
     .map((r, i) => ({ meaning: r.meaning.trim(), cues: r.cues ?? [], literal: i === 0 }));
   if (input.own?.trim()) raw.push({ meaning: input.own.trim(), cues: [], literal: false, own: true });
   onStep?.("weighing", { literal: gen.literal, meanings: raw.map((r) => r.meaning) });
   const ms_gen = Date.now() - t0;
-  const readings = await weigh(base, model, input, raw, signal);
+  const readings = shown(await weigh(base, model, input, raw, signal));
+  const safety = safetyCheck(input);
   return summarise(readings, {
     literal: gen.literal,
     check: gen.check_question,
-    boundary: input.mode === "them" ? (gen.boundary ?? "").trim() : "",
+    boundary: input.mode === "them" ? (gen.boundary ?? "").trim() || (safety.boundary ?? "") : "",
+    safety,
     model,
     ms: Date.now() - t0,
     ms_gen,
@@ -268,6 +294,24 @@ async function weigh(
   return raw.map((r, i) => ({ ...r, p: p[i] })).sort((a, b) => b.p - a.p);
 }
 
+/**
+ * Keep the SHOW_MAX most likely readings, always including the literal one
+ * and the user's own, and renormalise. Hidden readings are returned too
+ * (hidden: true) so evaluations can see what was dropped.
+ */
+function shown(readings: Reading[]): Reading[] {
+  if (readings.length <= SHOW_MAX) return readings;
+  const keep = readings.slice(0, SHOW_MAX);
+  for (const must of readings.filter((r) => r.literal || r.own)) {
+    if (keep.includes(must)) continue;
+    const drop = [...keep].reverse().find((r) => !r.literal && !r.own);
+    if (drop) keep[keep.indexOf(drop)] = must;
+  }
+  const z = keep.reduce((a, r) => a + r.p, 0);
+  const vis = keep.map((r) => ({ ...r, p: r.p / z })).sort((a, b) => b.p - a.p);
+  return [...vis, ...readings.filter((r) => !keep.includes(r)).map((r) => ({ ...r, hidden: true }))];
+}
+
 function summarise(
   readings: Reading[],
   rest: Omit<ReflectResult, "readings" | "clarity" | "spread" | "abstain">,
@@ -277,7 +321,7 @@ function summarise(
     ...rest,
     readings,
     clarity: top >= CLEAR_AT ? "clear" : top >= ABSTAIN_BELOW ? "some" : "high",
-    spread: normEntropy(readings.map((r) => r.p)),
+    spread: normEntropy(readings.filter((r) => !r.hidden).map((r) => r.p)),
     abstain: top < ABSTAIN_BELOW,
   };
 }
@@ -332,16 +376,18 @@ export async function waysToReply(
   result: ReflectResult,
   signal?: AbortSignal,
 ): Promise<Reply[]> {
-  const readings = result.readings.map((r) => `- ${r.meaning} (${Math.round(r.p * 100)}%)`).join("\n");
+  const readings = result.readings.filter((r) => !r.hidden).map((r) => `- ${r.meaning} (${Math.round(r.p * 100)}%)`).join("\n");
   const user = `${scene(input)}
 
 Possible readings of what ${input.person?.trim() || "they"} meant:
 ${readings}
 
 Give 2 or 3 different ways I could respond, if I want to respond at all. Keep each reply short and in plain, direct words I might use myself. One must simply ask what they meant or check. Offer not replying, or replying later, only if their message does not ask me anything or need an answer. Base the replies on what happened, not on how I feel or anything I have said about myself: do not suggest apologising, reassuring them or explaining myself unless I clearly did something wrong. Do not tell me to change how I come across.
-For each, might_land: one sentence on how ${input.person?.trim() || "they"} might take it, given the readings above.`;
+For each, might_land: one sentence on how ${input.person?.trim() || "they"} might take it, given the readings above.${
+    result.boundary ? "\nI have already said no. Do not suggest giving in, agreeing or meeting them halfway." : ""
+  }${result.safety?.scam ? "\nThis may be a scam. Do not suggest paying, clicking, confirming details or sharing any code." : ""}`;
   const r = await json<{ replies: Reply[] }>(base, model, SYSTEM_GEN, user, SCHEMA_REPLIES, signal);
-  return r.replies.filter((x) => x.reply?.trim()).slice(0, 3);
+  return safeReplies(r.replies.filter((x) => x.reply?.trim()), result.safety ?? {}).slice(0, 3);
 }
 
 const SCHEMA_NOTE = {

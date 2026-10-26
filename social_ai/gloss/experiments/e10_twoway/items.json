@@ -1,0 +1,674 @@
+[
+ {
+  "id": "me:1",
+  "group": "clear",
+  "input": {
+   "mode": "me",
+   "person": "Jess",
+   "relation": "friend",
+   "channel": "text message",
+   "context": "Jess asked if I can come to her dinner on Friday.",
+   "text": "No, I can't make Friday.",
+   "intended": "I can't come on Friday."
+  },
+  "risk": "none"
+ },
+ {
+  "id": "me:2",
+  "group": "clear",
+  "input": {
+   "mode": "me",
+   "person": "Ruth",
+   "relation": "manager",
+   "channel": "email",
+   "context": "Ruth asked for the quarterly figures by Thursday.",
+   "text": "Hi Ruth, the figures are attached. Let me know if you need anything else.",
+   "intended": "Here are the figures."
+  },
+  "risk": "none"
+ },
+ {
+  "id": "me:3",
+  "group": "clear",
+  "input": {
+   "mode": "me",
+   "person": "Ollie",
+   "relation": "colleague",
+   "channel": "Slack",
+   "context": "Ollie asked if I could review his pull request today.",
+   "text": "Yes, I'll review it by 3pm.",
+   "intended": "I'll do it this afternoon."
+  },
+  "risk": "none"
+ },
+ {
+  "id": "me:4",
+  "group": "clear",
+  "input": {
+   "mode": "me",
+   "person": "Mum",
+   "relation": "mother",
+   "channel": "phone call",
+   "context": "Mum asked whether I'm coming for Sunday lunch.",
+   "text": "Yes, I'll be there at one. Shall I bring pudding?",
+   "intended": "I'm coming and offering to bring dessert."
+  },
+  "risk": "none"
+ },
+ {
+  "id": "me:5",
+  "group": "clear",
+  "input": {
+   "mode": "me",
+   "person": "Priya",
+   "relation": "housemate",
+   "channel": "WhatsApp",
+   "context": "Priya asked if she can borrow my bike tomorrow.",
+   "text": "Sure, the key is on the hook by the door.",
+   "intended": "Yes she can."
+  },
+  "risk": "none"
+ },
+ {
+  "id": "me:6",
+  "group": "clear",
+  "input": {
+   "mode": "me",
+   "person": "Dr Shah",
+   "relation": "GP",
+   "channel": "online form",
+   "context": "The GP surgery asked why I want an appointment.",
+   "text": "I've had a cough for three weeks and it is not getting better.",
+   "intended": "Explaining my symptom."
+  },
+  "risk": "none"
+ },
+ {
+  "id": "me:7",
+  "group": "clear",
+  "input": {
+   "mode": "me",
+   "person": "Sam",
+   "relation": "friend",
+   "channel": "text message",
+   "context": "Sam invited me to a gig on Saturday. I don't like loud venues.",
+   "text": "Thanks for asking. I'm going to pass on this one, but I'd love to get food with you soon.",
+   "intended": "No to the gig, but I want to see Sam."
+  },
+  "risk": "none"
+ },
+ {
+  "id": "me:8",
+  "group": "clear",
+  "input": {
+   "mode": "me",
+   "person": "Aisha",
+   "relation": "colleague",
+   "channel": "Teams",
+   "context": "Aisha asked if I can join an extra meeting at 5pm.",
+   "text": "Sorry, I can't do 5pm. I'm free tomorrow morning.",
+   "intended": "Can't today, offering another time."
+  },
+  "risk": "none"
+ },
+ {
+  "id": "me:9",
+  "group": "clear",
+  "input": {
+   "mode": "me",
+   "person": "Landlord",
+   "relation": "landlord",
+   "channel": "email",
+   "context": "The kitchen tap has been dripping for a week.",
+   "text": "Hello, the kitchen tap has been dripping since last Monday. Could someone come to fix it this week? I'm in after 4pm.",
+   "intended": "Asking for a repair."
+  },
+  "risk": "none"
+ },
+ {
+  "id": "me:10",
+  "group": "clear",
+  "input": {
+   "mode": "me",
+   "person": "Ben",
+   "relation": "partner",
+   "channel": "text message",
+   "context": "Ben asked what I want for tea.",
+   "text": "Pasta please.",
+   "intended": "I'd like pasta."
+  },
+  "risk": "none"
+ },
+ {
+  "id": "me:11",
+  "group": "clear",
+  "input": {
+   "mode": "me",
+   "person": "Kat",
+   "relation": "sister",
+   "channel": "WhatsApp",
+   "context": "Kat sent a photo of her new puppy.",
+   "text": "He's gorgeous! What's his name?",
+   "intended": "I like the puppy."
+  },
+  "risk": "none"
+ },
+ {
+  "id": "me:12",
+  "group": "clear",
+  "input": {
+   "mode": "me",
+   "person": "Group",
+   "relation": "five-a-side group chat",
+   "channel": "WhatsApp",
+   "context": "The organiser asked who is playing on Tuesday.",
+   "text": "I'm out this week, back next Tuesday.",
+   "intended": "Not playing this week."
+  },
+  "risk": "none"
+ },
+ {
+  "id": "me:13",
+  "group": "clear",
+  "input": {
+   "mode": "me",
+   "person": "Tom",
+   "relation": "manager",
+   "channel": "email",
+   "context": "Tom asked if I can take on another project.",
+   "text": "I don't have capacity for another project right now without dropping something. Which would you like me to deprioritise?",
+   "intended": "I am at capacity and need him to choose."
+  },
+  "risk": "none"
+ },
+ {
+  "id": "me:14",
+  "group": "clear",
+  "input": {
+   "mode": "me",
+   "person": "Lucy",
+   "relation": "friend",
+   "channel": "text message",
+   "context": "Lucy asked if I'm upset with her because I didn't reply yesterday.",
+   "text": "No, not upset at all. I was just tired and didn't look at my phone.",
+   "intended": "Reassuring her I'm not upset."
+  },
+  "risk": "none"
+ },
+ {
+  "id": "me:15",
+  "group": "clear",
+  "input": {
+   "mode": "me",
+   "person": "Owen",
+   "relation": "neighbour",
+   "channel": "note through the door",
+   "context": "Owen's music was loud late last night.",
+   "text": "Hi Owen, could you keep the music down after 11 on weeknights? I start work early. Thanks.",
+   "intended": "Asking politely for quiet."
+  },
+  "risk": "none"
+ },
+ {
+  "id": "me:16",
+  "group": "clear",
+  "input": {
+   "mode": "me",
+   "person": "Grace",
+   "relation": "colleague",
+   "channel": "Slack",
+   "context": "Grace asked if I'd seen her email.",
+   "text": "Yes, I've read it. I'll reply properly tomorrow.",
+   "intended": "Acknowledging and saying when."
+  },
+  "risk": "none"
+ },
+ {
+  "id": "me:17",
+  "group": "clear",
+  "input": {
+   "mode": "me",
+   "person": "Uncle Rob",
+   "relation": "uncle",
+   "channel": "phone call",
+   "context": "Uncle Rob asked if I want to come fishing.",
+   "text": "No thanks, it's not really my thing. Hope you catch something!",
+   "intended": "Declining kindly."
+  },
+  "risk": "none"
+ },
+ {
+  "id": "me:18",
+  "group": "clear",
+  "input": {
+   "mode": "me",
+   "person": "Mei",
+   "relation": "classmate",
+   "channel": "Discord",
+   "context": "Mei asked if I've finished my part of the group project.",
+   "text": "Yes, it's in the shared folder, called section3_final.",
+   "intended": "Done and where it is."
+  },
+  "risk": "none"
+ },
+ {
+  "id": "me:19",
+  "group": "clear",
+  "input": {
+   "mode": "me",
+   "person": "Hiring team",
+   "relation": "recruiter",
+   "channel": "email",
+   "context": "A recruiter asked for my availability for an interview.",
+   "text": "I'm available Tuesday or Wednesday between 10am and 2pm.",
+   "intended": "Giving my availability."
+  },
+  "risk": "none"
+ },
+ {
+  "id": "me:20",
+  "group": "clear",
+  "input": {
+   "mode": "me",
+   "person": "Dan",
+   "relation": "friend",
+   "channel": "text message",
+   "context": "Dan asked if I can lend him 50 pounds.",
+   "text": "Sorry Dan, I can't lend money at the moment.",
+   "intended": "No, kindly."
+  },
+  "risk": "none"
+ },
+ {
+  "id": "me:21",
+  "group": "clear",
+  "input": {
+   "mode": "me",
+   "person": "Zoe",
+   "relation": "friend",
+   "channel": "text message",
+   "context": "Zoe asked how my interview went.",
+   "text": "It went well, I think. They'll let me know next week.",
+   "intended": "Reporting the interview went fine."
+  },
+  "risk": "none"
+ },
+ {
+  "id": "me:22",
+  "group": "clear",
+  "input": {
+   "mode": "me",
+   "person": "Raj",
+   "relation": "manager",
+   "channel": "Teams",
+   "context": "Raj asked if I understood the new process.",
+   "text": "I understand steps 1 to 3. Can you explain step 4 again?",
+   "intended": "I need step 4 clarified."
+  },
+  "risk": "none"
+ },
+ {
+  "id": "me:23",
+  "group": "clear",
+  "input": {
+   "mode": "me",
+   "person": "Hannah",
+   "relation": "someone I just met",
+   "channel": "text message",
+   "context": "I met Hannah at a book club and she gave me her number.",
+   "text": "Hi, it's Alex from book club. It was nice to meet you.",
+   "intended": "Being friendly."
+  },
+  "risk": "none"
+ },
+ {
+  "id": "me:24",
+  "group": "clear",
+  "input": {
+   "mode": "me",
+   "person": "Chris",
+   "relation": "colleague",
+   "channel": "in person",
+   "context": "Chris asked if I'm coming to after-work drinks.",
+   "text": "Not tonight, thanks. Have fun.",
+   "intended": "No thanks, no hard feelings."
+  },
+  "risk": "none"
+ },
+ {
+  "id": "me:25",
+  "group": "ambiguous",
+  "input": {
+   "mode": "me",
+   "person": "Ellie",
+   "relation": "friend",
+   "channel": "text message",
+   "context": "Ellie sent me a long message about how hard her week has been after her breakup, ending with 'sorry for the essay'.",
+   "text": "ok",
+   "intended": "I read it and I'm here for her, I just don't know what to say."
+  },
+  "risk": "a one-word reply to a long emotional message may read as cold or uninterested"
+ },
+ {
+  "id": "me:26",
+  "group": "ambiguous",
+  "input": {
+   "mode": "me",
+   "person": "Ben",
+   "relation": "partner",
+   "channel": "text message",
+   "context": "We argued about chores last night. Ben just texted asking if we're okay.",
+   "text": "fine.",
+   "intended": "Yes, we're okay, I'm not angry any more."
+  },
+  "risk": "'fine.' with a full stop after an argument is often read as still annoyed"
+ },
+ {
+  "id": "me:27",
+  "group": "ambiguous",
+  "input": {
+   "mode": "me",
+   "person": "Ollie",
+   "relation": "colleague",
+   "channel": "Slack",
+   "context": "Ollie shared his new slide design with the team.",
+   "text": "Bold choice of colours lol",
+   "intended": "I like that he tried something different."
+  },
+  "risk": "may read as a sarcastic dig at his design"
+ },
+ {
+  "id": "me:28",
+  "group": "ambiguous",
+  "input": {
+   "mode": "me",
+   "person": "Tom",
+   "relation": "manager",
+   "channel": "email",
+   "context": "Tom announced a new reporting process in a team email.",
+   "text": "Why are we doing it this way?",
+   "intended": "I genuinely want to understand the reason so I can do it right."
+  },
+  "risk": "a bare 'why' question can read as challenging or criticising the decision"
+ },
+ {
+  "id": "me:29",
+  "group": "ambiguous",
+  "input": {
+   "mode": "me",
+   "person": "Mum",
+   "relation": "mother",
+   "channel": "text message",
+   "context": "Mum asked if I've thought about her offer to help with the move.",
+   "text": "I'll do it myself.",
+   "intended": "Thanks, but I'd find it easier to do it at my own pace."
+  },
+  "risk": "may read as rejecting her or as hurt pride"
+ },
+ {
+  "id": "me:30",
+  "group": "ambiguous",
+  "input": {
+   "mode": "me",
+   "person": "Group",
+   "relation": "work group chat",
+   "channel": "Teams",
+   "context": "I was told yesterday in person that the deadline moved, but the rest of the group wasn't there.",
+   "text": "So it's Monday now.",
+   "intended": "Telling everyone the deadline has moved to Monday."
+  },
+  "risk": "missing context: others may not know what 'it' is or why it changed, or think it's a complaint"
+ },
+ {
+  "id": "me:31",
+  "group": "ambiguous",
+  "input": {
+   "mode": "me",
+   "person": "Jess",
+   "relation": "friend",
+   "channel": "text message",
+   "context": "Jess was 40 minutes late meeting me and apologised afterwards.",
+   "text": "No worries, I love standing in the rain.",
+   "intended": "Joking; I'm actually not bothered."
+  },
+  "risk": "a joke that could read as a pointed complaint about her lateness"
+ },
+ {
+  "id": "me:32",
+  "group": "ambiguous",
+  "input": {
+   "mode": "me",
+   "person": "Aisha",
+   "relation": "colleague",
+   "channel": "email",
+   "context": "Aisha sent a draft report and asked for feedback.",
+   "text": "Did you check the numbers in section 2?",
+   "intended": "I want to know if section 2 is final so I don't review it twice."
+  },
+  "risk": "may read as implying she made mistakes"
+ },
+ {
+  "id": "me:33",
+  "group": "ambiguous",
+  "input": {
+   "mode": "me",
+   "person": "Sam",
+   "relation": "friend",
+   "channel": "WhatsApp",
+   "context": "Sam asked if I want to come to his birthday on Saturday. I'm not sure if I'll have the energy.",
+   "text": "Maybe.",
+   "intended": "I'd like to, but I'll know on the day depending on how I feel."
+  },
+  "risk": "a bare 'maybe' can read as not interested or as a soft no"
+ },
+ {
+  "id": "me:34",
+  "group": "ambiguous",
+  "input": {
+   "mode": "me",
+   "person": "Kat",
+   "relation": "sister",
+   "channel": "WhatsApp",
+   "context": "Kat told me she got engaged.",
+   "text": "Oh wow. That was quick.",
+   "intended": "I'm surprised and happy for her."
+  },
+  "risk": "'that was quick' can read as disapproval of the engagement"
+ },
+ {
+  "id": "me:35",
+  "group": "ambiguous",
+  "input": {
+   "mode": "me",
+   "person": "Raj",
+   "relation": "manager",
+   "channel": "Teams",
+   "context": "Raj asked the team for volunteers for a weekend shift.",
+   "text": "Not me.",
+   "intended": "I can't do weekends this month because of family commitments."
+  },
+  "risk": "very blunt with no reason, may read as unwilling or not a team player"
+ },
+ {
+  "id": "me:36",
+  "group": "ambiguous",
+  "input": {
+   "mode": "me",
+   "person": "Lucy",
+   "relation": "friend",
+   "channel": "text message",
+   "context": "Lucy cancelled our plans for the third time this month.",
+   "text": "Sure, whatever works for you.",
+   "intended": "It's fine, I understand she's busy."
+  },
+  "risk": "'whatever' after repeated cancellations may read as passive-aggressive"
+ },
+ {
+  "id": "me:37",
+  "group": "ambiguous",
+  "input": {
+   "mode": "me",
+   "person": "Priya",
+   "relation": "housemate",
+   "channel": "note on the fridge",
+   "context": "Dishes have been left in the sink for days. I don't know whose they are.",
+   "text": "Some of us actually wash up.",
+   "intended": "Could whoever left the dishes please wash them?"
+  },
+  "risk": "reads as an accusation aimed at Priya in particular"
+ },
+ {
+  "id": "me:38",
+  "group": "ambiguous",
+  "input": {
+   "mode": "me",
+   "person": "Dr Shah",
+   "relation": "GP",
+   "channel": "email",
+   "context": "The GP changed my medication without explaining much.",
+   "text": "Is there a reason you changed it?",
+   "intended": "I'd like to understand the change."
+  },
+  "risk": "may read as questioning the doctor's judgement"
+ },
+ {
+  "id": "me:39",
+  "group": "ambiguous",
+  "input": {
+   "mode": "me",
+   "person": "Hannah",
+   "relation": "someone I just met",
+   "channel": "text message",
+   "context": "We met at a party last night and talked for an hour.",
+   "text": "You talk a lot haha",
+   "intended": "I enjoyed how chatty she was."
+  },
+  "risk": "may read as criticism that she talked too much"
+ },
+ {
+  "id": "me:40",
+  "group": "ambiguous",
+  "input": {
+   "mode": "me",
+   "person": "Grace",
+   "relation": "colleague",
+   "channel": "Slack",
+   "context": "Grace asked me to look at her code and I found a bug.",
+   "text": "This is broken.",
+   "intended": "There's a bug on line 40 and I can help fix it."
+  },
+  "risk": "terse and without detail, may read as harsh or dismissive of her work"
+ },
+ {
+  "id": "me:41",
+  "group": "ambiguous",
+  "input": {
+   "mode": "me",
+   "person": "Dad",
+   "relation": "father",
+   "channel": "phone call",
+   "context": "Dad told me a long story about his day at the allotment.",
+   "text": "Right. Anyway, I need to go.",
+   "intended": "I have to leave for an appointment, not bored of him."
+  },
+  "risk": "may read as bored or dismissive of his story"
+ },
+ {
+  "id": "me:42",
+  "group": "ambiguous",
+  "input": {
+   "mode": "me",
+   "person": "Chris",
+   "relation": "colleague",
+   "channel": "email",
+   "context": "Chris replied-all with a correction to my figures.",
+   "text": "Noted.",
+   "intended": "Thanks, I've seen the correction and will fix it."
+  },
+  "risk": "'Noted.' after a public correction can read as irritated or defensive"
+ },
+ {
+  "id": "me:43",
+  "group": "ambiguous",
+  "input": {
+   "mode": "me",
+   "person": "Zoe",
+   "relation": "friend",
+   "channel": "text message",
+   "context": "Zoe asked what I thought of her new boyfriend after meeting him.",
+   "text": "He's interesting.",
+   "intended": "I don't know him well yet but he seemed fine."
+  },
+  "risk": "'interesting' can read as a polite way of saying I don't like him"
+ },
+ {
+  "id": "me:44",
+  "group": "ambiguous",
+  "input": {
+   "mode": "me",
+   "person": "Mei",
+   "relation": "classmate",
+   "channel": "Discord",
+   "context": "Mei hasn't done her part of the group project and the deadline is tomorrow.",
+   "text": "Are you planning on doing your bit?",
+   "intended": "Checking if she still has time to do it or needs help."
+  },
+  "risk": "may read as sarcastic or accusing"
+ },
+ {
+  "id": "me:45",
+  "group": "ambiguous",
+  "input": {
+   "mode": "me",
+   "person": "Owen",
+   "relation": "neighbour",
+   "channel": "text message",
+   "context": "Owen asked if I could feed his cat while he's away.",
+   "text": "I suppose so.",
+   "intended": "Yes, happy to help."
+  },
+  "risk": "'I suppose so' can read as reluctant or put upon"
+ },
+ {
+  "id": "me:46",
+  "group": "ambiguous",
+  "input": {
+   "mode": "me",
+   "person": "Uncle Rob",
+   "relation": "uncle",
+   "channel": "Facebook comment",
+   "context": "Uncle Rob posted a photo of a fish he caught.",
+   "text": "Is that it?",
+   "intended": "Asking if that is the fish he was talking about at dinner."
+  },
+  "risk": "missing context: reads as mocking the size of the fish"
+ },
+ {
+  "id": "me:47",
+  "group": "ambiguous",
+  "input": {
+   "mode": "me",
+   "person": "Recruiter",
+   "relation": "recruiter",
+   "channel": "email",
+   "context": "A recruiter offered a salary lower than the advert said.",
+   "text": "That's not what the advert said.",
+   "intended": "I'd like to discuss the salary because it differs from the advert."
+  },
+  "risk": "may read as confrontational rather than opening a negotiation"
+ },
+ {
+  "id": "me:48",
+  "group": "ambiguous",
+  "input": {
+   "mode": "me",
+   "person": "Ellie",
+   "relation": "friend",
+   "channel": "text message",
+   "context": "Ellie asked me to proofread her cover letter and I found lots of typos.",
+   "text": "I've fixed about 30 typos.",
+   "intended": "I'm glad to help; it just needed a tidy."
+  },
+  "risk": "stating the number of errors may read as criticising her writing"
+ }
+]

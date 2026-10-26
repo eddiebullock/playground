@@ -497,6 +497,18 @@ export default function App() {
           )}
           {result && (
             <>
+              {result.safety?.distress && (
+                <p className="safety" role="note">
+                  <span className="label">Before the readings</span>
+                  {result.safety.distress}
+                </p>
+              )}
+              {result.safety?.scam && (
+                <p className="safety" role="note">
+                  <span className="label">Be careful</span>
+                  {result.safety.scam}
+                </p>
+              )}
               <div className={`clarity clarity-${result.clarity}`}>
                 <strong>{(isThem ? CLARITY_TEXT : CLARITY_TEXT_ME)[result.clarity].word}</strong>
                 <span>{(isThem ? CLARITY_TEXT : CLARITY_TEXT_ME)[result.clarity].detail}</span>
@@ -506,7 +518,7 @@ export default function App() {
                 {result.literal}
               </p>
               <ol className="readings">
-                {result.readings.map((r, i) => (
+                {result.readings.filter((r) => !r.hidden).map((r, i) => (
                   <li key={i}>
                     <div className="reading-head">
                       <span className="likelihood">{result.abstain ? "Possible" : likelihood(r.p)}</span>

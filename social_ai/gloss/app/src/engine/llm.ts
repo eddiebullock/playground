@@ -3,10 +3,10 @@
 
 export const DEFAULT_BASE = "http://127.0.0.1:11434";
 
-export type Family = "qwen" | "gemma";
+export type Family = "qwen" | "gemma" | "llama";
 
 export function family(model: string): Family {
-  return model.startsWith("gemma") ? "gemma" : "qwen";
+  return model.startsWith("gemma") ? "gemma" : model.startsWith("llama") ? "llama" : "qwen";
 }
 
 // Raw chat turns. The option distribution is read after an "Answer: " prefill,
@@ -15,6 +15,8 @@ const TURN: Record<Family, (s: string, u: string) => string> = {
   qwen: (s, u) =>
     `<|im_start|>system\n${s}<|im_end|>\n<|im_start|>user\n${u}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n`,
   gemma: (s, u) => `<start_of_turn>user\n${s}\n\n${u}<end_of_turn>\n<start_of_turn>model\n`,
+  llama: (s, u) =>
+    `<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\n${s}<|eot_id|><|start_header_id|>user<|end_header_id|>\n\n${u}<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n`,
 };
 
 type TopLogprob = { token: string; logprob: number };

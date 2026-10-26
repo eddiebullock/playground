@@ -36,6 +36,15 @@ SYSTEM_STANCE = (
     "white lies. They also often mean exactly what they say. Use the situation to decide what the speaker most "
     "plausibly meant. Answer with the number of the best option only. No other text."
 )
+# "Fit" stance (pre-registered 2026-10-25 23:10, docs/DECISIONS.md): instead
+# of a global push towards non-literal readings, tie the non-literal reading
+# to a clash between the words and the situation.
+SYSTEM_FIT = (
+    "First decide whether the speaker's words fit the situation. If they clearly clash with it, the speaker "
+    "probably means something other than the literal words (irony, a hint, a polite excuse or a white lie). If "
+    "they fit, the speaker probably means exactly what they say. Answer with the number of the best option only. "
+    "No other text."
+)
 SYSTEM_REASON = "Think briefly about what the speaker really means, then give the number of the best option."
 
 # Raw templates. The answer is read after an "Answer: " prefill, so the next
@@ -45,11 +54,12 @@ SYSTEM_REASON = "Think briefly about what the speaker really means, then give th
 TURN = {
     "qwen": "<|im_start|>system\n{s}<|im_end|>\n<|im_start|>user\n{u}<|im_end|>\n<|im_start|>assistant\n",
     "gemma": "<start_of_turn>user\n{s}\n\n{u}<end_of_turn>\n<start_of_turn>model\n",
+    "llama": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\n{s}<|eot_id|><|start_header_id|>user<|end_header_id|>\n\n{u}<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n",
 }
 
 
 def family(model):
-    return "gemma" if model.startswith("gemma") else "qwen"
+    return "gemma" if model.startswith("gemma") else "llama" if model.startswith("llama") else "qwen"
 
 
 def generate(model, prompt, num_predict, logprobs=False, stop=None, timeout=600):
@@ -92,8 +102,8 @@ def chat(model, prompt, mode="direct"):
         resp["total_duration"] = resp.get("total_duration", 0) + thought.get("total_duration", 0)
         resp["reason_tokens"] = thought.get("eval_count", 0)
         return resp
-    if mode in ("direct", "stance"):
-        head = TURN[fam].format(s=SYSTEM if mode == "direct" else SYSTEM_STANCE, u=prompt + "\n\nReply with the option number only.")
+    if mode in ("direct", "stance", "fit"):
+        head = TURN[fam].format(s={"direct": SYSTEM, "stance": SYSTEM_STANCE, "fit": SYSTEM_FIT}[mode], u=prompt + "\n\nReply with the option number only.")
         if fam == "qwen":
             head += "<think>\n\n</think>\n\n"
         return generate(model, head + "Answer: ", 2, logprobs=True)
@@ -155,21 +165,32 @@ def hu_items(task, seed):
         }
 
 
-SINCERE = ROOT / "data/sincere_irony.json"
+# Minimal-pair sincere controls, one file per phenomenon. The Irony set keeps
+# its original ids ("Sincere:<n>") so earlier results stay comparable; the
+# others are "Sincere<Task>:<n>".
+SINCERE = {"Irony": ROOT / "data/sincere_irony.json",
+           "IndirectSpeech": ROOT / "data/sincere_indirectspeech.json",
+           "Deceits": ROOT / "data/sincere_deceits.json"}
 
 
-def sincere_items(seed):
-    """Minimal pairs: Irony items with the context rewritten so the remark is
+def sincere_items(seed, tasks=("Irony",)):
+    """Minimal pairs: items with the context rewritten so the remark is
     sincere. Correct answer = the item's original literal option."""
-    new = json.load(open(SINCERE))
-    for it in hu_items("Irony", seed):
-        iid = it["id"].split(":")[1]
-        row = next(r for r in csv.DictReader(open(HU / f"prompts/Irony_prompts_seed{seed}_examples0.csv")) if r["item_id"] == iid)
-        old = row["content"].strip()
-        assert old in it["prompt"], iid
-        it = dict(it, id=f"Sincere:{iid}", task="Sincere", prompt=it["prompt"].replace(old, new[iid]))
-        it["true"] = it["labels"].index("IncorrectLiteral") + 1
-        yield it
+    for task in tasks:
+        if not SINCERE[task].exists():
+            continue
+        new = json.load(open(SINCERE[task]))
+        rows = {r["item_id"]: r for r in csv.DictReader(open(HU / f"prompts/{task}_prompts_seed{seed}_examples0.csv"))}
+        for it in hu_items(task, seed):
+            iid = it["id"].split(":")[1]
+            if not new.get(iid):
+                continue
+            old = rows[iid]["content"].strip()
+            assert old in it["prompt"], iid
+            name = "Sincere" if task == "Irony" else f"Sincere{task}"
+            it = dict(it, id=f"{name}:{iid}", task=name, prompt=it["prompt"].replace(old, new[iid]))
+            it["true"] = it["labels"].index("IncorrectLiteral") + 1
+            yield it
 
 
 def mustard_subset(n_per_class=100):
@@ -211,9 +232,9 @@ def mustard_items(seed):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--model", required=True)
-    ap.add_argument("--task", choices=["hu", "mustard", "sincere"], required=True)
+    ap.add_argument("--task", choices=["hu", "mustard", "sincere", "sincere_all"], required=True)
     ap.add_argument("--seeds", type=int, default=5)
-    ap.add_argument("--mode", choices=["direct", "reason", "stance", "check"], default="direct")
+    ap.add_argument("--mode", choices=["direct", "reason", "stance", "check", "fit"], default="direct")
     args = ap.parse_args()
 
     OUT.mkdir(parents=True, exist_ok=True)
@@ -226,6 +247,8 @@ def main():
         items = [it for s in range(args.seeds) for t in HU_TASKS for it in hu_items(t, s)]
     elif args.task == "sincere":
         items = [it for s in range(args.seeds) for it in sincere_items(s)]
+    elif args.task == "sincere_all":
+        items = [it for s in range(args.seeds) for it in sincere_items(s, ("IndirectSpeech", "Deceits"))]
     else:
         items = [it for s in range(min(args.seeds, 2)) for it in mustard_items(s)]
 

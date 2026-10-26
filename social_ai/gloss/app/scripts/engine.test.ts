@@ -81,3 +81,17 @@ test("json streams chunks to onText and parses the whole reply", async () => {
     globalThis.fetch = real;
   }
 });
+
+test("safety patterns flag clear cases and leave look-alikes alone", async () => {
+  const { safetyCheck, safeReplies } = await import("../src/engine/safety.ts");
+  assert.ok(safetyCheck({ mode: "them", context: "I feel like a burden to everyone.", text: "See you later" }).distress);
+  assert.ok(!safetyCheck({ mode: "them", context: "I'm dead tired, this week is killing me.", text: "See you later" }).distress);
+  const scam = safetyCheck({ mode: "them", text: "Your account will be suspended. Verify your account within 24 hours: secure-bank.xyz/login" });
+  assert.ok(scam.scam);
+  assert.ok(!safetyCheck({ mode: "them", text: "Your parcel was delivered to your safe place." }).scam);
+  assert.ok(safetyCheck({ mode: "them", context: "I said no, I need the car.", text: "Come on, you'd do it if you were a real mate." }).boundary);
+  assert.ok(!safetyCheck({ mode: "them", context: "I said no, I need the car.", text: "No worries, I'll ask someone else." }).boundary);
+  assert.ok(!safetyCheck({ mode: "me", context: "I feel fine.", text: "Click this link: x.xyz/a within 24 hours" }).scam);
+  const kept = safeReplies([{ reply: "I'll pay the fee now." }, { reply: "I'll check with the company first." }], scam);
+  assert.deepEqual(kept.map((r) => r.reply), ["I'll check with the company first."]);
+});
