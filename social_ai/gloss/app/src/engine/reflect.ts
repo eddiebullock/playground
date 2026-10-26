@@ -10,6 +10,7 @@
 //    the user has a measured calibration behind it.
 
 import { json, optionDist } from "./llm.ts";
+import { safeReplies, safetyCheck, type Safety } from "./safety.ts";
 
 export type Mode = "them" | "me";
 
@@ -48,6 +49,8 @@ export type ReflectResult = {
   check: string;
   /** Set only when the other person seems to be pushing past a "no": a reminder that the user can say no. */
   boundary: string;
+  /** Fixed notes from the safety layer (safety.ts), independent of the model. */
+  safety: Safety;
   model: string;
   ms: number;
   /** Time spent writing the readings, before weighing. */
@@ -268,10 +271,12 @@ export async function reflect(
   onStep?.("weighing", { literal: gen.literal, meanings: raw.map((r) => r.meaning) });
   const ms_gen = Date.now() - t0;
   const readings = shown(await weigh(base, model, input, raw, signal));
+  const safety = safetyCheck(input);
   return summarise(readings, {
     literal: gen.literal,
     check: gen.check_question,
-    boundary: input.mode === "them" ? (gen.boundary ?? "").trim() : "",
+    boundary: input.mode === "them" ? (gen.boundary ?? "").trim() || (safety.boundary ?? "") : "",
+    safety,
     model,
     ms: Date.now() - t0,
     ms_gen,
@@ -378,9 +383,11 @@ Possible readings of what ${input.person?.trim() || "they"} meant:
 ${readings}
 
 Give 2 or 3 different ways I could respond, if I want to respond at all. Keep each reply short and in plain, direct words I might use myself. One must simply ask what they meant or check. Offer not replying, or replying later, only if their message does not ask me anything or need an answer. Base the replies on what happened, not on how I feel or anything I have said about myself: do not suggest apologising, reassuring them or explaining myself unless I clearly did something wrong. Do not tell me to change how I come across.
-For each, might_land: one sentence on how ${input.person?.trim() || "they"} might take it, given the readings above.`;
+For each, might_land: one sentence on how ${input.person?.trim() || "they"} might take it, given the readings above.${
+    result.boundary ? "\nI have already said no. Do not suggest giving in, agreeing or meeting them halfway." : ""
+  }${result.safety?.scam ? "\nThis may be a scam. Do not suggest paying, clicking, confirming details or sharing any code." : ""}`;
   const r = await json<{ replies: Reply[] }>(base, model, SYSTEM_GEN, user, SCHEMA_REPLIES, signal);
-  return r.replies.filter((x) => x.reply?.trim()).slice(0, 3);
+  return safeReplies(r.replies.filter((x) => x.reply?.trim()), result.safety ?? {}).slice(0, 3);
 }
 
 const SCHEMA_NOTE = {
