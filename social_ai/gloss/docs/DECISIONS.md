@@ -876,3 +876,19 @@ Dated, with the evidence. Newest last.
   adopted strip). Distress still reads it. Users who write a diagnosis into
   "what came before" still get leftover drift; that is documented, not
   silently rewritten.
+
+- **Pre-registration: E10 me-mode clarity bands (before choosing cuts).**
+  Shipped them-mode bands (CLEAR_AT 0.7, ABSTAIN_BELOW 0.5) over-fire on
+  the user's own drafts: 11/24 clear drafts get "high" / abstain. Target
+  metric: clear-draft false alarm = share of group=clear labelled "high".
+  Aim <= 0.2. Them-mode bands stay. No new generate: use the frozen
+  `experiments/e10_twoway/results_qwen3-8b.jsonl` (48/48).
+  **Split:** odd ids (me:1,3,...,47) development, even ids test.
+  **Grid:** ABSTAIN_BELOW_ME in 0.15-0.50 step 0.05; CLEAR_AT_ME in
+  0.35-0.70 step 0.05 with CLEAR_AT_ME > ABSTAIN_BELOW_ME.
+  **Adopt** the pair on the odd half with FA <= 2/12 and missed-ambiguity
+  (ambiguous labelled "clear") <= 3/12; among those, highest abstain
+  threshold (keep a warning when the top mass is truly flat), then highest
+  clear threshold. Test that pair once on the even half with the same
+  caps (FA <= 2/12, miss <= 3/12). If the even half fails, do not ship.
+  Do not peek at even to choose the pair.
