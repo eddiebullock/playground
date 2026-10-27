@@ -1,0 +1,10 @@
+E10 me-mode clarity bands, 2026-10-27.
+Frozen Reflect jsonl (no new generate). Odd ids development, even test.
+
+Shipped them-mode 0.7 / 0.5 on all 48: FA 11/24, miss 4/24.
+Odd shipped FA 5/12.
+
+Chosen on odd: ABSTAIN_BELOW_ME 0.4, CLEAR_AT_ME 0.7
+Even: FA 2/12, miss 1/12, clear-on-clear 2/12. PASS.
+
+Adopted. Them-mode unchanged.

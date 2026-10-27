@@ -4,7 +4,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { json, optionDist } from "../src/engine/llm.ts";
-import { calibrate, draftFrom, dropSelfDescription, normEntropy, scoreOptions } from "../src/engine/reflect.ts";
+import { calibrate, clarityBand, draftFrom, dropSelfDescription, normEntropy, scoreOptions } from "../src/engine/reflect.ts";
 
 const close = (a: number[], b: number[]) => a.forEach((x, i) => assert.ok(Math.abs(x - b[i]) < 1e-6, `${a} vs ${b}`));
 
@@ -13,6 +13,14 @@ test("calibrate flattens overconfident probabilities and keeps the order", () =>
   assert.ok(Math.abs(p.reduce((a, b) => a + b) - 1) < 1e-9);
   assert.ok(p[0] < 0.9 && p[0] > p[1] && p[1] > p[2]);
   close(calibrate([0.9, 0.1], "unknown-model"), [0.9, 0.1]);
+});
+
+test("me-mode bands abstain later than them-mode so a 0.42 top is some, not high", () => {
+  assert.deepEqual(clarityBand(0.72, "them"), { clarity: "clear", abstain: false });
+  assert.deepEqual(clarityBand(0.72, "me"), { clarity: "clear", abstain: false });
+  assert.deepEqual(clarityBand(0.42, "them"), { clarity: "high", abstain: true });
+  assert.deepEqual(clarityBand(0.42, "me"), { clarity: "some", abstain: false });
+  assert.deepEqual(clarityBand(0.36, "me"), { clarity: "high", abstain: true });
 });
 
 test("normEntropy is 0 for certainty and 1 for a flat distribution", () => {

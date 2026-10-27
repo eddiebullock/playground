@@ -73,6 +73,19 @@ const TEMPERATURE: Record<string, number> = { "qwen3:8b": 3.4, "qwen3:4b": 1.8 }
 // (humans 0.86).
 export const CLEAR_AT = 0.7;
 export const ABSTAIN_BELOW = 0.5;
+// Me-mode bands (E10 even half, 2026-10-27). Same clear cut; lower abstain
+// so short plain drafts are not labelled "open" as often. Them-mode unchanged.
+export const CLEAR_AT_ME = 0.7;
+export const ABSTAIN_BELOW_ME = 0.4;
+
+export function clarityBand(top: number, mode: Mode): { clarity: Clarity; abstain: boolean } {
+  const clearAt = mode === "me" ? CLEAR_AT_ME : CLEAR_AT;
+  const abstainAt = mode === "me" ? ABSTAIN_BELOW_ME : ABSTAIN_BELOW;
+  return {
+    clarity: top >= clearAt ? "clear" : top >= abstainAt ? "some" : "high",
+    abstain: top < abstainAt,
+  };
+}
 
 // How many readings to write, and how many to show. Writing more than are
 // shown ("write more, show fewer") targets the E4 finding that generation
@@ -300,7 +313,7 @@ export async function reflect(
     model,
     ms: Date.now() - t0,
     ms_gen,
-  });
+  }, input.mode);
 }
 
 async function weigh(
@@ -335,14 +348,16 @@ function shown(readings: Reading[]): Reading[] {
 function summarise(
   readings: Reading[],
   rest: Omit<ReflectResult, "readings" | "clarity" | "spread" | "abstain">,
+  mode: Mode,
 ): ReflectResult {
   const top = readings[0]?.p ?? 0;
+  const { clarity, abstain } = clarityBand(top, mode);
   return {
     ...rest,
     readings,
-    clarity: top >= CLEAR_AT ? "clear" : top >= ABSTAIN_BELOW ? "some" : "high",
+    clarity,
     spread: normEntropy(readings.filter((r) => !r.hidden).map((r) => r.p)),
-    abstain: top < ABSTAIN_BELOW,
+    abstain,
   };
 }
 
@@ -361,7 +376,7 @@ export async function addOwnReading(
   const raw = result.readings.filter((r) => !r.own).map(({ p: _p, ...r }) => r);
   raw.push({ meaning: own.trim(), cues: [], literal: false, own: true });
   const readings = await weigh(base, result.model, { ...input, own }, raw, signal);
-  return summarise(readings, { ...result, ms: result.ms + Date.now() - t0 });
+  return summarise(readings, { ...result, ms: result.ms + Date.now() - t0 }, input.mode);
 }
 
 export type Reply = { reply: string; might_land: string };

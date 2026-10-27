@@ -892,3 +892,12 @@ Dated, with the evidence. Newest last.
   clear threshold. Test that pair once on the even half with the same
   caps (FA <= 2/12, miss <= 3/12). If the even half fails, do not ship.
   Do not peek at even to choose the pair.
+
+- **E10 me-mode bands (odd fit, even test, frozen jsonl).** Odd half
+  chose ABSTAIN_BELOW_ME **0.4**, CLEAR_AT_ME **0.7** (highest abstain
+  among FA <= 2/12 and miss <= 3/12, then highest clear). Even half:
+  FA **2/12**, missed-ambiguity **1/12**. **Pass; adopted.** Them-mode
+  stays 0.7 / 0.5. Shipped even FA was 6/12. me:1 ("No, I can't make
+  Friday.", top 0.476) moves from "high" to "some". Script:
+  `app/scripts/e10_bands.ts`. Summary:
+  experiments/e10_twoway/e10_bands_official.txt.
