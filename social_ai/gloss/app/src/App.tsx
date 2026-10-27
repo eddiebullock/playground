@@ -5,6 +5,7 @@ import {
   reflect,
   styleNote,
   waysToReply,
+  writeCheck,
   type Draft,
   type Reply,
   type ReflectInput,
@@ -121,7 +122,7 @@ export default function App() {
   const [extra, setExtra] = useState("");
   const [readFirst, setReadFirst] = useState(() => readStored("gloss.readFirst", "") === "1");
   const [replies, setReplies] = useState<Reply[] | null>(null);
-  const [busy, setBusy] = useState<null | "writing" | "weighing" | "replies">(null);
+  const [busy, setBusy] = useState<null | "writing" | "weighing" | "replies" | "check">(null);
   const [result, setResult] = useState<ReflectResult | null>(null);
   const [draft, setDraft] = useState<Draft | null>(null);
   const [lastInput, setLastInput] = useState<ReflectInput | null>(null);
@@ -217,6 +218,20 @@ export default function App() {
       setResult(r);
       setLastInput({ ...lastInput, own: extra });
       setExtra("");
+    } catch (e) {
+      if ((e as Error).name !== "AbortError") setError(String((e as Error).message ?? e));
+    } finally {
+      setBusy(null);
+    }
+  }
+
+  async function runCheck() {
+    if (!result || !lastInput || busy || result.check) return;
+    abort.current = new AbortController();
+    setBusy("check");
+    try {
+      const check = await writeCheck(base, model, lastInput, result, abort.current.signal);
+      setResult({ ...result, check });
     } catch (e) {
       if ((e as Error).name !== "AbortError") setError(String((e as Error).message ?? e));
     } finally {
@@ -561,11 +576,21 @@ export default function App() {
                   {result.boundary}
                 </p>
               )}
-              {result.check && (
+              {result.check ? (
                 <p className="check">
                   <span className="label">{isThem ? "To check, you could ask" : "If you want, you could add"}</span>
                   {result.check}
                 </p>
+              ) : (
+                <div className="row">
+                  <button onClick={runCheck} disabled={!!busy}>
+                    {busy === "check"
+                      ? "Writing..."
+                      : isThem
+                        ? "A question you could ask (optional)"
+                        : "A sentence you could add (optional)"}
+                  </button>
+                </div>
               )}
               {isThem && !replies && (
                 <div className="row">

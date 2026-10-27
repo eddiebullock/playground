@@ -901,3 +901,12 @@ Dated, with the evidence. Newest last.
   Friday.", top 0.476) moves from "high" to "some". Script:
   `app/scripts/e10_bands.ts`. Summary:
   experiments/e10_twoway/e10_bands_official.txt.
+
+- **Pre-registration: check question on demand (before latency remeasure).**
+  Generation no longer asks for `check_question` in the first write.
+  `writeCheck()` runs only if the user asks. After Reflect finishes, a
+  one-token `warmSystem` reloads SYSTEM_GEN so the next write is not cold
+  from the scorer. Remeasure on the first 10 E4 items with `latency.ts`
+  (same ids as v2). Report median literal / first / written / total vs
+  v2 first-10 (6.08 / 8.69 / 22.9 / 25.37 s). Ship the on-demand check
+  either way; the milliseconds are a measurement, not an adoption gate.

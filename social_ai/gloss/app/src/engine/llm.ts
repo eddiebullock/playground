@@ -155,6 +155,22 @@ function mass1(n: number, k: number): number[] {
   return p;
 }
 
+/** Reload the generation system prompt so the next Reflect write is not cold. */
+export async function warmSystem(base: string, model: string, system: string): Promise<void> {
+  try {
+    await post(base, "/api/generate", {
+      model,
+      prompt: TURN[family(model)](system, "ok"),
+      raw: true,
+      stream: false,
+      keep_alive: KEEP_ALIVE,
+      options: { temperature: 0, num_predict: 1, seed: 0 },
+    });
+  } catch {
+    /* warming is best-effort */
+  }
+}
+
 export async function listModels(base: string): Promise<string[]> {
   const res = await fetch(base + "/api/tags");
   if (!res.ok) throw new Error(`Ollama /api/tags ${res.status}`);

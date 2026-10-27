@@ -9,7 +9,7 @@
 //    bias. This is the mechanism measured in E1, so the confidence shown to
 //    the user has a measured calibration behind it.
 
-import { json, optionDist } from "./llm.ts";
+import { json, optionDist, warmSystem } from "./llm.ts";
 import { safeReplies, safetyCheck, type Safety } from "./safety.ts";
 import { safetyFull } from "./safety_model.ts";
 
@@ -136,7 +136,7 @@ export function setScorer(variant: "stance" | "words"): void {
 type Generated = {
   literal: string;
   readings: { meaning: string; cues: string[] }[];
-  check_question: string;
+  check_question?: string;
   boundary?: string;
 };
 
@@ -157,10 +157,9 @@ const SCHEMA = {
         required: ["meaning", "cues"],
       },
     },
-    check_question: { type: "string" },
     boundary: { type: "string" },
   },
-  required: ["literal", "readings", "check_question"],
+  required: ["literal", "readings"],
 };
 
 /** Drop "About me:" lines so the scorer does not see self-description (E4). */
@@ -198,7 +197,6 @@ Give:
 - readings: 2 to ${WRITE_MAX} different things they could have meant. The FIRST reading is the plain one: they meant exactly what they said, in its ordinary, neutral or kind sense, stated concretely. Every other reading must change what I would understand or do next (for example: they are annoyed, they are joking, they are hinting at a request). Never give two readings that mean nearly the same thing. If the situation does not genuinely support another reading, give only one alternative. Each reading is one sentence starting with "${input.person?.trim() || "They"}", says what they meant about me or the situation, and has up to 3 short cues: words or facts from the situation that support it.
 Look at what they did not say as well as what they said. If the words do not answer what was asked, or give far more or far less detail than needed, one reading must say what that suggests (for example: they would rather not talk about it, or they did not like it but do not want to say so). If they used a figure of speech, say plainly what it means about the person or thing it describes.
 If their reaction seems bigger than the situation explains, one reading can be that it is about something on their side, not about me.
-- check_question: one short, friendly, direct question I could ask them to check what they meant.
 - boundary: leave empty, unless I have already said no (or clearly do not want to) and they keep pushing, or the situation sounds unsafe. Then one calm sentence reminding me that I can say no or leave, without judging them.`;
   }
   const intended = input.intended?.trim();
@@ -206,8 +204,7 @@ If their reaction seems bigger than the situation explains, one reading can be t
 ${intended ? `\nWhat I mean by it: ${intended}\n` : ""}
 Give:
 - literal: one sentence saying what my words themselves say.
-- readings: 2 to 4 different ways ${input.person || "they"} could read my message, most likely first. The FIRST reading must be the meaning I intend${intended ? "" : " (my words taken sincerely)"}. Then add readings a reasonable person might actually take from it, about the content or about the tone (for example warm, neutral, brief, curt, annoyed, joking). Different people read short or direct messages differently, so include a tone reading when the message is short or direct. Each reading is one sentence starting with "They might think" and has up to 3 short cues: the words in my message, or what is missing from it, that could lead to that reading.
-- check_question: one short sentence I could add, if I want to, that makes my meaning explicit in my own direct style.`;
+- readings: 2 to 4 different ways ${input.person || "they"} could read my message, most likely first. The FIRST reading must be the meaning I intend${intended ? "" : " (my words taken sincerely)"}. Then add readings a reasonable person might actually take from it, about the content or about the tone (for example warm, neutral, brief, curt, annoyed, joking). Different people read short or direct messages differently, so include a tone reading when the message is short or direct. Each reading is one sentence starting with "They might think" and has up to 3 short cues: the words in my message, or what is missing from it, that could lead to that reading.`;
 }
 
 function scoringPrompt(input: ReflectInput, options: string[]): string {
@@ -305,9 +302,10 @@ export async function reflect(
   } catch {
     safety = safetyCheck(input);
   }
+  void warmSystem(base, model, SYSTEM_GEN);
   return summarise(readings, {
     literal: gen.literal,
-    check: gen.check_question,
+    check: (gen.check_question ?? "").trim(),
     boundary: input.mode === "them" ? (gen.boundary ?? "").trim() || (safety.boundary ?? "") : "",
     safety,
     model,
@@ -423,6 +421,39 @@ For each, might_land: one sentence on how ${input.person?.trim() || "they"} migh
   }${result.safety?.scam ? "\nThis may be a scam. Do not suggest paying, clicking, confirming details or sharing any code." : ""}`;
   const r = await json<{ replies: Reply[] }>(base, model, SYSTEM_GEN, user, SCHEMA_REPLIES, signal);
   return safeReplies(r.replies.filter((x) => x.reply?.trim()), result.safety ?? {}).slice(0, 3);
+}
+
+const SCHEMA_CHECK = {
+  type: "object",
+  properties: { check: { type: "string" } },
+  required: ["check"],
+};
+
+/** One check sentence, only when the user asks. Kept out of the first write. */
+export async function writeCheck(
+  base: string,
+  model: string,
+  input: ReflectInput,
+  result: ReflectResult,
+  signal?: AbortSignal,
+): Promise<string> {
+  const readings = result.readings
+    .filter((r) => !r.hidden)
+    .map((r) => `- ${r.meaning} (${Math.round(r.p * 100)}%)`)
+    .join("\n");
+  const ask =
+    input.mode === "them"
+      ? "Write one short, friendly, direct question I could ask them to check what they meant."
+      : "Write one short sentence I could add, if I want to, that makes my meaning explicit in my own direct style.";
+  const r = await json<{ check: string }>(
+    base,
+    model,
+    SYSTEM_GEN,
+    `${scene(input)}\n\nReadings:\n${readings}\n\n${ask} Plain words. No quote marks around the whole sentence.`,
+    SCHEMA_CHECK,
+    signal,
+  );
+  return (r.check ?? "").trim();
 }
 
 const SCHEMA_NOTE = {

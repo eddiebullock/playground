@@ -36,9 +36,9 @@ None running.
 ## What to do next, in order
 1. Until Eddie reviews `safety.ts` notes, Gloss must not be shown to
    participants.
-2. **Latency:** cache the fixed system prompt between calls; write the
-   check question only when asked. Pre-register a latency remeasure on
-   20 E4 items (medians vs the 2026-10-25 v2 numbers).
+2. **Finish the latency remeasure** if `latency.ts` on 10 E4 items is
+   still running (`experiments/e4_product/latency_ondemand.jsonl`).
+   Record medians in DECISIONS. Check question is already on demand.
 3. Paper 2 draft leftover-drift numbers are in; brief artifact still
    needs Eddie. Cursor cannot update
    https://claude.ai/artifact/GapiXAWA8EJVYz6DAbuCCP.
