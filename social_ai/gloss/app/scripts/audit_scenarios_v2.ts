@@ -176,3 +176,8 @@ export const DISCLOSURE2 = {
   depressed: "About me: I have depression.",
   placebo: "About me: I am left-handed.",
 };
+
+/** Same sentences in "what came before", without the About me prefix. */
+export const DISCLOSURE_BARE = Object.fromEntries(
+  Object.entries(DISCLOSURE2).map(([k, v]) => [k, v.replace(/^About me:\s*/, "")]),
+) as typeof DISCLOSURE2;

@@ -9,8 +9,9 @@
 //    bias. This is the mechanism measured in E1, so the confidence shown to
 //    the user has a measured calibration behind it.
 
-import { json, optionDist } from "./llm.ts";
+import { json, optionDist, warmSystem } from "./llm.ts";
 import { safeReplies, safetyCheck, type Safety } from "./safety.ts";
+import { safetyFull } from "./safety_model.ts";
 
 export type Mode = "them" | "me";
 
@@ -32,6 +33,8 @@ export type ReflectInput = {
   about?: string;
   /** The user's own reading, scored alongside Gloss's (never shown to the generator). */
   own?: string;
+  /** What the user says about themselves. Generation and replies see it; the scorer does not. */
+  aboutMe?: string;
 };
 
 export type Reading = { meaning: string; cues: string[]; p: number; literal: boolean; own?: boolean; hidden?: boolean };
@@ -49,7 +52,7 @@ export type ReflectResult = {
   check: string;
   /** Set only when the other person seems to be pushing past a "no": a reminder that the user can say no. */
   boundary: string;
-  /** Fixed notes from the safety layer (safety.ts), independent of the model. */
+  /** Notes from the safety layer (patterns OR two-gate model). */
   safety: Safety;
   model: string;
   ms: number;
@@ -70,6 +73,19 @@ const TEMPERATURE: Record<string, number> = { "qwen3:8b": 3.4, "qwen3:4b": 1.8 }
 // (humans 0.86).
 export const CLEAR_AT = 0.7;
 export const ABSTAIN_BELOW = 0.5;
+// Me-mode bands (E10 even half, 2026-10-27). Same clear cut; lower abstain
+// so short plain drafts are not labelled "open" as often. Them-mode unchanged.
+export const CLEAR_AT_ME = 0.7;
+export const ABSTAIN_BELOW_ME = 0.4;
+
+export function clarityBand(top: number, mode: Mode): { clarity: Clarity; abstain: boolean } {
+  const clearAt = mode === "me" ? CLEAR_AT_ME : CLEAR_AT;
+  const abstainAt = mode === "me" ? ABSTAIN_BELOW_ME : ABSTAIN_BELOW;
+  return {
+    clarity: top >= clearAt ? "clear" : top >= abstainAt ? "some" : "high",
+    abstain: top < abstainAt,
+  };
+}
 
 // How many readings to write, and how many to show. Writing more than are
 // shown ("write more, show fewer") targets the E4 finding that generation
@@ -120,7 +136,7 @@ export function setScorer(variant: "stance" | "words"): void {
 type Generated = {
   literal: string;
   readings: { meaning: string; cues: string[] }[];
-  check_question: string;
+  check_question?: string;
   boundary?: string;
 };
 
@@ -141,21 +157,31 @@ const SCHEMA = {
         required: ["meaning", "cues"],
       },
     },
-    check_question: { type: "string" },
     boundary: { type: "string" },
   },
-  required: ["literal", "readings", "check_question"],
+  required: ["literal", "readings"],
 };
 
-function scene(input: ReflectInput): string {
+/** Drop "About me:" lines so the scorer does not see self-description (E4). */
+export function dropSelfDescription(context?: string): string {
+  return (context ?? "")
+    .split("\n")
+    .filter((l) => !/^\s*about me\s*:/i.test(l))
+    .join("\n")
+    .trim();
+}
+
+function scene(input: ReflectInput, forScore = false): string {
   const who = input.person?.trim() || (input.mode === "them" ? "They" : "I");
   const lines: string[] = [
     `Roles: "I" and "me" are the person asking for help. ${input.mode === "them" ? who : input.person || "They"} is the other person.`,
   ];
   if (input.about?.trim()) lines.push(`What I know about ${input.person?.trim() || "them"}: ${input.about.trim()}`);
+  if (!forScore && input.aboutMe?.trim()) lines.push(`About me: ${input.aboutMe.trim()}`);
   if (input.relation) lines.push(`Relationship: ${input.mode === "them" ? `${who} is my ${input.relation}` : `${input.person || "They"} is my ${input.relation}`}.`);
   if (input.channel) lines.push(`Where: ${input.channel}.`);
-  if (input.context?.trim()) lines.push(`What came before:\n${input.context.trim()}`);
+  const context = forScore ? dropSelfDescription(input.context) : input.context?.trim();
+  if (context) lines.push(`What came before:\n${context}`);
   if (input.mode === "them") lines.push(`${who} said: "${input.text.trim()}"`);
   else lines.push(`I want to send this to ${input.person || "them"}: "${input.text.trim()}"`);
   return lines.join("\n\n");
@@ -171,7 +197,6 @@ Give:
 - readings: 2 to ${WRITE_MAX} different things they could have meant. The FIRST reading is the plain one: they meant exactly what they said, in its ordinary, neutral or kind sense, stated concretely. Every other reading must change what I would understand or do next (for example: they are annoyed, they are joking, they are hinting at a request). Never give two readings that mean nearly the same thing. If the situation does not genuinely support another reading, give only one alternative. Each reading is one sentence starting with "${input.person?.trim() || "They"}", says what they meant about me or the situation, and has up to 3 short cues: words or facts from the situation that support it.
 Look at what they did not say as well as what they said. If the words do not answer what was asked, or give far more or far less detail than needed, one reading must say what that suggests (for example: they would rather not talk about it, or they did not like it but do not want to say so). If they used a figure of speech, say plainly what it means about the person or thing it describes.
 If their reaction seems bigger than the situation explains, one reading can be that it is about something on their side, not about me.
-- check_question: one short, friendly, direct question I could ask them to check what they meant.
 - boundary: leave empty, unless I have already said no (or clearly do not want to) and they keep pushing, or the situation sounds unsafe. Then one calm sentence reminding me that I can say no or leave, without judging them.`;
   }
   const intended = input.intended?.trim();
@@ -179,8 +204,7 @@ If their reaction seems bigger than the situation explains, one reading can be t
 ${intended ? `\nWhat I mean by it: ${intended}\n` : ""}
 Give:
 - literal: one sentence saying what my words themselves say.
-- readings: 2 to 4 different ways ${input.person || "they"} could read my message, most likely first. The FIRST reading must be the meaning I intend${intended ? "" : " (my words taken sincerely)"}. Then add readings a reasonable person might actually take from it, about the content or about the tone (for example warm, neutral, brief, curt, annoyed, joking). Different people read short or direct messages differently, so include a tone reading when the message is short or direct. Each reading is one sentence starting with "They might think" and has up to 3 short cues: the words in my message, or what is missing from it, that could lead to that reading.
-- check_question: one short sentence I could add, if I want to, that makes my meaning explicit in my own direct style.`;
+- readings: 2 to 4 different ways ${input.person || "they"} could read my message, most likely first. The FIRST reading must be the meaning I intend${intended ? "" : " (my words taken sincerely)"}. Then add readings a reasonable person might actually take from it, about the content or about the tone (for example warm, neutral, brief, curt, annoyed, joking). Different people read short or direct messages differently, so include a tone reading when the message is short or direct. Each reading is one sentence starting with "They might think" and has up to 3 short cues: the words in my message, or what is missing from it, that could lead to that reading.`;
 }
 
 function scoringPrompt(input: ReflectInput, options: string[]): string {
@@ -188,7 +212,7 @@ function scoringPrompt(input: ReflectInput, options: string[]): string {
     input.mode === "them"
       ? `What did ${input.person?.trim() || "they"} most likely want to convey?`
       : `How will ${input.person?.trim() || "they"} most likely read this message?`;
-  return `Scenario:\n${scene(input)}\n\n${q}\nOptions:\n${options.map((o, i) => `${i + 1}) ${o}`).join("\n")}`;
+  return `Scenario:\n${scene(input, true)}\n\n${q}\nOptions:\n${options.map((o, i) => `${i + 1}) ${o}`).join("\n")}`;
 }
 
 export function normEntropy(p: number[]): number {
@@ -254,6 +278,7 @@ export async function reflect(
 ): Promise<ReflectResult> {
   const t0 = Date.now();
   onStep?.("writing");
+  const safetyP = safetyFull(base, model, input, signal);
   const gen = await json<Generated>(
     base,
     model,
@@ -271,16 +296,22 @@ export async function reflect(
   onStep?.("weighing", { literal: gen.literal, meanings: raw.map((r) => r.meaning) });
   const ms_gen = Date.now() - t0;
   const readings = shown(await weigh(base, model, input, raw, signal));
-  const safety = safetyCheck(input);
+  let safety: Safety;
+  try {
+    safety = await safetyP;
+  } catch {
+    safety = safetyCheck(input);
+  }
+  void warmSystem(base, model, SYSTEM_GEN);
   return summarise(readings, {
     literal: gen.literal,
-    check: gen.check_question,
+    check: (gen.check_question ?? "").trim(),
     boundary: input.mode === "them" ? (gen.boundary ?? "").trim() || (safety.boundary ?? "") : "",
     safety,
     model,
     ms: Date.now() - t0,
     ms_gen,
-  });
+  }, input.mode);
 }
 
 async function weigh(
@@ -315,14 +346,16 @@ function shown(readings: Reading[]): Reading[] {
 function summarise(
   readings: Reading[],
   rest: Omit<ReflectResult, "readings" | "clarity" | "spread" | "abstain">,
+  mode: Mode,
 ): ReflectResult {
   const top = readings[0]?.p ?? 0;
+  const { clarity, abstain } = clarityBand(top, mode);
   return {
     ...rest,
     readings,
-    clarity: top >= CLEAR_AT ? "clear" : top >= ABSTAIN_BELOW ? "some" : "high",
+    clarity,
     spread: normEntropy(readings.filter((r) => !r.hidden).map((r) => r.p)),
-    abstain: top < ABSTAIN_BELOW,
+    abstain,
   };
 }
 
@@ -341,7 +374,7 @@ export async function addOwnReading(
   const raw = result.readings.filter((r) => !r.own).map(({ p: _p, ...r }) => r);
   raw.push({ meaning: own.trim(), cues: [], literal: false, own: true });
   const readings = await weigh(base, result.model, { ...input, own }, raw, signal);
-  return summarise(readings, { ...result, ms: result.ms + Date.now() - t0 });
+  return summarise(readings, { ...result, ms: result.ms + Date.now() - t0 }, input.mode);
 }
 
 export type Reply = { reply: string; might_land: string };
@@ -388,6 +421,39 @@ For each, might_land: one sentence on how ${input.person?.trim() || "they"} migh
   }${result.safety?.scam ? "\nThis may be a scam. Do not suggest paying, clicking, confirming details or sharing any code." : ""}`;
   const r = await json<{ replies: Reply[] }>(base, model, SYSTEM_GEN, user, SCHEMA_REPLIES, signal);
   return safeReplies(r.replies.filter((x) => x.reply?.trim()), result.safety ?? {}).slice(0, 3);
+}
+
+const SCHEMA_CHECK = {
+  type: "object",
+  properties: { check: { type: "string" } },
+  required: ["check"],
+};
+
+/** One check sentence, only when the user asks. Kept out of the first write. */
+export async function writeCheck(
+  base: string,
+  model: string,
+  input: ReflectInput,
+  result: ReflectResult,
+  signal?: AbortSignal,
+): Promise<string> {
+  const readings = result.readings
+    .filter((r) => !r.hidden)
+    .map((r) => `- ${r.meaning} (${Math.round(r.p * 100)}%)`)
+    .join("\n");
+  const ask =
+    input.mode === "them"
+      ? "Write one short, friendly, direct question I could ask them to check what they meant."
+      : "Write one short sentence I could add, if I want to, that makes my meaning explicit in my own direct style.";
+  const r = await json<{ check: string }>(
+    base,
+    model,
+    SYSTEM_GEN,
+    `${scene(input)}\n\nReadings:\n${readings}\n\n${ask} Plain words. No quote marks around the whole sentence.`,
+    SCHEMA_CHECK,
+    signal,
+  );
+  return (r.check ?? "").trim();
 }
 
 const SCHEMA_NOTE = {

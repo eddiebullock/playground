@@ -4,7 +4,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { json, optionDist } from "../src/engine/llm.ts";
-import { calibrate, draftFrom, normEntropy, scoreOptions } from "../src/engine/reflect.ts";
+import { calibrate, clarityBand, draftFrom, dropSelfDescription, normEntropy, scoreOptions } from "../src/engine/reflect.ts";
 
 const close = (a: number[], b: number[]) => a.forEach((x, i) => assert.ok(Math.abs(x - b[i]) < 1e-6, `${a} vs ${b}`));
 
@@ -13,6 +13,14 @@ test("calibrate flattens overconfident probabilities and keeps the order", () =>
   assert.ok(Math.abs(p.reduce((a, b) => a + b) - 1) < 1e-9);
   assert.ok(p[0] < 0.9 && p[0] > p[1] && p[1] > p[2]);
   close(calibrate([0.9, 0.1], "unknown-model"), [0.9, 0.1]);
+});
+
+test("me-mode bands abstain later than them-mode so a 0.42 top is some, not high", () => {
+  assert.deepEqual(clarityBand(0.72, "them"), { clarity: "clear", abstain: false });
+  assert.deepEqual(clarityBand(0.72, "me"), { clarity: "clear", abstain: false });
+  assert.deepEqual(clarityBand(0.42, "them"), { clarity: "high", abstain: true });
+  assert.deepEqual(clarityBand(0.42, "me"), { clarity: "some", abstain: false });
+  assert.deepEqual(clarityBand(0.36, "me"), { clarity: "high", abstain: true });
 });
 
 test("normEntropy is 0 for certainty and 1 for a flat distribution", () => {
@@ -52,6 +60,13 @@ test("scoreOptions undoes the rotation, so position bias cancels", async () => {
   close(p, [1 / 3, 1 / 3, 1 / 3]);
 });
 
+test("dropSelfDescription keeps situation lines and drops About me", () => {
+  const ctx = "About me: I am autistic.\nI sent my weekly update at 5pm.";
+  assert.equal(dropSelfDescription(ctx), "I sent my weekly update at 5pm.");
+  assert.equal(dropSelfDescription("I cancelled our cinema plan."), "I cancelled our cinema plan.");
+  assert.equal(dropSelfDescription("about me: I often get anxious about what messages mean."), "");
+});
+
 test("draftFrom keeps only finished strings", () => {
   const partial = '{"literal": "She says \\"fine\\".", "readings": [{"meaning": "She is fine.", "cues": ["fine"]}, {"meaning": "She is a bit ann';
   const d = draftFrom(partial);
@@ -82,9 +97,54 @@ test("json streams chunks to onText and parses the whole reply", async () => {
   }
 });
 
+test("two-gate thresholds and distress cues match the adopted E9b/E9e layer", async () => {
+  const { THRESHOLD_TWOGATE, twoGateQuestions } = await import("../src/engine/safety_model.ts");
+  assert.deepEqual(THRESHOLD_TWOGATE, { distress: 0.3, scam: 0.5, boundary: 0.3 });
+  const q = twoGateQuestions({
+    mode: "them",
+    context: "I said no.",
+    text: "Come on, just this once.",
+  });
+  assert.ok(q.distress?.includes("no point in anything"));
+  assert.ok(q.distress?.includes("goodbye letter"));
+  assert.ok(q.distress?.includes("giving away things they would not need"));
+  assert.ok(q.scam_ask && q.scam_cue && q.boundary_no && q.boundary_push);
+});
+
+test("safetyFull ORs patterns with two-gate scores", async () => {
+  const { safetyFull } = await import("../src/engine/safety_model.ts");
+  const real = globalThis.fetch;
+  // Always pick option 1. Averaged over Yes-first and No-first that is p(yes)=0.5,
+  // which is at or above every THRESHOLD_TWOGATE cut.
+  globalThis.fetch = (async () =>
+    new Response(
+      JSON.stringify({
+        response: "1",
+        logprobs: [{ token: "1", top_logprobs: [{ token: "1", logprob: 0 }, { token: "2", logprob: -10 }] }],
+      }),
+    )) as typeof fetch;
+  try {
+    const pattern = await safetyFull("http://x", "qwen3:8b", {
+      mode: "them",
+      context: "I feel like a burden to everyone.",
+      text: "See you later",
+    });
+    assert.ok(pattern.distress);
+    const modelOnly = await safetyFull("http://x", "qwen3:8b", {
+      mode: "them",
+      context: "I have been holding on to a plan involving the railway line near ours.",
+      text: "dad's birthday is next week, shall i just get the card from both of us",
+    });
+    assert.ok(modelOnly.distress);
+  } finally {
+    globalThis.fetch = real;
+  }
+});
+
 test("safety patterns flag clear cases and leave look-alikes alone", async () => {
   const { safetyCheck, safeReplies } = await import("../src/engine/safety.ts");
   assert.ok(safetyCheck({ mode: "them", context: "I feel like a burden to everyone.", text: "See you later" }).distress);
+  assert.ok(safetyCheck({ mode: "them", aboutMe: "I feel like a burden to everyone.", text: "See you later" }).distress);
   assert.ok(!safetyCheck({ mode: "them", context: "I'm dead tired, this week is killing me.", text: "See you later" }).distress);
   const scam = safetyCheck({ mode: "them", text: "Your account will be suspended. Verify your account within 24 hours: secure-bank.xyz/login" });
   assert.ok(scam.scam);
@@ -94,4 +154,6 @@ test("safety patterns flag clear cases and leave look-alikes alone", async () =>
   assert.ok(!safetyCheck({ mode: "me", context: "I feel fine.", text: "Click this link: x.xyz/a within 24 hours" }).scam);
   const kept = safeReplies([{ reply: "I'll pay the fee now." }, { reply: "I'll check with the company first." }], scam);
   assert.deepEqual(kept.map((r) => r.reply), ["I'll check with the company first."]);
+  const curly = safeReplies([{ reply: "I’ll send the money later." }, { reply: "I’m not sending money." }], scam);
+  assert.deepEqual(curly.map((r) => r.reply), ["I’m not sending money."]);
 });

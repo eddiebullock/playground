@@ -10,7 +10,7 @@
 // Wording of the notes is a placeholder until Eddie and the advisory group
 // review it [EB]. Numbers are UK (Samaritans, 999).
 
-export type SafetyInput = { mode: "them" | "me"; context?: string; text: string; about?: string; own?: string };
+export type SafetyInput = { mode: "them" | "me"; context?: string; text: string; about?: string; own?: string; aboutMe?: string };
 
 export type Safety = {
   /** The user has written about themselves in a way that suggests distress or risk. */
@@ -114,10 +114,11 @@ const PUSH = [
 ];
 
 const any = (pats: RegExp[], s: string) => pats.some((p) => p.test(s));
+const fold = (s: string) => s.toLowerCase().replace(/[\u2018\u2019\u201A\u201B\u02BC]/g, "'");
 
 export function safetyCheck(input: SafetyInput): Safety {
-  const self = [input.context, input.own, input.about].filter(Boolean).join(" ").toLowerCase();
-  const msg = input.text.toLowerCase();
+  const self = fold([input.context, input.own, input.about, input.aboutMe].filter(Boolean).join(" "));
+  const msg = fold(input.text);
   const out: Safety = {};
   if (any(DISTRESS, self)) out.distress = DISTRESS_NOTE;
   if (input.mode === "them") {
@@ -136,5 +137,5 @@ const COMPLY = [
 
 export function safeReplies<T extends { reply: string }>(replies: T[], safety: Safety): T[] {
   if (!safety.scam) return replies;
-  return replies.filter((r) => !any(COMPLY, r.reply.toLowerCase()));
+  return replies.filter((r) => !any(COMPLY, fold(r.reply)));
 }

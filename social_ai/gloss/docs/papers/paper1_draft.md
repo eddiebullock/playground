@@ -175,7 +175,13 @@ Item entropy vs human disagreement rho 0.51 (direct 0.37).
 | Ranked first when written | 0.75 | |
 | Sincere controls: plain reading first | 0.72 | 0.75 |
 LLM judge vs blind labels: agreement 0.74, precision 0.62.
-[ON: iSarcasmEval replication; write-more-show-fewer.]
+
+E8, 160 author-labelled tweets (iSarcasmEval; frozen before any run):
+shipped engine puts the author's sarcastic meaning first on 0.487 of
+sarcastic tweets and the plain reading first on 0.738 of sincere ones.
+Write-6-show-4 did not replicate (not adopted). Clarity bands barely
+separate on tweets (0.66 vs 0.59), so they must not be sold as a strong
+signal on real messages until re-fitted.
 
 ## 5. Discussion points
 - "Literal-minded" is the wrong diagnosis for these models: they detect the
