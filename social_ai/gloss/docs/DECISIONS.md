@@ -910,3 +910,13 @@ Dated, with the evidence. Newest last.
   (same ids as v2). Report median literal / first / written / total vs
   v2 first-10 (6.08 / 8.69 / 22.9 / 25.37 s). Ship the on-demand check
   either way; the milliseconds are a measurement, not an adoption gate.
+
+- **Latency remeasure, on-demand check (n=10 E4 items, qwen3:8b).**
+  Medians, seconds: literal 8.49, first reading 11.14, written 27.51,
+  done 36.68. v2 first-10 was 6.08 / 8.69 / 22.9 / 25.37. Written and
+  total are slower, not faster. Two-gate safety (wired after v2) now
+  sits in the same Reflect call; that is the likely extra wait, not the
+  missing check sentence. On-demand check stays (users who do not ask
+  no longer wait for a sentence they did not want). File:
+  experiments/e4_product/latency_ondemand.jsonl. Next latency cut is
+  returning readings before safety finishes, or shortening two-gate.

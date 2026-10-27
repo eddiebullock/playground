@@ -1,4 +1,4 @@
-# Handover, 2026-10-27 11:20 (E10 me-mode bands adopted)
+# Handover, 2026-10-27 11:40 (E10 bands; check on demand)
 
 For the next agent picking up Gloss. Read `AGENT_PROMPT.md`, `PLAN.md`,
 `docs/PUBLICATION_STRATEGY.md` and the `docs/DECISIONS.md` entries dated
@@ -7,44 +7,39 @@ is done.
 
 ## Rules in force
 - PLAN.md section 7. No money, no paid APIs, no cluster, no licensed data,
-  nothing off the machine, no contacting people. Participant data stays
-  local. Delete only files you created. Keep >= 5 GB free (disk ~9 GB).
-  Never kill other users' processes.
-- No emojis. Repo `~/playground`, branch `es-vlm/setup`, remote
+  nothing off the machine, no contacting people. Keep >= 5 GB free
+  (disk ~9 GB). Never kill other users' processes. No emojis.
+- Repo `~/playground`, branch `es-vlm/setup`, remote
   `git@github-personal:eddiebullock/playground.git`. Commit only under
-  `social_ai/gloss`. Push after each finished result.
-- Commit trailer: `Co-Authored-By: Cursor Grok 4.6 <noreply@cursor.com>`.
-- **E9c, E9d and E9e are seen. Do not retune on them.** Two-gate
-  thresholds stay `{ distress: 0.3, scam: 0.5, boundary: 0.3 }`.
-- E10 even half has been used to test me-mode bands. Do not retune those
-  cuts on E10.
+  `social_ai/gloss`. Trailer: `Co-Authored-By: Cursor Grok 4.6 <noreply@cursor.com>`.
+- Do not retune E9c/d/e or E10 even-half bands.
 
 ## Environment
-- Ollama 127.0.0.1:11434; qwen3:8b product default. One model at a time.
-- `cd app && node --experimental-strip-types scripts/<x>.ts`.
-  Tests: `npm test`. Typecheck: `npx tsc --noEmit -p .`.
-- Product: two-gate safety; scorer drops About-you; me-mode abstain at 0.4.
+- Ollama 127.0.0.1:11434; qwen3:8b. `cd app && npm test` (12 pass).
+- Me-mode abstain 0.4, clear 0.7. Them-mode 0.7 / 0.5.
+- Check question is on demand (`writeCheck`). Two-gate safety still runs
+  inside `reflect()`.
 
 ## Jobs
 None running.
 
 ## State
-- E9e pass, two-gate wired. Participants blocked until Eddie reviews notes.
-- E10 me-mode: ABSTAIN_BELOW_ME 0.4, CLEAR_AT_ME 0.7. Even FA 2/12.
-  Them-mode still 0.7 / 0.5.
+- E9e pass, two-gate wired. Participants blocked on Eddie's note review.
+- E10 me-mode bands adopted (even FA 2/12).
+- On-demand check shipped. Latency on 10 E4 items was *slower* than v2
+  (done 36.7 s vs 25.4 s), likely two-gate in the same call.
 
 ## What to do next, in order
-1. Until Eddie reviews `safety.ts` notes, Gloss must not be shown to
-   participants.
-2. **Finish the latency remeasure** if `latency.ts` on 10 E4 items is
-   still running (`experiments/e4_product/latency_ondemand.jsonl`).
-   Record medians in DECISIONS. Check question is already on demand.
-3. Paper 2 draft leftover-drift numbers are in; brief artifact still
-   needs Eddie. Cursor cannot update
-   https://claude.ai/artifact/GapiXAWA8EJVYz6DAbuCCP.
+1. Eddie reviews `safety.ts` notes before any demo / Study 5.
+2. **Latency:** overlap or defer two-gate so readings appear before
+   safety notes, or cut two-gate questions. Pre-register before changing
+   when notes appear. Do not retune safety thresholds.
+3. Generation quality (white lies, metaphors) on odd/even E4 halves;
+   E4 even has been used once.
+4. Brief artifact still needs Eddie.
 
 ## For Eddie
-- E9e passed. Please review Samaritans/999 notes before any demo.
-- Me-mode no longer labels as many short plain drafts "open to different
-  readings" (false alarm 6/12 even -> 2/12). Them-mode bands unchanged.
-- Please update the brief artifact. Snapshot: `docs/brief_snapshot.html`.
+- E9e passed. Please review Samaritans/999 notes.
+- Me-mode is less alarmist on short drafts. Check questions are optional.
+- Please update https://claude.ai/artifact/GapiXAWA8EJVYz6DAbuCCP
+  (snapshot `docs/brief_snapshot.html`).
