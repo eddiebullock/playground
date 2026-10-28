@@ -1,12 +1,28 @@
 #!/usr/bin/env python3
 """Tiny terminal notes app. Run with: ./n"""
 
+import codecs
+import os
 import re
+import select
+import shutil
+import sys
+import termios
+import tty
 from datetime import datetime
 from pathlib import Path
 
 NOTES_FILE = Path(__file__).resolve().parent / "notes.txt"
 STAMP_RE = re.compile(r"^\[(\d{4}-\d{2}-\d{2} \d{2}:\d{2})\]\s*(.*)$")
+
+LEFT_KEYS = {"\x1b[D", "\x1bOD", "\x02"}
+RIGHT_KEYS = {"\x1b[C", "\x1bOC", "\x06"}
+HOME_KEYS = {"\x1b[H", "\x1bOH", "\x1b[1~", "\x1b[7~", "\x01", "\x1b[A"}
+END_KEYS = {"\x1b[F", "\x1bOF", "\x1b[4~", "\x1b[8~", "\x05", "\x1b[B"}
+WORD_LEFT_KEYS = {"\x1b[1;5D", "\x1b[1;3D", "\x1bb"}
+WORD_RIGHT_KEYS = {"\x1b[1;5C", "\x1b[1;3C", "\x1bf"}
+BACKSPACE_KEYS = {"\x7f", "\x08"}
+DELETE_KEYS = {"\x1b[3~", "\x04"}
 
 
 def load():
@@ -49,11 +65,197 @@ def help_text():
         "  type a note and press enter to add it\n"
         "  l       list notes\n"
         "  d N     delete note N\n"
-        "  e N     edit note N\n"
+        "  e N     edit note N in place\n"
         "  c       clear all notes\n"
         "  q       quit\n"
         "  h       help"
     )
+
+
+def word_left(chars, cursor):
+    i = cursor
+    while i > 0 and chars[i - 1].isspace():
+        i -= 1
+    while i > 0 and not chars[i - 1].isspace():
+        i -= 1
+    return i
+
+
+def word_right(chars, cursor):
+    i = cursor
+    n = len(chars)
+    while i < n and chars[i].isspace():
+        i += 1
+    while i < n and not chars[i].isspace():
+        i += 1
+    return i
+
+
+def insert_text(chars, cursor, text):
+    clean = text.replace("\r\n", " ").replace("\n", " ").replace("\r", " ").replace("\t", " ")
+    clean = "".join(ch for ch in clean if ch.isprintable())
+    if not clean:
+        return chars, cursor
+    chars[cursor:cursor] = list(clean)
+    return chars, cursor + len(clean)
+
+
+def edit_step(chars, cursor, key):
+    if key in {"\r", "\n"}:
+        return chars, cursor, "save"
+    if key in {"\x03", "\x1b"}:
+        return chars, cursor, "cancel"
+    if key in LEFT_KEYS:
+        return chars, max(0, cursor - 1), "edit"
+    if key in RIGHT_KEYS:
+        return chars, min(len(chars), cursor + 1), "edit"
+    if key in HOME_KEYS:
+        return chars, 0, "edit"
+    if key in END_KEYS:
+        return chars, len(chars), "edit"
+    if key in WORD_LEFT_KEYS:
+        return chars, word_left(chars, cursor), "edit"
+    if key in WORD_RIGHT_KEYS:
+        return chars, word_right(chars, cursor), "edit"
+    if key in BACKSPACE_KEYS:
+        if cursor > 0:
+            del chars[cursor - 1]
+            cursor -= 1
+        return chars, cursor, "edit"
+    if key in DELETE_KEYS:
+        if cursor < len(chars):
+            del chars[cursor]
+        return chars, cursor, "edit"
+    if key == "\x0b":
+        del chars[cursor:]
+        return chars, cursor, "edit"
+    if key == "\x15":
+        del chars[:cursor]
+        return chars, 0, "edit"
+    if key == "\x17":
+        cut = word_left(chars, cursor)
+        del chars[cut:cursor]
+        return chars, cut, "edit"
+    if len(key) == 1 and key.isprintable():
+        chars, cursor = insert_text(chars, cursor, key)
+        return chars, cursor, "edit"
+    return chars, cursor, "edit"
+
+
+def _wait_input(fd, timeout):
+    return select.select([fd], [], [], timeout)[0]
+
+
+def _read_char(fd, decoder):
+    while True:
+        raw = os.read(fd, 1)
+        if not raw:
+            raise EOFError
+        char = decoder.decode(raw)
+        if char:
+            return char
+
+
+def _read_key(fd, decoder):
+    char = _read_char(fd, decoder)
+    if char != "\x1b":
+        return char
+    if not _wait_input(fd, 0.05):
+        return "\x1b"
+    seq = _read_char(fd, decoder)
+    if seq not in "[O":
+        return "\x1b" + seq
+    while True:
+        if not _wait_input(fd, 0.02):
+            break
+        seq += _read_char(fd, decoder)
+        if seq[-1].isalpha() or seq[-1] == "~":
+            break
+        if len(seq) > 16:
+            break
+    return "\x1b" + seq
+
+
+def _read_paste(fd, decoder):
+    data = ""
+    while not data.endswith("\x1b[201~"):
+        data += _read_char(fd, decoder)
+        if len(data) > 100_000:
+            break
+    if data.endswith("\x1b[201~"):
+        data = data[: -len("\x1b[201~")]
+    return data
+
+
+def _draw(chars, cursor):
+    width = max(2, shutil.get_terminal_size((80, 24)).columns)
+    usable = width - 1
+    prefix = "  "
+    full = prefix + "".join(chars)
+    pos = len(prefix) + cursor
+    start = max(0, pos - (usable - 1))
+    visible = full[start : start + usable]
+    screen_col = pos - start + 1
+    sys.stdout.write("\r\x1b[2K" + visible + f"\x1b[{screen_col}G")
+    sys.stdout.flush()
+
+
+def line_editor(initial):
+    """Edit one line in place. Return the new text, or None if cancelled."""
+    chars = list(initial)
+    cursor = len(chars)
+    fd = sys.stdin.fileno()
+    decoder = codecs.getincrementaldecoder("utf-8")()
+    old = termios.tcgetattr(fd)
+    tty.setraw(fd)
+    try:
+        sys.stdout.write("\x1b[?2004h")
+        sys.stdout.flush()
+        _draw(chars, cursor)
+        while True:
+            key = _read_key(fd, decoder)
+            if key == "\x1b[200~":
+                chars, cursor = insert_text(chars, cursor, _read_paste(fd, decoder))
+                _draw(chars, cursor)
+                continue
+            chars, cursor, status = edit_step(chars, cursor, key)
+            if status == "save":
+                return "".join(chars)
+            if status == "cancel":
+                return None
+            _draw(chars, cursor)
+    finally:
+        sys.stdout.write("\x1b[?2004l\r\n")
+        sys.stdout.flush()
+        termios.tcsetattr(fd, termios.TCSADRAIN, old)
+
+
+def readline_edit(body):
+    try:
+        import readline
+    except ImportError:
+        readline = None
+    if readline is not None:
+        def hook():
+            readline.insert_text(body)
+            readline.redisplay()
+
+        readline.set_startup_hook(hook)
+        try:
+            return input("  ")
+        finally:
+            readline.set_startup_hook()
+    print(f"  {body}")
+    return input("  ")
+
+
+def prompt_edit(body):
+    if sys.stdin.isatty() and sys.stdout.isatty():
+        try:
+            return line_editor(body)
+        except (OSError, termios.error):
+            pass
+    return readline_edit(body)
 
 
 def main():
@@ -107,19 +309,29 @@ def main():
         if cmd in {"e", "edit"}:
             try:
                 i = int(arg.split(maxsplit=1)[0]) - 1
-                notes[i]
+                current = notes[i]
             except (ValueError, IndexError):
                 print("usage: e N")
                 continue
+            stamp, body = split_note(current)
+            label = f"[{stamp}] " if stamp else ""
+            print(f"  editing #{i + 1}  {label}")
+            print("  arrows move, ctrl-left/right jump words, enter saves, ctrl-c cancels")
             try:
-                new = input(f"  {notes[i]} -> ").strip()
+                new = prompt_edit(body)
             except (EOFError, KeyboardInterrupt):
                 print()
                 continue
-            if new:
-                notes[i] = apply_edit(notes[i], new)
-                save(notes)
-                print("updated")
+            if new is None:
+                print("cancelled")
+                continue
+            new_body = new.strip()
+            if not new_body or new_body == body.strip():
+                print("unchanged")
+                continue
+            notes[i] = apply_edit(current, new_body)
+            save(notes)
+            print("updated")
             continue
 
         stamp = datetime.now().strftime("%Y-%m-%d %H:%M")
