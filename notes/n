@@ -316,7 +316,6 @@ def main():
             stamp, body = split_note(current)
             label = f"[{stamp}] " if stamp else ""
             print(f"  editing #{i + 1}  {label}")
-            print("  arrows move, ctrl-left/right jump words, enter saves, ctrl-c cancels")
             try:
                 new = prompt_edit(body)
             except (EOFError, KeyboardInterrupt):
