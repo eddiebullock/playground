@@ -1,0 +1,14 @@
+# No site names. Paths come from the git-ignored local/paths.sh.
+seed: 20261029
+explore_fraction: 0.20
+channel4_a2_fraction: 0.10
+age_bands: [under_18, 18_29, 30_44, 45_59, 60_90, age_missing]
+item_coding:
+  status: inferred
+  strongly_agree: 1
+  slightly_agree: 2
+  slightly_disagree: 3
+  strongly_disagree: 4
+aq10_cutoff: 6
+eyes_max_missing_items: 2
+confirmatory_locked: true

@@ -1,0 +1,10 @@
+#!/bin/bash
+# Installed copy lives at .git/hooks/pre-commit. No-op when this file is absent
+# (other branches) or when the commit does not touch social_ai/.
+set -euo pipefail
+ROOT="$(git rev-parse --show-toplevel)"
+CHECK="$ROOT/social_ai/hooks/pre_commit_check.py"
+if [[ ! -f "$CHECK" ]]; then
+  exit 0
+fi
+exec python3 "$CHECK"

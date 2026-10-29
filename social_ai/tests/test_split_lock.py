@@ -1,0 +1,23 @@
+"""The committed lock is hashes only. It fails if a hash changes."""
+
+from pathlib import Path
+
+from scog.data.splits import read_lock
+
+LOCK = Path(__file__).resolve().parents[1] / "configs" / "splits.lock"
+
+EXPECTED = {
+    "card.confirmatory": "2ff466e624073ce9aeb3bcc4a671ebf3fcec150cec92e1dc140109a39d6f788f",
+    "card.exploratory": "ff5c641c006dd7d4258582437cc6109066e5a2884d0a705e9b4184ae872cd7e3",
+    "channel4.a2_test": "97b5654d781ab1e4e9bfdf1e7ffa176f95f36c4d8360a5327fc80215ac960a63",
+    "channel4.confirmatory": "b8746e14f11f9155451d607733a251d7535d65b94364c3faeb2568a2a7123b38",
+    "channel4.exploratory": "3adf2c0d2e1dc1f57ef290af3bcba566e18cf97b1b08c8de5b3ff07d28d364c1",
+    "eu_emotion.confirmatory": "774eb9ca3f4139331bee9f9d71c7f13325ead65a499a25fbd340e76d9a83145e",
+    "eu_emotion.exploratory": "03094f1c4342d120d4b1a409cdb6021dc983b4cf093fdba4dd29c25509420b04",
+    "ybt.confirmatory": "1e32a55c5293e2a3d24bd29affa6a0aa2bc220370ac48ceab255222c12c61804",
+    "ybt.exploratory": "613364bed0402f9251b35c5c401696692c254a17d59d4ee8defa42ebd8788ced",
+}
+
+
+def test_split_lock_matches_the_frozen_hashes():
+    assert read_lock(LOCK.read_text(encoding="utf-8")) == EXPECTED
