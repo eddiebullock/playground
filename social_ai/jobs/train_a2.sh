@@ -1,8 +1,10 @@
 #!/bin/bash
 #SBATCH --job-name=a2train
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
 #SBATCH --time=00:30:00
 #SBATCH --gres=gpu:1
-#SBATCH --cpus-per-task=32
+#SBATCH --cpus-per-task=8
 #SBATCH --signal=B:USR1@180
 #SBATCH --open-mode=append
 # One 30-minute LoRA chunk. Submits the next chunk, then trains. Exit 3 means resume.

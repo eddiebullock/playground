@@ -1,8 +1,10 @@
 #!/bin/bash
 #SBATCH --job-name=a2mmlu
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
 #SBATCH --time=00:30:00
 #SBATCH --gres=gpu:1
-#SBATCH --cpus-per-task=32
+#SBATCH --cpus-per-task=8
 #SBATCH --open-mode=append
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
