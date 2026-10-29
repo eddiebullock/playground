@@ -30,9 +30,15 @@ if [[ ! -x "${PREFIX}/bin/conda" ]]; then
 fi
 # shellcheck disable=SC1091
 source "${PREFIX}/etc/profile.d/conda.sh"
+# One setup at a time. Two jobs sharing the package cache delete each other's files.
+mkdir -p "${SITE_PROJECT_ROOT}/cache"
+exec 9>"${SITE_PROJECT_ROOT}/cache/a1-setup.lock"
+flock 9
+export CONDA_PKGS_DIRS="${SITE_PROJECT_ROOT}/cache/conda-pkgs-a1"
 # Own env. Study A2 uses conda/envs/scog at Python 3.11, and the lock needs 3.12.
 ENV="${SITE_PROJECT_ROOT}/conda/envs/scog-a1"
 if ! "${ENV}/bin/python" -c 'import sys; raise SystemExit(0 if sys.version_info >= (3, 12) else 1)' 2>/dev/null; then
+  rm -rf "${ENV}"
   conda create -y -p "${ENV}" python=3.12
 fi
 conda activate "${ENV}"
