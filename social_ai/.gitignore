@@ -1,6 +1,11 @@
 # Site names, paths, cluster logs. Never commit.
 local/
 
+# Participant exports and the variable-key document. Never commit.
+data/
+*.docx
+*.doc
+
 # Public repo: unpublished aggregate reports stay local.
 reports/
 

@@ -43,6 +43,12 @@ def test_refuses_data_suffixes_oversize_and_site_strings():
         blob=b"not-really",
         deny_strings=deny,
     )
+    assert mod.problems_for(
+        "social_ai/C4 Variable Key.docx",
+        size=9828,
+        blob=b"PK\x03\x04",
+        deny_strings=deny,
+    )
     big = mod.problems_for(
         "social_ai/src/scog/big.py",
         size=5 * 1024 * 1024 + 1,

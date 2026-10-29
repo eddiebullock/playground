@@ -19,6 +19,8 @@ BAD_SUFFIXES = {
     ".npy",
     ".safetensors",
     ".pt",
+    ".docx",
+    ".doc",
 }
 # Host and account names only. The laptop path in AGENTS.md contains the
 # CRSid, which the hook rules do not treat as a cluster account name.

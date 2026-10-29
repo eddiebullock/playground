@@ -19,6 +19,7 @@ from scog.data.channel4 import (
     load_channel4,
 )
 from scog.data.ybt import code_likert, load_ybt, parse_multiselect
+from scog.scoring.codebook import OCCUPATION, REGION
 from scog.scoring.eyes import EYES_ITEMS, EYES_KEY
 from scog.scoring.short_forms import (
     AQ10_AGREE,
@@ -61,6 +62,17 @@ def _trait_items(*, high_autistic_traits: bool):
     for col, agree in zip(SQR_COLS, SQR10_AGREE):
         out[col] = (1 if agree else 4) if high_autistic_traits else (4 if agree else 1)
     return out
+
+
+def test_variable_key_labels():
+    assert REGION[1] == "Wales"
+    assert REGION[4] == "London (England)"
+    assert REGION[12] == "Outside UK"
+    assert OCCUPATION[1] == "Artist"
+    assert OCCUPATION[15] == "Other"
+    assert OCCUPATION[25] == "Other"
+    assert OCCUPATION[26] == "Prefer not to say"
+    assert len(OCCUPATION) == 26
 
 
 def test_published_polarity_matches_the_keys_used_so_far():
