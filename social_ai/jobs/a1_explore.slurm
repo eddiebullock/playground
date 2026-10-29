@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=a1-explore
 #SBATCH --time=01:00:00
-#SBATCH --cpus-per-task=32
+#SBATCH --cpus-per-task=4
 #SBATCH --gres=gpu:1
 # One resumable chunk of the Qwen3-8B exploratory run. Local weights only.
 set -euo pipefail
