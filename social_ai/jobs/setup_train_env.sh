@@ -23,7 +23,9 @@ if [[ ! -x "${SITE_PROJECT_ROOT}/conda/envs/scog/bin/python" ]]; then
 fi
 conda activate "${SITE_PROJECT_ROOT}/conda/envs/scog"
 if ! python -c "import torch, transformers, peft, datasets, pandas" >/dev/null 2>&1; then
-  pip install -r "${ROOT}/requirements.lock"
+  # The analysis lock pins contourpy 1.4.0, which needs Python 3.12.
+  # Training only needs the dataframe stack plus the model libraries.
+  pip install "numpy==2.2.6" "pandas==2.2.3" "PyYAML==6.0.2"
   pip install "torch==2.5.1" --index-url "https://download.pytorch.org/whl/cu124"
   pip install "transformers==4.51.3" "peft==0.15.2" "accelerate==1.6.0" "datasets==3.6.0"
 fi

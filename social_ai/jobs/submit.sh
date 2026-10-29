@@ -12,15 +12,20 @@ case "${CLASS}" in
     ACCOUNT="${SITE_CPU_ACCOUNT}"
     PARTITION="${SITE_CPU_PARTITION}"
     MEM="${SITE_CPU_MEM_PER_CPU}"
+    QOS="cpu2"
     ;;
   gpu)
     ACCOUNT="${SITE_GPU_ACCOUNT}"
     PARTITION="${SITE_GPU_PARTITION}"
     MEM="${SITE_GPU_MEM_PER_CPU}"
+    QOS="gpu2"
     ;;
   *)
     echo "first argument must be cpu or gpu" >&2
     exit 1
     ;;
 esac
-exec sbatch -A "${ACCOUNT}" -p "${PARTITION}" --mem-per-cpu="${MEM}" "$@"
+# Batch QoS only. The interactive QoS allows one job and is already in use.
+# A high nice value keeps these jobs behind anything already queued.
+exec sbatch -A "${ACCOUNT}" -p "${PARTITION}" --qos="${QOS}" --nice=10000 \
+  --mem-per-cpu="${MEM}" "$@"
