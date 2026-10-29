@@ -1,0 +1,12 @@
+# Site names, paths, cluster logs. Never commit.
+local/
+
+# Public repo: unpublished aggregate reports stay local.
+reports/
+
+# Local environments and caches
+.venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/

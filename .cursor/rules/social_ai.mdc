@@ -1,0 +1,11 @@
+---
+description: Read social_ai/AGENTS.md before any work under social_ai/
+globs: social_ai/**/*
+alwaysApply: false
+---
+
+# social_ai
+
+Before editing, committing, running tests, or using the cluster for anything under `social_ai/`, read `social_ai/AGENTS.md` and follow it.
+
+The GitHub repository is public. Do not commit `social_ai/reports/`, `social_ai/local/`, data files, or site names. Participant rows never go in the terminal.
