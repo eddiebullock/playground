@@ -7,7 +7,11 @@
 #SBATCH --cpus-per-task=8
 #SBATCH --open-mode=append
 set -euo pipefail
-ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+if [[ -n "${SLURM_SUBMIT_DIR:-}" ]]; then
+  ROOT="${SLURM_SUBMIT_DIR}"
+else
+  ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+fi
 # shellcheck disable=SC1091
 source "${ROOT}/local/site.sh"
 export SCOG_EVAL_JOB=1

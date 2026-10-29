@@ -9,7 +9,11 @@
 #SBATCH --open-mode=append
 # One 30-minute LoRA chunk. Submits the next chunk, then trains. Exit 3 means resume.
 set -euo pipefail
-ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+if [[ -n "${SLURM_SUBMIT_DIR:-}" ]]; then
+  ROOT="${SLURM_SUBMIT_DIR}"
+else
+  ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+fi
 # shellcheck disable=SC1091
 source "${ROOT}/local/site.sh"
 : "${A2_RUN_DIR:?}" "${A2_CHUNK:?}" "${A2_MAX_CHUNK:?}" "${A2_SPLIT:?}"

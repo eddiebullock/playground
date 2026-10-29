@@ -5,7 +5,11 @@
 #SBATCH --open-mode=append
 # Download the base checkpoint, write the training JSONL, and freeze the MMLU ids.
 set -euo pipefail
-ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+if [[ -n "${SLURM_SUBMIT_DIR:-}" ]]; then
+  ROOT="${SLURM_SUBMIT_DIR}"
+else
+  ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+fi
 # shellcheck disable=SC1091
 source "${ROOT}/local/site.sh"
 bash "${ROOT}/jobs/setup_train_env.sh"
