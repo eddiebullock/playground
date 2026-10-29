@@ -108,15 +108,32 @@ def lock_lines(digests: dict[str, str]) -> str:
     return "\n".join(lines) + "\n"
 
 
-def assert_split_allowed(split: str) -> None:
-    """Confirmatory rows stay unread until a preregistration is frozen."""
-    if split != "confirmatory":
-        return
+def frozen_studies() -> set[str]:
+    """Study names listed in prereg/FROZEN. Blank lines and comments are ignored."""
     frozen = Path(__file__).resolve().parents[3] / "prereg" / "FROZEN"
     if not frozen.is_file():
-        raise RuntimeError(
-            "confirmatory split is locked until prereg/FROZEN exists"
-        )
+        return set()
+    names = set()
+    for line in frozen.read_text(encoding="utf-8").splitlines():
+        item = line.split("#", 1)[0].strip()
+        if item:
+            names.add(item)
+    return names
+
+
+def assert_split_allowed(split: str, *, study: str | None = None) -> None:
+    """Confirmatory rows stay unread until that study is listed in prereg/FROZEN.
+
+    A file that names Study A2 does not unlock confirmatory rows for any other study.
+    Callers that omit `study` stay locked.
+    """
+    if split != "confirmatory":
+        return
+    if study is not None and study in frozen_studies():
+        return
+    raise RuntimeError(
+        "confirmatory split is locked until prereg/FROZEN lists this study"
+    )
 
 
 def read_lock(text: str) -> dict[str, str]:
