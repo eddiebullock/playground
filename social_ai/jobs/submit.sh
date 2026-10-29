@@ -16,7 +16,9 @@ case "${CLASS}" in
   gpu)
     ACCOUNT="${SITE_GPU_ACCOUNT}"
     PARTITION="${SITE_GPU_PARTITION}"
-    MEM="${SITE_GPU_MEM_PER_CPU}"
+    # A per-CPU memory request at the CPUs that come with one GPU spills onto
+    # a second node. Ask for one node and a fixed memory total instead.
+    exec sbatch -A "${ACCOUNT}" -p "${PARTITION}" --nodes=1 --mem=64G "$@"
     ;;
   *)
     echo "first argument must be cpu or gpu" >&2
