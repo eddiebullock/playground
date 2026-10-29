@@ -13,6 +13,7 @@ export A2_MAX_MINUTES=25
 mkdir -p "${SITE_PROJECT_ROOT}/logs" "${A2_RUNS}"
 
 PREP="$("${ROOT}/jobs/submit.sh" cpu \
+  --nice=0 \
   --job-name="a2prep" \
   --cpus-per-task=8 \
   --output="${SITE_PROJECT_ROOT}/logs/%x_%j.out" \
@@ -21,6 +22,7 @@ PREP="$("${ROOT}/jobs/submit.sh" cpu \
 echo "prepare_job ${PREP}"
 
 MMLU="$("${ROOT}/jobs/submit.sh" gpu \
+  --nice=0 \
   --job-name="a2mmlu" \
   --dependency="afterok:${PREP}" \
   --output="${SITE_PROJECT_ROOT}/logs/%x_%j.out" \
@@ -39,6 +41,7 @@ while read -r run_id rank lr epochs chunks split; do
   export A2_SPLIT="${split}"
   export A2_CHUNK=1
   job="$("${ROOT}/jobs/submit.sh" gpu \
+    --nice=0 \
     --job-name="a2${run_id}" \
     --dependency="afterok:${PREP}" \
     --output="${SITE_PROJECT_ROOT}/logs/%x_%j.out" \
