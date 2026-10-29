@@ -15,7 +15,8 @@ free_gb="$(quota -s | tr '\r' '\n' | awk '$3+0 > 100 && $3+0 < 5000 {free=$3-$2}
 echo "free_gb=${free_gb}"
 python3 - << PY
 free = float("${free_gb}")
-if free < 40:
+# One 16 GB checkpoint plus about 8 GB for this env, and a little left under the quota.
+if free < 28:
     raise SystemExit("free project space is %.1f GB; refusing the 8B download" % free)
 print("free project space %.1f GB" % free)
 PY
@@ -42,14 +43,15 @@ if ! "${ENV}/bin/python" -c 'import sys; raise SystemExit(0 if sys.version_info 
   conda create -y -p "${ENV}" python=3.12
 fi
 conda activate "${ENV}"
-pip install -r "${ROOT}/requirements.lock"
-pip install "vllm==0.8.5" "huggingface_hub==0.31.1"
+pip install --no-cache-dir -r "${ROOT}/requirements.lock"
+pip install --no-cache-dir "vllm==0.8.5" "huggingface_hub==0.31.1"
+rm -rf "${SITE_PROJECT_ROOT}/cache/conda-pkgs-a1"
 
 free_gb="$(quota -s | tr '\r' '\n' | awk '$3+0 > 100 && $3+0 < 5000 {free=$3-$2} END {if (free=="") exit 1; printf "%.1f", free}')"
 echo "free_gb_after_env=${free_gb}"
 python3 - << PY
 free = float("${free_gb}")
-if free < 20:
+if free < 17:
     raise SystemExit("free project space is %.1f GB after the env install; refusing the 8B download" % free)
 print("free project space after the env install %.1f GB" % free)
 PY
@@ -63,6 +65,8 @@ if [[ ! -f "${WEIGHTS}/config.json" ]]; then
   echo "Qwen3-8B download did not produce a config" >&2
   exit 1
 fi
+# Drop a second copy if the hub cache kept one. Do not touch other studies' files.
+rm -rf "${SITE_PROJECT_ROOT}/cache/hf/hub/models--Qwen--Qwen3-8B"
 
 export SCOG_C4_PATH="${SITE_PROJECT_ROOT}/data/data_c4_raw.csv"
 export SCOG_SPLIT_LOCK="${ROOT}/configs/splits.lock"
