@@ -4,6 +4,7 @@ __pycache__/
 data/raw/
 data/licensed/
 *.mp4
+!live/public/demo.mp4
 *.wav
 .DS_Store
 dist/

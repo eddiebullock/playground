@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite --host 127.0.0.1 --port 5174",
     "build": "tsc --noEmit && vite build",
-    "test": "node --experimental-strip-types --test src/analysis/turntaking.test.ts src/analysis/emotion.test.ts src/analysis/gaze.test.ts"
+    "test": "node --experimental-strip-types --test src/analysis/turntaking.test.ts src/analysis/emotion.test.ts src/analysis/gaze.test.ts src/session/meet.test.ts"
   },
   "dependencies": {
     "@fontsource/libre-baskerville": "^5.2.5",

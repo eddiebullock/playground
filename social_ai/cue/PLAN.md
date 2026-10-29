@@ -11,10 +11,9 @@ what a face might be doing. The old working name is retired.
 Eddie rejected paste-a-message as a product people would open, and
 rejected safety studies of Cue as the publishable claim.
 
-1. **Product is Cue** (`live/`): screen share of a Zoom / Teams /
-   Meet / video window, realtime HUD, three tabs (eye contact, turn
-   taking, emotion). Copy-paste Reflect in `app/` remains research
-   tooling for Papers 1-2.
+1. **Product is Cue** (`live/`): open a local video, or a Zoom / Teams
+   tab, realtime HUD, three tabs (eye contact, turn taking, emotion).
+   Copy-paste Reflect in `app/` remains research tooling for Papers 1-2.
 2. **Safety paper is E11**, a red-team of frontier models as social
    intermediaries, not an eval of this codebase.
 3. Live eye-contact is a **camera target** on a video call (they see

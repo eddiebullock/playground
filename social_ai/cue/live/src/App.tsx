@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Sources } from "./hud/Sources.tsx";
 import { Stage, type Marker } from "./hud/Stage.tsx";
 import { useLive, type TabId } from "./session/useLive.ts";
 import { EmotionTab } from "./tabs/EmotionTab.tsx";
@@ -28,7 +29,7 @@ export default function App() {
     localStorage.setItem(MARK_KEY, JSON.stringify(marker));
   }, [marker]);
 
-  const hasCall = Boolean(live.callStream);
+  const hasPicture = Boolean(live.callStream || live.fileUrl);
   const hasFace = live.snap.callFaces.length > 0;
 
   return (
@@ -36,7 +37,7 @@ export default function App() {
       <header className="top">
         <div>
           <h1>Cue</h1>
-          <p className="tagline">Realtime cues on a call or a video, on this computer only.</p>
+          <p className="tagline">Realtime cues on a video, Zoom, or Teams, on this computer only.</p>
         </div>
         <label className="work">
           <input
@@ -47,6 +48,26 @@ export default function App() {
           Work or education setting
         </label>
       </header>
+
+      <Sources
+        source={live.source}
+        fileName={live.fileName}
+        hasCall={Boolean(live.callStream)}
+        hasMic={Boolean(live.micStream)}
+        hasCam={Boolean(live.camStream)}
+        error={live.error}
+        onFile={live.startFile}
+        onDemo={() => void live.startDemo()}
+        onShare={() => void live.startCall()}
+        onMeeting={(kind, raw) => live.startMeeting(kind, raw)}
+        onShareMeeting={() => void live.shareMeeting()}
+        onMic={() => void live.startMic()}
+        onCam={() => void live.startCam()}
+        onStop={live.stopAll}
+      />
+      {live.snap.visionError && (
+        <p className="warn">Face model: {live.snap.visionError}. Check the network for the first load.</p>
+      )}
 
       <nav className="mode" aria-label="Tabs">
         <button type="button" aria-selected={tab === "eye"} onClick={() => setTab("eye")}>
@@ -60,47 +81,34 @@ export default function App() {
         </button>
       </nav>
 
-      <div className="controls">
-        <button type="button" onClick={() => void live.startCall()}>
-          {hasCall ? "Share a different window" : "Share call or video"}
-        </button>
-        <button type="button" onClick={() => void live.startMic()}>
-          {live.micStream ? "Microphone on" : "Share microphone"}
-        </button>
-        <button type="button" onClick={() => void live.startCam()}>
-          {live.camStream ? "Camera on" : "Share my camera"}
-        </button>
-        <button type="button" onClick={live.stopAll}>
-          Stop
-        </button>
-      </div>
-      {live.error && <p className="warn">{live.error}</p>}
-      {live.snap.visionError && (
-        <p className="warn">Face model: {live.snap.visionError}. Check the network for the first load.</p>
-      )}
-
       <div className="layout">
         <Stage
+          source={live.source}
           callStream={live.callStream}
           camStream={live.camStream}
+          fileUrl={live.fileUrl}
+          fileName={live.fileName}
           callVideo={live.callVideo}
           camVideo={live.camVideo}
           faces={live.snap.callFaces}
           marker={marker}
           onMarker={setMarker}
+          onFilePlaying={live.tapFileAudio}
           showMarker={tab === "eye"}
           showFaces={tab !== "turn"}
         />
         {tab === "eye" && (
           <EyeTab
+            source={live.source}
             gaze={live.snap.gaze}
             hasCam={Boolean(live.camStream)}
-            hasCall={hasCall}
+            hasCall={hasPicture}
             hasFace={hasFace}
           />
         )}
         {tab === "turn" && (
           <TurnTab
+            source={live.source}
             turn={live.snap.turn}
             them={live.snap.them}
             you={live.snap.you}

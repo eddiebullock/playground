@@ -12,9 +12,18 @@ Nothing in this file is sent off the machine. Perception is on-device
 
 ## 1. What it is
 
-The user shares the call or the video (browser `getDisplayMedia`). Cue
-mirrors that picture, finds faces in it, listens to two audio channels
-when it can (the call vs the user's mic), and shows a calm overlay.
+Three ways in:
+
+1. **Open a video file.** Cue plays it locally and analyses each frame
+   and the soundtrack as it runs (eye / turn / emotion tabs).
+2. **Zoom or Teams.** Paste the invite, open the meeting in Chrome, then
+   share that *tab* with audio. Cue does not sit inside the Zoom or Teams
+   apps; there is no SDK and nothing is sent to their servers from here.
+3. **Share any window** (`getDisplayMedia`) for Meet or a desktop app.
+
+Cue mirrors that picture, finds faces in it, listens to two audio
+channels when it can (the video or call vs the user's mic), and shows a
+calm overlay.
 
 Three tabs, nothing else in the first version:
 
@@ -61,7 +70,8 @@ live/
   src/
     main.tsx, App.tsx, index.css
     session/useLive.ts     capture + rAF loop
-    session/capture.ts     getDisplayMedia, getUserMedia
+    session/capture.ts     getDisplayMedia, getUserMedia, file tap
+    session/meet.ts        Zoom / Teams invite parsing (pure)
     session/vision.ts      MediaPipe Face Landmarker (call + user)
     session/audio.ts       RMS / speech flags, two channels
     analysis/gaze.ts       camera-ward vs screen-ward (pure)
@@ -70,7 +80,8 @@ live/
     tabs/EyeTab.tsx
     tabs/TurnTab.tsx
     tabs/EmotionTab.tsx
-    hud/Stage.tsx          video + overlay canvas
+    hud/Stage.tsx          video + overlay + file playback
+    hud/Sources.tsx        file, Zoom, Teams, share
 ```
 
 Perception stack (from `docs/research/02_tech.md`):
@@ -127,14 +138,13 @@ microphone.
 
 ## 5. Implementation order
 
-1. Shell: Vite + React, three tabs, share-screen / share-mic / share-
-   camera, mirrored video. **This is already the product skeleton.**
-2. Face boxes on the call video (MediaPipe).
-3. Camera marker + eye-contact copy.
-4. Two-channel meters + turn state machine.
+1. Shell: Vite + React, three tabs, file / Zoom / Teams / share-window.
+2. Face boxes on the call or file video (MediaPipe).
+3. Camera marker + eye-contact copy (live calls only).
+4. Two-channel meters + turn state machine, including file audio.
 5. Blendshape emotion, hedged.
 6. User-camera gaze bins.
-7. Tests for the three pure analysis modules.
+7. Tests for the analysis modules and meeting-link parser.
 8. Electron always-on-top and system audio only after 1-7 work in
    Chrome.
 
@@ -150,8 +160,10 @@ npm install
 npm run dev
 ```
 
-Open http://127.0.0.1:5174/ in Chrome (tab audio). Allow screen and
-mic. Pick a Meet tab or a recorded video window to start.
+Open http://127.0.0.1:5174/ in Chrome. Use **Open a video file** or
+**Try a short sample** to check the three tabs without a call. For Zoom
+or Teams: open the meeting in Chrome, then **Share the Zoom/Teams tab**
+and tick share audio.
 
 ---
 
