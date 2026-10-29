@@ -27,22 +27,29 @@ batch_qos() {
 }
 
 # Nodes reserved for this user's interactive jobs. Empty if there are none.
+# Running jobs expose the node in the queue. Pending jobs need the controller.
 intr_node_list() {
   local id line node listed=""
-  local ids
-  ids="$(squeue -h -u "${USER}" -o "%A %q" | awk '$2=="intr" {print $1}')"
-  [[ -z "${ids}" ]] && return 0
-  for id in ${ids}; do
-    line="$(timeout 20 scontrol -o show job "${id}" 2>/dev/null || true)"
-    if [[ -z "${line}" ]]; then
-      echo "interactive job ${id} has no readable node" >&2
-      return 1
-    fi
-    while IFS= read -r node; do
-      [[ -z "${node}" || "${node}" == "(null)" ]] && continue
-      listed="${listed},${node}"
-    done < <(printf '%s\n' "${line}" | tr ' ' '\n' | sed -n 's/^NodeList=//p; s/^SchedNodeList=//p')
-  done
+  local running pending
+  running="$(squeue -h -u "${USER}" -t R -o "%A %q %N" | awk '$2=="intr" && $3 != "" && $3 != "n/a" {print $3}')"
+  pending="$(squeue -h -u "${USER}" -t PD -o "%A %q" | awk '$2=="intr" {print $1}')"
+  listed="${running//$'\n'/,}"
+  if [[ -n "${pending}" ]]; then
+    for id in ${pending}; do
+      line="$(timeout 20 scontrol -o show job "${id}" 2>/dev/null || true)"
+      if [[ -z "${line}" ]]; then
+        echo "interactive job ${id} has no readable node" >&2
+        return 1
+      fi
+      while IFS= read -r node; do
+        [[ -z "${node}" || "${node}" == "(null)" ]] && continue
+        listed="${listed},${node}"
+      done < <(printf '%s\n' "${line}" | tr ' ' '\n' | sed -n 's/^NodeList=//p; s/^SchedNodeList=//p')
+    done
+  fi
+  if [[ -z "${running}" && -z "${pending}" ]]; then
+    return 0
+  fi
   listed="$(printf '%s\n' "${listed}" | tr ',' '\n' | awk 'NF && !seen[$0]++' | paste -sd, -)"
   if [[ -z "${listed}" ]]; then
     echo "an interactive job is queued but its node is not assigned yet" >&2

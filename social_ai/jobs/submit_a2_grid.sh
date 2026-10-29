@@ -12,13 +12,17 @@ export A2_RUNS="${A2_ROOT}/runs"
 export A2_MAX_MINUTES=25
 mkdir -p "${SITE_PROJECT_ROOT}/logs" "${A2_RUNS}"
 
-PREP="$("${ROOT}/jobs/submit.sh" cpu \
-  --nice=0 \
-  --job-name="a2prep" \
-  --cpus-per-task=8 \
-  --output="${SITE_PROJECT_ROOT}/logs/%x_%j.out" \
-  --parsable \
-  "${ROOT}/jobs/prepare_a2.sh")"
+if [[ -n "${A2_PREP_JOB:-}" ]]; then
+  PREP="${A2_PREP_JOB}"
+else
+  PREP="$("${ROOT}/jobs/submit.sh" cpu \
+    --nice=0 \
+    --job-name="a2prep" \
+    --cpus-per-task=8 \
+    --output="${SITE_PROJECT_ROOT}/logs/%x_%j.out" \
+    --parsable \
+    "${ROOT}/jobs/prepare_a2.sh")"
+fi
 echo "prepare_job ${PREP}"
 
 MMLU="$("${ROOT}/jobs/submit.sh" gpu \
