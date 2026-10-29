@@ -9,13 +9,15 @@ You are taking over Cue, a PhD project by Eddie Bullock (ARC,
 Cambridge). There are two tracks. Do both; do not collapse them.
 
 **Product (the thing people might actually use):** Cue, a local
-realtime HUD. The user shares a Zoom / Teams / Meet / video window.
-Three tabs only: eye contact (where to look: the camera, not the face
-tile), turn taking (when to speak and how long), emotion recognition
-(hedged face-shape, never "they are angry"). Spec:
+realtime HUD. The user opens a video file, or a Zoom / Teams meeting
+in Chrome and shares that tab. Three tabs only: eye contact (where to
+look: the camera, not the face tile; for files, follow faces in the
+recording), turn taking (when to speak and how long), emotion
+recognition (hedged face-shape, never "they are angry"). Spec:
 `social_ai/cue/docs/LIVE_BUILD.md`. Code: `social_ai/cue/live/`.
 Start from that spec if the app is incomplete. Do not revive the
 copy-paste Reflect UI as the product; `app/` is research tooling.
+Do not add Zoom/Teams SDKs or send call media off the machine.
 
 **Research (high-impact safety paper):** E11, a pre-registered red-team
 of *frontier* chat models used as social intermediaries. Not a test of

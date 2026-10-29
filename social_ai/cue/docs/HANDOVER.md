@@ -1,4 +1,4 @@
-# Handover, 2026-10-29 (Live HUD + E11 protocol)
+# Handover, 2026-10-29 (file + Zoom/Teams)
 
 For the next agent. Read `docs/LIVE_BUILD.md`, `docs/research/05_frontier_safety.md`, then `docs/DECISIONS.md` 2026-10-29.
 
@@ -22,22 +22,27 @@ None running.
 ## State
 - Eddie dropped the working name. The project is Cue at `social_ai/cue`.
 - Eddie pivoted: live HUD is the product; E11 is the safety paper.
-- `live/` has the three-tab HUD (screen share, camera marker, turn
-  meters, hedged emotion). Electron / system audio are not built.
+- `live/` plays a local video file (or a short sample), opens Zoom/Teams
+  invites in the browser, then shares that tab. Three tabs: eye, turn,
+  emotion. Electron / Zoom SDK / system audio are not built and must
+  not be; call data stays on the machine.
 - E11 protocol, codebook, prompts, 36 dev + 36 sealed holdout items,
   harness. Holdout not scored. No paid runs.
 
 ## What to do next, in order
-1. Click through Cue in Chrome on a Meet tab or a local video.
-   Fix capture, face boxes, camera marker, two-channel audio.
+1. Click **Try a short sample**, then switch Eye / Turn / Emotion.
+   Open a user-supplied mp4 the same way. Fix capture if a tab share
+   has video but no audio.
 2. Expand confirmatory items to 180 without scoring them. Hash the file.
 3. Eddie: OSF snapshot of `prereg.md`; API keys if he wants frontier
    dry-runs on *dev* only.
 4. Do not recruit. Do not demo to participants.
 
 ## For Eddie
-- Try http://127.0.0.1:5174/ in Chrome. Share a Meet *tab* (tick Share
-  audio) for turn-taking; a Zoom window is usually video-only.
+- Try http://127.0.0.1:5174/ in Chrome. **Try a short sample** or open
+  your own video. For a live call: paste a Zoom or Teams link, open it,
+  then share that Chrome tab (tick Share audio). A Zoom *window* is
+  usually video-only.
 - E11 will not run against GPT/Claude/Gemini/Grok until you set keys
   and `E11_ALLOW_PAID=1`. The protocol is ready for OSF.
 - Please file the OSF snapshot when you are happy with `prereg.md`.

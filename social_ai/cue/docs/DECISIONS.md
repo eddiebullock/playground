@@ -951,3 +951,9 @@ Dated, with the evidence. Newest last.
   Gloss (a margin note: a possible reading). That name does not fit the
   live HUD. Project, UI, and folder are Cue (`social_ai/cue`). Frozen
   E9 item text that names the old tool is left unchanged.
+
+- **File playback and Zoom/Teams, Eddie.** The HUD must play a local
+  video and give live tab feedback as it runs. Zoom and Teams are join-
+  then-share-tab, not SDKs: nothing from the call leaves the machine,
+  and the desktop apps often have no audio when window-shared. Chrome
+  tab + share audio remains the working 1:1 path.

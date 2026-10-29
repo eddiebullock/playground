@@ -3,11 +3,19 @@ import type { FaceLandmarker } from "@mediapipe/tasks-vision";
 import { emotionFromBlendshapes, type EmotionRead } from "../analysis/emotion.ts";
 import { gazeFromBlendshapes, type GazeRead } from "../analysis/gaze.ts";
 import { emptyTurn, stepTurn, type TurnCue, type TurnMemory } from "../analysis/turntaking.ts";
-import { attachMeter, type Meter } from "./audio.ts";
-import { shareCall, shareCamera, shareMic, stopStream } from "./capture.ts";
+import { attachElementMeter, attachMeter, type Meter } from "./audio.ts";
+import {
+  shareCall,
+  shareCamera,
+  shareMeetingTab,
+  shareMic,
+  stopStream,
+} from "./capture.ts";
+import { openMeeting, parseMeetingLink, type MeetKind } from "./meet.ts";
 import { createLandmarker, facesFrom, largest, type FaceBox } from "./vision.ts";
 
 export type TabId = "eye" | "turn" | "emotion";
+export type LiveSource = "none" | "file" | "display";
 
 export type LiveSnap = {
   callFaces: FaceBox[];
@@ -25,7 +33,7 @@ export type LiveSnap = {
 const quietTurn: TurnCue = {
   talk: "silence",
   headline: "Quiet",
-  detail: "Share the call and your mic to hear turns.",
+  detail: "Open a video, or share a call, to hear turns.",
   floorOpen: false,
   longYou: false,
   youMs: 0,
@@ -35,7 +43,7 @@ const quietTurn: TurnCue = {
 
 const idleEmotion: EmotionRead = {
   label: "none",
-  hedge: "Share the call to read a face shape.",
+  hedge: "Open a video or share a call to read a face shape.",
   cues: [],
   confidence: "low",
 };
@@ -63,6 +71,9 @@ export function useLive() {
   const [callStream, setCallStream] = useState<MediaStream | null>(null);
   const [camStream, setCamStream] = useState<MediaStream | null>(null);
   const [micStream, setMicStream] = useState<MediaStream | null>(null);
+  const [fileUrl, setFileUrl] = useState<string | null>(null);
+  const [fileName, setFileName] = useState("");
+  const [source, setSource] = useState<LiveSource>("none");
   const [error, setError] = useState("");
   const [snap, setSnap] = useState<LiveSnap>(idle);
   const callVideo = useRef<HTMLVideoElement | null>(null);
@@ -71,6 +82,9 @@ export function useLive() {
   const userLm = useRef<FaceLandmarker | null>(null);
   const themMeter = useRef<ReturnType<typeof attachMeter> | null>(null);
   const youMeter = useRef<ReturnType<typeof attachMeter> | null>(null);
+  const fileTap = useRef<MediaStream | null>(null);
+  const fileUrlRef = useRef<string | null>(null);
+  const fileMeterOn = useRef(false);
   const mem = useRef<TurnMemory>(emptyTurn);
   const lastTs = useRef(0);
   const lastUi = useRef(0);
@@ -98,6 +112,7 @@ export function useLive() {
   }, []);
 
   useEffect(() => {
+    if (source === "file") return;
     themMeter.current?.stop();
     themMeter.current = attachMeter(callStream);
     setSnap((s) => ({
@@ -105,7 +120,7 @@ export function useLive() {
       callAudio: Boolean(callStream && callStream.getAudioTracks().length > 0),
     }));
     return () => themMeter.current?.stop();
-  }, [callStream]);
+  }, [callStream, source]);
 
   useEffect(() => {
     youMeter.current?.stop();
@@ -138,24 +153,103 @@ export function useLive() {
         turn: stepped.cue,
         emotion: other ? emotionFromBlendshapes(other.blends) : idleEmotion,
         gaze: self ? gazeFromBlendshapes(self.blends) : idleGaze,
-        callAudio: them.hasAudio,
+        callAudio: fileMeterOn.current || them.hasAudio,
       }));
     };
     raf = requestAnimationFrame(loop);
     return () => cancelAnimationFrame(raf);
   }, []);
 
-  const startCall = useCallback(async () => {
-    setError("");
-    try {
-      const stream = await shareCall();
+  const clearFile = useCallback(() => {
+    if (fileUrlRef.current?.startsWith("blob:")) URL.revokeObjectURL(fileUrlRef.current);
+    fileUrlRef.current = null;
+    setFileUrl(null);
+    setFileName("");
+    stopStream(fileTap.current);
+    fileTap.current = null;
+    fileMeterOn.current = false;
+  }, []);
+
+  const startDisplay = useCallback(
+    async (preferTab = false) => {
+      setError("");
+      try {
+        const stream = preferTab ? await shareMeetingTab() : await shareCall(false);
+        stopStream(callStream);
+        clearFile();
+        setSource("display");
+        setCallStream(stream);
+        mem.current = emptyTurn;
+        stream.getVideoTracks()[0]?.addEventListener("ended", () => {
+          setCallStream(null);
+          setSource("none");
+        });
+      } catch (err) {
+        setError(err instanceof Error ? err.message : String(err));
+      }
+    },
+    [callStream, clearFile],
+  );
+
+  const tapFileAudio = useCallback((el: HTMLVideoElement) => {
+    if (fileMeterOn.current) return;
+    fileMeterOn.current = true;
+    el.muted = false;
+    el.volume = 1;
+    themMeter.current?.stop();
+    stopStream(fileTap.current);
+    fileTap.current = null;
+    themMeter.current = attachElementMeter(el);
+    setSnap((s) => ({ ...s, callAudio: true }));
+  }, []);
+
+  const startFile = useCallback(
+    (file: File) => {
+      setError("");
+      if (!file.type.startsWith("video/") && !/\.(mp4|webm|mov|m4v|mkv)$/i.test(file.name)) {
+        setError("Pick a video file (mp4, webm, mov).");
+        return;
+      }
       stopStream(callStream);
-      setCallStream(stream);
-      stream.getVideoTracks()[0]?.addEventListener("ended", () => setCallStream(null));
-    } catch (err) {
-      setError(err instanceof Error ? err.message : String(err));
-    }
-  }, [callStream]);
+      setCallStream(null);
+      clearFile();
+      const url = URL.createObjectURL(file);
+      fileUrlRef.current = url;
+      setFileUrl(url);
+      setFileName(file.name);
+      setSource("file");
+      mem.current = emptyTurn;
+    },
+    [callStream, clearFile],
+  );
+
+  const startDemo = useCallback(() => {
+    setError("");
+    stopStream(callStream);
+    setCallStream(null);
+    clearFile();
+    setFileUrl("/demo.mp4");
+    setFileName("demo.mp4");
+    setSource("file");
+    mem.current = emptyTurn;
+  }, [callStream, clearFile]);
+
+  const startMeeting = useCallback(
+    async (kind: MeetKind, raw: string) => {
+      const parsed = parseMeetingLink(kind, raw);
+      if ("error" in parsed) {
+        setError(parsed.error);
+        return;
+      }
+      setError("");
+      openMeeting(parsed.href);
+    },
+    [],
+  );
+
+  const shareMeeting = useCallback(async () => {
+    await startDisplay(true);
+  }, [startDisplay]);
 
   const startCam = useCallback(async () => {
     setError("");
@@ -183,23 +277,35 @@ export function useLive() {
     stopStream(callStream);
     stopStream(camStream);
     stopStream(micStream);
+    stopStream(fileTap.current);
+    fileTap.current = null;
+    clearFile();
     setCallStream(null);
     setCamStream(null);
     setMicStream(null);
+    setSource("none");
     mem.current = emptyTurn;
-  }, [callStream, camStream, micStream]);
+  }, [callStream, camStream, micStream, clearFile]);
 
   return {
     snap,
     error,
+    source,
     callStream,
     camStream,
     micStream,
+    fileUrl,
+    fileName,
     callVideo,
     camVideo,
-    startCall,
+    startCall: () => startDisplay(false),
+    startFile,
+    startDemo,
+    startMeeting,
+    shareMeeting,
     startCam,
     startMic,
+    tapFileAudio,
     stopAll,
   };
 }
