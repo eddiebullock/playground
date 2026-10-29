@@ -16,4 +16,4 @@ model p=0.87 as well), he:80 scam (pattern on a genuine dispatch mail that
 mentions a fee; model p=0.00).
 
 safetyFull and reflect() now use two-gate + THRESHOLD_TWOGATE.
-Gloss still stays off participants until Eddie reviews the notes in safety.ts.
+Cue still stays off participants until Eddie reviews the notes in safety.ts.

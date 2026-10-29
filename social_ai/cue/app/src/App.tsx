@@ -34,7 +34,7 @@ const CLARITY_TEXT_ME = {
 // leave this computer and are only added as context when that name is used.
 function loadPeople(): Record<string, string> {
   try {
-    const raw = localStorage.getItem("cue.people") ?? localStorage.getItem("gloss.people") ?? "{}";
+    const raw = localStorage.getItem("cue.people") ?? "{}";
     return JSON.parse(raw) as Record<string, string>;
   } catch {
     return {};
@@ -58,7 +58,7 @@ function likelihood(p: number): string {
 
 function readStored(key: string, fallback: string): string {
   try {
-    return localStorage.getItem(`cue.${key}`) ?? localStorage.getItem(`gloss.${key}`) ?? fallback;
+    return localStorage.getItem(`cue.${key}`) ?? fallback;
   } catch {
     return fallback;
   }

@@ -11,4 +11,4 @@ Distress misses (indirect cues the question list does not name):
 hd:6 hd:12 hd:16 hd:87 hd:93 hd:95
 Scam miss: hd:33. Boundary hard-neg FP: hd:70.
 
-reflect() stays on safetyCheck. Gloss stays off participants.
+reflect() stays on safetyCheck. Cue stays off participants.

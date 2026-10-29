@@ -7,11 +7,10 @@ import { EyeTab } from "./tabs/EyeTab.tsx";
 import { TurnTab } from "./tabs/TurnTab.tsx";
 
 const MARK_KEY = "cue-camera-marker";
-const OLD_MARK_KEY = "gloss-live-camera-marker";
 
 function loadMarker(): Marker {
   try {
-    const raw = localStorage.getItem(MARK_KEY) ?? localStorage.getItem(OLD_MARK_KEY);
+    const raw = localStorage.getItem(MARK_KEY);
     if (raw) return JSON.parse(raw) as Marker;
   } catch {
     /* ignore */

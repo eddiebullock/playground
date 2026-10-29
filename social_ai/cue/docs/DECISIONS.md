@@ -4,7 +4,7 @@ Dated, with the evidence. Newest last.
 
 ## 2026-10-24
 
-- **New repo `~/playground/gloss`**, separate from `social_ai` (concept
+- **New repo under `~/playground`**, separate from `social_ai` (concept
   scenes) and `es-vlm`. It is its own git repo, so the playground branch
   `es-vlm/setup` and its uncommitted changes are untouched.
 - **Order of work: language first, reflective first, faces last.** Evidence:
@@ -81,10 +81,9 @@ Dated, with the evidence. Newest last.
   wrongly flagged "Hard to tell". After it, the three development cases read
   correctly (sarcasm 0.93; sincere work messages 0.87 and 0.89). These three
   cases are a development set, not an evaluation.
-- **Moved to `~/playground/social_ai/gloss` (2026-10-25)** at Eddie's request, so
+- **Moved to `~/playground/social_ai/cue` (2026-10-25)** at Eddie's request, so
   the work lives under the personal `eddiebullock/playground` GitHub repo rather
   than the work `minimal` repo. The earlier "separate repo" entry above is superseded.
-  Renamed to `social_ai/cue` on 2026-10-29.
 
 ## 2026-10-25
 
@@ -300,8 +299,8 @@ Dated, with the evidence. Newest last.
   model reads more generously once the user says they get anxious. Fix 2:
   tie that option to the message ("only if the message does not ask for an
   answer"), re-test on 3 seeds.
-- **`gloss` merged into the playground repo** at Eddie's request (subtree
-  merge, so the 38 gloss commits keep their history), on branch
+- **This tree merged into the playground repo** at Eddie's request (subtree
+  merge, so the early commits keep their history), on branch
   `es-vlm/setup`, and pushed to `eddiebullock/playground`. The nested `.git`
   is gone; commit from the playground repo.
 - **Replies audit after fix 2 (engine as committed in b6f72b6; seeds 0-2,
@@ -947,10 +946,8 @@ Dated, with the evidence. Newest last.
   Ollama. Expansion to 180 confirmatory items must be written blind to
   model output and hashed before scoring.
 
-- **Working name dropped, Eddie.** The paste-a-message tool was called
-  Gloss (a margin note: a possible reading). That name does not fit the
-  live HUD. Project, UI, and folder are Cue (`social_ai/cue`). Frozen
-  E9 item text that names the old tool is left unchanged.
+- **Name is Cue.** Folder `social_ai/cue`. The old working name is gone
+  from the product and from current docs.
 
 - **File playback and Zoom/Teams, Eddie.** The HUD must play a local
   video and give live tab feedback as it runs. Zoom and Teams are join-

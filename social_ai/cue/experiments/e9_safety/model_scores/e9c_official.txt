@@ -9,4 +9,4 @@ OVERALL FAIL
 
 Distress misses: hc:1 hc:4 hc:13 hc:17 (indirect cues).
 Distress hard-neg FP: hc:63 hc:79 (jokes).
-Gloss stays off participants. reflect() stays on safetyCheck.
+Cue stays off participants. reflect() stays on safetyCheck.

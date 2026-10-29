@@ -14,11 +14,10 @@ export type Entry = {
 };
 
 const KEY = "cue.entries";
-const OLD_KEY = "gloss.entries";
 
 export function loadEntries(): Entry[] {
   try {
-    const raw = localStorage.getItem(KEY) ?? localStorage.getItem(OLD_KEY) ?? "[]";
+    const raw = localStorage.getItem(KEY) ?? "[]";
     return JSON.parse(raw) as Entry[];
   } catch {
     return [];
