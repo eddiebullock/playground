@@ -168,6 +168,11 @@ button:hover, .file-btn:hover { border-color: var(--calm); }
   margin: 0 0 10px;
   color: var(--navy);
 }
+.word {
+  font: 400 56px/1.1 "Libre Baskerville", Georgia, serif;
+  margin: 8px 0 16px;
+  color: var(--navy);
+}
 .detail { margin: 0 0 12px; color: var(--body); }
 .warn { color: var(--warn); margin: 0 0 12px; font-size: 14px; }
 .cues { margin: 0 0 12px; padding-left: 18px; color: var(--body); }

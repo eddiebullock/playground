@@ -31,7 +31,7 @@ Three tabs, nothing else in the first version:
 |---|---|---|---|
 | **Eye contact** | Where to look so the other person *feels* looked-at on a video call | Call video + optional user camera + a draggable "camera is here" marker | A target on the physical webcam; "look here, not at their tile"; if the user camera is on, whether their gaze is toward the camera or toward the screen |
 | **Turn taking** | When to speak, and how long you have been speaking | Call audio = them, mic = you | THEY ARE SPEAKING / PAUSE, YOU COULD START / YOU ARE SPEAKING (timer) / BOTH / you have been talking for N seconds |
-| **Emotion** | A face-shape guess, never a feeling | Largest face in the call video, blendshapes | "This face looks like it might be smiling" plus the cues (mouth, brows). Always: faces are not feelings |
+| **Emotion** | A face-shape guess, never a feeling | Largest face in the call video, blendshapes | One or two words: Smile, Tense, Brows up, Open, Still. Always: faces are not feelings |
 
 The user can put Cue on a second monitor or in split view next to
 Zoom. Always-on-top (Electron) is version 2, not version 1.
@@ -131,8 +131,8 @@ microphone.
 2. Blendshape recipe (see `analysis/emotion.ts`): smile, frown, raised
    brows, still. Confidence is "low / some / higher" from the margin
    between the top two recipes, not from a 0-1 "happy" score.
-3. Headline form: "This face looks like it might be X." Subline: the
-   cues. Footer: "A face is not a feeling."
+3. Headline: one or two words (Smile, Tense, Brows up, Open, Still).
+   Footer: "Guess from the face. Not a feeling."
 
 ---
 

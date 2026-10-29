@@ -42,8 +42,8 @@ const quietTurn: TurnCue = {
 };
 
 const idleEmotion: EmotionRead = {
-  label: "none",
-  hedge: "Open a video or share a call to read a face shape.",
+  label: "None",
+  hedge: "None",
   cues: [],
   confidence: "low",
 };
