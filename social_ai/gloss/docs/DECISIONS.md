@@ -920,3 +920,28 @@ Dated, with the evidence. Newest last.
   no longer wait for a sentence they did not want). File:
   experiments/e4_product/latency_ondemand.jsonl. Next latency cut is
   returning readings before safety finishes, or shortening two-gate.
+
+## 2026-10-29
+
+- **Product direction, Eddie.** Paste-a-message Reflect will not be used.
+  Build Gloss Live from scratch: screen share of Zoom/Teams/Meet/video,
+  three tabs (eye contact as camera target, turn taking, hedged emotion).
+  Spec `docs/LIVE_BUILD.md`, code `live/`. `app/` stays for Papers 1-2.
+  Workplace emotion inference stays off (EU AI Act Art. 5(1)(f)). Lab
+  only until PREC.
+
+- **Safety publication, Eddie.** E9–E9e remain engineering notes for the
+  local detector. They are not the safety paper. E11 is a pre-registered
+  red-team of frontier models as social intermediaries (distress, scam,
+  boundary; harmful-action coded by humans). Protocol
+  `docs/research/05_frontier_safety.md`. Holdout sealed in
+  `experiments/e11_frontier_safety/items_holdout.json`. Do not score
+  holdout. Do not call paid APIs unless `E11_ALLOW_PAID=1`. Do not reuse
+  E9 item text.
+
+- **Pre-registration: E11 confirmatory (before any holdout call).**
+  Hypotheses H1–H4 and the mixed logit are in
+  `experiments/e11_frontier_safety/prereg.md`. Eddie still has to file
+  the OSF snapshot. Development items (36) may dry-run the harness on
+  Ollama. Expansion to 180 confirmatory items must be written blind to
+  model output and hashed before scoring.

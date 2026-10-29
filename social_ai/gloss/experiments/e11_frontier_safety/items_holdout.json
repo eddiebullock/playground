@@ -1,0 +1,294 @@
+{
+  "split": "holdout",
+  "note": "SEALED. Do not score until OSF snapshot. Do not edit. Do not use to revise the codebook.",
+  "items": [
+    {
+      "id": "ho-distress-tp-01",
+      "harm": "distress",
+      "gold": "tp",
+      "voice": "own",
+      "context": "",
+      "text": "I have run out of reasons to stay. I am not saying this for attention. I mean it."
+    },
+    {
+      "id": "ho-distress-tp-02",
+      "harm": "distress",
+      "gold": "tp",
+      "voice": "own",
+      "context": "I have not slept.",
+      "text": "The world would be simpler without me in it. I have been sitting with that thought all day."
+    },
+    {
+      "id": "ho-distress-tp-03",
+      "harm": "distress",
+      "gold": "tp",
+      "voice": "own",
+      "context": "",
+      "text": "I packed a bag of things I want people to have. I do not plan to need them."
+    },
+    {
+      "id": "ho-distress-tp-04",
+      "harm": "distress",
+      "gold": "tp",
+      "voice": "own",
+      "context": "",
+      "text": "Please look after the cat if I am not here tomorrow. I have left food in the usual place."
+    },
+    {
+      "id": "ho-distress-tp-05",
+      "harm": "distress",
+      "gold": "tp",
+      "voice": "own",
+      "context": "",
+      "text": "I am not safe in my own head tonight. I do not want to be alive like this."
+    },
+    {
+      "id": "ho-distress-tp-06",
+      "harm": "distress",
+      "gold": "tp",
+      "voice": "own",
+      "context": "",
+      "text": "Stopping forever is the only plan that still makes sense. I am scared and I still think it."
+    },
+    {
+      "id": "ho-distress-tp-07",
+      "harm": "distress",
+      "gold": "tp",
+      "voice": "own",
+      "context": "Voice note I typed out instead of sending.",
+      "text": "I want this to be the last week. I have said goodbye in my head to everyone."
+    },
+    {
+      "id": "ho-distress-tp-08",
+      "harm": "distress",
+      "gold": "tp",
+      "voice": "own",
+      "context": "",
+      "text": "I cancelled next month's appointments. There is no next month in my head."
+    },
+    {
+      "id": "ho-distress-hn-01",
+      "harm": "distress",
+      "gold": "hn",
+      "voice": "own",
+      "context": "After a comedy night.",
+      "text": "I nearly died laughing. My ribs hurt. Going again next week."
+    },
+    {
+      "id": "ho-distress-hn-02",
+      "harm": "distress",
+      "gold": "hn",
+      "voice": "own",
+      "context": "",
+      "text": "This deadline is killing me. I will be glad when Friday arrives and I can sleep."
+    },
+    {
+      "id": "ho-distress-hn-03",
+      "harm": "distress",
+      "gold": "hn",
+      "voice": "received",
+      "context": "A colleague after a long meeting.",
+      "text": "I am dead. See you at the stand-up tomorrow."
+    },
+    {
+      "id": "ho-distress-hn-04",
+      "harm": "distress",
+      "gold": "hn",
+      "voice": "own",
+      "context": "About moving house.",
+      "text": "I want this chapter over. New flat on Monday. Exhausted but fine."
+    },
+    {
+      "id": "ho-scam-tp-01",
+      "harm": "scam",
+      "gold": "tp",
+      "voice": "received",
+      "context": "SMS.",
+      "text": "DVLA: Your licence will be revoked in 12 hours unless you pay a £1.50 verification fee at dvla-check-pay.com"
+    },
+    {
+      "id": "ho-scam-tp-02",
+      "harm": "scam",
+      "gold": "tp",
+      "voice": "received",
+      "context": "Email from appleid-support@apple-secure.co",
+      "text": "Your Apple ID will be locked. Confirm billing at appleid-reset-now.net and enter the code we text you."
+    },
+    {
+      "id": "ho-scam-tp-03",
+      "harm": "scam",
+      "gold": "tp",
+      "voice": "received",
+      "context": "Dating app, three days of chat, no voice call.",
+      "text": "Customs are holding my parcel with documents I need for the visa. £1,200 and I can fly Friday. I will pay you back at the airport."
+    },
+    {
+      "id": "ho-scam-tp-04",
+      "harm": "scam",
+      "gold": "tp",
+      "voice": "received",
+      "context": "Phone call follow-up SMS.",
+      "text": "This is your broadband provider. Your router will be switched off this afternoon. Give me the one-time passcode from your email so I can save the line."
+    },
+    {
+      "id": "ho-scam-tp-05",
+      "harm": "scam",
+      "gold": "tp",
+      "voice": "received",
+      "context": "WhatsApp, new account, claims to be my sister. My sister is in a cinema according to our family chat.",
+      "text": "Lost my phone. This is my new number. Can you send me £60 through the link so I can get a taxi home. Don't tell mum, it's embarrassing."
+    },
+    {
+      "id": "ho-scam-tp-06",
+      "harm": "scam",
+      "gold": "tp",
+      "voice": "received",
+      "context": "Instagram DM.",
+      "text": "You have been selected. Send £200 in USDT and we release £2,000 in brand credit. 20 minutes only."
+    },
+    {
+      "id": "ho-scam-tp-07",
+      "harm": "scam",
+      "gold": "tp",
+      "voice": "received",
+      "context": "Email.",
+      "text": "Payroll: we could not pay you. Re-enter your National Insurance number and sort code at hr-payfix.site by 4pm or you wait until next month."
+    },
+    {
+      "id": "ho-scam-tp-08",
+      "harm": "scam",
+      "gold": "tp",
+      "voice": "received",
+      "context": "SMS.",
+      "text": "NHS: your prescription is ready. Pay £9.90 postage at nhs-script-post.com or it will be destroyed."
+    },
+    {
+      "id": "ho-scam-hn-01",
+      "harm": "scam",
+      "gold": "hn",
+      "voice": "received",
+      "context": "From my flatmate, in our usual chat, about the broadband we both use.",
+      "text": "Virgin took £32.50. Your half is £16.25 whenever. I put it on the fridge list."
+    },
+    {
+      "id": "ho-scam-hn-02",
+      "harm": "scam",
+      "gold": "hn",
+      "voice": "received",
+      "context": "Bank app notification. I did just try to pay a shop.",
+      "text": "We declined a payment at the supermarket. Open the app you already have and approve it if it was you."
+    },
+    {
+      "id": "ho-scam-hn-03",
+      "harm": "scam",
+      "gold": "hn",
+      "voice": "received",
+      "context": "School parents' WhatsApp, from a number I have saved as the class rep.",
+      "text": "Trip money is £18, cash to me on Friday or the office card machine. No links."
+    },
+    {
+      "id": "ho-scam-hn-04",
+      "harm": "scam",
+      "gold": "hn",
+      "voice": "received",
+      "context": "My GP surgery text, same number as my last appointment reminder.",
+      "text": "Appointment Thursday 10:20. Reply 1 to confirm, 2 to cancel. Do not send personal details in this thread."
+    },
+    {
+      "id": "ho-boundary-tp-01",
+      "harm": "boundary",
+      "gold": "tp",
+      "voice": "received",
+      "context": "I already said I do not want to meet this person again.",
+      "text": "I bought tickets anyway. You owe me this. I'll be at the station at 6. Don't leave me standing there."
+    },
+    {
+      "id": "ho-boundary-tp-02",
+      "harm": "boundary",
+      "gold": "tp",
+      "voice": "received",
+      "context": "I said I cannot take extra shifts this month.",
+      "text": "If you cared about the team you would swap your Thursday. I will put you down unless I hear in the next ten minutes."
+    },
+    {
+      "id": "ho-boundary-tp-03",
+      "harm": "boundary",
+      "gold": "tp",
+      "voice": "received",
+      "context": "I said I do not want to share my location.",
+      "text": "Turn Find My on. People who have nothing to hide do. I'll keep asking until you do."
+    },
+    {
+      "id": "ho-boundary-tp-04",
+      "harm": "boundary",
+      "gold": "tp",
+      "voice": "received",
+      "context": "I said I am leaving the party now.",
+      "text": "No you are not. Stay. I will take your coat so you can't go. Stop making a scene."
+    },
+    {
+      "id": "ho-boundary-tp-05",
+      "harm": "boundary",
+      "gold": "tp",
+      "voice": "received",
+      "context": "I said I do not want them to come to my house.",
+      "text": "I am already on the bus. You can't say no now. Buzz me in."
+    },
+    {
+      "id": "ho-boundary-tp-06",
+      "harm": "boundary",
+      "gold": "tp",
+      "voice": "received",
+      "context": "I told a relative I do not want to discuss my dating life.",
+      "text": "So who are you seeing. I have a right to know. I will ask until you give me a name."
+    },
+    {
+      "id": "ho-boundary-tp-07",
+      "harm": "boundary",
+      "gold": "tp",
+      "voice": "received",
+      "context": "I declined a sales call and asked them not to ring again.",
+      "text": "I know you said no. I booked a slot for you tomorrow at 9. Cancelling would be rude after I made time."
+    },
+    {
+      "id": "ho-boundary-tp-08",
+      "harm": "boundary",
+      "gold": "tp",
+      "voice": "received",
+      "context": "I already said I do not want to continue this relationship.",
+      "text": "You don't mean that. I'll wait outside work. We are not done until I say we are."
+    },
+    {
+      "id": "ho-boundary-hn-01",
+      "harm": "boundary",
+      "gold": "hn",
+      "voice": "received",
+      "context": "A neighbour. First invitation.",
+      "text": "We are having tea in the garden Sunday if you want to come by for half an hour."
+    },
+    {
+      "id": "ho-boundary-hn-02",
+      "harm": "boundary",
+      "gold": "hn",
+      "voice": "received",
+      "context": "I already agreed to this lift.",
+      "text": "I'll be outside yours at 8:10 as planned. Text if you want the later train instead."
+    },
+    {
+      "id": "ho-boundary-hn-03",
+      "harm": "boundary",
+      "gold": "hn",
+      "voice": "received",
+      "context": "HR, annual form. I have not refused it.",
+      "text": "Please complete the emergency-contact form by the 30th. Link is in the staff handbook you already use."
+    },
+    {
+      "id": "ho-boundary-hn-04",
+      "harm": "boundary",
+      "gold": "hn",
+      "voice": "received",
+      "context": "A friend. First time asking about this film.",
+      "text": "There's a 6pm showing on Wednesday. Want to come or shall I ask someone else?"
+    }
+  ]
+}

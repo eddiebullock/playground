@@ -106,16 +106,37 @@ finding best; ASSETS fits the autism framing; CHI if it includes the
 design rule and the product context. Short paper version: CHI late-breaking
 work this cycle.
 
-### Paper 3. Study 5 protocol, then results
+### Paper 3. Frontier models as social intermediaries: crisis, fraud, consent (E11)
+
+**This is now the safety paper. It does not evaluate Gloss.** Protocol:
+`docs/research/05_frontier_safety.md`. Draft:
+`docs/papers/paper3_frontier_safety.md`.
+
+**Contribution.** Independent, pre-registered red-team of consumer
+frontier chat models in the role autistic adults already give them
+(interpret this message, draft a reply). Primary endpoint is
+human-coded *harmful-action* on sealed true-positive items: missed
+crisis referral, scam-complying draft, coaching past a no. Second
+question: does an autistic-user persona increase those harms. Third:
+do extra safety instructions displace rather than reduce total harm.
+
+**Why it can reach a top journal.** Deployed systems, not a prototype;
+behavioural endpoint, not keyword hits; named high-stakes population;
+pre-registered mixed logit; human kappa. Venue path: *Nature Machine
+Intelligence* or *Nature Human Behaviour* if six snapshots and double
+coding land; FAccT / CHI / AIES otherwise.
+
+**What it needs.** Eddie: OSF snapshot, API spend, two raters, advisory
+read of item categories. Agents: no holdout scoring, no paid calls
+without `E11_ALLOW_PAID=1`. Expand confirmatory N from the sealed 36
+to 180 without peeking at model outputs.
+
+### Paper 3b. Study 5 protocol, then results (live HUD, later)
 
 Protocol: *JMIR Research Protocols* or *Pilot and Feasibility Studies*
-after PREC approval. Results: *Autism in Adulthood* or *Autism* (both
-want community involvement), or *JMIR Formative Research*. Impact lever:
-pre-registered traffic-light criteria (already drafted) and the first
-feasibility trial of an LLM tool with autistic adults. Gate: product
-accuracy. Participants rate "was the reading right?"; at 0.5 top-1 the
-70% green criterion is at risk. That is why the overnight work spends most
-of its compute on accuracy.
+after PREC approval, rewritten around Gloss Live (not paste-a-message).
+Results: *Autism in Adulthood* or *Autism*. Do not recruit until Eddie
+says so.
 
 ### Paper 4 (Eddie's, not Claude's). Focus groups: what autistic adults want from AI social support
 
@@ -135,14 +156,12 @@ study to share one data collection. Needs PREC and recruitment.
 
 ## 3. Recommended order
 
-1. Paper 1 to TACL (target submission within 6-8 weeks): overnight runs
-   supply breadth and the external test; Eddie and one rater validate the
-   minimal pairs and a label sample (about 4 hours of work).
-2. Paper 2 to FAccT (deadline usually January) or CHI LBW: overnight runs
-   supply the larger audit; classifier validation needed.
-3. One ethics application covering E7 + the Paper 1 human study + Study 5,
-   to save a PREC cycle.
-4. Study 5 protocol paper after approval.
+1. Paper 3 (E11) is the new high-ceiling safety paper. Freeze codebook,
+   OSF, then paid model runs when Eddie authorises them.
+2. Paper 1 to TACL: overnight runs already supply breadth; Eddie and one
+   rater validate the minimal pairs.
+3. Paper 2 to FAccT or CHI LBW: classifier validation still needed.
+4. Study 5 protocol after PREC, about the live HUD.
 
 ## 4. Things that would weaken every paper, to avoid
 

@@ -1,9 +1,29 @@
 # Gloss: master plan
 
-> State at the 2026-10-25 restart and the interrupted job: see `docs/HANDOVER.md`.
+> State: `docs/HANDOVER.md`. Product spec: `docs/LIVE_BUILD.md`.
+> Safety paper: `docs/research/05_frontier_safety.md`.
 
 Working name kept from the October concept scenes. A gloss is a note in the
-margin that explains what a passage means. That is the product.
+margin that explains what a passage means.
+
+## Direction as of 2026-10-29 (Eddie)
+
+Eddie rejected paste-a-message as a product people would open, and
+rejected safety studies of Gloss as the publishable claim.
+
+1. **Product is Gloss Live** (`live/`): screen share of a Zoom / Teams /
+   Meet / video window, realtime HUD, three tabs (eye contact, turn
+   taking, emotion). Copy-paste Reflect in `app/` remains research
+   tooling for Papers 1-2.
+2. **Safety paper is E11**, a red-team of frontier models as social
+   intermediaries, not an eval of this codebase.
+3. Live eye-contact is a **camera target** on a video call (they see
+   you looking if you look at the webcam, not at their tile). It is not
+   a street-stare coach and not a score. Emotion is a hedged face-shape,
+   always paired with "a face is not a feeling". Workplace use is off.
+
+The 2026-10-24 "language first, faces last" recommendation below is
+kept as the *argument that was made*. It is no longer the build order.
 
 Owner: Eddie Bullock (ARC, Cambridge). Plan written 2026-10-24 by Claude,
 working autonomously from: the first-year report, the PREC application, the
@@ -50,39 +70,27 @@ glasses. Emteq's inward-facing sensing (the user's own arousal/load, relevant
 to alexithymia) is a better fit for the wearable than reading other people's
 faces, and it raises fewer legal problems.
 
-## 3. Product: three modes, built in this order
+## 3. Product, built in this order (updated 2026-10-29)
 
-1. **Reflect** (build now, the Study 5 core). Paste a message, an email, a chat
-   thread, or a short description of what happened. Gloss returns 2-4 possible
-   readings with how likely each seems, the cues each rests on, an honest
-   ambiguity rating ("most people would be unsure too"), and a way to check
-   ("you could ask: ..."). It does not rewrite the user's voice unless asked.
-   Added after the focus groups (`04_focus_groups.md`): an optional "your
-   reading first" step; "add your own reading", which Gloss weighs without
-   knowing it is the user's; private notes about a person, used as context;
-   opt-in ideas for replying with how each might land; and a reminder that
-   you can say no when someone pushes past a refusal.
-2. **Two-way** (build now, small). "How might they read *my* message?" The same
-   engine run on the user's own draft. It explains conventions as conventions,
-   not rules, and it suggests a sentence to explain your own style if you want
-   one. This is the double-empathy feature, and no competitor has it.
-3. **Live** (build second). A Chrome extension for web video calls. Tab audio is
-   the other person and the mic is the user. Captions, idiom/sarcasm glosses at
-   turn ends, a "floor is open" turn-taking cue, and an on-demand recap. Faces
-   are off by default and disabled in work settings for EU users. Used in the
-   lab only with consenting confederates until ethics allows more.
-4. **Wearable** (Study 6, with Emteq). The same event bus, with phone-hosted
-   models. Add inward sensing of the user's own state. The focus groups
-   preferred a phone, an earpiece, or a ring or wristband haptic to glasses.
-   Live cues default to a tap or one word, with detail after the moment.
+1. **Live** (build now). See `docs/LIVE_BUILD.md`. Screen share of the
+   call or video. Three tabs: where to look (camera marker), when to
+   speak, hedged face-shape. Chrome, local, 127.0.0.1. Lab only with
+   consenting confederates until PREC.
+2. **Wearable** (Study 6, with Emteq), later. Same cues, inward sensing
+   of the user's own state. Phone / earpiece / haptic preferred over
+   glasses in the focus groups.
+3. **Reflect / two-way** (built, not the product). Paste-a-message in
+   `app/` supports Papers 1-2. It is not what we ship to users.
 
-Fixed design rules (from the concept scenes, the research and calibrated deferral):
-- Hedged language ("possibly", "may"). Colour is always paired with a word. A
-  quiet mode, and an explainer card the user can show to others.
-- The tool never tells the user how to sit, look or seem. No eye-contact
-  coaching. No masking scripts unless the user explicitly asks. Never
-  suggests talking less about an interest (focus groups T9). A user can opt in
-  to a turn-taking reminder for themselves; it is never a default.
+Fixed design rules:
+- Hedged language ("possibly", "may"). Colour is always paired with a word.
+- Eye-contact tab: where the webcam is, so the other person can feel
+  looked-at. Never a score, never "you are doing this wrong", never
+  street-stare training. Users can ignore the tab.
+- Emotion tab: face-shape guess plus "a face is not a feeling". Off in
+  workplace / education settings (EU AI Act Art. 5(1)(f)).
+- No masking scripts. Never suggest talking less about an interest (T9).
+- Turn-taking is a floor cue and a timer, not a personality critique.
 - Not a lie detector. It reads what most people would take from the words, and
   treats kind white lies as kindness (T2).
 - It abstains when it is unsure, and abstaining counts as a feature in evaluation.
@@ -95,6 +103,7 @@ Fixed design rules (from the concept scenes, the research and calibrated deferra
 
 | ID | Question | Status |
 |---|---|---|
+| E11 | When frontier chat models are used as social intermediaries, how often do they miss a crisis referral, draft a scam-compliant reply, or coach past a no? Does an autistic-user persona change that? Independent of Gloss. | Protocol frozen 2026-10-29. Holdout sealed. No holdout scoring. Paid APIs need Eddie. |
 | E1 | Can free on-device LLMs read non-literal language at human level, and does their confidence track their own errors and human disagreement? (Hu et al. 2023 items with 374-person human data; MUStARD sarcasm) | Running. First signal: 4B models answering directly are well below humans, and their errors are mostly **literal readings**. |
 | E2 | Scaling and reasoning: what model size and mode reaches human level with calibrated deferral? Sets the minimum hardware for Study 5. | Next (8B local; larger needs CSD3 with Eddie's go-ahead). |
 | E3 | Selective prediction: with an abstain rule, what accuracy does the tool reach on the readings it does show, and at what coverage? This is the "calibrated deferral" headline. | From E1/E2 data. |

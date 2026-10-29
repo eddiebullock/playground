@@ -1,45 +1,42 @@
-# Handover, 2026-10-27 11:40 (E10 bands; check on demand)
+# Handover, 2026-10-29 (Live HUD + E11 protocol)
 
-For the next agent picking up Gloss. Read `AGENT_PROMPT.md`, `PLAN.md`,
-`docs/PUBLICATION_STRATEGY.md` and the `docs/DECISIONS.md` entries dated
-2026-10-25 to 2026-10-27 first. Overwrite this file when the work below
-is done.
+For the next agent. Read `docs/LIVE_BUILD.md`, `docs/research/05_frontier_safety.md`, then `docs/DECISIONS.md` 2026-10-29.
 
 ## Rules in force
-- PLAN.md section 7. No money, no paid APIs, no cluster, no licensed data,
-  nothing off the machine, no contacting people. Keep >= 5 GB free
-  (disk ~9 GB). Never kill other users' processes. No emojis.
+- No money, no paid APIs unless `E11_ALLOW_PAID=1`. Nothing off the machine
+  for call video. Keep >= 5 GB free. No emojis.
 - Repo `~/playground`, branch `es-vlm/setup`, remote
   `git@github-personal:eddiebullock/playground.git`. Commit only under
   `social_ai/gloss`. Trailer: `Co-Authored-By: Cursor Grok 4.6 <noreply@cursor.com>`.
-- Do not retune E9c/d/e or E10 even-half bands.
+- E9c/d/e frozen. E11 holdout frozen until OSF + `HOLD_OUT_RELEASED`.
 
 ## Environment
-- Ollama 127.0.0.1:11434; qwen3:8b. `cd app && npm test` (12 pass).
-- Me-mode abstain 0.4, clear 0.7. Them-mode 0.7 / 0.5.
-- Check question is on demand (`writeCheck`). Two-gate safety still runs
-  inside `reflect()`.
+- Product: `cd social_ai/gloss/live && npm run dev` then Chrome at
+  http://127.0.0.1:5174/ (tab audio).
+- Research tooling still at `social_ai/gloss/app` (Ollama qwen3:8b).
+- E11 harness: `experiments/e11_frontier_safety/run.ts`.
 
 ## Jobs
 None running.
 
 ## State
-- E9e pass, two-gate wired. Participants blocked on Eddie's note review.
-- E10 me-mode bands adopted (even FA 2/12).
-- On-demand check shipped. Latency on 10 E4 items was *slower* than v2
-  (done 36.7 s vs 25.4 s), likely two-gate in the same call.
+- Eddie pivoted: live HUD is the product; E11 is the safety paper.
+- `live/` has the three-tab HUD (screen share, camera marker, turn
+  meters, hedged emotion). Electron / system audio are not built.
+- E11 protocol, codebook, prompts, 36 dev + 36 sealed holdout items,
+  harness. Holdout not scored. No paid runs.
 
 ## What to do next, in order
-1. Eddie reviews `safety.ts` notes before any demo / Study 5.
-2. **Latency:** overlap or defer two-gate so readings appear before
-   safety notes, or cut two-gate questions. Pre-register before changing
-   when notes appear. Do not retune safety thresholds.
-3. Generation quality (white lies, metaphors) on odd/even E4 halves;
-   E4 even has been used once.
-4. Brief artifact still needs Eddie.
+1. Click through Gloss Live in Chrome on a Meet tab or a local video.
+   Fix capture, face boxes, camera marker, two-channel audio.
+2. Expand confirmatory items to 180 without scoring them. Hash the file.
+3. Eddie: OSF snapshot of `prereg.md`; API keys if he wants frontier
+   dry-runs on *dev* only.
+4. Do not recruit. Do not demo to participants.
 
 ## For Eddie
-- E9e passed. Please review Samaritans/999 notes.
-- Me-mode is less alarmist on short drafts. Check questions are optional.
-- Please update https://claude.ai/artifact/GapiXAWA8EJVYz6DAbuCCP
-  (snapshot `docs/brief_snapshot.html`).
+- Try http://127.0.0.1:5174/ in Chrome. Share a Meet *tab* (tick Share
+  audio) for turn-taking; a Zoom window is usually video-only.
+- E11 will not run against GPT/Claude/Gemini/Grok until you set keys
+  and `E11_ALLOW_PAID=1`. The protocol is ready for OSF.
+- Please file the OSF snapshot when you are happy with `prereg.md`.

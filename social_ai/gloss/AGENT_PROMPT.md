@@ -54,9 +54,10 @@ Repeat until the time box ends:
 - Participant and focus-group data never leaves the machine.
 - Never commit to `~/playground` (the parent repo) and never push anywhere.
 - No emojis in any output, code or docs.
-- Language: hedged and neuroaffirming. Gloss offers readings, never
-  corrections. It never coaches eye contact, body language or masking, and
-  the literal reading is always shown.
+- Language: hedged and neuroaffirming. The live eye-contact tab is a
+  camera target on a video call, not a score and not street-stare
+  training. Emotion is a face-shape guess; a face is not a feeling. No
+  masking. The old Reflect engine still always keeps a literal reading.
 
 ## Ask Eddie (record the question in PLAN.md section 9, then continue with something else)
 Spending, cluster jobs, licensed data, contacting anyone, publishing anything
