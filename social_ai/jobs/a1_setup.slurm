@@ -30,12 +30,23 @@ if [[ ! -x "${PREFIX}/bin/conda" ]]; then
 fi
 # shellcheck disable=SC1091
 source "${PREFIX}/etc/profile.d/conda.sh"
-if [[ ! -x "${SITE_PROJECT_ROOT}/conda/envs/scog/bin/python" ]]; then
-  conda create -y -p "${SITE_PROJECT_ROOT}/conda/envs/scog" python=3.11
+# Own env. Study A2 uses conda/envs/scog at Python 3.11, and the lock needs 3.12.
+ENV="${SITE_PROJECT_ROOT}/conda/envs/scog-a1"
+if ! "${ENV}/bin/python" -c 'import sys; raise SystemExit(0 if sys.version_info >= (3, 12) else 1)' 2>/dev/null; then
+  conda create -y -p "${ENV}" python=3.12
 fi
-conda activate "${SITE_PROJECT_ROOT}/conda/envs/scog"
+conda activate "${ENV}"
 pip install -r "${ROOT}/requirements.lock"
 pip install "vllm==0.8.5" "huggingface_hub==0.31.1"
+
+free_gb="$(quota -s | tr '\r' '\n' | awk '$3+0 > 100 && $3+0 < 5000 {free=$3-$2} END {if (free=="") exit 1; printf "%.1f", free}')"
+echo "free_gb_after_env=${free_gb}"
+python3 - << PY
+free = float("${free_gb}")
+if free < 20:
+    raise SystemExit("free project space is %.1f GB after the env install; refusing the 8B download" % free)
+print("free project space after the env install %.1f GB" % free)
+PY
 
 WEIGHTS="${SITE_PROJECT_ROOT}/weights/Qwen3-8B"
 if [[ ! -f "${WEIGHTS}/config.json" ]]; then

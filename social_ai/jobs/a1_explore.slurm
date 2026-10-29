@@ -14,7 +14,7 @@ export SCOG_EVAL_JOB=1
 source "${ROOT}/jobs/preamble.sh"
 # shellcheck disable=SC1091
 source "${SITE_PROJECT_ROOT}/conda/etc/profile.d/conda.sh"
-conda activate "${SITE_PROJECT_ROOT}/conda/envs/scog"
+conda activate "${SITE_PROJECT_ROOT}/conda/envs/scog-a1"
 export PYTHONPATH="${ROOT}/src"
 export SCOG_MODEL_PATH="${SITE_PROJECT_ROOT}/weights/Qwen3-8B"
 export SCOG_MANIFEST="${SITE_PROJECT_ROOT}/runs/a1/explore_manifest.jsonl"
