@@ -72,6 +72,8 @@ def test_confirmatory_split_is_locked_until_prereg():
     assert_split_allowed("exploratory")
     with pytest.raises(RuntimeError, match="locked"):
         assert_split_allowed("confirmatory")
+    with pytest.raises(RuntimeError, match="locked"):
+        assert_split_allowed("confirmatory", study="A1")
 
 
 def test_emotion_intensity_is_not_the_mean_rating():
