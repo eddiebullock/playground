@@ -4,6 +4,7 @@ import { emotionFromBlendshapes, type EmotionRead } from "../analysis/emotion.ts
 import { gazeFromBlendshapes, type GazeRead } from "../analysis/gaze.ts";
 import { emptyTurn, stepTurn, type TurnCue, type TurnMemory } from "../analysis/turntaking.ts";
 import { attachElementMeter, attachMeter, type Meter } from "./audio.ts";
+import { createSpeechRecorder, revokeClips, type Clip, type SpeechRecorder } from "./record.ts";
 import {
   shareCall,
   shareCamera,
@@ -76,6 +77,8 @@ export function useLive() {
   const [source, setSource] = useState<LiveSource>("none");
   const [error, setError] = useState("");
   const [snap, setSnap] = useState<LiveSnap>(idle);
+  const [clips, setClips] = useState<Clip[]>([]);
+  const [recording, setRecording] = useState(false);
   const callVideo = useRef<HTMLVideoElement | null>(null);
   const camVideo = useRef<HTMLVideoElement | null>(null);
   const callLm = useRef<FaceLandmarker | null>(null);
@@ -88,6 +91,10 @@ export function useLive() {
   const mem = useRef<TurnMemory>(emptyTurn);
   const lastTs = useRef(0);
   const lastUi = useRef(0);
+  const micRef = useRef<MediaStream | null>(null);
+  const rec = useRef<SpeechRecorder | null>(null);
+  const recStarted = useRef(0);
+  micRef.current = micStream;
 
   useEffect(() => {
     let gone = false;
@@ -138,6 +145,34 @@ export function useLive() {
       const you = youMeter.current?.tick() ?? idle.you;
       const stepped = stepTurn(mem.current, them.speaking, you.speaking, dt);
       mem.current = stepped.mem;
+      if (you.speaking && !rec.current && micRef.current) {
+        try {
+          rec.current = createSpeechRecorder(micRef.current);
+          recStarted.current = ts;
+          setRecording(true);
+        } catch {
+          rec.current = null;
+        }
+      }
+      if (!you.speaking && rec.current) {
+        const handle = rec.current;
+        rec.current = null;
+        setRecording(false);
+        const durationMs = Math.max(0, ts - recStarted.current);
+        void handle.stop().then((blob) => {
+          if (blob.size < 200) return;
+          const url = URL.createObjectURL(blob);
+          setClips((c) => [
+            ...c,
+            {
+              id: crypto.randomUUID(),
+              startedAt: new Date().toISOString(),
+              durationMs,
+              url,
+            },
+          ]);
+        });
+      }
       const callFaces = facesFrom(callLm.current, callVideo.current, ts);
       const userFaces = facesFrom(userLm.current, camVideo.current, ts);
       const other = largest(callFaces);
@@ -157,7 +192,13 @@ export function useLive() {
       }));
     };
     raf = requestAnimationFrame(loop);
-    return () => cancelAnimationFrame(raf);
+    return () => {
+      cancelAnimationFrame(raf);
+      if (rec.current) {
+        void rec.current.stop();
+        rec.current = null;
+      }
+    };
   }, []);
 
   const clearFile = useCallback(() => {
@@ -273,19 +314,32 @@ export function useLive() {
     }
   }, [micStream]);
 
+  const clearClips = useCallback(() => {
+    setClips((c) => {
+      revokeClips(c);
+      return [];
+    });
+  }, []);
+
   const stopAll = useCallback(() => {
+    if (rec.current) {
+      void rec.current.stop();
+      rec.current = null;
+    }
+    setRecording(false);
     stopStream(callStream);
     stopStream(camStream);
     stopStream(micStream);
     stopStream(fileTap.current);
     fileTap.current = null;
     clearFile();
+    clearClips();
     setCallStream(null);
     setCamStream(null);
     setMicStream(null);
     setSource("none");
     mem.current = emptyTurn;
-  }, [callStream, camStream, micStream, clearFile]);
+  }, [callStream, camStream, micStream, clearFile, clearClips]);
 
   return {
     snap,
@@ -306,6 +360,9 @@ export function useLive() {
     startCam,
     startMic,
     tapFileAudio,
+    clips,
+    recording,
+    clearClips,
     stopAll,
   };
 }

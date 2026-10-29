@@ -127,6 +127,9 @@ export default function App() {
             you={live.snap.you}
             callAudio={live.snap.callAudio}
             hasMic={Boolean(live.micStream)}
+            recording={live.recording}
+            clips={live.clips}
+            onClearClips={live.clearClips}
           />
         )}
         {tab === "emotion" && (

@@ -20,12 +20,21 @@ test("your turn accumulates a timer", () => {
   let mem = emptyTurn;
   const a = stepTurn(mem, false, true, 1000);
   mem = a.mem;
-  const b = stepTurn(mem, false, true, 29_000);
+  const b = stepTurn(mem, false, true, 11_000);
   assert.equal(b.cue.longYou, true);
-  assert.match(b.cue.headline, /a while/);
+  assert.match(b.cue.headline, /Too long/);
 });
 
 test("overlap", () => {
   const { cue } = stepTurn(emptyTurn, true, true, 100);
   assert.equal(cue.talk, "both");
+  assert.equal(cue.longYou, false);
+});
+
+test("too long still shows when they start over you", () => {
+  let mem = emptyTurn;
+  mem = stepTurn(mem, false, true, 12_000).mem;
+  const { cue } = stepTurn(mem, true, true, 100);
+  assert.equal(cue.longYou, true);
+  assert.match(cue.headline, /Too long/);
 });

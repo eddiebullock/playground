@@ -25,6 +25,8 @@ export const emptyTurn: TurnMemory = {
   lastNonSilence: "silence",
 };
 
+export const LONG_YOU_MS = 12_000;
+
 export function rmsToSpeech(rms: number, threshold: number): boolean {
   return rms >= threshold;
 }
@@ -41,7 +43,7 @@ export function stepTurn(
   themSpeech: boolean,
   youSpeech: boolean,
   dtMs: number,
-  longYouMs = 30_000,
+  longYouMs = 12_000,
   floorMs = 800,
 ): { mem: TurnMemory; cue: TurnCue } {
   let talk: Talker = "silence";
@@ -74,7 +76,7 @@ export function stepTurn(
   }
 
   const floorOpen = talk === "silence" && lastNonSilence === "them" && silenceMs >= floorMs;
-  const longYou = talk === "you" && youMs >= longYouMs;
+  const longYou = (talk === "you" || talk === "both") && youMs >= longYouMs;
 
   let headline = "Quiet";
   let detail = "No one is speaking.";
@@ -82,13 +84,13 @@ export function stepTurn(
     headline = "They are speaking";
     detail = `Hold. They have had the floor for ${clock(themMs)}.`;
   } else if (talk === "you") {
-    headline = longYou ? "You have been talking for a while" : "You are speaking";
+    headline = longYou ? "Too long" : "You are speaking";
     detail = longYou
-      ? `${clock(youMs)}. A pause would let them in.`
+      ? `${clock(youMs)}. Pause so they can come in.`
       : clock(youMs);
   } else if (talk === "both") {
-    headline = "You are both speaking";
-    detail = "They have started as well.";
+    headline = longYou ? "Too long" : "You are both speaking";
+    detail = longYou ? `${clock(youMs)}. Pause so they can come in.` : "They have started as well.";
   } else if (floorOpen) {
     headline = "Pause — you could start";
     detail = "They have stopped. A reply would fit here.";

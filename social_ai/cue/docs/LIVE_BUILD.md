@@ -30,7 +30,7 @@ Three tabs, nothing else in the first version:
 | Tab | Job | Input | Output (hedged) |
 |---|---|---|---|
 | **Eye contact** | Where to look so the other person *feels* looked-at on a video call | Call video + optional user camera + a draggable "camera is here" marker | A target on the physical webcam; "look here, not at their tile"; if the user camera is on, whether their gaze is toward the camera or toward the screen |
-| **Turn taking** | When to speak, and how long you have been speaking | Call audio = them, mic = you | THEY ARE SPEAKING / PAUSE, YOU COULD START / YOU ARE SPEAKING (timer) / BOTH / you have been talking for N seconds |
+| **Turn taking** | When to speak, and how long you have been speaking | Call audio = them, mic = you | THEY ARE SPEAKING / PAUSE / YOU ARE SPEAKING / TOO LONG after 12 s / recorded turns stay on this computer |
 | **Emotion** | A face-shape guess, never a feeling | Largest face in the call video, blendshapes | One or two words: Smile, Tense, Brows up, Open, Still. Always: faces are not feelings |
 
 The user can put Cue on a second monitor or in split view next to
@@ -74,6 +74,7 @@ live/
     session/meet.ts        Zoom / Teams invite parsing (pure)
     session/vision.ts      MediaPipe Face Landmarker (call + user)
     session/audio.ts       RMS / speech flags, two channels
+    session/record.ts      local MediaRecorder for your turns
     analysis/gaze.ts       camera-ward vs screen-ward (pure)
     analysis/turntaking.ts state machine (pure)
     analysis/emotion.ts    blendshape -> hedged label (pure)
@@ -123,8 +124,10 @@ microphone.
 1. `themSpeech` from display-audio RMS above threshold with 120 ms
    hangover. `youSpeech` from mic the same way.
 2. States: them, you, both, silence. Floor-open after ~800 ms silence
-   that followed them. Long-turn cue after 30 s of you (user-settable).
-3. Big words, a timer, two level meters. No transcript in v1.
+   that followed them. Too-long cue after 12 s of you. Your turn is
+   recorded locally while you are speaking.
+3. Big words, a timer bar, two level meters, and playback of saved
+   turns. No transcript in v1.
 
 ### Emotion
 1. Largest face in the call frame.
