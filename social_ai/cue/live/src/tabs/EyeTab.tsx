@@ -7,43 +7,43 @@ type Props = {
   hasCam: boolean;
   hasCall: boolean;
   hasFace: boolean;
+  blur: number;
+  onBlur: (n: number) => void;
 };
 
-export function EyeTab({ source, gaze, hasCam, hasCall, hasFace }: Props) {
+export function EyeTab({ source, gaze, hasCam, hasCall, hasFace, blur, onBlur }: Props) {
   const watching = source === "file";
   return (
     <section className="panel" aria-label="Eye contact">
       <h2>Where to look</h2>
+      <p className="lede">
+        The face stays sharp. Everything else is blurred so the look target is
+        obvious.
+      </p>
+      <p className="status">
+        {hasFace ? "Look at the clear face." : hasCall ? "No face in this frame yet." : "Open a video or share a call."}
+      </p>
+      <label className="blur-set">
+        Background blur
+        <input
+          type="range"
+          min={0}
+          max={24}
+          value={blur}
+          onChange={(e) => onBlur(Number(e.target.value))}
+          aria-valuemin={0}
+          aria-valuemax={24}
+          aria-valuenow={blur}
+        />
+        <span>{blur}</span>
+      </label>
       {watching ? (
-        <>
-          <p className="lede">
-            This is a recording. The boxes follow faces in the video as it
-            plays. The webcam ring is for live calls, not for watching a file.
-          </p>
-          <p className="status">
-            {hasFace ? "A face is in the picture." : hasCall ? "No face in this frame yet." : "Open a video with a visible face."}
-          </p>
-          <p className="detail">
-            If you are practising being on a call, share your camera and look
-            at the lens, not at the recording.
-          </p>
-        </>
+        <p className="detail">This is a recording. Look at the unblurred face in the picture.</p>
       ) : (
-        <>
-          <p className="lede">
-            On a video call they see you looking at them when you look at the
-            webcam, not when you look at their face on the screen.
-          </p>
-          <p className="status">
-            {hasCall && hasFace
-              ? "Look at the ring, not the tile."
-              : "Share Zoom, Teams, or another window, then drag the ring onto your webcam."}
-          </p>
-          <p className="detail">
-            Drag anywhere on the picture to put the camera marker where the
-            physical lens is (usually the top centre of a laptop).
-          </p>
-        </>
+        <p className="detail">
+          On a live call they still see you looking if you look at the webcam
+          ring, not only at their tile.
+        </p>
       )}
       {hasCam ? (
         <>

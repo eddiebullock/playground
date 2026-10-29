@@ -111,9 +111,9 @@ microphone.
 1. User shares the call window. The other person's tile is a face box.
 2. User drags a marker to the physical webcam (usually top-centre of
    the laptop).
-3. Overlay: a stable ring at that marker, labelled "they see you
-   looking if you look here". A faint line from the face-tile to the
-   marker.
+3. Overlay: the background is blurred; the face to look at stays
+   sharp. A blur slider sets how strong that is. On a live call, a
+   ring still marks the webcam.
 4. Optional "use my camera": Face Landmarker on the user. If
    `eyeLookDown` dominates, they are looking at the screen; if look
    vectors are near centre, camera-ward.

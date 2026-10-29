@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type PointerEvent } from "react";
 import type { FaceBox } from "../session/vision.ts";
 import type { LiveSource } from "../session/useLive.ts";
+import { FaceBlur } from "./FaceBlur.tsx";
 
 export type Marker = { x: number; y: number };
 
@@ -18,6 +19,8 @@ type Props = {
   onFilePlaying: (el: HTMLVideoElement) => void;
   showMarker: boolean;
   showFaces: boolean;
+  blur: number;
+  blurFace: boolean;
 };
 
 function clock(sec: number): string {
@@ -41,6 +44,8 @@ export function Stage({
   onFilePlaying,
   showMarker,
   showFaces,
+  blur,
+  blurFace,
 }: Props) {
   const stage = useRef<HTMLDivElement | null>(null);
   const drag = useRef(false);
@@ -130,10 +135,11 @@ export function Stage({
       >
         <video
           ref={(el) => { callVideo.current = el; }}
-          className="stage-video"
+          className={`stage-video${blurFace && blur > 0 ? " stage-video-under" : ""}`}
           playsInline
           muted={source !== "file"}
         />
+        <FaceBlur video={callVideo} faces={faces} blur={blur} active={blurFace && blur > 0} />
         {!hasPicture && (
           <div className="stage-empty">
             <p>Open a video file, or share a Zoom / Teams tab.</p>

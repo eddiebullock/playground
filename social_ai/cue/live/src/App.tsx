@@ -23,10 +23,20 @@ export default function App() {
   const [tab, setTab] = useState<TabId>("eye");
   const [marker, setMarker] = useState<Marker>(loadMarker);
   const [workplace, setWorkplace] = useState(false);
+  const [blur, setBlur] = useState(() => {
+    const raw = localStorage.getItem("cue.faceBlur");
+    if (raw == null || raw === "") return 12;
+    const n = Number(raw);
+    return Number.isFinite(n) ? Math.min(24, Math.max(0, n)) : 12;
+  });
 
   useEffect(() => {
     localStorage.setItem(MARK_KEY, JSON.stringify(marker));
   }, [marker]);
+
+  useEffect(() => {
+    localStorage.setItem("cue.faceBlur", String(blur));
+  }, [blur]);
 
   const hasPicture = Boolean(live.callStream || live.fileUrl);
   const hasFace = live.snap.callFaces.length > 0;
@@ -94,7 +104,9 @@ export default function App() {
           onMarker={setMarker}
           onFilePlaying={live.tapFileAudio}
           showMarker={tab === "eye"}
-          showFaces={tab !== "turn"}
+          showFaces={tab !== "turn" && !(tab === "eye" && blur > 0)}
+          blur={blur}
+          blurFace={tab === "eye"}
         />
         {tab === "eye" && (
           <EyeTab
@@ -103,6 +115,8 @@ export default function App() {
             hasCam={Boolean(live.camStream)}
             hasCall={hasPicture}
             hasFace={hasFace}
+            blur={blur}
+            onBlur={setBlur}
           />
         )}
         {tab === "turn" && (
