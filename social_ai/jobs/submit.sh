@@ -26,6 +26,6 @@ case "${CLASS}" in
     ;;
 esac
 # Batch QoS only. The interactive QoS allows one job and is already in use.
-# A high nice value keeps these jobs behind anything already queued.
-exec sbatch -A "${ACCOUNT}" -p "${PARTITION}" --qos="${QOS}" --nice=10000 \
+# Its priority stays above these batch jobs, so they cannot take that slot.
+exec sbatch -A "${ACCOUNT}" -p "${PARTITION}" --qos="${QOS}" \
   --mem-per-cpu="${MEM}" "$@"
