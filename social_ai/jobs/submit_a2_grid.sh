@@ -12,19 +12,21 @@ export A2_RUNS="${A2_ROOT}/runs"
 export A2_MAX_MINUTES=25
 mkdir -p "${SITE_PROJECT_ROOT}/logs" "${A2_RUNS}"
 
-PREP="$("${ROOT}/jobs/submit.sh" cpu "${ROOT}/jobs/prepare_a2.sh" \
+PREP="$("${ROOT}/jobs/submit.sh" cpu \
   --job-name="a2prep" \
   --cpus-per-task=8 \
   --output="${SITE_PROJECT_ROOT}/logs/%x_%j.out" \
-  --parsable)"
+  --parsable \
+  "${ROOT}/jobs/prepare_a2.sh")"
 echo "prepare_job ${PREP}"
 
-MMLU="$("${ROOT}/jobs/submit.sh" gpu "${ROOT}/jobs/mmlu_a2.sh" \
+MMLU="$("${ROOT}/jobs/submit.sh" gpu \
   --job-name="a2mmlu" \
   --dependency="afterok:${PREP}" \
   --output="${SITE_PROJECT_ROOT}/logs/%x_%j.out" \
   --export="ALL,A2_MMLU_TAG=before" \
-  --parsable)"
+  --parsable \
+  "${ROOT}/jobs/mmlu_a2.sh")"
 echo "mmlu_before_job ${MMLU}"
 
 while read -r run_id rank lr epochs chunks split; do
@@ -36,12 +38,13 @@ while read -r run_id rank lr epochs chunks split; do
   export A2_MAX_CHUNK="${chunks}"
   export A2_SPLIT="${split}"
   export A2_CHUNK=1
-  job="$("${ROOT}/jobs/submit.sh" gpu "${ROOT}/jobs/train_a2.sh" \
+  job="$("${ROOT}/jobs/submit.sh" gpu \
     --job-name="a2${run_id}" \
     --dependency="afterok:${PREP}" \
     --output="${SITE_PROJECT_ROOT}/logs/%x_%j.out" \
     --export="ALL" \
-    --parsable)"
+    --parsable \
+    "${ROOT}/jobs/train_a2.sh")"
   echo "train_job ${run_id} ${job}"
 done < <(python3 - "${ROOT}/configs/a2_grid.json" << 'PY'
 import json, sys

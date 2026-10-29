@@ -29,12 +29,13 @@ fi
 NEXT_JOB=""
 NEXT=$((A2_CHUNK + 1))
 if (( NEXT <= A2_MAX_CHUNK )); then
-  NEXT_JOB="$(A2_CHUNK="${NEXT}" "${ROOT}/jobs/submit.sh" gpu "${ROOT}/jobs/train_a2.sh" \
+  NEXT_JOB="$(A2_CHUNK="${NEXT}" "${ROOT}/jobs/submit.sh" gpu \
     --job-name="a2${A2_RUN_ID}" \
     --dependency="afterany:${SLURM_JOB_ID}" \
     --output="${SITE_PROJECT_ROOT}/logs/%x_%j.out" \
     --export="ALL" \
-    --parsable)"
+    --parsable \
+    "${ROOT}/jobs/train_a2.sh")"
   echo "next_chunk ${NEXT} job ${NEXT_JOB}"
 fi
 
@@ -87,11 +88,12 @@ PY
     export A2_MAX_CHUNK="200"
     export A2_RUN_ID="confirmatory"
     export A2_RUN_DIR="${A2_ROOT}/runs/confirmatory"
-    if ! "${ROOT}/jobs/submit.sh" gpu "${ROOT}/jobs/train_a2.sh" \
+    if ! "${ROOT}/jobs/submit.sh" gpu \
       --job-name="a2conf" \
       --output="${SITE_PROJECT_ROOT}/logs/%x_%j.out" \
       --export="ALL" \
-      --parsable; then
+      --parsable \
+      "${ROOT}/jobs/train_a2.sh"; then
       rmdir "${A2_ROOT}/confirmatory.lock" || true
       exit 1
     fi
