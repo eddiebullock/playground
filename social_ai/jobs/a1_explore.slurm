@@ -5,7 +5,8 @@
 #SBATCH --gres=gpu:1
 # One resumable chunk of the Qwen3-8B exploratory run. Local weights only.
 set -euo pipefail
-ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+# sbatch copies this script into a spool directory, so $0 is not the repo.
+ROOT="${SLURM_SUBMIT_DIR:?submit the job from the repo root}"
 # shellcheck disable=SC1091
 source "${ROOT}/local/site.sh"
 export SCOG_EVAL_JOB=1

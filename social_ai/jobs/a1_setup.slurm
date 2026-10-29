@@ -4,7 +4,8 @@
 #SBATCH --cpus-per-task=4
 # Open weights only. Downloads the public Qwen3-8B checkpoint. No hosted API.
 set -euo pipefail
-ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+# sbatch copies this script into a spool directory, so $0 is not the repo.
+ROOT="${SLURM_SUBMIT_DIR:?submit the job from the repo root}"
 # shellcheck disable=SC1091
 source "${ROOT}/local/site.sh"
 # shellcheck disable=SC1091
