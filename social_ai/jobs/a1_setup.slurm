@@ -11,15 +11,30 @@ source "${ROOT}/local/site.sh"
 # shellcheck disable=SC1091
 source "${ROOT}/jobs/preamble.sh"
 
-free_gb="$(quota -s | tr '\r' '\n' | awk '$3+0 > 100 && $3+0 < 5000 {free=$3-$2} END {if (free=="") exit 1; printf "%.1f", free}')"
-echo "free_gb=${free_gb}"
-python3 - << PY
+WEIGHTS="${SITE_PROJECT_ROOT}/weights/Qwen3-8B"
+need_download=0
+if [[ ! -f "${WEIGHTS}/config.json" ]]; then
+  need_download=1
+fi
+for shard in 00001 00002 00003 00004 00005; do
+  if [[ ! -f "${WEIGHTS}/model-${shard}-of-00005.safetensors" ]]; then
+    need_download=1
+  fi
+done
+
+if [[ "${need_download}" -eq 1 ]]; then
+  free_gb="$(quota -s | tr '\r' '\n' | awk '$3+0 > 100 && $3+0 < 5000 {free=$3-$2} END {if (free=="") exit 1; printf "%.1f", free}')"
+  echo "free_gb=${free_gb}"
+  python3 - << PY
 free = float("${free_gb}")
 # One 16 GB checkpoint plus about 8 GB for this env, and a little left under the quota.
 if free < 28:
     raise SystemExit("free project space is %.1f GB; refusing the 8B download" % free)
 print("free project space %.1f GB" % free)
 PY
+else
+  echo "Qwen3-8B already on disk; skipping the download"
+fi
 
 PREFIX="${SITE_PROJECT_ROOT}/conda"
 if [[ ! -x "${PREFIX}/bin/conda" ]]; then
@@ -49,17 +64,15 @@ if ! python -c 'import importlib.util, sys; ok = importlib.util.find_spec("vllm"
   rm -rf "${SITE_PROJECT_ROOT}/cache/conda-pkgs-a1"
 fi
 
-free_gb="$(quota -s | tr '\r' '\n' | awk '$3+0 > 100 && $3+0 < 5000 {free=$3-$2} END {if (free=="") exit 1; printf "%.1f", free}')"
-echo "free_gb_after_env=${free_gb}"
-python3 - << PY
+if [[ "${need_download}" -eq 1 ]]; then
+  free_gb="$(quota -s | tr '\r' '\n' | awk '$3+0 > 100 && $3+0 < 5000 {free=$3-$2} END {if (free=="") exit 1; printf "%.1f", free}')"
+  echo "free_gb_after_env=${free_gb}"
+  python3 - << PY
 free = float("${free_gb}")
 if free < 17:
     raise SystemExit("free project space is %.1f GB after the env install; refusing the 8B download" % free)
 print("free project space after the env install %.1f GB" % free)
 PY
-
-WEIGHTS="${SITE_PROJECT_ROOT}/weights/Qwen3-8B"
-if [[ ! -f "${WEIGHTS}/config.json" ]]; then
   mkdir -p "${SITE_PROJECT_ROOT}/weights"
   huggingface-cli download Qwen/Qwen3-8B --local-dir "${WEIGHTS}"
 fi
