@@ -2,7 +2,7 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-10-30 14:47 Europe/London
+**Updated:** 2026-10-30 15:00 Europe/London
 
 ## Current phase
 
@@ -22,11 +22,11 @@ Monitor CSD3 GPU jobs 39709579–39709584. Re-run the same gate with `layer_set=
 
 ## Next 5 actions
 
-1. When all-layer extracts complete, re-run `paper_v2.probe --layer_set all_layers` and lock Branch A/B.
+1. Official all-layer Phase 2 CPU jobs 39712190–92 wait on extracts (`afterok`); they lock Branch A/B when they finish.
 2. Full-N ablation (`ablate_full_n243`) after 39709579; Gemma L5 after 39709584.
 3. Phase 3 patching heatmap + label-subspace positive control (GPU, Qwen first).
 4. Option-order robustness evals once ampere has room.
-5. Draft methods from the frozen prereg; do not rewrite hypotheses.
+5. Expand `research/paper/methods_v1.md`; do not rewrite hypotheses.
 
 ## Running jobs
 
@@ -42,6 +42,9 @@ Do not cancel A1/A2/CAS jobs.
 | s3_act_molmo_all f4 | 39709582 PD (Priority) | same | 8h wall |
 | s3_act_qwen_all16 f16 | 39709583 PD (Priority) | same | 12h wall |
 | s3_ablate_gemma L5 n=243 | 39709584 PD (Priority) | same | 12h wall |
+| s3_p2_qwen all_layers | 39712190 PD (Dependency 39709580) icelake | same | after extract |
+| s3_p2_gemma all_layers | 39712191 PD (Dependency 39709581) icelake | same | after extract |
+| s3_p2_molmo all_layers | 39712192 PD (Dependency 39709582) icelake | same | after extract |
 
 Local CPU jobs finished. Stimulus CPU job 39709870 completed (243/243).
 
@@ -49,7 +52,9 @@ Local CPU jobs finished. Stimulus CPU job 39709870 completed (243/243).
 
 - Default branch: `main` (local checkout stale/dirty; do not use).
 - Integration branch: `paper-v2`.
-- Task branch: `p1-pipeline` (includes this session).
+- Task branch: `p1-pipeline` (tip `3b966ce` plus follow-up).
+- `origin/paper-v2` fast-forwarded to `p1-pipeline`.
+- `origin/main` merged via PR #26 (`92f6ff6`, 2026-10-30 14:58 UTC).
 - Tags: `v2-phase0`, `prereg-v1`.
 - Repo visibility: **public**.
 
