@@ -2,21 +2,22 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-10-30 14:00 Europe/London
+**Updated:** 2026-10-30 14:20 Europe/London
 
 ## Current phase
 
-Phase 0 complete pending git push. Next: Phase 1 (correctness + pipeline refactor). CPU-feasible work is unblocked. GPU work is blocked on CSD3 SSH.
+Phase 0 git wrap-up. Next after push/tag: Phase 1 (correctness + pipeline refactor). CPU-feasible work is unblocked. GPU work is blocked on CSD3 SSH.
 
 ## Task in progress
 
-None. Phase 0 locate / verify / reproduce finished locally.
+Merging `p0-locate-reproduce` into `paper-v2`, pushing, tagging `v2-phase0`.
 
 ## Last completed step
 
 - Located project at `/Users/eb2007/playground/bullpy/mr_eu_open_llm` (git root `/Users/eb2007/playground`, remote `eddiebullock/playground`).
 - Reproduced headline numbers from cached eval/stats/mech JSON and axis `.npy` files via `research/scripts/reproduce_headline_numbers.py`.
 - Wrote research scaffold, compute map, reproduction report, decisions, needs-input, results registry, phase-0 review, digest.
+- Commit `2e2af355a4c4c776d2b9675aa4a5b55c56fc44c8` on `p0-locate-reproduce`.
 
 ## Running jobs
 
@@ -37,8 +38,8 @@ None.
 ## Branch / git
 
 - Default branch: `main` (local is 11 commits behind `origin/main`; those commits are Study A1/A2, not this project).
-- Integration branch: `paper-v2` (to be created from `origin/main`).
-- Task branch: `p0-locate-reproduce`.
+- Integration branch: `paper-v2` (created from `origin/main` at `90e7a86`).
+- Task branch: `p0-locate-reproduce` @ `2e2af35`.
 - Repo visibility: **public**.
 
 ## Blockers (non-idle)

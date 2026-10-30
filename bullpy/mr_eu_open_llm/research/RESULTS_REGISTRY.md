@@ -4,7 +4,7 @@ Every paper number must trace to a script, a commit, and an output file. No esti
 
 Status key: **verified** = recomputed or read from the named file this session; **read-only** = copied from a saved analysis JSON without rerunning the analysis that produced it; **missing** = brief/docs mention it, no file.
 
-Commit hash to be filled after the Phase 0 commit.
+Phase 0 snapshot commit: `2e2af355a4c4c776d2b9675aa4a5b55c56fc44c8` (`p0-locate-reproduce`).
 
 | claim | value | status | script | output file | notes |
 |---|---|---|---|---|---|
