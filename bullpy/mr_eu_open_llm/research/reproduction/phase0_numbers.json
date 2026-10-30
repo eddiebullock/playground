@@ -1,0 +1,473 @@
+{
+  "n_brief": 243,
+  "chance": 0.16666666666666666,
+  "accuracy": {
+    "qwen3vl": {
+      "source": "results/baseline/eu_emotions/qwen3vl/eval_v2_eu_emotions_qwen3vl_video_only_seed42.json",
+      "n_scored": 243,
+      "n_correct": 92,
+      "accuracy": 0.3786008230452675,
+      "accuracy_pct_1dp": 37.9,
+      "stored_p_binom_gt_chance": 2.2529144061822715e-15,
+      "recomputed_p_binom_gt_chance": 2.2529144061822707e-15,
+      "p_match_stored": true,
+      "wilson_ci_95": [
+        0.3199522767101488,
+        0.44102790756733234
+      ],
+      "above_chance_alpha_05": true,
+      "matches_brief_1dp": true,
+      "seed": 42,
+      "n_options": 6,
+      "chance_level": 0.16666666666666666,
+      "protocol_version": "v2-study3-full-eu-6afc",
+      "condition": "video_only",
+      "stage2_prompt_mode_field": "4afc",
+      "mean_forced_choice_entropy": 0.17868813647729728,
+      "created_at_utc": "2026-08-13T00:35:55.858474+00:00",
+      "slurm_job_id": "33520827"
+    },
+    "gemma4": {
+      "source": "results/baseline/eu_emotions/gemma4/eval_v2_eu_emotions_gemma4_video_only_seed42.json",
+      "n_scored": 243,
+      "n_correct": 76,
+      "accuracy": 0.31275720164609055,
+      "accuracy_pct_1dp": 31.3,
+      "stored_p_binom_gt_chance": 1.5418048786037994e-08,
+      "recomputed_p_binom_gt_chance": 1.541804878603798e-08,
+      "p_match_stored": true,
+      "wilson_ci_95": [
+        0.25776185860603434,
+        0.37358045951686053
+      ],
+      "above_chance_alpha_05": true,
+      "matches_brief_1dp": true,
+      "seed": 42,
+      "n_options": 6,
+      "chance_level": 0.16666666666666666,
+      "protocol_version": "v2-study3-full-eu-6afc",
+      "condition": "video_only",
+      "stage2_prompt_mode_field": "4afc",
+      "mean_forced_choice_entropy": 0.6764988701663599,
+      "created_at_utc": "2026-07-31T21:06:31.759528+00:00",
+      "slurm_job_id": "32447858"
+    },
+    "molmo2": {
+      "source": "results/baseline/eu_emotions/molmo2/eval_v2_eu_emotions_molmo2_video_only_seed42.json",
+      "n_scored": 243,
+      "n_correct": 48,
+      "accuracy": 0.19753086419753085,
+      "accuracy_pct_1dp": 19.8,
+      "stored_p_binom_gt_chance": 0.11554654230151935,
+      "recomputed_p_binom_gt_chance": 0.11554654230151924,
+      "p_match_stored": true,
+      "wilson_ci_95": [
+        0.15234815114847874,
+        0.25212790120388984
+      ],
+      "above_chance_alpha_05": false,
+      "matches_brief_1dp": true,
+      "seed": 42,
+      "n_options": 6,
+      "chance_level": 0.16666666666666666,
+      "protocol_version": "v2-study3-full-eu-6afc",
+      "condition": "video_only",
+      "stage2_prompt_mode_field": "4afc",
+      "mean_forced_choice_entropy": 1.3562900414497678,
+      "created_at_utc": "2026-07-31T21:29:23.659568+00:00",
+      "slurm_job_id": "32447860"
+    }
+  },
+  "entropy_alignment": {
+    "gemma4": {
+      "source": "results/stats/rq1_1b_entropy_alignment.json",
+      "n": 243,
+      "stored_spearman_rho": 0.11724630621919127,
+      "recomputed_spearman_rho": 0.11724630621919127,
+      "recomputed_p": 0.06806701082786343,
+      "matches_brief_3dp": true,
+      "significant_alpha_05": false
+    },
+    "molmo2": {
+      "source": "results/stats/rq1_1b_entropy_alignment.json",
+      "n": 243,
+      "stored_spearman_rho": -0.0344232402583643,
+      "recomputed_spearman_rho": -0.0344232402583643,
+      "recomputed_p": 0.5933438614458105,
+      "matches_brief_3dp": true,
+      "significant_alpha_05": false
+    },
+    "qwen3vl": {
+      "source": "results/stats/rq1_1b_entropy_alignment.json",
+      "n": 243,
+      "stored_spearman_rho": -0.0013253211000191954,
+      "recomputed_spearman_rho": -0.0013253211000191954,
+      "recomputed_p": 0.9836020786799202,
+      "matches_brief_3dp": true,
+      "significant_alpha_05": false
+    }
+  },
+  "human_calibration": {
+    "gemma4": {
+      "source": "results/stats/human_calibration.json",
+      "high_consensus_acc": 0.5061728395061729,
+      "mid_acc": 0.30864197530864196,
+      "low_consensus_acc": 0.12345679012345678,
+      "n_per_tercile": 81,
+      "high_vs_low_p": 1.5702995141463587e-07,
+      "p_lt_1e-4": true,
+      "p_lt_0.05": true
+    },
+    "molmo2": {
+      "source": "results/stats/human_calibration.json",
+      "high_consensus_acc": 0.345679012345679,
+      "mid_acc": 0.14814814814814814,
+      "low_consensus_acc": 0.09876543209876543,
+      "n_per_tercile": 81,
+      "high_vs_low_p": 0.00015705228423075119,
+      "p_lt_1e-4": false,
+      "p_lt_0.05": true
+    },
+    "qwen3vl": {
+      "source": "results/stats/human_calibration.json",
+      "high_consensus_acc": 0.5432098765432098,
+      "mid_acc": 0.38271604938271603,
+      "low_consensus_acc": 0.20987654320987653,
+      "n_per_tercile": 81,
+      "high_vs_low_p": 1.1966312512879397e-05,
+      "p_lt_1e-4": true,
+      "p_lt_0.05": true
+    }
+  },
+  "probe_rsa": {
+    "qwen3vl": {
+      "source": "results/mech/qwen3vl_confusability_probe_rsa.json",
+      "n_trials": 243,
+      "layers": [
+        {
+          "layer": 4,
+          "n_trials": 243,
+          "probe_confusability_rho": 0.5197684972624679,
+          "probe_human_entropy_rho": 0.5013466764627486,
+          "rsa_human_confusion_rho": -0.07913318779238063,
+          "rsa_human_confusion_p_perm": 0.044977511244377814,
+          "has_difficulty_matched": false
+        },
+        {
+          "layer": 13,
+          "n_trials": 243,
+          "probe_confusability_rho": 0.49766613416583516,
+          "probe_human_entropy_rho": 0.5159763372993242,
+          "rsa_human_confusion_rho": -0.07610848883796038,
+          "rsa_human_confusion_p_perm": 0.05547226386806597,
+          "has_difficulty_matched": false
+        },
+        {
+          "layer": 26,
+          "n_trials": 243,
+          "probe_confusability_rho": 0.5192570853117493,
+          "probe_human_entropy_rho": 0.456812894976002,
+          "rsa_human_confusion_rho": -0.0558915733958236,
+          "rsa_human_confusion_p_perm": 0.14392803598200898,
+          "has_difficulty_matched": false
+        }
+      ],
+      "probe_conf_range": [
+        0.49766613416583516,
+        0.5197684972624679
+      ],
+      "probe_entropy_range": [
+        0.456812894976002,
+        0.5159763372993242
+      ],
+      "rsa_range": [
+        -0.07913318779238063,
+        -0.0558915733958236
+      ]
+    },
+    "gemma4": {
+      "source": "results/mech/gemma4_confusability_probe_rsa.json",
+      "n_trials": 243,
+      "layers": [
+        {
+          "layer": 5,
+          "n_trials": 243,
+          "probe_confusability_rho": 0.5075481351628767,
+          "probe_human_entropy_rho": 0.4825199680695299,
+          "rsa_human_confusion_rho": -0.018732275235250097,
+          "rsa_human_confusion_p_perm": 0.6431784107946027,
+          "has_difficulty_matched": false
+        },
+        {
+          "layer": 15,
+          "n_trials": 243,
+          "probe_confusability_rho": 0.56039375796256,
+          "probe_human_entropy_rho": 0.5013654935535176,
+          "rsa_human_confusion_rho": -0.01861894504156993,
+          "rsa_human_confusion_p_perm": 0.6101949025487257,
+          "has_difficulty_matched": false
+        },
+        {
+          "layer": 31,
+          "n_trials": 243,
+          "probe_confusability_rho": 0.4667045939735981,
+          "probe_human_entropy_rho": 0.4413456645214175,
+          "rsa_human_confusion_rho": 0.003388503972684565,
+          "rsa_human_confusion_p_perm": 0.9235382308845578,
+          "has_difficulty_matched": false
+        }
+      ],
+      "probe_conf_range": [
+        0.4667045939735981,
+        0.56039375796256
+      ],
+      "probe_entropy_range": [
+        0.4413456645214175,
+        0.5013654935535176
+      ],
+      "rsa_range": [
+        -0.018732275235250097,
+        0.003388503972684565
+      ]
+    },
+    "molmo2": {
+      "source": "results/mech/molmo2_confusability_probe_rsa.json",
+      "n_trials": 243,
+      "layers": [
+        {
+          "layer": 4,
+          "n_trials": 243,
+          "probe_confusability_rho": 0.5139660833391881,
+          "probe_human_entropy_rho": 0.46914645258118126,
+          "rsa_human_confusion_rho": 0.014707462853473855,
+          "rsa_human_confusion_p_perm": 0.679160419790105,
+          "has_difficulty_matched": false
+        },
+        {
+          "layer": 12,
+          "n_trials": 243,
+          "probe_confusability_rho": 0.5294154912960557,
+          "probe_human_entropy_rho": 0.45372271051415186,
+          "rsa_human_confusion_rho": -0.013788627337272171,
+          "rsa_human_confusion_p_perm": 0.719640179910045,
+          "has_difficulty_matched": false
+        },
+        {
+          "layer": 23,
+          "n_trials": 243,
+          "probe_confusability_rho": 0.6105455820815163,
+          "probe_human_entropy_rho": 0.5315179998018398,
+          "rsa_human_confusion_rho": 0.02682227274531775,
+          "rsa_human_confusion_p_perm": 0.4427786106946527,
+          "has_difficulty_matched": false
+        }
+      ],
+      "probe_conf_range": [
+        0.5139660833391881,
+        0.6105455820815163
+      ],
+      "probe_entropy_range": [
+        0.45372271051415186,
+        0.5315179998018398
+      ],
+      "rsa_range": [
+        -0.013788627337272171,
+        0.02682227274531775
+      ]
+    }
+  },
+  "axes": {
+    "source_json": "results/mech/qwen3vl_eu_causal_axes_layer4.json",
+    "source_npy_glob": "results/mech/axis_*_qwen3vl_layer4.npy",
+    "hidden_dim": 4096,
+    "json_axis_alignment_conf_vs_entropy": 0.9500855207443237,
+    "npy_cos_conf_vs_entropy": 0.950085461139679,
+    "npy_cos_pair_vs_entropy": {
+      "pair_bored_unfriendly": 0.47746914625167847,
+      "pair_interested_kind": 0.6521544456481934,
+      "pair_disappointed_worried": -0.5270310044288635,
+      "random": -0.030853256583213806
+    },
+    "npy_abs_cos_pair_vs_entropy": {
+      "pair_bored_unfriendly": 0.47746914625167847,
+      "pair_interested_kind": 0.6521544456481934,
+      "pair_disappointed_worried": 0.5270310044288635
+    },
+    "pair_own_vs_rest": [
+      {
+        "pair": "pair_bored_unfriendly",
+        "n_pair_trials": 8,
+        "own_effect_pair_vs_rest": 0.584475040435791
+      },
+      {
+        "pair": "pair_interested_kind",
+        "n_pair_trials": 7,
+        "own_effect_pair_vs_rest": 0.5281553268432617
+      },
+      {
+        "pair": "pair_disappointed_worried",
+        "n_pair_trials": 13,
+        "own_effect_pair_vs_rest": 0.7962431907653809
+      }
+    ],
+    "json_has_entanglement_vs_entropy_field": false,
+    "json_has_difficulty_matched_control_pairs": false
+  },
+  "steer": {
+    "source_csv": "results/mech/steer_summary_qwen3vl_layer4.csv",
+    "source_json": "results/mech/steer_summary_qwen3vl_layer4.json",
+    "n_trials": 36,
+    "n_samples": 5,
+    "layer": 4,
+    "hook_module": "model.language_model.layers.4",
+    "mean_delta_js_by_axis_alpha": [
+      {
+        "axis": "confusability",
+        "alpha": -1.0,
+        "mean_delta_js_human": -0.0067785092252484,
+        "n_trials": 36
+      },
+      {
+        "axis": "confusability",
+        "alpha": 1.0,
+        "mean_delta_js_human": 0.0146505453760194,
+        "n_trials": 36
+      },
+      {
+        "axis": "entropy",
+        "alpha": -1.0,
+        "mean_delta_js_human": 0.0161604808480932,
+        "n_trials": 36
+      },
+      {
+        "axis": "entropy",
+        "alpha": 1.0,
+        "mean_delta_js_human": 0.005865906551575,
+        "n_trials": 36
+      },
+      {
+        "axis": "pair_bored_unfriendly",
+        "alpha": -1.0,
+        "mean_delta_js_human": 0.0058334756745973,
+        "n_trials": 36
+      },
+      {
+        "axis": "pair_bored_unfriendly",
+        "alpha": 1.0,
+        "mean_delta_js_human": 0.050012680617079,
+        "n_trials": 36
+      },
+      {
+        "axis": "pair_disappointed_worried",
+        "alpha": -1.0,
+        "mean_delta_js_human": 0.0389768746573031,
+        "n_trials": 36
+      },
+      {
+        "axis": "pair_disappointed_worried",
+        "alpha": 1.0,
+        "mean_delta_js_human": 0.0218883465335354,
+        "n_trials": 36
+      },
+      {
+        "axis": "pair_interested_kind",
+        "alpha": -1.0,
+        "mean_delta_js_human": 0.0324824225469715,
+        "n_trials": 36
+      },
+      {
+        "axis": "pair_interested_kind",
+        "alpha": 1.0,
+        "mean_delta_js_human": 0.0294548177838651,
+        "n_trials": 36
+      },
+      {
+        "axis": "random",
+        "alpha": -1.0,
+        "mean_delta_js_human": 0.0323557945600815,
+        "n_trials": 36
+      },
+      {
+        "axis": "random",
+        "alpha": 1.0,
+        "mean_delta_js_human": 0.0131061555236421,
+        "n_trials": 36
+      }
+    ]
+  },
+  "human_meta": {
+    "source": "data/eu_emotions_human_entropy.json",
+    "modality": "Face",
+    "n_matched": 243,
+    "n_human_items_available": 249,
+    "source_workbook": "eu_emotions_oreilly_item_level.xlsx",
+    "n_actors_from_filename": 17,
+    "actor_counts": {
+      "B": 15,
+      "C": 17,
+      "D": 14,
+      "E": 11,
+      "F": 12,
+      "G": 15,
+      "H": 14,
+      "I": 15,
+      "J": 15,
+      "K": 13,
+      "L": 9,
+      "M": 14,
+      "N": 13,
+      "O": 17,
+      "P": 17,
+      "R": 16,
+      "S": 16
+    },
+    "grouped_cv_by_actor_possible": true
+  },
+  "activation_cache": {
+    "qwen3vl": {
+      "extract_meta": "/Users/eb2007/playground/bullpy/mr_eu_open_llm/results/activations/baseline_qwen3vl_6afc/qwen3vl/extract_meta.json",
+      "n_trials": 243,
+      "pooling": "last_token",
+      "saved_layers": [
+        4,
+        13,
+        26
+      ],
+      "max_frames": 4,
+      "n_npy_files_local": 0,
+      "activations_present_locally": false
+    },
+    "gemma4": {
+      "extract_meta": "/Users/eb2007/playground/bullpy/mr_eu_open_llm/results/activations/baseline_gemma4_6afc/gemma4/extract_meta.json",
+      "n_trials": 243,
+      "pooling": "last_token",
+      "saved_layers": [
+        5,
+        15,
+        31
+      ],
+      "max_frames": 4,
+      "n_npy_files_local": 0,
+      "activations_present_locally": false
+    },
+    "molmo2": {
+      "extract_meta": "/Users/eb2007/playground/bullpy/mr_eu_open_llm/results/activations/baseline_molmo2_6afc/molmo2/extract_meta.json",
+      "n_trials": 243,
+      "pooling": "last_token",
+      "saved_layers": [
+        4,
+        12,
+        23
+      ],
+      "max_frames": 4,
+      "n_npy_files_local": 0,
+      "activations_present_locally": false
+    }
+  },
+  "missing": {
+    "difficulty_matched_rsa_in_probe_json": false,
+    "causal_ablation_result_files": [],
+    "frame_policy_ablation_dir_exists": true,
+    "note": "results/ablation/ is the frame-policy / modality ablation, not the axis mean-projection causal test. No qwen3vl_eu_ablation_layer4.json is present locally."
+  }
+}

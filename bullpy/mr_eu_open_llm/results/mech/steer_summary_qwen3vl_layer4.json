@@ -1,0 +1,40 @@
+{
+  "alphas": [
+    -1.0,
+    1.0
+  ],
+  "axes": [
+    "confusability",
+    "entropy",
+    "random",
+    "pair_bored_unfriendly",
+    "pair_interested_kind",
+    "pair_disappointed_worried"
+  ],
+  "csv": "/rds/user/eb2007/hpc-work/study3/results/mech/steer_trials_qwen3vl_layer4.csv",
+  "hook_module": "model.language_model.layers.4",
+  "layer": 4,
+  "model": "qwen3vl",
+  "n_samples": 5,
+  "n_trials": 36,
+  "pair_specs": [
+    {
+      "label_a": "Bored",
+      "label_b": "Unfriendly"
+    },
+    {
+      "label_a": "Interested",
+      "label_b": "Kind"
+    },
+    {
+      "label_a": "Disappointed",
+      "label_b": "Worried"
+    }
+  ],
+  "patch_modes": [
+    "last_token"
+  ],
+  "readout_note": "Negative mean_delta_js_human = model soft label moved closer to human distribution. Compare own pair vs other pair deltas for reuse.",
+  "status": "ok",
+  "summary_csv": "/rds/user/eb2007/hpc-work/study3/results/mech/steer_summary_qwen3vl_layer4.csv"
+}

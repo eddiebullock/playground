@@ -1,0 +1,57 @@
+{
+  "activations_dir": "results/activations/baseline_qwen3vl_6afc/qwen3vl",
+  "layers": [
+    {
+      "layer": 4,
+      "n_trials": 243,
+      "probe_confusability_rho": 0.5197684972624679,
+      "probe_human_entropy_rho": 0.5013466764627486,
+      "rsa_human_confusion_p_perm": 0.044977511244377814,
+      "rsa_human_confusion_rho": -0.07913318779238063
+    },
+    {
+      "layer": 13,
+      "n_trials": 243,
+      "probe_confusability_rho": 0.49766613416583516,
+      "probe_human_entropy_rho": 0.5159763372993242,
+      "rsa_human_confusion_p_perm": 0.05547226386806597,
+      "rsa_human_confusion_rho": -0.07610848883796038
+    },
+    {
+      "layer": 26,
+      "n_trials": 243,
+      "probe_confusability_rho": 0.5192570853117493,
+      "probe_human_entropy_rho": 0.456812894976002,
+      "rsa_human_confusion_p_perm": 0.14392803598200898,
+      "rsa_human_confusion_rho": -0.0558915733958236
+    }
+  ],
+  "model": "qwen3vl",
+  "n_layers": 3,
+  "n_trials": 243,
+  "peak_probe_confusability_layer": {
+    "layer": 4.0,
+    "n_trials": 243.0,
+    "probe_confusability_rho": 0.5197684972624679,
+    "probe_human_entropy_rho": 0.5013466764627486,
+    "rsa_human_confusion_p_perm": 0.044977511244377814,
+    "rsa_human_confusion_rho": -0.07913318779238063
+  },
+  "peak_probe_entropy_layer": {
+    "layer": 13.0,
+    "n_trials": 243.0,
+    "probe_confusability_rho": 0.49766613416583516,
+    "probe_human_entropy_rho": 0.5159763372993242,
+    "rsa_human_confusion_p_perm": 0.05547226386806597,
+    "rsa_human_confusion_rho": -0.07610848883796038
+  },
+  "peak_rsa_layer": {
+    "layer": 4.0,
+    "n_trials": 243.0,
+    "probe_confusability_rho": 0.5197684972624679,
+    "probe_human_entropy_rho": 0.5013466764627486,
+    "rsa_human_confusion_p_perm": 0.044977511244377814,
+    "rsa_human_confusion_rho": -0.07913318779238063
+  },
+  "status": "ok"
+}
