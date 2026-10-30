@@ -57,6 +57,14 @@ Non-trivial decisions. Date, decision, alternatives, why. Do not rewrite history
 - **Alternatives:** Use LOO as the gate (matches the pilot script); re-run nested CV on every bootstrap sample.
 - **Why:** Actor leakage was flagged as the critical confound. GCV and prediction-pair bootstrap keep ≥1,000 permutations tractable on CPU. Permutation refits use dual Ridge with α frozen from full-sample GCV (the observed ρ still uses nested GCV per fold).
 
+## 2026-10-30 — Phase 2 3-layer run: would-be A, not locked
+
+- **Decision:** Do not lock Branch A. Record an exploratory would-be A from Qwen L26 and Gemma L15. Re-apply the identical rule on the all-layer extract before the paper commits to a branch. Molmo’s passing layers are completeness only (not above chance).
+- **Numbers (grouped-by-actor T1, 1000 perms, 2000 bootstrap, stimulus = actor one-hot + n_frames + last_frame + luminance + motion + duration):** Qwen L26 ρ = 0.440, p_Holm = 0.003, Δρ vs stim = 0.303 (CI 0.148–0.449). Gemma L15 ρ = 0.328, p_Holm = 0.003, Δρ = 0.190 (CI 0.021–0.360). Qwen L4/L13 fail Holm or Δρ. Gemma L31 fails the category-residual CI. File: `research/reproduction/phase2_gate.json`.
+- **Category residual is often negative.** The pre-registered check is “CI excludes 0”, two-sided. Passing layers satisfy it with ρ ≈ −0.13 to −0.15. That means the positive T1 signal is largely between emotion categories. Do not rewrite the rule after seeing the sign.
+- **LOO > grouped** (Qwen L4 0.39 vs 0.19): actor leakage is real; grouped CV is the right gate statistic.
+- **Why not lock:** Preregistration: “Pilot 3-layer last-token probes are exploratory and do not decide the branch.” Holm over 3 layers is more lenient than Holm over all layers.
+
 ## 2026-10-30 — Phase 5: 1−p_target and human entropy are almost the same target
 
 - **Decision:** Treat the two scalar targets as entangled by construction. Spearman ρ(1−p_target, human entropy) = 0.954 on the 243 EU items. Simulated probes with that correlation have cosine ≈ 0.95; observed entropy vs confusability probe cosines are 0.78–0.83, i.e. *below* the Gaussian null, not above it. Partial RSA controlling an entropy-difference RDM stays near the raw RSA (still ~0).

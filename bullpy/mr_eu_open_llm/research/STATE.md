@@ -2,30 +2,31 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-10-30 14:10 Europe/London
+**Updated:** 2026-10-30 14:47 Europe/London
 
 ## Current phase
 
-Phase 1 complete enough to run confirmatory analyses. Preregistration frozen (`prereg-v1`). Phase 2 protocol is running on the cached 3-layer last-token activations (exploratory; does not lock Branch A/B). GPU jobs for all-layer extract and full-N ablation are queued on CSD3.
+Phase 2 protocol has been applied to the pilot 3-layer last-token cache. Outcome is **exploratory would-be Branch A**; the branch is **not locked**. GPU all-layer extracts and full-N ablation are still queued on CSD3. Phase 3 waits for those.
 
 ## Task in progress
 
-Local CPU: Phase 2 nested-CV probes + Phase 5 entanglement null. HPC: monitor GPU jobs; CPU stimulus-feature extract.
+Monitor CSD3 GPU jobs 39709579–39709584. Re-run the same gate with `layer_set=all_layers` when extracts land.
 
 ## Last completed step
 
-- Six CSD3 GPU jobs submitted via ControlMaster (all PD / Priority).
-- Phase 2 library: nested Ridge, actor-grouped CV, Holm, bootstrap, four baselines, option-order interface, entanglement null.
-- Tests 24/24 (conda `mr_eu_open_llm`, no pytest binary; functions invoked directly).
-- n=36 ablation and difficulty-matched RSA verified from pulled files.
+- Phase 2 confirmatory protocol on 3-layer last-token activations (`research/reproduction/phase2_gate.json`). Qwen L26 and Gemma L15 pass the four-check rule; Molmo also matches the statistics but is not above chance so it cannot support H1. Branch not locked.
+- Phase 5: ρ(1−p_target, H_human) = 0.954; probe cosines sit below the Gaussian null.
+- H2: model-output entropy vs human entropy bootstrap CIs all include 0.
+- Stimulus features 243/243 (job 39709870).
+- Six GPU jobs still PD (Priority). Option-order GPU jobs not submitted.
 
 ## Next 5 actions
 
-1. Finish local Phase 2 run; log would-be branch as exploratory in `DECISIONS.md`.
-2. Pull stimulus features when the CPU job finishes; re-score the stimulus baseline if luminance/motion add anything.
-3. When all-layer extracts complete, re-run the same gate with `layer_set=all_layers` and lock Branch A/B.
-4. Full-N ablation (`ablate_full_n243`) after job 39709579.
-5. Option-order GPU evals only after the current ampere queue drains.
+1. When all-layer extracts complete, re-run `paper_v2.probe --layer_set all_layers` and lock Branch A/B.
+2. Full-N ablation (`ablate_full_n243`) after 39709579; Gemma L5 after 39709584.
+3. Phase 3 patching heatmap + label-subspace positive control (GPU, Qwen first).
+4. Option-order robustness evals once ampere has room.
+5. Draft methods from the frozen prereg; do not rewrite hypotheses.
 
 ## Running jobs
 
@@ -41,15 +42,14 @@ Do not cancel A1/A2/CAS jobs.
 | s3_act_molmo_all f4 | 39709582 PD (Priority) | same | 8h wall |
 | s3_act_qwen_all16 f16 | 39709583 PD (Priority) | same | 12h wall |
 | s3_ablate_gemma L5 n=243 | 39709584 PD (Priority) | same | 12h wall |
-| cas_r2 (unrelated) | 39707124 R gpu-q-8 | — | leave running |
-| s3_stim_feat (CPU) | 39709870 R cpu-q-162 | `logs/study3_stim_*` | ~minutes |
-| local Phase 2 probes | conda `mr_eu_open_llm` | `research/logs/phase2_gate.log` | after Phase 5 |
+
+Local CPU jobs finished. Stimulus CPU job 39709870 completed (243/243).
 
 ## Branch / git
 
 - Default branch: `main` (local checkout stale/dirty; do not use).
 - Integration branch: `paper-v2`.
-- Task branch: `p1-pipeline` (HEAD `a438754` plus this session).
+- Task branch: `p1-pipeline` (includes this session).
 - Tags: `v2-phase0`, `prereg-v1`.
 - Repo visibility: **public**.
 

@@ -37,6 +37,13 @@ Phase 0 snapshot commit: `2e2af355a4c4c776d2b9675aa4a5b55c56fc44c8` (`p0-locate-
 | Probe cosine entropy vs 1−p (Qwen L4) | obs 0.808 vs null 0.955 | verified | same | same | n_sim = 100; obs below Gaussian null |
 | Partial RSA vs entropy RDM (Qwen L4) | raw −0.079, partial −0.061 | verified | same | same | still near zero |
 
+| Phase 2 Qwen L26 grouped T1 ρ | 0.440, boot CI [0.317, 0.540], p_Holm = 0.003 | verified | `paper_v2.probe` | `research/reproduction/phase2_gate.json` | exploratory 3-layer cache; passes gate |
+| Phase 2 Gemma L15 grouped T1 ρ | 0.328, boot CI [0.200, 0.442], p_Holm = 0.003 | verified | same | same | exploratory; passes gate |
+| Phase 2 stimulus baseline T1 ρ | 0.138 | verified | same | same | actor + duration/luminance/motion |
+| Phase 2 would-be branch | A (not locked) | verified | same | same | Molmo excluded from H1 |
+| H2 output entropy CIs include 0 | Qwen [−0.121, 0.120]; Gemma [−0.013, 0.235]; Molmo [−0.154, 0.097] | verified | `paper_v2.behaviour` | `research/reproduction/behaviour_summary.json` | confirmatory H2 |
+
 Dump of the Phase 0 recompute: `research/reproduction/phase0_numbers.json`.
+Phase 2 dump: `research/reproduction/phase2_gate.json`.
 Phase 5 dump: `research/reproduction/phase5_entanglement.json`.
 Stimulus features (HPC job 39709870): `research/reproduction/stimulus_features.json` (243/243 ok).
