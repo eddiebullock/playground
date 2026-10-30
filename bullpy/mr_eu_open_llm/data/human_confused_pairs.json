@@ -1,0 +1,658 @@
+{
+  "label_pair_confusion": [
+    {
+      "aggregate_foil_mass": 4.413165022165022,
+      "example_trial_ids": [
+        "emotions/EDITED/Unfriendly/NF25_cut.mp4",
+        "emotions/EDITED/Unfriendly/RF25_cut.mp4",
+        "emotions_2/EDITED/Unfriendly/BF25v1_cut.mp4",
+        "emotions_2/EDITED/Unfriendly/FF25_cut.mp4",
+        "emotions_2/EDITED/Unfriendly/GF25_cut.mp4"
+      ],
+      "label_a": "Bored",
+      "label_b": "Unfriendly",
+      "n_items": 8
+    },
+    {
+      "aggregate_foil_mass": 3.4410814410814408,
+      "example_trial_ids": [
+        "emotions_32/EDITED/Kind/DF24_cut.mp4",
+        "emotions_32/EDITED/Kind/PF24_cut.mp4",
+        "emotions_33/EDITED/Kind/NF24_cut.mp4",
+        "emotions_34/EDITED/Kind/LF24_cut.mp4",
+        "emotions_36/EDITED/Kind/BF24_cut.mp4"
+      ],
+      "label_a": "Interested",
+      "label_b": "Kind",
+      "n_items": 7
+    },
+    {
+      "aggregate_foil_mass": 2.7080620910620916,
+      "example_trial_ids": [
+        "emotions/EDITED/Worried/BF22_cut.mp4",
+        "emotions/EDITED/Worried/DF22_cut.mp4",
+        "emotions/EDITED/Worried/FF22_cut.mp4",
+        "emotions/EDITED/Worried/HF22_cut.mp4",
+        "emotions/EDITED/Worried/JF22_cut.mp4"
+      ],
+      "label_a": "Disappointed",
+      "label_b": "Worried",
+      "n_items": 13
+    },
+    {
+      "aggregate_foil_mass": 2.658521493521493,
+      "example_trial_ids": [
+        "emotions_29/EDITED/Jealous/MF11_cut.mp4",
+        "emotions_29/EDITED/Jealous/OF11_cut.mp4",
+        "emotions_29/EDITED/Jealous/SF11_cut.mp4",
+        "emotions_31/EDITED/Jealous/CF11_cut.mp4",
+        "emotions_31/EDITED/Jealous/GF11_cut.mp4"
+      ],
+      "label_a": "Disappointed",
+      "label_b": "Jealous",
+      "n_items": 6
+    },
+    {
+      "aggregate_foil_mass": 2.496031121031121,
+      "example_trial_ids": [
+        "emotions_4/EDITED/Hurt/MF10_cut.mp4",
+        "emotions_37/EDITED/Hurt/SF10 v1_cut.mp4",
+        "emotions_38/EDITED/Hurt/OF10_cut.mp4",
+        "emotions_38/EDITED/Hurt/SF10 v2_cut.mp4",
+        "emotions_39/EDITED/Hurt/CF10v1_cut.mp4"
+      ],
+      "label_a": "Hurt",
+      "label_b": "Worried",
+      "n_items": 10
+    },
+    {
+      "aggregate_foil_mass": 1.975822020822021,
+      "example_trial_ids": [
+        "emotions_4/EDITED/Happy Low Intensity/SF2_cut.mp4",
+        "emotions_6/EDITED/Happy/IF1_cut.mp4",
+        "emotions_6/EDITED/Happy/OF1_cut.mp4",
+        "emotions_6/EDITED/Happy Low Intensity/CF2_cut.mp4",
+        "emotions_6/EDITED/Happy Low Intensity/GF2_cut.mp4"
+      ],
+      "label_a": "Happy",
+      "label_b": "Interested",
+      "n_items": 9
+    },
+    {
+      "aggregate_foil_mass": 1.7525663515663517,
+      "example_trial_ids": [
+        "emotions_18/EDITED/Disappointed/KF9_cut.mp4",
+        "emotions_23/EDITED/Disappointed/SF9 v1_cut.mp4",
+        "emotions_26/EDITED/Disappointed/OF9_cut.mp4",
+        "emotions_46/EDITED/Disappointed/IF9_cut.mp4",
+        "emotions_52/EDITED/Disappointed/SF9 v2_cut.mp4"
+      ],
+      "label_a": "Bored",
+      "label_b": "Disappointed",
+      "n_items": 5
+    },
+    {
+      "aggregate_foil_mass": 1.7369570429570431,
+      "example_trial_ids": [
+        "emotions_6/EDITED/Disgusted/CF5_cut.mp4",
+        "emotions_6/EDITED/Disgusted/GF5_cut.mp4",
+        "emotions_6/EDITED/Disgusted/KF5_cut.mp4",
+        "emotions_6/EDITED/Disgusted/MF5_cut.mp4",
+        "emotions_17/EDITED/Disgusted Low Intensity/GF6_cut.mp4"
+      ],
+      "label_a": "Disgusted",
+      "label_b": "Sad",
+      "n_items": 11
+    },
+    {
+      "aggregate_foil_mass": 1.683101645101645,
+      "example_trial_ids": [
+        "emotions_7/EDITED/Interested/BF21.mp4",
+        "emotions_7/EDITED/Interested/HF21_cut.mp4",
+        "emotions_7/EDITED/Interested/JF21v1_cut.mp4",
+        "emotions_7/EDITED/Interested/JF21v2_cut.mp4",
+        "emotions_7/EDITED/Interested/NF21v2_cut.mp4"
+      ],
+      "label_a": "Disappointed",
+      "label_b": "Interested",
+      "n_items": 10
+    },
+    {
+      "aggregate_foil_mass": 1.50410045010045,
+      "example_trial_ids": [
+        "emotions_30/EDITED/Neutral/NF28_cut.mp4",
+        "emotions_30/EDITED/Neutral/RF28_cut.mp4",
+        "emotions_31/EDITED/Neutral/SF14_cut.mp4",
+        "emotions_32/EDITED/Neutral/DF28_cut.mp4",
+        "emotions_33/EDITED/Neutral/CF14_cut.mp4"
+      ],
+      "label_a": "Bored",
+      "label_b": "Neutral",
+      "n_items": 17
+    },
+    {
+      "aggregate_foil_mass": 1.4509397049397053,
+      "example_trial_ids": [
+        "emotions_11/EDITED/Afraid/CF3_cut.mp4",
+        "emotions_17/EDITED/Afraid/MF3_cut.mp4",
+        "emotions_17/EDITED/Afraid Low Intensity/IF4_cut.mp4",
+        "emotions_22/EDITED/Afraid Low Intensity/IF4v2_cut.mp4",
+        "emotions_22/EDITED/Afraid Low Intensity/MF4_cut.mp4"
+      ],
+      "label_a": "Afraid",
+      "label_b": "Ashamed",
+      "n_items": 14
+    },
+    {
+      "aggregate_foil_mass": 1.3885804195804194,
+      "example_trial_ids": [
+        "emotions_29/EDITED/Proud/FF27_cut.mp4",
+        "emotions_29/EDITED/Proud/LF27_cut.mp4",
+        "emotions_31/EDITED/Proud/NF27_cut.mp4",
+        "emotions_34/EDITED/Proud/DF27_cut.mp4",
+        "emotions_34/EDITED/Proud/JF27_cut.mp4"
+      ],
+      "label_a": "Excited",
+      "label_b": "Proud",
+      "n_items": 7
+    },
+    {
+      "aggregate_foil_mass": 1.0309120879120879,
+      "example_trial_ids": [
+        "emotions_13/EDITED/Bored/CF8_cut(1).mp4",
+        "emotions_23/EDITED/Bored/CF8_cut.mp4",
+        "emotions_23/EDITED/Bored/GF8_cut.mp4",
+        "emotions_23/EDITED/Bored/MF8_cut.mp4",
+        "emotions_51/EDITED/Bored/KF8_cut.mp4"
+      ],
+      "label_a": "Bored",
+      "label_b": "Frustrated",
+      "n_items": 8
+    },
+    {
+      "aggregate_foil_mass": 1.007808191808192,
+      "example_trial_ids": [
+        "emotions_6/EDITED/Frustrated/JF23_cut.mp4",
+        "emotions_6/EDITED/Frustrated/RF23 v1_cut.mp4",
+        "emotions_11/EDITED/Frustrated/BF23_cut.mp4",
+        "emotions_11/EDITED/Frustrated/FF23_cut.mp4",
+        "emotions_11/EDITED/Frustrated/HF23v1_cut.mp4"
+      ],
+      "label_a": "Frustrated",
+      "label_b": "Sad",
+      "n_items": 8
+    },
+    {
+      "aggregate_foil_mass": 0.9846233766233767,
+      "example_trial_ids": [
+        "emotions_30/EDITED/Proud/BF27v1_cut.mp4",
+        "emotions_30/EDITED/Proud/RF27_cut.mp4",
+        "emotions_34/EDITED/Proud/BF27v2_cut.mp4",
+        "emotions_34/EDITED/Proud/HF27_cut.mp4",
+        "emotions_36/EDITED/Interested/FF21_cut.mp4"
+      ],
+      "label_a": "Interested",
+      "label_b": "Proud",
+      "n_items": 5
+    },
+    {
+      "aggregate_foil_mass": 0.9506323676323678,
+      "example_trial_ids": [
+        "emotions_2/EDITED/Surprised/PF19v1_cut.mp4",
+        "emotions_5/EDITED/Surprised/FF19_cut.mp4",
+        "emotions_5/EDITED/Surprised/JF19_cut.mp4",
+        "emotions_31/EDITED/Surprised Low Intensity/RF20 v2_cut.mp4",
+        "emotions_34/EDITED/Surprised/DF19_cut.mp4"
+      ],
+      "label_a": "Surprised",
+      "label_b": "Worried",
+      "n_items": 8
+    },
+    {
+      "aggregate_foil_mass": 0.9466046046046045,
+      "example_trial_ids": [
+        "emotions_11/EDITED/Ashamed/EF13_cut.mp4",
+        "emotions_11/EDITED/Ashamed/GF13_cut.mp4",
+        "emotions_11/EDITED/Ashamed/SF13_cut.mp4",
+        "emotions_36/EDITED/Ashamed/IF13_cut.mp4"
+      ],
+      "label_a": "Ashamed",
+      "label_b": "Disappointed",
+      "n_items": 4
+    },
+    {
+      "aggregate_foil_mass": 0.9095674325674326,
+      "example_trial_ids": [
+        "emotions_4/EDITED/Sneaky/BF26v2_cut.mp4",
+        "emotions_5/EDITED/Sneaky/NF26_cut.mp4",
+        "emotions_5/EDITED/Sneaky/PF26v1_cut.mp4",
+        "emotions_5/EDITED/Sneaky/RF26_cut.mp4",
+        "emotions_37/EDITED/Sneaky/BF26v1_cut.mp4"
+      ],
+      "label_a": "Ashamed",
+      "label_b": "Sneaky",
+      "n_items": 6
+    },
+    {
+      "aggregate_foil_mass": 0.8962002002002001,
+      "example_trial_ids": [
+        "emotions_4/EDITED/Angry Low Intensity/NF18_cut.mp4",
+        "emotions_6/EDITED/Angry/RF17_cut.mp4",
+        "emotions_11/EDITED/Angry/NF17_cut.mp4",
+        "emotions_51/EDITED/Angry Low Intensity/HF18_cut.mp4"
+      ],
+      "label_a": "Angry",
+      "label_b": "Disgusted",
+      "n_items": 4
+    },
+    {
+      "aggregate_foil_mass": 0.8936353646353645,
+      "example_trial_ids": [
+        "emotions_6/EDITED/Excited/EF7_cut.mp4",
+        "emotions_6/EDITED/Excited/GF7_cut.mp4",
+        "emotions_6/EDITED/Excited/IF7_cut.mp4",
+        "emotions_6/EDITED/Excited/MF7_cut.mp4",
+        "emotions_7/EDITED/Excited/SF7_cut.mp4"
+      ],
+      "label_a": "Excited",
+      "label_b": "Joking",
+      "n_items": 6
+    },
+    {
+      "aggregate_foil_mass": 0.8817882117882118,
+      "example_trial_ids": [
+        "emotions_4/EDITED/Angry/JF17_cut.mp4",
+        "emotions_11/EDITED/Angry/DF17_cut.mp4",
+        "emotions_11/EDITED/Angry/PF17_cut.mp4",
+        "emotions_21/EDITED/Angry Low Intensity/PF18_cut.mp4",
+        "emotions_23/EDITED/Angry Low Intensity/FF18_cut.mp4"
+      ],
+      "label_a": "Angry",
+      "label_b": "Jealous",
+      "n_items": 8
+    },
+    {
+      "aggregate_foil_mass": 0.7735694305694306,
+      "example_trial_ids": [
+        "emotions_6/EDITED/Ashamed/KF13_cut.mp4",
+        "emotions_11/EDITED/Ashamed/Of13_cut.mp4",
+        "emotions_22/EDITED/Ashamed/CF13_cut.mp4",
+        "emotions_38/EDITED/Ashamed/MF13_cut.mp4"
+      ],
+      "label_a": "Ashamed",
+      "label_b": "Worried",
+      "n_items": 4
+    },
+    {
+      "aggregate_foil_mass": 0.6406883116883116,
+      "example_trial_ids": [
+        "emotions_33/EDITED/Kind/RF24_cut.mp4",
+        "emotions_36/EDITED/Kind/FF24_cut.mp4"
+      ],
+      "label_a": "Kind",
+      "label_b": "Proud",
+      "n_items": 2
+    },
+    {
+      "aggregate_foil_mass": 0.6133143143143143,
+      "example_trial_ids": [
+        "emotions_2/EDITED/Unfriendly/BF25v2_cut.mp4",
+        "emotions_29/EDITED/Unfriendly/JF25_cut.mp4"
+      ],
+      "label_a": "Hurt",
+      "label_b": "Unfriendly",
+      "n_items": 2
+    },
+    {
+      "aggregate_foil_mass": 0.5829400599400599,
+      "example_trial_ids": [
+        "emotions_4/EDITED/Sneaky/FF26_cut.mp4",
+        "emotions_4/EDITED/Sneaky/HF26_cut.mp4",
+        "emotions_5/EDITED/Sneaky/PF26v2_cut.mp4",
+        "emotions_33/EDITED/Sneaky/LF26_cut.mp4",
+        "emotions_37/EDITED/Sneaky/Df26_cut.mp4"
+      ],
+      "label_a": "Kind",
+      "label_b": "Sneaky",
+      "n_items": 5
+    },
+    {
+      "aggregate_foil_mass": 0.524,
+      "example_trial_ids": [
+        "emotions_31/EDITED/Jealous/KF11_cut.mp4"
+      ],
+      "label_a": "Disgusted",
+      "label_b": "Jealous",
+      "n_items": 1
+    },
+    {
+      "aggregate_foil_mass": 0.5017102897102897,
+      "example_trial_ids": [
+        "emotions_3/EDITED/Sad/RF15_cut.mp4",
+        "emotions_5/EDITED/Sad/FF15_cut.mp4",
+        "emotions_5/EDITED/Sad/NF15_cut.mp4",
+        "emotions_5/EDITED/Sad Low Intensity/HF16_cut.mp4",
+        "emotions_5/EDITED/Sad Low Intensity/PF16_cut.mp4"
+      ],
+      "label_a": "Afraid",
+      "label_b": "Sad",
+      "n_items": 9
+    },
+    {
+      "aggregate_foil_mass": 0.44302504902504897,
+      "example_trial_ids": [
+        "emotions_6/EDITED/Happy/GF1_cut.mp4",
+        "emotions_6/EDITED/Happy/KF1_cut.mp4",
+        "emotions_6/EDITED/Happy/MF1_cut.mp4",
+        "emotions_33/EDITED/Surprised Low Intensity/FF20_cut.mp4",
+        "emotions_34/EDITED/Surprised/BF19_cut.mp4"
+      ],
+      "label_a": "Happy",
+      "label_b": "Surprised",
+      "n_items": 8
+    },
+    {
+      "aggregate_foil_mass": 0.38407207207207206,
+      "example_trial_ids": [
+        "emotions_13/EDITED/Disgusted Low Intensity/OF6v2_cut.mp4",
+        "emotions_43/EDITED/Disgusted Low Intensity/SF6 v1_cut.mp4",
+        "emotions_51/EDITED/Disgusted Low Intensity/OF6v1_cut.mp4"
+      ],
+      "label_a": "Afraid",
+      "label_b": "Disgusted",
+      "n_items": 3
+    },
+    {
+      "aggregate_foil_mass": 0.30492507492507487,
+      "example_trial_ids": [
+        "emotions_5/EDITED/Surprised/RF19_cut.mp4",
+        "emotions_31/EDITED/Surprised/NF19_cut.mp4",
+        "emotions_33/EDITED/Surprised Low Intensity/DF20_cut.mp4",
+        "emotions_35/EDITED/Surprised Low Intensity/BF20_cut.mp4"
+      ],
+      "label_a": "Bored",
+      "label_b": "Surprised",
+      "n_items": 4
+    },
+    {
+      "aggregate_foil_mass": 0.29602902902902906,
+      "example_trial_ids": [
+        "emotions_5/EDITED/Sad/DF15_cut.mp4",
+        "emotions_5/EDITED/Sad Low Intensity/DF16_cut.mp4",
+        "emotions_34/EDITED/Sad Low Intensity/JF16_cut.mp4",
+        "emotions_34/EDITED/Sad Low Intensity/RF16 v2_cut.mp4"
+      ],
+      "label_a": "Jealous",
+      "label_b": "Sad",
+      "n_items": 4
+    },
+    {
+      "aggregate_foil_mass": 0.29116016016016016,
+      "example_trial_ids": [
+        "emotions_6/EDITED/Excited/CF7_cut.mp4",
+        "emotions_39/EDITED/Excited/OF7v1_cut.mp4",
+        "emotions_39/EDITED/Excited/OF7v2_cut.mp4"
+      ],
+      "label_a": "Excited",
+      "label_b": "Interested",
+      "n_items": 3
+    },
+    {
+      "aggregate_foil_mass": 0.24982817182817185,
+      "example_trial_ids": [
+        "emotions_11/EDITED/Angry/HF17v1_cut.mp4",
+        "emotions_35/EDITED/Angry Low Intensity/BF18_cut.mp4"
+      ],
+      "label_a": "Angry",
+      "label_b": "Surprised",
+      "n_items": 2
+    },
+    {
+      "aggregate_foil_mass": 0.22922922922922923,
+      "example_trial_ids": [
+        "emotions_21/EDITED/Bored/EF8_cut.mp4"
+      ],
+      "label_a": "Bored",
+      "label_b": "Hurt",
+      "n_items": 1
+    },
+    {
+      "aggregate_foil_mass": 0.195,
+      "example_trial_ids": [
+        "emotions_17/EDITED/Afraid Low Intensity/KF4_cut.mp4",
+        "emotions_35/EDITED/Afraid/GF3_cut.mp4"
+      ],
+      "label_a": "Afraid",
+      "label_b": "Disappointed",
+      "n_items": 2
+    },
+    {
+      "aggregate_foil_mass": 0.17190809190809192,
+      "example_trial_ids": [
+        "emotions_36/EDITED/Joking/GF12_cut.mp4",
+        "emotions_36/EDITED/Joking/IF12_cut.mp4",
+        "emotions_36/EDITED/Joking/MF12_cut.mp4",
+        "emotions_38/EDITED/Joking/CF12_cut.mp4"
+      ],
+      "label_a": "Interested",
+      "label_b": "Joking",
+      "n_items": 4
+    },
+    {
+      "aggregate_foil_mass": 0.14789310689310692,
+      "example_trial_ids": [
+        "emotions_6/EDITED/Disgusted/IF5_cut.mp4",
+        "emotions_6/EDITED/Disgusted/OF5_cut.mp4",
+        "emotions_51/EDITED/Disgusted Low Intensity/IF6_cut.mp4"
+      ],
+      "label_a": "Disgusted",
+      "label_b": "Frustrated",
+      "n_items": 3
+    },
+    {
+      "aggregate_foil_mass": 0.14195410395410396,
+      "example_trial_ids": [
+        "emotions_6/EDITED/Frustrated/LF23_cut.mp4",
+        "emotions_11/EDITED/Frustrated/DF23_cut.mp4",
+        "emotions_11/EDITED/Frustrated/HF23v2_cut.mp4"
+      ],
+      "label_a": "Frustrated",
+      "label_b": "Jealous",
+      "n_items": 3
+    },
+    {
+      "aggregate_foil_mass": 0.070988023988024,
+      "example_trial_ids": [
+        "emotions_4/EDITED/Joking/OF12v1_cut.mp4",
+        "emotions_5/EDITED/Joking/OF12v2_cut.mp4",
+        "emotions_36/EDITED/Joking/EF12_cut.mp4",
+        "emotions_36/EDITED/Joking/KF12_cut.mp4"
+      ],
+      "label_a": "Joking",
+      "label_b": "Kind",
+      "n_items": 4
+    },
+    {
+      "aggregate_foil_mass": 0.03397104292912676,
+      "example_trial_ids": [
+        "emotions_5/EDITED/Surprised/LF19_cut.mp4",
+        "emotions_30/EDITED/Surprised/PF19v2_cut.mp4",
+        "emotions_31/EDITED/Surprised Low Intensity/RF20 v1_cut.mp4"
+      ],
+      "label_a": "Joking",
+      "label_b": "Surprised",
+      "n_items": 3
+    },
+    {
+      "aggregate_foil_mass": 0.013013013013013013,
+      "example_trial_ids": [
+        "emotions_36/EDITED/Happy/CF1_cut.mp4"
+      ],
+      "label_a": "Angry",
+      "label_b": "Happy",
+      "n_items": 1
+    },
+    {
+      "aggregate_foil_mass": 0.012,
+      "example_trial_ids": [
+        "emotions_37/EDITED/Joking/SF12_cut.mp4"
+      ],
+      "label_a": "Joking",
+      "label_b": "Proud",
+      "n_items": 1
+    }
+  ],
+  "n_trials": 243,
+  "nearest_item_pairs": [
+    {
+      "js_distance": 0.0,
+      "trial_id_a": "emotions_13/EDITED/Bored/CF8_cut(1).mp4",
+      "trial_id_b": "emotions_23/EDITED/Bored/CF8_cut.mp4"
+    },
+    {
+      "js_distance": 0.00014536865637637675,
+      "trial_id_a": "emotions_17/EDITED/Afraid Low Intensity/IF4_cut.mp4",
+      "trial_id_b": "emotions_34/EDITED/Proud/JF27v2_cut.mp4"
+    },
+    {
+      "js_distance": 0.00015320187958423048,
+      "trial_id_a": "emotions_31/EDITED/Sad/JF15_cut.mp4",
+      "trial_id_b": "emotions_38/EDITED/Hurt/OF10_cut.mp4"
+    },
+    {
+      "js_distance": 0.0002942686842288822,
+      "trial_id_a": "emotions_11/EDITED/Angry/PF17_cut.mp4",
+      "trial_id_b": "emotions_34/EDITED/Neutral/KF14_cut.mp4"
+    },
+    {
+      "js_distance": 0.0004136688366997987,
+      "trial_id_a": "emotions_6/EDITED/Happy/KF1_cut.mp4",
+      "trial_id_b": "emotions_30/EDITED/Neutral/NF28_cut.mp4"
+    },
+    {
+      "js_distance": 0.0005698244203813374,
+      "trial_id_a": "emotions_4/EDITED/Joking/OF12v1_cut.mp4",
+      "trial_id_b": "emotions_6/EDITED/Disgusted/OF5_cut.mp4"
+    },
+    {
+      "js_distance": 0.000615664932411164,
+      "trial_id_a": "emotions_4/EDITED/Happy Low Intensity/SF2_cut.mp4",
+      "trial_id_b": "emotions_34/EDITED/Neutral/PF28_cut.mp4"
+    },
+    {
+      "js_distance": 0.0006796573288738728,
+      "trial_id_a": "emotions_6/EDITED/Excited/EF7_cut.mp4",
+      "trial_id_b": "emotions_6/EDITED/Happy/KF1_cut.mp4"
+    },
+    {
+      "js_distance": 0.0008631862583570182,
+      "trial_id_a": "emotions_5/EDITED/Joking/OF12v2_cut.mp4",
+      "trial_id_b": "emotions_35/EDITED/Surprised Low Intensity/HF20_cut.mp4"
+    },
+    {
+      "js_distance": 0.0009829294867813587,
+      "trial_id_a": "emotions_30/EDITED/Neutral/RF28_cut.mp4",
+      "trial_id_b": "emotions_34/EDITED/Neutral/PF28_cut.mp4"
+    },
+    {
+      "js_distance": 0.0009930151281878352,
+      "trial_id_a": "emotions_4/EDITED/Angry/JF17_cut.mp4",
+      "trial_id_b": "emotions_33/EDITED/Neutral/CF14_cut.mp4"
+    },
+    {
+      "js_distance": 0.001045619254000485,
+      "trial_id_a": "emotions_31/EDITED/Sad/BF15_cut.mp4",
+      "trial_id_b": "emotions_38/EDITED/Frustrated/NF23_cut.mp4"
+    },
+    {
+      "js_distance": 0.001126800780184567,
+      "trial_id_a": "emotions/EDITED/Worried/NF22_cut.mp4",
+      "trial_id_b": "emotions_36/EDITED/Interested/FF21_cut.mp4"
+    },
+    {
+      "js_distance": 0.001128654694184661,
+      "trial_id_a": "emotions_39/EDITED/Hurt/EF10_cut.mp4",
+      "trial_id_b": "emotions_57/EDITED/Disappointed/MF9_cut.mp4"
+    },
+    {
+      "js_distance": 0.0011655412381514907,
+      "trial_id_a": "emotions_11/EDITED/Angry/DF17_cut.mp4",
+      "trial_id_b": "emotions_40/EDITED/Afraid Low Intensity/CF4_cut.mp4"
+    },
+    {
+      "js_distance": 0.0012261512456461787,
+      "trial_id_a": "emotions_3/EDITED/Sad/RF15_cut.mp4",
+      "trial_id_b": "emotions_31/EDITED/Sad Low Intensity/RF16 v1_cut.mp4"
+    },
+    {
+      "js_distance": 0.0012615263694897294,
+      "trial_id_a": "emotions_31/EDITED/Surprised Low Intensity/RF20 v1_cut.mp4",
+      "trial_id_b": "emotions_38/EDITED/Joking/CF12_cut.mp4"
+    },
+    {
+      "js_distance": 0.0013195285573601723,
+      "trial_id_a": "emotions_6/EDITED/Happy Low Intensity/IF2_cut.mp4",
+      "trial_id_b": "emotions_68/EDITED/Bored/SF8_cut.mp4"
+    },
+    {
+      "js_distance": 0.0013761897571384907,
+      "trial_id_a": "emotions_30/EDITED/Neutral/NF28_cut.mp4",
+      "trial_id_b": "emotions_30/EDITED/Neutral/RF28_cut.mp4"
+    },
+    {
+      "js_distance": 0.0014351148856803775,
+      "trial_id_a": "emotions_6/EDITED/Disgusted/IF5_cut.mp4",
+      "trial_id_b": "emotions_34/EDITED/Surprised/HF19_cut.mp4"
+    },
+    {
+      "js_distance": 0.001523559563793242,
+      "trial_id_a": "emotions_6/EDITED/Disgusted/IF5_cut.mp4",
+      "trial_id_b": "emotions_38/EDITED/Joking/CF12_cut.mp4"
+    },
+    {
+      "js_distance": 0.001885818550363183,
+      "trial_id_a": "emotions_6/EDITED/Excited/EF7_cut.mp4",
+      "trial_id_b": "emotions_30/EDITED/Neutral/NF28_cut.mp4"
+    },
+    {
+      "js_distance": 0.0019277211977168918,
+      "trial_id_a": "emotions_11/EDITED/Angry/DF17_cut.mp4",
+      "trial_id_b": "emotions_31/EDITED/Sad/JF15_cut.mp4"
+    },
+    {
+      "js_distance": 0.001987928058952093,
+      "trial_id_a": "emotions_6/EDITED/Excited/EF7_cut.mp4",
+      "trial_id_b": "emotions_6/EDITED/Excited/GF7_cut.mp4"
+    },
+    {
+      "js_distance": 0.001996090868487954,
+      "trial_id_a": "emotions_31/EDITED/Neutral/SF14_cut.mp4",
+      "trial_id_b": "emotions_34/EDITED/Neutral/OF14_cut.mp4"
+    },
+    {
+      "js_distance": 0.002003694185987115,
+      "trial_id_a": "emotions_4/EDITED/Happy Low Intensity/SF2_cut.mp4",
+      "trial_id_b": "emotions_30/EDITED/Neutral/RF28_cut.mp4"
+    },
+    {
+      "js_distance": 0.002093598013743758,
+      "trial_id_a": "emotions_27/EDITED/Afraid/IF3_cut.mp4",
+      "trial_id_b": "emotions_39/EDITED/Excited/OF7v2_cut.mp4"
+    },
+    {
+      "js_distance": 0.0021348362788558006,
+      "trial_id_a": "emotions_6/EDITED/Happy/KF1_cut.mp4",
+      "trial_id_b": "emotions_39/EDITED/Happy/SF1_cut.mp4"
+    },
+    {
+      "js_distance": 0.0021513402462005615,
+      "trial_id_a": "emotions_11/EDITED/Frustrated/DF23_cut.mp4",
+      "trial_id_b": "emotions_36/EDITED/Joking/MF12_cut.mp4"
+    },
+    {
+      "js_distance": 0.0021560087334364653,
+      "trial_id_a": "emotions_11/EDITED/Afraid/CF3_cut.mp4",
+      "trial_id_b": "emotions_11/EDITED/Frustrated/HF23v1_cut.mp4"
+    }
+  ]
+}

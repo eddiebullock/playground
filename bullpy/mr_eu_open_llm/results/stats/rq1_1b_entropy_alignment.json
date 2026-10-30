@@ -1,0 +1,5156 @@
+[
+  {
+    "condition": "video_only",
+    "eval": "eval_v2_eu_emotions_gemma4_video_only_seed42.json",
+    "model": "gemma4",
+    "n_trials_matched_to_human": 243,
+    "protocol_version": "v2-study3-full-eu-6afc",
+    "rq1_1a_semantic_vs_human": {
+      "n": 243,
+      "spearman_rho": 0.09206630567075615
+    },
+    "rq1_1b_forced_choice_vs_human": {
+      "n": 243,
+      "spearman_rho": 0.11724630621919127
+    },
+    "trials": [
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.1097385521061456,
+        "human_entropy": 1.340037911029546,
+        "semantic_entropy": 2.7681395763834242,
+        "trial_id": "emotions/EDITED/Unfriendly/NF25_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.9958213213455276,
+        "human_entropy": 1.1673852880726607,
+        "semantic_entropy": 2.723833439292471,
+        "trial_id": "emotions/EDITED/Unfriendly/RF25_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.7460326647147848,
+        "human_entropy": 0.4609335270292359,
+        "semantic_entropy": 2.649032691969327,
+        "trial_id": "emotions/EDITED/Worried/BF22_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.6128694524619495,
+        "human_entropy": 0.8511324784893517,
+        "semantic_entropy": 2.7861534210876893,
+        "trial_id": "emotions/EDITED/Worried/DF22_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.1985152433458726,
+        "human_entropy": 0.7306874907145144,
+        "semantic_entropy": 2.6416593150962564,
+        "trial_id": "emotions/EDITED/Worried/FF22_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.5875009311062074,
+        "human_entropy": 1.0525420783298356,
+        "semantic_entropy": 2.8543131150838326,
+        "trial_id": "emotions/EDITED/Worried/HF22_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.799902779427117,
+        "human_entropy": 0.9316330598182656,
+        "semantic_entropy": 2.8922427853488224,
+        "trial_id": "emotions/EDITED/Worried/JF22_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.3250829733914482,
+        "human_entropy": 0.9252398621768354,
+        "semantic_entropy": 2.8894846132421095,
+        "trial_id": "emotions/EDITED/Worried/NF22_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.7083465777061715,
+        "semantic_entropy": 2.865229788528468,
+        "trial_id": "emotions/EDITED/Worried/PF22_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.1985152433458726,
+        "human_entropy": 1.0594788076175,
+        "semantic_entropy": 2.6552593722846365,
+        "trial_id": "emotions/EDITED/Worried/RF22_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.4655917308900292,
+        "semantic_entropy": 2.7586929185932507,
+        "trial_id": "emotions_2/EDITED/Surprised/PF19v1_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.487798380001651,
+        "human_entropy": 1.4898300268126123,
+        "semantic_entropy": 2.8399448990290046,
+        "trial_id": "emotions_2/EDITED/Unfriendly/BF25v1_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.9958213213455276,
+        "human_entropy": 1.3833228674711864,
+        "semantic_entropy": 2.8032634500694185,
+        "trial_id": "emotions_2/EDITED/Unfriendly/BF25v2_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.9745701894462542,
+        "human_entropy": 0.9944576271351991,
+        "semantic_entropy": 2.80581036009979,
+        "trial_id": "emotions_2/EDITED/Unfriendly/FF25_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.6730116670092565,
+        "human_entropy": 1.29184477359449,
+        "semantic_entropy": 2.5099761119468265,
+        "trial_id": "emotions_2/EDITED/Unfriendly/GF25_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.42270908780599087,
+        "human_entropy": 1.000623980571525,
+        "semantic_entropy": 2.4473882065800177,
+        "trial_id": "emotions_2/EDITED/Unfriendly/LF25_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.9433483923290391,
+        "human_entropy": 0.14700920769063494,
+        "semantic_entropy": 2.588553871554596,
+        "trial_id": "emotions_3/EDITED/Sad/RF15_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.070047314690476,
+        "human_entropy": 1.1155908718668062,
+        "semantic_entropy": 2.830086067745834,
+        "trial_id": "emotions_3/EDITED/Unfriendly/PF25_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 1.3563362969912935,
+        "human_entropy": 0.38493607237184935,
+        "semantic_entropy": 2.556865016419152,
+        "trial_id": "emotions_4/EDITED/Angry/JF17_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.9433483923290392,
+        "human_entropy": 1.2290361056177583,
+        "semantic_entropy": 2.6732595631861304,
+        "trial_id": "emotions_4/EDITED/Angry Low Intensity/NF18_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.42518997942599734,
+        "semantic_entropy": 2.509295731708175,
+        "trial_id": "emotions_4/EDITED/Happy Low Intensity/SF2_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.1985152433458726,
+        "human_entropy": 1.1379476539226172,
+        "semantic_entropy": 2.8469943658500756,
+        "trial_id": "emotions_4/EDITED/Hurt/MF10_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.17982670631184053,
+        "semantic_entropy": 2.566818374081583,
+        "trial_id": "emotions_4/EDITED/Joking/OF12v1_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.051256318980014,
+        "human_entropy": 0.9743327032772795,
+        "semantic_entropy": 2.7900901773448656,
+        "trial_id": "emotions_4/EDITED/Sneaky/BF26v2_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.6128694524619496,
+        "human_entropy": 1.2598296720209492,
+        "semantic_entropy": 2.621775442531545,
+        "trial_id": "emotions_4/EDITED/Sneaky/FF26_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.6874357505033553,
+        "human_entropy": 0.8322795676123806,
+        "semantic_entropy": 2.8469943658500756,
+        "trial_id": "emotions_4/EDITED/Sneaky/HF26_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.8237197315118312,
+        "human_entropy": 0.12671854618545952,
+        "semantic_entropy": 2.23397513364654,
+        "trial_id": "emotions_5/EDITED/Joking/OF12v2_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.3180952614124806,
+        "human_entropy": 0.8245446322887418,
+        "semantic_entropy": 2.7119263017605633,
+        "trial_id": "emotions_5/EDITED/Sad/DF15_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.8237197315118312,
+        "human_entropy": 0.5944080513210923,
+        "semantic_entropy": 2.6120739219858793,
+        "trial_id": "emotions_5/EDITED/Sad/FF15_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.1985152433458726,
+        "human_entropy": 0.601881107236682,
+        "semantic_entropy": 2.6065926304865843,
+        "trial_id": "emotions_5/EDITED/Sad/NF15_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.8979457248567798,
+        "human_entropy": 0.8536238510643961,
+        "semantic_entropy": 2.669488613871244,
+        "trial_id": "emotions_5/EDITED/Sad Low Intensity/DF16_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.9142855814670989,
+        "human_entropy": 0.6546620721434904,
+        "semantic_entropy": 2.6366361512342165,
+        "trial_id": "emotions_5/EDITED/Sad Low Intensity/HF16_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 1.122372129066931,
+        "human_entropy": 0.40853250920507,
+        "semantic_entropy": 2.523654800383379,
+        "trial_id": "emotions_5/EDITED/Sad Low Intensity/PF16_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.3250829733914482,
+        "human_entropy": 0.9203823458065222,
+        "semantic_entropy": 2.914271155712625,
+        "trial_id": "emotions_5/EDITED/Sneaky/NF26_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.6881388137135884,
+        "human_entropy": 1.2093778186078623,
+        "semantic_entropy": 2.8554641820143982,
+        "trial_id": "emotions_5/EDITED/Sneaky/PF26v1_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.42270908780599087,
+        "human_entropy": 1.05125580310506,
+        "semantic_entropy": 2.847977969517091,
+        "trial_id": "emotions_5/EDITED/Sneaky/PF26v2_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.5623351446188083,
+        "human_entropy": 1.1688279154107737,
+        "semantic_entropy": 2.6131282249640533,
+        "trial_id": "emotions_5/EDITED/Sneaky/RF26_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.8260651866153443,
+        "human_entropy": 1.0623539601987668,
+        "semantic_entropy": 2.697250132069622,
+        "trial_id": "emotions_5/EDITED/Surprised/FF19_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.8568409950394724,
+        "human_entropy": 1.1840892344403937,
+        "semantic_entropy": 2.666720342055898,
+        "trial_id": "emotions_5/EDITED/Surprised/JF19_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.5181862130502128,
+        "human_entropy": 0.22222617024591548,
+        "semantic_entropy": 2.7454008880284513,
+        "trial_id": "emotions_5/EDITED/Surprised/LF19_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.1985152433458726,
+        "human_entropy": 0.25168787476878574,
+        "semantic_entropy": 2.701572463642694,
+        "trial_id": "emotions_5/EDITED/Surprised/RF19_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.639031859650177,
+        "human_entropy": 0.9229370804074729,
+        "semantic_entropy": 2.5241574055722205,
+        "trial_id": "emotions_6/EDITED/Angry/RF17_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.5181862130502128,
+        "human_entropy": 0.8553657489184912,
+        "semantic_entropy": 2.654939021832881,
+        "trial_id": "emotions_6/EDITED/Ashamed/KF13_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.237597168232557,
+        "human_entropy": 0.30900106867274113,
+        "semantic_entropy": 2.666038296861991,
+        "trial_id": "emotions_6/EDITED/Disgusted/CF5_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.3250829733914482,
+        "human_entropy": 1.127313708464679,
+        "semantic_entropy": 2.469639245954355,
+        "trial_id": "emotions_6/EDITED/Disgusted/GF5_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.4737146012040094,
+        "human_entropy": 0.2893507687509995,
+        "semantic_entropy": 2.6563090677145484,
+        "trial_id": "emotions_6/EDITED/Disgusted/IF5_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.0790774247673154,
+        "human_entropy": 0.27955289262005906,
+        "semantic_entropy": 2.711502061335386,
+        "trial_id": "emotions_6/EDITED/Disgusted/KF5_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.7305880613711224,
+        "human_entropy": 0.33765475371041304,
+        "semantic_entropy": 2.5124598440909907,
+        "trial_id": "emotions_6/EDITED/Disgusted/MF5_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.2348391579906925,
+        "human_entropy": 0.1895770203261275,
+        "semantic_entropy": 2.5009433319385015,
+        "trial_id": "emotions_6/EDITED/Disgusted/OF5_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.6821188874364651,
+        "semantic_entropy": 2.1513218617080017,
+        "trial_id": "emotions_6/EDITED/Excited/CF7_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.39439769144744274,
+        "human_entropy": 0.3981986682803288,
+        "semantic_entropy": 2.204605892659258,
+        "trial_id": "emotions_6/EDITED/Excited/EF7_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.0486537893593546,
+        "human_entropy": 0.49445575544161835,
+        "semantic_entropy": 2.3077614668887785,
+        "trial_id": "emotions_6/EDITED/Excited/GF7_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.7305880613711224,
+        "human_entropy": 0.48645947075665985,
+        "semantic_entropy": 2.3001054088943853,
+        "trial_id": "emotions_6/EDITED/Excited/IF7_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.8018185525433373,
+        "human_entropy": 0.7508112214843,
+        "semantic_entropy": 2.846963960737807,
+        "trial_id": "emotions_6/EDITED/Excited/MF7_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.6730116670092565,
+        "human_entropy": 0.7422487407818779,
+        "semantic_entropy": 2.846963960737807,
+        "trial_id": "emotions_6/EDITED/Frustrated/JF23_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.6730116670092565,
+        "human_entropy": 0.9036834788355568,
+        "semantic_entropy": 2.8646468734360826,
+        "trial_id": "emotions_6/EDITED/Frustrated/LF23_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.1985152433458726,
+        "human_entropy": 0.9332256021725779,
+        "semantic_entropy": 2.6295359185815674,
+        "trial_id": "emotions_6/EDITED/Frustrated/RF23 v1_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.7460326647147848,
+        "human_entropy": 0.15553658359656514,
+        "semantic_entropy": 2.905182941087047,
+        "trial_id": "emotions_6/EDITED/Happy/GF1_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.3250829733914482,
+        "human_entropy": 0.9149114231502237,
+        "semantic_entropy": 2.330203660109737,
+        "trial_id": "emotions_6/EDITED/Happy/IF1_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.1985152433458726,
+        "human_entropy": 0.34598081344691317,
+        "semantic_entropy": 2.5405197761083773,
+        "trial_id": "emotions_6/EDITED/Happy/KF1_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.39439769144744274,
+        "human_entropy": 0.6298210215880925,
+        "semantic_entropy": 2.3933517896252607,
+        "trial_id": "emotions_6/EDITED/Happy/MF1_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.6464855238863217,
+        "semantic_entropy": 2.4423938547401973,
+        "trial_id": "emotions_6/EDITED/Happy/OF1_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.9142855814670989,
+        "human_entropy": 0.9125347439144864,
+        "semantic_entropy": 2.4760691564066857,
+        "trial_id": "emotions_6/EDITED/Happy Low Intensity/CF2_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.7909873504355756,
+        "human_entropy": 1.317736115444217,
+        "semantic_entropy": 2.6013591418846422,
+        "trial_id": "emotions_6/EDITED/Happy Low Intensity/GF2_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.639031859650177,
+        "human_entropy": 0.6065170496930994,
+        "semantic_entropy": 2.668746495214918,
+        "trial_id": "emotions_6/EDITED/Happy Low Intensity/IF2_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.5387680910402701,
+        "human_entropy": 0.7122771289619992,
+        "semantic_entropy": 2.4710824805940486,
+        "trial_id": "emotions_6/EDITED/Happy Low Intensity/KF2_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.2013670042689852,
+        "human_entropy": 0.7676706091062226,
+        "semantic_entropy": 2.4835784062337525,
+        "trial_id": "emotions_7/EDITED/Excited/SF7_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.926506603289533,
+        "human_entropy": 0.47862315812325196,
+        "semantic_entropy": 2.6375201505837107,
+        "trial_id": "emotions_7/EDITED/Interested/BF21.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.926506603289533,
+        "human_entropy": 0.40761985280731605,
+        "semantic_entropy": 2.650370374958964,
+        "trial_id": "emotions_7/EDITED/Interested/HF21_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.5181862130502128,
+        "human_entropy": 1.0644078580323229,
+        "semantic_entropy": 2.766675569317398,
+        "trial_id": "emotions_7/EDITED/Interested/JF21v1_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 1.5444795210968603,
+        "human_entropy": 0.9595670198443658,
+        "semantic_entropy": 2.4605303672133516,
+        "trial_id": "emotions_7/EDITED/Interested/JF21v2_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.0126631103850339,
+        "human_entropy": 0.988059257542929,
+        "semantic_entropy": 2.602503136881496,
+        "trial_id": "emotions_7/EDITED/Interested/NF21v2_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.8018185525433373,
+        "human_entropy": 1.0785381139092651,
+        "semantic_entropy": 2.827371743255457,
+        "trial_id": "emotions_7/EDITED/Interested/PF21_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 1.1097385521061456,
+        "human_entropy": 0.5598020067138181,
+        "semantic_entropy": 2.5030439116542627,
+        "trial_id": "emotions_11/EDITED/Afraid/CF3_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.0331140875166713,
+        "human_entropy": 0.8319761756588322,
+        "semantic_entropy": 2.693730829036165,
+        "trial_id": "emotions_11/EDITED/Angry/DF17_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 1.349168943889662,
+        "human_entropy": 0.8779945648954439,
+        "semantic_entropy": 2.643901383297232,
+        "trial_id": "emotions_11/EDITED/Angry/HF17v1_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.39439769144744274,
+        "human_entropy": 1.2264990738557862,
+        "semantic_entropy": 2.4650141750328705,
+        "trial_id": "emotions_11/EDITED/Angry/NF17_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.5875009311062073,
+        "human_entropy": 0.5621538995014704,
+        "semantic_entropy": 2.6469464790433044,
+        "trial_id": "emotions_11/EDITED/Angry/PF17_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.1985152433458726,
+        "human_entropy": 0.9968773424690679,
+        "semantic_entropy": 2.6543077606914407,
+        "trial_id": "emotions_11/EDITED/Ashamed/EF13_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.5623351446188083,
+        "human_entropy": 1.0506349456865312,
+        "semantic_entropy": 2.483945022090733,
+        "trial_id": "emotions_11/EDITED/Ashamed/GF13_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.1985152433458726,
+        "human_entropy": 0.39226687048625264,
+        "semantic_entropy": 2.645938011597197,
+        "trial_id": "emotions_11/EDITED/Ashamed/Of13_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.6108643020548935,
+        "human_entropy": 1.0604861799724354,
+        "semantic_entropy": 2.731969570936306,
+        "trial_id": "emotions_11/EDITED/Ashamed/SF13_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.5181862130502128,
+        "human_entropy": 0.6859711622471995,
+        "semantic_entropy": 2.8219098824053774,
+        "trial_id": "emotions_11/EDITED/Frustrated/BF23_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.9745701894462542,
+        "human_entropy": 0.532326110978585,
+        "semantic_entropy": 2.693913480460854,
+        "trial_id": "emotions_11/EDITED/Frustrated/DF23_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.3250829733914482,
+        "human_entropy": 0.7671112102080893,
+        "semantic_entropy": 2.7114122474720617,
+        "trial_id": "emotions_11/EDITED/Frustrated/FF23_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.3250829733914482,
+        "human_entropy": 0.6011578395151034,
+        "semantic_entropy": 2.698694099311711,
+        "trial_id": "emotions_11/EDITED/Frustrated/HF23v1_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.5623351446188083,
+        "human_entropy": 0.7590648558560682,
+        "semantic_entropy": 2.846963960737807,
+        "trial_id": "emotions_11/EDITED/Frustrated/HF23v2_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.6474466390346325,
+        "human_entropy": 0.9312784067881004,
+        "semantic_entropy": 2.6069388787587533,
+        "trial_id": "emotions_13/EDITED/Bored/CF8_cut(1).mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.9836002995230935,
+        "human_entropy": 0.6254581324713603,
+        "semantic_entropy": 2.7190527057002023,
+        "trial_id": "emotions_13/EDITED/Disgusted Low Intensity/OF6v2_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.8260651866153443,
+        "human_entropy": 1.055775898855157,
+        "semantic_entropy": 2.5133171621921013,
+        "trial_id": "emotions_17/EDITED/Afraid/MF3_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.8979457248567798,
+        "human_entropy": 0.84070407416566,
+        "semantic_entropy": 2.6448862234117017,
+        "trial_id": "emotions_17/EDITED/Afraid Low Intensity/IF4_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.7776612957621659,
+        "human_entropy": 0.8464184689125798,
+        "semantic_entropy": 2.231400097435944,
+        "trial_id": "emotions_17/EDITED/Afraid Low Intensity/KF4_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.7305880613711224,
+        "human_entropy": 1.0153625071641845,
+        "semantic_entropy": 2.5352554161140137,
+        "trial_id": "emotions_17/EDITED/Disgusted Low Intensity/GF6_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.5875009311062073,
+        "human_entropy": 0.72606743995123,
+        "semantic_entropy": 2.618702529420698,
+        "trial_id": "emotions_18/EDITED/Disappointed/EF9_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.2779914688584595,
+        "human_entropy": 0.920739904659952,
+        "semantic_entropy": 2.6786181908068554,
+        "trial_id": "emotions_18/EDITED/Disappointed/KF9_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.158214693401218,
+        "human_entropy": 1.1301373107970947,
+        "semantic_entropy": 2.7343761583922706,
+        "trial_id": "emotions_21/EDITED/Angry Low Intensity/PF18_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.1097385521061456,
+        "human_entropy": 1.2303159972044118,
+        "semantic_entropy": 2.714421695699746,
+        "trial_id": "emotions_21/EDITED/Bored/EF8_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.1985152433458726,
+        "human_entropy": 0.9611757665581756,
+        "semantic_entropy": 2.304019133693189,
+        "trial_id": "emotions_22/EDITED/Afraid Low Intensity/IF4v2_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.9672604429127744,
+        "human_entropy": 1.1393733363888416,
+        "semantic_entropy": 2.6909217442080813,
+        "trial_id": "emotions_22/EDITED/Afraid Low Intensity/MF4_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.8018185525433373,
+        "human_entropy": 0.532066469716399,
+        "semantic_entropy": 2.695291836783826,
+        "trial_id": "emotions_22/EDITED/Ashamed/CF13_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.6474466390346325,
+        "human_entropy": 0.7739358438862305,
+        "semantic_entropy": 2.901584079213409,
+        "trial_id": "emotions_22/EDITED/Disappointed/GF9_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.1985152433458726,
+        "human_entropy": 1.2242386917968744,
+        "semantic_entropy": 2.6076166960619034,
+        "trial_id": "emotions_23/EDITED/Angry Low Intensity/FF18_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.0126631103850336,
+        "human_entropy": 0.9312784067881004,
+        "semantic_entropy": 2.6185943224880144,
+        "trial_id": "emotions_23/EDITED/Bored/CF8_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.997271523182384,
+        "human_entropy": 1.0561506788499946,
+        "semantic_entropy": 2.708992485009721,
+        "trial_id": "emotions_23/EDITED/Bored/GF8_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.6874357505033553,
+        "human_entropy": 0.7347985275502752,
+        "semantic_entropy": 2.8349052135633928,
+        "trial_id": "emotions_23/EDITED/Bored/MF8_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.5623351446188083,
+        "human_entropy": 0.875882375478273,
+        "semantic_entropy": 2.907352918935608,
+        "trial_id": "emotions_23/EDITED/Disappointed/SF9 v1_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.1921945007602976,
+        "human_entropy": 1.5480499215240306,
+        "semantic_entropy": 2.5920341263009687,
+        "trial_id": "emotions_23/EDITED/Disgusted Low Intensity/MF6_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 1.0492904296147767,
+        "semantic_entropy": 2.6135500235215527,
+        "trial_id": "emotions_26/EDITED/Disappointed/OF9_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.2348391579906925,
+        "human_entropy": 0.9678221797258894,
+        "semantic_entropy": 2.5884307914803553,
+        "trial_id": "emotions_26/EDITED/Disgusted Low Intensity/EF6_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.799902779427117,
+        "human_entropy": 0.12415397163303728,
+        "semantic_entropy": 2.6218523805968417,
+        "trial_id": "emotions_27/EDITED/Afraid/IF3_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.0888999753452235,
+        "human_entropy": 1.2797530285328393,
+        "semantic_entropy": 2.598678405349051,
+        "trial_id": "emotions_29/EDITED/Jealous/MF11_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 1.1731921727417078,
+        "semantic_entropy": 2.5044240583189303,
+        "trial_id": "emotions_29/EDITED/Jealous/OF11_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.6108643020548935,
+        "human_entropy": 1.1143214757308781,
+        "semantic_entropy": 2.9026409794765105,
+        "trial_id": "emotions_29/EDITED/Jealous/SF11_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.5181862130502128,
+        "human_entropy": 0.4986027962210376,
+        "semantic_entropy": 2.630650338958322,
+        "trial_id": "emotions_29/EDITED/Proud/FF27_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.39439769144744274,
+        "human_entropy": 1.338139984411786,
+        "semantic_entropy": 2.4702850542715007,
+        "trial_id": "emotions_29/EDITED/Proud/LF27_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 1.0888999753452235,
+        "human_entropy": 0.43261856569191603,
+        "semantic_entropy": 2.6127355428499452,
+        "trial_id": "emotions_29/EDITED/Sad/PF15_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.1985152433458726,
+        "human_entropy": 0.7952258419421175,
+        "semantic_entropy": 2.694701073107828,
+        "trial_id": "emotions_29/EDITED/Unfriendly/DF25_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.3046615296840591,
+        "human_entropy": 1.4057275664727884,
+        "semantic_entropy": 2.723964912350222,
+        "trial_id": "emotions_29/EDITED/Unfriendly/JF25_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.3388734448766708,
+        "semantic_entropy": 2.572266544022358,
+        "trial_id": "emotions_30/EDITED/Neutral/NF28_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.4129210418694463,
+        "semantic_entropy": 2.70565874345844,
+        "trial_id": "emotions_30/EDITED/Neutral/RF28_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.5181862130502128,
+        "human_entropy": 1.2304476727046516,
+        "semantic_entropy": 2.6978859537388153,
+        "trial_id": "emotions_30/EDITED/Proud/BF27v1_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.7083465777061715,
+        "human_entropy": 0.3068982649132118,
+        "semantic_entropy": 2.5141262978817003,
+        "trial_id": "emotions_30/EDITED/Proud/RF27_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.1985152433458726,
+        "human_entropy": 0.06500189380978766,
+        "semantic_entropy": 2.7344269438870374,
+        "trial_id": "emotions_30/EDITED/Surprised/PF19v2_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.1058898790247635,
+        "human_entropy": 1.3238914188848572,
+        "semantic_entropy": 2.855745113794619,
+        "trial_id": "emotions_31/EDITED/Jealous/CF11_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.6474466390346325,
+        "human_entropy": 1.0304721867729125,
+        "semantic_entropy": 2.893833037188143,
+        "trial_id": "emotions_31/EDITED/Jealous/GF11_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.3747764025076898,
+        "human_entropy": 1.0882826211788867,
+        "semantic_entropy": 2.73633286133108,
+        "trial_id": "emotions_31/EDITED/Jealous/IF11_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.6108643020548935,
+        "human_entropy": 0.9299087697725864,
+        "semantic_entropy": 2.870237262414768,
+        "trial_id": "emotions_31/EDITED/Jealous/KF11_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.8018185525433373,
+        "human_entropy": 0.5218851445634826,
+        "semantic_entropy": 2.8845291072908585,
+        "trial_id": "emotions_31/EDITED/Neutral/SF14_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.3250829733914482,
+        "human_entropy": 1.215841797303982,
+        "semantic_entropy": 2.6569308696164518,
+        "trial_id": "emotions_31/EDITED/Proud/NF27_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 1.4490023958526383,
+        "human_entropy": 0.7347985275502752,
+        "semantic_entropy": 2.7539926783363136,
+        "trial_id": "emotions_31/EDITED/Sad/BF15_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.9972715231823841,
+        "human_entropy": 0.6526518166231635,
+        "semantic_entropy": 2.595615895988828,
+        "trial_id": "emotions_31/EDITED/Sad/HF15_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.8556886672556694,
+        "human_entropy": 0.8559233718366581,
+        "semantic_entropy": 2.7092539508665725,
+        "trial_id": "emotions_31/EDITED/Sad/JF15_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.8451132568429528,
+        "human_entropy": 0.2180569809608334,
+        "semantic_entropy": 2.5857117670914063,
+        "trial_id": "emotions_31/EDITED/Sad Low Intensity/RF16 v1_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.6985934821408661,
+        "semantic_entropy": 2.535257516132129,
+        "trial_id": "emotions_31/EDITED/Surprised/NF19_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.3250829733914482,
+        "human_entropy": 0.41923657294776084,
+        "semantic_entropy": 2.465701374938501,
+        "trial_id": "emotions_31/EDITED/Surprised Low Intensity/RF20 v1_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.4277246198870338,
+        "semantic_entropy": 2.1239584803683713,
+        "trial_id": "emotions_31/EDITED/Surprised Low Intensity/RF20 v2_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.8237197315118312,
+        "human_entropy": 1.557763624937636,
+        "semantic_entropy": 2.5504795485325507,
+        "trial_id": "emotions_32/EDITED/Kind/DF24_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.8711332705993318,
+        "human_entropy": 1.1497830179957012,
+        "semantic_entropy": 2.5497637518215233,
+        "trial_id": "emotions_32/EDITED/Kind/PF24_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.5257912017738154,
+        "semantic_entropy": 2.6562103423968955,
+        "trial_id": "emotions_32/EDITED/Neutral/DF28_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.0888999753452235,
+        "human_entropy": 0.9745626010968317,
+        "semantic_entropy": 2.6578141998341973,
+        "trial_id": "emotions_33/EDITED/Interested/NF21v1_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.7305880613711224,
+        "human_entropy": 0.9635053730892417,
+        "semantic_entropy": 2.787988459399106,
+        "trial_id": "emotions_33/EDITED/Kind/NF24_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.033114087516671,
+        "human_entropy": 1.361365674923442,
+        "semantic_entropy": 2.587525997288388,
+        "trial_id": "emotions_33/EDITED/Kind/RF24_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.1985152433458726,
+        "human_entropy": 0.37367552680218435,
+        "semantic_entropy": 2.6707876847616885,
+        "trial_id": "emotions_33/EDITED/Neutral/CF14_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.5761934010628065,
+        "semantic_entropy": 2.5716538372597957,
+        "trial_id": "emotions_33/EDITED/Neutral/EF14_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.49170552746865576,
+        "semantic_entropy": 2.692746866622505,
+        "trial_id": "emotions_33/EDITED/Neutral/FF28_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.5707725048874256,
+        "semantic_entropy": 2.6076166960619034,
+        "trial_id": "emotions_33/EDITED/Neutral/GF14_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 1.0549201679861442,
+        "human_entropy": 0.35928790584303383,
+        "semantic_entropy": 2.8849648415430185,
+        "trial_id": "emotions_33/EDITED/Neutral/HF28_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.42270908780599087,
+        "human_entropy": 0.549932648388716,
+        "semantic_entropy": 2.8897193442074904,
+        "trial_id": "emotions_33/EDITED/Sneaky/LF26_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.1058898790247633,
+        "human_entropy": 0.8250578726404313,
+        "semantic_entropy": 2.6688449941416263,
+        "trial_id": "emotions_33/EDITED/Surprised Low Intensity/DF20_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.23560956328610605,
+        "semantic_entropy": 2.6543471197902213,
+        "trial_id": "emotions_33/EDITED/Surprised Low Intensity/FF20_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.8711332705993319,
+        "human_entropy": 1.3448492442385056,
+        "semantic_entropy": 2.6823864910564685,
+        "trial_id": "emotions_34/EDITED/Kind/LF24_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.9985793315873921,
+        "human_entropy": 0.696809667743568,
+        "semantic_entropy": 2.8281418364683426,
+        "trial_id": "emotions_34/EDITED/Neutral/JF28_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 1.0486537893593546,
+        "human_entropy": 0.614235417022184,
+        "semantic_entropy": 2.8848607593818496,
+        "trial_id": "emotions_34/EDITED/Neutral/KF14_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.9433483923290393,
+        "human_entropy": 0.7057977229302815,
+        "semantic_entropy": 2.836879887893304,
+        "trial_id": "emotions_34/EDITED/Neutral/LF28_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.8568409950394724,
+        "human_entropy": 0.5933485030117569,
+        "semantic_entropy": 2.8726636174385094,
+        "trial_id": "emotions_34/EDITED/Neutral/MF14_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.5530544586968841,
+        "semantic_entropy": 2.5866830789027713,
+        "trial_id": "emotions_34/EDITED/Neutral/OF14_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.9985793315873921,
+        "human_entropy": 0.39356420692115973,
+        "semantic_entropy": 2.8811353924778356,
+        "trial_id": "emotions_34/EDITED/Neutral/PF28_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.799902779427117,
+        "human_entropy": 0.8055141363398549,
+        "semantic_entropy": 2.660445490590206,
+        "trial_id": "emotions_34/EDITED/Proud/BF27v2_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.39439769144744274,
+        "human_entropy": 0.5254964024680017,
+        "semantic_entropy": 2.671380472342845,
+        "trial_id": "emotions_34/EDITED/Proud/DF27_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.926155713095467,
+        "human_entropy": 1.3033982236736732,
+        "semantic_entropy": 2.6533767088901596,
+        "trial_id": "emotions_34/EDITED/Proud/HF27_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.3250829733914482,
+        "human_entropy": 0.4792133584049474,
+        "semantic_entropy": 2.4935809481644573,
+        "trial_id": "emotions_34/EDITED/Proud/JF27_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.9989315046035592,
+        "human_entropy": 0.8206804316128937,
+        "semantic_entropy": 2.5577523711526267,
+        "trial_id": "emotions_34/EDITED/Proud/JF27v2_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.1985152433458726,
+        "human_entropy": 1.1617134221222012,
+        "semantic_entropy": 2.4339104433373078,
+        "trial_id": "emotions_34/EDITED/Proud/PF27_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.7083465777061715,
+        "human_entropy": 1.1450536857637756,
+        "semantic_entropy": 2.786099012854866,
+        "trial_id": "emotions_34/EDITED/Sad Low Intensity/JF16_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.926506603289533,
+        "human_entropy": 0.6944581128025329,
+        "semantic_entropy": 2.774603226586286,
+        "trial_id": "emotions_34/EDITED/Sad Low Intensity/RF16 v2_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.1985152433458726,
+        "human_entropy": 0.3655793218978421,
+        "semantic_entropy": 2.056061285623432,
+        "trial_id": "emotions_34/EDITED/Surprised/BF19_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.5857258993242922,
+        "semantic_entropy": 2.287750522881028,
+        "trial_id": "emotions_34/EDITED/Surprised/DF19_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.7460326647147848,
+        "human_entropy": 0.2062555541162096,
+        "semantic_entropy": 2.602630321431753,
+        "trial_id": "emotions_34/EDITED/Surprised/HF19_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.1024288055726656,
+        "human_entropy": 0.6352879830198852,
+        "semantic_entropy": 2.5846272782901596,
+        "trial_id": "emotions_35/EDITED/Afraid/EF3_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.8237197315118312,
+        "human_entropy": 0.8438760514540481,
+        "semantic_entropy": 2.624184270857091,
+        "trial_id": "emotions_35/EDITED/Afraid/GF3_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 1.5573319673494386,
+        "semantic_entropy": 2.6792836444206407,
+        "trial_id": "emotions_35/EDITED/Angry Low Intensity/BF18_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.9010630856404789,
+        "semantic_entropy": 2.665299237580613,
+        "trial_id": "emotions_35/EDITED/Neutral/IF14_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.0126631103850336,
+        "human_entropy": 0.5426062507233901,
+        "semantic_entropy": 2.560075259720961,
+        "trial_id": "emotions_35/EDITED/Surprised Low Intensity/BF20_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.42270908780599087,
+        "human_entropy": 0.13857198594030795,
+        "semantic_entropy": 2.6199843545001715,
+        "trial_id": "emotions_35/EDITED/Surprised Low Intensity/HF20_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.1985152433458726,
+        "human_entropy": 0.7922530650134624,
+        "semantic_entropy": 2.560746457981551,
+        "trial_id": "emotions_35/EDITED/Surprised Low Intensity/PF20v1_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.1985152433458726,
+        "human_entropy": 0.7982917073153333,
+        "semantic_entropy": 2.494141282757155,
+        "trial_id": "emotions_35/EDITED/Surprised Low Intensity/PF20v2_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.8556886672556694,
+        "human_entropy": 0.7419548788407495,
+        "semantic_entropy": 2.6587761154329774,
+        "trial_id": "emotions_36/EDITED/Afraid Low Intensity/EF4_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.7305880613711224,
+        "human_entropy": 0.45685927991347675,
+        "semantic_entropy": 2.736502955032419,
+        "trial_id": "emotions_36/EDITED/Ashamed/IF13_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.2706817223249798,
+        "human_entropy": 0.8321673269361318,
+        "semantic_entropy": 2.656081383829621,
+        "trial_id": "emotions_36/EDITED/Disgusted Low Intensity/SF6 v2_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.1985152433458726,
+        "human_entropy": 0.1386843129218439,
+        "semantic_entropy": 2.4488237844500733,
+        "trial_id": "emotions_36/EDITED/Happy/CF1_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.7083465777061714,
+        "human_entropy": 0.6716156704719491,
+        "semantic_entropy": 2.636101779771446,
+        "trial_id": "emotions_36/EDITED/Happy/EF1_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.3250829733914482,
+        "human_entropy": 1.028837662307958,
+        "semantic_entropy": 2.656392859242587,
+        "trial_id": "emotions_36/EDITED/Happy Low Intensity/MF2_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.8260651866153443,
+        "human_entropy": 0.8869167754476329,
+        "semantic_entropy": 2.3405874398881936,
+        "trial_id": "emotions_36/EDITED/Interested/FF21_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.2706817223249798,
+        "human_entropy": 0.3667872216609197,
+        "semantic_entropy": 2.620934282335173,
+        "trial_id": "emotions_36/EDITED/Joking/EF12_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.5004024235381879,
+        "human_entropy": 0.9489846797694362,
+        "semantic_entropy": 2.4440190899812264,
+        "trial_id": "emotions_36/EDITED/Joking/GF12_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.39439769144744274,
+        "human_entropy": 0.5239817070483234,
+        "semantic_entropy": 2.6222442794216474,
+        "trial_id": "emotions_36/EDITED/Joking/IF12_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.5004024235381879,
+        "human_entropy": 0.11001678737755638,
+        "semantic_entropy": 2.8820838549701215,
+        "trial_id": "emotions_36/EDITED/Joking/KF12_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.5623351446188083,
+        "human_entropy": 0.4113508184196229,
+        "semantic_entropy": 2.9040014464175457,
+        "trial_id": "emotions_36/EDITED/Joking/MF12_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.8451132568429528,
+        "human_entropy": 0.7693871100566957,
+        "semantic_entropy": 2.74150151523384,
+        "trial_id": "emotions_36/EDITED/Kind/BF24_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.237597168232557,
+        "human_entropy": 1.4169820153744386,
+        "semantic_entropy": 2.348251063425391,
+        "trial_id": "emotions_36/EDITED/Kind/FF24_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.1985152433458726,
+        "human_entropy": 1.2290002489863274,
+        "semantic_entropy": 2.6949796290376664,
+        "trial_id": "emotions_36/EDITED/Kind/HF24_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.033114087516671,
+        "human_entropy": 1.6475433872670957,
+        "semantic_entropy": 2.5926713011389864,
+        "trial_id": "emotions_36/EDITED/Kind/JF24_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 1.0335888855539315,
+        "semantic_entropy": 2.5524690703123616,
+        "trial_id": "emotions_36/EDITED/Neutral/BF28_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 1.0119559221169985,
+        "semantic_entropy": 2.4583240464024607,
+        "trial_id": "emotions_37/EDITED/Happy Low Intensity/OF2_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.1985152433458726,
+        "human_entropy": 0.9422767384439854,
+        "semantic_entropy": 2.3903569843415706,
+        "trial_id": "emotions_37/EDITED/Hurt/SF10 v1_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.274530395406362,
+        "human_entropy": 0.5414266792488174,
+        "semantic_entropy": 2.4664166255854005,
+        "trial_id": "emotions_37/EDITED/Interested/Df21_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.6128694524619495,
+        "human_entropy": 0.82139275897296,
+        "semantic_entropy": 2.6836113872601666,
+        "trial_id": "emotions_37/EDITED/Interested/LF21_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.6108643020548935,
+        "human_entropy": 0.1298580350480468,
+        "semantic_entropy": 2.901369682740532,
+        "trial_id": "emotions_37/EDITED/Joking/SF12_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.1682824501765625,
+        "human_entropy": 0.40734109719880895,
+        "semantic_entropy": 2.7257596896025897,
+        "trial_id": "emotions_37/EDITED/Sneaky/BF26v1_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.070047314690476,
+        "human_entropy": 0.7933516213192937,
+        "semantic_entropy": 2.693593460678359,
+        "trial_id": "emotions_37/EDITED/Sneaky/Df26_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.39439769144744274,
+        "human_entropy": 0.9002980337830352,
+        "semantic_entropy": 2.7519883152152835,
+        "trial_id": "emotions_37/EDITED/Sneaky/JF26_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.6128694524619496,
+        "human_entropy": 1.2080982950722918,
+        "semantic_entropy": 2.618780032863242,
+        "trial_id": "emotions_38/EDITED/Angry Low Intensity/JF18_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.6881388137135884,
+        "human_entropy": 1.1658220517397027,
+        "semantic_entropy": 2.640709846133977,
+        "trial_id": "emotions_38/EDITED/Ashamed/MF13_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.6691267067992982,
+        "semantic_entropy": 2.884361904395242,
+        "trial_id": "emotions_38/EDITED/Frustrated/NF23_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.5623351446188083,
+        "human_entropy": 0.5011707625659023,
+        "semantic_entropy": 2.870237262414768,
+        "trial_id": "emotions_38/EDITED/Frustrated/PF23_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.55995350019292,
+        "semantic_entropy": 2.5766802578288064,
+        "trial_id": "emotions_38/EDITED/Frustrated/RF23 v2_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.39439769144744274,
+        "human_entropy": 0.8766611018318162,
+        "semantic_entropy": 2.6715994582932314,
+        "trial_id": "emotions_38/EDITED/Hurt/OF10_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.3250829733914482,
+        "human_entropy": 0.8402571406917932,
+        "semantic_entropy": 2.6859128080069348,
+        "trial_id": "emotions_38/EDITED/Hurt/SF10 v2_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.5875009311062074,
+        "human_entropy": 0.7197289724055755,
+        "semantic_entropy": 2.719380829590856,
+        "trial_id": "emotions_38/EDITED/Interested/RF21_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 1.0182301539513936,
+        "human_entropy": 0.37158739828818305,
+        "semantic_entropy": 2.3478514362325797,
+        "trial_id": "emotions_38/EDITED/Joking/CF12_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.5181862130502128,
+        "human_entropy": 0.3424702494487607,
+        "semantic_entropy": 2.866313714195083,
+        "trial_id": "emotions_39/EDITED/Excited/KF7_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.799902779427117,
+        "human_entropy": 0.6624715817013779,
+        "semantic_entropy": 2.533138770692566,
+        "trial_id": "emotions_39/EDITED/Excited/OF7v1_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.39439769144744274,
+        "human_entropy": 0.2043625374781422,
+        "semantic_entropy": 2.470415461090786,
+        "trial_id": "emotions_39/EDITED/Excited/OF7v2_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.39439769144744274,
+        "human_entropy": 0.33873281129520955,
+        "semantic_entropy": 2.3766417044439856,
+        "trial_id": "emotions_39/EDITED/Happy/SF1_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.7083465777061715,
+        "human_entropy": 0.6559806055652888,
+        "semantic_entropy": 2.695296539077156,
+        "trial_id": "emotions_39/EDITED/Hurt/CF10v1_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.9142855814670989,
+        "human_entropy": 0.8537716311897667,
+        "semantic_entropy": 2.6161508661085184,
+        "trial_id": "emotions_39/EDITED/Hurt/CF10v2_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.7909873504355756,
+        "human_entropy": 0.7930115595991998,
+        "semantic_entropy": 2.6294599542152377,
+        "trial_id": "emotions_39/EDITED/Hurt/EF10_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.5004024235381879,
+        "human_entropy": 0.6834785647711188,
+        "semantic_entropy": 2.775778217401453,
+        "trial_id": "emotions_39/EDITED/Hurt/GF10_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.39439769144744274,
+        "human_entropy": 0.7001722154050752,
+        "semantic_entropy": 2.826859363294806,
+        "trial_id": "emotions_39/EDITED/Hurt/IF10_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.39439769144744274,
+        "human_entropy": 0.8293032080725099,
+        "semantic_entropy": 2.7207763834312733,
+        "trial_id": "emotions_39/EDITED/Hurt/KF10_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.639031859650177,
+        "human_entropy": 0.7782532312347523,
+        "semantic_entropy": 2.672637858945808,
+        "trial_id": "emotions_40/EDITED/Afraid Low Intensity/CF4_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.5004024235381879,
+        "human_entropy": 0.8287233306023749,
+        "semantic_entropy": 2.6753486721895627,
+        "trial_id": "emotions_41/EDITED/Angry Low Intensity/LF18_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.0627375681569964,
+        "human_entropy": 1.0424143687493586,
+        "semantic_entropy": 2.6009327340007427,
+        "trial_id": "emotions_43/EDITED/Disgusted Low Intensity/SF6 v1_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.6108643020548935,
+        "human_entropy": 0.45215531649310925,
+        "semantic_entropy": 2.664636307421439,
+        "trial_id": "emotions_44/EDITED/Disgusted Low Intensity/CF6_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.799902779427117,
+        "human_entropy": 0.23360396499832023,
+        "semantic_entropy": 2.6152337945583186,
+        "trial_id": "emotions_46/EDITED/Afraid/SF3_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.5623351446188083,
+        "human_entropy": 0.6639692338729113,
+        "semantic_entropy": 2.6136874661015193,
+        "trial_id": "emotions_46/EDITED/Afraid Low Intensity/OF4_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.9985793315873921,
+        "human_entropy": 0.6389645264391534,
+        "semantic_entropy": 2.4477283712783526,
+        "trial_id": "emotions_46/EDITED/Afraid Low Intensity/SF4_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.2750380490437343,
+        "human_entropy": 1.116956718959034,
+        "semantic_entropy": 2.78535356276333,
+        "trial_id": "emotions_46/EDITED/Disappointed/CF9v1_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.8568409950394724,
+        "human_entropy": 0.7818583590402087,
+        "semantic_entropy": 2.7641945067725273,
+        "trial_id": "emotions_46/EDITED/Disappointed/IF9_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.135900959294373,
+        "human_entropy": 0.8256638529710575,
+        "semantic_entropy": 2.603084040842869,
+        "trial_id": "emotions_51/EDITED/Angry Low Intensity/HF18_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.070047314690476,
+        "human_entropy": 0.4741337450807064,
+        "semantic_entropy": 2.756858147441881,
+        "trial_id": "emotions_51/EDITED/Bored/KF8_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.7909873504355756,
+        "human_entropy": 1.0958489756607737,
+        "semantic_entropy": 2.5730797766762032,
+        "trial_id": "emotions_51/EDITED/Disgusted Low Intensity/IF6_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.7460326647147848,
+        "human_entropy": 1.501888279900196,
+        "semantic_entropy": 2.6773913410888115,
+        "trial_id": "emotions_51/EDITED/Disgusted Low Intensity/OF6v1_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.7909873504355757,
+        "human_entropy": 0.938952700620868,
+        "semantic_entropy": 2.861042851711133,
+        "trial_id": "emotions_52/EDITED/Disappointed/SF9 v2_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.1985152433458726,
+        "human_entropy": 0.6367577255909682,
+        "semantic_entropy": 2.1001936667072383,
+        "trial_id": "emotions_53/EDITED/Afraid/OF3_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.5181862130502128,
+        "human_entropy": 0.9901075132277787,
+        "semantic_entropy": 2.724406085715498,
+        "trial_id": "emotions_54/EDITED/Disappointed/CF9v2_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.1205710370360085,
+        "human_entropy": 0.7467325314556992,
+        "semantic_entropy": 2.7894093951939665,
+        "trial_id": "emotions_57/EDITED/Disappointed/MF9_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.6931471805599453,
+        "human_entropy": 1.2178193050000101,
+        "semantic_entropy": 2.6882332664998114,
+        "trial_id": "emotions_59/EDITED/Angry Low Intensity/DF18_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.6874357505033553,
+        "human_entropy": 0.6674310161977423,
+        "semantic_entropy": 2.7206053195702697,
+        "trial_id": "emotions_68/EDITED/Afraid Low Intensity/GF4_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 1.2312356911067468,
+        "human_entropy": 0.9212612808052513,
+        "semantic_entropy": 2.586092631101152,
+        "trial_id": "emotions_68/EDITED/Bored/IF8_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.070047314690476,
+        "human_entropy": 0.645704684272175,
+        "semantic_entropy": 2.515122037632771,
+        "trial_id": "emotions_68/EDITED/Bored/OF8_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.2779914688584597,
+        "human_entropy": 0.6743199714053549,
+        "semantic_entropy": 2.5904554483675586,
+        "trial_id": "emotions_68/EDITED/Bored/SF8_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.2013670042689852,
+        "human_entropy": 0.4696272713562404,
+        "semantic_entropy": 2.6446654265727294,
+        "trial_id": "emotions_68/EDITED/Disgusted Low Intensity/KF6_cut.mp4"
+      }
+    ]
+  },
+  {
+    "condition": "video_only",
+    "eval": "eval_v2_eu_emotions_molmo2_video_only_seed42.json",
+    "model": "molmo2",
+    "n_trials_matched_to_human": 243,
+    "protocol_version": "v2-study3-full-eu-6afc",
+    "rq1_1a_semantic_vs_human": {
+      "n": 243,
+      "spearman_rho": -0.03299891174469038
+    },
+    "rq1_1b_forced_choice_vs_human": {
+      "n": 243,
+      "spearman_rho": -0.0344232402583643
+    },
+    "trials": [
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.1097385521061456,
+        "human_entropy": 1.340037911029546,
+        "semantic_entropy": 2.784927774375112,
+        "trial_id": "emotions/EDITED/Unfriendly/NF25_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.495615780172503,
+        "human_entropy": 1.1673852880726607,
+        "semantic_entropy": 2.5980867469050337,
+        "trial_id": "emotions/EDITED/Unfriendly/RF25_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.447552194015782,
+        "human_entropy": 0.4609335270292359,
+        "semantic_entropy": 2.8674084658717707,
+        "trial_id": "emotions/EDITED/Worried/BF22_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.4877983800016512,
+        "human_entropy": 0.8511324784893517,
+        "semantic_entropy": 2.667291254593741,
+        "trial_id": "emotions/EDITED/Worried/DF22_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.4305622903362423,
+        "human_entropy": 0.7306874907145144,
+        "semantic_entropy": 2.743723245036483,
+        "trial_id": "emotions/EDITED/Worried/FF22_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.4886936332683078,
+        "human_entropy": 1.0525420783298356,
+        "semantic_entropy": 2.7619516684749184,
+        "trial_id": "emotions/EDITED/Worried/HF22_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.1752045970807579,
+        "human_entropy": 0.9316330598182656,
+        "semantic_entropy": 2.7975045289615252,
+        "trial_id": "emotions/EDITED/Worried/JF22_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.458174899361326,
+        "human_entropy": 0.9252398621768354,
+        "semantic_entropy": 2.768841567969509,
+        "trial_id": "emotions/EDITED/Worried/NF22_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.4150225884935588,
+        "human_entropy": 0.7083465777061715,
+        "semantic_entropy": 2.7906184453801974,
+        "trial_id": "emotions/EDITED/Worried/PF22_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.3747764025076898,
+        "human_entropy": 1.0594788076175,
+        "semantic_entropy": 2.693182284336441,
+        "trial_id": "emotions/EDITED/Worried/RF22_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.094408629847781,
+        "human_entropy": 0.4655917308900292,
+        "semantic_entropy": 2.705180889812076,
+        "trial_id": "emotions_2/EDITED/Surprised/PF19v1_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.4432909657960482,
+        "human_entropy": 1.4898300268126123,
+        "semantic_entropy": 2.7517632799774843,
+        "trial_id": "emotions_2/EDITED/Unfriendly/BF25v1_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.3195454632493369,
+        "human_entropy": 1.3833228674711864,
+        "semantic_entropy": 2.8388239805236974,
+        "trial_id": "emotions_2/EDITED/Unfriendly/BF25v2_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.2348391579906925,
+        "human_entropy": 0.9944576271351991,
+        "semantic_entropy": 2.783546461244735,
+        "trial_id": "emotions_2/EDITED/Unfriendly/FF25_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.495615780172503,
+        "human_entropy": 1.29184477359449,
+        "semantic_entropy": 2.657573642063686,
+        "trial_id": "emotions_2/EDITED/Unfriendly/GF25_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.6874357505033554,
+        "human_entropy": 1.000623980571525,
+        "semantic_entropy": 2.807772962477876,
+        "trial_id": "emotions_2/EDITED/Unfriendly/LF25_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.1058898790247633,
+        "human_entropy": 0.14700920769063494,
+        "semantic_entropy": 2.5708366069368447,
+        "trial_id": "emotions_3/EDITED/Sad/RF15_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.0097627067113208,
+        "human_entropy": 1.1155908718668062,
+        "semantic_entropy": 2.8261041878135806,
+        "trial_id": "emotions_3/EDITED/Unfriendly/PF25_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.094408629847781,
+        "human_entropy": 0.38493607237184935,
+        "semantic_entropy": 2.6223407025098786,
+        "trial_id": "emotions_4/EDITED/Angry/JF17_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.189885755092003,
+        "human_entropy": 1.2290361056177583,
+        "semantic_entropy": 2.7056165903239378,
+        "trial_id": "emotions_4/EDITED/Angry Low Intensity/NF18_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 1.3994886078590607,
+        "human_entropy": 0.42518997942599734,
+        "semantic_entropy": 2.6102892843077847,
+        "trial_id": "emotions_4/EDITED/Happy Low Intensity/SF2_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.2706817223249798,
+        "human_entropy": 1.1379476539226172,
+        "semantic_entropy": 2.8484216999759004,
+        "trial_id": "emotions_4/EDITED/Hurt/MF10_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 1.5671808548329902,
+        "human_entropy": 0.17982670631184053,
+        "semantic_entropy": 2.6747916356622596,
+        "trial_id": "emotions_4/EDITED/Joking/OF12v1_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.4708084763221112,
+        "human_entropy": 0.9743327032772795,
+        "semantic_entropy": 2.7145942598802364,
+        "trial_id": "emotions_4/EDITED/Sneaky/BF26v2_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.1673871969099059,
+        "human_entropy": 1.2598296720209492,
+        "semantic_entropy": 2.8282719725657546,
+        "trial_id": "emotions_4/EDITED/Sneaky/FF26_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.4305622903362423,
+        "human_entropy": 0.8322795676123806,
+        "semantic_entropy": 2.72739232458523,
+        "trial_id": "emotions_4/EDITED/Sneaky/HF26_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.6088829638639006,
+        "human_entropy": 0.12671854618545952,
+        "semantic_entropy": 2.6403660009836916,
+        "trial_id": "emotions_5/EDITED/Joking/OF12v2_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.4475521940157818,
+        "human_entropy": 0.8245446322887418,
+        "semantic_entropy": 2.837392471627697,
+        "trial_id": "emotions_5/EDITED/Sad/DF15_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.6525902233018672,
+        "human_entropy": 0.5944080513210923,
+        "semantic_entropy": 2.8190238510904533,
+        "trial_id": "emotions_5/EDITED/Sad/FF15_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 1.1872832254713437,
+        "human_entropy": 0.601881107236682,
+        "semantic_entropy": 2.4676954676980287,
+        "trial_id": "emotions_5/EDITED/Sad/NF15_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.4285514187210009,
+        "human_entropy": 0.8536238510643961,
+        "semantic_entropy": 2.616579561097335,
+        "trial_id": "emotions_5/EDITED/Sad Low Intensity/DF16_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.3491689438896621,
+        "human_entropy": 0.6546620721434904,
+        "semantic_entropy": 2.802101992499775,
+        "trial_id": "emotions_5/EDITED/Sad Low Intensity/HF16_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.370515174287956,
+        "human_entropy": 0.40853250920507,
+        "semantic_entropy": 2.884490713431522,
+        "trial_id": "emotions_5/EDITED/Sad Low Intensity/PF16_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.4320124921730986,
+        "human_entropy": 0.9203823458065222,
+        "semantic_entropy": 2.7579830580099203,
+        "trial_id": "emotions_5/EDITED/Sneaky/NF26_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.400138654928281,
+        "human_entropy": 1.2093778186078623,
+        "semantic_entropy": 2.7932661041799296,
+        "trial_id": "emotions_5/EDITED/Sneaky/PF26v1_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.6088829638639008,
+        "human_entropy": 1.05125580310506,
+        "semantic_entropy": 2.7980924712249124,
+        "trial_id": "emotions_5/EDITED/Sneaky/PF26v2_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.135900959294373,
+        "human_entropy": 1.1688279154107737,
+        "semantic_entropy": 2.7107063598262036,
+        "trial_id": "emotions_5/EDITED/Sneaky/RF26_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.3303162832349145,
+        "human_entropy": 1.0623539601987668,
+        "semantic_entropy": 2.7794323293618426,
+        "trial_id": "emotions_5/EDITED/Surprised/FF19_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.9672604429127742,
+        "human_entropy": 1.1840892344403937,
+        "semantic_entropy": 2.722258055027958,
+        "trial_id": "emotions_5/EDITED/Surprised/JF19_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.3046615296840591,
+        "human_entropy": 0.22222617024591548,
+        "semantic_entropy": 2.7766096608073476,
+        "trial_id": "emotions_5/EDITED/Surprised/LF19_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.495615780172503,
+        "human_entropy": 0.25168787476878574,
+        "semantic_entropy": 2.663076467538291,
+        "trial_id": "emotions_5/EDITED/Surprised/RF19_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.3069118862885516,
+        "human_entropy": 0.9229370804074729,
+        "semantic_entropy": 2.693799767952928,
+        "trial_id": "emotions_6/EDITED/Angry/RF17_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.4786258764929634,
+        "human_entropy": 0.8553657489184912,
+        "semantic_entropy": 2.6798394947373563,
+        "trial_id": "emotions_6/EDITED/Ashamed/KF13_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 1.5841707585125298,
+        "human_entropy": 0.30900106867274113,
+        "semantic_entropy": 2.7786626656816127,
+        "trial_id": "emotions_6/EDITED/Disgusted/CF5_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.5274896174173205,
+        "human_entropy": 1.127313708464679,
+        "semantic_entropy": 2.626452683301453,
+        "trial_id": "emotions_6/EDITED/Disgusted/GF5_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.495615780172503,
+        "human_entropy": 0.2893507687509995,
+        "semantic_entropy": 2.7699367591301876,
+        "trial_id": "emotions_6/EDITED/Disgusted/IF5_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 1.6695801269814072,
+        "human_entropy": 0.27955289262005906,
+        "semantic_entropy": 2.524433222252844,
+        "trial_id": "emotions_6/EDITED/Disgusted/KF5_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 1.495615780172503,
+        "human_entropy": 0.33765475371041304,
+        "semantic_entropy": 1.9477578250864998,
+        "trial_id": "emotions_6/EDITED/Disgusted/MF5_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.6695801269814072,
+        "human_entropy": 0.1895770203261275,
+        "semantic_entropy": 2.8078089110673456,
+        "trial_id": "emotions_6/EDITED/Disgusted/OF5_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.6569465500206217,
+        "human_entropy": 0.6821188874364651,
+        "semantic_entropy": 2.6929879377915604,
+        "trial_id": "emotions_6/EDITED/Excited/CF7_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.2565979435273382,
+        "human_entropy": 0.3981986682803288,
+        "semantic_entropy": 2.7251716208557393,
+        "trial_id": "emotions_6/EDITED/Excited/EF7_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.543029319260004,
+        "human_entropy": 0.49445575544161835,
+        "semantic_entropy": 2.8013784583596464,
+        "trial_id": "emotions_6/EDITED/Excited/GF7_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 1.7228001946245186,
+        "human_entropy": 0.48645947075665985,
+        "semantic_entropy": 2.7321894693053923,
+        "trial_id": "emotions_6/EDITED/Excited/IF7_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.5841707585125298,
+        "human_entropy": 0.7508112214843,
+        "semantic_entropy": 2.7727395066566682,
+        "trial_id": "emotions_6/EDITED/Excited/MF7_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.4150225884935588,
+        "human_entropy": 0.7422487407818779,
+        "semantic_entropy": 2.888979232537057,
+        "trial_id": "emotions_6/EDITED/Frustrated/JF23_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.2779914688584597,
+        "human_entropy": 0.9036834788355568,
+        "semantic_entropy": 2.8619356592475618,
+        "trial_id": "emotions_6/EDITED/Frustrated/LF23_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.5387680910402701,
+        "human_entropy": 0.9332256021725779,
+        "semantic_entropy": 2.780885394254645,
+        "trial_id": "emotions_6/EDITED/Frustrated/RF23 v1_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 1.5013272102290933,
+        "human_entropy": 0.15553658359656514,
+        "semantic_entropy": 2.7440786915692312,
+        "trial_id": "emotions_6/EDITED/Happy/GF1_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 1.1421200429883351,
+        "human_entropy": 0.9149114231502237,
+        "semantic_entropy": 2.4881098296247757,
+        "trial_id": "emotions_6/EDITED/Happy/IF1_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 1.1872832254713437,
+        "human_entropy": 0.34598081344691317,
+        "semantic_entropy": 2.753095277877186,
+        "trial_id": "emotions_6/EDITED/Happy/KF1_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 1.164821376724465,
+        "human_entropy": 0.6298210215880925,
+        "semantic_entropy": 2.4895826327765653,
+        "trial_id": "emotions_6/EDITED/Happy/MF1_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 1.1872832254713437,
+        "human_entropy": 0.6464855238863217,
+        "semantic_entropy": 2.742448192617862,
+        "trial_id": "emotions_6/EDITED/Happy/OF1_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.275038049043734,
+        "human_entropy": 0.9125347439144864,
+        "semantic_entropy": 2.672993955393162,
+        "trial_id": "emotions_6/EDITED/Happy Low Intensity/CF2_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.2876716260045196,
+        "human_entropy": 1.317736115444217,
+        "semantic_entropy": 2.7364115567070972,
+        "trial_id": "emotions_6/EDITED/Happy Low Intensity/GF2_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.3046615296840591,
+        "human_entropy": 0.6065170496930994,
+        "semantic_entropy": 2.6678045086314057,
+        "trial_id": "emotions_6/EDITED/Happy Low Intensity/IF2_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.3308239368722865,
+        "human_entropy": 0.7122771289619992,
+        "semantic_entropy": 2.650628345232882,
+        "trial_id": "emotions_6/EDITED/Happy Low Intensity/KF2_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.5387680910402701,
+        "human_entropy": 0.7676706091062226,
+        "semantic_entropy": 2.6883306379028284,
+        "trial_id": "emotions_7/EDITED/Excited/SF7_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.5691917264482313,
+        "human_entropy": 0.47862315812325196,
+        "semantic_entropy": 2.6921792720972526,
+        "trial_id": "emotions_7/EDITED/Interested/BF21.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.5827205566756732,
+        "human_entropy": 0.40761985280731605,
+        "semantic_entropy": 2.8307205756413527,
+        "trial_id": "emotions_7/EDITED/Interested/HF21_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.447552194015782,
+        "human_entropy": 1.0644078580323229,
+        "semantic_entropy": 2.489443498120984,
+        "trial_id": "emotions_7/EDITED/Interested/JF21v1_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 1.4490023958526383,
+        "human_entropy": 0.9595670198443658,
+        "semantic_entropy": 2.6176909261284935,
+        "trial_id": "emotions_7/EDITED/Interested/JF21v2_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.400138654928281,
+        "human_entropy": 0.988059257542929,
+        "semantic_entropy": 2.746925147161322,
+        "trial_id": "emotions_7/EDITED/Interested/NF21v2_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.4320124921730986,
+        "human_entropy": 1.0785381139092651,
+        "semantic_entropy": 2.6981155134317842,
+        "trial_id": "emotions_7/EDITED/Interested/PF21_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.7228001946245188,
+        "human_entropy": 0.5598020067138181,
+        "semantic_entropy": 2.6557446884888214,
+        "trial_id": "emotions_11/EDITED/Afraid/CF3_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.2968441295132072,
+        "human_entropy": 0.8319761756588322,
+        "semantic_entropy": 2.668533804124132,
+        "trial_id": "emotions_11/EDITED/Angry/DF17_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.6874357505033554,
+        "human_entropy": 0.8779945648954439,
+        "semantic_entropy": 2.725068864507769,
+        "trial_id": "emotions_11/EDITED/Angry/HF17v1_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.051256318980014,
+        "human_entropy": 1.2264990738557862,
+        "semantic_entropy": 2.430846308027001,
+        "trial_id": "emotions_11/EDITED/Angry/NF17_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.777661295762166,
+        "human_entropy": 0.5621538995014704,
+        "semantic_entropy": 2.7592559623655637,
+        "trial_id": "emotions_11/EDITED/Angry/PF17_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.415022588493559,
+        "human_entropy": 0.9968773424690679,
+        "semantic_entropy": 2.7762846911710035,
+        "trial_id": "emotions_11/EDITED/Ashamed/EF13_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.1872832254713435,
+        "human_entropy": 1.0506349456865312,
+        "semantic_entropy": 2.641607145170096,
+        "trial_id": "emotions_11/EDITED/Ashamed/GF13_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.333074293476779,
+        "human_entropy": 0.39226687048625264,
+        "semantic_entropy": 2.816824697360918,
+        "trial_id": "emotions_11/EDITED/Ashamed/Of13_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 1.7524236752648437,
+        "human_entropy": 1.0604861799724354,
+        "semantic_entropy": 2.852745504868124,
+        "trial_id": "emotions_11/EDITED/Ashamed/SF13_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.3303162832349145,
+        "human_entropy": 0.6859711622471995,
+        "semantic_entropy": 2.8247985798412545,
+        "trial_id": "emotions_11/EDITED/Frustrated/BF23_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.5013272102290933,
+        "human_entropy": 0.532326110978585,
+        "semantic_entropy": 2.7400351390222246,
+        "trial_id": "emotions_11/EDITED/Frustrated/DF23_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.2798542258336676,
+        "human_entropy": 0.7671112102080893,
+        "semantic_entropy": 2.8298690024898656,
+        "trial_id": "emotions_11/EDITED/Frustrated/FF23_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.4406300471115867,
+        "human_entropy": 0.6011578395151034,
+        "semantic_entropy": 2.8333481509917977,
+        "trial_id": "emotions_11/EDITED/Frustrated/HF23v1_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.3330742934767792,
+        "human_entropy": 0.7590648558560682,
+        "semantic_entropy": 2.7501437683394694,
+        "trial_id": "emotions_11/EDITED/Frustrated/HF23v2_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.914285581467099,
+        "human_entropy": 0.9312784067881004,
+        "semantic_entropy": 2.7699721519271843,
+        "trial_id": "emotions_13/EDITED/Bored/CF8_cut(1).mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.6695801269814075,
+        "human_entropy": 0.6254581324713603,
+        "semantic_entropy": 2.7388533106027477,
+        "trial_id": "emotions_13/EDITED/Disgusted Low Intensity/OF6v2_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.686570030660947,
+        "human_entropy": 1.055775898855157,
+        "semantic_entropy": 2.6806190583696714,
+        "trial_id": "emotions_17/EDITED/Afraid/MF3_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.3831487512487415,
+        "human_entropy": 0.84070407416566,
+        "semantic_entropy": 2.8021497179741774,
+        "trial_id": "emotions_17/EDITED/Afraid Low Intensity/IF4_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.6695801269814075,
+        "human_entropy": 0.8464184689125798,
+        "semantic_entropy": 2.7059215564358947,
+        "trial_id": "emotions_17/EDITED/Afraid Low Intensity/KF4_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.4964159349401391,
+        "human_entropy": 1.0153625071641845,
+        "semantic_entropy": 2.70645930969099,
+        "trial_id": "emotions_17/EDITED/Disgusted Low Intensity/GF6_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.5260394155804642,
+        "human_entropy": 0.72606743995123,
+        "semantic_entropy": 2.6787935977981836,
+        "trial_id": "emotions_18/EDITED/Disappointed/EF9_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.327362863420189,
+        "human_entropy": 0.920739904659952,
+        "semantic_entropy": 2.8965983701562097,
+        "trial_id": "emotions_18/EDITED/Disappointed/KF9_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.914285581467099,
+        "human_entropy": 1.1301373107970947,
+        "semantic_entropy": 2.747521536976933,
+        "trial_id": "emotions_21/EDITED/Angry Low Intensity/PF18_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.4475521940157818,
+        "human_entropy": 1.2303159972044118,
+        "semantic_entropy": 2.71714295094073,
+        "trial_id": "emotions_21/EDITED/Bored/EF8_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.4737146012040094,
+        "human_entropy": 0.9611757665581756,
+        "semantic_entropy": 2.794474050027733,
+        "trial_id": "emotions_22/EDITED/Afraid Low Intensity/IF4v2_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.6088829638639008,
+        "human_entropy": 1.1393733363888416,
+        "semantic_entropy": 2.7639707540235485,
+        "trial_id": "emotions_22/EDITED/Afraid Low Intensity/MF4_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.5047882836811908,
+        "human_entropy": 0.532066469716399,
+        "semantic_entropy": 2.796718589684856,
+        "trial_id": "emotions_22/EDITED/Ashamed/CF13_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.5274896174173205,
+        "human_entropy": 0.7739358438862305,
+        "semantic_entropy": 2.8278585677807193,
+        "trial_id": "emotions_22/EDITED/Disappointed/GF9_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.7083465777061715,
+        "human_entropy": 1.2242386917968744,
+        "semantic_entropy": 2.71556184446172,
+        "trial_id": "emotions_23/EDITED/Angry Low Intensity/FF18_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.370515174287956,
+        "human_entropy": 0.9312784067881004,
+        "semantic_entropy": 2.70331023450116,
+        "trial_id": "emotions_23/EDITED/Bored/CF8_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.6908312588806806,
+        "human_entropy": 1.0561506788499946,
+        "semantic_entropy": 2.7399086578915566,
+        "trial_id": "emotions_23/EDITED/Bored/GF8_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.656946550020622,
+        "human_entropy": 0.7347985275502752,
+        "semantic_entropy": 2.7891825953761575,
+        "trial_id": "emotions_23/EDITED/Bored/MF8_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.5387680910402701,
+        "human_entropy": 0.875882375478273,
+        "semantic_entropy": 2.6856446618760597,
+        "trial_id": "emotions_23/EDITED/Disappointed/SF9 v1_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.4877983800016512,
+        "human_entropy": 1.5480499215240306,
+        "semantic_entropy": 2.8045332038765713,
+        "trial_id": "emotions_23/EDITED/Disgusted Low Intensity/MF6_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.4581748993613257,
+        "human_entropy": 1.0492904296147767,
+        "semantic_entropy": 2.6982937032451244,
+        "trial_id": "emotions_26/EDITED/Disappointed/OF9_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.543029319260004,
+        "human_entropy": 0.9678221797258894,
+        "semantic_entropy": 2.754644038237566,
+        "trial_id": "emotions_26/EDITED/Disgusted Low Intensity/EF6_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.009762706711321,
+        "human_entropy": 0.12415397163303728,
+        "semantic_entropy": 2.676655828185629,
+        "trial_id": "emotions_27/EDITED/Afraid/IF3_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.471703729588768,
+        "human_entropy": 1.2797530285328393,
+        "semantic_entropy": 2.7020194203689147,
+        "trial_id": "emotions_29/EDITED/Jealous/MF11_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 1.6796478837567517,
+        "human_entropy": 1.1731921727417078,
+        "semantic_entropy": 2.8051594387907315,
+        "trial_id": "emotions_29/EDITED/Jealous/OF11_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.4702535277519118,
+        "human_entropy": 1.1143214757308781,
+        "semantic_entropy": 2.6842137063201377,
+        "trial_id": "emotions_29/EDITED/Jealous/SF11_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.735433771585304,
+        "human_entropy": 0.4986027962210376,
+        "semantic_entropy": 2.6862841548410907,
+        "trial_id": "emotions_29/EDITED/Proud/FF27_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.3923212547574289,
+        "human_entropy": 1.338139984411786,
+        "semantic_entropy": 2.6810588036265455,
+        "trial_id": "emotions_29/EDITED/Proud/LF27_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.3491689438896621,
+        "human_entropy": 0.43261856569191603,
+        "semantic_entropy": 2.7293612256390642,
+        "trial_id": "emotions_29/EDITED/Sad/PF15_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.5832755052458731,
+        "human_entropy": 0.7952258419421175,
+        "semantic_entropy": 2.7418399230907124,
+        "trial_id": "emotions_29/EDITED/Unfriendly/DF25_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.495615780172503,
+        "human_entropy": 1.4057275664727884,
+        "semantic_entropy": 2.821621472660802,
+        "trial_id": "emotions_29/EDITED/Unfriendly/JF25_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 1.1205710370360085,
+        "human_entropy": 0.3388734448766708,
+        "semantic_entropy": 2.8170180730402783,
+        "trial_id": "emotions_30/EDITED/Neutral/NF28_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.5181862130502128,
+        "human_entropy": 0.4129210418694463,
+        "semantic_entropy": 2.6370171948127084,
+        "trial_id": "emotions_30/EDITED/Neutral/RF28_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.4843373065495533,
+        "human_entropy": 1.2304476727046516,
+        "semantic_entropy": 2.7288647584631964,
+        "trial_id": "emotions_30/EDITED/Proud/BF27v1_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.482887104712697,
+        "human_entropy": 0.3068982649132118,
+        "semantic_entropy": 2.6024962583512137,
+        "trial_id": "emotions_30/EDITED/Proud/RF27_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.0250939117917865,
+        "human_entropy": 0.06500189380978766,
+        "semantic_entropy": 2.816231725057882,
+        "trial_id": "emotions_30/EDITED/Surprised/PF19v2_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.4490023958526383,
+        "human_entropy": 1.3238914188848572,
+        "semantic_entropy": 2.7575589828701492,
+        "trial_id": "emotions_31/EDITED/Jealous/CF11_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.5047882836811908,
+        "human_entropy": 1.0304721867729125,
+        "semantic_entropy": 2.7551563379951673,
+        "trial_id": "emotions_31/EDITED/Jealous/GF11_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.596804335473315,
+        "human_entropy": 1.0882826211788867,
+        "semantic_entropy": 2.721120130991028,
+        "trial_id": "emotions_31/EDITED/Jealous/IF11_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.5047882836811908,
+        "human_entropy": 0.9299087697725864,
+        "semantic_entropy": 2.8462178390988564,
+        "trial_id": "emotions_31/EDITED/Jealous/KF11_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.8260651866153443,
+        "human_entropy": 0.5218851445634826,
+        "semantic_entropy": 2.8301318771401087,
+        "trial_id": "emotions_31/EDITED/Neutral/SF14_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 1.4490023958526383,
+        "human_entropy": 1.215841797303982,
+        "semantic_entropy": 2.640306795680171,
+        "trial_id": "emotions_31/EDITED/Proud/NF27_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.094408629847781,
+        "human_entropy": 0.7347985275502752,
+        "semantic_entropy": 2.70238914430599,
+        "trial_id": "emotions_31/EDITED/Sad/BF15_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.1058898790247633,
+        "human_entropy": 0.6526518166231635,
+        "semantic_entropy": 2.8643795841294932,
+        "trial_id": "emotions_31/EDITED/Sad/HF15_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.9836002995230935,
+        "human_entropy": 0.8559233718366581,
+        "semantic_entropy": 2.8007308218990112,
+        "trial_id": "emotions_31/EDITED/Sad/JF15_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.26100156517892,
+        "human_entropy": 0.2180569809608334,
+        "semantic_entropy": 2.5459655600979323,
+        "trial_id": "emotions_31/EDITED/Sad Low Intensity/RF16 v1_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.207973687592232,
+        "human_entropy": 0.6985934821408661,
+        "semantic_entropy": 2.683461926117632,
+        "trial_id": "emotions_31/EDITED/Surprised/NF19_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.3330742934767792,
+        "human_entropy": 0.41923657294776084,
+        "semantic_entropy": 2.6977849960780524,
+        "trial_id": "emotions_31/EDITED/Surprised Low Intensity/RF20 v1_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.2779914688584597,
+        "human_entropy": 0.4277246198870338,
+        "semantic_entropy": 2.5954988394729046,
+        "trial_id": "emotions_31/EDITED/Surprised Low Intensity/RF20 v2_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.495615780172503,
+        "human_entropy": 1.557763624937636,
+        "semantic_entropy": 2.65604413799995,
+        "trial_id": "emotions_32/EDITED/Kind/DF24_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 1.6088829638639006,
+        "human_entropy": 1.1497830179957012,
+        "semantic_entropy": 2.5941696454257155,
+        "trial_id": "emotions_32/EDITED/Kind/PF24_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 1.2013670042689852,
+        "human_entropy": 0.5257912017738154,
+        "semantic_entropy": 2.73687432589005,
+        "trial_id": "emotions_32/EDITED/Neutral/DF28_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.1633711748876086,
+        "human_entropy": 0.9745626010968317,
+        "semantic_entropy": 2.8208685221988437,
+        "trial_id": "emotions_33/EDITED/Interested/NF21v1_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.442080248948443,
+        "human_entropy": 0.9635053730892417,
+        "semantic_entropy": 2.785384877478375,
+        "trial_id": "emotions_33/EDITED/Kind/NF24_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.3308239368722865,
+        "human_entropy": 1.361365674923442,
+        "semantic_entropy": 2.6189413816336966,
+        "trial_id": "emotions_33/EDITED/Kind/RF24_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.9836002995230935,
+        "human_entropy": 0.37367552680218435,
+        "semantic_entropy": 2.7196003850097563,
+        "trial_id": "emotions_33/EDITED/Neutral/CF14_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 1.3303162832349145,
+        "human_entropy": 0.5761934010628065,
+        "semantic_entropy": 2.7667895839451866,
+        "trial_id": "emotions_33/EDITED/Neutral/EF14_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 1.051256318980014,
+        "human_entropy": 0.49170552746865576,
+        "semantic_entropy": 2.693746334632719,
+        "trial_id": "emotions_33/EDITED/Neutral/FF28_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 1.3303162832349145,
+        "human_entropy": 0.5707725048874256,
+        "semantic_entropy": 2.847073938012106,
+        "trial_id": "emotions_33/EDITED/Neutral/GF14_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 1.1752045970807579,
+        "human_entropy": 0.35928790584303383,
+        "semantic_entropy": 2.7642720912128205,
+        "trial_id": "emotions_33/EDITED/Neutral/HF28_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.5657306529961337,
+        "human_entropy": 0.549932648388716,
+        "semantic_entropy": 2.7231999369694546,
+        "trial_id": "emotions_33/EDITED/Sneaky/LF26_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.1752045970807579,
+        "human_entropy": 0.8250578726404313,
+        "semantic_entropy": 2.726563489981841,
+        "trial_id": "emotions_33/EDITED/Surprised Low Intensity/DF20_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.4877983800016508,
+        "human_entropy": 0.23560956328610605,
+        "semantic_entropy": 2.70020564722068,
+        "trial_id": "emotions_33/EDITED/Surprised Low Intensity/FF20_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.4023890115327735,
+        "human_entropy": 1.3448492442385056,
+        "semantic_entropy": 2.632089458815746,
+        "trial_id": "emotions_34/EDITED/Kind/LF24_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 1.0790774247673154,
+        "human_entropy": 0.696809667743568,
+        "semantic_entropy": 2.8169500685910314,
+        "trial_id": "emotions_34/EDITED/Neutral/JF28_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 1.122372129066931,
+        "human_entropy": 0.614235417022184,
+        "semantic_entropy": 2.7874949200016834,
+        "trial_id": "emotions_34/EDITED/Neutral/KF14_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.639031859650177,
+        "human_entropy": 0.7057977229302815,
+        "semantic_entropy": 2.7916818858639196,
+        "trial_id": "emotions_34/EDITED/Neutral/LF28_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.5181862130502128,
+        "human_entropy": 0.5933485030117569,
+        "semantic_entropy": 2.7815721852899724,
+        "trial_id": "emotions_34/EDITED/Neutral/MF14_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.7083465777061715,
+        "human_entropy": 0.5530544586968841,
+        "semantic_entropy": 2.765616897305927,
+        "trial_id": "emotions_34/EDITED/Neutral/OF14_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 1.2706817223249798,
+        "human_entropy": 0.39356420692115973,
+        "semantic_entropy": 2.853854046653243,
+        "trial_id": "emotions_34/EDITED/Neutral/PF28_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.289921982609012,
+        "human_entropy": 0.8055141363398549,
+        "semantic_entropy": 2.7663171668581077,
+        "trial_id": "emotions_34/EDITED/Proud/BF27v2_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 1.6088829638639006,
+        "human_entropy": 0.5254964024680017,
+        "semantic_entropy": 2.763756855298768,
+        "trial_id": "emotions_34/EDITED/Proud/DF27_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.26100156517892,
+        "human_entropy": 1.3033982236736732,
+        "semantic_entropy": 2.795490809837412,
+        "trial_id": "emotions_34/EDITED/Proud/HF27_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.3259126615833325,
+        "human_entropy": 0.4792133584049474,
+        "semantic_entropy": 2.8365166080792275,
+        "trial_id": "emotions_34/EDITED/Proud/JF27_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.5274896174173205,
+        "human_entropy": 0.8206804316128937,
+        "semantic_entropy": 2.6926791070885416,
+        "trial_id": "emotions_34/EDITED/Proud/JF27v2_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.6399566463410822,
+        "human_entropy": 1.1617134221222012,
+        "semantic_entropy": 2.6960341280051074,
+        "trial_id": "emotions_34/EDITED/Proud/PF27_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.3762266043445461,
+        "human_entropy": 1.1450536857637756,
+        "semantic_entropy": 2.7790454858412117,
+        "trial_id": "emotions_34/EDITED/Sad Low Intensity/JF16_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 1.4616359728134236,
+        "human_entropy": 0.6944581128025329,
+        "semantic_entropy": 2.5920563452927157,
+        "trial_id": "emotions_34/EDITED/Sad Low Intensity/RF16 v2_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.3046615296840594,
+        "human_entropy": 0.3655793218978421,
+        "semantic_entropy": 2.634024041816305,
+        "trial_id": "emotions_34/EDITED/Surprised/BF19_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.2779914688584597,
+        "human_entropy": 0.5857258993242922,
+        "semantic_entropy": 2.7399773025815026,
+        "trial_id": "emotions_34/EDITED/Surprised/DF19_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.237597168232557,
+        "human_entropy": 0.2062555541162096,
+        "semantic_entropy": 2.6916216958936396,
+        "trial_id": "emotions_34/EDITED/Surprised/HF19_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.5691917264482313,
+        "human_entropy": 0.6352879830198852,
+        "semantic_entropy": 2.7675705414270797,
+        "trial_id": "emotions_35/EDITED/Afraid/EF3_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.344257668600708,
+        "human_entropy": 0.8438760514540481,
+        "semantic_entropy": 2.6474413278389606,
+        "trial_id": "emotions_35/EDITED/Afraid/GF3_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.799902779427117,
+        "human_entropy": 1.5573319673494386,
+        "semantic_entropy": 2.800900940368177,
+        "trial_id": "emotions_35/EDITED/Angry Low Intensity/BF18_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.9376369622724492,
+        "human_entropy": 0.9010630856404789,
+        "semantic_entropy": 2.6200157693227855,
+        "trial_id": "emotions_35/EDITED/Neutral/IF14_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.0097627067113208,
+        "human_entropy": 0.5426062507233901,
+        "semantic_entropy": 2.8151062756196663,
+        "trial_id": "emotions_35/EDITED/Surprised Low Intensity/BF20_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.39439769144744274,
+        "human_entropy": 0.13857198594030795,
+        "semantic_entropy": 2.7041404422399604,
+        "trial_id": "emotions_35/EDITED/Surprised Low Intensity/HF20_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.3473061869144543,
+        "human_entropy": 0.7922530650134624,
+        "semantic_entropy": 2.7650231119057618,
+        "trial_id": "emotions_35/EDITED/Surprised Low Intensity/PF20v1_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.1752045970807579,
+        "human_entropy": 0.7982917073153333,
+        "semantic_entropy": 2.689504538758119,
+        "trial_id": "emotions_35/EDITED/Surprised Low Intensity/PF20v2_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.5827205566756732,
+        "human_entropy": 0.7419548788407495,
+        "semantic_entropy": 2.7363815234406443,
+        "trial_id": "emotions_36/EDITED/Afraid Low Intensity/EF4_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.5387680910402701,
+        "human_entropy": 0.45685927991347675,
+        "semantic_entropy": 2.7397772936707625,
+        "trial_id": "emotions_36/EDITED/Ashamed/IF13_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.4786258764929634,
+        "human_entropy": 0.8321673269361318,
+        "semantic_entropy": 2.7090986982143015,
+        "trial_id": "emotions_36/EDITED/Disgusted Low Intensity/SF6 v2_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.3046615296840591,
+        "human_entropy": 0.1386843129218439,
+        "semantic_entropy": 2.6937978106722738,
+        "trial_id": "emotions_36/EDITED/Happy/CF1_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 1.2353468116280648,
+        "human_entropy": 0.6716156704719491,
+        "semantic_entropy": 2.5929763386482696,
+        "trial_id": "emotions_36/EDITED/Happy/EF1_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.6695801269814072,
+        "human_entropy": 1.028837662307958,
+        "semantic_entropy": 2.5373321263226694,
+        "trial_id": "emotions_36/EDITED/Happy Low Intensity/MF2_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.4320124921730986,
+        "human_entropy": 0.8869167754476329,
+        "semantic_entropy": 2.5658842336122163,
+        "trial_id": "emotions_36/EDITED/Interested/FF21_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 1.7480673485460894,
+        "human_entropy": 0.3667872216609197,
+        "semantic_entropy": 2.7292570342829285,
+        "trial_id": "emotions_36/EDITED/Joking/EF12_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.591092905416725,
+        "human_entropy": 0.9489846797694362,
+        "semantic_entropy": 2.679248174956031,
+        "trial_id": "emotions_36/EDITED/Joking/GF12_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.4150225884935588,
+        "human_entropy": 0.5239817070483234,
+        "semantic_entropy": 2.7059314000333097,
+        "trial_id": "emotions_36/EDITED/Joking/IF12_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.5274896174173205,
+        "human_entropy": 0.11001678737755638,
+        "semantic_entropy": 2.804894837320792,
+        "trial_id": "emotions_36/EDITED/Joking/KF12_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.3046615296840594,
+        "human_entropy": 0.4113508184196229,
+        "semantic_entropy": 2.8073951883704664,
+        "trial_id": "emotions_36/EDITED/Joking/MF12_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 1.4949657331032826,
+        "human_entropy": 0.7693871100566957,
+        "semantic_entropy": 2.8403118169554666,
+        "trial_id": "emotions_36/EDITED/Kind/BF24_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 1.6831089572088493,
+        "human_entropy": 1.4169820153744386,
+        "semantic_entropy": 2.7217087939307585,
+        "trial_id": "emotions_36/EDITED/Kind/FF24_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.248780543356486,
+        "human_entropy": 1.2290002489863274,
+        "semantic_entropy": 2.6824778199813086,
+        "trial_id": "emotions_36/EDITED/Kind/HF24_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.165524439934698,
+        "human_entropy": 1.6475433872670957,
+        "semantic_entropy": 2.7125946337822753,
+        "trial_id": "emotions_36/EDITED/Kind/JF24_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.7083465777061715,
+        "human_entropy": 1.0335888855539315,
+        "semantic_entropy": 2.7469418880216567,
+        "trial_id": "emotions_36/EDITED/Neutral/BF28_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 1.0486537893593546,
+        "human_entropy": 1.0119559221169985,
+        "semantic_entropy": 2.433960657315808,
+        "trial_id": "emotions_37/EDITED/Happy Low Intensity/OF2_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.1223721290669308,
+        "human_entropy": 0.9422767384439854,
+        "semantic_entropy": 2.5352840631307716,
+        "trial_id": "emotions_37/EDITED/Hurt/SF10 v1_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.5047882836811906,
+        "human_entropy": 0.5414266792488174,
+        "semantic_entropy": 2.7768991927916855,
+        "trial_id": "emotions_37/EDITED/Interested/Df21_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.0250939117917865,
+        "human_entropy": 0.82139275897296,
+        "semantic_entropy": 2.844819179271713,
+        "trial_id": "emotions_37/EDITED/Interested/LF21_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.4964159349401391,
+        "human_entropy": 0.1298580350480468,
+        "semantic_entropy": 2.8301659731215905,
+        "trial_id": "emotions_37/EDITED/Joking/SF12_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.6796478837567517,
+        "human_entropy": 0.40734109719880895,
+        "semantic_entropy": 2.728797003380825,
+        "trial_id": "emotions_37/EDITED/Sneaky/BF26v1_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.4446460691338838,
+        "human_entropy": 0.7933516213192937,
+        "semantic_entropy": 2.795393398829394,
+        "trial_id": "emotions_37/EDITED/Sneaky/Df26_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.495615780172503,
+        "human_entropy": 0.9002980337830352,
+        "semantic_entropy": 2.7399086578915566,
+        "trial_id": "emotions_37/EDITED/Sneaky/JF26_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.8260651866153443,
+        "human_entropy": 1.2080982950722918,
+        "semantic_entropy": 2.6122456614868996,
+        "trial_id": "emotions_38/EDITED/Angry Low Intensity/JF18_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.5444795210968603,
+        "human_entropy": 1.1658220517397027,
+        "semantic_entropy": 2.8284110504227313,
+        "trial_id": "emotions_38/EDITED/Ashamed/MF13_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.5841707585125298,
+        "human_entropy": 0.6691267067992982,
+        "semantic_entropy": 2.817124606444228,
+        "trial_id": "emotions_38/EDITED/Frustrated/NF23_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.5134058386196787,
+        "human_entropy": 0.5011707625659023,
+        "semantic_entropy": 2.7675649109364446,
+        "trial_id": "emotions_38/EDITED/Frustrated/PF23_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.3563362969912935,
+        "human_entropy": 0.55995350019292,
+        "semantic_entropy": 2.761412717383625,
+        "trial_id": "emotions_38/EDITED/Frustrated/RF23 v2_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.4406300471115867,
+        "human_entropy": 0.8766611018318162,
+        "semantic_entropy": 2.6924333100473974,
+        "trial_id": "emotions_38/EDITED/Hurt/OF10_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.2013670042689852,
+        "human_entropy": 0.8402571406917932,
+        "semantic_entropy": 2.691500447645649,
+        "trial_id": "emotions_38/EDITED/Hurt/SF10 v2_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.2312356911067468,
+        "human_entropy": 0.7197289724055755,
+        "semantic_entropy": 2.832472601589631,
+        "trial_id": "emotions_38/EDITED/Interested/RF21_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.540123194378106,
+        "human_entropy": 0.37158739828818305,
+        "semantic_entropy": 2.574776817708205,
+        "trial_id": "emotions_38/EDITED/Joking/CF12_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.344257668600708,
+        "human_entropy": 0.3424702494487607,
+        "semantic_entropy": 2.8133387273819572,
+        "trial_id": "emotions_39/EDITED/Excited/KF7_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.6385064445042257,
+        "human_entropy": 0.6624715817013779,
+        "semantic_entropy": 2.659810097798663,
+        "trial_id": "emotions_39/EDITED/Excited/OF7v1_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 1.6399566463410822,
+        "human_entropy": 0.2043625374781422,
+        "semantic_entropy": 2.6045833705008166,
+        "trial_id": "emotions_39/EDITED/Excited/OF7v2_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 1.5657306529961337,
+        "human_entropy": 0.33873281129520955,
+        "semantic_entropy": 2.5652357856278045,
+        "trial_id": "emotions_39/EDITED/Happy/SF1_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.3399964403809743,
+        "human_entropy": 0.6559806055652888,
+        "semantic_entropy": 2.745824257362268,
+        "trial_id": "emotions_39/EDITED/Hurt/CF10v1_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 1.5113949670044375,
+        "human_entropy": 0.8537716311897667,
+        "semantic_entropy": 2.796933980222347,
+        "trial_id": "emotions_39/EDITED/Hurt/CF10v2_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.333074293476779,
+        "human_entropy": 0.7930115595991998,
+        "semantic_entropy": 2.8541192050692215,
+        "trial_id": "emotions_39/EDITED/Hurt/EF10_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.6385064445042257,
+        "human_entropy": 0.6834785647711188,
+        "semantic_entropy": 2.7930851001366848,
+        "trial_id": "emotions_39/EDITED/Hurt/GF10_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.4285514187210009,
+        "human_entropy": 0.7001722154050752,
+        "semantic_entropy": 2.7557805634696577,
+        "trial_id": "emotions_39/EDITED/Hurt/IF10_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.471703729588768,
+        "human_entropy": 0.8293032080725099,
+        "semantic_entropy": 2.8170676570407958,
+        "trial_id": "emotions_39/EDITED/Hurt/KF10_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.681658755371993,
+        "human_entropy": 0.7782532312347523,
+        "semantic_entropy": 2.7627146344683577,
+        "trial_id": "emotions_40/EDITED/Afraid Low Intensity/CF4_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.333074293476779,
+        "human_entropy": 0.8287233306023749,
+        "semantic_entropy": 2.541956075699575,
+        "trial_id": "emotions_41/EDITED/Angry Low Intensity/LF18_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.3734685941026816,
+        "human_entropy": 1.0424143687493586,
+        "semantic_entropy": 2.6292056567459423,
+        "trial_id": "emotions_43/EDITED/Disgusted Low Intensity/SF6 v1_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 1.425651015047288,
+        "human_entropy": 0.45215531649310925,
+        "semantic_entropy": 2.740706423927951,
+        "trial_id": "emotions_44/EDITED/Disgusted Low Intensity/CF6_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.705810290944979,
+        "human_entropy": 0.23360396499832023,
+        "semantic_entropy": 2.7813847286621836,
+        "trial_id": "emotions_46/EDITED/Afraid/SF3_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.5741030017371853,
+        "human_entropy": 0.6639692338729113,
+        "semantic_entropy": 2.7149890013399656,
+        "trial_id": "emotions_46/EDITED/Afraid Low Intensity/OF4_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.2348391579906925,
+        "human_entropy": 0.6389645264391534,
+        "semantic_entropy": 2.812196891230958,
+        "trial_id": "emotions_46/EDITED/Afraid Low Intensity/SF4_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.5260394155804642,
+        "human_entropy": 1.116956718959034,
+        "semantic_entropy": 2.7943420905354213,
+        "trial_id": "emotions_46/EDITED/Disappointed/CF9v1_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 1.7297223415287137,
+        "human_entropy": 0.7818583590402087,
+        "semantic_entropy": 2.7068729854475646,
+        "trial_id": "emotions_46/EDITED/Disappointed/IF9_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.0097627067113208,
+        "human_entropy": 0.8256638529710575,
+        "semantic_entropy": 2.6334818886734874,
+        "trial_id": "emotions_51/EDITED/Angry Low Intensity/HF18_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.0104127537805414,
+        "human_entropy": 0.4741337450807064,
+        "semantic_entropy": 2.812313616978226,
+        "trial_id": "emotions_51/EDITED/Bored/KF8_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.2013670042689852,
+        "human_entropy": 1.0958489756607737,
+        "semantic_entropy": 2.718263878367505,
+        "trial_id": "emotions_51/EDITED/Disgusted Low Intensity/IF6_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.3473061869144543,
+        "human_entropy": 1.501888279900196,
+        "semantic_entropy": 2.6821870548862257,
+        "trial_id": "emotions_51/EDITED/Disgusted Low Intensity/OF6v1_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.5387680910402701,
+        "human_entropy": 0.938952700620868,
+        "semantic_entropy": 2.7953945394137585,
+        "trial_id": "emotions_52/EDITED/Disappointed/SF9 v2_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.2779914688584597,
+        "human_entropy": 0.6367577255909682,
+        "semantic_entropy": 2.8272122218134563,
+        "trial_id": "emotions_53/EDITED/Afraid/OF3_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.6264278161136398,
+        "human_entropy": 0.9901075132277787,
+        "semantic_entropy": 2.746586242180586,
+        "trial_id": "emotions_54/EDITED/Disappointed/CF9v2_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.6816587553719928,
+        "human_entropy": 0.7467325314556992,
+        "semantic_entropy": 2.8232651280957812,
+        "trial_id": "emotions_57/EDITED/Disappointed/MF9_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.9836002995230936,
+        "human_entropy": 1.2178193050000101,
+        "semantic_entropy": 2.6988983947566307,
+        "trial_id": "emotions_59/EDITED/Angry Low Intensity/DF18_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.5691917264482313,
+        "human_entropy": 0.6674310161977423,
+        "semantic_entropy": 2.7704456510281656,
+        "trial_id": "emotions_68/EDITED/Afraid Low Intensity/GF4_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.5832755052458727,
+        "human_entropy": 0.9212612808052513,
+        "semantic_entropy": 2.739596556785713,
+        "trial_id": "emotions_68/EDITED/Bored/IF8_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 1.664668851692453,
+        "human_entropy": 0.645704684272175,
+        "semantic_entropy": 2.756240666782258,
+        "trial_id": "emotions_68/EDITED/Bored/OF8_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.2348391579906925,
+        "human_entropy": 0.6743199714053549,
+        "semantic_entropy": 2.522807102589807,
+        "trial_id": "emotions_68/EDITED/Bored/SF8_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 1.4659922995321781,
+        "human_entropy": 0.4696272713562404,
+        "semantic_entropy": 2.706432992553693,
+        "trial_id": "emotions_68/EDITED/Disgusted Low Intensity/KF6_cut.mp4"
+      }
+    ]
+  },
+  {
+    "condition": "video_only",
+    "eval": "eval_v2_eu_emotions_qwen3vl_video_only_seed42.json",
+    "model": "qwen3vl",
+    "n_trials_matched_to_human": 243,
+    "protocol_version": "v2-study3-full-eu-6afc",
+    "rq1_1a_semantic_vs_human": {
+      "n": 0,
+      "spearman_rho": null
+    },
+    "rq1_1b_forced_choice_vs_human": {
+      "n": 243,
+      "spearman_rho": -0.0013253211000191954
+    },
+    "trials": [
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.42270908780599087,
+        "human_entropy": 1.340037911029546,
+        "semantic_entropy": null,
+        "trial_id": "emotions/EDITED/Unfriendly/NF25_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.6474466390346325,
+        "human_entropy": 1.1673852880726607,
+        "semantic_entropy": null,
+        "trial_id": "emotions/EDITED/Unfriendly/RF25_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.4609335270292359,
+        "semantic_entropy": null,
+        "trial_id": "emotions/EDITED/Worried/BF22_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.1985152433458726,
+        "human_entropy": 0.8511324784893517,
+        "semantic_entropy": null,
+        "trial_id": "emotions/EDITED/Worried/DF22_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.8568409950394724,
+        "human_entropy": 0.7306874907145144,
+        "semantic_entropy": null,
+        "trial_id": "emotions/EDITED/Worried/FF22_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 1.0525420783298356,
+        "semantic_entropy": null,
+        "trial_id": "emotions/EDITED/Worried/HF22_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.9316330598182656,
+        "semantic_entropy": null,
+        "trial_id": "emotions/EDITED/Worried/JF22_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.5623351446188083,
+        "human_entropy": 0.9252398621768354,
+        "semantic_entropy": null,
+        "trial_id": "emotions/EDITED/Worried/NF22_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.3250829733914482,
+        "human_entropy": 0.7083465777061715,
+        "semantic_entropy": null,
+        "trial_id": "emotions/EDITED/Worried/PF22_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.5004024235381879,
+        "human_entropy": 1.0594788076175,
+        "semantic_entropy": null,
+        "trial_id": "emotions/EDITED/Worried/RF22_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.4655917308900292,
+        "semantic_entropy": null,
+        "trial_id": "emotions_2/EDITED/Surprised/PF19v1_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 1.4898300268126123,
+        "semantic_entropy": null,
+        "trial_id": "emotions_2/EDITED/Unfriendly/BF25v1_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 1.3833228674711864,
+        "semantic_entropy": null,
+        "trial_id": "emotions_2/EDITED/Unfriendly/BF25v2_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.5004024235381879,
+        "human_entropy": 0.9944576271351991,
+        "semantic_entropy": null,
+        "trial_id": "emotions_2/EDITED/Unfriendly/FF25_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 1.29184477359449,
+        "semantic_entropy": null,
+        "trial_id": "emotions_2/EDITED/Unfriendly/GF25_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 1.000623980571525,
+        "semantic_entropy": null,
+        "trial_id": "emotions_2/EDITED/Unfriendly/LF25_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.14700920769063494,
+        "semantic_entropy": null,
+        "trial_id": "emotions_3/EDITED/Sad/RF15_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 1.1155908718668062,
+        "semantic_entropy": null,
+        "trial_id": "emotions_3/EDITED/Unfriendly/PF25_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.3250829733914482,
+        "human_entropy": 0.38493607237184935,
+        "semantic_entropy": null,
+        "trial_id": "emotions_4/EDITED/Angry/JF17_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 1.2290361056177583,
+        "semantic_entropy": null,
+        "trial_id": "emotions_4/EDITED/Angry Low Intensity/NF18_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.42518997942599734,
+        "semantic_entropy": null,
+        "trial_id": "emotions_4/EDITED/Happy Low Intensity/SF2_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 1.1379476539226172,
+        "semantic_entropy": null,
+        "trial_id": "emotions_4/EDITED/Hurt/MF10_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.17982670631184053,
+        "semantic_entropy": null,
+        "trial_id": "emotions_4/EDITED/Joking/OF12v1_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.1985152433458726,
+        "human_entropy": 0.9743327032772795,
+        "semantic_entropy": null,
+        "trial_id": "emotions_4/EDITED/Sneaky/BF26v2_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.1985152433458726,
+        "human_entropy": 1.2598296720209492,
+        "semantic_entropy": null,
+        "trial_id": "emotions_4/EDITED/Sneaky/FF26_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.8322795676123806,
+        "semantic_entropy": null,
+        "trial_id": "emotions_4/EDITED/Sneaky/HF26_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.7460326647147848,
+        "human_entropy": 0.12671854618545952,
+        "semantic_entropy": null,
+        "trial_id": "emotions_5/EDITED/Joking/OF12v2_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.0296530140645737,
+        "human_entropy": 0.8245446322887418,
+        "semantic_entropy": null,
+        "trial_id": "emotions_5/EDITED/Sad/DF15_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.5944080513210923,
+        "semantic_entropy": null,
+        "trial_id": "emotions_5/EDITED/Sad/FF15_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.601881107236682,
+        "semantic_entropy": null,
+        "trial_id": "emotions_5/EDITED/Sad/NF15_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.42270908780599087,
+        "human_entropy": 0.8536238510643961,
+        "semantic_entropy": null,
+        "trial_id": "emotions_5/EDITED/Sad Low Intensity/DF16_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.1985152433458726,
+        "human_entropy": 0.6546620721434904,
+        "semantic_entropy": null,
+        "trial_id": "emotions_5/EDITED/Sad Low Intensity/HF16_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.40853250920507,
+        "semantic_entropy": null,
+        "trial_id": "emotions_5/EDITED/Sad Low Intensity/PF16_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.9203823458065222,
+        "semantic_entropy": null,
+        "trial_id": "emotions_5/EDITED/Sneaky/NF26_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 1.2093778186078623,
+        "semantic_entropy": null,
+        "trial_id": "emotions_5/EDITED/Sneaky/PF26v1_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 1.05125580310506,
+        "semantic_entropy": null,
+        "trial_id": "emotions_5/EDITED/Sneaky/PF26v2_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.6128694524619495,
+        "human_entropy": 1.1688279154107737,
+        "semantic_entropy": null,
+        "trial_id": "emotions_5/EDITED/Sneaky/RF26_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 1.0623539601987668,
+        "semantic_entropy": null,
+        "trial_id": "emotions_5/EDITED/Surprised/FF19_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.5004024235381879,
+        "human_entropy": 1.1840892344403937,
+        "semantic_entropy": null,
+        "trial_id": "emotions_5/EDITED/Surprised/JF19_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.22222617024591548,
+        "semantic_entropy": null,
+        "trial_id": "emotions_5/EDITED/Surprised/LF19_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.25168787476878574,
+        "semantic_entropy": null,
+        "trial_id": "emotions_5/EDITED/Surprised/RF19_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.9229370804074729,
+        "semantic_entropy": null,
+        "trial_id": "emotions_6/EDITED/Angry/RF17_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.42270908780599087,
+        "human_entropy": 0.8553657489184912,
+        "semantic_entropy": null,
+        "trial_id": "emotions_6/EDITED/Ashamed/KF13_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.6730116670092565,
+        "human_entropy": 0.30900106867274113,
+        "semantic_entropy": null,
+        "trial_id": "emotions_6/EDITED/Disgusted/CF5_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 1.127313708464679,
+        "semantic_entropy": null,
+        "trial_id": "emotions_6/EDITED/Disgusted/GF5_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.8018185525433373,
+        "human_entropy": 0.2893507687509995,
+        "semantic_entropy": null,
+        "trial_id": "emotions_6/EDITED/Disgusted/IF5_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.27955289262005906,
+        "semantic_entropy": null,
+        "trial_id": "emotions_6/EDITED/Disgusted/KF5_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.33765475371041304,
+        "semantic_entropy": null,
+        "trial_id": "emotions_6/EDITED/Disgusted/MF5_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.1985152433458726,
+        "human_entropy": 0.1895770203261275,
+        "semantic_entropy": null,
+        "trial_id": "emotions_6/EDITED/Disgusted/OF5_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.6821188874364651,
+        "semantic_entropy": null,
+        "trial_id": "emotions_6/EDITED/Excited/CF7_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.3981986682803288,
+        "semantic_entropy": null,
+        "trial_id": "emotions_6/EDITED/Excited/EF7_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.1985152433458726,
+        "human_entropy": 0.49445575544161835,
+        "semantic_entropy": null,
+        "trial_id": "emotions_6/EDITED/Excited/GF7_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.0296530140645737,
+        "human_entropy": 0.48645947075665985,
+        "semantic_entropy": null,
+        "trial_id": "emotions_6/EDITED/Excited/IF7_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.5004024235381879,
+        "human_entropy": 0.7508112214843,
+        "semantic_entropy": null,
+        "trial_id": "emotions_6/EDITED/Excited/MF7_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.7422487407818779,
+        "semantic_entropy": null,
+        "trial_id": "emotions_6/EDITED/Frustrated/JF23_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.9036834788355568,
+        "semantic_entropy": null,
+        "trial_id": "emotions_6/EDITED/Frustrated/LF23_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.9332256021725779,
+        "semantic_entropy": null,
+        "trial_id": "emotions_6/EDITED/Frustrated/RF23 v1_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.15553658359656514,
+        "semantic_entropy": null,
+        "trial_id": "emotions_6/EDITED/Happy/GF1_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.9149114231502237,
+        "semantic_entropy": null,
+        "trial_id": "emotions_6/EDITED/Happy/IF1_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.34598081344691317,
+        "semantic_entropy": null,
+        "trial_id": "emotions_6/EDITED/Happy/KF1_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.6298210215880925,
+        "semantic_entropy": null,
+        "trial_id": "emotions_6/EDITED/Happy/MF1_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.6464855238863217,
+        "semantic_entropy": null,
+        "trial_id": "emotions_6/EDITED/Happy/OF1_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.9125347439144864,
+        "semantic_entropy": null,
+        "trial_id": "emotions_6/EDITED/Happy Low Intensity/CF2_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 1.317736115444217,
+        "semantic_entropy": null,
+        "trial_id": "emotions_6/EDITED/Happy Low Intensity/GF2_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.6065170496930994,
+        "semantic_entropy": null,
+        "trial_id": "emotions_6/EDITED/Happy Low Intensity/IF2_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.7122771289619992,
+        "semantic_entropy": null,
+        "trial_id": "emotions_6/EDITED/Happy Low Intensity/KF2_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.7676706091062226,
+        "semantic_entropy": null,
+        "trial_id": "emotions_7/EDITED/Excited/SF7_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.6881388137135884,
+        "human_entropy": 0.47862315812325196,
+        "semantic_entropy": null,
+        "trial_id": "emotions_7/EDITED/Interested/BF21.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.40761985280731605,
+        "semantic_entropy": null,
+        "trial_id": "emotions_7/EDITED/Interested/HF21_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 1.0644078580323229,
+        "semantic_entropy": null,
+        "trial_id": "emotions_7/EDITED/Interested/JF21v1_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.6730116670092565,
+        "human_entropy": 0.9595670198443658,
+        "semantic_entropy": null,
+        "trial_id": "emotions_7/EDITED/Interested/JF21v2_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.988059257542929,
+        "semantic_entropy": null,
+        "trial_id": "emotions_7/EDITED/Interested/NF21v2_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 1.0785381139092651,
+        "semantic_entropy": null,
+        "trial_id": "emotions_7/EDITED/Interested/PF21_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.7460326647147848,
+        "human_entropy": 0.5598020067138181,
+        "semantic_entropy": null,
+        "trial_id": "emotions_11/EDITED/Afraid/CF3_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.1985152433458726,
+        "human_entropy": 0.8319761756588322,
+        "semantic_entropy": null,
+        "trial_id": "emotions_11/EDITED/Angry/DF17_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.8779945648954439,
+        "semantic_entropy": null,
+        "trial_id": "emotions_11/EDITED/Angry/HF17v1_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 1.2264990738557862,
+        "semantic_entropy": null,
+        "trial_id": "emotions_11/EDITED/Angry/NF17_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.6874357505033553,
+        "human_entropy": 0.5621538995014704,
+        "semantic_entropy": null,
+        "trial_id": "emotions_11/EDITED/Angry/PF17_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.997271523182384,
+        "human_entropy": 0.9968773424690679,
+        "semantic_entropy": null,
+        "trial_id": "emotions_11/EDITED/Ashamed/EF13_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.1985152433458726,
+        "human_entropy": 1.0506349456865312,
+        "semantic_entropy": null,
+        "trial_id": "emotions_11/EDITED/Ashamed/GF13_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.3250829733914482,
+        "human_entropy": 0.39226687048625264,
+        "semantic_entropy": null,
+        "trial_id": "emotions_11/EDITED/Ashamed/Of13_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 1.0604861799724354,
+        "semantic_entropy": null,
+        "trial_id": "emotions_11/EDITED/Ashamed/SF13_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.6859711622471995,
+        "semantic_entropy": null,
+        "trial_id": "emotions_11/EDITED/Frustrated/BF23_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.532326110978585,
+        "semantic_entropy": null,
+        "trial_id": "emotions_11/EDITED/Frustrated/DF23_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.6730116670092565,
+        "human_entropy": 0.7671112102080893,
+        "semantic_entropy": null,
+        "trial_id": "emotions_11/EDITED/Frustrated/FF23_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.6011578395151034,
+        "semantic_entropy": null,
+        "trial_id": "emotions_11/EDITED/Frustrated/HF23v1_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.7590648558560682,
+        "semantic_entropy": null,
+        "trial_id": "emotions_11/EDITED/Frustrated/HF23v2_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.9312784067881004,
+        "semantic_entropy": null,
+        "trial_id": "emotions_13/EDITED/Bored/CF8_cut(1).mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.6254581324713603,
+        "semantic_entropy": null,
+        "trial_id": "emotions_13/EDITED/Disgusted Low Intensity/OF6v2_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 1.055775898855157,
+        "semantic_entropy": null,
+        "trial_id": "emotions_17/EDITED/Afraid/MF3_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.1985152433458726,
+        "human_entropy": 0.84070407416566,
+        "semantic_entropy": null,
+        "trial_id": "emotions_17/EDITED/Afraid Low Intensity/IF4_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.42270908780599087,
+        "human_entropy": 0.8464184689125798,
+        "semantic_entropy": null,
+        "trial_id": "emotions_17/EDITED/Afraid Low Intensity/KF4_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.1985152433458726,
+        "human_entropy": 1.0153625071641845,
+        "semantic_entropy": null,
+        "trial_id": "emotions_17/EDITED/Disgusted Low Intensity/GF6_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.72606743995123,
+        "semantic_entropy": null,
+        "trial_id": "emotions_18/EDITED/Disappointed/EF9_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.920739904659952,
+        "semantic_entropy": null,
+        "trial_id": "emotions_18/EDITED/Disappointed/KF9_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 1.1301373107970947,
+        "semantic_entropy": null,
+        "trial_id": "emotions_21/EDITED/Angry Low Intensity/PF18_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.3250829733914482,
+        "human_entropy": 1.2303159972044118,
+        "semantic_entropy": null,
+        "trial_id": "emotions_21/EDITED/Bored/EF8_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.6730116670092565,
+        "human_entropy": 0.9611757665581756,
+        "semantic_entropy": null,
+        "trial_id": "emotions_22/EDITED/Afraid Low Intensity/IF4v2_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 1.1393733363888416,
+        "semantic_entropy": null,
+        "trial_id": "emotions_22/EDITED/Afraid Low Intensity/MF4_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.0104127537805414,
+        "human_entropy": 0.532066469716399,
+        "semantic_entropy": null,
+        "trial_id": "emotions_22/EDITED/Ashamed/CF13_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.1985152433458726,
+        "human_entropy": 0.7739358438862305,
+        "semantic_entropy": null,
+        "trial_id": "emotions_22/EDITED/Disappointed/GF9_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 1.2242386917968744,
+        "semantic_entropy": null,
+        "trial_id": "emotions_23/EDITED/Angry Low Intensity/FF18_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.9312784067881004,
+        "semantic_entropy": null,
+        "trial_id": "emotions_23/EDITED/Bored/CF8_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 1.0561506788499946,
+        "semantic_entropy": null,
+        "trial_id": "emotions_23/EDITED/Bored/GF8_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.3250829733914482,
+        "human_entropy": 0.7347985275502752,
+        "semantic_entropy": null,
+        "trial_id": "emotions_23/EDITED/Bored/MF8_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.875882375478273,
+        "semantic_entropy": null,
+        "trial_id": "emotions_23/EDITED/Disappointed/SF9 v1_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 1.5480499215240306,
+        "semantic_entropy": null,
+        "trial_id": "emotions_23/EDITED/Disgusted Low Intensity/MF6_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 1.0492904296147767,
+        "semantic_entropy": null,
+        "trial_id": "emotions_26/EDITED/Disappointed/OF9_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.6108643020548935,
+        "human_entropy": 0.9678221797258894,
+        "semantic_entropy": null,
+        "trial_id": "emotions_26/EDITED/Disgusted Low Intensity/EF6_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.1985152433458726,
+        "human_entropy": 0.12415397163303728,
+        "semantic_entropy": null,
+        "trial_id": "emotions_27/EDITED/Afraid/IF3_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 1.2797530285328393,
+        "semantic_entropy": null,
+        "trial_id": "emotions_29/EDITED/Jealous/MF11_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.1985152433458726,
+        "human_entropy": 1.1731921727417078,
+        "semantic_entropy": null,
+        "trial_id": "emotions_29/EDITED/Jealous/OF11_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.42270908780599087,
+        "human_entropy": 1.1143214757308781,
+        "semantic_entropy": null,
+        "trial_id": "emotions_29/EDITED/Jealous/SF11_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.1421200429883351,
+        "human_entropy": 0.4986027962210376,
+        "semantic_entropy": null,
+        "trial_id": "emotions_29/EDITED/Proud/FF27_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 1.338139984411786,
+        "semantic_entropy": null,
+        "trial_id": "emotions_29/EDITED/Proud/LF27_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.43261856569191603,
+        "semantic_entropy": null,
+        "trial_id": "emotions_29/EDITED/Sad/PF15_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.2052156773503675,
+        "human_entropy": 0.7952258419421175,
+        "semantic_entropy": null,
+        "trial_id": "emotions_29/EDITED/Unfriendly/DF25_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.6108643020548935,
+        "human_entropy": 1.4057275664727884,
+        "semantic_entropy": null,
+        "trial_id": "emotions_29/EDITED/Unfriendly/JF25_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.3388734448766708,
+        "semantic_entropy": null,
+        "trial_id": "emotions_30/EDITED/Neutral/NF28_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.4129210418694463,
+        "semantic_entropy": null,
+        "trial_id": "emotions_30/EDITED/Neutral/RF28_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.39439769144744274,
+        "human_entropy": 1.2304476727046516,
+        "semantic_entropy": null,
+        "trial_id": "emotions_30/EDITED/Proud/BF27v1_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.926506603289533,
+        "human_entropy": 0.3068982649132118,
+        "semantic_entropy": null,
+        "trial_id": "emotions_30/EDITED/Proud/RF27_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.06500189380978766,
+        "semantic_entropy": null,
+        "trial_id": "emotions_30/EDITED/Surprised/PF19v2_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 1.3238914188848572,
+        "semantic_entropy": null,
+        "trial_id": "emotions_31/EDITED/Jealous/CF11_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 1.0304721867729125,
+        "semantic_entropy": null,
+        "trial_id": "emotions_31/EDITED/Jealous/GF11_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.1985152433458726,
+        "human_entropy": 1.0882826211788867,
+        "semantic_entropy": null,
+        "trial_id": "emotions_31/EDITED/Jealous/IF11_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.6128694524619496,
+        "human_entropy": 0.9299087697725864,
+        "semantic_entropy": null,
+        "trial_id": "emotions_31/EDITED/Jealous/KF11_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.5218851445634826,
+        "semantic_entropy": null,
+        "trial_id": "emotions_31/EDITED/Neutral/SF14_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.1985152433458726,
+        "human_entropy": 1.215841797303982,
+        "semantic_entropy": null,
+        "trial_id": "emotions_31/EDITED/Proud/NF27_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.7347985275502752,
+        "semantic_entropy": null,
+        "trial_id": "emotions_31/EDITED/Sad/BF15_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.1985152433458726,
+        "human_entropy": 0.6526518166231635,
+        "semantic_entropy": null,
+        "trial_id": "emotions_31/EDITED/Sad/HF15_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.8559233718366581,
+        "semantic_entropy": null,
+        "trial_id": "emotions_31/EDITED/Sad/JF15_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.2180569809608334,
+        "semantic_entropy": null,
+        "trial_id": "emotions_31/EDITED/Sad Low Intensity/RF16 v1_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.6985934821408661,
+        "semantic_entropy": null,
+        "trial_id": "emotions_31/EDITED/Surprised/NF19_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.42270908780599087,
+        "human_entropy": 0.41923657294776084,
+        "semantic_entropy": null,
+        "trial_id": "emotions_31/EDITED/Surprised Low Intensity/RF20 v1_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.4277246198870338,
+        "semantic_entropy": null,
+        "trial_id": "emotions_31/EDITED/Surprised Low Intensity/RF20 v2_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.5181862130502128,
+        "human_entropy": 1.557763624937636,
+        "semantic_entropy": null,
+        "trial_id": "emotions_32/EDITED/Kind/DF24_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 1.1497830179957012,
+        "semantic_entropy": null,
+        "trial_id": "emotions_32/EDITED/Kind/PF24_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.5257912017738154,
+        "semantic_entropy": null,
+        "trial_id": "emotions_32/EDITED/Neutral/DF28_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.9745626010968317,
+        "semantic_entropy": null,
+        "trial_id": "emotions_33/EDITED/Interested/NF21v1_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.9635053730892417,
+        "semantic_entropy": null,
+        "trial_id": "emotions_33/EDITED/Kind/NF24_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 1.361365674923442,
+        "semantic_entropy": null,
+        "trial_id": "emotions_33/EDITED/Kind/RF24_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.37367552680218435,
+        "semantic_entropy": null,
+        "trial_id": "emotions_33/EDITED/Neutral/CF14_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.5761934010628065,
+        "semantic_entropy": null,
+        "trial_id": "emotions_33/EDITED/Neutral/EF14_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.49170552746865576,
+        "semantic_entropy": null,
+        "trial_id": "emotions_33/EDITED/Neutral/FF28_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.5707725048874256,
+        "semantic_entropy": null,
+        "trial_id": "emotions_33/EDITED/Neutral/GF14_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.35928790584303383,
+        "semantic_entropy": null,
+        "trial_id": "emotions_33/EDITED/Neutral/HF28_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.549932648388716,
+        "semantic_entropy": null,
+        "trial_id": "emotions_33/EDITED/Sneaky/LF26_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.8250578726404313,
+        "semantic_entropy": null,
+        "trial_id": "emotions_33/EDITED/Surprised Low Intensity/DF20_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.23560956328610605,
+        "semantic_entropy": null,
+        "trial_id": "emotions_33/EDITED/Surprised Low Intensity/FF20_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 1.3448492442385056,
+        "semantic_entropy": null,
+        "trial_id": "emotions_34/EDITED/Kind/LF24_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.696809667743568,
+        "semantic_entropy": null,
+        "trial_id": "emotions_34/EDITED/Neutral/JF28_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.614235417022184,
+        "semantic_entropy": null,
+        "trial_id": "emotions_34/EDITED/Neutral/KF14_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.1985152433458726,
+        "human_entropy": 0.7057977229302815,
+        "semantic_entropy": null,
+        "trial_id": "emotions_34/EDITED/Neutral/LF28_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.1985152433458726,
+        "human_entropy": 0.5933485030117569,
+        "semantic_entropy": null,
+        "trial_id": "emotions_34/EDITED/Neutral/MF14_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.5530544586968841,
+        "semantic_entropy": null,
+        "trial_id": "emotions_34/EDITED/Neutral/OF14_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.39356420692115973,
+        "semantic_entropy": null,
+        "trial_id": "emotions_34/EDITED/Neutral/PF28_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.0888999753452235,
+        "human_entropy": 0.8055141363398549,
+        "semantic_entropy": null,
+        "trial_id": "emotions_34/EDITED/Proud/BF27v2_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.5254964024680017,
+        "semantic_entropy": null,
+        "trial_id": "emotions_34/EDITED/Proud/DF27_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.3250829733914482,
+        "human_entropy": 1.3033982236736732,
+        "semantic_entropy": null,
+        "trial_id": "emotions_34/EDITED/Proud/HF27_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.4792133584049474,
+        "semantic_entropy": null,
+        "trial_id": "emotions_34/EDITED/Proud/JF27_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 1.1421200429883351,
+        "human_entropy": 0.8206804316128937,
+        "semantic_entropy": null,
+        "trial_id": "emotions_34/EDITED/Proud/JF27v2_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 1.1617134221222012,
+        "semantic_entropy": null,
+        "trial_id": "emotions_34/EDITED/Proud/PF27_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.3250829733914482,
+        "human_entropy": 1.1450536857637756,
+        "semantic_entropy": null,
+        "trial_id": "emotions_34/EDITED/Sad Low Intensity/JF16_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.6944581128025329,
+        "semantic_entropy": null,
+        "trial_id": "emotions_34/EDITED/Sad Low Intensity/RF16 v2_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.3655793218978421,
+        "semantic_entropy": null,
+        "trial_id": "emotions_34/EDITED/Surprised/BF19_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.5857258993242922,
+        "semantic_entropy": null,
+        "trial_id": "emotions_34/EDITED/Surprised/DF19_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.2062555541162096,
+        "semantic_entropy": null,
+        "trial_id": "emotions_34/EDITED/Surprised/HF19_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.3250829733914482,
+        "human_entropy": 0.6352879830198852,
+        "semantic_entropy": null,
+        "trial_id": "emotions_35/EDITED/Afraid/EF3_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.1985152433458726,
+        "human_entropy": 0.8438760514540481,
+        "semantic_entropy": null,
+        "trial_id": "emotions_35/EDITED/Afraid/GF3_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 1.5573319673494386,
+        "semantic_entropy": null,
+        "trial_id": "emotions_35/EDITED/Angry Low Intensity/BF18_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.9010630856404789,
+        "semantic_entropy": null,
+        "trial_id": "emotions_35/EDITED/Neutral/IF14_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.5426062507233901,
+        "semantic_entropy": null,
+        "trial_id": "emotions_35/EDITED/Surprised Low Intensity/BF20_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.13857198594030795,
+        "semantic_entropy": null,
+        "trial_id": "emotions_35/EDITED/Surprised Low Intensity/HF20_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.7922530650134624,
+        "semantic_entropy": null,
+        "trial_id": "emotions_35/EDITED/Surprised Low Intensity/PF20v1_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.7982917073153333,
+        "semantic_entropy": null,
+        "trial_id": "emotions_35/EDITED/Surprised Low Intensity/PF20v2_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.7419548788407495,
+        "semantic_entropy": null,
+        "trial_id": "emotions_36/EDITED/Afraid Low Intensity/EF4_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.1985152433458726,
+        "human_entropy": 0.45685927991347675,
+        "semantic_entropy": null,
+        "trial_id": "emotions_36/EDITED/Ashamed/IF13_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.42270908780599087,
+        "human_entropy": 0.8321673269361318,
+        "semantic_entropy": null,
+        "trial_id": "emotions_36/EDITED/Disgusted Low Intensity/SF6 v2_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.1386843129218439,
+        "semantic_entropy": null,
+        "trial_id": "emotions_36/EDITED/Happy/CF1_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.6716156704719491,
+        "semantic_entropy": null,
+        "trial_id": "emotions_36/EDITED/Happy/EF1_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 1.028837662307958,
+        "semantic_entropy": null,
+        "trial_id": "emotions_36/EDITED/Happy Low Intensity/MF2_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.1985152433458726,
+        "human_entropy": 0.8869167754476329,
+        "semantic_entropy": null,
+        "trial_id": "emotions_36/EDITED/Interested/FF21_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.6108643020548935,
+        "human_entropy": 0.3667872216609197,
+        "semantic_entropy": null,
+        "trial_id": "emotions_36/EDITED/Joking/EF12_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.9489846797694362,
+        "semantic_entropy": null,
+        "trial_id": "emotions_36/EDITED/Joking/GF12_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.3250829733914482,
+        "human_entropy": 0.5239817070483234,
+        "semantic_entropy": null,
+        "trial_id": "emotions_36/EDITED/Joking/IF12_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.11001678737755638,
+        "semantic_entropy": null,
+        "trial_id": "emotions_36/EDITED/Joking/KF12_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.4113508184196229,
+        "semantic_entropy": null,
+        "trial_id": "emotions_36/EDITED/Joking/MF12_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.7693871100566957,
+        "semantic_entropy": null,
+        "trial_id": "emotions_36/EDITED/Kind/BF24_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 1.4169820153744386,
+        "semantic_entropy": null,
+        "trial_id": "emotions_36/EDITED/Kind/FF24_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 1.2290002489863274,
+        "semantic_entropy": null,
+        "trial_id": "emotions_36/EDITED/Kind/HF24_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 1.6475433872670957,
+        "semantic_entropy": null,
+        "trial_id": "emotions_36/EDITED/Kind/JF24_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 1.0335888855539315,
+        "semantic_entropy": null,
+        "trial_id": "emotions_36/EDITED/Neutral/BF28_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 1.0119559221169985,
+        "semantic_entropy": null,
+        "trial_id": "emotions_37/EDITED/Happy Low Intensity/OF2_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.9422767384439854,
+        "semantic_entropy": null,
+        "trial_id": "emotions_37/EDITED/Hurt/SF10 v1_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.1985152433458726,
+        "human_entropy": 0.5414266792488174,
+        "semantic_entropy": null,
+        "trial_id": "emotions_37/EDITED/Interested/Df21_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.82139275897296,
+        "semantic_entropy": null,
+        "trial_id": "emotions_37/EDITED/Interested/LF21_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.1298580350480468,
+        "semantic_entropy": null,
+        "trial_id": "emotions_37/EDITED/Joking/SF12_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.8864644756797975,
+        "human_entropy": 0.40734109719880895,
+        "semantic_entropy": null,
+        "trial_id": "emotions_37/EDITED/Sneaky/BF26v1_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.7909873504355756,
+        "human_entropy": 0.7933516213192937,
+        "semantic_entropy": null,
+        "trial_id": "emotions_37/EDITED/Sneaky/Df26_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.9002980337830352,
+        "semantic_entropy": null,
+        "trial_id": "emotions_37/EDITED/Sneaky/JF26_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 1.2080982950722918,
+        "semantic_entropy": null,
+        "trial_id": "emotions_38/EDITED/Angry Low Intensity/JF18_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 1.1658220517397027,
+        "semantic_entropy": null,
+        "trial_id": "emotions_38/EDITED/Ashamed/MF13_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.1985152433458726,
+        "human_entropy": 0.6691267067992982,
+        "semantic_entropy": null,
+        "trial_id": "emotions_38/EDITED/Frustrated/NF23_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.5011707625659023,
+        "semantic_entropy": null,
+        "trial_id": "emotions_38/EDITED/Frustrated/PF23_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.55995350019292,
+        "semantic_entropy": null,
+        "trial_id": "emotions_38/EDITED/Frustrated/RF23 v2_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.8766611018318162,
+        "semantic_entropy": null,
+        "trial_id": "emotions_38/EDITED/Hurt/OF10_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.8402571406917932,
+        "semantic_entropy": null,
+        "trial_id": "emotions_38/EDITED/Hurt/SF10 v2_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.7197289724055755,
+        "semantic_entropy": null,
+        "trial_id": "emotions_38/EDITED/Interested/RF21_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.6881388137135884,
+        "human_entropy": 0.37158739828818305,
+        "semantic_entropy": null,
+        "trial_id": "emotions_38/EDITED/Joking/CF12_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.3424702494487607,
+        "semantic_entropy": null,
+        "trial_id": "emotions_39/EDITED/Excited/KF7_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.39439769144744274,
+        "human_entropy": 0.6624715817013779,
+        "semantic_entropy": null,
+        "trial_id": "emotions_39/EDITED/Excited/OF7v1_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.2043625374781422,
+        "semantic_entropy": null,
+        "trial_id": "emotions_39/EDITED/Excited/OF7v2_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.33873281129520955,
+        "semantic_entropy": null,
+        "trial_id": "emotions_39/EDITED/Happy/SF1_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.6881388137135884,
+        "human_entropy": 0.6559806055652888,
+        "semantic_entropy": null,
+        "trial_id": "emotions_39/EDITED/Hurt/CF10v1_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.8537716311897667,
+        "semantic_entropy": null,
+        "trial_id": "emotions_39/EDITED/Hurt/CF10v2_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.3250829733914482,
+        "human_entropy": 0.7930115595991998,
+        "semantic_entropy": null,
+        "trial_id": "emotions_39/EDITED/Hurt/EF10_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.1985152433458726,
+        "human_entropy": 0.6834785647711188,
+        "semantic_entropy": null,
+        "trial_id": "emotions_39/EDITED/Hurt/GF10_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.7001722154050752,
+        "semantic_entropy": null,
+        "trial_id": "emotions_39/EDITED/Hurt/IF10_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.42270908780599087,
+        "human_entropy": 0.8293032080725099,
+        "semantic_entropy": null,
+        "trial_id": "emotions_39/EDITED/Hurt/KF10_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.7782532312347523,
+        "semantic_entropy": null,
+        "trial_id": "emotions_40/EDITED/Afraid Low Intensity/CF4_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.8287233306023749,
+        "semantic_entropy": null,
+        "trial_id": "emotions_41/EDITED/Angry Low Intensity/LF18_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 1.0424143687493586,
+        "semantic_entropy": null,
+        "trial_id": "emotions_43/EDITED/Disgusted Low Intensity/SF6 v1_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.7305880613711224,
+        "human_entropy": 0.45215531649310925,
+        "semantic_entropy": null,
+        "trial_id": "emotions_44/EDITED/Disgusted Low Intensity/CF6_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.1985152433458726,
+        "human_entropy": 0.23360396499832023,
+        "semantic_entropy": null,
+        "trial_id": "emotions_46/EDITED/Afraid/SF3_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.6639692338729113,
+        "semantic_entropy": null,
+        "trial_id": "emotions_46/EDITED/Afraid Low Intensity/OF4_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.3250829733914482,
+        "human_entropy": 0.6389645264391534,
+        "semantic_entropy": null,
+        "trial_id": "emotions_46/EDITED/Afraid Low Intensity/SF4_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.1985152433458726,
+        "human_entropy": 1.116956718959034,
+        "semantic_entropy": null,
+        "trial_id": "emotions_46/EDITED/Disappointed/CF9v1_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.7818583590402087,
+        "semantic_entropy": null,
+        "trial_id": "emotions_46/EDITED/Disappointed/IF9_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.6881388137135884,
+        "human_entropy": 0.8256638529710575,
+        "semantic_entropy": null,
+        "trial_id": "emotions_51/EDITED/Angry Low Intensity/HF18_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.4741337450807064,
+        "semantic_entropy": null,
+        "trial_id": "emotions_51/EDITED/Bored/KF8_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 1.0958489756607737,
+        "semantic_entropy": null,
+        "trial_id": "emotions_51/EDITED/Disgusted Low Intensity/IF6_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.1985152433458726,
+        "human_entropy": 1.501888279900196,
+        "semantic_entropy": null,
+        "trial_id": "emotions_51/EDITED/Disgusted Low Intensity/OF6v1_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.5004024235381879,
+        "human_entropy": 0.938952700620868,
+        "semantic_entropy": null,
+        "trial_id": "emotions_52/EDITED/Disappointed/SF9 v2_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.1985152433458726,
+        "human_entropy": 0.6367577255909682,
+        "semantic_entropy": null,
+        "trial_id": "emotions_53/EDITED/Afraid/OF3_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.3250829733914482,
+        "human_entropy": 0.9901075132277787,
+        "semantic_entropy": null,
+        "trial_id": "emotions_54/EDITED/Disappointed/CF9v2_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.7467325314556992,
+        "semantic_entropy": null,
+        "trial_id": "emotions_57/EDITED/Disappointed/MF9_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": 0.39439769144744274,
+        "human_entropy": 1.2178193050000101,
+        "semantic_entropy": null,
+        "trial_id": "emotions_59/EDITED/Angry Low Intensity/DF18_cut.mp4"
+      },
+      {
+        "correct": false,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.6674310161977423,
+        "semantic_entropy": null,
+        "trial_id": "emotions_68/EDITED/Afraid Low Intensity/GF4_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.9212612808052513,
+        "semantic_entropy": null,
+        "trial_id": "emotions_68/EDITED/Bored/IF8_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.6474466390346325,
+        "human_entropy": 0.645704684272175,
+        "semantic_entropy": null,
+        "trial_id": "emotions_68/EDITED/Bored/OF8_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": -0.0,
+        "human_entropy": 0.6743199714053549,
+        "semantic_entropy": null,
+        "trial_id": "emotions_68/EDITED/Bored/SF8_cut.mp4"
+      },
+      {
+        "correct": true,
+        "forced_choice_entropy": 0.1985152433458726,
+        "human_entropy": 0.4696272713562404,
+        "semantic_entropy": null,
+        "trial_id": "emotions_68/EDITED/Disgusted Low Intensity/KF6_cut.mp4"
+      }
+    ]
+  }
+]

@@ -1,0 +1,57 @@
+{
+  "activations_dir": "results/activations/baseline_gemma4_6afc/gemma4",
+  "layers": [
+    {
+      "layer": 5,
+      "n_trials": 243,
+      "probe_confusability_rho": 0.5075481351628767,
+      "probe_human_entropy_rho": 0.4825199680695299,
+      "rsa_human_confusion_p_perm": 0.6431784107946027,
+      "rsa_human_confusion_rho": -0.018732275235250097
+    },
+    {
+      "layer": 15,
+      "n_trials": 243,
+      "probe_confusability_rho": 0.56039375796256,
+      "probe_human_entropy_rho": 0.5013654935535176,
+      "rsa_human_confusion_p_perm": 0.6101949025487257,
+      "rsa_human_confusion_rho": -0.01861894504156993
+    },
+    {
+      "layer": 31,
+      "n_trials": 243,
+      "probe_confusability_rho": 0.4667045939735981,
+      "probe_human_entropy_rho": 0.4413456645214175,
+      "rsa_human_confusion_p_perm": 0.9235382308845578,
+      "rsa_human_confusion_rho": 0.003388503972684565
+    }
+  ],
+  "model": "gemma4",
+  "n_layers": 3,
+  "n_trials": 243,
+  "peak_probe_confusability_layer": {
+    "layer": 15.0,
+    "n_trials": 243.0,
+    "probe_confusability_rho": 0.56039375796256,
+    "probe_human_entropy_rho": 0.5013654935535176,
+    "rsa_human_confusion_p_perm": 0.6101949025487257,
+    "rsa_human_confusion_rho": -0.01861894504156993
+  },
+  "peak_probe_entropy_layer": {
+    "layer": 15.0,
+    "n_trials": 243.0,
+    "probe_confusability_rho": 0.56039375796256,
+    "probe_human_entropy_rho": 0.5013654935535176,
+    "rsa_human_confusion_p_perm": 0.6101949025487257,
+    "rsa_human_confusion_rho": -0.01861894504156993
+  },
+  "peak_rsa_layer": {
+    "layer": 5.0,
+    "n_trials": 243.0,
+    "probe_confusability_rho": 0.5075481351628767,
+    "probe_human_entropy_rho": 0.4825199680695299,
+    "rsa_human_confusion_p_perm": 0.6431784107946027,
+    "rsa_human_confusion_rho": -0.018732275235250097
+  },
+  "status": "ok"
+}

@@ -1,0 +1,30 @@
+{
+  "model": "gemma4",
+  "condition": "baseline_gemma4_6afc",
+  "modality": "video_only",
+  "prompt_mode": "4afc",
+  "pooling": "last_token",
+  "n_options": 6,
+  "n_layers": 42,
+  "layer_map": {
+    "frac_0p125": 5,
+    "frac_0p375": 15,
+    "frac_0p750": 31
+  },
+  "n_trials": 243,
+  "seed": 42,
+  "fps": 1.0,
+  "max_frames": 4,
+  "prompt": null,
+  "prompt_note": "per_trial_4afc",
+  "human_options_source": "data/eu_emotions_human_entropy.json",
+  "checkpoint": null,
+  "saved_layers": [
+    5,
+    15,
+    31
+  ],
+  "n_errors": 0,
+  "errors_head": [],
+  "smoke_trials_identical": false
+}

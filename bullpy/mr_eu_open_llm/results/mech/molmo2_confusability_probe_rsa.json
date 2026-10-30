@@ -1,0 +1,57 @@
+{
+  "activations_dir": "results/activations/baseline_molmo2_6afc/molmo2",
+  "layers": [
+    {
+      "layer": 4,
+      "n_trials": 243,
+      "probe_confusability_rho": 0.5139660833391881,
+      "probe_human_entropy_rho": 0.46914645258118126,
+      "rsa_human_confusion_p_perm": 0.679160419790105,
+      "rsa_human_confusion_rho": 0.014707462853473855
+    },
+    {
+      "layer": 12,
+      "n_trials": 243,
+      "probe_confusability_rho": 0.5294154912960557,
+      "probe_human_entropy_rho": 0.45372271051415186,
+      "rsa_human_confusion_p_perm": 0.719640179910045,
+      "rsa_human_confusion_rho": -0.013788627337272171
+    },
+    {
+      "layer": 23,
+      "n_trials": 243,
+      "probe_confusability_rho": 0.6105455820815163,
+      "probe_human_entropy_rho": 0.5315179998018398,
+      "rsa_human_confusion_p_perm": 0.4427786106946527,
+      "rsa_human_confusion_rho": 0.02682227274531775
+    }
+  ],
+  "model": "molmo2",
+  "n_layers": 3,
+  "n_trials": 243,
+  "peak_probe_confusability_layer": {
+    "layer": 23.0,
+    "n_trials": 243.0,
+    "probe_confusability_rho": 0.6105455820815163,
+    "probe_human_entropy_rho": 0.5315179998018398,
+    "rsa_human_confusion_p_perm": 0.4427786106946527,
+    "rsa_human_confusion_rho": 0.02682227274531775
+  },
+  "peak_probe_entropy_layer": {
+    "layer": 23.0,
+    "n_trials": 243.0,
+    "probe_confusability_rho": 0.6105455820815163,
+    "probe_human_entropy_rho": 0.5315179998018398,
+    "rsa_human_confusion_p_perm": 0.4427786106946527,
+    "rsa_human_confusion_rho": 0.02682227274531775
+  },
+  "peak_rsa_layer": {
+    "layer": 23.0,
+    "n_trials": 243.0,
+    "probe_confusability_rho": 0.6105455820815163,
+    "probe_human_entropy_rho": 0.5315179998018398,
+    "rsa_human_confusion_p_perm": 0.4427786106946527,
+    "rsa_human_confusion_rho": 0.02682227274531775
+  },
+  "status": "ok"
+}

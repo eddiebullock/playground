@@ -22,13 +22,14 @@ data/processed/
 datasets/
 models/
 
-# Large HPC artifacts
+# Large HPC artifacts (activations stay local/HPC; extract_meta JSON is un-ignored below)
 results/activations/
 results/cache/
 *.npy
 *.pt
 *.bin
 *.safetensors
+*.npz
 
 # Model weights and checkpoints
 */models/
@@ -44,11 +45,56 @@ logs/
 *.log
 
 # API keys and secrets
+.env
 .env.*
 *.secret
 *.key
 *credentials*.json
 
+# Local scratch
+.tmp_rmet/
+
 # OS-specific
 .DS_Store
 Thumbs.db
+
+# ---------------------------------------------------------------------------
+# Paper v2 exceptions
+# Parent ignore files hide the tables this paper needs:
+#   bullpy/.gitignore  -> *.json, *.csv
+#   repo-root .gitignore -> *.csv, *.png, *.pdf
+# Re-include only small analysis artifacts (< ~5 MB). Never un-ignore stimuli,
+# raw videos, model weights, or activation tensors.
+# ---------------------------------------------------------------------------
+!research/
+!research/**
+!research/figures/**
+!research/paper/**
+
+!data/eu_emotions_human_entropy.json
+!data/human_confusion_meta.json
+!data/human_confused_pairs.json
+!data/eu_emotions_full_manifest.json
+!data/eu_emotion_definitions.json
+!data/eu_emotion_states_list.txt
+!data/eu_emotion_synonyms.json
+
+!results/mech/*.json
+!results/mech/*.csv
+!results/mech/axis_*.npy
+
+!results/stats/*.json
+!results/stats/*.csv
+!results/stats/*.md
+
+!results/baseline/eu_emotions/qwen3vl/eval_v2_eu_emotions_qwen3vl_video_only_seed42.json
+!results/baseline/eu_emotions/gemma4/eval_v2_eu_emotions_gemma4_video_only_seed42.json
+!results/baseline/eu_emotions/molmo2/eval_v2_eu_emotions_molmo2_video_only_seed42.json
+
+!results/figures/study3/*.png
+!results/figures/study3/*.pdf
+!results/README.md
+
+# Keep log bodies out of git; .gitkeep so the directory exists
+research/logs/*
+!research/logs/.gitkeep

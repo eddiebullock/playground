@@ -1,0 +1,308 @@
+{
+  "models": [
+    {
+      "model": "qwen2vl",
+      "modality": "video_only",
+      "baseline_4afc_acc": 0.4152542372881356,
+      "finetuned_4afc_acc": 0.4491525423728814,
+      "delta_pp": 3.4,
+      "b0_pattern": "gain_or_preserved",
+      "probes": {
+        "peak_layer": 20,
+        "baseline_peak_acc": 0.1864406779661017,
+        "finetuned_peak_acc": 0.30508474576271183,
+        "baseline_low_ambiguity": null,
+        "baseline_high_ambiguity": null,
+        "finetuned_low_ambiguity": null,
+        "finetuned_high_ambiguity": null
+      },
+      "rsa": {
+        "mean_rho": 0.6449882850495178,
+        "layers": [
+          {
+            "layer_index": 3,
+            "spearman_rho_baseline_vs_finetuned": 0.7013714445535835,
+            "interpretation": "high=r preserved geometry; low=r representational reorganization"
+          },
+          {
+            "layer_index": 10,
+            "spearman_rho_baseline_vs_finetuned": 0.7373551368596387,
+            "interpretation": "high=r preserved geometry; low=r representational reorganization"
+          },
+          {
+            "layer_index": 20,
+            "spearman_rho_baseline_vs_finetuned": 0.49623827373533097,
+            "interpretation": "high=r preserved geometry; low=r representational reorganization"
+          }
+        ]
+      },
+      "patching": {
+        "n_trials": 65,
+        "fix_rate": 0.0,
+        "change_rate": 0.7230769230769231,
+        "acc_before": 0.07692307692307693,
+        "acc_after": 0.0,
+        "peak_layer": 20,
+        "n_trials_with_nonempty_output": 65,
+        "patching_outputs_valid": true
+      },
+      "path_patching": {
+        "model": "qwen2vl",
+        "modality": "video_only",
+        "peak_layer": 20,
+        "max_trials": 30,
+        "layers": [
+          {
+            "layer_index": 3,
+            "n_trials": 30,
+            "fix_rate": 0.0,
+            "change_rate": 0.8,
+            "accuracy_before": 0.1,
+            "accuracy_after": 0.0,
+            "is_peak_layer": false
+          },
+          {
+            "layer_index": 10,
+            "n_trials": 30,
+            "fix_rate": 0.0,
+            "change_rate": 0.9333333333333333,
+            "accuracy_before": 0.1,
+            "accuracy_after": 0.0,
+            "is_peak_layer": false
+          },
+          {
+            "layer_index": 20,
+            "n_trials": 30,
+            "fix_rate": 0.0,
+            "change_rate": 0.8666666666666667,
+            "accuracy_before": 0.06666666666666667,
+            "accuracy_after": 0.0,
+            "is_peak_layer": true
+          }
+        ],
+        "peak_fix_rate": 0.0,
+        "mean_non_peak_fix_rate": 0.0,
+        "interpretation": "Peak fix_rate >> non-peak supports late-layer readout hijack; uniform fix rates suggest distributed or shallow effect."
+      },
+      "sae": {
+        "model": "qwen2vl",
+        "peak_layer": 20,
+        "n_components": 16,
+        "reconstruction_error_baseline": 200.84225463867188,
+        "basis_probe_accuracy_baseline": 0.1440677966101695,
+        "basis_probe_accuracy_finetuned": 0.1864406779661017,
+        "basis_probe_low_ambiguity_baseline": NaN,
+        "basis_probe_high_ambiguity_baseline": NaN,
+        "basis_probe_low_ambiguity_finetuned": NaN,
+        "basis_probe_high_ambiguity_finetuned": NaN,
+        "mean_feature_delta_l2": 2.507218599319458,
+        "median_feature_delta_l2": 2.5121536254882812,
+        "interpretation": "Large feature deltas + stable basis probe => readout/routing shift; large deltas + collapsed basis probe => representational reorganization."
+      },
+      "missing": []
+    },
+    {
+      "model": "llavanext",
+      "modality": "video_only",
+      "baseline_4afc_acc": 0.2542372881355932,
+      "finetuned_4afc_acc": 0.2542372881355932,
+      "delta_pp": 0.0,
+      "b0_pattern": "null_transfer",
+      "probes": {
+        "peak_layer": 3,
+        "baseline_peak_acc": 0.3305084745762712,
+        "finetuned_peak_acc": 0.364406779661017,
+        "baseline_low_ambiguity": null,
+        "baseline_high_ambiguity": null,
+        "finetuned_low_ambiguity": null,
+        "finetuned_high_ambiguity": null
+      },
+      "rsa": {
+        "mean_rho": 0.4649237377967122,
+        "layers": [
+          {
+            "layer_index": 3,
+            "spearman_rho_baseline_vs_finetuned": 0.5169865564797861,
+            "interpretation": "high=r preserved geometry; low=r representational reorganization"
+          },
+          {
+            "layer_index": 10,
+            "spearman_rho_baseline_vs_finetuned": 0.466900804909144,
+            "interpretation": "high=r preserved geometry; low=r representational reorganization"
+          },
+          {
+            "layer_index": 20,
+            "spearman_rho_baseline_vs_finetuned": 0.41088385200120664,
+            "interpretation": "high=r preserved geometry; low=r representational reorganization"
+          }
+        ]
+      },
+      "patching": {
+        "n_trials": 118,
+        "fix_rate": 0.0,
+        "change_rate": 0.0,
+        "acc_before": 0.0,
+        "acc_after": 0.0,
+        "peak_layer": 3,
+        "n_trials_with_nonempty_output": 0,
+        "patching_outputs_valid": false
+      },
+      "path_patching": {
+        "model": "llavanext",
+        "modality": "video_only",
+        "peak_layer": 3,
+        "max_trials": 30,
+        "layers": [
+          {
+            "layer_index": 3,
+            "n_trials": 30,
+            "fix_rate": 0.0,
+            "change_rate": 0.0,
+            "accuracy_before": 0.0,
+            "accuracy_after": 0.0,
+            "is_peak_layer": true
+          },
+          {
+            "layer_index": 10,
+            "n_trials": 30,
+            "fix_rate": 0.0,
+            "change_rate": 0.0,
+            "accuracy_before": 0.0,
+            "accuracy_after": 0.0,
+            "is_peak_layer": false
+          },
+          {
+            "layer_index": 20,
+            "n_trials": 30,
+            "fix_rate": 0.0,
+            "change_rate": 0.0,
+            "accuracy_before": 0.0,
+            "accuracy_after": 0.0,
+            "is_peak_layer": false
+          }
+        ],
+        "peak_fix_rate": 0.0,
+        "mean_non_peak_fix_rate": 0.0,
+        "interpretation": "Peak fix_rate >> non-peak supports late-layer readout hijack; uniform fix rates suggest distributed or shallow effect."
+      },
+      "sae": {
+        "model": "llavanext",
+        "peak_layer": 3,
+        "n_components": 16,
+        "reconstruction_error_baseline": 250.7294921875,
+        "basis_probe_accuracy_baseline": 0.15254237288135591,
+        "basis_probe_accuracy_finetuned": 0.1694915254237288,
+        "basis_probe_low_ambiguity_baseline": NaN,
+        "basis_probe_high_ambiguity_baseline": NaN,
+        "basis_probe_low_ambiguity_finetuned": NaN,
+        "basis_probe_high_ambiguity_finetuned": NaN,
+        "mean_feature_delta_l2": 1.173783302307129,
+        "median_feature_delta_l2": 1.14208984375,
+        "interpretation": "Large feature deltas + stable basis probe => readout/routing shift; large deltas + collapsed basis probe => representational reorganization."
+      },
+      "missing": []
+    },
+    {
+      "model": "gemma4",
+      "modality": "multimodal",
+      "baseline_4afc_acc": 0.4322033898305085,
+      "finetuned_4afc_acc": 0.025423728813559324,
+      "delta_pp": -40.7,
+      "b0_pattern": "collapse",
+      "probes": {
+        "peak_layer": 12,
+        "baseline_peak_acc": 0.1864406779661017,
+        "finetuned_peak_acc": 0.3050847457627119,
+        "baseline_low_ambiguity": null,
+        "baseline_high_ambiguity": null,
+        "finetuned_low_ambiguity": null,
+        "finetuned_high_ambiguity": null
+      },
+      "rsa": {
+        "mean_rho": 0.2695720744674108,
+        "layers": [
+          {
+            "layer_index": 4,
+            "spearman_rho_baseline_vs_finetuned": 0.07364867077899993,
+            "interpretation": "high=r preserved geometry; low=r representational reorganization"
+          },
+          {
+            "layer_index": 12,
+            "spearman_rho_baseline_vs_finetuned": 0.6824101233987885,
+            "interpretation": "high=r preserved geometry; low=r representational reorganization"
+          },
+          {
+            "layer_index": 25,
+            "spearman_rho_baseline_vs_finetuned": 0.052657429224444,
+            "interpretation": "high=r preserved geometry; low=r representational reorganization"
+          }
+        ]
+      },
+      "patching": {
+        "n_trials": 115,
+        "fix_rate": 0.06086956521739131,
+        "change_rate": 0.28695652173913044,
+        "acc_before": 0.05217391304347826,
+        "acc_after": 0.09565217391304348,
+        "peak_layer": 12,
+        "n_trials_with_nonempty_output": 115,
+        "patching_outputs_valid": true
+      },
+      "path_patching": {
+        "model": "gemma4",
+        "modality": "multimodal",
+        "peak_layer": 12,
+        "max_trials": 30,
+        "layers": [
+          {
+            "layer_index": 4,
+            "n_trials": 30,
+            "fix_rate": 0.06666666666666667,
+            "change_rate": 0.2,
+            "accuracy_before": 0.03333333333333333,
+            "accuracy_after": 0.1,
+            "is_peak_layer": false
+          },
+          {
+            "layer_index": 12,
+            "n_trials": 30,
+            "fix_rate": 0.1,
+            "change_rate": 0.4,
+            "accuracy_before": 0.0,
+            "accuracy_after": 0.1,
+            "is_peak_layer": true
+          },
+          {
+            "layer_index": 25,
+            "n_trials": 30,
+            "fix_rate": 0.23333333333333334,
+            "change_rate": 0.6,
+            "accuracy_before": 0.03333333333333333,
+            "accuracy_after": 0.26666666666666666,
+            "is_peak_layer": false
+          }
+        ],
+        "peak_fix_rate": 0.1,
+        "mean_non_peak_fix_rate": 0.15,
+        "interpretation": "Peak fix_rate >> non-peak supports late-layer readout hijack; uniform fix rates suggest distributed or shallow effect."
+      },
+      "sae": {
+        "model": "gemma4",
+        "peak_layer": 12,
+        "n_components": 16,
+        "reconstruction_error_baseline": 220.27047729492188,
+        "basis_probe_accuracy_baseline": 0.11050724637681157,
+        "basis_probe_accuracy_finetuned": 0.0931159420289855,
+        "basis_probe_low_ambiguity_baseline": 0.07857142857142857,
+        "basis_probe_high_ambiguity_baseline": 0.125,
+        "basis_probe_low_ambiguity_finetuned": 0.07857142857142857,
+        "basis_probe_high_ambiguity_finetuned": 0.125,
+        "mean_feature_delta_l2": 2.6656596660614014,
+        "median_feature_delta_l2": 2.672886848449707,
+        "interpretation": "Large feature deltas + stable basis probe => readout/routing shift; large deltas + collapsed basis probe => representational reorganization."
+      },
+      "missing": []
+    }
+  ],
+  "table_markdown": "# Study 3 comparison (auto-generated)\n\nTrain: **MindReading** LoRA. Eval: **EU-Emotions** 118 trials, 4AFC stage-2.\n\n| Model | Modality | B0 (base\u2192FT) | \u0394 pp | Peak probe | Low/H high tertile (base) | RSA \u03c1 | Patch fix |\n|-------|----------|--------------|------|------------|---------------------------|-------|-----------|\n| qwen2vl | video_only | 41.5%\u219244.9% | 3.4 | L20 18.6%\u219230.5% | \u2014/\u2014 | 0.64 | 0.0% |\n| llavanext | video_only | 25.4%\u219225.4% | 0.0 | L3 33.1%\u219236.4% | \u2014/\u2014 | 0.46 | 0.0% (invalid outputs) |\n| gemma4 | multimodal | 43.2%\u21922.5% | -40.7 | L12 18.6%\u219230.5% | \u2014/\u2014 | 0.27 | 6.1% |\n\nRegenerate: `python -m scripts.study3_summarize`\nFast pull: `./sync.sh pull-study3`\n"
+}
