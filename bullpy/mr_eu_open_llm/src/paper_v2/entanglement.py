@@ -9,12 +9,11 @@ from typing import Any, Dict, Optional, Sequence
 
 import numpy as np
 from scipy.stats import spearmanr
-from sklearn.linear_model import RidgeCV
+from sklearn.linear_model import Ridge
 from sklearn.preprocessing import StandardScaler
 
 from paper_v2.datasets.eu_emotion import load_eu_emotion_items
 from paper_v2.metrics import (
-    RIDGE_ALPHAS,
     cosine_rdm,
     partial_spearman,
     rsa_spearman,
@@ -26,10 +25,10 @@ ROOT = Path(__file__).resolve().parents[2]
 SEED = 42
 
 
-def _ridge_weights(X: np.ndarray, y: np.ndarray) -> np.ndarray:
+def _ridge_weights(X: np.ndarray, y: np.ndarray, *, alpha: float = 10.0) -> np.ndarray:
     scaler = StandardScaler()
     Xs = scaler.fit_transform(X)
-    model = RidgeCV(alphas=RIDGE_ALPHAS)
+    model = Ridge(alpha=alpha, solver="cholesky")
     model.fit(Xs, y)
     w = np.asarray(model.coef_, dtype=float)
     nrm = np.linalg.norm(w)
@@ -96,6 +95,7 @@ def run_model(model: str, *, n_sim: int, seed: int) -> Dict[str, Any]:
 
     layer_rows = []
     for layer_idx, path in layers:
+        print(f"  entanglement {model} L{layer_idx} n_sim={n_sim}", flush=True)
         X = align_X(path, act_dir, trial_ids)
         w_ent = _ridge_weights(X, y_ent)
         w_conf = _ridge_weights(X, y_conf)

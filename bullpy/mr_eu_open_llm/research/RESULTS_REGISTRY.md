@@ -33,4 +33,10 @@ Phase 0 snapshot commit: `2e2af355a4c4c776d2b9675aa4a5b55c56fc44c8` (`p0-locate-
 | Human norms modality | Face | verified | `scripts/human_entropy.py` | `data/eu_emotions_human_entropy.json` `"modality": "Face"` | |
 | n actors | 17 letters from filenames | verified | regex in reproduce script | same JSON keys | grouped CV possible |
 
+| Target corr(1−p_target, H_human) | 0.954 | verified | `paper_v2.entanglement` | `research/reproduction/phase5_entanglement.json` | n = 243 |
+| Probe cosine entropy vs 1−p (Qwen L4) | obs 0.808 vs null 0.955 | verified | same | same | n_sim = 100; obs below Gaussian null |
+| Partial RSA vs entropy RDM (Qwen L4) | raw −0.079, partial −0.061 | verified | same | same | still near zero |
+
 Dump of the Phase 0 recompute: `research/reproduction/phase0_numbers.json`.
+Phase 5 dump: `research/reproduction/phase5_entanglement.json`.
+Stimulus features (HPC job 39709870): `research/reproduction/stimulus_features.json` (243/243 ok).
