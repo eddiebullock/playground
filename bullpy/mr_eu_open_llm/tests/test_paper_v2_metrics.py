@@ -99,4 +99,5 @@ def test_validate_item_and_actor_parse():
         }
     )
     assert actor_id_from_eu_filename(item["item_id"]) == "N"
+    assert actor_id_from_eu_filename("emotions_11/EDITED/Ashamed/Of13_cut.mp4") == "O"
     assert item["target_idx"] == 0

@@ -57,5 +57,5 @@ def actor_id_from_eu_filename(item_id: str) -> Optional[str]:
     """EU-Emotion filenames encode actor as the letter before F, e.g. NF25 -> N."""
     import re
 
-    match = re.search(r"([A-Za-z])F\s*\d+", item_id)
+    match = re.search(r"([A-Za-z])F\s*\d+", item_id, flags=re.IGNORECASE)
     return match.group(1).upper() if match else None

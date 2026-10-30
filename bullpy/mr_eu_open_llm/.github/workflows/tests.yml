@@ -19,3 +19,5 @@ jobs:
           pip install pytest
       - name: Parser, judge, scorer, and artifact pipeline tests
         run: pytest tests/test_parse_emotion.py tests/test_free_response_judge.py tests/test_selective_prediction.py tests/test_tolerant_parse.py tests/test_semantic_entropy.py tests/test_eu_emotion_definitions.py tests/test_artifact_pipeline.py tests/test_artifact_results_table.py -q
+      - name: Paper-v2 metric and adapter tests
+        run: PYTHONPATH=src pytest tests/test_paper_v2_metrics.py tests/test_eu_emotion_adapter.py -q
