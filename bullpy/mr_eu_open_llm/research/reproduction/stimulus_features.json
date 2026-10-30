@@ -1,0 +1,1708 @@
+{
+  "n_ok": 243,
+  "n_missing": 0,
+  "data_root": "data/eu_emotions",
+  "trials": {
+    "emotions/EDITED/Unfriendly/NF25_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Unfriendly/NF25_cut.mp4",
+      "duration_s": 5.76,
+      "mean_luminance": 0.8839768767356873,
+      "motion_energy": 0.014872421510517597
+    },
+    "emotions/EDITED/Unfriendly/RF25_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Unfriendly/RF25_cut.mp4",
+      "duration_s": 5.84,
+      "mean_luminance": 0.8805752396583557,
+      "motion_energy": 0.016219487413764
+    },
+    "emotions/EDITED/Worried/BF22_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Worried/BF22_cut.mp4",
+      "duration_s": 10.84,
+      "mean_luminance": 0.8648046851158142,
+      "motion_energy": 0.01687755063176155
+    },
+    "emotions/EDITED/Worried/DF22_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Worried/DF22_cut.mp4",
+      "duration_s": 6.548208333333333,
+      "mean_luminance": 0.8381362557411194,
+      "motion_energy": 0.01138466876000166
+    },
+    "emotions/EDITED/Worried/FF22_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Worried/FF22_cut.mp4",
+      "duration_s": 11.469791666666666,
+      "mean_luminance": 0.8207692503929138,
+      "motion_energy": 0.015242225490510464
+    },
+    "emotions/EDITED/Worried/HF22_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Worried/HF22_cut.mp4",
+      "duration_s": 12.6,
+      "mean_luminance": 0.4986265301704407,
+      "motion_energy": 0.0
+    },
+    "emotions/EDITED/Worried/JF22_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Worried/JF22_cut.mp4",
+      "duration_s": 7.04,
+      "mean_luminance": 0.6554668545722961,
+      "motion_energy": 0.0
+    },
+    "emotions/EDITED/Worried/NF22_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Worried/NF22_cut.mp4",
+      "duration_s": 7.92,
+      "mean_luminance": 0.5188820958137512,
+      "motion_energy": 0.0
+    },
+    "emotions/EDITED/Worried/PF22_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Worried/PF22_cut.mp4",
+      "duration_s": 9.0,
+      "mean_luminance": 0.5080565810203552,
+      "motion_energy": 0.0
+    },
+    "emotions/EDITED/Worried/RF22_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Worried/RF22_cut.mp4",
+      "duration_s": 9.44,
+      "mean_luminance": 0.8689432144165039,
+      "motion_energy": 0.016551179811358452
+    },
+    "emotions_2/EDITED/Surprised/PF19v1_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 2/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Surprised/PF19v1_cut.mp4",
+      "duration_s": 2.48,
+      "mean_luminance": 0.8426926136016846,
+      "motion_energy": 0.006022028159350157
+    },
+    "emotions_2/EDITED/Unfriendly/BF25v1_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 2/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Unfriendly/BF25v1_cut.mp4",
+      "duration_s": 8.52,
+      "mean_luminance": 0.8793454766273499,
+      "motion_energy": 0.016187483444809914
+    },
+    "emotions_2/EDITED/Unfriendly/BF25v2_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 2/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Unfriendly/BF25v2_cut.mp4",
+      "duration_s": 9.88,
+      "mean_luminance": 0.8688680529594421,
+      "motion_energy": 0.022049250081181526
+    },
+    "emotions_2/EDITED/Unfriendly/FF25_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 2/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Unfriendly/FF25_cut.mp4",
+      "duration_s": 7.75775,
+      "mean_luminance": 0.8352097868919373,
+      "motion_energy": 0.029069693759083748
+    },
+    "emotions_2/EDITED/Unfriendly/GF25_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 2/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Unfriendly/GF25_cut.mp4",
+      "duration_s": 11.6,
+      "mean_luminance": 0.8281078934669495,
+      "motion_energy": 0.027043670415878296
+    },
+    "emotions_2/EDITED/Unfriendly/LF25_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 2/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Unfriendly/LF25_cut.mp4",
+      "duration_s": 9.4,
+      "mean_luminance": 0.8452035188674927,
+      "motion_energy": 0.016938401386141777
+    },
+    "emotions_3/EDITED/Sad/RF15_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 3/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Sad/RF15_cut.mp4",
+      "duration_s": 3.96,
+      "mean_luminance": 0.8787131309509277,
+      "motion_energy": 0.007579382508993149
+    },
+    "emotions_3/EDITED/Unfriendly/PF25_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 3/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Unfriendly/PF25_cut.mp4",
+      "duration_s": 14.64,
+      "mean_luminance": 0.8554052710533142,
+      "motion_energy": 0.03565852344036102
+    },
+    "emotions_4/EDITED/Angry/JF17_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 4/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Angry/JF17_cut.mp4",
+      "duration_s": 7.04,
+      "mean_luminance": 0.8529679179191589,
+      "motion_energy": 0.033874500542879105
+    },
+    "emotions_4/EDITED/Angry Low Intensity/NF18_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 4/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Angry Low Intensity/NF18_cut.mp4",
+      "duration_s": 4.76,
+      "mean_luminance": 0.8818109631538391,
+      "motion_energy": 0.01376523356884718
+    },
+    "emotions_4/EDITED/Happy Low Intensity/SF2_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 4/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Happy Low Intensity/SF2_cut.mp4",
+      "duration_s": 3.72,
+      "mean_luminance": 0.8305222988128662,
+      "motion_energy": 0.017244504764676094
+    },
+    "emotions_4/EDITED/Hurt/MF10_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 4/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Hurt/MF10_cut.mp4",
+      "duration_s": 8.76,
+      "mean_luminance": 0.6272480487823486,
+      "motion_energy": 0.0
+    },
+    "emotions_4/EDITED/Joking/OF12v1_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 4/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Joking/OF12v1_cut.mp4",
+      "duration_s": 5.16,
+      "mean_luminance": 0.7979962825775146,
+      "motion_energy": 0.05130104720592499
+    },
+    "emotions_4/EDITED/Sneaky/BF26v2_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 4/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Sneaky/BF26v2_cut.mp4",
+      "duration_s": 10.88,
+      "mean_luminance": 0.8502084016799927,
+      "motion_energy": 0.019358279183506966
+    },
+    "emotions_4/EDITED/Sneaky/FF26_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 4/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Sneaky/FF26_cut.mp4",
+      "duration_s": 10.635625,
+      "mean_luminance": 0.8278469443321228,
+      "motion_energy": 0.06016635149717331
+    },
+    "emotions_4/EDITED/Sneaky/HF26_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 4/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Sneaky/HF26_cut.mp4",
+      "duration_s": 10.36,
+      "mean_luminance": 0.5130759477615356,
+      "motion_energy": 0.0
+    },
+    "emotions_5/EDITED/Joking/OF12v2_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 5/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Joking/OF12v2_cut.mp4",
+      "duration_s": 6.08,
+      "mean_luminance": 0.7951713800430298,
+      "motion_energy": 0.05105742812156677
+    },
+    "emotions_5/EDITED/Sad/DF15_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 5/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Sad/DF15_cut.mp4",
+      "duration_s": 9.759749999999999,
+      "mean_luminance": 0.8432173728942871,
+      "motion_energy": 0.016143817454576492
+    },
+    "emotions_5/EDITED/Sad/FF15_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 5/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Sad/FF15_cut.mp4",
+      "duration_s": 7.632624999999999,
+      "mean_luminance": 0.8293338418006897,
+      "motion_energy": 0.008922816254198551
+    },
+    "emotions_5/EDITED/Sad/NF15_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 5/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Sad/NF15_cut.mp4",
+      "duration_s": 7.2,
+      "mean_luminance": 0.8850149512290955,
+      "motion_energy": 0.009742562659084797
+    },
+    "emotions_5/EDITED/Sad Low Intensity/DF16_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 5/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Sad Low Intensity/DF16_cut.mp4",
+      "duration_s": 9.5095,
+      "mean_luminance": 0.8503126502037048,
+      "motion_energy": 0.0059697190299630165
+    },
+    "emotions_5/EDITED/Sad Low Intensity/HF16_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 5/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Sad Low Intensity/HF16_cut.mp4",
+      "duration_s": 10.84,
+      "mean_luminance": 0.8200907111167908,
+      "motion_energy": 0.017054928466677666
+    },
+    "emotions_5/EDITED/Sad Low Intensity/PF16_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 5/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Sad Low Intensity/PF16_cut.mp4",
+      "duration_s": 8.84,
+      "mean_luminance": 0.836188018321991,
+      "motion_energy": 0.026763007044792175
+    },
+    "emotions_5/EDITED/Sneaky/NF26_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 5/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Sneaky/NF26_cut.mp4",
+      "duration_s": 7.8,
+      "mean_luminance": 0.7100566029548645,
+      "motion_energy": 0.0
+    },
+    "emotions_5/EDITED/Sneaky/PF26v1_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 5/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Sneaky/PF26v1_cut.mp4",
+      "duration_s": 9.48,
+      "mean_luminance": 0.6355408430099487,
+      "motion_energy": 0.0
+    },
+    "emotions_5/EDITED/Sneaky/PF26v2_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 5/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Sneaky/PF26v2_cut.mp4",
+      "duration_s": 8.92,
+      "mean_luminance": 0.48405513167381287,
+      "motion_energy": 0.0
+    },
+    "emotions_5/EDITED/Sneaky/RF26_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 5/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Sneaky/RF26_cut.mp4",
+      "duration_s": 7.76,
+      "mean_luminance": 0.8579854965209961,
+      "motion_energy": 0.028839629143476486
+    },
+    "emotions_5/EDITED/Surprised/FF19_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 5/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Surprised/FF19_cut.mp4",
+      "duration_s": 4.421083333333333,
+      "mean_luminance": 0.8178614377975464,
+      "motion_energy": 0.021840987727046013
+    },
+    "emotions_5/EDITED/Surprised/JF19_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 5/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Surprised/JF19_cut.mp4",
+      "duration_s": 4.12,
+      "mean_luminance": 0.8505933284759521,
+      "motion_energy": 0.021326111629605293
+    },
+    "emotions_5/EDITED/Surprised/LF19_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 5/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Surprised/LF19_cut.mp4",
+      "duration_s": 4.64,
+      "mean_luminance": 0.8490978479385376,
+      "motion_energy": 0.012869646772742271
+    },
+    "emotions_5/EDITED/Surprised/RF19_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 5/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Surprised/RF19_cut.mp4",
+      "duration_s": 4.0,
+      "mean_luminance": 0.8737924695014954,
+      "motion_energy": 0.006656990852206945
+    },
+    "emotions_6/EDITED/Angry/RF17_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 6/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Angry/RF17_cut.mp4",
+      "duration_s": 6.4,
+      "mean_luminance": 0.8672065734863281,
+      "motion_energy": 0.010845260694622993
+    },
+    "emotions_6/EDITED/Ashamed/KF13_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 6/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Ashamed/KF13_cut.mp4",
+      "duration_s": 7.92,
+      "mean_luminance": 0.8102123141288757,
+      "motion_energy": 0.015541382133960724
+    },
+    "emotions_6/EDITED/Disgusted/CF5_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 6/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Disgusted/CF5_cut.mp4",
+      "duration_s": 10.301958333333333,
+      "mean_luminance": 0.8164632320404053,
+      "motion_energy": 0.013479651883244514
+    },
+    "emotions_6/EDITED/Disgusted/GF5_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 6/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Disgusted/GF5_cut.mp4",
+      "duration_s": 11.24,
+      "mean_luminance": 0.8126831650733948,
+      "motion_energy": 0.026526210829615593
+    },
+    "emotions_6/EDITED/Disgusted/IF5_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 6/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Disgusted/IF5_cut.mp4",
+      "duration_s": 9.0,
+      "mean_luminance": 0.8963679075241089,
+      "motion_energy": 0.022071370854973793
+    },
+    "emotions_6/EDITED/Disgusted/KF5_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 6/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Disgusted/KF5_cut.mp4",
+      "duration_s": 8.32,
+      "mean_luminance": 0.8186447620391846,
+      "motion_energy": 0.024364151060581207
+    },
+    "emotions_6/EDITED/Disgusted/MF5_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 6/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Disgusted/MF5_cut.mp4",
+      "duration_s": 7.2,
+      "mean_luminance": 0.8256545662879944,
+      "motion_energy": 0.018175257369875908
+    },
+    "emotions_6/EDITED/Disgusted/OF5_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 6/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Disgusted/OF5_cut.mp4",
+      "duration_s": 9.2,
+      "mean_luminance": 0.8022916316986084,
+      "motion_energy": 0.044515881687402725
+    },
+    "emotions_6/EDITED/Excited/CF7_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 6/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Excited/CF7_cut.mp4",
+      "duration_s": 7.632624999999999,
+      "mean_luminance": 0.8067111372947693,
+      "motion_energy": 0.014786822721362114
+    },
+    "emotions_6/EDITED/Excited/EF7_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 6/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Excited/EF7_cut.mp4",
+      "duration_s": 9.342666666666666,
+      "mean_luminance": 0.9022402763366699,
+      "motion_energy": 0.01886519230902195
+    },
+    "emotions_6/EDITED/Excited/GF7_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 6/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Excited/GF7_cut.mp4",
+      "duration_s": 10.32,
+      "mean_luminance": 0.5085598230361938,
+      "motion_energy": 0.0
+    },
+    "emotions_6/EDITED/Excited/IF7_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 6/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Excited/IF7_cut.mp4",
+      "duration_s": 8.08,
+      "mean_luminance": 0.8966258764266968,
+      "motion_energy": 0.02857283689081669
+    },
+    "emotions_6/EDITED/Excited/MF7_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 6/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Excited/MF7_cut.mp4",
+      "duration_s": 8.04,
+      "mean_luminance": 0.5065301656723022,
+      "motion_energy": 0.0
+    },
+    "emotions_6/EDITED/Frustrated/JF23_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 6/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Frustrated/JF23_cut.mp4",
+      "duration_s": 9.64,
+      "mean_luminance": 0.5032384991645813,
+      "motion_energy": 0.0
+    },
+    "emotions_6/EDITED/Frustrated/LF23_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 6/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Frustrated/LF23_cut.mp4",
+      "duration_s": 9.68,
+      "mean_luminance": 0.4729688763618469,
+      "motion_energy": 0.0
+    },
+    "emotions_6/EDITED/Frustrated/RF23 v1_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 6/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Frustrated/RF23 v1_cut.mp4",
+      "duration_s": 7.52,
+      "mean_luminance": 0.8746044635772705,
+      "motion_energy": 0.02371259592473507
+    },
+    "emotions_6/EDITED/Happy/GF1_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 6/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Happy/GF1_cut.mp4",
+      "duration_s": 7.12,
+      "mean_luminance": 0.4520704746246338,
+      "motion_energy": 0.0
+    },
+    "emotions_6/EDITED/Happy/IF1_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 6/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Happy/IF1_cut.mp4",
+      "duration_s": 7.08,
+      "mean_luminance": 0.8962346911430359,
+      "motion_energy": 0.030849110335111618
+    },
+    "emotions_6/EDITED/Happy/KF1_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 6/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Happy/KF1_cut.mp4",
+      "duration_s": 6.08,
+      "mean_luminance": 0.8281491994857788,
+      "motion_energy": 0.017510786652565002
+    },
+    "emotions_6/EDITED/Happy/MF1_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 6/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Happy/MF1_cut.mp4",
+      "duration_s": 7.0,
+      "mean_luminance": 0.8194960951805115,
+      "motion_energy": 0.009759516455233097
+    },
+    "emotions_6/EDITED/Happy/OF1_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 6/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Happy/OF1_cut.mp4",
+      "duration_s": 7.4,
+      "mean_luminance": 0.8167791962623596,
+      "motion_energy": 0.03109462559223175
+    },
+    "emotions_6/EDITED/Happy Low Intensity/CF2_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 6/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Happy Low Intensity/CF2_cut.mp4",
+      "duration_s": 8.174833333333332,
+      "mean_luminance": 0.8142982125282288,
+      "motion_energy": 0.00907161459326744
+    },
+    "emotions_6/EDITED/Happy Low Intensity/GF2_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 6/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Happy Low Intensity/GF2_cut.mp4",
+      "duration_s": 7.2,
+      "mean_luminance": 0.817497730255127,
+      "motion_energy": 0.017540069296956062
+    },
+    "emotions_6/EDITED/Happy Low Intensity/IF2_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 6/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Happy Low Intensity/IF2_cut.mp4",
+      "duration_s": 8.52,
+      "mean_luminance": 0.8984885215759277,
+      "motion_energy": 0.039566926658153534
+    },
+    "emotions_6/EDITED/Happy Low Intensity/KF2_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 6/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Happy Low Intensity/KF2_cut.mp4",
+      "duration_s": 7.0,
+      "mean_luminance": 0.8340151906013489,
+      "motion_energy": 0.01267194002866745
+    },
+    "emotions_7/EDITED/Excited/SF7_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 7/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Excited/SF7_cut.mp4",
+      "duration_s": 5.12,
+      "mean_luminance": 0.4977605938911438,
+      "motion_energy": 0.0
+    },
+    "emotions_7/EDITED/Interested/BF21.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 7/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Interested/BF21.mp4",
+      "duration_s": 5.96,
+      "mean_luminance": 0.8634700179100037,
+      "motion_energy": 0.015847351402044296
+    },
+    "emotions_7/EDITED/Interested/HF21_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 7/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Interested/HF21_cut.mp4",
+      "duration_s": 8.04,
+      "mean_luminance": 0.8277238011360168,
+      "motion_energy": 0.0134529247879982
+    },
+    "emotions_7/EDITED/Interested/JF21v1_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 7/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Interested/JF21v1_cut.mp4",
+      "duration_s": 8.12,
+      "mean_luminance": 0.8617181181907654,
+      "motion_energy": 0.02281360514461994
+    },
+    "emotions_7/EDITED/Interested/JF21v2_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 7/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Interested/JF21v2_cut.mp4",
+      "duration_s": 7.6,
+      "mean_luminance": 0.8649992346763611,
+      "motion_energy": 0.028861399739980698
+    },
+    "emotions_7/EDITED/Interested/NF21v2_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 7/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Interested/NF21v2_cut.mp4",
+      "duration_s": 8.56,
+      "mean_luminance": 0.8848761916160583,
+      "motion_energy": 0.010129367001354694
+    },
+    "emotions_7/EDITED/Interested/PF21_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 7/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Interested/PF21_cut.mp4",
+      "duration_s": 7.76,
+      "mean_luminance": 0.8484528660774231,
+      "motion_energy": 0.014055304229259491
+    },
+    "emotions_11/EDITED/Afraid/CF3_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 11/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Afraid/CF3_cut.mp4",
+      "duration_s": 8.5085,
+      "mean_luminance": 0.8129660487174988,
+      "motion_energy": 0.015790052711963654
+    },
+    "emotions_11/EDITED/Angry/DF17_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 11/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Angry/DF17_cut.mp4",
+      "duration_s": 8.049708333333333,
+      "mean_luminance": 0.8247377872467041,
+      "motion_energy": 0.019758451730012894
+    },
+    "emotions_11/EDITED/Angry/HF17v1_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 11/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Angry/HF17v1_cut.mp4",
+      "duration_s": 11.04,
+      "mean_luminance": 0.8222962617874146,
+      "motion_energy": 0.023324597626924515
+    },
+    "emotions_11/EDITED/Angry/NF17_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 11/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Angry/NF17_cut.mp4",
+      "duration_s": 6.88,
+      "mean_luminance": 0.8828399777412415,
+      "motion_energy": 0.016844168305397034
+    },
+    "emotions_11/EDITED/Angry/PF17_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 11/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Angry/PF17_cut.mp4",
+      "duration_s": 6.6,
+      "mean_luminance": 0.8444372415542603,
+      "motion_energy": 0.028276218101382256
+    },
+    "emotions_11/EDITED/Ashamed/EF13_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 11/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Ashamed/EF13_cut.mp4",
+      "duration_s": 8.5085,
+      "mean_luminance": 0.9075331091880798,
+      "motion_energy": 0.012487314641475677
+    },
+    "emotions_11/EDITED/Ashamed/GF13_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 11/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Ashamed/GF13_cut.mp4",
+      "duration_s": 11.92,
+      "mean_luminance": 0.8271626234054565,
+      "motion_energy": 0.02816813625395298
+    },
+    "emotions_11/EDITED/Ashamed/Of13_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 11/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Ashamed/Of13_cut.mp4",
+      "duration_s": 10.24,
+      "mean_luminance": 0.7899085283279419,
+      "motion_energy": 0.0553780235350132
+    },
+    "emotions_11/EDITED/Ashamed/SF13_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 11/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Ashamed/SF13_cut.mp4",
+      "duration_s": 8.04,
+      "mean_luminance": 0.8239657878875732,
+      "motion_energy": 0.024323998019099236
+    },
+    "emotions_11/EDITED/Frustrated/BF23_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 11/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Frustrated/BF23_cut.mp4",
+      "duration_s": 9.24,
+      "mean_luminance": 0.8657117486000061,
+      "motion_energy": 0.028230834752321243
+    },
+    "emotions_11/EDITED/Frustrated/DF23_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 11/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Frustrated/DF23_cut.mp4",
+      "duration_s": 7.173833333333333,
+      "mean_luminance": 0.8326361775398254,
+      "motion_energy": 0.0170806422829628
+    },
+    "emotions_11/EDITED/Frustrated/FF23_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 11/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Frustrated/FF23_cut.mp4",
+      "duration_s": 8.842166666666666,
+      "mean_luminance": 0.830485999584198,
+      "motion_energy": 0.017487015575170517
+    },
+    "emotions_11/EDITED/Frustrated/HF23v1_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 11/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Frustrated/HF23v1_cut.mp4",
+      "duration_s": 10.48,
+      "mean_luminance": 0.6014947295188904,
+      "motion_energy": 0.0
+    },
+    "emotions_11/EDITED/Frustrated/HF23v2_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 11/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Frustrated/HF23v2_cut.mp4",
+      "duration_s": 11.08,
+      "mean_luminance": 0.640831470489502,
+      "motion_energy": 0.0
+    },
+    "emotions_13/EDITED/Bored/CF8_cut(1).mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 13/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Bored/CF8_cut(1).mp4",
+      "duration_s": 14.472791666666666,
+      "mean_luminance": 0.8154294490814209,
+      "motion_energy": 0.016090957447886467
+    },
+    "emotions_13/EDITED/Disgusted Low Intensity/OF6v2_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 13/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Disgusted Low Intensity/OF6v2_cut.mp4",
+      "duration_s": 5.64,
+      "mean_luminance": 0.802078366279602,
+      "motion_energy": 0.028208721429109573
+    },
+    "emotions_17/EDITED/Afraid/MF3_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 17/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Afraid/MF3_cut.mp4",
+      "duration_s": 7.16,
+      "mean_luminance": 0.8183344006538391,
+      "motion_energy": 0.017905615270137787
+    },
+    "emotions_17/EDITED/Afraid Low Intensity/IF4_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 17/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Afraid Low Intensity/IF4_cut.mp4",
+      "duration_s": 8.08,
+      "mean_luminance": 0.8945560455322266,
+      "motion_energy": 0.016165873035788536
+    },
+    "emotions_17/EDITED/Afraid Low Intensity/KF4_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 17/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Afraid Low Intensity/KF4_cut.mp4",
+      "duration_s": 7.04,
+      "mean_luminance": 0.8206236362457275,
+      "motion_energy": 0.01351251546293497
+    },
+    "emotions_17/EDITED/Disgusted Low Intensity/GF6_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 17/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Disgusted Low Intensity/GF6_cut.mp4",
+      "duration_s": 9.56,
+      "mean_luminance": 0.8179588913917542,
+      "motion_energy": 0.014368714764714241
+    },
+    "emotions_18/EDITED/Disappointed/EF9_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 18/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Disappointed/EF9_cut.mp4",
+      "duration_s": 8.883875,
+      "mean_luminance": 0.9066856503486633,
+      "motion_energy": 0.015077355317771435
+    },
+    "emotions_18/EDITED/Disappointed/KF9_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 18/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Disappointed/KF9_cut.mp4",
+      "duration_s": 9.08,
+      "mean_luminance": 0.6277071237564087,
+      "motion_energy": 0.0
+    },
+    "emotions_21/EDITED/Angry Low Intensity/PF18_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 21/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Angry Low Intensity/PF18_cut.mp4",
+      "duration_s": 5.8,
+      "mean_luminance": 0.8496803045272827,
+      "motion_energy": 0.013225216418504715
+    },
+    "emotions_21/EDITED/Bored/EF8_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 21/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Bored/EF8_cut.mp4",
+      "duration_s": 11.219541666666666,
+      "mean_luminance": 0.9071415662765503,
+      "motion_energy": 0.014767906628549099
+    },
+    "emotions_22/EDITED/Afraid Low Intensity/IF4v2_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 22/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Afraid Low Intensity/IF4v2_cut.mp4",
+      "duration_s": 6.84,
+      "mean_luminance": 0.8979222178459167,
+      "motion_energy": 0.01138535887002945
+    },
+    "emotions_22/EDITED/Afraid Low Intensity/MF4_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 22/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Afraid Low Intensity/MF4_cut.mp4",
+      "duration_s": 8.44,
+      "mean_luminance": 0.8122382164001465,
+      "motion_energy": 0.019826240837574005
+    },
+    "emotions_22/EDITED/Ashamed/CF13_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 22/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Ashamed/CF13_cut.mp4",
+      "duration_s": 10.885874999999999,
+      "mean_luminance": 0.8075365424156189,
+      "motion_energy": 0.019417457282543182
+    },
+    "emotions_22/EDITED/Disappointed/GF9_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 22/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Disappointed/GF9_cut.mp4",
+      "duration_s": 11.0,
+      "mean_luminance": 0.6308924555778503,
+      "motion_energy": 0.0
+    },
+    "emotions_23/EDITED/Angry Low Intensity/FF18_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 23/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Angry Low Intensity/FF18_cut.mp4",
+      "duration_s": 7.674333333333333,
+      "mean_luminance": 0.8188753724098206,
+      "motion_energy": 0.008716150186955929
+    },
+    "emotions_23/EDITED/Bored/CF8_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 23/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Bored/CF8_cut.mp4",
+      "duration_s": 14.472791666666666,
+      "mean_luminance": 0.8155674338340759,
+      "motion_energy": 0.015793684870004654
+    },
+    "emotions_23/EDITED/Bored/GF8_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 23/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Bored/GF8_cut.mp4",
+      "duration_s": 11.04,
+      "mean_luminance": 0.6199670433998108,
+      "motion_energy": 0.0
+    },
+    "emotions_23/EDITED/Bored/MF8_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 23/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Bored/MF8_cut.mp4",
+      "duration_s": 9.56,
+      "mean_luminance": 0.648464560508728,
+      "motion_energy": 0.0
+    },
+    "emotions_23/EDITED/Disappointed/SF9 v1_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 23/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Disappointed/SF9 v1_cut.mp4",
+      "duration_s": 7.56,
+      "mean_luminance": 3.9525841089016467e-07,
+      "motion_energy": 0.0
+    },
+    "emotions_23/EDITED/Disgusted Low Intensity/MF6_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 23/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Disgusted Low Intensity/MF6_cut.mp4",
+      "duration_s": 9.0,
+      "mean_luminance": 0.820678174495697,
+      "motion_energy": 0.018222734332084656
+    },
+    "emotions_26/EDITED/Disappointed/OF9_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 26/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Disappointed/OF9_cut.mp4",
+      "duration_s": 8.16,
+      "mean_luminance": 0.8263033032417297,
+      "motion_energy": 0.03351155295968056
+    },
+    "emotions_26/EDITED/Disgusted Low Intensity/EF6_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 26/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Disgusted Low Intensity/EF6_cut.mp4",
+      "duration_s": 7.507499999999999,
+      "mean_luminance": 0.9063929319381714,
+      "motion_energy": 0.01301876362413168
+    },
+    "emotions_27/EDITED/Afraid/IF3_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 27/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Afraid/IF3_cut.mp4",
+      "duration_s": 7.68,
+      "mean_luminance": 0.8963024020195007,
+      "motion_energy": 0.01800873689353466
+    },
+    "emotions_29/EDITED/Jealous/MF11_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 29/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Jealous/MF11_cut.mp4",
+      "duration_s": 7.44,
+      "mean_luminance": 0.6366139054298401,
+      "motion_energy": 0.0
+    },
+    "emotions_29/EDITED/Jealous/OF11_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 29/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Jealous/OF11_cut.mp4",
+      "duration_s": 6.64,
+      "mean_luminance": 0.7972500920295715,
+      "motion_energy": 0.022900013253092766
+    },
+    "emotions_29/EDITED/Jealous/SF11_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 29/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Jealous/SF11_cut.mp4",
+      "duration_s": 8.2,
+      "mean_luminance": 0.4673216938972473,
+      "motion_energy": 0.0
+    },
+    "emotions_29/EDITED/Proud/FF27_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 29/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Proud/FF27_cut.mp4",
+      "duration_s": 6.381374999999999,
+      "mean_luminance": 0.8338367938995361,
+      "motion_energy": 0.014996112324297428
+    },
+    "emotions_29/EDITED/Proud/LF27_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 29/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Proud/LF27_cut.mp4",
+      "duration_s": 6.56,
+      "mean_luminance": 0.8618983626365662,
+      "motion_energy": 0.025795428082346916
+    },
+    "emotions_29/EDITED/Sad/PF15_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 29/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Sad/PF15_cut.mp4",
+      "duration_s": 7.0,
+      "mean_luminance": 0.8297813534736633,
+      "motion_energy": 0.013757226057350636
+    },
+    "emotions_29/EDITED/Unfriendly/DF25_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 29/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Unfriendly/DF25_cut.mp4",
+      "duration_s": 7.590916666666666,
+      "mean_luminance": 0.826710045337677,
+      "motion_energy": 0.02804485335946083
+    },
+    "emotions_29/EDITED/Unfriendly/JF25_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 29/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Unfriendly/JF25_cut.mp4",
+      "duration_s": 7.0,
+      "mean_luminance": 0.8612053990364075,
+      "motion_energy": 0.04458518698811531
+    },
+    "emotions_30/EDITED/Neutral/NF28_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 30/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Neutral/NF28_cut.mp4",
+      "duration_s": 4.28,
+      "mean_luminance": 0.6759820580482483,
+      "motion_energy": 0.0
+    },
+    "emotions_30/EDITED/Neutral/RF28_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 30/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Neutral/RF28_cut.mp4",
+      "duration_s": 4.48,
+      "mean_luminance": 0.8844043016433716,
+      "motion_energy": 0.007385695353150368
+    },
+    "emotions_30/EDITED/Proud/BF27v1_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 30/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Proud/BF27v1_cut.mp4",
+      "duration_s": 6.32,
+      "mean_luminance": 0.871433675289154,
+      "motion_energy": 0.015108579769730568
+    },
+    "emotions_30/EDITED/Proud/RF27_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 30/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Proud/RF27_cut.mp4",
+      "duration_s": 6.52,
+      "mean_luminance": 0.8901726007461548,
+      "motion_energy": 0.018231868743896484
+    },
+    "emotions_30/EDITED/Surprised/PF19v2_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 30/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Surprised/PF19v2_cut.mp4",
+      "duration_s": 1.88,
+      "mean_luminance": 0.8338977694511414,
+      "motion_energy": 0.00500847352668643
+    },
+    "emotions_31/EDITED/Jealous/CF11_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 31/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Jealous/CF11_cut.mp4",
+      "duration_s": 10.969291666666665,
+      "mean_luminance": 0.80902498960495,
+      "motion_energy": 0.013255848549306393
+    },
+    "emotions_31/EDITED/Jealous/GF11_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 31/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Jealous/GF11_cut.mp4",
+      "duration_s": 11.16,
+      "mean_luminance": 0.4618920087814331,
+      "motion_energy": 0.0
+    },
+    "emotions_31/EDITED/Jealous/IF11_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 31/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Jealous/IF11_cut.mp4",
+      "duration_s": 7.64,
+      "mean_luminance": 0.8969129920005798,
+      "motion_energy": 0.008117246441543102
+    },
+    "emotions_31/EDITED/Jealous/KF11_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 31/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Jealous/KF11_cut.mp4",
+      "duration_s": 8.84,
+      "mean_luminance": 0.4523252546787262,
+      "motion_energy": 0.0
+    },
+    "emotions_31/EDITED/Neutral/SF14_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 31/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Neutral/SF14_cut.mp4",
+      "duration_s": 4.32,
+      "mean_luminance": 0.6525325775146484,
+      "motion_energy": 0.0
+    },
+    "emotions_31/EDITED/Proud/NF27_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 31/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Proud/NF27_cut.mp4",
+      "duration_s": 5.52,
+      "mean_luminance": 0.8774744868278503,
+      "motion_energy": 0.01628045365214348
+    },
+    "emotions_31/EDITED/Sad/BF15_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 31/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Sad/BF15_cut.mp4",
+      "duration_s": 8.04,
+      "mean_luminance": 0.8692794442176819,
+      "motion_energy": 0.010144597850739956
+    },
+    "emotions_31/EDITED/Sad/HF15_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 31/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Sad/HF15_cut.mp4",
+      "duration_s": 10.4,
+      "mean_luminance": 0.8257125616073608,
+      "motion_energy": 0.01413299422711134
+    },
+    "emotions_31/EDITED/Sad/JF15_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 31/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Sad/JF15_cut.mp4",
+      "duration_s": 7.36,
+      "mean_luminance": 0.8514434099197388,
+      "motion_energy": 0.02985071949660778
+    },
+    "emotions_31/EDITED/Sad Low Intensity/RF16 v1_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 31/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Sad Low Intensity/RF16 v1_cut.mp4",
+      "duration_s": 3.96,
+      "mean_luminance": 0.8787131309509277,
+      "motion_energy": 0.007579382508993149
+    },
+    "emotions_31/EDITED/Surprised/NF19_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 31/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Surprised/NF19_cut.mp4",
+      "duration_s": 3.12,
+      "mean_luminance": 0.8841581344604492,
+      "motion_energy": 0.004740019328892231
+    },
+    "emotions_31/EDITED/Surprised Low Intensity/RF20 v1_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 31/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Surprised Low Intensity/RF20 v1_cut.mp4",
+      "duration_s": 4.08,
+      "mean_luminance": 0.8743864297866821,
+      "motion_energy": 0.009366298094391823
+    },
+    "emotions_31/EDITED/Surprised Low Intensity/RF20 v2_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 31/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Surprised Low Intensity/RF20 v2_cut.mp4",
+      "duration_s": 4.08,
+      "mean_luminance": 0.873870313167572,
+      "motion_energy": 0.0096479132771492
+    },
+    "emotions_32/EDITED/Kind/DF24_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 32/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Kind/DF24_cut.mp4",
+      "duration_s": 5.2969583333333325,
+      "mean_luminance": 0.832777738571167,
+      "motion_energy": 0.008585705421864986
+    },
+    "emotions_32/EDITED/Kind/PF24_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 32/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Kind/PF24_cut.mp4",
+      "duration_s": 8.28,
+      "mean_luminance": 0.854526698589325,
+      "motion_energy": 0.01818317174911499
+    },
+    "emotions_32/EDITED/Neutral/DF28_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 32/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Neutral/DF28_cut.mp4",
+      "duration_s": 5.380375,
+      "mean_luminance": 0.8436012864112854,
+      "motion_energy": 0.004485899582505226
+    },
+    "emotions_33/EDITED/Interested/NF21v1_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 33/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Interested/NF21v1_cut.mp4",
+      "duration_s": 7.2,
+      "mean_luminance": 0.8885207772254944,
+      "motion_energy": 0.008495699614286423
+    },
+    "emotions_33/EDITED/Kind/NF24_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 33/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Kind/NF24_cut.mp4",
+      "duration_s": 6.88,
+      "mean_luminance": 0.8861117959022522,
+      "motion_energy": 0.010738451033830643
+    },
+    "emotions_33/EDITED/Kind/RF24_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 33/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Kind/RF24_cut.mp4",
+      "duration_s": 6.56,
+      "mean_luminance": 0.8811079859733582,
+      "motion_energy": 0.020082756876945496
+    },
+    "emotions_33/EDITED/Neutral/CF14_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 33/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Neutral/CF14_cut.mp4",
+      "duration_s": 6.673333333333333,
+      "mean_luminance": 0.8151347637176514,
+      "motion_energy": 0.004185957834124565
+    },
+    "emotions_33/EDITED/Neutral/EF14_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 33/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Neutral/EF14_cut.mp4",
+      "duration_s": 5.547208333333333,
+      "mean_luminance": 0.9047960042953491,
+      "motion_energy": 0.0037729209288954735
+    },
+    "emotions_33/EDITED/Neutral/FF28_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 33/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Neutral/FF28_cut.mp4",
+      "duration_s": 5.088416666666666,
+      "mean_luminance": 0.8392009139060974,
+      "motion_energy": 0.005636303685605526
+    },
+    "emotions_33/EDITED/Neutral/GF14_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 33/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Neutral/GF14_cut.mp4",
+      "duration_s": 6.44,
+      "mean_luminance": 0.6289160847663879,
+      "motion_energy": 0.0
+    },
+    "emotions_33/EDITED/Neutral/HF28_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 33/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Neutral/HF28_cut.mp4",
+      "duration_s": 5.04,
+      "mean_luminance": 0.49809813499450684,
+      "motion_energy": 0.0
+    },
+    "emotions_33/EDITED/Sneaky/LF26_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 33/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Sneaky/LF26_cut.mp4",
+      "duration_s": 5.88,
+      "mean_luminance": 0.6214541792869568,
+      "motion_energy": 0.0
+    },
+    "emotions_33/EDITED/Surprised Low Intensity/DF20_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 33/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Surprised Low Intensity/DF20_cut.mp4",
+      "duration_s": 4.25425,
+      "mean_luminance": 0.8360069990158081,
+      "motion_energy": 0.009430109523236752
+    },
+    "emotions_33/EDITED/Surprised Low Intensity/FF20_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 33/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Surprised Low Intensity/FF20_cut.mp4",
+      "duration_s": 5.005,
+      "mean_luminance": 0.8196461796760559,
+      "motion_energy": 0.005656198598444462
+    },
+    "emotions_34/EDITED/Kind/LF24_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 34/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Kind/LF24_cut.mp4",
+      "duration_s": 6.44,
+      "mean_luminance": 0.834291398525238,
+      "motion_energy": 0.0162612684071064
+    },
+    "emotions_34/EDITED/Neutral/JF28_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 34/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Neutral/JF28_cut.mp4",
+      "duration_s": 4.6,
+      "mean_luminance": 0.6682754755020142,
+      "motion_energy": 0.0
+    },
+    "emotions_34/EDITED/Neutral/KF14_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 34/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Neutral/KF14_cut.mp4",
+      "duration_s": 5.64,
+      "mean_luminance": 0.6571636199951172,
+      "motion_energy": 0.0
+    },
+    "emotions_34/EDITED/Neutral/LF28_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 34/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Neutral/LF28_cut.mp4",
+      "duration_s": 6.68,
+      "mean_luminance": 0.45489534735679626,
+      "motion_energy": 0.0
+    },
+    "emotions_34/EDITED/Neutral/MF14_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 34/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Neutral/MF14_cut.mp4",
+      "duration_s": 4.96,
+      "mean_luminance": 0.4486925005912781,
+      "motion_energy": 0.0
+    },
+    "emotions_34/EDITED/Neutral/OF14_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 34/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Neutral/OF14_cut.mp4",
+      "duration_s": 5.48,
+      "mean_luminance": 0.8067983984947205,
+      "motion_energy": 0.01253059133887291
+    },
+    "emotions_34/EDITED/Neutral/PF28_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 34/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Neutral/PF28_cut.mp4",
+      "duration_s": 5.36,
+      "mean_luminance": 0.6567441821098328,
+      "motion_energy": 0.0
+    },
+    "emotions_34/EDITED/Proud/BF27v2_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 34/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Proud/BF27v2_cut.mp4",
+      "duration_s": 7.36,
+      "mean_luminance": 0.8709690570831299,
+      "motion_energy": 0.024905027821660042
+    },
+    "emotions_34/EDITED/Proud/DF27_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 34/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Proud/DF27_cut.mp4",
+      "duration_s": 6.464791666666666,
+      "mean_luminance": 0.8183613419532776,
+      "motion_energy": 0.03086216002702713
+    },
+    "emotions_34/EDITED/Proud/HF27_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 34/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Proud/HF27_cut.mp4",
+      "duration_s": 11.12,
+      "mean_luminance": 0.8220257759094238,
+      "motion_energy": 0.014873583801090717
+    },
+    "emotions_34/EDITED/Proud/JF27_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 34/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Proud/JF27_cut.mp4",
+      "duration_s": 8.32,
+      "mean_luminance": 0.8567792773246765,
+      "motion_energy": 0.036899566650390625
+    },
+    "emotions_34/EDITED/Proud/JF27v2_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 34/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Proud/JF27v2_cut.mp4",
+      "duration_s": 7.92,
+      "mean_luminance": 0.8580411076545715,
+      "motion_energy": 0.045575838536024094
+    },
+    "emotions_34/EDITED/Proud/PF27_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 34/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Proud/PF27_cut.mp4",
+      "duration_s": 9.24,
+      "mean_luminance": 0.8710042834281921,
+      "motion_energy": 0.025242606177926064
+    },
+    "emotions_34/EDITED/Sad Low Intensity/JF16_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 34/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Sad Low Intensity/JF16_cut.mp4",
+      "duration_s": 7.24,
+      "mean_luminance": 0.8568270206451416,
+      "motion_energy": 0.023713968694210052
+    },
+    "emotions_34/EDITED/Sad Low Intensity/RF16 v2_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 34/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Sad Low Intensity/RF16 v2_cut.mp4",
+      "duration_s": 5.88,
+      "mean_luminance": 0.8794482350349426,
+      "motion_energy": 0.015914464369416237
+    },
+    "emotions_34/EDITED/Surprised/BF19_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 34/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Surprised/BF19_cut.mp4",
+      "duration_s": 5.16,
+      "mean_luminance": 0.8642698526382446,
+      "motion_energy": 0.02104114554822445
+    },
+    "emotions_34/EDITED/Surprised/DF19_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 34/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Surprised/DF19_cut.mp4",
+      "duration_s": 6.756749999999999,
+      "mean_luminance": 0.8324631452560425,
+      "motion_energy": 0.006899368017911911
+    },
+    "emotions_34/EDITED/Surprised/HF19_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 34/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Surprised/HF19_cut.mp4",
+      "duration_s": 6.76,
+      "mean_luminance": 0.8397589325904846,
+      "motion_energy": 0.007828155532479286
+    },
+    "emotions_35/EDITED/Afraid/EF3_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 35/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Afraid/EF3_cut.mp4",
+      "duration_s": 9.300958333333332,
+      "mean_luminance": 0.9006516933441162,
+      "motion_energy": 0.014750193804502487
+    },
+    "emotions_35/EDITED/Afraid/GF3_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 35/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Afraid/GF3_cut.mp4",
+      "duration_s": 11.6,
+      "mean_luminance": 0.8097899556159973,
+      "motion_energy": 0.016937317326664925
+    },
+    "emotions_35/EDITED/Angry Low Intensity/BF18_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 35/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Angry Low Intensity/BF18_cut.mp4",
+      "duration_s": 6.88,
+      "mean_luminance": 0.8641256093978882,
+      "motion_energy": 0.015473989769816399
+    },
+    "emotions_35/EDITED/Neutral/IF14_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 35/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Neutral/IF14_cut.mp4",
+      "duration_s": 6.52,
+      "mean_luminance": 0.8968685865402222,
+      "motion_energy": 0.006702422630041838
+    },
+    "emotions_35/EDITED/Surprised Low Intensity/BF20_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 35/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Surprised Low Intensity/BF20_cut.mp4",
+      "duration_s": 2.8,
+      "mean_luminance": 0.8669546246528625,
+      "motion_energy": 0.010562286712229252
+    },
+    "emotions_35/EDITED/Surprised Low Intensity/HF20_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 35/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Surprised Low Intensity/HF20_cut.mp4",
+      "duration_s": 2.88,
+      "mean_luminance": 0.8316171169281006,
+      "motion_energy": 0.003834381466731429
+    },
+    "emotions_35/EDITED/Surprised Low Intensity/PF20v1_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 35/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Surprised Low Intensity/PF20v1_cut.mp4",
+      "duration_s": 4.2,
+      "mean_luminance": 0.847611129283905,
+      "motion_energy": 0.009546022862195969
+    },
+    "emotions_35/EDITED/Surprised Low Intensity/PF20v2_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 35/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Surprised Low Intensity/PF20v2_cut.mp4",
+      "duration_s": 4.16,
+      "mean_luminance": 0.8475227952003479,
+      "motion_energy": 0.009619767777621746
+    },
+    "emotions_36/EDITED/Afraid Low Intensity/EF4_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 36/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Afraid Low Intensity/EF4_cut.mp4",
+      "duration_s": 8.883875,
+      "mean_luminance": 0.9011417627334595,
+      "motion_energy": 0.014197692275047302
+    },
+    "emotions_36/EDITED/Ashamed/IF13_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 36/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Ashamed/IF13_cut.mp4",
+      "duration_s": 7.48,
+      "mean_luminance": 0.8848560452461243,
+      "motion_energy": 0.013121864758431911
+    },
+    "emotions_36/EDITED/Disgusted Low Intensity/SF6 v2_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 36/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Disgusted Low Intensity/SF6 v2_cut.mp4",
+      "duration_s": 6.76,
+      "mean_luminance": 0.8353580236434937,
+      "motion_energy": 0.012558610178530216
+    },
+    "emotions_36/EDITED/Happy/CF1_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 36/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Happy/CF1_cut.mp4",
+      "duration_s": 6.798458333333333,
+      "mean_luminance": 0.8136873245239258,
+      "motion_energy": 0.011959708295762539
+    },
+    "emotions_36/EDITED/Happy/EF1_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 36/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Happy/EF1_cut.mp4",
+      "duration_s": 7.924583333333333,
+      "mean_luminance": 0.8981466889381409,
+      "motion_energy": 0.01405965443700552
+    },
+    "emotions_36/EDITED/Happy Low Intensity/MF2_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 36/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Happy Low Intensity/MF2_cut.mp4",
+      "duration_s": 6.56,
+      "mean_luminance": 0.8255101442337036,
+      "motion_energy": 0.008626403287053108
+    },
+    "emotions_36/EDITED/Interested/FF21_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 36/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Interested/FF21_cut.mp4",
+      "duration_s": 5.75575,
+      "mean_luminance": 0.8306661248207092,
+      "motion_energy": 0.014285685494542122
+    },
+    "emotions_36/EDITED/Joking/EF12_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 36/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Joking/EF12_cut.mp4",
+      "duration_s": 9.300958333333332,
+      "mean_luminance": 0.9030800461769104,
+      "motion_energy": 0.014292546547949314
+    },
+    "emotions_36/EDITED/Joking/GF12_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 36/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Joking/GF12_cut.mp4",
+      "duration_s": 13.28,
+      "mean_luminance": 0.45933806896209717,
+      "motion_energy": 0.0
+    },
+    "emotions_36/EDITED/Joking/IF12_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 36/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Joking/IF12_cut.mp4",
+      "duration_s": 9.56,
+      "mean_luminance": 0.89690762758255,
+      "motion_energy": 0.015721583738923073
+    },
+    "emotions_36/EDITED/Joking/KF12_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 36/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Joking/KF12_cut.mp4",
+      "duration_s": 9.24,
+      "mean_luminance": 0.6722579002380371,
+      "motion_energy": 0.0
+    },
+    "emotions_36/EDITED/Joking/MF12_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 36/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Joking/MF12_cut.mp4",
+      "duration_s": 10.24,
+      "mean_luminance": 0.6359882354736328,
+      "motion_energy": 0.0
+    },
+    "emotions_36/EDITED/Kind/BF24_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 36/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Kind/BF24_cut.mp4",
+      "duration_s": 9.48,
+      "mean_luminance": 0.8591820597648621,
+      "motion_energy": 0.018230373039841652
+    },
+    "emotions_36/EDITED/Kind/FF24_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 36/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Kind/FF24_cut.mp4",
+      "duration_s": 6.673333333333333,
+      "mean_luminance": 0.8267861008644104,
+      "motion_energy": 0.018761374056339264
+    },
+    "emotions_36/EDITED/Kind/HF24_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 36/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Kind/HF24_cut.mp4",
+      "duration_s": 8.48,
+      "mean_luminance": 0.8242923021316528,
+      "motion_energy": 0.016144176945090294
+    },
+    "emotions_36/EDITED/Kind/JF24_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 36/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Kind/JF24_cut.mp4",
+      "duration_s": 7.52,
+      "mean_luminance": 0.862022876739502,
+      "motion_energy": 0.03848684951663017
+    },
+    "emotions_36/EDITED/Neutral/BF28_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 36/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Neutral/BF28_cut.mp4",
+      "duration_s": 7.4,
+      "mean_luminance": 0.8706867098808289,
+      "motion_energy": 0.005436241161078215
+    },
+    "emotions_37/EDITED/Happy Low Intensity/OF2_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 37/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Happy Low Intensity/OF2_cut.mp4",
+      "duration_s": 4.44,
+      "mean_luminance": 0.8175808191299438,
+      "motion_energy": 0.017083987593650818
+    },
+    "emotions_37/EDITED/Hurt/SF10 v1_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 37/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Hurt/SF10 v1_cut.mp4",
+      "duration_s": 5.44,
+      "mean_luminance": 0.6597056984901428,
+      "motion_energy": 0.0
+    },
+    "emotions_37/EDITED/Interested/Df21_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 37/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Interested/Df21_cut.mp4",
+      "duration_s": 7.424083333333333,
+      "mean_luminance": 0.8422646522521973,
+      "motion_energy": 0.01328715868294239
+    },
+    "emotions_37/EDITED/Interested/LF21_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 37/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Interested/LF21_cut.mp4",
+      "duration_s": 10.28,
+      "mean_luminance": 0.8429163098335266,
+      "motion_energy": 0.021905621513724327
+    },
+    "emotions_37/EDITED/Joking/SF12_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 37/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Joking/SF12_cut.mp4",
+      "duration_s": 7.28,
+      "mean_luminance": 0.6547374725341797,
+      "motion_energy": 0.0
+    },
+    "emotions_37/EDITED/Sneaky/BF26v1_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 37/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Sneaky/BF26v1_cut.mp4",
+      "duration_s": 9.6,
+      "mean_luminance": 0.8496952652931213,
+      "motion_energy": 0.022543691098690033
+    },
+    "emotions_37/EDITED/Sneaky/Df26_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 37/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Sneaky/Df26_cut.mp4",
+      "duration_s": 9.384374999999999,
+      "mean_luminance": 0.8323692083358765,
+      "motion_energy": 0.03321109339594841
+    },
+    "emotions_37/EDITED/Sneaky/JF26_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 37/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Sneaky/JF26_cut.mp4",
+      "duration_s": 7.96,
+      "mean_luminance": 0.6613149642944336,
+      "motion_energy": 0.0
+    },
+    "emotions_38/EDITED/Angry Low Intensity/JF18_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 38/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Angry Low Intensity/JF18_cut.mp4",
+      "duration_s": 6.92,
+      "mean_luminance": 0.8642910122871399,
+      "motion_energy": 0.056933075189590454
+    },
+    "emotions_38/EDITED/Ashamed/MF13_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 38/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Ashamed/MF13_cut.mp4",
+      "duration_s": 8.76,
+      "mean_luminance": 0.8283776044845581,
+      "motion_energy": 0.028196079656481743
+    },
+    "emotions_38/EDITED/Frustrated/NF23_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 38/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Frustrated/NF23_cut.mp4",
+      "duration_s": 7.24,
+      "mean_luminance": 0.4736286997795105,
+      "motion_energy": 0.0
+    },
+    "emotions_38/EDITED/Frustrated/PF23_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 38/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Frustrated/PF23_cut.mp4",
+      "duration_s": 7.6,
+      "mean_luminance": 0.6390647292137146,
+      "motion_energy": 0.0
+    },
+    "emotions_38/EDITED/Frustrated/RF23 v2_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 38/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Frustrated/RF23 v2_cut.mp4",
+      "duration_s": 7.4,
+      "mean_luminance": 0.8701730966567993,
+      "motion_energy": 0.02432183362543583
+    },
+    "emotions_38/EDITED/Hurt/OF10_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 38/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Hurt/OF10_cut.mp4",
+      "duration_s": 10.28,
+      "mean_luminance": 0.7826215028762817,
+      "motion_energy": 0.03881083056330681
+    },
+    "emotions_38/EDITED/Hurt/SF10 v2_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 38/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Hurt/SF10 v2_cut.mp4",
+      "duration_s": 6.56,
+      "mean_luminance": 0.6535815596580505,
+      "motion_energy": 0.0
+    },
+    "emotions_38/EDITED/Interested/RF21_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 38/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Interested/RF21_cut.mp4",
+      "duration_s": 8.44,
+      "mean_luminance": 0.881180465221405,
+      "motion_energy": 0.01800055429339409
+    },
+    "emotions_38/EDITED/Joking/CF12_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 38/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Joking/CF12_cut.mp4",
+      "duration_s": 10.176833333333333,
+      "mean_luminance": 0.809099018573761,
+      "motion_energy": 0.026695769280195236
+    },
+    "emotions_39/EDITED/Excited/KF7_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 39/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Excited/KF7_cut.mp4",
+      "duration_s": 6.88,
+      "mean_luminance": 0.45481374859809875,
+      "motion_energy": 0.0
+    },
+    "emotions_39/EDITED/Excited/OF7v1_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 39/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Excited/OF7v1_cut.mp4",
+      "duration_s": 8.76,
+      "mean_luminance": 0.7974182367324829,
+      "motion_energy": 0.04377289488911629
+    },
+    "emotions_39/EDITED/Excited/OF7v2_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 39/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Excited/OF7v2_cut.mp4",
+      "duration_s": 10.4,
+      "mean_luminance": 0.8128452897071838,
+      "motion_energy": 0.04955865442752838
+    },
+    "emotions_39/EDITED/Happy/SF1_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 39/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Happy/SF1_cut.mp4",
+      "duration_s": 4.6,
+      "mean_luminance": 0.8332139253616333,
+      "motion_energy": 0.026959508657455444
+    },
+    "emotions_39/EDITED/Hurt/CF10v1_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 39/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Hurt/CF10v1_cut.mp4",
+      "duration_s": 10.343666666666666,
+      "mean_luminance": 0.8133808970451355,
+      "motion_energy": 0.019142646342515945
+    },
+    "emotions_39/EDITED/Hurt/CF10v2_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 39/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Hurt/CF10v2_cut.mp4",
+      "duration_s": 10.927583333333333,
+      "mean_luminance": 0.8091131448745728,
+      "motion_energy": 0.014659189619123936
+    },
+    "emotions_39/EDITED/Hurt/EF10_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 39/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Hurt/EF10_cut.mp4",
+      "duration_s": 9.175833333333333,
+      "mean_luminance": 0.9053016901016235,
+      "motion_energy": 0.011137550696730614
+    },
+    "emotions_39/EDITED/Hurt/GF10_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 39/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Hurt/GF10_cut.mp4",
+      "duration_s": 8.12,
+      "mean_luminance": 0.45377013087272644,
+      "motion_energy": 0.0
+    },
+    "emotions_39/EDITED/Hurt/IF10_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 39/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Hurt/IF10_cut.mp4",
+      "duration_s": 8.12,
+      "mean_luminance": 0.8864601254463196,
+      "motion_energy": 0.014287029393017292
+    },
+    "emotions_39/EDITED/Hurt/KF10_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 39/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Hurt/KF10_cut.mp4",
+      "duration_s": 8.88,
+      "mean_luminance": 0.4635261297225952,
+      "motion_energy": 0.0
+    },
+    "emotions_40/EDITED/Afraid Low Intensity/CF4_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 40/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Afraid Low Intensity/CF4_cut.mp4",
+      "duration_s": 8.341666666666667,
+      "mean_luminance": 0.8136352300643921,
+      "motion_energy": 0.014401431195437908
+    },
+    "emotions_41/EDITED/Angry Low Intensity/LF18_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 41/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Angry Low Intensity/LF18_cut.mp4",
+      "duration_s": 9.52,
+      "mean_luminance": 0.8340042233467102,
+      "motion_energy": 0.019360506907105446
+    },
+    "emotions_43/EDITED/Disgusted Low Intensity/SF6 v1_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 43/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Disgusted Low Intensity/SF6 v1_cut.mp4",
+      "duration_s": 6.2,
+      "mean_luminance": 0.8322334885597229,
+      "motion_energy": 0.015656474977731705
+    },
+    "emotions_44/EDITED/Disgusted Low Intensity/CF6_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 44/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Disgusted Low Intensity/CF6_cut.mp4",
+      "duration_s": 8.133125,
+      "mean_luminance": 0.8095107078552246,
+      "motion_energy": 0.00658646272495389
+    },
+    "emotions_46/EDITED/Afraid/SF3_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 46/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Afraid/SF3_cut.mp4",
+      "duration_s": 5.96,
+      "mean_luminance": 0.8156213164329529,
+      "motion_energy": 0.03791876137256622
+    },
+    "emotions_46/EDITED/Afraid Low Intensity/OF4_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 46/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Afraid Low Intensity/OF4_cut.mp4",
+      "duration_s": 6.68,
+      "mean_luminance": 0.8061484694480896,
+      "motion_energy": 0.025201182812452316
+    },
+    "emotions_46/EDITED/Afraid Low Intensity/SF4_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 46/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Afraid Low Intensity/SF4_cut.mp4",
+      "duration_s": 5.36,
+      "mean_luminance": 0.8026155829429626,
+      "motion_energy": 0.03701429069042206
+    },
+    "emotions_46/EDITED/Disappointed/CF9v1_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 46/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Disappointed/CF9v1_cut.mp4",
+      "duration_s": 10.719041666666666,
+      "mean_luminance": 0.8186740875244141,
+      "motion_energy": 0.019284149631857872
+    },
+    "emotions_46/EDITED/Disappointed/IF9_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 46/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Disappointed/IF9_cut.mp4",
+      "duration_s": 5.96,
+      "mean_luminance": 0.8945248126983643,
+      "motion_energy": 0.02444520778954029
+    },
+    "emotions_51/EDITED/Angry Low Intensity/HF18_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 51/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Angry Low Intensity/HF18_cut.mp4",
+      "duration_s": 9.56,
+      "mean_luminance": 0.8189574480056763,
+      "motion_energy": 0.018689073622226715
+    },
+    "emotions_51/EDITED/Bored/KF8_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 51/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Bored/KF8_cut.mp4",
+      "duration_s": 8.2,
+      "mean_luminance": 0.6303442716598511,
+      "motion_energy": 0.0
+    },
+    "emotions_51/EDITED/Disgusted Low Intensity/IF6_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 51/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Disgusted Low Intensity/IF6_cut.mp4",
+      "duration_s": 6.92,
+      "mean_luminance": 0.8961595892906189,
+      "motion_energy": 0.011936557479202747
+    },
+    "emotions_51/EDITED/Disgusted Low Intensity/OF6v1_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 51/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Disgusted Low Intensity/OF6v1_cut.mp4",
+      "duration_s": 7.04,
+      "mean_luminance": 0.8043055534362793,
+      "motion_energy": 0.022484663873910904
+    },
+    "emotions_52/EDITED/Disappointed/SF9 v2_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 52/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Disappointed/SF9 v2_cut.mp4",
+      "duration_s": 7.12,
+      "mean_luminance": 0.4805184602737427,
+      "motion_energy": 0.0
+    },
+    "emotions_53/EDITED/Afraid/OF3_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 53/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Afraid/OF3_cut.mp4",
+      "duration_s": 9.04,
+      "mean_luminance": 0.8145204186439514,
+      "motion_energy": 0.028020180761814117
+    },
+    "emotions_54/EDITED/Disappointed/CF9v2_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 54/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Disappointed/CF9v2_cut.mp4",
+      "duration_s": 12.095416666666665,
+      "mean_luminance": 0.8194335103034973,
+      "motion_energy": 0.01938599906861782
+    },
+    "emotions_57/EDITED/Disappointed/MF9_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 57/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Disappointed/MF9_cut.mp4",
+      "duration_s": 6.2,
+      "mean_luminance": 0.6498975157737732,
+      "motion_energy": 0.0
+    },
+    "emotions_59/EDITED/Angry Low Intensity/DF18_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 59/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Angry Low Intensity/DF18_cut.mp4",
+      "duration_s": 6.5065,
+      "mean_luminance": 0.8183252811431885,
+      "motion_energy": 0.01685277931392193
+    },
+    "emotions_68/EDITED/Afraid Low Intensity/GF4_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 68/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Afraid Low Intensity/GF4_cut.mp4",
+      "duration_s": 9.16,
+      "mean_luminance": 0.8132134079933167,
+      "motion_energy": 0.013408592902123928
+    },
+    "emotions_68/EDITED/Bored/IF8_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 68/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Bored/IF8_cut.mp4",
+      "duration_s": 8.8,
+      "mean_luminance": 0.8980355858802795,
+      "motion_energy": 0.015679465606808662
+    },
+    "emotions_68/EDITED/Bored/OF8_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 68/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Bored/OF8_cut.mp4",
+      "duration_s": 8.36,
+      "mean_luminance": 0.7972601056098938,
+      "motion_energy": 0.0345441997051239
+    },
+    "emotions_68/EDITED/Bored/SF8_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 68/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Bored/SF8_cut.mp4",
+      "duration_s": 6.4,
+      "mean_luminance": 0.6644124388694763,
+      "motion_energy": 0.0
+    },
+    "emotions_68/EDITED/Disgusted Low Intensity/KF6_cut.mp4": {
+      "status": "ok",
+      "path": "data/eu_emotions/emotions 68/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Disgusted Low Intensity/KF6_cut.mp4",
+      "duration_s": 7.44,
+      "mean_luminance": 0.8291312456130981,
+      "motion_energy": 0.011827901937067509
+    }
+  }
+}

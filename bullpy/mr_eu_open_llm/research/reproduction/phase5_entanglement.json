@@ -1,0 +1,165 @@
+{
+  "seed": 42,
+  "n_sim": 100,
+  "models": {
+    "qwen3vl": {
+      "model": "qwen3vl",
+      "n_trials": 243,
+      "target_spearman_1minus_p_vs_entropy": 0.9543293883731173,
+      "target_spearman_p": 1.9145905816572383e-128,
+      "layers": [
+        {
+          "layer": 4,
+          "observed_probe_cosine": 0.8075374478254514,
+          "null_probe_cosine": {
+            "target_rho": 0.9543293883731173,
+            "n_sim": 100,
+            "cosine_mean": 0.9551926051976767,
+            "cosine_std": 0.007992222704109044,
+            "cosine_ci_lo": 0.9408184304531743,
+            "cosine_ci_hi": 0.9702532631351881
+          },
+          "cosine_minus_null_mean": -0.14765515737222523,
+          "rsa_raw": -0.07913319320441331,
+          "rsa_partial_entropy_rdm": -0.06103908997503279
+        },
+        {
+          "layer": 13,
+          "observed_probe_cosine": 0.80652436636609,
+          "null_probe_cosine": {
+            "target_rho": 0.9543293883731173,
+            "n_sim": 100,
+            "cosine_mean": 0.9548305870001621,
+            "cosine_std": 0.007788002078212385,
+            "cosine_ci_lo": 0.9375373430690369,
+            "cosine_ci_hi": 0.9682694970306098
+          },
+          "cosine_minus_null_mean": -0.14830622063407206,
+          "rsa_raw": -0.07610848504868219,
+          "rsa_partial_entropy_rdm": -0.05456207725251168
+        },
+        {
+          "layer": 26,
+          "observed_probe_cosine": 0.8118223317091947,
+          "null_probe_cosine": {
+            "target_rho": 0.9543293883731173,
+            "n_sim": 100,
+            "cosine_mean": 0.9532641826579988,
+            "cosine_std": 0.007438628615537386,
+            "cosine_ci_lo": 0.9414071649852134,
+            "cosine_ci_hi": 0.9650897586064567
+          },
+          "cosine_minus_null_mean": -0.14144185094880413,
+          "rsa_raw": -0.055891593811888976,
+          "rsa_partial_entropy_rdm": -0.06906678424015014
+        }
+      ]
+    },
+    "gemma4": {
+      "model": "gemma4",
+      "n_trials": 243,
+      "target_spearman_1minus_p_vs_entropy": 0.9543293883731173,
+      "target_spearman_p": 1.9145905816572383e-128,
+      "layers": [
+        {
+          "layer": 5,
+          "observed_probe_cosine": 0.7918155488579315,
+          "null_probe_cosine": {
+            "target_rho": 0.9543293883731173,
+            "n_sim": 100,
+            "cosine_mean": 0.95372270785421,
+            "cosine_std": 0.007355912387324864,
+            "cosine_ci_lo": 0.9383009500326661,
+            "cosine_ci_hi": 0.9639995684522202
+          },
+          "cosine_minus_null_mean": -0.1619071589962785,
+          "rsa_raw": -0.01873227142808896,
+          "rsa_partial_entropy_rdm": -0.00829783406173548
+        },
+        {
+          "layer": 15,
+          "observed_probe_cosine": 0.7892543866923332,
+          "null_probe_cosine": {
+            "target_rho": 0.9543293883731173,
+            "n_sim": 100,
+            "cosine_mean": 0.9532333702663363,
+            "cosine_std": 0.008208496659018424,
+            "cosine_ci_lo": 0.9365140551198856,
+            "cosine_ci_hi": 0.9666879385846397
+          },
+          "cosine_minus_null_mean": -0.1639789835740031,
+          "rsa_raw": -0.01861894816273418,
+          "rsa_partial_entropy_rdm": -0.01317395898968398
+        },
+        {
+          "layer": 31,
+          "observed_probe_cosine": 0.8270401674675205,
+          "null_probe_cosine": {
+            "target_rho": 0.9543293883731173,
+            "n_sim": 100,
+            "cosine_mean": 0.9537445366312463,
+            "cosine_std": 0.008365861406449272,
+            "cosine_ci_lo": 0.9351135690677617,
+            "cosine_ci_hi": 0.9677354273189822
+          },
+          "cosine_minus_null_mean": -0.12670436916372574,
+          "rsa_raw": 0.003388512644371092,
+          "rsa_partial_entropy_rdm": -0.0024192342148496517
+        }
+      ]
+    },
+    "molmo2": {
+      "model": "molmo2",
+      "n_trials": 243,
+      "target_spearman_1minus_p_vs_entropy": 0.9543293883731173,
+      "target_spearman_p": 1.9145905816572383e-128,
+      "layers": [
+        {
+          "layer": 4,
+          "observed_probe_cosine": 0.7913946772318737,
+          "null_probe_cosine": {
+            "target_rho": 0.9543293883731173,
+            "n_sim": 100,
+            "cosine_mean": 0.9550625352190798,
+            "cosine_std": 0.008521850106624382,
+            "cosine_ci_lo": 0.9368380308590287,
+            "cosine_ci_hi": 0.970929420785754
+          },
+          "cosine_minus_null_mean": -0.16366785798720607,
+          "rsa_raw": 0.014707470365952671,
+          "rsa_partial_entropy_rdm": 0.024328864028916753
+        },
+        {
+          "layer": 12,
+          "observed_probe_cosine": 0.8096210212441168,
+          "null_probe_cosine": {
+            "target_rho": 0.9543293883731173,
+            "n_sim": 100,
+            "cosine_mean": 0.95396391820469,
+            "cosine_std": 0.008072059081791271,
+            "cosine_ci_lo": 0.9349660267951714,
+            "cosine_ci_hi": 0.9670779843428224
+          },
+          "cosine_minus_null_mean": -0.14434289696057312,
+          "rsa_raw": -0.013788622228267955,
+          "rsa_partial_entropy_rdm": -0.009846808503959996
+        },
+        {
+          "layer": 23,
+          "observed_probe_cosine": 0.7767257630739264,
+          "null_probe_cosine": {
+            "target_rho": 0.9543293883731173,
+            "n_sim": 100,
+            "cosine_mean": 0.9550658195267786,
+            "cosine_std": 0.007465315676346619,
+            "cosine_ci_lo": 0.9411759780833956,
+            "cosine_ci_hi": 0.967201799076818
+          },
+          "cosine_minus_null_mean": -0.17834005645285222,
+          "rsa_raw": 0.02682225446989101,
+          "rsa_partial_entropy_rdm": 0.024638449510975435
+        }
+      ]
+    }
+  }
+}

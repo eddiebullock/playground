@@ -82,6 +82,8 @@ Thumbs.db
 !results/mech/*.json
 !results/mech/*.csv
 !results/mech/axis_*.npy
+!results/mech/pilot_n36/
+!results/mech/pilot_n36/**
 
 !results/stats/*.json
 !results/stats/*.csv
