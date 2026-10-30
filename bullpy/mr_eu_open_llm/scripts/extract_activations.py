@@ -135,6 +135,8 @@ def extract_activations(
     pooling: Optional[PoolingMode] = None,
     n_options: Optional[int] = None,
     human_entropy_lookup: Optional[Path] = None,
+    all_layers: bool = False,
+    resume: bool = True,
 ) -> Dict[str, Any]:
     trials, _labels = load_eu_emotions_manifest(manifest, dataset_root)
     if max_trials is not None:
@@ -171,8 +173,10 @@ def extract_activations(
         model_key, device=device, dtype=dtype, checkpoint=checkpoint
     )
 
-    layer_map = get_layer_indices(model_key, model=model)
+    layer_map = get_layer_indices(model_key, model=model, all_layers=all_layers)
     nl = n_layers(model_key, model)
+    output_dir.mkdir(parents=True, exist_ok=True)
+
     hooks = []
     storage: Dict[str, List[np.ndarray]] = {k: [] for k in layer_map}
 
@@ -183,9 +187,40 @@ def extract_activations(
 
     trial_ids: List[str] = []
     errors: List[Dict[str, str]] = []
+    done: set[str] = set()
+    if resume:
+        any_sidecar = None
+        for layer_idx in layer_map.values():
+            sidecar = output_dir / f"layer{layer_idx}_trial_ids.json"
+            npy_path = output_dir / f"layer{layer_idx}_eu_emotions_seed{seed}.npy"
+            if sidecar.is_file() and npy_path.is_file():
+                any_sidecar = sidecar
+                break
+        if any_sidecar is not None:
+            trial_ids = json.loads(any_sidecar.read_text(encoding="utf-8"))
+            done = set(trial_ids)
+            for frac_key, layer_idx in layer_map.items():
+                npy_path = output_dir / f"layer{layer_idx}_eu_emotions_seed{seed}.npy"
+                if npy_path.is_file():
+                    arr = np.load(npy_path)
+                    storage[frac_key] = [arr[i : i + 1] for i in range(min(len(arr), len(trial_ids)))]
+            print(f"resume: {len(done)} trials already extracted", flush=True)
+
+    def _flush() -> None:
+        for frac_key, arrs in storage.items():
+            if not arrs:
+                continue
+            acts = np.concatenate(arrs, axis=0)
+            layer_idx = layer_map[frac_key]
+            np.save(output_dir / f"layer{layer_idx}_eu_emotions_seed{seed}.npy", acts)
+            (output_dir / f"layer{layer_idx}_trial_ids.json").write_text(
+                json.dumps(trial_ids, indent=2) + "\n", encoding="utf-8"
+            )
 
     for trial_idx, t in enumerate(trials):
         trial_id = str(t.get("trial_id", ""))
+        if trial_id in done:
+            continue
         trial_ids.append(trial_id)
         trial_copy = dict(t)
         human_entry = human_options.get(trial_id)
@@ -238,19 +273,14 @@ def extract_activations(
                 else:
                     dim = 4096
                 storage[frac_key].append(np.zeros((1, dim), dtype=np.float32))
+        done.add(trial_id)
+        n_new = len(trial_ids)
+        if n_new % 5 == 0 or n_new == len(trials):
+            _flush()
+            print(f"checkpoint {n_new}/{len(trials)}", flush=True)
 
-    output_dir.mkdir(parents=True, exist_ok=True)
-    saved_layers: List[int] = []
-    for frac_key, arrs in storage.items():
-        if not arrs:
-            continue
-        acts = np.concatenate(arrs, axis=0)
-        layer_idx = layer_map[frac_key]
-        saved_layers.append(layer_idx)
-        out_path = output_dir / f"layer{layer_idx}_eu_emotions_seed{seed}.npy"
-        np.save(out_path, acts)
-        sidecar = output_dir / f"layer{layer_idx}_trial_ids.json"
-        sidecar.write_text(json.dumps(trial_ids, indent=2) + "\n", encoding="utf-8")
+    _flush()
+    saved_layers = [layer_map[k] for k, arrs in storage.items() if arrs]
 
     meta = {
         "model": model_key,
@@ -272,6 +302,7 @@ def extract_activations(
         ),
         "checkpoint": str(checkpoint) if checkpoint else None,
         "saved_layers": saved_layers,
+        "all_layers": bool(all_layers),
         "n_errors": len(errors),
         "errors_head": errors[:5],
     }
@@ -345,6 +376,16 @@ def main() -> None:
         default=None,
         help="eu_emotions_human_entropy.json — use human 6AFC option sets (like evaluate.py).",
     )
+    ap.add_argument(
+        "--all_layers",
+        action="store_true",
+        help="Save every transformer layer (not just protocol depth fractions).",
+    )
+    ap.add_argument(
+        "--no_resume",
+        action="store_true",
+        help="Ignore existing npy checkpoints and re-extract from scratch.",
+    )
     args = ap.parse_args()
 
     dataset_root = args.data_root or resolve_dataset_root("eu_emotions")
@@ -375,6 +416,8 @@ def main() -> None:
         pooling=args.pooling,
         n_options=args.n_options,
         human_entropy_lookup=args.human_options,
+        all_layers=bool(args.all_layers),
+        resume=not bool(args.no_resume),
     )
     print(json.dumps(meta, indent=2))
 
