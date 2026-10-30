@@ -2,22 +2,28 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-10-30 14:20 Europe/London
+**Updated:** 2026-10-30 14:35 Europe/London
 
 ## Current phase
 
-Phase 0 git wrap-up. Next after push/tag: Phase 1 (correctness + pipeline refactor). CPU-feasible work is unblocked. GPU work is blocked on CSD3 SSH.
+Phase 0 complete (`v2-phase0` on `origin/main` and `origin/paper-v2`). Starting Phase 1.
 
 ## Task in progress
 
-Merging `p0-locate-reproduce` into `paper-v2`, pushing, tagging `v2-phase0`.
+Phase 1: Molmo chance-level wording, binomial helper, pipeline skeleton, unit tests. Preregistration draft (commit before any Phase 2 run).
 
 ## Last completed step
 
-- Located project at `/Users/eb2007/playground/bullpy/mr_eu_open_llm` (git root `/Users/eb2007/playground`, remote `eddiebullock/playground`).
-- Reproduced headline numbers from cached eval/stats/mech JSON and axis `.npy` files via `research/scripts/reproduce_headline_numbers.py`.
-- Wrote research scaffold, compute map, reproduction report, decisions, needs-input, results registry, phase-0 review, digest.
-- Commit `2e2af355a4c4c776d2b9675aa4a5b55c56fc44c8` on `p0-locate-reproduce`.
+- Phase 0 tagged `v2-phase0` on `origin/main` and `origin/paper-v2` (`d47c0be`).
+- Started Phase 1: Molmo wording in `docs/study3_brief_for_claude_agent.md`; `src/paper_v2` metrics + item schema; known-answer tests (11/11 pass). Original `scripts/` untouched.
+
+## Next 5 actions
+
+1. EU-Emotion dataset adapter → common Item schema from human_entropy JSON + manifest.
+2. Behaviour entry point: binomial vs chance for every model, consensus terciles, entropy ρ with bootstrap CIs.
+3. Option-position-bias plan + logprob scoring interface (run when GPU exists).
+4. Write `research/PREREGISTRATION.md` and tag `prereg-v1` before any Phase 2 probe rerun.
+5. Unit tests for RDM construction from the adapter; keep original scripts archived in place.
 
 ## Running jobs
 
@@ -27,19 +33,11 @@ None.
 |---|---|---|---|
 | — | — | — | — |
 
-## Next 5 actions
-
-1. Commit Phase 0 on `p0-locate-reproduce`, push, merge into `paper-v2`, tag `v2-phase0`.
-2. Phase 1: fix Molmo above-chance wording in docs; add binomial tests as a reusable function; do not treat Molmo mechanistic results as recognition.
-3. Phase 1: archive original scripts; start config-driven `src/` pipeline (dataset + model adapters, option-logprob scoring). Unit tests for entropy / RDM / Spearman / LOO.
-4. Write `research/PREREGISTRATION.md` and commit/tag `prereg-v1` **before** any Phase 2 probe rerun.
-5. If CSD3 SSH is restored: pull 6AFC activation `.npy` (3 models x 3 layers, last-token) then run Phase 2 gate on CPU. Until then, draft adapters and paper methods from cached JSON.
-
 ## Branch / git
 
-- Default branch: `main` (local is 11 commits behind `origin/main`; those commits are Study A1/A2, not this project).
+- Default branch: `main` (local checkout still stale/dirty; `origin/main` is at `v2-phase0`).
 - Integration branch: `paper-v2` (created from `origin/main` at `90e7a86`).
-- Task branch: `p0-locate-reproduce` @ `2e2af35`.
+- Task branch: `p1-pipeline` (from `paper-v2`). Merged Phase 0: `p0-locate-reproduce`.
 - Repo visibility: **public**.
 
 ## Blockers (non-idle)
