@@ -133,12 +133,27 @@ def hash_mmlu(rows: list[dict]) -> str:
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()
 
 
-def load_mmlu_pairs() -> list[tuple[str, int]]:
-    from datasets import get_dataset_config_names, load_dataset
+def mmlu_subject_names(configs: list[str], splits_for) -> list[str]:
+    """Keep subject configs that publish a test split. Skip the aggregate and train-only sets."""
+    chosen = []
+    for name in configs:
+        if name == "all":
+            continue
+        if "test" not in splits_for(name):
+            continue
+        chosen.append(name)
+    if not chosen:
+        raise RuntimeError("cais/mmlu returned no subject with a test split")
+    return chosen
 
-    names = [name for name in get_dataset_config_names("cais/mmlu") if name != "all"]
-    if not names:
-        raise RuntimeError("cais/mmlu returned no subject configs")
+
+def load_mmlu_pairs() -> list[tuple[str, int]]:
+    from datasets import get_dataset_config_names, get_dataset_split_names, load_dataset
+
+    names = mmlu_subject_names(
+        get_dataset_config_names("cais/mmlu"),
+        lambda subject: get_dataset_split_names("cais/mmlu", subject),
+    )
     pairs = []
     for subject in names:
         dataset = load_dataset("cais/mmlu", subject, split="test")

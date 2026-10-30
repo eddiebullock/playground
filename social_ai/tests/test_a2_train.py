@@ -145,6 +145,19 @@ def test_grid_records_wait_for_every_epoch(tmp_path):
     assert choose(records)["epoch"] == 1
 
 
+def test_mmlu_skips_configs_without_a_test_split():
+    from scog.train.prepare import mmlu_subject_names
+
+    splits = {
+        "all": ["test"],
+        "abstract_algebra": ["test", "validation", "dev"],
+        "auxiliary_train": ["train"],
+    }
+    assert mmlu_subject_names(list(splits), splits.get) == ["abstract_algebra"]
+    with pytest.raises(RuntimeError, match="no subject with a test split"):
+        mmlu_subject_names(["all", "auxiliary_train"], splits.get)
+
+
 def test_mmlu_sample_is_stable_and_hashed():
     pairs = [(f"s{i % 3}", i) for i in range(50)]
     first = sample_mmlu(pairs, n=20, seed=20261029)
