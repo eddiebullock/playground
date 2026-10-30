@@ -50,14 +50,14 @@ Is human-like **pair-specific** confusion structure **causally necessary** at a 
 
 ### Behaviour (243 trials, video_only, 6AFC, 3 models)
 
-| Model | Accuracy | H_fc vs H_human ρ |
-|---|---|---|
-| Qwen3-VL | 37.9% | ≈ 0 |
-| Gemma 4 | 31.3% | +0.12 |
-| Molmo2 | 19.8% | −0.03 |
-| Chance | 16.7% | — |
+| Model | Accuracy | vs chance (greater) | H_fc vs H_human ρ |
+|---|---|---|---|
+| Qwen3-VL | 37.9% (92/243) | p = 2.25e-15 | ≈ 0 (p = 0.98) |
+| Gemma 4 | 31.3% (76/243) | p = 1.54e-08 | +0.12 (p = 0.068) |
+| Molmo2 | 19.8% (48/243) | p = 0.116, **not above chance** | −0.03 (p = 0.59) |
+| Chance | 16.7% | — | — |
 
-Accuracy tracks human consensus terciles; entropy does not.
+Qwen and Gemma are above chance. Molmo is not; do not treat its geometry as recognition. Accuracy tracks human consensus terciles; output entropy does not.
 
 ### Geometry (3 models, 3 depths, last-token activations)
 
