@@ -145,6 +145,14 @@ def test_grid_records_wait_for_every_epoch(tmp_path):
     assert choose(records)["epoch"] == 1
 
 
+def test_resume_asks_for_a_smaller_disk_reserve():
+    from scog.train.prepare import headroom_requirement
+
+    assert headroom_requirement(True, True) == (1.0, 2000)
+    assert headroom_requirement(False, True) == (30.0, 80000)
+    assert headroom_requirement(True, False) == (30.0, 80000)
+
+
 def test_mmlu_skips_configs_without_a_test_split():
     from scog.train.prepare import mmlu_subject_names
 
