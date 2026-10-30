@@ -149,6 +149,12 @@ def eligible_frame(frame: pd.DataFrame) -> pd.DataFrame:
         raise RuntimeError("persona sample: an eligible row has no userid")
     work["userid"] = work["userid"].astype("int64").astype(str)
     personas = pd.DataFrame([_persona_from_row(row) for _, row in work.iterrows()])
+    # Condition 2 is the demographic profile. A row with none of those fields
+    # would be an empty person block, so it is not a persona.
+    shown = ["age_band", "sex", "education", "occupation", "region"]
+    personas = personas.loc[personas[shown].notna().any(axis=1)].copy()
+    if len(personas) == 0:
+        raise RuntimeError("persona sample: every row lacks demographics")
     counts = personas.groupby(["group", "cell"]).size()
     keep = counts[counts >= MIN_CELL]
     if len(keep) == 0:

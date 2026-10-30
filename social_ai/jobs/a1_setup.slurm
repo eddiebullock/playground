@@ -11,14 +11,30 @@ source "${ROOT}/local/site.sh"
 # shellcheck disable=SC1091
 source "${ROOT}/jobs/preamble.sh"
 
-free_gb="$(quota -s | tr '\r' '\n' | awk '$3+0 > 100 && $3+0 < 5000 {free=$3-$2} END {if (free=="") exit 1; printf "%.1f", free}')"
-echo "free_gb=${free_gb}"
-python3 - << PY
+WEIGHTS="${SITE_PROJECT_ROOT}/weights/Qwen3-8B"
+need_download=0
+if [[ ! -f "${WEIGHTS}/config.json" ]]; then
+  need_download=1
+fi
+for shard in 00001 00002 00003 00004 00005; do
+  if [[ ! -f "${WEIGHTS}/model-${shard}-of-00005.safetensors" ]]; then
+    need_download=1
+  fi
+done
+
+if [[ "${need_download}" -eq 1 ]]; then
+  free_gb="$(quota -s | tr '\r' '\n' | awk '$3+0 > 100 && $3+0 < 5000 {free=$3-$2} END {if (free=="") exit 1; printf "%.1f", free}')"
+  echo "free_gb=${free_gb}"
+  python3 - << PY
 free = float("${free_gb}")
-if free < 40:
+# One 16 GB checkpoint plus about 8 GB for this env, and a little left under the quota.
+if free < 28:
     raise SystemExit("free project space is %.1f GB; refusing the 8B download" % free)
 print("free project space %.1f GB" % free)
 PY
+else
+  echo "Qwen3-8B already on disk; skipping the download"
+fi
 
 PREFIX="${SITE_PROJECT_ROOT}/conda"
 if [[ ! -x "${PREFIX}/bin/conda" ]]; then
@@ -30,26 +46,33 @@ if [[ ! -x "${PREFIX}/bin/conda" ]]; then
 fi
 # shellcheck disable=SC1091
 source "${PREFIX}/etc/profile.d/conda.sh"
+# One setup at a time. Two jobs sharing the package cache delete each other's files.
+mkdir -p "${SITE_PROJECT_ROOT}/cache"
+exec 9>"${SITE_PROJECT_ROOT}/cache/a1-setup.lock"
+flock 9
+export CONDA_PKGS_DIRS="${SITE_PROJECT_ROOT}/cache/conda-pkgs-a1"
 # Own env. Study A2 uses conda/envs/scog at Python 3.11, and the lock needs 3.12.
 ENV="${SITE_PROJECT_ROOT}/conda/envs/scog-a1"
 if ! "${ENV}/bin/python" -c 'import sys; raise SystemExit(0 if sys.version_info >= (3, 12) else 1)' 2>/dev/null; then
+  rm -rf "${ENV}"
   conda create -y -p "${ENV}" python=3.12
 fi
 conda activate "${ENV}"
-pip install -r "${ROOT}/requirements.lock"
-pip install "vllm==0.8.5" "huggingface_hub==0.31.1"
+if ! python -c 'import importlib.util, sys; ok = importlib.util.find_spec("vllm") and importlib.util.find_spec("pandas"); sys.exit(0 if ok else 1)'; then
+  pip install --no-cache-dir -r "${ROOT}/requirements.lock"
+  pip install --no-cache-dir "vllm==0.8.5" "huggingface_hub==0.31.1"
+  rm -rf "${SITE_PROJECT_ROOT}/cache/conda-pkgs-a1"
+fi
 
-free_gb="$(quota -s | tr '\r' '\n' | awk '$3+0 > 100 && $3+0 < 5000 {free=$3-$2} END {if (free=="") exit 1; printf "%.1f", free}')"
-echo "free_gb_after_env=${free_gb}"
-python3 - << PY
+if [[ "${need_download}" -eq 1 ]]; then
+  free_gb="$(quota -s | tr '\r' '\n' | awk '$3+0 > 100 && $3+0 < 5000 {free=$3-$2} END {if (free=="") exit 1; printf "%.1f", free}')"
+  echo "free_gb_after_env=${free_gb}"
+  python3 - << PY
 free = float("${free_gb}")
-if free < 20:
+if free < 17:
     raise SystemExit("free project space is %.1f GB after the env install; refusing the 8B download" % free)
 print("free project space after the env install %.1f GB" % free)
 PY
-
-WEIGHTS="${SITE_PROJECT_ROOT}/weights/Qwen3-8B"
-if [[ ! -f "${WEIGHTS}/config.json" ]]; then
   mkdir -p "${SITE_PROJECT_ROOT}/weights"
   huggingface-cli download Qwen/Qwen3-8B --local-dir "${WEIGHTS}"
 fi
@@ -57,6 +80,8 @@ if [[ ! -f "${WEIGHTS}/config.json" ]]; then
   echo "Qwen3-8B download did not produce a config" >&2
   exit 1
 fi
+# Drop a second copy if the hub cache kept one. Do not touch other studies' files.
+rm -rf "${SITE_PROJECT_ROOT}/cache/hf/hub/models--Qwen--Qwen3-8B"
 
 export SCOG_C4_PATH="${SITE_PROJECT_ROOT}/data/data_c4_raw.csv"
 export SCOG_SPLIT_LOCK="${ROOT}/configs/splits.lock"
