@@ -279,10 +279,11 @@ def run_model(
     seed: int,
     n_jobs: int,
     extra_stim: Optional[Path] = None,
+    act_dir: Optional[Path] = None,
 ) -> Dict[str, Any]:
     items = load_eu_emotion_items()
     acc = summarise_eval(EVAL_PATHS[model])
-    act_dir = ACT_DIRS[model]
+    act_dir = Path(act_dir) if act_dir is not None else ACT_DIRS[model]
     layers = list_activation_layers(act_dir)
     trial_ids = load_trial_ids(act_dir, layers[0][1])
     item_by_id = {it["item_id"]: it for it in items}
@@ -335,6 +336,7 @@ def run_model(
         "n_perm": int(n_perm),
         "n_boot": int(n_boot),
         "seed": int(seed),
+        "activations_dir": str(act_dir),
         "layers": layer_rows,
         "passing_layers": passing,
         "any_layer_passes": bool(passing),
@@ -376,6 +378,7 @@ def run_gate(
     extra_stim: Optional[Path] = None,
     out_path: Optional[Path] = None,
     layer_set: str = "pilot_3layer_last_token",
+    act_dirs: Optional[Dict[str, Path]] = None,
 ) -> Dict[str, Any]:
     model_results = [
         run_model(
@@ -385,6 +388,7 @@ def run_gate(
             seed=seed,
             n_jobs=n_jobs,
             extra_stim=extra_stim,
+            act_dir=(act_dirs or {}).get(m),
         )
         for m in models
     ]
@@ -436,8 +440,19 @@ def main() -> None:
         type=Path,
         default=ROOT / "research/reproduction/phase2_gate.json",
     )
+    ap.add_argument(
+        "--act_dir",
+        type=Path,
+        default=None,
+        help="Activation directory for a single --models entry. Default: 3-layer 6AFC cache.",
+    )
     args = ap.parse_args()
     extra = args.extra_stim if args.extra_stim.is_file() else None
+    act_dirs = None
+    if args.act_dir is not None:
+        if len(args.models) != 1:
+            ap.error("--act_dir requires exactly one --models entry")
+        act_dirs = {args.models[0]: args.act_dir}
     payload = run_gate(
         models=args.models,
         n_perm=args.n_perm,
@@ -447,6 +462,7 @@ def main() -> None:
         extra_stim=extra,
         out_path=args.out,
         layer_set=args.layer_set,
+        act_dirs=act_dirs,
     )
     print(f"wrote {args.out}")
     print(f"exploratory={payload['exploratory']} would_be_branch={payload['would_be_branch']}")
