@@ -46,6 +46,22 @@ Non-trivial decisions. Date, decision, alternatives, why. Do not rewrite history
 - **Decision:** Pre-register grouped-by-actor CV. Filenames parse to 17 actor letters (B–S, no Q) via the same regex as `parse_stimulus_code`.
 - **Why:** Brief flags actor leakage as critical. Metadata does not store an `actor_id` field, but the stimulus code does.
 
+## 2026-10-30 — Ablation n=36 and difficulty-matched RSA are now on disk
+
+- **Decision:** Cite Δacc = 0, Δconfusion = 0, 5/180 flips from `results/mech/pilot_n36/`. Difficulty-matched RSA from the pulled `*_confusability_probe_rsa.json` files. Supercedes the earlier "unverified / missing" entries.
+- **Why:** Files were on CSD3 and have been pulled. Counts recomputed from `ablate_trials_qwen3vl_layer4.csv` (5 prediction changes vs baseline: entropy 0, bored 1, disappointed 1, interested 2, random 1).
+
+## 2026-10-30 — Phase 2 gate statistic is grouped-by-actor CV; 3-layer cache is exploratory
+
+- **Decision:** The confirmatory ρ for Holm / permutation / Δρ vs stimulus is **Leave-One-Actor-Out**. LOO is still computed and reported for continuity with the pilot. Inner α is RidgeCV GCV on the training fold. Bootstrap CIs resample held-out (y, pred) pairs (2,000), not full nested CV. The 3-layer last-token run applies the full rule but **does not lock Branch A/B** (prereg: pilot 3-layer probes are exploratory). Official lock waits for `layer_set=all_layers`.
+- **Alternatives:** Use LOO as the gate (matches the pilot script); re-run nested CV on every bootstrap sample.
+- **Why:** Actor leakage was flagged as the critical confound. GCV and prediction-pair bootstrap keep ≥1,000 permutations tractable on CPU. Permutation refits use dual Ridge with α frozen from full-sample GCV (the observed ρ still uses nested GCV per fold).
+
+## 2026-10-30 — Do not queue extra GPU option-order jobs yet
+
+- **Decision:** Land the option-order interface and slurm script; do not `sbatch` them while 39709579–39709584 are pending.
+- **Why:** Ampere is Priority-bound. Option-order is a full 243-trial eval and would delay all-layer extracts needed for the official gate.
+
 ## 2026-10-30 — Continue without CSD3; do not download 8B weights onto this Mac
 
 - **Decision:** Sequence CPU work (Phase 1 refactor, tests, prereg, paper methods, Phase 5 entanglement null once activations exist) while HPC auth is broken. Do not pull Hugging Face 8B checkpoints onto a 16 GB M3 Air with 29 GB free.

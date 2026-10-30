@@ -18,15 +18,9 @@ No remaining question. Keep using `-o ControlPath=/Users/eb2007/.ssh/cm-%r@%h:%p
 
 **Meanwhile.** Gitignore exceptions are scoped to small analysis artifacts.
 
-## 3. HPC activation pull (depends on #1)
+## 3. HPC activation pull — RESOLVED 2026-10-30
 
-**Context.** Phase 2 (the Branch A/B gate) needs last-token activations for all 243 items at the saved layers, and later all layers × several token positions. Those tensors are almost certainly on CSD3 under `~/rds/hpc-work/study3/results/activations/baseline_{qwen3vl,gemma4,molmo2}_6afc/`.
-
-**Exact question.** None beyond #1. Logged so it is not forgotten.
-
-**Recommended default.** `rsync` the `.npy` + manifests as soon as SSH works. Do not re-extract until a cache miss is confirmed.
-
-**Meanwhile.** Probe JSON is enough to reproduce the *reported* ρ values but not to rerun probes with new baselines.
+3-layer last-token `.npy` for Qwen/Gemma/Molmo 6AFC are local. All-layer extracts are jobs 39709580–39709583. No remaining question.
 
 ## 4. CREMA-D access form (Phase 6, not blocking now)
 
