@@ -91,6 +91,14 @@ def test_cell_rule_drops_small_cells_children_and_is_deterministic():
     assert controls_drawn["diagnoses"].iloc[0] == [
         "I have not been diagnosed with any of these conditions"
     ]
+    blank = _people(12, group="autistic")
+    blank["userid"] = blank["userid"] + 300
+    blank["age"] = np.nan
+    blank["sex"] = np.nan
+    blank["education"] = np.nan
+    blank["occupation"] = np.nan
+    blank["country_region"] = np.nan
+    frame = pd.concat([frame, blank], ignore_index=True)
     with pytest.raises(RuntimeError, match="only"):
         draw_group(frame, "autistic", 13, 20261029)
     assert len(draw_ids(["b", "a", "c"], 2, 1)) == 2

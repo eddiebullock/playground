@@ -43,9 +43,11 @@ if ! "${ENV}/bin/python" -c 'import sys; raise SystemExit(0 if sys.version_info 
   conda create -y -p "${ENV}" python=3.12
 fi
 conda activate "${ENV}"
-pip install --no-cache-dir -r "${ROOT}/requirements.lock"
-pip install --no-cache-dir "vllm==0.8.5" "huggingface_hub==0.31.1"
-rm -rf "${SITE_PROJECT_ROOT}/cache/conda-pkgs-a1"
+if ! python -c 'import importlib.util, sys; ok = importlib.util.find_spec("vllm") and importlib.util.find_spec("pandas"); sys.exit(0 if ok else 1)'; then
+  pip install --no-cache-dir -r "${ROOT}/requirements.lock"
+  pip install --no-cache-dir "vllm==0.8.5" "huggingface_hub==0.31.1"
+  rm -rf "${SITE_PROJECT_ROOT}/cache/conda-pkgs-a1"
+fi
 
 free_gb="$(quota -s | tr '\r' '\n' | awk '$3+0 > 100 && $3+0 < 5000 {free=$3-$2} END {if (free=="") exit 1; printf "%.1f", free}')"
 echo "free_gb_after_env=${free_gb}"
