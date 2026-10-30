@@ -1,0 +1,40 @@
+{
+  "ablation_method": "mean_ablation",
+  "axes": [
+    "entropy",
+    "random",
+    "pair_bored_unfriendly",
+    "pair_interested_kind",
+    "pair_disappointed_worried"
+  ],
+  "csv": "/rds/user/eb2007/hpc-work/study3/results/mech/ablate_trials_qwen3vl_layer4.csv",
+  "hook_module": "model.language_model.layers.4",
+  "intervention": "activation_patching_mean_ablation",
+  "layer": 4,
+  "mean_projections": {
+    "entropy": -2.0755417346954346,
+    "pair_bored_unfriendly": 2.65515398979187,
+    "pair_disappointed_worried": -0.7604334950447083,
+    "pair_interested_kind": 2.5057685375213623,
+    "random": 0.3175542950630188
+  },
+  "model": "qwen3vl",
+  "n_trials": 36,
+  "pair_specs": [
+    {
+      "label_a": "Bored",
+      "label_b": "Unfriendly"
+    },
+    {
+      "label_a": "Interested",
+      "label_b": "Kind"
+    },
+    {
+      "label_a": "Disappointed",
+      "label_b": "Worried"
+    }
+  ],
+  "readout_note": "Negative mean_delta_accuracy = ablation hurt accuracy (necessity). Positive mean_delta_confusion_rate = more top-foil choices after ablation. Compare own pair vs other pairs vs random axis.",
+  "status": "ok",
+  "summary_csv": "/rds/user/eb2007/hpc-work/study3/results/mech/ablate_summary_qwen3vl_layer4.csv"
+}

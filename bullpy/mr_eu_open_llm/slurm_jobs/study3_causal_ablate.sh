@@ -28,6 +28,11 @@ MODE="${MODE:-smoke}"
 SEED="${SEED:-42}"
 MAX_FRAMES="${MAX_FRAMES:-4}"
 CONDITION="${CONDITION:-baseline_${MODEL}_6afc}"
+if [[ "${MODE}" == "full" ]]; then
+  OUTDIR="${OUTDIR:-results/mech/ablate_full_n243}"
+else
+  OUTDIR="${OUTDIR:-results/mech}"
+fi
 
 MOLMO2_VENV="${MOLMO2_VENV:-${PROJECT_ROOT}/venvs/molmo2}"
 USE_MOLMO2_VENV=0
@@ -54,7 +59,7 @@ fi
 set -u
 
 cd "${PROJECT_ROOT}"
-mkdir -p logs results/mech
+mkdir -p logs results/mech "${OUTDIR}"
 
 export HF_HOME="${PROJECT_ROOT}/hf_cache"
 export TOKENIZERS_PARALLELISM="false"
@@ -81,6 +86,7 @@ ABLATE_ARGS=(
   --max_frames "${MAX_FRAMES}"
   --seed "${SEED}"
   --sample_temperature 0.0
+  --outdir "${OUTDIR}"
 )
 
 if [[ "${MODE}" == "smoke" ]]; then

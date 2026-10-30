@@ -6,6 +6,236 @@
       "n_trials": 243,
       "probe_confusability_rho": 0.5197684972624679,
       "probe_human_entropy_rho": 0.5013466764627486,
+      "rsa_difficulty_matched": {
+        "n_pairs": 3,
+        "note": "Difficulty-controlled RSA: confused-pair items vs matched low-confusion pairs.",
+        "per_pair": [
+          {
+            "label_a": "Bored",
+            "label_b": "Unfriendly",
+            "matched_pairs": [
+              {
+                "label_a": "Afraid",
+                "label_b": "Disgusted",
+                "mean_human_entropy": 1.056586927040305,
+                "n_items": 3
+              },
+              {
+                "label_a": "Angry",
+                "label_b": "Disgusted",
+                "mean_human_entropy": 1.0510340282130188,
+                "n_items": 4
+              },
+              {
+                "label_a": "Angry",
+                "label_b": "Surprised",
+                "mean_human_entropy": 1.2176632661224414,
+                "n_items": 2
+              },
+              {
+                "label_a": "Bored",
+                "label_b": "Hurt",
+                "mean_human_entropy": 1.2303159972044118,
+                "n_items": 1
+              },
+              {
+                "label_a": "Disappointed",
+                "label_b": "Jealous",
+                "mean_human_entropy": 1.1683188173070136,
+                "n_items": 6
+              }
+            ],
+            "matching_tolerance_sd": 0.5,
+            "mean_confused_entropy": 1.1493745401281195,
+            "n_confused": 8,
+            "n_confused_items": 8,
+            "n_control_items": 16,
+            "n_subset": 24,
+            "pair": "Bored/Unfriendly",
+            "rsa_p_perm": 0.004497751124437781,
+            "rsa_rho": 0.26909832907635456,
+            "widened": false
+          },
+          {
+            "label_a": "Interested",
+            "label_b": "Kind",
+            "matched_pairs": [
+              {
+                "label_a": "Angry",
+                "label_b": "Surprised",
+                "mean_human_entropy": 1.2176632661224414,
+                "n_items": 2
+              },
+              {
+                "label_a": "Bored",
+                "label_b": "Hurt",
+                "mean_human_entropy": 1.2303159972044118,
+                "n_items": 1
+              },
+              {
+                "label_a": "Disappointed",
+                "label_b": "Jealous",
+                "mean_human_entropy": 1.1683188173070136,
+                "n_items": 6
+              },
+              {
+                "label_a": "Hurt",
+                "label_b": "Unfriendly",
+                "mean_human_entropy": 1.3945252169719873,
+                "n_items": 2
+              },
+              {
+                "label_a": "Kind",
+                "label_b": "Proud",
+                "mean_human_entropy": 1.3891738451489402,
+                "n_items": 2
+              }
+            ],
+            "matching_tolerance_sd": 0.5,
+            "mean_confused_entropy": 1.2374045723673148,
+            "n_confused": 7,
+            "n_confused_items": 7,
+            "n_control_items": 13,
+            "n_subset": 20,
+            "pair": "Interested/Kind",
+            "rsa_p_perm": 0.17791104447776113,
+            "rsa_rho": -0.16800027993194155,
+            "widened": false
+          },
+          {
+            "label_a": "Disappointed",
+            "label_b": "Worried",
+            "matched_pairs": [
+              {
+                "label_a": "Afraid",
+                "label_b": "Ashamed",
+                "mean_human_entropy": 0.6912291153220836,
+                "n_items": 14
+              },
+              {
+                "label_a": "Afraid",
+                "label_b": "Disappointed",
+                "mean_human_entropy": 0.8451472601833139,
+                "n_items": 2
+              },
+              {
+                "label_a": "Angry",
+                "label_b": "Jealous",
+                "mean_human_entropy": 0.9235103851000996,
+                "n_items": 8
+              },
+              {
+                "label_a": "Ashamed",
+                "label_b": "Disappointed",
+                "mean_human_entropy": 0.8912144370103778,
+                "n_items": 4
+              },
+              {
+                "label_a": "Ashamed",
+                "label_b": "Sneaky",
+                "mean_human_entropy": 0.9300933190140469,
+                "n_items": 6
+              },
+              {
+                "label_a": "Ashamed",
+                "label_b": "Worried",
+                "mean_human_entropy": 0.7363802852152114,
+                "n_items": 4
+              },
+              {
+                "label_a": "Bored",
+                "label_b": "Disappointed",
+                "mean_human_entropy": 0.9133447538828158,
+                "n_items": 5
+              },
+              {
+                "label_a": "Bored",
+                "label_b": "Frustrated",
+                "mean_human_entropy": 0.7961157126924947,
+                "n_items": 8
+              },
+              {
+                "label_a": "Disappointed",
+                "label_b": "Interested",
+                "mean_human_entropy": 0.8033926271983635,
+                "n_items": 10
+              },
+              {
+                "label_a": "Disgusted",
+                "label_b": "Jealous",
+                "mean_human_entropy": 0.9299087697725864,
+                "n_items": 1
+              },
+              {
+                "label_a": "Disgusted",
+                "label_b": "Sad",
+                "mean_human_entropy": 0.686978538875301,
+                "n_items": 11
+              },
+              {
+                "label_a": "Excited",
+                "label_b": "Proud",
+                "mean_human_entropy": 0.8628125989349785,
+                "n_items": 7
+              },
+              {
+                "label_a": "Frustrated",
+                "label_b": "Jealous",
+                "mean_human_entropy": 0.73169148189007,
+                "n_items": 3
+              },
+              {
+                "label_a": "Happy",
+                "label_b": "Interested",
+                "mean_human_entropy": 0.8418272832112557,
+                "n_items": 9
+              },
+              {
+                "label_a": "Hurt",
+                "label_b": "Worried",
+                "mean_human_entropy": 0.8312860419493171,
+                "n_items": 10
+              },
+              {
+                "label_a": "Interested",
+                "label_b": "Proud",
+                "mean_human_entropy": 0.9066350146158049,
+                "n_items": 5
+              },
+              {
+                "label_a": "Jealous",
+                "label_b": "Sad",
+                "mean_human_entropy": 0.8794200704798616,
+                "n_items": 4
+              },
+              {
+                "label_a": "Kind",
+                "label_b": "Sneaky",
+                "mean_human_entropy": 0.8973298624892798,
+                "n_items": 5
+              },
+              {
+                "label_a": "Surprised",
+                "label_b": "Worried",
+                "mean_human_entropy": 0.6902857213981901,
+                "n_items": 8
+              }
+            ],
+            "matching_tolerance_sd": 0.5,
+            "mean_confused_entropy": 0.851830302258591,
+            "n_confused": 13,
+            "n_confused_items": 13,
+            "n_control_items": 124,
+            "n_subset": 137,
+            "pair": "Disappointed/Worried",
+            "rsa_p_perm": 0.8735632183908046,
+            "rsa_rho": -0.007329256156514212,
+            "widened": false
+          }
+        ],
+        "rho_mean": 0.0312562643292996
+      },
+      "rsa_human_confusion_note": "raw full-set RSA; not difficulty-controlled",
       "rsa_human_confusion_p_perm": 0.044977511244377814,
       "rsa_human_confusion_rho": -0.07913318779238063
     },
@@ -14,6 +244,236 @@
       "n_trials": 243,
       "probe_confusability_rho": 0.49766613416583516,
       "probe_human_entropy_rho": 0.5159763372993242,
+      "rsa_difficulty_matched": {
+        "n_pairs": 3,
+        "note": "Difficulty-controlled RSA: confused-pair items vs matched low-confusion pairs.",
+        "per_pair": [
+          {
+            "label_a": "Bored",
+            "label_b": "Unfriendly",
+            "matched_pairs": [
+              {
+                "label_a": "Afraid",
+                "label_b": "Disgusted",
+                "mean_human_entropy": 1.056586927040305,
+                "n_items": 3
+              },
+              {
+                "label_a": "Angry",
+                "label_b": "Disgusted",
+                "mean_human_entropy": 1.0510340282130188,
+                "n_items": 4
+              },
+              {
+                "label_a": "Angry",
+                "label_b": "Surprised",
+                "mean_human_entropy": 1.2176632661224414,
+                "n_items": 2
+              },
+              {
+                "label_a": "Bored",
+                "label_b": "Hurt",
+                "mean_human_entropy": 1.2303159972044118,
+                "n_items": 1
+              },
+              {
+                "label_a": "Disappointed",
+                "label_b": "Jealous",
+                "mean_human_entropy": 1.1683188173070136,
+                "n_items": 6
+              }
+            ],
+            "matching_tolerance_sd": 0.5,
+            "mean_confused_entropy": 1.1493745401281195,
+            "n_confused": 8,
+            "n_confused_items": 8,
+            "n_control_items": 16,
+            "n_subset": 24,
+            "pair": "Bored/Unfriendly",
+            "rsa_p_perm": 0.0014992503748125937,
+            "rsa_rho": 0.2975642470855153,
+            "widened": false
+          },
+          {
+            "label_a": "Interested",
+            "label_b": "Kind",
+            "matched_pairs": [
+              {
+                "label_a": "Angry",
+                "label_b": "Surprised",
+                "mean_human_entropy": 1.2176632661224414,
+                "n_items": 2
+              },
+              {
+                "label_a": "Bored",
+                "label_b": "Hurt",
+                "mean_human_entropy": 1.2303159972044118,
+                "n_items": 1
+              },
+              {
+                "label_a": "Disappointed",
+                "label_b": "Jealous",
+                "mean_human_entropy": 1.1683188173070136,
+                "n_items": 6
+              },
+              {
+                "label_a": "Hurt",
+                "label_b": "Unfriendly",
+                "mean_human_entropy": 1.3945252169719873,
+                "n_items": 2
+              },
+              {
+                "label_a": "Kind",
+                "label_b": "Proud",
+                "mean_human_entropy": 1.3891738451489402,
+                "n_items": 2
+              }
+            ],
+            "matching_tolerance_sd": 0.5,
+            "mean_confused_entropy": 1.2374045723673148,
+            "n_confused": 7,
+            "n_confused_items": 7,
+            "n_control_items": 13,
+            "n_subset": 20,
+            "pair": "Interested/Kind",
+            "rsa_p_perm": 0.21389305347326337,
+            "rsa_rho": -0.15270724805031777,
+            "widened": false
+          },
+          {
+            "label_a": "Disappointed",
+            "label_b": "Worried",
+            "matched_pairs": [
+              {
+                "label_a": "Afraid",
+                "label_b": "Ashamed",
+                "mean_human_entropy": 0.6912291153220836,
+                "n_items": 14
+              },
+              {
+                "label_a": "Afraid",
+                "label_b": "Disappointed",
+                "mean_human_entropy": 0.8451472601833139,
+                "n_items": 2
+              },
+              {
+                "label_a": "Angry",
+                "label_b": "Jealous",
+                "mean_human_entropy": 0.9235103851000996,
+                "n_items": 8
+              },
+              {
+                "label_a": "Ashamed",
+                "label_b": "Disappointed",
+                "mean_human_entropy": 0.8912144370103778,
+                "n_items": 4
+              },
+              {
+                "label_a": "Ashamed",
+                "label_b": "Sneaky",
+                "mean_human_entropy": 0.9300933190140469,
+                "n_items": 6
+              },
+              {
+                "label_a": "Ashamed",
+                "label_b": "Worried",
+                "mean_human_entropy": 0.7363802852152114,
+                "n_items": 4
+              },
+              {
+                "label_a": "Bored",
+                "label_b": "Disappointed",
+                "mean_human_entropy": 0.9133447538828158,
+                "n_items": 5
+              },
+              {
+                "label_a": "Bored",
+                "label_b": "Frustrated",
+                "mean_human_entropy": 0.7961157126924947,
+                "n_items": 8
+              },
+              {
+                "label_a": "Disappointed",
+                "label_b": "Interested",
+                "mean_human_entropy": 0.8033926271983635,
+                "n_items": 10
+              },
+              {
+                "label_a": "Disgusted",
+                "label_b": "Jealous",
+                "mean_human_entropy": 0.9299087697725864,
+                "n_items": 1
+              },
+              {
+                "label_a": "Disgusted",
+                "label_b": "Sad",
+                "mean_human_entropy": 0.686978538875301,
+                "n_items": 11
+              },
+              {
+                "label_a": "Excited",
+                "label_b": "Proud",
+                "mean_human_entropy": 0.8628125989349785,
+                "n_items": 7
+              },
+              {
+                "label_a": "Frustrated",
+                "label_b": "Jealous",
+                "mean_human_entropy": 0.73169148189007,
+                "n_items": 3
+              },
+              {
+                "label_a": "Happy",
+                "label_b": "Interested",
+                "mean_human_entropy": 0.8418272832112557,
+                "n_items": 9
+              },
+              {
+                "label_a": "Hurt",
+                "label_b": "Worried",
+                "mean_human_entropy": 0.8312860419493171,
+                "n_items": 10
+              },
+              {
+                "label_a": "Interested",
+                "label_b": "Proud",
+                "mean_human_entropy": 0.9066350146158049,
+                "n_items": 5
+              },
+              {
+                "label_a": "Jealous",
+                "label_b": "Sad",
+                "mean_human_entropy": 0.8794200704798616,
+                "n_items": 4
+              },
+              {
+                "label_a": "Kind",
+                "label_b": "Sneaky",
+                "mean_human_entropy": 0.8973298624892798,
+                "n_items": 5
+              },
+              {
+                "label_a": "Surprised",
+                "label_b": "Worried",
+                "mean_human_entropy": 0.6902857213981901,
+                "n_items": 8
+              }
+            ],
+            "matching_tolerance_sd": 0.5,
+            "mean_confused_entropy": 0.851830302258591,
+            "n_confused": 13,
+            "n_confused_items": 13,
+            "n_control_items": 124,
+            "n_subset": 137,
+            "pair": "Disappointed/Worried",
+            "rsa_p_perm": 0.9370314842578711,
+            "rsa_rho": 0.003908023884436943,
+            "widened": false
+          }
+        ],
+        "rho_mean": 0.0495883409732115
+      },
+      "rsa_human_confusion_note": "raw full-set RSA; not difficulty-controlled",
       "rsa_human_confusion_p_perm": 0.05547226386806597,
       "rsa_human_confusion_rho": -0.07610848883796038
     },
@@ -22,6 +482,236 @@
       "n_trials": 243,
       "probe_confusability_rho": 0.5192570853117493,
       "probe_human_entropy_rho": 0.456812894976002,
+      "rsa_difficulty_matched": {
+        "n_pairs": 3,
+        "note": "Difficulty-controlled RSA: confused-pair items vs matched low-confusion pairs.",
+        "per_pair": [
+          {
+            "label_a": "Bored",
+            "label_b": "Unfriendly",
+            "matched_pairs": [
+              {
+                "label_a": "Afraid",
+                "label_b": "Disgusted",
+                "mean_human_entropy": 1.056586927040305,
+                "n_items": 3
+              },
+              {
+                "label_a": "Angry",
+                "label_b": "Disgusted",
+                "mean_human_entropy": 1.0510340282130188,
+                "n_items": 4
+              },
+              {
+                "label_a": "Angry",
+                "label_b": "Surprised",
+                "mean_human_entropy": 1.2176632661224414,
+                "n_items": 2
+              },
+              {
+                "label_a": "Bored",
+                "label_b": "Hurt",
+                "mean_human_entropy": 1.2303159972044118,
+                "n_items": 1
+              },
+              {
+                "label_a": "Disappointed",
+                "label_b": "Jealous",
+                "mean_human_entropy": 1.1683188173070136,
+                "n_items": 6
+              }
+            ],
+            "matching_tolerance_sd": 0.5,
+            "mean_confused_entropy": 1.1493745401281195,
+            "n_confused": 8,
+            "n_confused_items": 8,
+            "n_control_items": 16,
+            "n_subset": 24,
+            "pair": "Bored/Unfriendly",
+            "rsa_p_perm": 0.0004997501249375312,
+            "rsa_rho": 0.3672493257801686,
+            "widened": false
+          },
+          {
+            "label_a": "Interested",
+            "label_b": "Kind",
+            "matched_pairs": [
+              {
+                "label_a": "Angry",
+                "label_b": "Surprised",
+                "mean_human_entropy": 1.2176632661224414,
+                "n_items": 2
+              },
+              {
+                "label_a": "Bored",
+                "label_b": "Hurt",
+                "mean_human_entropy": 1.2303159972044118,
+                "n_items": 1
+              },
+              {
+                "label_a": "Disappointed",
+                "label_b": "Jealous",
+                "mean_human_entropy": 1.1683188173070136,
+                "n_items": 6
+              },
+              {
+                "label_a": "Hurt",
+                "label_b": "Unfriendly",
+                "mean_human_entropy": 1.3945252169719873,
+                "n_items": 2
+              },
+              {
+                "label_a": "Kind",
+                "label_b": "Proud",
+                "mean_human_entropy": 1.3891738451489402,
+                "n_items": 2
+              }
+            ],
+            "matching_tolerance_sd": 0.5,
+            "mean_confused_entropy": 1.2374045723673148,
+            "n_confused": 7,
+            "n_confused_items": 7,
+            "n_control_items": 13,
+            "n_subset": 20,
+            "pair": "Interested/Kind",
+            "rsa_p_perm": 0.3378310844577711,
+            "rsa_rho": -0.1161988741487226,
+            "widened": false
+          },
+          {
+            "label_a": "Disappointed",
+            "label_b": "Worried",
+            "matched_pairs": [
+              {
+                "label_a": "Afraid",
+                "label_b": "Ashamed",
+                "mean_human_entropy": 0.6912291153220836,
+                "n_items": 14
+              },
+              {
+                "label_a": "Afraid",
+                "label_b": "Disappointed",
+                "mean_human_entropy": 0.8451472601833139,
+                "n_items": 2
+              },
+              {
+                "label_a": "Angry",
+                "label_b": "Jealous",
+                "mean_human_entropy": 0.9235103851000996,
+                "n_items": 8
+              },
+              {
+                "label_a": "Ashamed",
+                "label_b": "Disappointed",
+                "mean_human_entropy": 0.8912144370103778,
+                "n_items": 4
+              },
+              {
+                "label_a": "Ashamed",
+                "label_b": "Sneaky",
+                "mean_human_entropy": 0.9300933190140469,
+                "n_items": 6
+              },
+              {
+                "label_a": "Ashamed",
+                "label_b": "Worried",
+                "mean_human_entropy": 0.7363802852152114,
+                "n_items": 4
+              },
+              {
+                "label_a": "Bored",
+                "label_b": "Disappointed",
+                "mean_human_entropy": 0.9133447538828158,
+                "n_items": 5
+              },
+              {
+                "label_a": "Bored",
+                "label_b": "Frustrated",
+                "mean_human_entropy": 0.7961157126924947,
+                "n_items": 8
+              },
+              {
+                "label_a": "Disappointed",
+                "label_b": "Interested",
+                "mean_human_entropy": 0.8033926271983635,
+                "n_items": 10
+              },
+              {
+                "label_a": "Disgusted",
+                "label_b": "Jealous",
+                "mean_human_entropy": 0.9299087697725864,
+                "n_items": 1
+              },
+              {
+                "label_a": "Disgusted",
+                "label_b": "Sad",
+                "mean_human_entropy": 0.686978538875301,
+                "n_items": 11
+              },
+              {
+                "label_a": "Excited",
+                "label_b": "Proud",
+                "mean_human_entropy": 0.8628125989349785,
+                "n_items": 7
+              },
+              {
+                "label_a": "Frustrated",
+                "label_b": "Jealous",
+                "mean_human_entropy": 0.73169148189007,
+                "n_items": 3
+              },
+              {
+                "label_a": "Happy",
+                "label_b": "Interested",
+                "mean_human_entropy": 0.8418272832112557,
+                "n_items": 9
+              },
+              {
+                "label_a": "Hurt",
+                "label_b": "Worried",
+                "mean_human_entropy": 0.8312860419493171,
+                "n_items": 10
+              },
+              {
+                "label_a": "Interested",
+                "label_b": "Proud",
+                "mean_human_entropy": 0.9066350146158049,
+                "n_items": 5
+              },
+              {
+                "label_a": "Jealous",
+                "label_b": "Sad",
+                "mean_human_entropy": 0.8794200704798616,
+                "n_items": 4
+              },
+              {
+                "label_a": "Kind",
+                "label_b": "Sneaky",
+                "mean_human_entropy": 0.8973298624892798,
+                "n_items": 5
+              },
+              {
+                "label_a": "Surprised",
+                "label_b": "Worried",
+                "mean_human_entropy": 0.6902857213981901,
+                "n_items": 8
+              }
+            ],
+            "matching_tolerance_sd": 0.5,
+            "mean_confused_entropy": 0.851830302258591,
+            "n_confused": 13,
+            "n_confused_items": 13,
+            "n_control_items": 124,
+            "n_subset": 137,
+            "pair": "Disappointed/Worried",
+            "rsa_p_perm": 0.18340829585207397,
+            "rsa_rho": 0.060133287107099725,
+            "widened": false
+          }
+        ],
+        "rho_mean": 0.1037279129128486
+      },
+      "rsa_human_confusion_note": "raw full-set RSA; not difficulty-controlled",
       "rsa_human_confusion_p_perm": 0.14392803598200898,
       "rsa_human_confusion_rho": -0.0558915733958236
     }
@@ -30,26 +720,716 @@
   "n_layers": 3,
   "n_trials": 243,
   "peak_probe_confusability_layer": {
-    "layer": 4.0,
-    "n_trials": 243.0,
+    "layer": 4,
+    "n_trials": 243,
     "probe_confusability_rho": 0.5197684972624679,
     "probe_human_entropy_rho": 0.5013466764627486,
+    "rsa_difficulty_matched": {
+      "n_pairs": 3,
+      "note": "Difficulty-controlled RSA: confused-pair items vs matched low-confusion pairs.",
+      "per_pair": [
+        {
+          "label_a": "Bored",
+          "label_b": "Unfriendly",
+          "matched_pairs": [
+            {
+              "label_a": "Afraid",
+              "label_b": "Disgusted",
+              "mean_human_entropy": 1.056586927040305,
+              "n_items": 3
+            },
+            {
+              "label_a": "Angry",
+              "label_b": "Disgusted",
+              "mean_human_entropy": 1.0510340282130188,
+              "n_items": 4
+            },
+            {
+              "label_a": "Angry",
+              "label_b": "Surprised",
+              "mean_human_entropy": 1.2176632661224414,
+              "n_items": 2
+            },
+            {
+              "label_a": "Bored",
+              "label_b": "Hurt",
+              "mean_human_entropy": 1.2303159972044118,
+              "n_items": 1
+            },
+            {
+              "label_a": "Disappointed",
+              "label_b": "Jealous",
+              "mean_human_entropy": 1.1683188173070136,
+              "n_items": 6
+            }
+          ],
+          "matching_tolerance_sd": 0.5,
+          "mean_confused_entropy": 1.1493745401281195,
+          "n_confused": 8,
+          "n_confused_items": 8,
+          "n_control_items": 16,
+          "n_subset": 24,
+          "pair": "Bored/Unfriendly",
+          "rsa_p_perm": 0.004497751124437781,
+          "rsa_rho": 0.26909832907635456,
+          "widened": false
+        },
+        {
+          "label_a": "Interested",
+          "label_b": "Kind",
+          "matched_pairs": [
+            {
+              "label_a": "Angry",
+              "label_b": "Surprised",
+              "mean_human_entropy": 1.2176632661224414,
+              "n_items": 2
+            },
+            {
+              "label_a": "Bored",
+              "label_b": "Hurt",
+              "mean_human_entropy": 1.2303159972044118,
+              "n_items": 1
+            },
+            {
+              "label_a": "Disappointed",
+              "label_b": "Jealous",
+              "mean_human_entropy": 1.1683188173070136,
+              "n_items": 6
+            },
+            {
+              "label_a": "Hurt",
+              "label_b": "Unfriendly",
+              "mean_human_entropy": 1.3945252169719873,
+              "n_items": 2
+            },
+            {
+              "label_a": "Kind",
+              "label_b": "Proud",
+              "mean_human_entropy": 1.3891738451489402,
+              "n_items": 2
+            }
+          ],
+          "matching_tolerance_sd": 0.5,
+          "mean_confused_entropy": 1.2374045723673148,
+          "n_confused": 7,
+          "n_confused_items": 7,
+          "n_control_items": 13,
+          "n_subset": 20,
+          "pair": "Interested/Kind",
+          "rsa_p_perm": 0.17791104447776113,
+          "rsa_rho": -0.16800027993194155,
+          "widened": false
+        },
+        {
+          "label_a": "Disappointed",
+          "label_b": "Worried",
+          "matched_pairs": [
+            {
+              "label_a": "Afraid",
+              "label_b": "Ashamed",
+              "mean_human_entropy": 0.6912291153220836,
+              "n_items": 14
+            },
+            {
+              "label_a": "Afraid",
+              "label_b": "Disappointed",
+              "mean_human_entropy": 0.8451472601833139,
+              "n_items": 2
+            },
+            {
+              "label_a": "Angry",
+              "label_b": "Jealous",
+              "mean_human_entropy": 0.9235103851000996,
+              "n_items": 8
+            },
+            {
+              "label_a": "Ashamed",
+              "label_b": "Disappointed",
+              "mean_human_entropy": 0.8912144370103778,
+              "n_items": 4
+            },
+            {
+              "label_a": "Ashamed",
+              "label_b": "Sneaky",
+              "mean_human_entropy": 0.9300933190140469,
+              "n_items": 6
+            },
+            {
+              "label_a": "Ashamed",
+              "label_b": "Worried",
+              "mean_human_entropy": 0.7363802852152114,
+              "n_items": 4
+            },
+            {
+              "label_a": "Bored",
+              "label_b": "Disappointed",
+              "mean_human_entropy": 0.9133447538828158,
+              "n_items": 5
+            },
+            {
+              "label_a": "Bored",
+              "label_b": "Frustrated",
+              "mean_human_entropy": 0.7961157126924947,
+              "n_items": 8
+            },
+            {
+              "label_a": "Disappointed",
+              "label_b": "Interested",
+              "mean_human_entropy": 0.8033926271983635,
+              "n_items": 10
+            },
+            {
+              "label_a": "Disgusted",
+              "label_b": "Jealous",
+              "mean_human_entropy": 0.9299087697725864,
+              "n_items": 1
+            },
+            {
+              "label_a": "Disgusted",
+              "label_b": "Sad",
+              "mean_human_entropy": 0.686978538875301,
+              "n_items": 11
+            },
+            {
+              "label_a": "Excited",
+              "label_b": "Proud",
+              "mean_human_entropy": 0.8628125989349785,
+              "n_items": 7
+            },
+            {
+              "label_a": "Frustrated",
+              "label_b": "Jealous",
+              "mean_human_entropy": 0.73169148189007,
+              "n_items": 3
+            },
+            {
+              "label_a": "Happy",
+              "label_b": "Interested",
+              "mean_human_entropy": 0.8418272832112557,
+              "n_items": 9
+            },
+            {
+              "label_a": "Hurt",
+              "label_b": "Worried",
+              "mean_human_entropy": 0.8312860419493171,
+              "n_items": 10
+            },
+            {
+              "label_a": "Interested",
+              "label_b": "Proud",
+              "mean_human_entropy": 0.9066350146158049,
+              "n_items": 5
+            },
+            {
+              "label_a": "Jealous",
+              "label_b": "Sad",
+              "mean_human_entropy": 0.8794200704798616,
+              "n_items": 4
+            },
+            {
+              "label_a": "Kind",
+              "label_b": "Sneaky",
+              "mean_human_entropy": 0.8973298624892798,
+              "n_items": 5
+            },
+            {
+              "label_a": "Surprised",
+              "label_b": "Worried",
+              "mean_human_entropy": 0.6902857213981901,
+              "n_items": 8
+            }
+          ],
+          "matching_tolerance_sd": 0.5,
+          "mean_confused_entropy": 0.851830302258591,
+          "n_confused": 13,
+          "n_confused_items": 13,
+          "n_control_items": 124,
+          "n_subset": 137,
+          "pair": "Disappointed/Worried",
+          "rsa_p_perm": 0.8735632183908046,
+          "rsa_rho": -0.007329256156514212,
+          "widened": false
+        }
+      ],
+      "rho_mean": 0.0312562643292996
+    },
+    "rsa_human_confusion_note": "raw full-set RSA; not difficulty-controlled",
     "rsa_human_confusion_p_perm": 0.044977511244377814,
     "rsa_human_confusion_rho": -0.07913318779238063
   },
   "peak_probe_entropy_layer": {
-    "layer": 13.0,
-    "n_trials": 243.0,
+    "layer": 13,
+    "n_trials": 243,
     "probe_confusability_rho": 0.49766613416583516,
     "probe_human_entropy_rho": 0.5159763372993242,
+    "rsa_difficulty_matched": {
+      "n_pairs": 3,
+      "note": "Difficulty-controlled RSA: confused-pair items vs matched low-confusion pairs.",
+      "per_pair": [
+        {
+          "label_a": "Bored",
+          "label_b": "Unfriendly",
+          "matched_pairs": [
+            {
+              "label_a": "Afraid",
+              "label_b": "Disgusted",
+              "mean_human_entropy": 1.056586927040305,
+              "n_items": 3
+            },
+            {
+              "label_a": "Angry",
+              "label_b": "Disgusted",
+              "mean_human_entropy": 1.0510340282130188,
+              "n_items": 4
+            },
+            {
+              "label_a": "Angry",
+              "label_b": "Surprised",
+              "mean_human_entropy": 1.2176632661224414,
+              "n_items": 2
+            },
+            {
+              "label_a": "Bored",
+              "label_b": "Hurt",
+              "mean_human_entropy": 1.2303159972044118,
+              "n_items": 1
+            },
+            {
+              "label_a": "Disappointed",
+              "label_b": "Jealous",
+              "mean_human_entropy": 1.1683188173070136,
+              "n_items": 6
+            }
+          ],
+          "matching_tolerance_sd": 0.5,
+          "mean_confused_entropy": 1.1493745401281195,
+          "n_confused": 8,
+          "n_confused_items": 8,
+          "n_control_items": 16,
+          "n_subset": 24,
+          "pair": "Bored/Unfriendly",
+          "rsa_p_perm": 0.0014992503748125937,
+          "rsa_rho": 0.2975642470855153,
+          "widened": false
+        },
+        {
+          "label_a": "Interested",
+          "label_b": "Kind",
+          "matched_pairs": [
+            {
+              "label_a": "Angry",
+              "label_b": "Surprised",
+              "mean_human_entropy": 1.2176632661224414,
+              "n_items": 2
+            },
+            {
+              "label_a": "Bored",
+              "label_b": "Hurt",
+              "mean_human_entropy": 1.2303159972044118,
+              "n_items": 1
+            },
+            {
+              "label_a": "Disappointed",
+              "label_b": "Jealous",
+              "mean_human_entropy": 1.1683188173070136,
+              "n_items": 6
+            },
+            {
+              "label_a": "Hurt",
+              "label_b": "Unfriendly",
+              "mean_human_entropy": 1.3945252169719873,
+              "n_items": 2
+            },
+            {
+              "label_a": "Kind",
+              "label_b": "Proud",
+              "mean_human_entropy": 1.3891738451489402,
+              "n_items": 2
+            }
+          ],
+          "matching_tolerance_sd": 0.5,
+          "mean_confused_entropy": 1.2374045723673148,
+          "n_confused": 7,
+          "n_confused_items": 7,
+          "n_control_items": 13,
+          "n_subset": 20,
+          "pair": "Interested/Kind",
+          "rsa_p_perm": 0.21389305347326337,
+          "rsa_rho": -0.15270724805031777,
+          "widened": false
+        },
+        {
+          "label_a": "Disappointed",
+          "label_b": "Worried",
+          "matched_pairs": [
+            {
+              "label_a": "Afraid",
+              "label_b": "Ashamed",
+              "mean_human_entropy": 0.6912291153220836,
+              "n_items": 14
+            },
+            {
+              "label_a": "Afraid",
+              "label_b": "Disappointed",
+              "mean_human_entropy": 0.8451472601833139,
+              "n_items": 2
+            },
+            {
+              "label_a": "Angry",
+              "label_b": "Jealous",
+              "mean_human_entropy": 0.9235103851000996,
+              "n_items": 8
+            },
+            {
+              "label_a": "Ashamed",
+              "label_b": "Disappointed",
+              "mean_human_entropy": 0.8912144370103778,
+              "n_items": 4
+            },
+            {
+              "label_a": "Ashamed",
+              "label_b": "Sneaky",
+              "mean_human_entropy": 0.9300933190140469,
+              "n_items": 6
+            },
+            {
+              "label_a": "Ashamed",
+              "label_b": "Worried",
+              "mean_human_entropy": 0.7363802852152114,
+              "n_items": 4
+            },
+            {
+              "label_a": "Bored",
+              "label_b": "Disappointed",
+              "mean_human_entropy": 0.9133447538828158,
+              "n_items": 5
+            },
+            {
+              "label_a": "Bored",
+              "label_b": "Frustrated",
+              "mean_human_entropy": 0.7961157126924947,
+              "n_items": 8
+            },
+            {
+              "label_a": "Disappointed",
+              "label_b": "Interested",
+              "mean_human_entropy": 0.8033926271983635,
+              "n_items": 10
+            },
+            {
+              "label_a": "Disgusted",
+              "label_b": "Jealous",
+              "mean_human_entropy": 0.9299087697725864,
+              "n_items": 1
+            },
+            {
+              "label_a": "Disgusted",
+              "label_b": "Sad",
+              "mean_human_entropy": 0.686978538875301,
+              "n_items": 11
+            },
+            {
+              "label_a": "Excited",
+              "label_b": "Proud",
+              "mean_human_entropy": 0.8628125989349785,
+              "n_items": 7
+            },
+            {
+              "label_a": "Frustrated",
+              "label_b": "Jealous",
+              "mean_human_entropy": 0.73169148189007,
+              "n_items": 3
+            },
+            {
+              "label_a": "Happy",
+              "label_b": "Interested",
+              "mean_human_entropy": 0.8418272832112557,
+              "n_items": 9
+            },
+            {
+              "label_a": "Hurt",
+              "label_b": "Worried",
+              "mean_human_entropy": 0.8312860419493171,
+              "n_items": 10
+            },
+            {
+              "label_a": "Interested",
+              "label_b": "Proud",
+              "mean_human_entropy": 0.9066350146158049,
+              "n_items": 5
+            },
+            {
+              "label_a": "Jealous",
+              "label_b": "Sad",
+              "mean_human_entropy": 0.8794200704798616,
+              "n_items": 4
+            },
+            {
+              "label_a": "Kind",
+              "label_b": "Sneaky",
+              "mean_human_entropy": 0.8973298624892798,
+              "n_items": 5
+            },
+            {
+              "label_a": "Surprised",
+              "label_b": "Worried",
+              "mean_human_entropy": 0.6902857213981901,
+              "n_items": 8
+            }
+          ],
+          "matching_tolerance_sd": 0.5,
+          "mean_confused_entropy": 0.851830302258591,
+          "n_confused": 13,
+          "n_confused_items": 13,
+          "n_control_items": 124,
+          "n_subset": 137,
+          "pair": "Disappointed/Worried",
+          "rsa_p_perm": 0.9370314842578711,
+          "rsa_rho": 0.003908023884436943,
+          "widened": false
+        }
+      ],
+      "rho_mean": 0.0495883409732115
+    },
+    "rsa_human_confusion_note": "raw full-set RSA; not difficulty-controlled",
     "rsa_human_confusion_p_perm": 0.05547226386806597,
     "rsa_human_confusion_rho": -0.07610848883796038
   },
   "peak_rsa_layer": {
-    "layer": 4.0,
-    "n_trials": 243.0,
+    "layer": 4,
+    "n_trials": 243,
     "probe_confusability_rho": 0.5197684972624679,
     "probe_human_entropy_rho": 0.5013466764627486,
+    "rsa_difficulty_matched": {
+      "n_pairs": 3,
+      "note": "Difficulty-controlled RSA: confused-pair items vs matched low-confusion pairs.",
+      "per_pair": [
+        {
+          "label_a": "Bored",
+          "label_b": "Unfriendly",
+          "matched_pairs": [
+            {
+              "label_a": "Afraid",
+              "label_b": "Disgusted",
+              "mean_human_entropy": 1.056586927040305,
+              "n_items": 3
+            },
+            {
+              "label_a": "Angry",
+              "label_b": "Disgusted",
+              "mean_human_entropy": 1.0510340282130188,
+              "n_items": 4
+            },
+            {
+              "label_a": "Angry",
+              "label_b": "Surprised",
+              "mean_human_entropy": 1.2176632661224414,
+              "n_items": 2
+            },
+            {
+              "label_a": "Bored",
+              "label_b": "Hurt",
+              "mean_human_entropy": 1.2303159972044118,
+              "n_items": 1
+            },
+            {
+              "label_a": "Disappointed",
+              "label_b": "Jealous",
+              "mean_human_entropy": 1.1683188173070136,
+              "n_items": 6
+            }
+          ],
+          "matching_tolerance_sd": 0.5,
+          "mean_confused_entropy": 1.1493745401281195,
+          "n_confused": 8,
+          "n_confused_items": 8,
+          "n_control_items": 16,
+          "n_subset": 24,
+          "pair": "Bored/Unfriendly",
+          "rsa_p_perm": 0.004497751124437781,
+          "rsa_rho": 0.26909832907635456,
+          "widened": false
+        },
+        {
+          "label_a": "Interested",
+          "label_b": "Kind",
+          "matched_pairs": [
+            {
+              "label_a": "Angry",
+              "label_b": "Surprised",
+              "mean_human_entropy": 1.2176632661224414,
+              "n_items": 2
+            },
+            {
+              "label_a": "Bored",
+              "label_b": "Hurt",
+              "mean_human_entropy": 1.2303159972044118,
+              "n_items": 1
+            },
+            {
+              "label_a": "Disappointed",
+              "label_b": "Jealous",
+              "mean_human_entropy": 1.1683188173070136,
+              "n_items": 6
+            },
+            {
+              "label_a": "Hurt",
+              "label_b": "Unfriendly",
+              "mean_human_entropy": 1.3945252169719873,
+              "n_items": 2
+            },
+            {
+              "label_a": "Kind",
+              "label_b": "Proud",
+              "mean_human_entropy": 1.3891738451489402,
+              "n_items": 2
+            }
+          ],
+          "matching_tolerance_sd": 0.5,
+          "mean_confused_entropy": 1.2374045723673148,
+          "n_confused": 7,
+          "n_confused_items": 7,
+          "n_control_items": 13,
+          "n_subset": 20,
+          "pair": "Interested/Kind",
+          "rsa_p_perm": 0.17791104447776113,
+          "rsa_rho": -0.16800027993194155,
+          "widened": false
+        },
+        {
+          "label_a": "Disappointed",
+          "label_b": "Worried",
+          "matched_pairs": [
+            {
+              "label_a": "Afraid",
+              "label_b": "Ashamed",
+              "mean_human_entropy": 0.6912291153220836,
+              "n_items": 14
+            },
+            {
+              "label_a": "Afraid",
+              "label_b": "Disappointed",
+              "mean_human_entropy": 0.8451472601833139,
+              "n_items": 2
+            },
+            {
+              "label_a": "Angry",
+              "label_b": "Jealous",
+              "mean_human_entropy": 0.9235103851000996,
+              "n_items": 8
+            },
+            {
+              "label_a": "Ashamed",
+              "label_b": "Disappointed",
+              "mean_human_entropy": 0.8912144370103778,
+              "n_items": 4
+            },
+            {
+              "label_a": "Ashamed",
+              "label_b": "Sneaky",
+              "mean_human_entropy": 0.9300933190140469,
+              "n_items": 6
+            },
+            {
+              "label_a": "Ashamed",
+              "label_b": "Worried",
+              "mean_human_entropy": 0.7363802852152114,
+              "n_items": 4
+            },
+            {
+              "label_a": "Bored",
+              "label_b": "Disappointed",
+              "mean_human_entropy": 0.9133447538828158,
+              "n_items": 5
+            },
+            {
+              "label_a": "Bored",
+              "label_b": "Frustrated",
+              "mean_human_entropy": 0.7961157126924947,
+              "n_items": 8
+            },
+            {
+              "label_a": "Disappointed",
+              "label_b": "Interested",
+              "mean_human_entropy": 0.8033926271983635,
+              "n_items": 10
+            },
+            {
+              "label_a": "Disgusted",
+              "label_b": "Jealous",
+              "mean_human_entropy": 0.9299087697725864,
+              "n_items": 1
+            },
+            {
+              "label_a": "Disgusted",
+              "label_b": "Sad",
+              "mean_human_entropy": 0.686978538875301,
+              "n_items": 11
+            },
+            {
+              "label_a": "Excited",
+              "label_b": "Proud",
+              "mean_human_entropy": 0.8628125989349785,
+              "n_items": 7
+            },
+            {
+              "label_a": "Frustrated",
+              "label_b": "Jealous",
+              "mean_human_entropy": 0.73169148189007,
+              "n_items": 3
+            },
+            {
+              "label_a": "Happy",
+              "label_b": "Interested",
+              "mean_human_entropy": 0.8418272832112557,
+              "n_items": 9
+            },
+            {
+              "label_a": "Hurt",
+              "label_b": "Worried",
+              "mean_human_entropy": 0.8312860419493171,
+              "n_items": 10
+            },
+            {
+              "label_a": "Interested",
+              "label_b": "Proud",
+              "mean_human_entropy": 0.9066350146158049,
+              "n_items": 5
+            },
+            {
+              "label_a": "Jealous",
+              "label_b": "Sad",
+              "mean_human_entropy": 0.8794200704798616,
+              "n_items": 4
+            },
+            {
+              "label_a": "Kind",
+              "label_b": "Sneaky",
+              "mean_human_entropy": 0.8973298624892798,
+              "n_items": 5
+            },
+            {
+              "label_a": "Surprised",
+              "label_b": "Worried",
+              "mean_human_entropy": 0.6902857213981901,
+              "n_items": 8
+            }
+          ],
+          "matching_tolerance_sd": 0.5,
+          "mean_confused_entropy": 0.851830302258591,
+          "n_confused": 13,
+          "n_confused_items": 13,
+          "n_control_items": 124,
+          "n_subset": 137,
+          "pair": "Disappointed/Worried",
+          "rsa_p_perm": 0.8735632183908046,
+          "rsa_rho": -0.007329256156514212,
+          "widened": false
+        }
+      ],
+      "rho_mean": 0.0312562643292996
+    },
+    "rsa_human_confusion_note": "raw full-set RSA; not difficulty-controlled",
     "rsa_human_confusion_p_perm": 0.044977511244377814,
     "rsa_human_confusion_rho": -0.07913318779238063
   },

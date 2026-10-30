@@ -2,23 +2,11 @@
 
 Questions the agent cannot resolve. Each item is standalone. Work continues on everything else.
 
-## 1. CSD3 SSH authentication (blocking GPU phases and activation pull)
+## 1. CSD3 SSH — RESOLVED 2026-10-30
 
-**Context.** Heavy study3 compute lives on Cambridge CSD3 (`eb2007@login.hpc.cam.ac.uk`, work dir `~/rds/hpc-work/study3`, GPU account `BARON-COHEN-SL3-GPU`). Local 6AFC activation directories contain `extract_meta.json` and trial-id sidecars but **no** `.npy` tensors. Axis vectors and eval JSON were pulled earlier; the tensors were not. Causal ablation result files are also absent locally.
+Reuse the live ControlMaster socket `~/.ssh/cm-eb2007@login.hpc.cam.ac.uk:22` (process `ssh -fN ... ControlPersist=12h`, plus an interactive `ssh eb2007@login.hpc.cam.ac.uk`). Fresh BatchMode logins without that path still fail. 6AFC `.npy` and the n=36 ablation were pulled. GPU jobs are being submitted through this multiplexed connection.
 
-On 2026-10-30 a batch-mode SSH attempt failed:
-
-```
-eb2007@login.hpc.cam.ac.uk: Permission denied (publickey,keyboard-interactive,hostbased).
-```
-
-This machine has `~/.ssh/id_ed25519_personal.pub` and `id_ed25519_minimal.pub`. GitHub SSH via `github-personal` works. CSD3 does not.
-
-**Exact question.** Can you restore SSH to CSD3 (agent key, `ssh-copy-id`, or an interactive login + TOTP)? Once that works, the agent can `rsync` only the small 6AFC `.npy` files (on the order of tens of MB, not checkpoints) and any `*ablat*` mech outputs.
-
-**Recommended default.** Continue Phases 1, 5 (code), 6 (adapters), and 7 (methods draft) on CPU. Do not download 8B VLMs onto this Mac.
-
-**Meanwhile.** Mapping compute, reproducing JSON-level numbers, refactoring, preregistration.
+No remaining question. Keep using `-o ControlPath=/Users/eb2007/.ssh/cm-%r@%h:%p -o ControlMaster=auto`.
 
 ## 2. GitHub repo is public
 
@@ -30,15 +18,9 @@ This machine has `~/.ssh/id_ed25519_personal.pub` and `id_ed25519_minimal.pub`. 
 
 **Meanwhile.** Gitignore exceptions are scoped to small analysis artifacts.
 
-## 3. HPC activation pull (depends on #1)
+## 3. HPC activation pull — RESOLVED 2026-10-30
 
-**Context.** Phase 2 (the Branch A/B gate) needs last-token activations for all 243 items at the saved layers, and later all layers × several token positions. Those tensors are almost certainly on CSD3 under `~/rds/hpc-work/study3/results/activations/baseline_{qwen3vl,gemma4,molmo2}_6afc/`.
-
-**Exact question.** None beyond #1. Logged so it is not forgotten.
-
-**Recommended default.** `rsync` the `.npy` + manifests as soon as SSH works. Do not re-extract until a cache miss is confirmed.
-
-**Meanwhile.** Probe JSON is enough to reproduce the *reported* ρ values but not to rerun probes with new baselines.
+3-layer last-token `.npy` for Qwen/Gemma/Molmo 6AFC are local. All-layer extracts are jobs 39709580–39709583. No remaining question.
 
 ## 4. CREMA-D access form (Phase 6, not blocking now)
 

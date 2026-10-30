@@ -44,7 +44,7 @@ Long local jobs, if any: `caffeinate -dimsu` and tmux, logs under `research/logs
 
 ## CSD3 (Cambridge)
 
-Configured in `config.py` / `sync.sh` / `README.md`. **SSH from this agent session failed** (publickey). Treat as currently unavailable.
+Configured in `config.py` / `sync.sh` / `README.md`. **SSH works** via the live ControlMaster socket `~/.ssh/cm-eb2007@login.hpc.cam.ac.uk:22`. Fresh BatchMode logins without that path still fail.
 
 | | |
 |---|---|
@@ -79,9 +79,9 @@ Eval runtime: CUDA, torch 2.10.0+cu128, transformers 5.10.1 (Molmo 4.57.3).
 
 | model | layers saved | pooling | n | `.npy` local |
 |---|---|---|---|---|
-| qwen3vl | 4, 13, 26 | last_token | 243 | **no** |
-| gemma4 | 5, 15, 31 | last_token | 243 | **no** |
-| molmo2 | 4, 12, 23 | last_token | 243 | **no** |
+| qwen3vl | 4, 13, 26 | last_token | 243 | **yes** (pulled 2026-10-30) |
+| gemma4 | 5, 15, 31 | last_token | 243 | **yes** (pulled 2026-10-30) |
+| molmo2 | 4, 12, 23 | last_token | 243 | **yes** (pulled 2026-10-30) |
 
 Axis vectors (`results/mech/axis_*_qwen3vl_layer4.npy`) **are** local, shape `(4096,)`, unit-norm, float32.
 

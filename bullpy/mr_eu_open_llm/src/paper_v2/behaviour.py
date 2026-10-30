@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 from paper_v2.datasets.eu_emotion import load_eu_emotion_items
-from paper_v2.metrics import binomial_gt_chance, spearman_rho
+from paper_v2.metrics import binomial_gt_chance, bootstrap_spearman_ci, spearman_rho
 
 ROOT = Path(__file__).resolve().parents[2]
 CHANCE_6AFC = 1.0 / 6.0
@@ -64,12 +64,19 @@ def entropy_alignment(eval_path: Path, items: Optional[List[dict]] = None) -> Di
         xs.append(float(fc))
         ys.append(human_h[tid])
     rho, p = spearman_rho(xs, ys)
+    ci = bootstrap_spearman_ci(ys, xs, n_boot=2000, seed=42)
     return {
         "model": d["model"],
         "n": len(xs),
         "n_missing": missing,
         "spearman_rho": rho,
         "p": p,
+        "bootstrap_ci_95": {
+            "ci_lo": ci["ci_lo"],
+            "ci_hi": ci["ci_hi"],
+            "excludes_zero": ci["excludes_zero"],
+            "n_boot": ci["n_boot"],
+        },
     }
 
 
