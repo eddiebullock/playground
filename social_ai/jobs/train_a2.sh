@@ -55,9 +55,22 @@ export HF_HUB_OFFLINE=1
 export TRANSFORMERS_OFFLINE=1
 python -c "from scog.train.prepare import quota_headroom; quota_headroom()"
 
+# USR1 is delivered to this shell. Forward it and keep waiting so the trainer
+# can write trainer.pt. If this shell dies on the default action, the chunk is lost.
 set +e
-python -m scog.train.lora
-rc=$?
+export PYTHONUNBUFFERED=1
+python -m scog.train.lora &
+train_pid=$!
+trap 'kill -USR1 "${train_pid}" 2>/dev/null || true' USR1
+rc=0
+while true; do
+  wait "${train_pid}"
+  rc=$?
+  if ! kill -0 "${train_pid}" 2>/dev/null; then
+    break
+  fi
+done
+trap - USR1
 set -e
 echo "trainer_exit ${rc}"
 

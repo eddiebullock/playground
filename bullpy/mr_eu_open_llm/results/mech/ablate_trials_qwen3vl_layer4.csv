@@ -1,0 +1,217 @@
+trial_id,condition,axis,correct,confused_with_top_foil,prediction,correct_label,top_foil_label,pair_membership,hook_module,ablation_method
+emotions/EDITED/Unfriendly/NF25_cut.mp4,baseline,baseline,False,False,None of the above,Unfriendly,Bored,pair_bored_unfriendly,model.language_model.layers.4,none
+emotions/EDITED/Unfriendly/NF25_cut.mp4,ablate_entropy,entropy,False,False,None of the above,Unfriendly,Bored,pair_bored_unfriendly,model.language_model.layers.4,mean_ablation
+emotions/EDITED/Unfriendly/NF25_cut.mp4,ablate_random,random,False,False,None of the above,Unfriendly,Bored,pair_bored_unfriendly,model.language_model.layers.4,mean_ablation
+emotions/EDITED/Unfriendly/NF25_cut.mp4,ablate_pair_bored_unfriendly,pair_bored_unfriendly,False,False,None of the above,Unfriendly,Bored,pair_bored_unfriendly,model.language_model.layers.4,mean_ablation
+emotions/EDITED/Unfriendly/NF25_cut.mp4,ablate_pair_interested_kind,pair_interested_kind,False,False,None of the above,Unfriendly,Bored,pair_bored_unfriendly,model.language_model.layers.4,mean_ablation
+emotions/EDITED/Unfriendly/NF25_cut.mp4,ablate_pair_disappointed_worried,pair_disappointed_worried,False,False,None of the above,Unfriendly,Bored,pair_bored_unfriendly,model.language_model.layers.4,mean_ablation
+emotions/EDITED/Unfriendly/RF25_cut.mp4,baseline,baseline,False,False,None of the above,Unfriendly,Bored,pair_bored_unfriendly,model.language_model.layers.4,none
+emotions/EDITED/Unfriendly/RF25_cut.mp4,ablate_entropy,entropy,False,False,None of the above,Unfriendly,Bored,pair_bored_unfriendly,model.language_model.layers.4,mean_ablation
+emotions/EDITED/Unfriendly/RF25_cut.mp4,ablate_random,random,False,False,None of the above,Unfriendly,Bored,pair_bored_unfriendly,model.language_model.layers.4,mean_ablation
+emotions/EDITED/Unfriendly/RF25_cut.mp4,ablate_pair_bored_unfriendly,pair_bored_unfriendly,False,False,None of the above,Unfriendly,Bored,pair_bored_unfriendly,model.language_model.layers.4,mean_ablation
+emotions/EDITED/Unfriendly/RF25_cut.mp4,ablate_pair_interested_kind,pair_interested_kind,False,False,None of the above,Unfriendly,Bored,pair_bored_unfriendly,model.language_model.layers.4,mean_ablation
+emotions/EDITED/Unfriendly/RF25_cut.mp4,ablate_pair_disappointed_worried,pair_disappointed_worried,False,False,None of the above,Unfriendly,Bored,pair_bored_unfriendly,model.language_model.layers.4,mean_ablation
+emotions_2/EDITED/Unfriendly/BF25v1_cut.mp4,baseline,baseline,False,False,None of the above,Unfriendly,Bored,pair_bored_unfriendly,model.language_model.layers.4,none
+emotions_2/EDITED/Unfriendly/BF25v1_cut.mp4,ablate_entropy,entropy,False,False,None of the above,Unfriendly,Bored,pair_bored_unfriendly,model.language_model.layers.4,mean_ablation
+emotions_2/EDITED/Unfriendly/BF25v1_cut.mp4,ablate_random,random,False,False,None of the above,Unfriendly,Bored,pair_bored_unfriendly,model.language_model.layers.4,mean_ablation
+emotions_2/EDITED/Unfriendly/BF25v1_cut.mp4,ablate_pair_bored_unfriendly,pair_bored_unfriendly,False,False,None of the above,Unfriendly,Bored,pair_bored_unfriendly,model.language_model.layers.4,mean_ablation
+emotions_2/EDITED/Unfriendly/BF25v1_cut.mp4,ablate_pair_interested_kind,pair_interested_kind,False,False,None of the above,Unfriendly,Bored,pair_bored_unfriendly,model.language_model.layers.4,mean_ablation
+emotions_2/EDITED/Unfriendly/BF25v1_cut.mp4,ablate_pair_disappointed_worried,pair_disappointed_worried,False,False,None of the above,Unfriendly,Bored,pair_bored_unfriendly,model.language_model.layers.4,mean_ablation
+emotions_2/EDITED/Unfriendly/FF25_cut.mp4,baseline,baseline,False,False,None of the above,Unfriendly,Bored,pair_bored_unfriendly,model.language_model.layers.4,none
+emotions_2/EDITED/Unfriendly/FF25_cut.mp4,ablate_entropy,entropy,False,False,None of the above,Unfriendly,Bored,pair_bored_unfriendly,model.language_model.layers.4,mean_ablation
+emotions_2/EDITED/Unfriendly/FF25_cut.mp4,ablate_random,random,False,False,None of the above,Unfriendly,Bored,pair_bored_unfriendly,model.language_model.layers.4,mean_ablation
+emotions_2/EDITED/Unfriendly/FF25_cut.mp4,ablate_pair_bored_unfriendly,pair_bored_unfriendly,False,False,None of the above,Unfriendly,Bored,pair_bored_unfriendly,model.language_model.layers.4,mean_ablation
+emotions_2/EDITED/Unfriendly/FF25_cut.mp4,ablate_pair_interested_kind,pair_interested_kind,False,False,None of the above,Unfriendly,Bored,pair_bored_unfriendly,model.language_model.layers.4,mean_ablation
+emotions_2/EDITED/Unfriendly/FF25_cut.mp4,ablate_pair_disappointed_worried,pair_disappointed_worried,False,False,None of the above,Unfriendly,Bored,pair_bored_unfriendly,model.language_model.layers.4,mean_ablation
+emotions_2/EDITED/Unfriendly/GF25_cut.mp4,baseline,baseline,False,False,None of the above,Unfriendly,Bored,pair_bored_unfriendly,model.language_model.layers.4,none
+emotions_2/EDITED/Unfriendly/GF25_cut.mp4,ablate_entropy,entropy,False,False,None of the above,Unfriendly,Bored,pair_bored_unfriendly,model.language_model.layers.4,mean_ablation
+emotions_2/EDITED/Unfriendly/GF25_cut.mp4,ablate_random,random,False,False,None of the above,Unfriendly,Bored,pair_bored_unfriendly,model.language_model.layers.4,mean_ablation
+emotions_2/EDITED/Unfriendly/GF25_cut.mp4,ablate_pair_bored_unfriendly,pair_bored_unfriendly,False,False,None of the above,Unfriendly,Bored,pair_bored_unfriendly,model.language_model.layers.4,mean_ablation
+emotions_2/EDITED/Unfriendly/GF25_cut.mp4,ablate_pair_interested_kind,pair_interested_kind,False,False,None of the above,Unfriendly,Bored,pair_bored_unfriendly,model.language_model.layers.4,mean_ablation
+emotions_2/EDITED/Unfriendly/GF25_cut.mp4,ablate_pair_disappointed_worried,pair_disappointed_worried,False,False,None of the above,Unfriendly,Bored,pair_bored_unfriendly,model.language_model.layers.4,mean_ablation
+emotions_2/EDITED/Unfriendly/LF25_cut.mp4,baseline,baseline,False,False,None of the above,Unfriendly,Bored,pair_bored_unfriendly,model.language_model.layers.4,none
+emotions_2/EDITED/Unfriendly/LF25_cut.mp4,ablate_entropy,entropy,False,False,None of the above,Unfriendly,Bored,pair_bored_unfriendly,model.language_model.layers.4,mean_ablation
+emotions_2/EDITED/Unfriendly/LF25_cut.mp4,ablate_random,random,False,False,None of the above,Unfriendly,Bored,pair_bored_unfriendly,model.language_model.layers.4,mean_ablation
+emotions_2/EDITED/Unfriendly/LF25_cut.mp4,ablate_pair_bored_unfriendly,pair_bored_unfriendly,False,False,None of the above,Unfriendly,Bored,pair_bored_unfriendly,model.language_model.layers.4,mean_ablation
+emotions_2/EDITED/Unfriendly/LF25_cut.mp4,ablate_pair_interested_kind,pair_interested_kind,False,False,None of the above,Unfriendly,Bored,pair_bored_unfriendly,model.language_model.layers.4,mean_ablation
+emotions_2/EDITED/Unfriendly/LF25_cut.mp4,ablate_pair_disappointed_worried,pair_disappointed_worried,False,False,None of the above,Unfriendly,Bored,pair_bored_unfriendly,model.language_model.layers.4,mean_ablation
+emotions_3/EDITED/Unfriendly/PF25_cut.mp4,baseline,baseline,False,False,None of the above,Unfriendly,Bored,pair_bored_unfriendly,model.language_model.layers.4,none
+emotions_3/EDITED/Unfriendly/PF25_cut.mp4,ablate_entropy,entropy,False,False,None of the above,Unfriendly,Bored,pair_bored_unfriendly,model.language_model.layers.4,mean_ablation
+emotions_3/EDITED/Unfriendly/PF25_cut.mp4,ablate_random,random,False,False,None of the above,Unfriendly,Bored,pair_bored_unfriendly,model.language_model.layers.4,mean_ablation
+emotions_3/EDITED/Unfriendly/PF25_cut.mp4,ablate_pair_bored_unfriendly,pair_bored_unfriendly,False,False,None of the above,Unfriendly,Bored,pair_bored_unfriendly,model.language_model.layers.4,mean_ablation
+emotions_3/EDITED/Unfriendly/PF25_cut.mp4,ablate_pair_interested_kind,pair_interested_kind,False,False,None of the above,Unfriendly,Bored,pair_bored_unfriendly,model.language_model.layers.4,mean_ablation
+emotions_3/EDITED/Unfriendly/PF25_cut.mp4,ablate_pair_disappointed_worried,pair_disappointed_worried,False,False,None of the above,Unfriendly,Bored,pair_bored_unfriendly,model.language_model.layers.4,mean_ablation
+emotions_29/EDITED/Unfriendly/DF25_cut.mp4,baseline,baseline,False,False,Surprised,Unfriendly,Bored,pair_bored_unfriendly,model.language_model.layers.4,none
+emotions_29/EDITED/Unfriendly/DF25_cut.mp4,ablate_entropy,entropy,False,False,Surprised,Unfriendly,Bored,pair_bored_unfriendly,model.language_model.layers.4,mean_ablation
+emotions_29/EDITED/Unfriendly/DF25_cut.mp4,ablate_random,random,False,False,Surprised,Unfriendly,Bored,pair_bored_unfriendly,model.language_model.layers.4,mean_ablation
+emotions_29/EDITED/Unfriendly/DF25_cut.mp4,ablate_pair_bored_unfriendly,pair_bored_unfriendly,False,False,Surprised,Unfriendly,Bored,pair_bored_unfriendly,model.language_model.layers.4,mean_ablation
+emotions_29/EDITED/Unfriendly/DF25_cut.mp4,ablate_pair_interested_kind,pair_interested_kind,False,False,Surprised,Unfriendly,Bored,pair_bored_unfriendly,model.language_model.layers.4,mean_ablation
+emotions_29/EDITED/Unfriendly/DF25_cut.mp4,ablate_pair_disappointed_worried,pair_disappointed_worried,False,False,Surprised,Unfriendly,Bored,pair_bored_unfriendly,model.language_model.layers.4,mean_ablation
+emotions_32/EDITED/Kind/DF24_cut.mp4,baseline,baseline,False,False,None of the above,Kind,Interested,pair_interested_kind,model.language_model.layers.4,none
+emotions_32/EDITED/Kind/DF24_cut.mp4,ablate_entropy,entropy,False,False,None of the above,Kind,Interested,pair_interested_kind,model.language_model.layers.4,mean_ablation
+emotions_32/EDITED/Kind/DF24_cut.mp4,ablate_random,random,False,False,None of the above,Kind,Interested,pair_interested_kind,model.language_model.layers.4,mean_ablation
+emotions_32/EDITED/Kind/DF24_cut.mp4,ablate_pair_bored_unfriendly,pair_bored_unfriendly,False,False,None of the above,Kind,Interested,pair_interested_kind,model.language_model.layers.4,mean_ablation
+emotions_32/EDITED/Kind/DF24_cut.mp4,ablate_pair_interested_kind,pair_interested_kind,False,False,None of the above,Kind,Interested,pair_interested_kind,model.language_model.layers.4,mean_ablation
+emotions_32/EDITED/Kind/DF24_cut.mp4,ablate_pair_disappointed_worried,pair_disappointed_worried,False,False,None of the above,Kind,Interested,pair_interested_kind,model.language_model.layers.4,mean_ablation
+emotions_32/EDITED/Kind/PF24_cut.mp4,baseline,baseline,True,False,Kind,Kind,Interested,pair_interested_kind,model.language_model.layers.4,none
+emotions_32/EDITED/Kind/PF24_cut.mp4,ablate_entropy,entropy,True,False,Kind,Kind,Interested,pair_interested_kind,model.language_model.layers.4,mean_ablation
+emotions_32/EDITED/Kind/PF24_cut.mp4,ablate_random,random,True,False,Kind,Kind,Interested,pair_interested_kind,model.language_model.layers.4,mean_ablation
+emotions_32/EDITED/Kind/PF24_cut.mp4,ablate_pair_bored_unfriendly,pair_bored_unfriendly,True,False,Kind,Kind,Interested,pair_interested_kind,model.language_model.layers.4,mean_ablation
+emotions_32/EDITED/Kind/PF24_cut.mp4,ablate_pair_interested_kind,pair_interested_kind,True,False,Kind,Kind,Interested,pair_interested_kind,model.language_model.layers.4,mean_ablation
+emotions_32/EDITED/Kind/PF24_cut.mp4,ablate_pair_disappointed_worried,pair_disappointed_worried,True,False,Kind,Kind,Interested,pair_interested_kind,model.language_model.layers.4,mean_ablation
+emotions_33/EDITED/Kind/NF24_cut.mp4,baseline,baseline,False,False,Frustrated,Kind,Interested,pair_interested_kind,model.language_model.layers.4,none
+emotions_33/EDITED/Kind/NF24_cut.mp4,ablate_entropy,entropy,False,False,Frustrated,Kind,Interested,pair_interested_kind,model.language_model.layers.4,mean_ablation
+emotions_33/EDITED/Kind/NF24_cut.mp4,ablate_random,random,False,False,Frustrated,Kind,Interested,pair_interested_kind,model.language_model.layers.4,mean_ablation
+emotions_33/EDITED/Kind/NF24_cut.mp4,ablate_pair_bored_unfriendly,pair_bored_unfriendly,False,False,Frustrated,Kind,Interested,pair_interested_kind,model.language_model.layers.4,mean_ablation
+emotions_33/EDITED/Kind/NF24_cut.mp4,ablate_pair_interested_kind,pair_interested_kind,False,False,None of the above,Kind,Interested,pair_interested_kind,model.language_model.layers.4,mean_ablation
+emotions_33/EDITED/Kind/NF24_cut.mp4,ablate_pair_disappointed_worried,pair_disappointed_worried,False,False,Frustrated,Kind,Interested,pair_interested_kind,model.language_model.layers.4,mean_ablation
+emotions_34/EDITED/Kind/LF24_cut.mp4,baseline,baseline,True,False,Kind,Kind,Interested,pair_interested_kind,model.language_model.layers.4,none
+emotions_34/EDITED/Kind/LF24_cut.mp4,ablate_entropy,entropy,True,False,Kind,Kind,Interested,pair_interested_kind,model.language_model.layers.4,mean_ablation
+emotions_34/EDITED/Kind/LF24_cut.mp4,ablate_random,random,True,False,Kind,Kind,Interested,pair_interested_kind,model.language_model.layers.4,mean_ablation
+emotions_34/EDITED/Kind/LF24_cut.mp4,ablate_pair_bored_unfriendly,pair_bored_unfriendly,True,False,Kind,Kind,Interested,pair_interested_kind,model.language_model.layers.4,mean_ablation
+emotions_34/EDITED/Kind/LF24_cut.mp4,ablate_pair_interested_kind,pair_interested_kind,True,False,Kind,Kind,Interested,pair_interested_kind,model.language_model.layers.4,mean_ablation
+emotions_34/EDITED/Kind/LF24_cut.mp4,ablate_pair_disappointed_worried,pair_disappointed_worried,True,False,Kind,Kind,Interested,pair_interested_kind,model.language_model.layers.4,mean_ablation
+emotions_36/EDITED/Kind/BF24_cut.mp4,baseline,baseline,True,False,Kind,Kind,Interested,pair_interested_kind,model.language_model.layers.4,none
+emotions_36/EDITED/Kind/BF24_cut.mp4,ablate_entropy,entropy,True,False,Kind,Kind,Interested,pair_interested_kind,model.language_model.layers.4,mean_ablation
+emotions_36/EDITED/Kind/BF24_cut.mp4,ablate_random,random,True,False,Kind,Kind,Interested,pair_interested_kind,model.language_model.layers.4,mean_ablation
+emotions_36/EDITED/Kind/BF24_cut.mp4,ablate_pair_bored_unfriendly,pair_bored_unfriendly,True,False,Kind,Kind,Interested,pair_interested_kind,model.language_model.layers.4,mean_ablation
+emotions_36/EDITED/Kind/BF24_cut.mp4,ablate_pair_interested_kind,pair_interested_kind,True,False,Kind,Kind,Interested,pair_interested_kind,model.language_model.layers.4,mean_ablation
+emotions_36/EDITED/Kind/BF24_cut.mp4,ablate_pair_disappointed_worried,pair_disappointed_worried,True,False,Kind,Kind,Interested,pair_interested_kind,model.language_model.layers.4,mean_ablation
+emotions_36/EDITED/Kind/HF24_cut.mp4,baseline,baseline,True,False,Kind,Kind,Interested,pair_interested_kind,model.language_model.layers.4,none
+emotions_36/EDITED/Kind/HF24_cut.mp4,ablate_entropy,entropy,True,False,Kind,Kind,Interested,pair_interested_kind,model.language_model.layers.4,mean_ablation
+emotions_36/EDITED/Kind/HF24_cut.mp4,ablate_random,random,True,False,Kind,Kind,Interested,pair_interested_kind,model.language_model.layers.4,mean_ablation
+emotions_36/EDITED/Kind/HF24_cut.mp4,ablate_pair_bored_unfriendly,pair_bored_unfriendly,True,False,Kind,Kind,Interested,pair_interested_kind,model.language_model.layers.4,mean_ablation
+emotions_36/EDITED/Kind/HF24_cut.mp4,ablate_pair_interested_kind,pair_interested_kind,True,False,Kind,Kind,Interested,pair_interested_kind,model.language_model.layers.4,mean_ablation
+emotions_36/EDITED/Kind/HF24_cut.mp4,ablate_pair_disappointed_worried,pair_disappointed_worried,True,False,Kind,Kind,Interested,pair_interested_kind,model.language_model.layers.4,mean_ablation
+emotions_36/EDITED/Kind/JF24_cut.mp4,baseline,baseline,True,False,Kind,Kind,Interested,pair_interested_kind,model.language_model.layers.4,none
+emotions_36/EDITED/Kind/JF24_cut.mp4,ablate_entropy,entropy,True,False,Kind,Kind,Interested,pair_interested_kind,model.language_model.layers.4,mean_ablation
+emotions_36/EDITED/Kind/JF24_cut.mp4,ablate_random,random,True,False,Kind,Kind,Interested,pair_interested_kind,model.language_model.layers.4,mean_ablation
+emotions_36/EDITED/Kind/JF24_cut.mp4,ablate_pair_bored_unfriendly,pair_bored_unfriendly,True,False,Kind,Kind,Interested,pair_interested_kind,model.language_model.layers.4,mean_ablation
+emotions_36/EDITED/Kind/JF24_cut.mp4,ablate_pair_interested_kind,pair_interested_kind,True,False,Kind,Kind,Interested,pair_interested_kind,model.language_model.layers.4,mean_ablation
+emotions_36/EDITED/Kind/JF24_cut.mp4,ablate_pair_disappointed_worried,pair_disappointed_worried,True,False,Kind,Kind,Interested,pair_interested_kind,model.language_model.layers.4,mean_ablation
+emotions/EDITED/Worried/BF22_cut.mp4,baseline,baseline,True,False,Worried,Worried,Disappointed,pair_disappointed_worried,model.language_model.layers.4,none
+emotions/EDITED/Worried/BF22_cut.mp4,ablate_entropy,entropy,True,False,Worried,Worried,Disappointed,pair_disappointed_worried,model.language_model.layers.4,mean_ablation
+emotions/EDITED/Worried/BF22_cut.mp4,ablate_random,random,True,False,Worried,Worried,Disappointed,pair_disappointed_worried,model.language_model.layers.4,mean_ablation
+emotions/EDITED/Worried/BF22_cut.mp4,ablate_pair_bored_unfriendly,pair_bored_unfriendly,True,False,Worried,Worried,Disappointed,pair_disappointed_worried,model.language_model.layers.4,mean_ablation
+emotions/EDITED/Worried/BF22_cut.mp4,ablate_pair_interested_kind,pair_interested_kind,True,False,Worried,Worried,Disappointed,pair_disappointed_worried,model.language_model.layers.4,mean_ablation
+emotions/EDITED/Worried/BF22_cut.mp4,ablate_pair_disappointed_worried,pair_disappointed_worried,True,False,Worried,Worried,Disappointed,pair_disappointed_worried,model.language_model.layers.4,mean_ablation
+emotions/EDITED/Worried/DF22_cut.mp4,baseline,baseline,True,False,Worried,Worried,Disappointed,pair_disappointed_worried,model.language_model.layers.4,none
+emotions/EDITED/Worried/DF22_cut.mp4,ablate_entropy,entropy,True,False,Worried,Worried,Disappointed,pair_disappointed_worried,model.language_model.layers.4,mean_ablation
+emotions/EDITED/Worried/DF22_cut.mp4,ablate_random,random,True,False,Worried,Worried,Disappointed,pair_disappointed_worried,model.language_model.layers.4,mean_ablation
+emotions/EDITED/Worried/DF22_cut.mp4,ablate_pair_bored_unfriendly,pair_bored_unfriendly,True,False,Worried,Worried,Disappointed,pair_disappointed_worried,model.language_model.layers.4,mean_ablation
+emotions/EDITED/Worried/DF22_cut.mp4,ablate_pair_interested_kind,pair_interested_kind,True,False,Worried,Worried,Disappointed,pair_disappointed_worried,model.language_model.layers.4,mean_ablation
+emotions/EDITED/Worried/DF22_cut.mp4,ablate_pair_disappointed_worried,pair_disappointed_worried,True,False,Worried,Worried,Disappointed,pair_disappointed_worried,model.language_model.layers.4,mean_ablation
+emotions/EDITED/Worried/FF22_cut.mp4,baseline,baseline,False,True,Disappointed,Worried,Disappointed,pair_disappointed_worried,model.language_model.layers.4,none
+emotions/EDITED/Worried/FF22_cut.mp4,ablate_entropy,entropy,False,True,Disappointed,Worried,Disappointed,pair_disappointed_worried,model.language_model.layers.4,mean_ablation
+emotions/EDITED/Worried/FF22_cut.mp4,ablate_random,random,False,True,Disappointed,Worried,Disappointed,pair_disappointed_worried,model.language_model.layers.4,mean_ablation
+emotions/EDITED/Worried/FF22_cut.mp4,ablate_pair_bored_unfriendly,pair_bored_unfriendly,False,True,Disappointed,Worried,Disappointed,pair_disappointed_worried,model.language_model.layers.4,mean_ablation
+emotions/EDITED/Worried/FF22_cut.mp4,ablate_pair_interested_kind,pair_interested_kind,False,True,Disappointed,Worried,Disappointed,pair_disappointed_worried,model.language_model.layers.4,mean_ablation
+emotions/EDITED/Worried/FF22_cut.mp4,ablate_pair_disappointed_worried,pair_disappointed_worried,False,True,Disappointed,Worried,Disappointed,pair_disappointed_worried,model.language_model.layers.4,mean_ablation
+emotions/EDITED/Worried/HF22_cut.mp4,baseline,baseline,False,False,None of the above,Worried,Disappointed,pair_disappointed_worried,model.language_model.layers.4,none
+emotions/EDITED/Worried/HF22_cut.mp4,ablate_entropy,entropy,False,False,None of the above,Worried,Disappointed,pair_disappointed_worried,model.language_model.layers.4,mean_ablation
+emotions/EDITED/Worried/HF22_cut.mp4,ablate_random,random,False,False,None of the above,Worried,Disappointed,pair_disappointed_worried,model.language_model.layers.4,mean_ablation
+emotions/EDITED/Worried/HF22_cut.mp4,ablate_pair_bored_unfriendly,pair_bored_unfriendly,False,False,None of the above,Worried,Disappointed,pair_disappointed_worried,model.language_model.layers.4,mean_ablation
+emotions/EDITED/Worried/HF22_cut.mp4,ablate_pair_interested_kind,pair_interested_kind,False,False,None of the above,Worried,Disappointed,pair_disappointed_worried,model.language_model.layers.4,mean_ablation
+emotions/EDITED/Worried/HF22_cut.mp4,ablate_pair_disappointed_worried,pair_disappointed_worried,False,False,None of the above,Worried,Disappointed,pair_disappointed_worried,model.language_model.layers.4,mean_ablation
+emotions/EDITED/Worried/JF22_cut.mp4,baseline,baseline,False,False,None of the above,Worried,Disappointed,pair_disappointed_worried,model.language_model.layers.4,none
+emotions/EDITED/Worried/JF22_cut.mp4,ablate_entropy,entropy,False,False,None of the above,Worried,Disappointed,pair_disappointed_worried,model.language_model.layers.4,mean_ablation
+emotions/EDITED/Worried/JF22_cut.mp4,ablate_random,random,False,False,None of the above,Worried,Disappointed,pair_disappointed_worried,model.language_model.layers.4,mean_ablation
+emotions/EDITED/Worried/JF22_cut.mp4,ablate_pair_bored_unfriendly,pair_bored_unfriendly,False,False,None of the above,Worried,Disappointed,pair_disappointed_worried,model.language_model.layers.4,mean_ablation
+emotions/EDITED/Worried/JF22_cut.mp4,ablate_pair_interested_kind,pair_interested_kind,False,False,None of the above,Worried,Disappointed,pair_disappointed_worried,model.language_model.layers.4,mean_ablation
+emotions/EDITED/Worried/JF22_cut.mp4,ablate_pair_disappointed_worried,pair_disappointed_worried,False,False,None of the above,Worried,Disappointed,pair_disappointed_worried,model.language_model.layers.4,mean_ablation
+emotions/EDITED/Worried/NF22_cut.mp4,baseline,baseline,False,False,None of the above,Worried,Disappointed,pair_disappointed_worried,model.language_model.layers.4,none
+emotions/EDITED/Worried/NF22_cut.mp4,ablate_entropy,entropy,False,False,None of the above,Worried,Disappointed,pair_disappointed_worried,model.language_model.layers.4,mean_ablation
+emotions/EDITED/Worried/NF22_cut.mp4,ablate_random,random,False,False,None of the above,Worried,Disappointed,pair_disappointed_worried,model.language_model.layers.4,mean_ablation
+emotions/EDITED/Worried/NF22_cut.mp4,ablate_pair_bored_unfriendly,pair_bored_unfriendly,False,False,None of the above,Worried,Disappointed,pair_disappointed_worried,model.language_model.layers.4,mean_ablation
+emotions/EDITED/Worried/NF22_cut.mp4,ablate_pair_interested_kind,pair_interested_kind,False,False,None of the above,Worried,Disappointed,pair_disappointed_worried,model.language_model.layers.4,mean_ablation
+emotions/EDITED/Worried/NF22_cut.mp4,ablate_pair_disappointed_worried,pair_disappointed_worried,False,False,None of the above,Worried,Disappointed,pair_disappointed_worried,model.language_model.layers.4,mean_ablation
+emotions/EDITED/Worried/PF22_cut.mp4,baseline,baseline,False,False,None of the above,Worried,Disappointed,pair_disappointed_worried,model.language_model.layers.4,none
+emotions/EDITED/Worried/PF22_cut.mp4,ablate_entropy,entropy,False,False,None of the above,Worried,Disappointed,pair_disappointed_worried,model.language_model.layers.4,mean_ablation
+emotions/EDITED/Worried/PF22_cut.mp4,ablate_random,random,False,False,None of the above,Worried,Disappointed,pair_disappointed_worried,model.language_model.layers.4,mean_ablation
+emotions/EDITED/Worried/PF22_cut.mp4,ablate_pair_bored_unfriendly,pair_bored_unfriendly,False,False,None of the above,Worried,Disappointed,pair_disappointed_worried,model.language_model.layers.4,mean_ablation
+emotions/EDITED/Worried/PF22_cut.mp4,ablate_pair_interested_kind,pair_interested_kind,False,False,None of the above,Worried,Disappointed,pair_disappointed_worried,model.language_model.layers.4,mean_ablation
+emotions/EDITED/Worried/PF22_cut.mp4,ablate_pair_disappointed_worried,pair_disappointed_worried,False,False,None of the above,Worried,Disappointed,pair_disappointed_worried,model.language_model.layers.4,mean_ablation
+emotions/EDITED/Worried/RF22_cut.mp4,baseline,baseline,False,True,Disappointed,Worried,Disappointed,pair_disappointed_worried,model.language_model.layers.4,none
+emotions/EDITED/Worried/RF22_cut.mp4,ablate_entropy,entropy,False,True,Disappointed,Worried,Disappointed,pair_disappointed_worried,model.language_model.layers.4,mean_ablation
+emotions/EDITED/Worried/RF22_cut.mp4,ablate_random,random,False,True,Disappointed,Worried,Disappointed,pair_disappointed_worried,model.language_model.layers.4,mean_ablation
+emotions/EDITED/Worried/RF22_cut.mp4,ablate_pair_bored_unfriendly,pair_bored_unfriendly,False,True,Disappointed,Worried,Disappointed,pair_disappointed_worried,model.language_model.layers.4,mean_ablation
+emotions/EDITED/Worried/RF22_cut.mp4,ablate_pair_interested_kind,pair_interested_kind,False,True,Disappointed,Worried,Disappointed,pair_disappointed_worried,model.language_model.layers.4,mean_ablation
+emotions/EDITED/Worried/RF22_cut.mp4,ablate_pair_disappointed_worried,pair_disappointed_worried,False,True,Disappointed,Worried,Disappointed,pair_disappointed_worried,model.language_model.layers.4,mean_ablation
+emotions_18/EDITED/Disappointed/EF9_cut.mp4,baseline,baseline,False,False,None of the above,Disappointed,Worried,pair_disappointed_worried,model.language_model.layers.4,none
+emotions_18/EDITED/Disappointed/EF9_cut.mp4,ablate_entropy,entropy,False,False,None of the above,Disappointed,Worried,pair_disappointed_worried,model.language_model.layers.4,mean_ablation
+emotions_18/EDITED/Disappointed/EF9_cut.mp4,ablate_random,random,False,False,None of the above,Disappointed,Worried,pair_disappointed_worried,model.language_model.layers.4,mean_ablation
+emotions_18/EDITED/Disappointed/EF9_cut.mp4,ablate_pair_bored_unfriendly,pair_bored_unfriendly,False,False,None of the above,Disappointed,Worried,pair_disappointed_worried,model.language_model.layers.4,mean_ablation
+emotions_18/EDITED/Disappointed/EF9_cut.mp4,ablate_pair_interested_kind,pair_interested_kind,False,False,None of the above,Disappointed,Worried,pair_disappointed_worried,model.language_model.layers.4,mean_ablation
+emotions_18/EDITED/Disappointed/EF9_cut.mp4,ablate_pair_disappointed_worried,pair_disappointed_worried,False,False,None of the above,Disappointed,Worried,pair_disappointed_worried,model.language_model.layers.4,mean_ablation
+emotions_22/EDITED/Disappointed/GF9_cut.mp4,baseline,baseline,False,False,None of the above,Disappointed,Worried,pair_disappointed_worried,model.language_model.layers.4,none
+emotions_22/EDITED/Disappointed/GF9_cut.mp4,ablate_entropy,entropy,False,False,None of the above,Disappointed,Worried,pair_disappointed_worried,model.language_model.layers.4,mean_ablation
+emotions_22/EDITED/Disappointed/GF9_cut.mp4,ablate_random,random,False,False,None of the above,Disappointed,Worried,pair_disappointed_worried,model.language_model.layers.4,mean_ablation
+emotions_22/EDITED/Disappointed/GF9_cut.mp4,ablate_pair_bored_unfriendly,pair_bored_unfriendly,False,False,None of the above,Disappointed,Worried,pair_disappointed_worried,model.language_model.layers.4,mean_ablation
+emotions_22/EDITED/Disappointed/GF9_cut.mp4,ablate_pair_interested_kind,pair_interested_kind,False,False,None of the above,Disappointed,Worried,pair_disappointed_worried,model.language_model.layers.4,mean_ablation
+emotions_22/EDITED/Disappointed/GF9_cut.mp4,ablate_pair_disappointed_worried,pair_disappointed_worried,False,False,None of the above,Disappointed,Worried,pair_disappointed_worried,model.language_model.layers.4,mean_ablation
+emotions_46/EDITED/Disappointed/CF9v1_cut.mp4,baseline,baseline,False,False,None of the above,Disappointed,Worried,pair_disappointed_worried,model.language_model.layers.4,none
+emotions_46/EDITED/Disappointed/CF9v1_cut.mp4,ablate_entropy,entropy,False,False,None of the above,Disappointed,Worried,pair_disappointed_worried,model.language_model.layers.4,mean_ablation
+emotions_46/EDITED/Disappointed/CF9v1_cut.mp4,ablate_random,random,False,False,None of the above,Disappointed,Worried,pair_disappointed_worried,model.language_model.layers.4,mean_ablation
+emotions_46/EDITED/Disappointed/CF9v1_cut.mp4,ablate_pair_bored_unfriendly,pair_bored_unfriendly,False,False,None of the above,Disappointed,Worried,pair_disappointed_worried,model.language_model.layers.4,mean_ablation
+emotions_46/EDITED/Disappointed/CF9v1_cut.mp4,ablate_pair_interested_kind,pair_interested_kind,False,False,None of the above,Disappointed,Worried,pair_disappointed_worried,model.language_model.layers.4,mean_ablation
+emotions_46/EDITED/Disappointed/CF9v1_cut.mp4,ablate_pair_disappointed_worried,pair_disappointed_worried,False,False,None of the above,Disappointed,Worried,pair_disappointed_worried,model.language_model.layers.4,mean_ablation
+emotions_54/EDITED/Disappointed/CF9v2_cut.mp4,baseline,baseline,False,True,Worried,Disappointed,Worried,pair_disappointed_worried,model.language_model.layers.4,none
+emotions_54/EDITED/Disappointed/CF9v2_cut.mp4,ablate_entropy,entropy,False,True,Worried,Disappointed,Worried,pair_disappointed_worried,model.language_model.layers.4,mean_ablation
+emotions_54/EDITED/Disappointed/CF9v2_cut.mp4,ablate_random,random,False,True,Worried,Disappointed,Worried,pair_disappointed_worried,model.language_model.layers.4,mean_ablation
+emotions_54/EDITED/Disappointed/CF9v2_cut.mp4,ablate_pair_bored_unfriendly,pair_bored_unfriendly,False,True,Worried,Disappointed,Worried,pair_disappointed_worried,model.language_model.layers.4,mean_ablation
+emotions_54/EDITED/Disappointed/CF9v2_cut.mp4,ablate_pair_interested_kind,pair_interested_kind,False,True,Worried,Disappointed,Worried,pair_disappointed_worried,model.language_model.layers.4,mean_ablation
+emotions_54/EDITED/Disappointed/CF9v2_cut.mp4,ablate_pair_disappointed_worried,pair_disappointed_worried,False,True,Worried,Disappointed,Worried,pair_disappointed_worried,model.language_model.layers.4,mean_ablation
+emotions_57/EDITED/Disappointed/MF9_cut.mp4,baseline,baseline,False,False,None of the above,Disappointed,Worried,pair_disappointed_worried,model.language_model.layers.4,none
+emotions_57/EDITED/Disappointed/MF9_cut.mp4,ablate_entropy,entropy,False,False,None of the above,Disappointed,Worried,pair_disappointed_worried,model.language_model.layers.4,mean_ablation
+emotions_57/EDITED/Disappointed/MF9_cut.mp4,ablate_random,random,False,False,None of the above,Disappointed,Worried,pair_disappointed_worried,model.language_model.layers.4,mean_ablation
+emotions_57/EDITED/Disappointed/MF9_cut.mp4,ablate_pair_bored_unfriendly,pair_bored_unfriendly,False,False,None of the above,Disappointed,Worried,pair_disappointed_worried,model.language_model.layers.4,mean_ablation
+emotions_57/EDITED/Disappointed/MF9_cut.mp4,ablate_pair_interested_kind,pair_interested_kind,False,False,None of the above,Disappointed,Worried,pair_disappointed_worried,model.language_model.layers.4,mean_ablation
+emotions_57/EDITED/Disappointed/MF9_cut.mp4,ablate_pair_disappointed_worried,pair_disappointed_worried,False,False,None of the above,Disappointed,Worried,pair_disappointed_worried,model.language_model.layers.4,mean_ablation
+emotions_2/EDITED/Surprised/PF19v1_cut.mp4,baseline,baseline,False,False,None of the above,Surprised,Worried,other,model.language_model.layers.4,none
+emotions_2/EDITED/Surprised/PF19v1_cut.mp4,ablate_entropy,entropy,False,False,None of the above,Surprised,Worried,other,model.language_model.layers.4,mean_ablation
+emotions_2/EDITED/Surprised/PF19v1_cut.mp4,ablate_random,random,False,False,None of the above,Surprised,Worried,other,model.language_model.layers.4,mean_ablation
+emotions_2/EDITED/Surprised/PF19v1_cut.mp4,ablate_pair_bored_unfriendly,pair_bored_unfriendly,False,False,None of the above,Surprised,Worried,other,model.language_model.layers.4,mean_ablation
+emotions_2/EDITED/Surprised/PF19v1_cut.mp4,ablate_pair_interested_kind,pair_interested_kind,False,False,None of the above,Surprised,Worried,other,model.language_model.layers.4,mean_ablation
+emotions_2/EDITED/Surprised/PF19v1_cut.mp4,ablate_pair_disappointed_worried,pair_disappointed_worried,False,False,None of the above,Surprised,Worried,other,model.language_model.layers.4,mean_ablation
+emotions_2/EDITED/Unfriendly/BF25v2_cut.mp4,baseline,baseline,False,False,None of the above,Unfriendly,Hurt,other,model.language_model.layers.4,none
+emotions_2/EDITED/Unfriendly/BF25v2_cut.mp4,ablate_entropy,entropy,False,False,None of the above,Unfriendly,Hurt,other,model.language_model.layers.4,mean_ablation
+emotions_2/EDITED/Unfriendly/BF25v2_cut.mp4,ablate_random,random,False,False,None of the above,Unfriendly,Hurt,other,model.language_model.layers.4,mean_ablation
+emotions_2/EDITED/Unfriendly/BF25v2_cut.mp4,ablate_pair_bored_unfriendly,pair_bored_unfriendly,False,False,None of the above,Unfriendly,Hurt,other,model.language_model.layers.4,mean_ablation
+emotions_2/EDITED/Unfriendly/BF25v2_cut.mp4,ablate_pair_interested_kind,pair_interested_kind,False,False,None of the above,Unfriendly,Hurt,other,model.language_model.layers.4,mean_ablation
+emotions_2/EDITED/Unfriendly/BF25v2_cut.mp4,ablate_pair_disappointed_worried,pair_disappointed_worried,False,False,None of the above,Unfriendly,Hurt,other,model.language_model.layers.4,mean_ablation
+emotions_3/EDITED/Sad/RF15_cut.mp4,baseline,baseline,True,False,Sad,Sad,Afraid,other,model.language_model.layers.4,none
+emotions_3/EDITED/Sad/RF15_cut.mp4,ablate_entropy,entropy,True,False,Sad,Sad,Afraid,other,model.language_model.layers.4,mean_ablation
+emotions_3/EDITED/Sad/RF15_cut.mp4,ablate_random,random,True,False,Sad,Sad,Afraid,other,model.language_model.layers.4,mean_ablation
+emotions_3/EDITED/Sad/RF15_cut.mp4,ablate_pair_bored_unfriendly,pair_bored_unfriendly,True,False,Sad,Sad,Afraid,other,model.language_model.layers.4,mean_ablation
+emotions_3/EDITED/Sad/RF15_cut.mp4,ablate_pair_interested_kind,pair_interested_kind,True,False,Sad,Sad,Afraid,other,model.language_model.layers.4,mean_ablation
+emotions_3/EDITED/Sad/RF15_cut.mp4,ablate_pair_disappointed_worried,pair_disappointed_worried,True,False,Sad,Sad,Afraid,other,model.language_model.layers.4,mean_ablation
+emotions_4/EDITED/Angry/JF17_cut.mp4,baseline,baseline,False,False,Disgusted,Angry,Jealous,other,model.language_model.layers.4,none
+emotions_4/EDITED/Angry/JF17_cut.mp4,ablate_entropy,entropy,False,False,Disgusted,Angry,Jealous,other,model.language_model.layers.4,mean_ablation
+emotions_4/EDITED/Angry/JF17_cut.mp4,ablate_random,random,False,False,Disgusted,Angry,Jealous,other,model.language_model.layers.4,mean_ablation
+emotions_4/EDITED/Angry/JF17_cut.mp4,ablate_pair_bored_unfriendly,pair_bored_unfriendly,False,False,Disgusted,Angry,Jealous,other,model.language_model.layers.4,mean_ablation
+emotions_4/EDITED/Angry/JF17_cut.mp4,ablate_pair_interested_kind,pair_interested_kind,False,False,Disgusted,Angry,Jealous,other,model.language_model.layers.4,mean_ablation
+emotions_4/EDITED/Angry/JF17_cut.mp4,ablate_pair_disappointed_worried,pair_disappointed_worried,False,False,Disgusted,Angry,Jealous,other,model.language_model.layers.4,mean_ablation
+emotions_4/EDITED/Angry Low Intensity/NF18_cut.mp4,baseline,baseline,False,True,Disgusted,Angry Low Intensity,Disgusted,other,model.language_model.layers.4,none
+emotions_4/EDITED/Angry Low Intensity/NF18_cut.mp4,ablate_entropy,entropy,False,True,Disgusted,Angry Low Intensity,Disgusted,other,model.language_model.layers.4,mean_ablation
+emotions_4/EDITED/Angry Low Intensity/NF18_cut.mp4,ablate_random,random,False,True,Disgusted,Angry Low Intensity,Disgusted,other,model.language_model.layers.4,mean_ablation
+emotions_4/EDITED/Angry Low Intensity/NF18_cut.mp4,ablate_pair_bored_unfriendly,pair_bored_unfriendly,False,True,Disgusted,Angry Low Intensity,Disgusted,other,model.language_model.layers.4,mean_ablation
+emotions_4/EDITED/Angry Low Intensity/NF18_cut.mp4,ablate_pair_interested_kind,pair_interested_kind,False,True,Disgusted,Angry Low Intensity,Disgusted,other,model.language_model.layers.4,mean_ablation
+emotions_4/EDITED/Angry Low Intensity/NF18_cut.mp4,ablate_pair_disappointed_worried,pair_disappointed_worried,False,True,Disgusted,Angry Low Intensity,Disgusted,other,model.language_model.layers.4,mean_ablation
+emotions_4/EDITED/Happy Low Intensity/SF2_cut.mp4,baseline,baseline,False,False,Happy,Happy Low Intensity,Interested,other,model.language_model.layers.4,none
+emotions_4/EDITED/Happy Low Intensity/SF2_cut.mp4,ablate_entropy,entropy,False,False,Happy,Happy Low Intensity,Interested,other,model.language_model.layers.4,mean_ablation
+emotions_4/EDITED/Happy Low Intensity/SF2_cut.mp4,ablate_random,random,False,False,Happy,Happy Low Intensity,Interested,other,model.language_model.layers.4,mean_ablation
+emotions_4/EDITED/Happy Low Intensity/SF2_cut.mp4,ablate_pair_bored_unfriendly,pair_bored_unfriendly,False,False,Happy,Happy Low Intensity,Interested,other,model.language_model.layers.4,mean_ablation
+emotions_4/EDITED/Happy Low Intensity/SF2_cut.mp4,ablate_pair_interested_kind,pair_interested_kind,False,False,Happy,Happy Low Intensity,Interested,other,model.language_model.layers.4,mean_ablation
+emotions_4/EDITED/Happy Low Intensity/SF2_cut.mp4,ablate_pair_disappointed_worried,pair_disappointed_worried,False,False,Happy,Happy Low Intensity,Interested,other,model.language_model.layers.4,mean_ablation
+emotions_4/EDITED/Hurt/MF10_cut.mp4,baseline,baseline,False,False,Happy,Hurt,Worried,other,model.language_model.layers.4,none
+emotions_4/EDITED/Hurt/MF10_cut.mp4,ablate_entropy,entropy,False,False,Happy,Hurt,Worried,other,model.language_model.layers.4,mean_ablation
+emotions_4/EDITED/Hurt/MF10_cut.mp4,ablate_random,random,False,False,None of the above,Hurt,Worried,other,model.language_model.layers.4,mean_ablation
+emotions_4/EDITED/Hurt/MF10_cut.mp4,ablate_pair_bored_unfriendly,pair_bored_unfriendly,False,False,None of the above,Hurt,Worried,other,model.language_model.layers.4,mean_ablation
+emotions_4/EDITED/Hurt/MF10_cut.mp4,ablate_pair_interested_kind,pair_interested_kind,False,False,None of the above,Hurt,Worried,other,model.language_model.layers.4,mean_ablation
+emotions_4/EDITED/Hurt/MF10_cut.mp4,ablate_pair_disappointed_worried,pair_disappointed_worried,False,False,None of the above,Hurt,Worried,other,model.language_model.layers.4,mean_ablation
+emotions_4/EDITED/Joking/OF12v1_cut.mp4,baseline,baseline,True,False,Joking,Joking,Kind,other,model.language_model.layers.4,none
+emotions_4/EDITED/Joking/OF12v1_cut.mp4,ablate_entropy,entropy,True,False,Joking,Joking,Kind,other,model.language_model.layers.4,mean_ablation
+emotions_4/EDITED/Joking/OF12v1_cut.mp4,ablate_random,random,True,False,Joking,Joking,Kind,other,model.language_model.layers.4,mean_ablation
+emotions_4/EDITED/Joking/OF12v1_cut.mp4,ablate_pair_bored_unfriendly,pair_bored_unfriendly,True,False,Joking,Joking,Kind,other,model.language_model.layers.4,mean_ablation
+emotions_4/EDITED/Joking/OF12v1_cut.mp4,ablate_pair_interested_kind,pair_interested_kind,True,False,Joking,Joking,Kind,other,model.language_model.layers.4,mean_ablation
+emotions_4/EDITED/Joking/OF12v1_cut.mp4,ablate_pair_disappointed_worried,pair_disappointed_worried,True,False,Joking,Joking,Kind,other,model.language_model.layers.4,mean_ablation

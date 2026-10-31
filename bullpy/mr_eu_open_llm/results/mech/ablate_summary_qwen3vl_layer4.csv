@@ -1,0 +1,6 @@
+axis,ablation_method,mean_delta_accuracy,mean_delta_confusion_rate,n_trials,own_pair_bored_unfriendly_mean_delta_accuracy,own_pair_bored_unfriendly_mean_delta_confusion_rate,reuse_other_pairs_mean_delta_accuracy,reuse_other_pairs_mean_delta_confusion_rate,own_pair_interested_kind_mean_delta_accuracy,own_pair_interested_kind_mean_delta_confusion_rate,own_pair_disappointed_worried_mean_delta_accuracy,own_pair_disappointed_worried_mean_delta_confusion_rate
+entropy,mean_ablation,0.0,0.0,36,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+pair_bored_unfriendly,mean_ablation,0.0,0.0,36,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+pair_disappointed_worried,mean_ablation,0.0,0.0,36,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+pair_interested_kind,mean_ablation,0.0,0.0,36,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+random,mean_ablation,0.0,0.0,36,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0

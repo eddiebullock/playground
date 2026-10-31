@@ -1,0 +1,1994 @@
+{
+  "dataset": "eu_emotions",
+  "dataset_root": "/Users/eb2007/Library/CloudStorage/OneDrive-UniversityofCambridge/Documents/PhD/data/EU_Emotions",
+  "edition_filter": "edited",
+  "n_options": 6,
+  "n_trials": 243,
+  "summary": {
+    "n_labels": 27,
+    "labels": {
+      "Afraid": 7,
+      "Afraid Low Intensity": 9,
+      "Angry": 6,
+      "Angry Low Intensity": 8,
+      "Ashamed": 8,
+      "Bored": 9,
+      "Disappointed": 10,
+      "Disgusted": 6,
+      "Disgusted Low Intensity": 10,
+      "Excited": 9,
+      "Frustrated": 11,
+      "Happy": 8,
+      "Happy Low Intensity": 7,
+      "Hurt": 10,
+      "Interested": 11,
+      "Jealous": 7,
+      "Joking": 9,
+      "Kind": 9,
+      "Neutral": 17,
+      "Proud": 11,
+      "Sad": 8,
+      "Sad Low Intensity": 6,
+      "Sneaky": 11,
+      "Surprised": 10,
+      "Surprised Low Intensity": 8,
+      "Unfriendly": 10,
+      "Worried": 8
+    },
+    "editions": {
+      "EDITED": 243
+    }
+  },
+  "notes": [
+    "Audio paired at eval via UK Voices Fixed-amplified by normalized correct_label.",
+    "6AFC foils generated at runtime (not stored in manifest); pass --n_options 6 or rely on this field.",
+    "stimulus_path is relative to dataset_root / --data_root used at eval.",
+    "Study2 used 4AFC on the 118-trial subset; study3 full-EU defaults to 6AFC."
+  ],
+  "trials": [
+    {
+      "trial_id": "emotions/EDITED/Unfriendly/NF25_cut.mp4",
+      "stimulus_path": "emotions/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Unfriendly/NF25_cut.mp4",
+      "correct_label": "Unfriendly",
+      "label": "Unfriendly",
+      "edition": "EDITED",
+      "pack": "emotions"
+    },
+    {
+      "trial_id": "emotions/EDITED/Unfriendly/RF25_cut.mp4",
+      "stimulus_path": "emotions/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Unfriendly/RF25_cut.mp4",
+      "correct_label": "Unfriendly",
+      "label": "Unfriendly",
+      "edition": "EDITED",
+      "pack": "emotions"
+    },
+    {
+      "trial_id": "emotions/EDITED/Worried/BF22_cut.mp4",
+      "stimulus_path": "emotions/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Worried/BF22_cut.mp4",
+      "correct_label": "Worried",
+      "label": "Worried",
+      "edition": "EDITED",
+      "pack": "emotions"
+    },
+    {
+      "trial_id": "emotions/EDITED/Worried/DF22_cut.mp4",
+      "stimulus_path": "emotions/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Worried/DF22_cut.mp4",
+      "correct_label": "Worried",
+      "label": "Worried",
+      "edition": "EDITED",
+      "pack": "emotions"
+    },
+    {
+      "trial_id": "emotions/EDITED/Worried/FF22_cut.mp4",
+      "stimulus_path": "emotions/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Worried/FF22_cut.mp4",
+      "correct_label": "Worried",
+      "label": "Worried",
+      "edition": "EDITED",
+      "pack": "emotions"
+    },
+    {
+      "trial_id": "emotions/EDITED/Worried/HF22_cut.mp4",
+      "stimulus_path": "emotions/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Worried/HF22_cut.mp4",
+      "correct_label": "Worried",
+      "label": "Worried",
+      "edition": "EDITED",
+      "pack": "emotions"
+    },
+    {
+      "trial_id": "emotions/EDITED/Worried/JF22_cut.mp4",
+      "stimulus_path": "emotions/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Worried/JF22_cut.mp4",
+      "correct_label": "Worried",
+      "label": "Worried",
+      "edition": "EDITED",
+      "pack": "emotions"
+    },
+    {
+      "trial_id": "emotions/EDITED/Worried/NF22_cut.mp4",
+      "stimulus_path": "emotions/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Worried/NF22_cut.mp4",
+      "correct_label": "Worried",
+      "label": "Worried",
+      "edition": "EDITED",
+      "pack": "emotions"
+    },
+    {
+      "trial_id": "emotions/EDITED/Worried/PF22_cut.mp4",
+      "stimulus_path": "emotions/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Worried/PF22_cut.mp4",
+      "correct_label": "Worried",
+      "label": "Worried",
+      "edition": "EDITED",
+      "pack": "emotions"
+    },
+    {
+      "trial_id": "emotions/EDITED/Worried/RF22_cut.mp4",
+      "stimulus_path": "emotions/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Worried/RF22_cut.mp4",
+      "correct_label": "Worried",
+      "label": "Worried",
+      "edition": "EDITED",
+      "pack": "emotions"
+    },
+    {
+      "trial_id": "emotions_2/EDITED/Surprised/PF19v1_cut.mp4",
+      "stimulus_path": "emotions 2/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Surprised/PF19v1_cut.mp4",
+      "correct_label": "Surprised",
+      "label": "Surprised",
+      "edition": "EDITED",
+      "pack": "emotions 2"
+    },
+    {
+      "trial_id": "emotions_2/EDITED/Unfriendly/BF25v1_cut.mp4",
+      "stimulus_path": "emotions 2/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Unfriendly/BF25v1_cut.mp4",
+      "correct_label": "Unfriendly",
+      "label": "Unfriendly",
+      "edition": "EDITED",
+      "pack": "emotions 2"
+    },
+    {
+      "trial_id": "emotions_2/EDITED/Unfriendly/BF25v2_cut.mp4",
+      "stimulus_path": "emotions 2/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Unfriendly/BF25v2_cut.mp4",
+      "correct_label": "Unfriendly",
+      "label": "Unfriendly",
+      "edition": "EDITED",
+      "pack": "emotions 2"
+    },
+    {
+      "trial_id": "emotions_2/EDITED/Unfriendly/FF25_cut.mp4",
+      "stimulus_path": "emotions 2/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Unfriendly/FF25_cut.mp4",
+      "correct_label": "Unfriendly",
+      "label": "Unfriendly",
+      "edition": "EDITED",
+      "pack": "emotions 2"
+    },
+    {
+      "trial_id": "emotions_2/EDITED/Unfriendly/GF25_cut.mp4",
+      "stimulus_path": "emotions 2/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Unfriendly/GF25_cut.mp4",
+      "correct_label": "Unfriendly",
+      "label": "Unfriendly",
+      "edition": "EDITED",
+      "pack": "emotions 2"
+    },
+    {
+      "trial_id": "emotions_2/EDITED/Unfriendly/LF25_cut.mp4",
+      "stimulus_path": "emotions 2/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Unfriendly/LF25_cut.mp4",
+      "correct_label": "Unfriendly",
+      "label": "Unfriendly",
+      "edition": "EDITED",
+      "pack": "emotions 2"
+    },
+    {
+      "trial_id": "emotions_3/EDITED/Sad/RF15_cut.mp4",
+      "stimulus_path": "emotions 3/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Sad/RF15_cut.mp4",
+      "correct_label": "Sad",
+      "label": "Sad",
+      "edition": "EDITED",
+      "pack": "emotions 3"
+    },
+    {
+      "trial_id": "emotions_3/EDITED/Unfriendly/PF25_cut.mp4",
+      "stimulus_path": "emotions 3/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Unfriendly/PF25_cut.mp4",
+      "correct_label": "Unfriendly",
+      "label": "Unfriendly",
+      "edition": "EDITED",
+      "pack": "emotions 3"
+    },
+    {
+      "trial_id": "emotions_4/EDITED/Angry/JF17_cut.mp4",
+      "stimulus_path": "emotions 4/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Angry/JF17_cut.mp4",
+      "correct_label": "Angry",
+      "label": "Angry",
+      "edition": "EDITED",
+      "pack": "emotions 4"
+    },
+    {
+      "trial_id": "emotions_4/EDITED/Angry Low Intensity/NF18_cut.mp4",
+      "stimulus_path": "emotions 4/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Angry Low Intensity/NF18_cut.mp4",
+      "correct_label": "Angry Low Intensity",
+      "label": "Angry Low Intensity",
+      "edition": "EDITED",
+      "pack": "emotions 4"
+    },
+    {
+      "trial_id": "emotions_4/EDITED/Happy Low Intensity/SF2_cut.mp4",
+      "stimulus_path": "emotions 4/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Happy Low Intensity/SF2_cut.mp4",
+      "correct_label": "Happy Low Intensity",
+      "label": "Happy Low Intensity",
+      "edition": "EDITED",
+      "pack": "emotions 4"
+    },
+    {
+      "trial_id": "emotions_4/EDITED/Hurt/MF10_cut.mp4",
+      "stimulus_path": "emotions 4/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Hurt/MF10_cut.mp4",
+      "correct_label": "Hurt",
+      "label": "Hurt",
+      "edition": "EDITED",
+      "pack": "emotions 4"
+    },
+    {
+      "trial_id": "emotions_4/EDITED/Joking/OF12v1_cut.mp4",
+      "stimulus_path": "emotions 4/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Joking/OF12v1_cut.mp4",
+      "correct_label": "Joking",
+      "label": "Joking",
+      "edition": "EDITED",
+      "pack": "emotions 4"
+    },
+    {
+      "trial_id": "emotions_4/EDITED/Sneaky/BF26v2_cut.mp4",
+      "stimulus_path": "emotions 4/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Sneaky/BF26v2_cut.mp4",
+      "correct_label": "Sneaky",
+      "label": "Sneaky",
+      "edition": "EDITED",
+      "pack": "emotions 4"
+    },
+    {
+      "trial_id": "emotions_4/EDITED/Sneaky/FF26_cut.mp4",
+      "stimulus_path": "emotions 4/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Sneaky/FF26_cut.mp4",
+      "correct_label": "Sneaky",
+      "label": "Sneaky",
+      "edition": "EDITED",
+      "pack": "emotions 4"
+    },
+    {
+      "trial_id": "emotions_4/EDITED/Sneaky/HF26_cut.mp4",
+      "stimulus_path": "emotions 4/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Sneaky/HF26_cut.mp4",
+      "correct_label": "Sneaky",
+      "label": "Sneaky",
+      "edition": "EDITED",
+      "pack": "emotions 4"
+    },
+    {
+      "trial_id": "emotions_5/EDITED/Joking/OF12v2_cut.mp4",
+      "stimulus_path": "emotions 5/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Joking/OF12v2_cut.mp4",
+      "correct_label": "Joking",
+      "label": "Joking",
+      "edition": "EDITED",
+      "pack": "emotions 5"
+    },
+    {
+      "trial_id": "emotions_5/EDITED/Sad/DF15_cut.mp4",
+      "stimulus_path": "emotions 5/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Sad/DF15_cut.mp4",
+      "correct_label": "Sad",
+      "label": "Sad",
+      "edition": "EDITED",
+      "pack": "emotions 5"
+    },
+    {
+      "trial_id": "emotions_5/EDITED/Sad/FF15_cut.mp4",
+      "stimulus_path": "emotions 5/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Sad/FF15_cut.mp4",
+      "correct_label": "Sad",
+      "label": "Sad",
+      "edition": "EDITED",
+      "pack": "emotions 5"
+    },
+    {
+      "trial_id": "emotions_5/EDITED/Sad/NF15_cut.mp4",
+      "stimulus_path": "emotions 5/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Sad/NF15_cut.mp4",
+      "correct_label": "Sad",
+      "label": "Sad",
+      "edition": "EDITED",
+      "pack": "emotions 5"
+    },
+    {
+      "trial_id": "emotions_5/EDITED/Sad Low Intensity/DF16_cut.mp4",
+      "stimulus_path": "emotions 5/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Sad Low Intensity/DF16_cut.mp4",
+      "correct_label": "Sad Low Intensity",
+      "label": "Sad Low Intensity",
+      "edition": "EDITED",
+      "pack": "emotions 5"
+    },
+    {
+      "trial_id": "emotions_5/EDITED/Sad Low Intensity/HF16_cut.mp4",
+      "stimulus_path": "emotions 5/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Sad Low Intensity/HF16_cut.mp4",
+      "correct_label": "Sad Low Intensity",
+      "label": "Sad Low Intensity",
+      "edition": "EDITED",
+      "pack": "emotions 5"
+    },
+    {
+      "trial_id": "emotions_5/EDITED/Sad Low Intensity/PF16_cut.mp4",
+      "stimulus_path": "emotions 5/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Sad Low Intensity/PF16_cut.mp4",
+      "correct_label": "Sad Low Intensity",
+      "label": "Sad Low Intensity",
+      "edition": "EDITED",
+      "pack": "emotions 5"
+    },
+    {
+      "trial_id": "emotions_5/EDITED/Sneaky/NF26_cut.mp4",
+      "stimulus_path": "emotions 5/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Sneaky/NF26_cut.mp4",
+      "correct_label": "Sneaky",
+      "label": "Sneaky",
+      "edition": "EDITED",
+      "pack": "emotions 5"
+    },
+    {
+      "trial_id": "emotions_5/EDITED/Sneaky/PF26v1_cut.mp4",
+      "stimulus_path": "emotions 5/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Sneaky/PF26v1_cut.mp4",
+      "correct_label": "Sneaky",
+      "label": "Sneaky",
+      "edition": "EDITED",
+      "pack": "emotions 5"
+    },
+    {
+      "trial_id": "emotions_5/EDITED/Sneaky/PF26v2_cut.mp4",
+      "stimulus_path": "emotions 5/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Sneaky/PF26v2_cut.mp4",
+      "correct_label": "Sneaky",
+      "label": "Sneaky",
+      "edition": "EDITED",
+      "pack": "emotions 5"
+    },
+    {
+      "trial_id": "emotions_5/EDITED/Sneaky/RF26_cut.mp4",
+      "stimulus_path": "emotions 5/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Sneaky/RF26_cut.mp4",
+      "correct_label": "Sneaky",
+      "label": "Sneaky",
+      "edition": "EDITED",
+      "pack": "emotions 5"
+    },
+    {
+      "trial_id": "emotions_5/EDITED/Surprised/FF19_cut.mp4",
+      "stimulus_path": "emotions 5/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Surprised/FF19_cut.mp4",
+      "correct_label": "Surprised",
+      "label": "Surprised",
+      "edition": "EDITED",
+      "pack": "emotions 5"
+    },
+    {
+      "trial_id": "emotions_5/EDITED/Surprised/JF19_cut.mp4",
+      "stimulus_path": "emotions 5/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Surprised/JF19_cut.mp4",
+      "correct_label": "Surprised",
+      "label": "Surprised",
+      "edition": "EDITED",
+      "pack": "emotions 5"
+    },
+    {
+      "trial_id": "emotions_5/EDITED/Surprised/LF19_cut.mp4",
+      "stimulus_path": "emotions 5/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Surprised/LF19_cut.mp4",
+      "correct_label": "Surprised",
+      "label": "Surprised",
+      "edition": "EDITED",
+      "pack": "emotions 5"
+    },
+    {
+      "trial_id": "emotions_5/EDITED/Surprised/RF19_cut.mp4",
+      "stimulus_path": "emotions 5/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Surprised/RF19_cut.mp4",
+      "correct_label": "Surprised",
+      "label": "Surprised",
+      "edition": "EDITED",
+      "pack": "emotions 5"
+    },
+    {
+      "trial_id": "emotions_6/EDITED/Angry/RF17_cut.mp4",
+      "stimulus_path": "emotions 6/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Angry/RF17_cut.mp4",
+      "correct_label": "Angry",
+      "label": "Angry",
+      "edition": "EDITED",
+      "pack": "emotions 6"
+    },
+    {
+      "trial_id": "emotions_6/EDITED/Ashamed/KF13_cut.mp4",
+      "stimulus_path": "emotions 6/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Ashamed/KF13_cut.mp4",
+      "correct_label": "Ashamed",
+      "label": "Ashamed",
+      "edition": "EDITED",
+      "pack": "emotions 6"
+    },
+    {
+      "trial_id": "emotions_6/EDITED/Disgusted/CF5_cut.mp4",
+      "stimulus_path": "emotions 6/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Disgusted/CF5_cut.mp4",
+      "correct_label": "Disgusted",
+      "label": "Disgusted",
+      "edition": "EDITED",
+      "pack": "emotions 6"
+    },
+    {
+      "trial_id": "emotions_6/EDITED/Disgusted/GF5_cut.mp4",
+      "stimulus_path": "emotions 6/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Disgusted/GF5_cut.mp4",
+      "correct_label": "Disgusted",
+      "label": "Disgusted",
+      "edition": "EDITED",
+      "pack": "emotions 6"
+    },
+    {
+      "trial_id": "emotions_6/EDITED/Disgusted/IF5_cut.mp4",
+      "stimulus_path": "emotions 6/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Disgusted/IF5_cut.mp4",
+      "correct_label": "Disgusted",
+      "label": "Disgusted",
+      "edition": "EDITED",
+      "pack": "emotions 6"
+    },
+    {
+      "trial_id": "emotions_6/EDITED/Disgusted/KF5_cut.mp4",
+      "stimulus_path": "emotions 6/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Disgusted/KF5_cut.mp4",
+      "correct_label": "Disgusted",
+      "label": "Disgusted",
+      "edition": "EDITED",
+      "pack": "emotions 6"
+    },
+    {
+      "trial_id": "emotions_6/EDITED/Disgusted/MF5_cut.mp4",
+      "stimulus_path": "emotions 6/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Disgusted/MF5_cut.mp4",
+      "correct_label": "Disgusted",
+      "label": "Disgusted",
+      "edition": "EDITED",
+      "pack": "emotions 6"
+    },
+    {
+      "trial_id": "emotions_6/EDITED/Disgusted/OF5_cut.mp4",
+      "stimulus_path": "emotions 6/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Disgusted/OF5_cut.mp4",
+      "correct_label": "Disgusted",
+      "label": "Disgusted",
+      "edition": "EDITED",
+      "pack": "emotions 6"
+    },
+    {
+      "trial_id": "emotions_6/EDITED/Excited/CF7_cut.mp4",
+      "stimulus_path": "emotions 6/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Excited/CF7_cut.mp4",
+      "correct_label": "Excited",
+      "label": "Excited",
+      "edition": "EDITED",
+      "pack": "emotions 6"
+    },
+    {
+      "trial_id": "emotions_6/EDITED/Excited/EF7_cut.mp4",
+      "stimulus_path": "emotions 6/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Excited/EF7_cut.mp4",
+      "correct_label": "Excited",
+      "label": "Excited",
+      "edition": "EDITED",
+      "pack": "emotions 6"
+    },
+    {
+      "trial_id": "emotions_6/EDITED/Excited/GF7_cut.mp4",
+      "stimulus_path": "emotions 6/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Excited/GF7_cut.mp4",
+      "correct_label": "Excited",
+      "label": "Excited",
+      "edition": "EDITED",
+      "pack": "emotions 6"
+    },
+    {
+      "trial_id": "emotions_6/EDITED/Excited/IF7_cut.mp4",
+      "stimulus_path": "emotions 6/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Excited/IF7_cut.mp4",
+      "correct_label": "Excited",
+      "label": "Excited",
+      "edition": "EDITED",
+      "pack": "emotions 6"
+    },
+    {
+      "trial_id": "emotions_6/EDITED/Excited/MF7_cut.mp4",
+      "stimulus_path": "emotions 6/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Excited/MF7_cut.mp4",
+      "correct_label": "Excited",
+      "label": "Excited",
+      "edition": "EDITED",
+      "pack": "emotions 6"
+    },
+    {
+      "trial_id": "emotions_6/EDITED/Frustrated/JF23_cut.mp4",
+      "stimulus_path": "emotions 6/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Frustrated/JF23_cut.mp4",
+      "correct_label": "Frustrated",
+      "label": "Frustrated",
+      "edition": "EDITED",
+      "pack": "emotions 6"
+    },
+    {
+      "trial_id": "emotions_6/EDITED/Frustrated/LF23_cut.mp4",
+      "stimulus_path": "emotions 6/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Frustrated/LF23_cut.mp4",
+      "correct_label": "Frustrated",
+      "label": "Frustrated",
+      "edition": "EDITED",
+      "pack": "emotions 6"
+    },
+    {
+      "trial_id": "emotions_6/EDITED/Frustrated/RF23 v1_cut.mp4",
+      "stimulus_path": "emotions 6/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Frustrated/RF23 v1_cut.mp4",
+      "correct_label": "Frustrated",
+      "label": "Frustrated",
+      "edition": "EDITED",
+      "pack": "emotions 6"
+    },
+    {
+      "trial_id": "emotions_6/EDITED/Happy/GF1_cut.mp4",
+      "stimulus_path": "emotions 6/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Happy/GF1_cut.mp4",
+      "correct_label": "Happy",
+      "label": "Happy",
+      "edition": "EDITED",
+      "pack": "emotions 6"
+    },
+    {
+      "trial_id": "emotions_6/EDITED/Happy/IF1_cut.mp4",
+      "stimulus_path": "emotions 6/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Happy/IF1_cut.mp4",
+      "correct_label": "Happy",
+      "label": "Happy",
+      "edition": "EDITED",
+      "pack": "emotions 6"
+    },
+    {
+      "trial_id": "emotions_6/EDITED/Happy/KF1_cut.mp4",
+      "stimulus_path": "emotions 6/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Happy/KF1_cut.mp4",
+      "correct_label": "Happy",
+      "label": "Happy",
+      "edition": "EDITED",
+      "pack": "emotions 6"
+    },
+    {
+      "trial_id": "emotions_6/EDITED/Happy/MF1_cut.mp4",
+      "stimulus_path": "emotions 6/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Happy/MF1_cut.mp4",
+      "correct_label": "Happy",
+      "label": "Happy",
+      "edition": "EDITED",
+      "pack": "emotions 6"
+    },
+    {
+      "trial_id": "emotions_6/EDITED/Happy/OF1_cut.mp4",
+      "stimulus_path": "emotions 6/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Happy/OF1_cut.mp4",
+      "correct_label": "Happy",
+      "label": "Happy",
+      "edition": "EDITED",
+      "pack": "emotions 6"
+    },
+    {
+      "trial_id": "emotions_6/EDITED/Happy Low Intensity/CF2_cut.mp4",
+      "stimulus_path": "emotions 6/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Happy Low Intensity/CF2_cut.mp4",
+      "correct_label": "Happy Low Intensity",
+      "label": "Happy Low Intensity",
+      "edition": "EDITED",
+      "pack": "emotions 6"
+    },
+    {
+      "trial_id": "emotions_6/EDITED/Happy Low Intensity/GF2_cut.mp4",
+      "stimulus_path": "emotions 6/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Happy Low Intensity/GF2_cut.mp4",
+      "correct_label": "Happy Low Intensity",
+      "label": "Happy Low Intensity",
+      "edition": "EDITED",
+      "pack": "emotions 6"
+    },
+    {
+      "trial_id": "emotions_6/EDITED/Happy Low Intensity/IF2_cut.mp4",
+      "stimulus_path": "emotions 6/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Happy Low Intensity/IF2_cut.mp4",
+      "correct_label": "Happy Low Intensity",
+      "label": "Happy Low Intensity",
+      "edition": "EDITED",
+      "pack": "emotions 6"
+    },
+    {
+      "trial_id": "emotions_6/EDITED/Happy Low Intensity/KF2_cut.mp4",
+      "stimulus_path": "emotions 6/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Happy Low Intensity/KF2_cut.mp4",
+      "correct_label": "Happy Low Intensity",
+      "label": "Happy Low Intensity",
+      "edition": "EDITED",
+      "pack": "emotions 6"
+    },
+    {
+      "trial_id": "emotions_7/EDITED/Excited/SF7_cut.mp4",
+      "stimulus_path": "emotions 7/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Excited/SF7_cut.mp4",
+      "correct_label": "Excited",
+      "label": "Excited",
+      "edition": "EDITED",
+      "pack": "emotions 7"
+    },
+    {
+      "trial_id": "emotions_7/EDITED/Interested/BF21.mp4",
+      "stimulus_path": "emotions 7/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Interested/BF21.mp4",
+      "correct_label": "Interested",
+      "label": "Interested",
+      "edition": "EDITED",
+      "pack": "emotions 7"
+    },
+    {
+      "trial_id": "emotions_7/EDITED/Interested/HF21_cut.mp4",
+      "stimulus_path": "emotions 7/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Interested/HF21_cut.mp4",
+      "correct_label": "Interested",
+      "label": "Interested",
+      "edition": "EDITED",
+      "pack": "emotions 7"
+    },
+    {
+      "trial_id": "emotions_7/EDITED/Interested/JF21v1_cut.mp4",
+      "stimulus_path": "emotions 7/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Interested/JF21v1_cut.mp4",
+      "correct_label": "Interested",
+      "label": "Interested",
+      "edition": "EDITED",
+      "pack": "emotions 7"
+    },
+    {
+      "trial_id": "emotions_7/EDITED/Interested/JF21v2_cut.mp4",
+      "stimulus_path": "emotions 7/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Interested/JF21v2_cut.mp4",
+      "correct_label": "Interested",
+      "label": "Interested",
+      "edition": "EDITED",
+      "pack": "emotions 7"
+    },
+    {
+      "trial_id": "emotions_7/EDITED/Interested/NF21v2_cut.mp4",
+      "stimulus_path": "emotions 7/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Interested/NF21v2_cut.mp4",
+      "correct_label": "Interested",
+      "label": "Interested",
+      "edition": "EDITED",
+      "pack": "emotions 7"
+    },
+    {
+      "trial_id": "emotions_7/EDITED/Interested/PF21_cut.mp4",
+      "stimulus_path": "emotions 7/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Interested/PF21_cut.mp4",
+      "correct_label": "Interested",
+      "label": "Interested",
+      "edition": "EDITED",
+      "pack": "emotions 7"
+    },
+    {
+      "trial_id": "emotions_11/EDITED/Afraid/CF3_cut.mp4",
+      "stimulus_path": "emotions 11/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Afraid/CF3_cut.mp4",
+      "correct_label": "Afraid",
+      "label": "Afraid",
+      "edition": "EDITED",
+      "pack": "emotions 11"
+    },
+    {
+      "trial_id": "emotions_11/EDITED/Angry/DF17_cut.mp4",
+      "stimulus_path": "emotions 11/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Angry/DF17_cut.mp4",
+      "correct_label": "Angry",
+      "label": "Angry",
+      "edition": "EDITED",
+      "pack": "emotions 11"
+    },
+    {
+      "trial_id": "emotions_11/EDITED/Angry/HF17v1_cut.mp4",
+      "stimulus_path": "emotions 11/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Angry/HF17v1_cut.mp4",
+      "correct_label": "Angry",
+      "label": "Angry",
+      "edition": "EDITED",
+      "pack": "emotions 11"
+    },
+    {
+      "trial_id": "emotions_11/EDITED/Angry/NF17_cut.mp4",
+      "stimulus_path": "emotions 11/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Angry/NF17_cut.mp4",
+      "correct_label": "Angry",
+      "label": "Angry",
+      "edition": "EDITED",
+      "pack": "emotions 11"
+    },
+    {
+      "trial_id": "emotions_11/EDITED/Angry/PF17_cut.mp4",
+      "stimulus_path": "emotions 11/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Angry/PF17_cut.mp4",
+      "correct_label": "Angry",
+      "label": "Angry",
+      "edition": "EDITED",
+      "pack": "emotions 11"
+    },
+    {
+      "trial_id": "emotions_11/EDITED/Ashamed/EF13_cut.mp4",
+      "stimulus_path": "emotions 11/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Ashamed/EF13_cut.mp4",
+      "correct_label": "Ashamed",
+      "label": "Ashamed",
+      "edition": "EDITED",
+      "pack": "emotions 11"
+    },
+    {
+      "trial_id": "emotions_11/EDITED/Ashamed/GF13_cut.mp4",
+      "stimulus_path": "emotions 11/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Ashamed/GF13_cut.mp4",
+      "correct_label": "Ashamed",
+      "label": "Ashamed",
+      "edition": "EDITED",
+      "pack": "emotions 11"
+    },
+    {
+      "trial_id": "emotions_11/EDITED/Ashamed/Of13_cut.mp4",
+      "stimulus_path": "emotions 11/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Ashamed/Of13_cut.mp4",
+      "correct_label": "Ashamed",
+      "label": "Ashamed",
+      "edition": "EDITED",
+      "pack": "emotions 11"
+    },
+    {
+      "trial_id": "emotions_11/EDITED/Ashamed/SF13_cut.mp4",
+      "stimulus_path": "emotions 11/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Ashamed/SF13_cut.mp4",
+      "correct_label": "Ashamed",
+      "label": "Ashamed",
+      "edition": "EDITED",
+      "pack": "emotions 11"
+    },
+    {
+      "trial_id": "emotions_11/EDITED/Frustrated/BF23_cut.mp4",
+      "stimulus_path": "emotions 11/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Frustrated/BF23_cut.mp4",
+      "correct_label": "Frustrated",
+      "label": "Frustrated",
+      "edition": "EDITED",
+      "pack": "emotions 11"
+    },
+    {
+      "trial_id": "emotions_11/EDITED/Frustrated/DF23_cut.mp4",
+      "stimulus_path": "emotions 11/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Frustrated/DF23_cut.mp4",
+      "correct_label": "Frustrated",
+      "label": "Frustrated",
+      "edition": "EDITED",
+      "pack": "emotions 11"
+    },
+    {
+      "trial_id": "emotions_11/EDITED/Frustrated/FF23_cut.mp4",
+      "stimulus_path": "emotions 11/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Frustrated/FF23_cut.mp4",
+      "correct_label": "Frustrated",
+      "label": "Frustrated",
+      "edition": "EDITED",
+      "pack": "emotions 11"
+    },
+    {
+      "trial_id": "emotions_11/EDITED/Frustrated/HF23v1_cut.mp4",
+      "stimulus_path": "emotions 11/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Frustrated/HF23v1_cut.mp4",
+      "correct_label": "Frustrated",
+      "label": "Frustrated",
+      "edition": "EDITED",
+      "pack": "emotions 11"
+    },
+    {
+      "trial_id": "emotions_11/EDITED/Frustrated/HF23v2_cut.mp4",
+      "stimulus_path": "emotions 11/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Frustrated/HF23v2_cut.mp4",
+      "correct_label": "Frustrated",
+      "label": "Frustrated",
+      "edition": "EDITED",
+      "pack": "emotions 11"
+    },
+    {
+      "trial_id": "emotions_13/EDITED/Bored/CF8_cut(1).mp4",
+      "stimulus_path": "emotions 13/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Bored/CF8_cut(1).mp4",
+      "correct_label": "Bored",
+      "label": "Bored",
+      "edition": "EDITED",
+      "pack": "emotions 13"
+    },
+    {
+      "trial_id": "emotions_13/EDITED/Disgusted Low Intensity/OF6v2_cut.mp4",
+      "stimulus_path": "emotions 13/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Disgusted Low Intensity/OF6v2_cut.mp4",
+      "correct_label": "Disgusted Low Intensity",
+      "label": "Disgusted Low Intensity",
+      "edition": "EDITED",
+      "pack": "emotions 13"
+    },
+    {
+      "trial_id": "emotions_17/EDITED/Afraid/MF3_cut.mp4",
+      "stimulus_path": "emotions 17/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Afraid/MF3_cut.mp4",
+      "correct_label": "Afraid",
+      "label": "Afraid",
+      "edition": "EDITED",
+      "pack": "emotions 17"
+    },
+    {
+      "trial_id": "emotions_17/EDITED/Afraid Low Intensity/IF4_cut.mp4",
+      "stimulus_path": "emotions 17/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Afraid Low Intensity/IF4_cut.mp4",
+      "correct_label": "Afraid Low Intensity",
+      "label": "Afraid Low Intensity",
+      "edition": "EDITED",
+      "pack": "emotions 17"
+    },
+    {
+      "trial_id": "emotions_17/EDITED/Afraid Low Intensity/KF4_cut.mp4",
+      "stimulus_path": "emotions 17/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Afraid Low Intensity/KF4_cut.mp4",
+      "correct_label": "Afraid Low Intensity",
+      "label": "Afraid Low Intensity",
+      "edition": "EDITED",
+      "pack": "emotions 17"
+    },
+    {
+      "trial_id": "emotions_17/EDITED/Disgusted Low Intensity/GF6_cut.mp4",
+      "stimulus_path": "emotions 17/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Disgusted Low Intensity/GF6_cut.mp4",
+      "correct_label": "Disgusted Low Intensity",
+      "label": "Disgusted Low Intensity",
+      "edition": "EDITED",
+      "pack": "emotions 17"
+    },
+    {
+      "trial_id": "emotions_18/EDITED/Disappointed/EF9_cut.mp4",
+      "stimulus_path": "emotions 18/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Disappointed/EF9_cut.mp4",
+      "correct_label": "Disappointed",
+      "label": "Disappointed",
+      "edition": "EDITED",
+      "pack": "emotions 18"
+    },
+    {
+      "trial_id": "emotions_18/EDITED/Disappointed/KF9_cut.mp4",
+      "stimulus_path": "emotions 18/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Disappointed/KF9_cut.mp4",
+      "correct_label": "Disappointed",
+      "label": "Disappointed",
+      "edition": "EDITED",
+      "pack": "emotions 18"
+    },
+    {
+      "trial_id": "emotions_21/EDITED/Angry Low Intensity/PF18_cut.mp4",
+      "stimulus_path": "emotions 21/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Angry Low Intensity/PF18_cut.mp4",
+      "correct_label": "Angry Low Intensity",
+      "label": "Angry Low Intensity",
+      "edition": "EDITED",
+      "pack": "emotions 21"
+    },
+    {
+      "trial_id": "emotions_21/EDITED/Bored/EF8_cut.mp4",
+      "stimulus_path": "emotions 21/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Bored/EF8_cut.mp4",
+      "correct_label": "Bored",
+      "label": "Bored",
+      "edition": "EDITED",
+      "pack": "emotions 21"
+    },
+    {
+      "trial_id": "emotions_22/EDITED/Afraid Low Intensity/IF4v2_cut.mp4",
+      "stimulus_path": "emotions 22/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Afraid Low Intensity/IF4v2_cut.mp4",
+      "correct_label": "Afraid Low Intensity",
+      "label": "Afraid Low Intensity",
+      "edition": "EDITED",
+      "pack": "emotions 22"
+    },
+    {
+      "trial_id": "emotions_22/EDITED/Afraid Low Intensity/MF4_cut.mp4",
+      "stimulus_path": "emotions 22/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Afraid Low Intensity/MF4_cut.mp4",
+      "correct_label": "Afraid Low Intensity",
+      "label": "Afraid Low Intensity",
+      "edition": "EDITED",
+      "pack": "emotions 22"
+    },
+    {
+      "trial_id": "emotions_22/EDITED/Ashamed/CF13_cut.mp4",
+      "stimulus_path": "emotions 22/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Ashamed/CF13_cut.mp4",
+      "correct_label": "Ashamed",
+      "label": "Ashamed",
+      "edition": "EDITED",
+      "pack": "emotions 22"
+    },
+    {
+      "trial_id": "emotions_22/EDITED/Disappointed/GF9_cut.mp4",
+      "stimulus_path": "emotions 22/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Disappointed/GF9_cut.mp4",
+      "correct_label": "Disappointed",
+      "label": "Disappointed",
+      "edition": "EDITED",
+      "pack": "emotions 22"
+    },
+    {
+      "trial_id": "emotions_23/EDITED/Angry Low Intensity/FF18_cut.mp4",
+      "stimulus_path": "emotions 23/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Angry Low Intensity/FF18_cut.mp4",
+      "correct_label": "Angry Low Intensity",
+      "label": "Angry Low Intensity",
+      "edition": "EDITED",
+      "pack": "emotions 23"
+    },
+    {
+      "trial_id": "emotions_23/EDITED/Bored/CF8_cut.mp4",
+      "stimulus_path": "emotions 23/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Bored/CF8_cut.mp4",
+      "correct_label": "Bored",
+      "label": "Bored",
+      "edition": "EDITED",
+      "pack": "emotions 23"
+    },
+    {
+      "trial_id": "emotions_23/EDITED/Bored/GF8_cut.mp4",
+      "stimulus_path": "emotions 23/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Bored/GF8_cut.mp4",
+      "correct_label": "Bored",
+      "label": "Bored",
+      "edition": "EDITED",
+      "pack": "emotions 23"
+    },
+    {
+      "trial_id": "emotions_23/EDITED/Bored/MF8_cut.mp4",
+      "stimulus_path": "emotions 23/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Bored/MF8_cut.mp4",
+      "correct_label": "Bored",
+      "label": "Bored",
+      "edition": "EDITED",
+      "pack": "emotions 23"
+    },
+    {
+      "trial_id": "emotions_23/EDITED/Disappointed/SF9 v1_cut.mp4",
+      "stimulus_path": "emotions 23/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Disappointed/SF9 v1_cut.mp4",
+      "correct_label": "Disappointed",
+      "label": "Disappointed",
+      "edition": "EDITED",
+      "pack": "emotions 23"
+    },
+    {
+      "trial_id": "emotions_23/EDITED/Disgusted Low Intensity/MF6_cut.mp4",
+      "stimulus_path": "emotions 23/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Disgusted Low Intensity/MF6_cut.mp4",
+      "correct_label": "Disgusted Low Intensity",
+      "label": "Disgusted Low Intensity",
+      "edition": "EDITED",
+      "pack": "emotions 23"
+    },
+    {
+      "trial_id": "emotions_26/EDITED/Disappointed/OF9_cut.mp4",
+      "stimulus_path": "emotions 26/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Disappointed/OF9_cut.mp4",
+      "correct_label": "Disappointed",
+      "label": "Disappointed",
+      "edition": "EDITED",
+      "pack": "emotions 26"
+    },
+    {
+      "trial_id": "emotions_26/EDITED/Disgusted Low Intensity/EF6_cut.mp4",
+      "stimulus_path": "emotions 26/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Disgusted Low Intensity/EF6_cut.mp4",
+      "correct_label": "Disgusted Low Intensity",
+      "label": "Disgusted Low Intensity",
+      "edition": "EDITED",
+      "pack": "emotions 26"
+    },
+    {
+      "trial_id": "emotions_27/EDITED/Afraid/IF3_cut.mp4",
+      "stimulus_path": "emotions 27/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Afraid/IF3_cut.mp4",
+      "correct_label": "Afraid",
+      "label": "Afraid",
+      "edition": "EDITED",
+      "pack": "emotions 27"
+    },
+    {
+      "trial_id": "emotions_29/EDITED/Jealous/MF11_cut.mp4",
+      "stimulus_path": "emotions 29/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Jealous/MF11_cut.mp4",
+      "correct_label": "Jealous",
+      "label": "Jealous",
+      "edition": "EDITED",
+      "pack": "emotions 29"
+    },
+    {
+      "trial_id": "emotions_29/EDITED/Jealous/OF11_cut.mp4",
+      "stimulus_path": "emotions 29/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Jealous/OF11_cut.mp4",
+      "correct_label": "Jealous",
+      "label": "Jealous",
+      "edition": "EDITED",
+      "pack": "emotions 29"
+    },
+    {
+      "trial_id": "emotions_29/EDITED/Jealous/SF11_cut.mp4",
+      "stimulus_path": "emotions 29/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Jealous/SF11_cut.mp4",
+      "correct_label": "Jealous",
+      "label": "Jealous",
+      "edition": "EDITED",
+      "pack": "emotions 29"
+    },
+    {
+      "trial_id": "emotions_29/EDITED/Proud/FF27_cut.mp4",
+      "stimulus_path": "emotions 29/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Proud/FF27_cut.mp4",
+      "correct_label": "Proud",
+      "label": "Proud",
+      "edition": "EDITED",
+      "pack": "emotions 29"
+    },
+    {
+      "trial_id": "emotions_29/EDITED/Proud/LF27_cut.mp4",
+      "stimulus_path": "emotions 29/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Proud/LF27_cut.mp4",
+      "correct_label": "Proud",
+      "label": "Proud",
+      "edition": "EDITED",
+      "pack": "emotions 29"
+    },
+    {
+      "trial_id": "emotions_29/EDITED/Sad/PF15_cut.mp4",
+      "stimulus_path": "emotions 29/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Sad/PF15_cut.mp4",
+      "correct_label": "Sad",
+      "label": "Sad",
+      "edition": "EDITED",
+      "pack": "emotions 29"
+    },
+    {
+      "trial_id": "emotions_29/EDITED/Unfriendly/DF25_cut.mp4",
+      "stimulus_path": "emotions 29/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Unfriendly/DF25_cut.mp4",
+      "correct_label": "Unfriendly",
+      "label": "Unfriendly",
+      "edition": "EDITED",
+      "pack": "emotions 29"
+    },
+    {
+      "trial_id": "emotions_29/EDITED/Unfriendly/JF25_cut.mp4",
+      "stimulus_path": "emotions 29/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Unfriendly/JF25_cut.mp4",
+      "correct_label": "Unfriendly",
+      "label": "Unfriendly",
+      "edition": "EDITED",
+      "pack": "emotions 29"
+    },
+    {
+      "trial_id": "emotions_30/EDITED/Neutral/NF28_cut.mp4",
+      "stimulus_path": "emotions 30/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Neutral/NF28_cut.mp4",
+      "correct_label": "Neutral",
+      "label": "Neutral",
+      "edition": "EDITED",
+      "pack": "emotions 30"
+    },
+    {
+      "trial_id": "emotions_30/EDITED/Neutral/RF28_cut.mp4",
+      "stimulus_path": "emotions 30/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Neutral/RF28_cut.mp4",
+      "correct_label": "Neutral",
+      "label": "Neutral",
+      "edition": "EDITED",
+      "pack": "emotions 30"
+    },
+    {
+      "trial_id": "emotions_30/EDITED/Proud/BF27v1_cut.mp4",
+      "stimulus_path": "emotions 30/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Proud/BF27v1_cut.mp4",
+      "correct_label": "Proud",
+      "label": "Proud",
+      "edition": "EDITED",
+      "pack": "emotions 30"
+    },
+    {
+      "trial_id": "emotions_30/EDITED/Proud/RF27_cut.mp4",
+      "stimulus_path": "emotions 30/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Proud/RF27_cut.mp4",
+      "correct_label": "Proud",
+      "label": "Proud",
+      "edition": "EDITED",
+      "pack": "emotions 30"
+    },
+    {
+      "trial_id": "emotions_30/EDITED/Surprised/PF19v2_cut.mp4",
+      "stimulus_path": "emotions 30/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Surprised/PF19v2_cut.mp4",
+      "correct_label": "Surprised",
+      "label": "Surprised",
+      "edition": "EDITED",
+      "pack": "emotions 30"
+    },
+    {
+      "trial_id": "emotions_31/EDITED/Jealous/CF11_cut.mp4",
+      "stimulus_path": "emotions 31/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Jealous/CF11_cut.mp4",
+      "correct_label": "Jealous",
+      "label": "Jealous",
+      "edition": "EDITED",
+      "pack": "emotions 31"
+    },
+    {
+      "trial_id": "emotions_31/EDITED/Jealous/GF11_cut.mp4",
+      "stimulus_path": "emotions 31/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Jealous/GF11_cut.mp4",
+      "correct_label": "Jealous",
+      "label": "Jealous",
+      "edition": "EDITED",
+      "pack": "emotions 31"
+    },
+    {
+      "trial_id": "emotions_31/EDITED/Jealous/IF11_cut.mp4",
+      "stimulus_path": "emotions 31/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Jealous/IF11_cut.mp4",
+      "correct_label": "Jealous",
+      "label": "Jealous",
+      "edition": "EDITED",
+      "pack": "emotions 31"
+    },
+    {
+      "trial_id": "emotions_31/EDITED/Jealous/KF11_cut.mp4",
+      "stimulus_path": "emotions 31/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Jealous/KF11_cut.mp4",
+      "correct_label": "Jealous",
+      "label": "Jealous",
+      "edition": "EDITED",
+      "pack": "emotions 31"
+    },
+    {
+      "trial_id": "emotions_31/EDITED/Neutral/SF14_cut.mp4",
+      "stimulus_path": "emotions 31/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Neutral/SF14_cut.mp4",
+      "correct_label": "Neutral",
+      "label": "Neutral",
+      "edition": "EDITED",
+      "pack": "emotions 31"
+    },
+    {
+      "trial_id": "emotions_31/EDITED/Proud/NF27_cut.mp4",
+      "stimulus_path": "emotions 31/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Proud/NF27_cut.mp4",
+      "correct_label": "Proud",
+      "label": "Proud",
+      "edition": "EDITED",
+      "pack": "emotions 31"
+    },
+    {
+      "trial_id": "emotions_31/EDITED/Sad/BF15_cut.mp4",
+      "stimulus_path": "emotions 31/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Sad/BF15_cut.mp4",
+      "correct_label": "Sad",
+      "label": "Sad",
+      "edition": "EDITED",
+      "pack": "emotions 31"
+    },
+    {
+      "trial_id": "emotions_31/EDITED/Sad/HF15_cut.mp4",
+      "stimulus_path": "emotions 31/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Sad/HF15_cut.mp4",
+      "correct_label": "Sad",
+      "label": "Sad",
+      "edition": "EDITED",
+      "pack": "emotions 31"
+    },
+    {
+      "trial_id": "emotions_31/EDITED/Sad/JF15_cut.mp4",
+      "stimulus_path": "emotions 31/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Sad/JF15_cut.mp4",
+      "correct_label": "Sad",
+      "label": "Sad",
+      "edition": "EDITED",
+      "pack": "emotions 31"
+    },
+    {
+      "trial_id": "emotions_31/EDITED/Sad Low Intensity/RF16 v1_cut.mp4",
+      "stimulus_path": "emotions 31/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Sad Low Intensity/RF16 v1_cut.mp4",
+      "correct_label": "Sad Low Intensity",
+      "label": "Sad Low Intensity",
+      "edition": "EDITED",
+      "pack": "emotions 31"
+    },
+    {
+      "trial_id": "emotions_31/EDITED/Surprised/NF19_cut.mp4",
+      "stimulus_path": "emotions 31/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Surprised/NF19_cut.mp4",
+      "correct_label": "Surprised",
+      "label": "Surprised",
+      "edition": "EDITED",
+      "pack": "emotions 31"
+    },
+    {
+      "trial_id": "emotions_31/EDITED/Surprised Low Intensity/RF20 v1_cut.mp4",
+      "stimulus_path": "emotions 31/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Surprised Low Intensity/RF20 v1_cut.mp4",
+      "correct_label": "Surprised Low Intensity",
+      "label": "Surprised Low Intensity",
+      "edition": "EDITED",
+      "pack": "emotions 31"
+    },
+    {
+      "trial_id": "emotions_31/EDITED/Surprised Low Intensity/RF20 v2_cut.mp4",
+      "stimulus_path": "emotions 31/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Surprised Low Intensity/RF20 v2_cut.mp4",
+      "correct_label": "Surprised Low Intensity",
+      "label": "Surprised Low Intensity",
+      "edition": "EDITED",
+      "pack": "emotions 31"
+    },
+    {
+      "trial_id": "emotions_32/EDITED/Kind/DF24_cut.mp4",
+      "stimulus_path": "emotions 32/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Kind/DF24_cut.mp4",
+      "correct_label": "Kind",
+      "label": "Kind",
+      "edition": "EDITED",
+      "pack": "emotions 32"
+    },
+    {
+      "trial_id": "emotions_32/EDITED/Kind/PF24_cut.mp4",
+      "stimulus_path": "emotions 32/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Kind/PF24_cut.mp4",
+      "correct_label": "Kind",
+      "label": "Kind",
+      "edition": "EDITED",
+      "pack": "emotions 32"
+    },
+    {
+      "trial_id": "emotions_32/EDITED/Neutral/DF28_cut.mp4",
+      "stimulus_path": "emotions 32/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Neutral/DF28_cut.mp4",
+      "correct_label": "Neutral",
+      "label": "Neutral",
+      "edition": "EDITED",
+      "pack": "emotions 32"
+    },
+    {
+      "trial_id": "emotions_33/EDITED/Interested/NF21v1_cut.mp4",
+      "stimulus_path": "emotions 33/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Interested/NF21v1_cut.mp4",
+      "correct_label": "Interested",
+      "label": "Interested",
+      "edition": "EDITED",
+      "pack": "emotions 33"
+    },
+    {
+      "trial_id": "emotions_33/EDITED/Kind/NF24_cut.mp4",
+      "stimulus_path": "emotions 33/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Kind/NF24_cut.mp4",
+      "correct_label": "Kind",
+      "label": "Kind",
+      "edition": "EDITED",
+      "pack": "emotions 33"
+    },
+    {
+      "trial_id": "emotions_33/EDITED/Kind/RF24_cut.mp4",
+      "stimulus_path": "emotions 33/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Kind/RF24_cut.mp4",
+      "correct_label": "Kind",
+      "label": "Kind",
+      "edition": "EDITED",
+      "pack": "emotions 33"
+    },
+    {
+      "trial_id": "emotions_33/EDITED/Neutral/CF14_cut.mp4",
+      "stimulus_path": "emotions 33/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Neutral/CF14_cut.mp4",
+      "correct_label": "Neutral",
+      "label": "Neutral",
+      "edition": "EDITED",
+      "pack": "emotions 33"
+    },
+    {
+      "trial_id": "emotions_33/EDITED/Neutral/EF14_cut.mp4",
+      "stimulus_path": "emotions 33/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Neutral/EF14_cut.mp4",
+      "correct_label": "Neutral",
+      "label": "Neutral",
+      "edition": "EDITED",
+      "pack": "emotions 33"
+    },
+    {
+      "trial_id": "emotions_33/EDITED/Neutral/FF28_cut.mp4",
+      "stimulus_path": "emotions 33/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Neutral/FF28_cut.mp4",
+      "correct_label": "Neutral",
+      "label": "Neutral",
+      "edition": "EDITED",
+      "pack": "emotions 33"
+    },
+    {
+      "trial_id": "emotions_33/EDITED/Neutral/GF14_cut.mp4",
+      "stimulus_path": "emotions 33/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Neutral/GF14_cut.mp4",
+      "correct_label": "Neutral",
+      "label": "Neutral",
+      "edition": "EDITED",
+      "pack": "emotions 33"
+    },
+    {
+      "trial_id": "emotions_33/EDITED/Neutral/HF28_cut.mp4",
+      "stimulus_path": "emotions 33/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Neutral/HF28_cut.mp4",
+      "correct_label": "Neutral",
+      "label": "Neutral",
+      "edition": "EDITED",
+      "pack": "emotions 33"
+    },
+    {
+      "trial_id": "emotions_33/EDITED/Sneaky/LF26_cut.mp4",
+      "stimulus_path": "emotions 33/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Sneaky/LF26_cut.mp4",
+      "correct_label": "Sneaky",
+      "label": "Sneaky",
+      "edition": "EDITED",
+      "pack": "emotions 33"
+    },
+    {
+      "trial_id": "emotions_33/EDITED/Surprised Low Intensity/DF20_cut.mp4",
+      "stimulus_path": "emotions 33/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Surprised Low Intensity/DF20_cut.mp4",
+      "correct_label": "Surprised Low Intensity",
+      "label": "Surprised Low Intensity",
+      "edition": "EDITED",
+      "pack": "emotions 33"
+    },
+    {
+      "trial_id": "emotions_33/EDITED/Surprised Low Intensity/FF20_cut.mp4",
+      "stimulus_path": "emotions 33/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Surprised Low Intensity/FF20_cut.mp4",
+      "correct_label": "Surprised Low Intensity",
+      "label": "Surprised Low Intensity",
+      "edition": "EDITED",
+      "pack": "emotions 33"
+    },
+    {
+      "trial_id": "emotions_34/EDITED/Kind/LF24_cut.mp4",
+      "stimulus_path": "emotions 34/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Kind/LF24_cut.mp4",
+      "correct_label": "Kind",
+      "label": "Kind",
+      "edition": "EDITED",
+      "pack": "emotions 34"
+    },
+    {
+      "trial_id": "emotions_34/EDITED/Neutral/JF28_cut.mp4",
+      "stimulus_path": "emotions 34/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Neutral/JF28_cut.mp4",
+      "correct_label": "Neutral",
+      "label": "Neutral",
+      "edition": "EDITED",
+      "pack": "emotions 34"
+    },
+    {
+      "trial_id": "emotions_34/EDITED/Neutral/KF14_cut.mp4",
+      "stimulus_path": "emotions 34/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Neutral/KF14_cut.mp4",
+      "correct_label": "Neutral",
+      "label": "Neutral",
+      "edition": "EDITED",
+      "pack": "emotions 34"
+    },
+    {
+      "trial_id": "emotions_34/EDITED/Neutral/LF28_cut.mp4",
+      "stimulus_path": "emotions 34/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Neutral/LF28_cut.mp4",
+      "correct_label": "Neutral",
+      "label": "Neutral",
+      "edition": "EDITED",
+      "pack": "emotions 34"
+    },
+    {
+      "trial_id": "emotions_34/EDITED/Neutral/MF14_cut.mp4",
+      "stimulus_path": "emotions 34/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Neutral/MF14_cut.mp4",
+      "correct_label": "Neutral",
+      "label": "Neutral",
+      "edition": "EDITED",
+      "pack": "emotions 34"
+    },
+    {
+      "trial_id": "emotions_34/EDITED/Neutral/OF14_cut.mp4",
+      "stimulus_path": "emotions 34/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Neutral/OF14_cut.mp4",
+      "correct_label": "Neutral",
+      "label": "Neutral",
+      "edition": "EDITED",
+      "pack": "emotions 34"
+    },
+    {
+      "trial_id": "emotions_34/EDITED/Neutral/PF28_cut.mp4",
+      "stimulus_path": "emotions 34/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Neutral/PF28_cut.mp4",
+      "correct_label": "Neutral",
+      "label": "Neutral",
+      "edition": "EDITED",
+      "pack": "emotions 34"
+    },
+    {
+      "trial_id": "emotions_34/EDITED/Proud/BF27v2_cut.mp4",
+      "stimulus_path": "emotions 34/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Proud/BF27v2_cut.mp4",
+      "correct_label": "Proud",
+      "label": "Proud",
+      "edition": "EDITED",
+      "pack": "emotions 34"
+    },
+    {
+      "trial_id": "emotions_34/EDITED/Proud/DF27_cut.mp4",
+      "stimulus_path": "emotions 34/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Proud/DF27_cut.mp4",
+      "correct_label": "Proud",
+      "label": "Proud",
+      "edition": "EDITED",
+      "pack": "emotions 34"
+    },
+    {
+      "trial_id": "emotions_34/EDITED/Proud/HF27_cut.mp4",
+      "stimulus_path": "emotions 34/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Proud/HF27_cut.mp4",
+      "correct_label": "Proud",
+      "label": "Proud",
+      "edition": "EDITED",
+      "pack": "emotions 34"
+    },
+    {
+      "trial_id": "emotions_34/EDITED/Proud/JF27_cut.mp4",
+      "stimulus_path": "emotions 34/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Proud/JF27_cut.mp4",
+      "correct_label": "Proud",
+      "label": "Proud",
+      "edition": "EDITED",
+      "pack": "emotions 34"
+    },
+    {
+      "trial_id": "emotions_34/EDITED/Proud/JF27v2_cut.mp4",
+      "stimulus_path": "emotions 34/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Proud/JF27v2_cut.mp4",
+      "correct_label": "Proud",
+      "label": "Proud",
+      "edition": "EDITED",
+      "pack": "emotions 34"
+    },
+    {
+      "trial_id": "emotions_34/EDITED/Proud/PF27_cut.mp4",
+      "stimulus_path": "emotions 34/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Proud/PF27_cut.mp4",
+      "correct_label": "Proud",
+      "label": "Proud",
+      "edition": "EDITED",
+      "pack": "emotions 34"
+    },
+    {
+      "trial_id": "emotions_34/EDITED/Sad Low Intensity/JF16_cut.mp4",
+      "stimulus_path": "emotions 34/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Sad Low Intensity/JF16_cut.mp4",
+      "correct_label": "Sad Low Intensity",
+      "label": "Sad Low Intensity",
+      "edition": "EDITED",
+      "pack": "emotions 34"
+    },
+    {
+      "trial_id": "emotions_34/EDITED/Sad Low Intensity/RF16 v2_cut.mp4",
+      "stimulus_path": "emotions 34/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Sad Low Intensity/RF16 v2_cut.mp4",
+      "correct_label": "Sad Low Intensity",
+      "label": "Sad Low Intensity",
+      "edition": "EDITED",
+      "pack": "emotions 34"
+    },
+    {
+      "trial_id": "emotions_34/EDITED/Surprised/BF19_cut.mp4",
+      "stimulus_path": "emotions 34/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Surprised/BF19_cut.mp4",
+      "correct_label": "Surprised",
+      "label": "Surprised",
+      "edition": "EDITED",
+      "pack": "emotions 34"
+    },
+    {
+      "trial_id": "emotions_34/EDITED/Surprised/DF19_cut.mp4",
+      "stimulus_path": "emotions 34/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Surprised/DF19_cut.mp4",
+      "correct_label": "Surprised",
+      "label": "Surprised",
+      "edition": "EDITED",
+      "pack": "emotions 34"
+    },
+    {
+      "trial_id": "emotions_34/EDITED/Surprised/HF19_cut.mp4",
+      "stimulus_path": "emotions 34/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Surprised/HF19_cut.mp4",
+      "correct_label": "Surprised",
+      "label": "Surprised",
+      "edition": "EDITED",
+      "pack": "emotions 34"
+    },
+    {
+      "trial_id": "emotions_35/EDITED/Afraid/EF3_cut.mp4",
+      "stimulus_path": "emotions 35/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Afraid/EF3_cut.mp4",
+      "correct_label": "Afraid",
+      "label": "Afraid",
+      "edition": "EDITED",
+      "pack": "emotions 35"
+    },
+    {
+      "trial_id": "emotions_35/EDITED/Afraid/GF3_cut.mp4",
+      "stimulus_path": "emotions 35/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Afraid/GF3_cut.mp4",
+      "correct_label": "Afraid",
+      "label": "Afraid",
+      "edition": "EDITED",
+      "pack": "emotions 35"
+    },
+    {
+      "trial_id": "emotions_35/EDITED/Angry Low Intensity/BF18_cut.mp4",
+      "stimulus_path": "emotions 35/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Angry Low Intensity/BF18_cut.mp4",
+      "correct_label": "Angry Low Intensity",
+      "label": "Angry Low Intensity",
+      "edition": "EDITED",
+      "pack": "emotions 35"
+    },
+    {
+      "trial_id": "emotions_35/EDITED/Neutral/IF14_cut.mp4",
+      "stimulus_path": "emotions 35/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Neutral/IF14_cut.mp4",
+      "correct_label": "Neutral",
+      "label": "Neutral",
+      "edition": "EDITED",
+      "pack": "emotions 35"
+    },
+    {
+      "trial_id": "emotions_35/EDITED/Surprised Low Intensity/BF20_cut.mp4",
+      "stimulus_path": "emotions 35/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Surprised Low Intensity/BF20_cut.mp4",
+      "correct_label": "Surprised Low Intensity",
+      "label": "Surprised Low Intensity",
+      "edition": "EDITED",
+      "pack": "emotions 35"
+    },
+    {
+      "trial_id": "emotions_35/EDITED/Surprised Low Intensity/HF20_cut.mp4",
+      "stimulus_path": "emotions 35/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Surprised Low Intensity/HF20_cut.mp4",
+      "correct_label": "Surprised Low Intensity",
+      "label": "Surprised Low Intensity",
+      "edition": "EDITED",
+      "pack": "emotions 35"
+    },
+    {
+      "trial_id": "emotions_35/EDITED/Surprised Low Intensity/PF20v1_cut.mp4",
+      "stimulus_path": "emotions 35/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Surprised Low Intensity/PF20v1_cut.mp4",
+      "correct_label": "Surprised Low Intensity",
+      "label": "Surprised Low Intensity",
+      "edition": "EDITED",
+      "pack": "emotions 35"
+    },
+    {
+      "trial_id": "emotions_35/EDITED/Surprised Low Intensity/PF20v2_cut.mp4",
+      "stimulus_path": "emotions 35/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Surprised Low Intensity/PF20v2_cut.mp4",
+      "correct_label": "Surprised Low Intensity",
+      "label": "Surprised Low Intensity",
+      "edition": "EDITED",
+      "pack": "emotions 35"
+    },
+    {
+      "trial_id": "emotions_36/EDITED/Afraid Low Intensity/EF4_cut.mp4",
+      "stimulus_path": "emotions 36/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Afraid Low Intensity/EF4_cut.mp4",
+      "correct_label": "Afraid Low Intensity",
+      "label": "Afraid Low Intensity",
+      "edition": "EDITED",
+      "pack": "emotions 36"
+    },
+    {
+      "trial_id": "emotions_36/EDITED/Ashamed/IF13_cut.mp4",
+      "stimulus_path": "emotions 36/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Ashamed/IF13_cut.mp4",
+      "correct_label": "Ashamed",
+      "label": "Ashamed",
+      "edition": "EDITED",
+      "pack": "emotions 36"
+    },
+    {
+      "trial_id": "emotions_36/EDITED/Disgusted Low Intensity/SF6 v2_cut.mp4",
+      "stimulus_path": "emotions 36/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Disgusted Low Intensity/SF6 v2_cut.mp4",
+      "correct_label": "Disgusted Low Intensity",
+      "label": "Disgusted Low Intensity",
+      "edition": "EDITED",
+      "pack": "emotions 36"
+    },
+    {
+      "trial_id": "emotions_36/EDITED/Happy/CF1_cut.mp4",
+      "stimulus_path": "emotions 36/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Happy/CF1_cut.mp4",
+      "correct_label": "Happy",
+      "label": "Happy",
+      "edition": "EDITED",
+      "pack": "emotions 36"
+    },
+    {
+      "trial_id": "emotions_36/EDITED/Happy/EF1_cut.mp4",
+      "stimulus_path": "emotions 36/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Happy/EF1_cut.mp4",
+      "correct_label": "Happy",
+      "label": "Happy",
+      "edition": "EDITED",
+      "pack": "emotions 36"
+    },
+    {
+      "trial_id": "emotions_36/EDITED/Happy Low Intensity/MF2_cut.mp4",
+      "stimulus_path": "emotions 36/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Happy Low Intensity/MF2_cut.mp4",
+      "correct_label": "Happy Low Intensity",
+      "label": "Happy Low Intensity",
+      "edition": "EDITED",
+      "pack": "emotions 36"
+    },
+    {
+      "trial_id": "emotions_36/EDITED/Interested/FF21_cut.mp4",
+      "stimulus_path": "emotions 36/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Interested/FF21_cut.mp4",
+      "correct_label": "Interested",
+      "label": "Interested",
+      "edition": "EDITED",
+      "pack": "emotions 36"
+    },
+    {
+      "trial_id": "emotions_36/EDITED/Joking/EF12_cut.mp4",
+      "stimulus_path": "emotions 36/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Joking/EF12_cut.mp4",
+      "correct_label": "Joking",
+      "label": "Joking",
+      "edition": "EDITED",
+      "pack": "emotions 36"
+    },
+    {
+      "trial_id": "emotions_36/EDITED/Joking/GF12_cut.mp4",
+      "stimulus_path": "emotions 36/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Joking/GF12_cut.mp4",
+      "correct_label": "Joking",
+      "label": "Joking",
+      "edition": "EDITED",
+      "pack": "emotions 36"
+    },
+    {
+      "trial_id": "emotions_36/EDITED/Joking/IF12_cut.mp4",
+      "stimulus_path": "emotions 36/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Joking/IF12_cut.mp4",
+      "correct_label": "Joking",
+      "label": "Joking",
+      "edition": "EDITED",
+      "pack": "emotions 36"
+    },
+    {
+      "trial_id": "emotions_36/EDITED/Joking/KF12_cut.mp4",
+      "stimulus_path": "emotions 36/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Joking/KF12_cut.mp4",
+      "correct_label": "Joking",
+      "label": "Joking",
+      "edition": "EDITED",
+      "pack": "emotions 36"
+    },
+    {
+      "trial_id": "emotions_36/EDITED/Joking/MF12_cut.mp4",
+      "stimulus_path": "emotions 36/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Joking/MF12_cut.mp4",
+      "correct_label": "Joking",
+      "label": "Joking",
+      "edition": "EDITED",
+      "pack": "emotions 36"
+    },
+    {
+      "trial_id": "emotions_36/EDITED/Kind/BF24_cut.mp4",
+      "stimulus_path": "emotions 36/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Kind/BF24_cut.mp4",
+      "correct_label": "Kind",
+      "label": "Kind",
+      "edition": "EDITED",
+      "pack": "emotions 36"
+    },
+    {
+      "trial_id": "emotions_36/EDITED/Kind/FF24_cut.mp4",
+      "stimulus_path": "emotions 36/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Kind/FF24_cut.mp4",
+      "correct_label": "Kind",
+      "label": "Kind",
+      "edition": "EDITED",
+      "pack": "emotions 36"
+    },
+    {
+      "trial_id": "emotions_36/EDITED/Kind/HF24_cut.mp4",
+      "stimulus_path": "emotions 36/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Kind/HF24_cut.mp4",
+      "correct_label": "Kind",
+      "label": "Kind",
+      "edition": "EDITED",
+      "pack": "emotions 36"
+    },
+    {
+      "trial_id": "emotions_36/EDITED/Kind/JF24_cut.mp4",
+      "stimulus_path": "emotions 36/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Kind/JF24_cut.mp4",
+      "correct_label": "Kind",
+      "label": "Kind",
+      "edition": "EDITED",
+      "pack": "emotions 36"
+    },
+    {
+      "trial_id": "emotions_36/EDITED/Neutral/BF28_cut.mp4",
+      "stimulus_path": "emotions 36/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Neutral/BF28_cut.mp4",
+      "correct_label": "Neutral",
+      "label": "Neutral",
+      "edition": "EDITED",
+      "pack": "emotions 36"
+    },
+    {
+      "trial_id": "emotions_37/EDITED/Happy Low Intensity/OF2_cut.mp4",
+      "stimulus_path": "emotions 37/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Happy Low Intensity/OF2_cut.mp4",
+      "correct_label": "Happy Low Intensity",
+      "label": "Happy Low Intensity",
+      "edition": "EDITED",
+      "pack": "emotions 37"
+    },
+    {
+      "trial_id": "emotions_37/EDITED/Hurt/SF10 v1_cut.mp4",
+      "stimulus_path": "emotions 37/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Hurt/SF10 v1_cut.mp4",
+      "correct_label": "Hurt",
+      "label": "Hurt",
+      "edition": "EDITED",
+      "pack": "emotions 37"
+    },
+    {
+      "trial_id": "emotions_37/EDITED/Interested/Df21_cut.mp4",
+      "stimulus_path": "emotions 37/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Interested/Df21_cut.mp4",
+      "correct_label": "Interested",
+      "label": "Interested",
+      "edition": "EDITED",
+      "pack": "emotions 37"
+    },
+    {
+      "trial_id": "emotions_37/EDITED/Interested/LF21_cut.mp4",
+      "stimulus_path": "emotions 37/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Interested/LF21_cut.mp4",
+      "correct_label": "Interested",
+      "label": "Interested",
+      "edition": "EDITED",
+      "pack": "emotions 37"
+    },
+    {
+      "trial_id": "emotions_37/EDITED/Joking/SF12_cut.mp4",
+      "stimulus_path": "emotions 37/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Joking/SF12_cut.mp4",
+      "correct_label": "Joking",
+      "label": "Joking",
+      "edition": "EDITED",
+      "pack": "emotions 37"
+    },
+    {
+      "trial_id": "emotions_37/EDITED/Sneaky/BF26v1_cut.mp4",
+      "stimulus_path": "emotions 37/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Sneaky/BF26v1_cut.mp4",
+      "correct_label": "Sneaky",
+      "label": "Sneaky",
+      "edition": "EDITED",
+      "pack": "emotions 37"
+    },
+    {
+      "trial_id": "emotions_37/EDITED/Sneaky/Df26_cut.mp4",
+      "stimulus_path": "emotions 37/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Sneaky/Df26_cut.mp4",
+      "correct_label": "Sneaky",
+      "label": "Sneaky",
+      "edition": "EDITED",
+      "pack": "emotions 37"
+    },
+    {
+      "trial_id": "emotions_37/EDITED/Sneaky/JF26_cut.mp4",
+      "stimulus_path": "emotions 37/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Sneaky/JF26_cut.mp4",
+      "correct_label": "Sneaky",
+      "label": "Sneaky",
+      "edition": "EDITED",
+      "pack": "emotions 37"
+    },
+    {
+      "trial_id": "emotions_38/EDITED/Angry Low Intensity/JF18_cut.mp4",
+      "stimulus_path": "emotions 38/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Angry Low Intensity/JF18_cut.mp4",
+      "correct_label": "Angry Low Intensity",
+      "label": "Angry Low Intensity",
+      "edition": "EDITED",
+      "pack": "emotions 38"
+    },
+    {
+      "trial_id": "emotions_38/EDITED/Ashamed/MF13_cut.mp4",
+      "stimulus_path": "emotions 38/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Ashamed/MF13_cut.mp4",
+      "correct_label": "Ashamed",
+      "label": "Ashamed",
+      "edition": "EDITED",
+      "pack": "emotions 38"
+    },
+    {
+      "trial_id": "emotions_38/EDITED/Frustrated/NF23_cut.mp4",
+      "stimulus_path": "emotions 38/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Frustrated/NF23_cut.mp4",
+      "correct_label": "Frustrated",
+      "label": "Frustrated",
+      "edition": "EDITED",
+      "pack": "emotions 38"
+    },
+    {
+      "trial_id": "emotions_38/EDITED/Frustrated/PF23_cut.mp4",
+      "stimulus_path": "emotions 38/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Frustrated/PF23_cut.mp4",
+      "correct_label": "Frustrated",
+      "label": "Frustrated",
+      "edition": "EDITED",
+      "pack": "emotions 38"
+    },
+    {
+      "trial_id": "emotions_38/EDITED/Frustrated/RF23 v2_cut.mp4",
+      "stimulus_path": "emotions 38/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Frustrated/RF23 v2_cut.mp4",
+      "correct_label": "Frustrated",
+      "label": "Frustrated",
+      "edition": "EDITED",
+      "pack": "emotions 38"
+    },
+    {
+      "trial_id": "emotions_38/EDITED/Hurt/OF10_cut.mp4",
+      "stimulus_path": "emotions 38/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Hurt/OF10_cut.mp4",
+      "correct_label": "Hurt",
+      "label": "Hurt",
+      "edition": "EDITED",
+      "pack": "emotions 38"
+    },
+    {
+      "trial_id": "emotions_38/EDITED/Hurt/SF10 v2_cut.mp4",
+      "stimulus_path": "emotions 38/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Hurt/SF10 v2_cut.mp4",
+      "correct_label": "Hurt",
+      "label": "Hurt",
+      "edition": "EDITED",
+      "pack": "emotions 38"
+    },
+    {
+      "trial_id": "emotions_38/EDITED/Interested/RF21_cut.mp4",
+      "stimulus_path": "emotions 38/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Interested/RF21_cut.mp4",
+      "correct_label": "Interested",
+      "label": "Interested",
+      "edition": "EDITED",
+      "pack": "emotions 38"
+    },
+    {
+      "trial_id": "emotions_38/EDITED/Joking/CF12_cut.mp4",
+      "stimulus_path": "emotions 38/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Joking/CF12_cut.mp4",
+      "correct_label": "Joking",
+      "label": "Joking",
+      "edition": "EDITED",
+      "pack": "emotions 38"
+    },
+    {
+      "trial_id": "emotions_39/EDITED/Excited/KF7_cut.mp4",
+      "stimulus_path": "emotions 39/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Excited/KF7_cut.mp4",
+      "correct_label": "Excited",
+      "label": "Excited",
+      "edition": "EDITED",
+      "pack": "emotions 39"
+    },
+    {
+      "trial_id": "emotions_39/EDITED/Excited/OF7v1_cut.mp4",
+      "stimulus_path": "emotions 39/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Excited/OF7v1_cut.mp4",
+      "correct_label": "Excited",
+      "label": "Excited",
+      "edition": "EDITED",
+      "pack": "emotions 39"
+    },
+    {
+      "trial_id": "emotions_39/EDITED/Excited/OF7v2_cut.mp4",
+      "stimulus_path": "emotions 39/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Excited/OF7v2_cut.mp4",
+      "correct_label": "Excited",
+      "label": "Excited",
+      "edition": "EDITED",
+      "pack": "emotions 39"
+    },
+    {
+      "trial_id": "emotions_39/EDITED/Happy/SF1_cut.mp4",
+      "stimulus_path": "emotions 39/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Happy/SF1_cut.mp4",
+      "correct_label": "Happy",
+      "label": "Happy",
+      "edition": "EDITED",
+      "pack": "emotions 39"
+    },
+    {
+      "trial_id": "emotions_39/EDITED/Hurt/CF10v1_cut.mp4",
+      "stimulus_path": "emotions 39/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Hurt/CF10v1_cut.mp4",
+      "correct_label": "Hurt",
+      "label": "Hurt",
+      "edition": "EDITED",
+      "pack": "emotions 39"
+    },
+    {
+      "trial_id": "emotions_39/EDITED/Hurt/CF10v2_cut.mp4",
+      "stimulus_path": "emotions 39/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Hurt/CF10v2_cut.mp4",
+      "correct_label": "Hurt",
+      "label": "Hurt",
+      "edition": "EDITED",
+      "pack": "emotions 39"
+    },
+    {
+      "trial_id": "emotions_39/EDITED/Hurt/EF10_cut.mp4",
+      "stimulus_path": "emotions 39/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Hurt/EF10_cut.mp4",
+      "correct_label": "Hurt",
+      "label": "Hurt",
+      "edition": "EDITED",
+      "pack": "emotions 39"
+    },
+    {
+      "trial_id": "emotions_39/EDITED/Hurt/GF10_cut.mp4",
+      "stimulus_path": "emotions 39/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Hurt/GF10_cut.mp4",
+      "correct_label": "Hurt",
+      "label": "Hurt",
+      "edition": "EDITED",
+      "pack": "emotions 39"
+    },
+    {
+      "trial_id": "emotions_39/EDITED/Hurt/IF10_cut.mp4",
+      "stimulus_path": "emotions 39/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Hurt/IF10_cut.mp4",
+      "correct_label": "Hurt",
+      "label": "Hurt",
+      "edition": "EDITED",
+      "pack": "emotions 39"
+    },
+    {
+      "trial_id": "emotions_39/EDITED/Hurt/KF10_cut.mp4",
+      "stimulus_path": "emotions 39/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Hurt/KF10_cut.mp4",
+      "correct_label": "Hurt",
+      "label": "Hurt",
+      "edition": "EDITED",
+      "pack": "emotions 39"
+    },
+    {
+      "trial_id": "emotions_40/EDITED/Afraid Low Intensity/CF4_cut.mp4",
+      "stimulus_path": "emotions 40/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Afraid Low Intensity/CF4_cut.mp4",
+      "correct_label": "Afraid Low Intensity",
+      "label": "Afraid Low Intensity",
+      "edition": "EDITED",
+      "pack": "emotions 40"
+    },
+    {
+      "trial_id": "emotions_41/EDITED/Angry Low Intensity/LF18_cut.mp4",
+      "stimulus_path": "emotions 41/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Angry Low Intensity/LF18_cut.mp4",
+      "correct_label": "Angry Low Intensity",
+      "label": "Angry Low Intensity",
+      "edition": "EDITED",
+      "pack": "emotions 41"
+    },
+    {
+      "trial_id": "emotions_43/EDITED/Disgusted Low Intensity/SF6 v1_cut.mp4",
+      "stimulus_path": "emotions 43/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Disgusted Low Intensity/SF6 v1_cut.mp4",
+      "correct_label": "Disgusted Low Intensity",
+      "label": "Disgusted Low Intensity",
+      "edition": "EDITED",
+      "pack": "emotions 43"
+    },
+    {
+      "trial_id": "emotions_44/EDITED/Disgusted Low Intensity/CF6_cut.mp4",
+      "stimulus_path": "emotions 44/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Disgusted Low Intensity/CF6_cut.mp4",
+      "correct_label": "Disgusted Low Intensity",
+      "label": "Disgusted Low Intensity",
+      "edition": "EDITED",
+      "pack": "emotions 44"
+    },
+    {
+      "trial_id": "emotions_46/EDITED/Afraid/SF3_cut.mp4",
+      "stimulus_path": "emotions 46/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Afraid/SF3_cut.mp4",
+      "correct_label": "Afraid",
+      "label": "Afraid",
+      "edition": "EDITED",
+      "pack": "emotions 46"
+    },
+    {
+      "trial_id": "emotions_46/EDITED/Afraid Low Intensity/OF4_cut.mp4",
+      "stimulus_path": "emotions 46/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Afraid Low Intensity/OF4_cut.mp4",
+      "correct_label": "Afraid Low Intensity",
+      "label": "Afraid Low Intensity",
+      "edition": "EDITED",
+      "pack": "emotions 46"
+    },
+    {
+      "trial_id": "emotions_46/EDITED/Afraid Low Intensity/SF4_cut.mp4",
+      "stimulus_path": "emotions 46/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Afraid Low Intensity/SF4_cut.mp4",
+      "correct_label": "Afraid Low Intensity",
+      "label": "Afraid Low Intensity",
+      "edition": "EDITED",
+      "pack": "emotions 46"
+    },
+    {
+      "trial_id": "emotions_46/EDITED/Disappointed/CF9v1_cut.mp4",
+      "stimulus_path": "emotions 46/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Disappointed/CF9v1_cut.mp4",
+      "correct_label": "Disappointed",
+      "label": "Disappointed",
+      "edition": "EDITED",
+      "pack": "emotions 46"
+    },
+    {
+      "trial_id": "emotions_46/EDITED/Disappointed/IF9_cut.mp4",
+      "stimulus_path": "emotions 46/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Disappointed/IF9_cut.mp4",
+      "correct_label": "Disappointed",
+      "label": "Disappointed",
+      "edition": "EDITED",
+      "pack": "emotions 46"
+    },
+    {
+      "trial_id": "emotions_51/EDITED/Angry Low Intensity/HF18_cut.mp4",
+      "stimulus_path": "emotions 51/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Angry Low Intensity/HF18_cut.mp4",
+      "correct_label": "Angry Low Intensity",
+      "label": "Angry Low Intensity",
+      "edition": "EDITED",
+      "pack": "emotions 51"
+    },
+    {
+      "trial_id": "emotions_51/EDITED/Bored/KF8_cut.mp4",
+      "stimulus_path": "emotions 51/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Bored/KF8_cut.mp4",
+      "correct_label": "Bored",
+      "label": "Bored",
+      "edition": "EDITED",
+      "pack": "emotions 51"
+    },
+    {
+      "trial_id": "emotions_51/EDITED/Disgusted Low Intensity/IF6_cut.mp4",
+      "stimulus_path": "emotions 51/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Disgusted Low Intensity/IF6_cut.mp4",
+      "correct_label": "Disgusted Low Intensity",
+      "label": "Disgusted Low Intensity",
+      "edition": "EDITED",
+      "pack": "emotions 51"
+    },
+    {
+      "trial_id": "emotions_51/EDITED/Disgusted Low Intensity/OF6v1_cut.mp4",
+      "stimulus_path": "emotions 51/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Disgusted Low Intensity/OF6v1_cut.mp4",
+      "correct_label": "Disgusted Low Intensity",
+      "label": "Disgusted Low Intensity",
+      "edition": "EDITED",
+      "pack": "emotions 51"
+    },
+    {
+      "trial_id": "emotions_52/EDITED/Disappointed/SF9 v2_cut.mp4",
+      "stimulus_path": "emotions 52/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Disappointed/SF9 v2_cut.mp4",
+      "correct_label": "Disappointed",
+      "label": "Disappointed",
+      "edition": "EDITED",
+      "pack": "emotions 52"
+    },
+    {
+      "trial_id": "emotions_53/EDITED/Afraid/OF3_cut.mp4",
+      "stimulus_path": "emotions 53/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Afraid/OF3_cut.mp4",
+      "correct_label": "Afraid",
+      "label": "Afraid",
+      "edition": "EDITED",
+      "pack": "emotions 53"
+    },
+    {
+      "trial_id": "emotions_54/EDITED/Disappointed/CF9v2_cut.mp4",
+      "stimulus_path": "emotions 54/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Disappointed/CF9v2_cut.mp4",
+      "correct_label": "Disappointed",
+      "label": "Disappointed",
+      "edition": "EDITED",
+      "pack": "emotions 54"
+    },
+    {
+      "trial_id": "emotions_57/EDITED/Disappointed/MF9_cut.mp4",
+      "stimulus_path": "emotions 57/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Disappointed/MF9_cut.mp4",
+      "correct_label": "Disappointed",
+      "label": "Disappointed",
+      "edition": "EDITED",
+      "pack": "emotions 57"
+    },
+    {
+      "trial_id": "emotions_59/EDITED/Angry Low Intensity/DF18_cut.mp4",
+      "stimulus_path": "emotions 59/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Angry Low Intensity/DF18_cut.mp4",
+      "correct_label": "Angry Low Intensity",
+      "label": "Angry Low Intensity",
+      "edition": "EDITED",
+      "pack": "emotions 59"
+    },
+    {
+      "trial_id": "emotions_68/EDITED/Afraid Low Intensity/GF4_cut.mp4",
+      "stimulus_path": "emotions 68/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Afraid Low Intensity/GF4_cut.mp4",
+      "correct_label": "Afraid Low Intensity",
+      "label": "Afraid Low Intensity",
+      "edition": "EDITED",
+      "pack": "emotions 68"
+    },
+    {
+      "trial_id": "emotions_68/EDITED/Bored/IF8_cut.mp4",
+      "stimulus_path": "emotions 68/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Bored/IF8_cut.mp4",
+      "correct_label": "Bored",
+      "label": "Bored",
+      "edition": "EDITED",
+      "pack": "emotions 68"
+    },
+    {
+      "trial_id": "emotions_68/EDITED/Bored/OF8_cut.mp4",
+      "stimulus_path": "emotions 68/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Bored/OF8_cut.mp4",
+      "correct_label": "Bored",
+      "label": "Bored",
+      "edition": "EDITED",
+      "pack": "emotions 68"
+    },
+    {
+      "trial_id": "emotions_68/EDITED/Bored/SF8_cut.mp4",
+      "stimulus_path": "emotions 68/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Bored/SF8_cut.mp4",
+      "correct_label": "Bored",
+      "label": "Bored",
+      "edition": "EDITED",
+      "pack": "emotions 68"
+    },
+    {
+      "trial_id": "emotions_68/EDITED/Disgusted Low Intensity/KF6_cut.mp4",
+      "stimulus_path": "emotions 68/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Disgusted Low Intensity/KF6_cut.mp4",
+      "correct_label": "Disgusted Low Intensity",
+      "label": "Disgusted Low Intensity",
+      "edition": "EDITED",
+      "pack": "emotions 68"
+    }
+  ]
+}

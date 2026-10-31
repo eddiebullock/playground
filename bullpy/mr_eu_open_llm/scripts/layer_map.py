@@ -44,7 +44,12 @@ def get_layer_indices(
     model_key: str,
     fractions: List[float] = None,
     model: object = None,
+    *,
+    all_layers: bool = False,
 ) -> Dict[str, int]:
+    if all_layers:
+        nl = n_layers(model_key, model)
+        return {f"layer_{i}": i for i in range(nl)}
     fractions = fractions if fractions is not None else list(LAYER_DEPTH_FRACTIONS)
     out: Dict[str, int] = {}
     for frac in fractions:

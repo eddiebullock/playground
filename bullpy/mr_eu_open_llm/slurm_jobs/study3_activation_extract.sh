@@ -26,13 +26,18 @@ set -euo pipefail
 PROJECT_ROOT=~/rds/hpc-work/study3
 ENV_ROOT=~/rds/hpc-work/study2
 MODEL="${MODEL:-qwen3vl}"
-CONDITION="${CONDITION:-baseline_${MODEL}_6afc}"
+ALL_LAYERS="${ALL_LAYERS:-0}"
+MAX_FRAMES="${MAX_FRAMES:-16}"
+if [[ "${ALL_LAYERS}" == "1" ]]; then
+  CONDITION="${CONDITION:-baseline_${MODEL}_6afc_all_layers_f${MAX_FRAMES}}"
+else
+  CONDITION="${CONDITION:-baseline_${MODEL}_6afc}"
+fi
 MODALITY="${MODALITY:-video_only}"
 MANIFEST="${MANIFEST:-data/eu_emotions_full_manifest.json}"
 DATA_ROOT="${DATA_ROOT:-data/eu_emotions}"
 HUMAN_OPTIONS="${HUMAN_OPTIONS:-data/eu_emotions_human_entropy.json}"
 MAX_TRIALS="${MAX_TRIALS:-}"
-MAX_FRAMES="${MAX_FRAMES:-16}"
 N_OPTIONS="${N_OPTIONS:-6}"
 SEED="${SEED:-42}"
 PROMPT_MODE="${PROMPT_MODE:-4afc}"
@@ -88,7 +93,10 @@ ARGS=(
 if [[ -n "${MAX_TRIALS}" ]]; then
   ARGS+=(--max_trials "${MAX_TRIALS}")
 fi
+if [[ "${ALL_LAYERS}" == "1" ]]; then
+  ARGS+=(--all_layers)
+fi
 
-echo "study3 activation extract: MODEL=${MODEL} CONDITION=${CONDITION} MAX_FRAMES=${MAX_FRAMES}"
+echo "study3 activation extract: MODEL=${MODEL} CONDITION=${CONDITION} MAX_FRAMES=${MAX_FRAMES} ALL_LAYERS=${ALL_LAYERS}"
 python -m scripts.extract_activations "${ARGS[@]}"
 echo "Done: ${OUT_DIR}/extract_meta.json"

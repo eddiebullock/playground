@@ -1,0 +1,30 @@
+{
+  "model": "molmo2",
+  "condition": "baseline_molmo2_6afc",
+  "modality": "video_only",
+  "prompt_mode": "4afc",
+  "pooling": "last_token",
+  "n_options": 6,
+  "n_layers": 32,
+  "layer_map": {
+    "frac_0p125": 4,
+    "frac_0p375": 12,
+    "frac_0p750": 23
+  },
+  "n_trials": 243,
+  "seed": 42,
+  "fps": 1.0,
+  "max_frames": 4,
+  "prompt": null,
+  "prompt_note": "per_trial_4afc",
+  "human_options_source": "data/eu_emotions_human_entropy.json",
+  "checkpoint": null,
+  "saved_layers": [
+    4,
+    12,
+    23
+  ],
+  "n_errors": 0,
+  "errors_head": [],
+  "smoke_trials_identical": false
+}

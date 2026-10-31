@@ -1,0 +1,4 @@
+layer,rsa_human_confusion_rho,rsa_human_confusion_p_perm,rsa_human_confusion_note,probe_human_entropy_rho,probe_confusability_rho,n_trials,rsa_difficulty_matched_rho_mean
+5,-0.018732275235250097,0.6431784107946027,raw full-set RSA; not difficulty-controlled,0.4825199680695299,0.5075481351628767,243,0.08574062461075198
+15,-0.01861894504156993,0.6101949025487257,raw full-set RSA; not difficulty-controlled,0.5013654935535176,0.56039375796256,243,0.08714029739374518
+31,0.003388503972684565,0.9235382308845578,raw full-set RSA; not difficulty-controlled,0.4413456645214175,0.4667045939735981,243,0.004319720704078066

@@ -1,0 +1,28 @@
+# EU-Emotion video-only 6AFC (study3 / paper-v2)
+dataset: eu_emotion
+n_options: 6
+chance: 0.16666666666666666
+seed: 42
+condition: video_only
+n_items: 243
+human_lookup: data/eu_emotions_human_entropy.json
+manifest: data/eu_emotions_full_manifest.json
+models:
+  - key: qwen3vl
+    hf_id: Qwen/Qwen3-VL-8B-Instruct
+    above_chance: true
+  - key: gemma4
+    hf_id: google/gemma-4-E4B-it
+    above_chance: true
+  - key: molmo2
+    hf_id: allenai/Molmo2-O-7B
+    above_chance: false
+    note: "48/243, one-sided binomial p=0.1155; do not interpret mech results as recognition"
+activations:
+  qwen3vl: results/activations/baseline_qwen3vl_6afc/qwen3vl
+  gemma4: results/activations/baseline_gemma4_6afc/gemma4
+  molmo2: results/activations/baseline_molmo2_6afc/molmo2
+eval:
+  qwen3vl: results/baseline/eu_emotions/qwen3vl/eval_v2_eu_emotions_qwen3vl_video_only_seed42.json
+  gemma4: results/baseline/eu_emotions/gemma4/eval_v2_eu_emotions_gemma4_video_only_seed42.json
+  molmo2: results/baseline/eu_emotions/molmo2/eval_v2_eu_emotions_molmo2_video_only_seed42.json

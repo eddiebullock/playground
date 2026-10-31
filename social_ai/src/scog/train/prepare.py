@@ -203,6 +203,13 @@ def ensure_model(dest: Path, model_id: str) -> None:
     print("model_downloaded")
 
 
+def headroom_requirement(model_ready: bool, data_ready: bool) -> tuple[float, int]:
+    """The large reserve is for the checkpoint download. A resume only writes the MMLU list."""
+    if model_ready and data_ready:
+        return (1.0, 2000)
+    return (30.0, 80000)
+
+
 def main() -> None:
     csv_path = os.environ.get("C4_CSV", "")
     out_root = os.environ.get("A2_ROOT", "")
@@ -210,10 +217,13 @@ def main() -> None:
     model_dir = os.environ.get("A2_MODEL", "")
     if not csv_path or not out_root or not model_dir:
         raise RuntimeError("C4_CSV, A2_ROOT and A2_MODEL must be set")
-    quota_headroom(30, 80000)
-    ensure_model(Path(model_dir), model_id)
+    model_path = Path(model_dir)
+    manifest_path = Path(out_root) / "data" / "manifest.json"
+    quota_headroom(
+        *headroom_requirement(model_path.joinpath("config.json").is_file(), manifest_path.is_file())
+    )
+    ensure_model(model_path, model_id)
     destination = Path(out_root) / "data"
-    manifest_path = destination / "manifest.json"
     if manifest_path.is_file():
         print("data_manifest_exists")
     else:
