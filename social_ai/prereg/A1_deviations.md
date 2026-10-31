@@ -15,3 +15,6 @@ The exploratory manifest build stopped on a drawn profile with no age, sex, educ
 
 ## 2026-10-29, same quota as Study A2
 A later quota check showed about 34 GB free. Study A2's model files and the shared environment account for the drop. The exploratory job still downloads only `Qwen/Qwen3-8B`. It starts when the remainder can hold that checkpoint and the A1 environment, and it does not remove A2 files.
+
+## 2026-10-31, exploratory chunks queued
+The manifest has 860 prompts. Generation is 29 sequential one-GPU chunks of 30 new prompts, each limited to one hour, resuming the same JSONL. A lowest-priority submission waited through 30 Oct without a GPU, so this chain uses the normal GPU queue. It does not use the interactive queue. No completions had been written by late morning UK on 31 Oct. Hypothesis statements are unchanged.
