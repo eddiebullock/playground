@@ -61,17 +61,27 @@ def encode_example(tokenizer, prompt: str, answer: str, max_length: int) -> dict
     return {"input_ids": input_ids, "labels": labels}
 
 
+def _cpu_byte(state):
+    import torch
+
+    tensor = state.detach() if isinstance(state, torch.Tensor) else torch.as_tensor(state)
+    tensor = tensor.to(device="cpu", dtype=torch.uint8).contiguous()
+    if tensor.dtype != torch.uint8 or tensor.device.type != "cpu":
+        raise RuntimeError("RNG state must be a CPU byte tensor")
+    return tensor
+
+
 def capture_rng(order_gen) -> dict:
     import torch
 
     payload = {
         "python": random.getstate(),
         "numpy": np.random.get_state(),
-        "torch_cpu": torch.get_rng_state(),
-        "order_gen": order_gen.get_state(),
+        "torch_cpu": _cpu_byte(torch.get_rng_state()),
+        "order_gen": _cpu_byte(order_gen.get_state()),
     }
     if torch.cuda.is_available():
-        payload["cuda"] = [state.detach().to("cpu") for state in torch.cuda.get_rng_state_all()]
+        payload["cuda"] = [_cpu_byte(state) for state in torch.cuda.get_rng_state_all()]
     return payload
 
 
@@ -80,10 +90,12 @@ def restore_rng(payload: dict, order_gen) -> None:
 
     random.setstate(payload["python"])
     np.random.set_state(payload["numpy"])
-    torch.set_rng_state(payload["torch_cpu"])
-    order_gen.set_state(payload["order_gen"])
+    # get_rng_state returns a CPU byte tensor. Moving it onto the GPU makes
+    # set_state reject it with "RNG state must be a torch.ByteTensor".
+    torch.set_rng_state(_cpu_byte(payload["torch_cpu"]))
+    order_gen.set_state(_cpu_byte(payload["order_gen"]))
     if "cuda" in payload and torch.cuda.is_available():
-        torch.cuda.set_rng_state_all([state.to("cuda") for state in payload["cuda"]])
+        torch.cuda.set_rng_state_all([_cpu_byte(state) for state in payload["cuda"]])
 
 
 def _batch(tokenizer, features: list[dict], device):
