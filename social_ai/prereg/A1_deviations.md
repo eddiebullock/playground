@@ -18,3 +18,6 @@ A later quota check showed about 34 GB free. Study A2's model files and the shar
 
 ## 2026-10-31, exploratory chunks queued
 The manifest has 860 prompts. Generation is 29 sequential one-GPU chunks of 30 new prompts, each limited to one hour, resuming the same JSONL. A lowest-priority submission waited through 30 Oct without a GPU, so this chain uses the normal GPU queue. It does not use the interactive queue. No completions had been written by late morning UK on 31 Oct. Hypothesis statements are unchanged.
+
+## 2026-11-01, first sixty prompts
+Two chunks have finished. All 60 stored completions are complete, and each has 40 parsed items. They are autistic profiles: 30 in condition 2 and 30 in condition 3. 800 prompts remain, in 27 queued chunks on the normal GPU queue. Hypothesis statements are unchanged.
