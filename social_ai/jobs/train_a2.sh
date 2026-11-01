@@ -30,6 +30,20 @@ if [[ -f "${A2_RUN_DIR}/COMPLETE" ]]; then
   exit 0
 fi
 
+# Queued chunks keep the cap they were submitted with. A higher cap in the
+# config applies on the next start, so the chain can reach epoch 2.
+cfg_max="$(python3 - "${ROOT}/configs/a2_grid.json" "${A2_SPLIT}" << 'PY'
+import json, sys
+grid = json.loads(open(sys.argv[1], encoding="utf-8").read())
+key = "max_chunks_exploratory" if sys.argv[2] == "exploratory" else "max_chunks_confirmatory"
+print(int(grid[key]))
+PY
+)"
+if (( cfg_max > A2_MAX_CHUNK )); then
+  echo "chunk_cap ${A2_MAX_CHUNK} -> ${cfg_max}"
+  A2_MAX_CHUNK="${cfg_max}"
+fi
+
 NEXT_JOB=""
 NEXT=$((A2_CHUNK + 1))
 if (( NEXT <= A2_MAX_CHUNK )); then
