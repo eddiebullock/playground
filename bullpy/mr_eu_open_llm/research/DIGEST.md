@@ -2,6 +2,10 @@
 
 One entry per working day. User-facing; keep to 5–10 lines.
 
+## 2026-11-02 11:10 Europe/London — Branch B locked
+
+All-layer last-token extracts finished (Qwen 36, Gemma 42, Molmo 32 layers; n = 243). Official Phase 2 gate **locks Branch B**: no layer has Holm p < 0.01. Peak grouped T1 ρ is still high (Qwen L34 0.47, Gemma L2 0.49) with raw p_perm = 0.001; Holm floors are 0.036 / 0.042 because n_perm = 1000 cannot beat 0.01 across that many layers. Rule not retuned. Paper is above-chance, non-human-like outputs, mechanistic map, entanglement, generalisation. Phase 4 off. Ablation / f16 extract still queued for 00:25 Europe/London tomorrow. Results draft and ρ-vs-layer figure written from the locked dump.
+
 ## 2026-10-30 14:47 Europe/London — Phase 2 exploratory gate
 
 Confirmatory protocol on the 3-layer last-token cache (not locked). Would-be **Branch A**: Qwen L26 grouped ρ = 0.44 (p_Holm = 0.003) beats the stimulus baseline by 0.30; Gemma L15 ρ = 0.33 also passes. Molmo layers pass the statistics but Molmo is at chance, so not H1. Category-residual ρ is often negative (between-category signal); the pre-registered check is two-sided and was not retuned. H2 holds: output-entropy vs human-entropy CIs all include 0. Phase 5: 1−p_target vs entropy ρ = 0.954. GPU jobs 39709579–84 still Priority.

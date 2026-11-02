@@ -119,4 +119,6 @@ Seed 42 unless a procedure specifies otherwise. Bootstrap ≥ 2,000 item resampl
 
 ## Deviations
 
-*(none at freeze)*
+### 2026-11-02 — Holm floor with n_perm = 1000 and all layers
+
+The gate used the frozen rule (Holm p < 0.01 across layers of one model; ≥ 1,000 T1 shuffles). All-layer extracts have 36 / 42 / 32 last-token layers. Minimum permutation p is 1/1001, so the Holm floor is n_layers/1001 (0.036 / 0.042 / 0.032), all above 0.01. No layer can pass check 1 at this n_perm. The rule was **not** retuned and n_perm was **not** increased after seeing the result. Branch B is locked. The floor is a limitation, not a silent rewrite of H1.

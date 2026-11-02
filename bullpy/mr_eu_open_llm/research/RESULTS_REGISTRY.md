@@ -40,10 +40,18 @@ Phase 0 snapshot commit: `2e2af355a4c4c776d2b9675aa4a5b55c56fc44c8` (`p0-locate-
 | Phase 2 Qwen L26 grouped T1 ρ | 0.440, boot CI [0.317, 0.540], p_Holm = 0.003 | verified | `paper_v2.probe` | `research/reproduction/phase2_gate.json` | exploratory 3-layer cache; passes gate |
 | Phase 2 Gemma L15 grouped T1 ρ | 0.328, boot CI [0.200, 0.442], p_Holm = 0.003 | verified | same | same | exploratory; passes gate |
 | Phase 2 stimulus baseline T1 ρ | 0.138 | verified | same | same | actor + duration/luminance/motion |
-| Phase 2 would-be branch | A (not locked) | verified | same | same | Molmo excluded from H1 |
+| Phase 2 would-be branch (3-layer) | A (not locked) | verified | same | same | superseded by all-layer lock |
 | H2 output entropy CIs include 0 | Qwen [−0.121, 0.120]; Gemma [−0.013, 0.235]; Molmo [−0.154, 0.097] | verified | `paper_v2.behaviour` | `research/reproduction/behaviour_summary.json` | confirmatory H2 |
+| Official branch | **B** | verified | `paper_v2.probe` all-layer | `research/reproduction/phase2_gate_all_layers.json` | locked 2026-11-02; Holm floor |
+| All-layer Qwen peak grouped T1 ρ | L34 0.471, p_perm = 0.001, p_Holm = 0.036 | verified | jobs 39709580 / 39712190 | same | 36 layers; 20 fail only Holm |
+| All-layer Gemma peak grouped T1 ρ | L2 0.492, p_perm = 0.001, p_Holm = 0.042 | verified | jobs 39709581 / 39712191 | same | 42 layers |
+| All-layer Molmo peak grouped T1 ρ | L22 0.518, p_perm = 0.001, p_Holm = 0.032 | verified | jobs 39709582 / 39712192 | same | at chance; completeness |
+| Extract completeness | Qwen 36/36, Gemma 42/42, Molmo 32/32 npy; 0 errors | verified | extract_meta on CSD3 | HPC `baseline_*_6afc_all_layers_f4` | last_token, max_frames=4 |
+| Qwen layers failing only Holm | 20 / 36 | verified | `paper_v2.probe` gate flags | `research/reproduction/phase2_all_layers_summary.csv` `holm_only_fail` | other four checks pass |
+| Phase 2 grouped T1 vs layer figure | `research/figures/phase2_grouped_t1_rho.png` | verified | `research/scripts/plot_phase2_all_layers.py` | same PNG | filled markers = Holm-only fail |
 
 Dump of the Phase 0 recompute: `research/reproduction/phase0_numbers.json`.
-Phase 2 dump: `research/reproduction/phase2_gate.json`.
+Phase 2 exploratory dump: `research/reproduction/phase2_gate.json`.
+Official Phase 2 dump: `research/reproduction/phase2_gate_all_layers.json`.
 Phase 5 dump: `research/reproduction/phase5_entanglement.json`.
 Stimulus features (HPC job 39709870): `research/reproduction/stimulus_features.json` (243/243 ok).
