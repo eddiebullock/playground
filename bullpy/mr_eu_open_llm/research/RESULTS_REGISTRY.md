@@ -49,6 +49,8 @@ Phase 0 snapshot commit: `2e2af355a4c4c776d2b9675aa4a5b55c56fc44c8` (`p0-locate-
 | Extract completeness | Qwen 36/36, Gemma 42/42, Molmo 32/32 npy; 0 errors | verified | extract_meta on CSD3 | HPC `baseline_*_6afc_all_layers_f4` | last_token, max_frames=4 |
 | Qwen layers failing only Holm | 20 / 36 | verified | `paper_v2.probe` gate flags | `research/reproduction/phase2_all_layers_summary.csv` `holm_only_fail` | other four checks pass |
 | Phase 2 grouped T1 vs layer figure | `research/figures/phase2_grouped_t1_rho.png` | verified | `research/scripts/plot_phase2_all_layers.py` | same PNG | filled markers = Holm-only fail |
+| LOO vs grouped T1 figure | `research/figures/phase2_loo_vs_grouped.png` | verified | `research/scripts/plot_phase2_loo_vs_grouped.py` | same PNG | LOO > grouped at every layer |
+| Pilot n=36 ablation flips recomputed | 5 / 180 | verified | `paper_v2.causal` | `research/reproduction/phase3_pilot_ablation.json` | entropy 0, bored 1, disappointed 1, interested 2, random 1 |
 
 Dump of the Phase 0 recompute: `research/reproduction/phase0_numbers.json`.
 Phase 2 exploratory dump: `research/reproduction/phase2_gate.json`.

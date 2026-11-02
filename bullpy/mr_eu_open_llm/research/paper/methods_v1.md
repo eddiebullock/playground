@@ -18,7 +18,7 @@ Ridge, α by GCV inside each training fold. Outer loops: leave-one-out and leave
 
 Branch A if an above-chance model has a layer with T1 grouped permutation p_Holm < 0.01, Δρ vs stimulus ≥ 0.10 with CI excluding 0, and both residual CIs excluding 0. Otherwise Branch B. The 3-layer last-token cache is exploratory and does not lock the branch.
 
-**Locked 2026-11-02: Branch B** (`research/reproduction/phase2_gate_all_layers.json`). All last-token layers, n_perm = 1000. Holm p never fell below 0.01; the permutation floor is n_layers/1001. The rule was not retuned. Phase 4 is omitted. Phase 3 (patching, label-subspace positive control, entropy erasure, full-N ablation) still runs. Results draft: `research/paper/results_v1.md`.
+**Locked 2026-11-02: Branch B** (`research/reproduction/phase2_gate_all_layers.json`). All last-token layers, n_perm = 1000. Holm p never fell below 0.01; the permutation floor is n_layers/1001. The rule was not retuned. Phase 4 is omitted. Phase 3 (patching, label-subspace positive control, entropy erasure, full-N ablation) still runs. Drafts: `research/paper/intro_v1.md`, `results_v1.md`, `discussion_v1.md`.
 
 ## Entanglement
 
