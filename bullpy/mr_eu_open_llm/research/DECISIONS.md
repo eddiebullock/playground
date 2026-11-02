@@ -65,6 +65,12 @@ Non-trivial decisions. Date, decision, alternatives, why. Do not rewrite history
 - **LOO > grouped** (Qwen L4 0.39 vs 0.19): actor leakage is real; grouped CV is the right gate statistic.
 - **Why not lock:** Preregistration: “Pilot 3-layer last-token probes are exploratory and do not decide the branch.” Holm over 3 layers is more lenient than Holm over all layers.
 
+## 2026-11-02 — Official Phase 2 gate locks Branch B
+
+- **Decision:** Lock **Branch B**. Do not raise n_perm, switch to BH-FDR, or shrink the layer family to recover Branch A.
+- **Numbers:** All-layer last-token probes, jobs 39712190–92 after extracts 39709580–82. Qwen 36 layers, peak grouped T1 ρ = 0.471 at L34, raw p_perm = 0.001, p_Holm = 0.036. Gemma 42 layers, peak ρ = 0.492 at L2, p_Holm = 0.042. Zero layers with p_Holm < 0.01. Twenty Qwen layers fail *only* the Holm check (the other four gate checks pass). Molmo remains below chance. File: `research/reproduction/phase2_gate_all_layers.json`.
+- **Why:** Preregistration forbids retuning after seeing the all-layer result. The 3-layer would-be A was exploratory (Holm over three tests). Paper is: above-chance, non-human-like output entropy, a mechanistic map, entanglement methods, generalisation. Phase 4 (readout/steering) is off.
+
 ## 2026-10-30 — Phase 5: 1−p_target and human entropy are almost the same target
 
 - **Decision:** Treat the two scalar targets as entangled by construction. Spearman ρ(1−p_target, human entropy) = 0.954 on the 243 EU items. Simulated probes with that correlation have cosine ≈ 0.95; observed entropy vs confusability probe cosines are 0.78–0.83, i.e. *below* the Gaussian null, not above it. Partial RSA controlling an entropy-difference RDM stays near the raw RSA (still ~0).

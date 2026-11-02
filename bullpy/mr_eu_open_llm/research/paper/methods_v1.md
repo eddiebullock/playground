@@ -18,6 +18,8 @@ Ridge, α by GCV inside each training fold. Outer loops: leave-one-out and leave
 
 Branch A if an above-chance model has a layer with T1 grouped permutation p_Holm < 0.01, Δρ vs stimulus ≥ 0.10 with CI excluding 0, and both residual CIs excluding 0. Otherwise Branch B. The 3-layer last-token cache is exploratory and does not lock the branch.
 
+**Locked 2026-11-02: Branch B** (`research/reproduction/phase2_gate_all_layers.json`). All last-token layers, n_perm = 1000. Holm p never fell below 0.01; the permutation floor is n_layers/1001. The rule was not retuned. Phase 4 is omitted. Phase 3 (patching, label-subspace positive control, entropy erasure, full-N ablation) still runs. Results draft: `research/paper/results_v1.md`.
+
 ## Entanglement
 
 Report ρ(1−p_target, human entropy). Null: simulate target pairs with that correlation and record probe-direction cosine. Partial RSA residualises RDM upper triangles on an entropy-difference RDM.
@@ -25,3 +27,7 @@ Report ρ(1−p_target, human entropy). Null: simulate target pairs with that co
 ## Causal (Phase 3, both branches)
 
 Qwen3-VL first, all 243 items: patching heatmap, label-subspace positive control, human-entropy erasure vs ≥ 20 matched-rank random controls, then the L4 mean-projection ablation on the full set (pilot was n = 36).
+
+## Paper shape under Branch B
+
+Above-chance 6AFC (Qwen, Gemma; Molmo at chance). Output entropy does not track human entropy. Linear probes show large grouped ρ that does not survive Holm at the pre-registered n_perm. Methods: actor-grouped CV, stimulus and residual baselines, entanglement null, difficulty-matched RSA. Generalisation (scale, MRMET, CREMA-D) remains. No output-alignment / steering chapter.
