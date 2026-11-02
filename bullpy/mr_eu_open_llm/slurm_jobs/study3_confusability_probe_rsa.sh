@@ -2,15 +2,18 @@
 #SBATCH -J s3_mech_cpu
 #SBATCH -A BARON-COHEN-SL3-CPU
 #SBATCH -p icelake
-#SBATCH --time=00:30:00
+#SBATCH --time=08:00:00
 #SBATCH --cpus-per-task=4
-#SBATCH --mem=16G
+#SBATCH --mem=32G
 #SBATCH -o logs/study3_mech_%x_%j.out
 #SBATCH -e logs/study3_mech_%x_%j.err
 #
 # Build human confusion RDM (if missing) + confusability RSA/probes for one model.
+# Default OUT keeps the 3-layer file. All-layer extracts write a tagged file.
 #
 #   MODEL=qwen3vl sbatch slurm_jobs/study3_confusability_probe_rsa.sh
+#   MODEL=qwen3vl CONDITION=baseline_qwen3vl_6afc_all_layers_f4 TAG=all_layers \
+#     sbatch -J s3_rsa_qwen_all slurm_jobs/study3_confusability_probe_rsa.sh
 
 set -euo pipefail
 
@@ -19,7 +22,13 @@ ENV_ROOT=~/rds/hpc-work/study2
 ENV_NAME="${ENV_NAME:-mr_eu_open_llm}"
 MODEL="${MODEL:-qwen3vl}"
 CONDITION="${CONDITION:-baseline_${MODEL}_6afc}"
+TAG="${TAG:-}"
 N_PERM="${N_PERM:-2000}"
+if [[ -n "${TAG}" ]]; then
+  OUT="${OUT:-results/mech/${MODEL}_confusability_probe_rsa_${TAG}.json}"
+else
+  OUT="${OUT:-results/mech/${MODEL}_confusability_probe_rsa.json}"
+fi
 
 module load miniconda || module load miniconda3 || true
 export CONDA_ENVS_PATH="${ENV_ROOT}/conda_envs"
@@ -50,7 +59,7 @@ fi
 python -m scripts.confusability_probe_rsa \
   --model "${MODEL}" \
   --activations_dir "${ACT_DIR}" \
-  --out "results/mech/${MODEL}_confusability_probe_rsa.json" \
+  --out "${OUT}" \
   --n_perm "${N_PERM}"
 
 echo "Done."

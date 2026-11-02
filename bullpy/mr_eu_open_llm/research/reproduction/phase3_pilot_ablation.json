@@ -1,0 +1,87 @@
+{
+  "axes": {
+    "entropy": {
+      "flip_examples": [],
+      "mean_delta_accuracy": 0.0,
+      "mean_delta_confusion_rate": 0.0,
+      "n_flips": 0,
+      "n_trials": 36
+    },
+    "pair_bored_unfriendly": {
+      "flip_examples": [
+        {
+          "from": "Happy",
+          "label": "Hurt",
+          "to": "None of the above",
+          "trial_id": "emotions_4/EDITED/Hurt/MF10_cut.mp4"
+        }
+      ],
+      "mean_delta_accuracy": 0.0,
+      "mean_delta_confusion_rate": 0.0,
+      "n_flips": 1,
+      "n_trials": 36
+    },
+    "pair_disappointed_worried": {
+      "flip_examples": [
+        {
+          "from": "Happy",
+          "label": "Hurt",
+          "to": "None of the above",
+          "trial_id": "emotions_4/EDITED/Hurt/MF10_cut.mp4"
+        }
+      ],
+      "mean_delta_accuracy": 0.0,
+      "mean_delta_confusion_rate": 0.0,
+      "n_flips": 1,
+      "n_trials": 36
+    },
+    "pair_interested_kind": {
+      "flip_examples": [
+        {
+          "from": "Frustrated",
+          "label": "Kind",
+          "to": "None of the above",
+          "trial_id": "emotions_33/EDITED/Kind/NF24_cut.mp4"
+        },
+        {
+          "from": "Happy",
+          "label": "Hurt",
+          "to": "None of the above",
+          "trial_id": "emotions_4/EDITED/Hurt/MF10_cut.mp4"
+        }
+      ],
+      "mean_delta_accuracy": 0.0,
+      "mean_delta_confusion_rate": 0.0,
+      "n_flips": 2,
+      "n_trials": 36
+    },
+    "random": {
+      "flip_examples": [
+        {
+          "from": "Happy",
+          "label": "Hurt",
+          "to": "None of the above",
+          "trial_id": "emotions_4/EDITED/Hurt/MF10_cut.mp4"
+        }
+      ],
+      "mean_delta_accuracy": 0.0,
+      "mean_delta_confusion_rate": 0.0,
+      "n_flips": 1,
+      "n_trials": 36
+    }
+  },
+  "flip_rate": 0.027777777777777776,
+  "flips_by_axis": {
+    "entropy": 0,
+    "pair_bored_unfriendly": 1,
+    "pair_disappointed_worried": 1,
+    "pair_interested_kind": 2,
+    "random": 1
+  },
+  "n_axes": 5,
+  "n_axis_trials": 180,
+  "n_flips": 5,
+  "n_trials": 36,
+  "nonselective": true,
+  "source": "/Users/eb2007/playground/bullpy/mr_eu_open_llm/results/mech/pilot_n36/ablate_trials_qwen3vl_layer4.csv"
+}

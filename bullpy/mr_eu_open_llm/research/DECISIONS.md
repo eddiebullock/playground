@@ -76,6 +76,11 @@ Non-trivial decisions. Date, decision, alternatives, why. Do not rewrite history
 - **Decision:** Treat the two scalar targets as entangled by construction. Spearman ρ(1−p_target, human entropy) = 0.954 on the 243 EU items. Simulated probes with that correlation have cosine ≈ 0.95; observed entropy vs confusability probe cosines are 0.78–0.83, i.e. *below* the Gaussian null, not above it. Partial RSA controlling an entropy-difference RDM stays near the raw RSA (still ~0).
 - **Why:** Numbers from `research/reproduction/phase5_entanglement.json` (n_sim = 100, Ridge α = 10). This is H4, not a reason to drop T1; it is a reason T2 cannot be an independent discovery.
 
+## 2026-11-02 — All-layer RSA on CPU; do not overwrite the 3-layer file
+
+- **Decision:** Queue icelake RSA/probe jobs on `baseline_*_6afc_all_layers_f4` writing `results/mech/{model}_confusability_probe_rsa_all_layers.json`. Leave the 3-layer `*_confusability_probe_rsa.json` untouched. Exploratory (prereg).
+- **Why:** All-layer last-token caches are on disk; GPU ablation is still Priority-bound. Difficulty-matched RSA is in the Branch B methods list and can run on CPU without delaying A1/A2/CAS.
+
 ## 2026-10-30 — Do not queue extra GPU option-order jobs yet
 
 - **Decision:** Land the option-order interface and slurm script; do not `sbatch` them while 39709579–39709584 are pending.
