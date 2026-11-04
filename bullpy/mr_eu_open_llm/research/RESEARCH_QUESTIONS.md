@@ -55,7 +55,7 @@ No human data will be collected. Every human comparison uses existing data, and 
 | Snoek AU data | Trial-level judgements of randomised action units, including bored, confused, interested, thinking (conversational set n = 20 per group) | Causal on the human side, on avatars | RQ1, RQ2 predictions | Open, CC BY 4.0; downloaded |
 | EU-Emotion norms | Item-level option distributions on the clips the models see | Observational, complex states, fixed options | RQ1, RQ4 | Held |
 | CREMA-D | Per-clip face-only votes; all clips share one option set; 91 actors | Observational, basic emotions | RQ1, RQ5 | Ratings public; videos need a registration form |
-| RMET and MRMET open data | Per-person item selections | Observational, eyes | RQ4 | Workbooks open; stimuli need a form |
+| RMET and MRMET open data | Per-person item selections | Observational, eyes | RQ4 | Full RMET access held; MRMET workbooks open |
 | Published experiments | Direction of effects (speed, adaptation, gaze, composites) | Causal, other stimuli | RQ2 predictions | Literature |
 
 **Rules that keep this robust**
