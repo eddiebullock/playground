@@ -1,0 +1,338 @@
+{
+ "au_csv": "research/reproduction/eu_au_measures.csv",
+ "spec": "within",
+ "stat": "mean",
+ "n_boot": 2000,
+ "weak_target_labels": [
+  "Kind",
+  "Unfriendly",
+  "Jealous"
+ ],
+ "note": "Observational on both sides. Primary cue set is the eight AUs both detectors measure.",
+ "detector_agreement": {
+  "all": {
+   "AU01": {
+    "n_clips": 243,
+    "pearson": 0.2496,
+    "spearman": 0.2624,
+    "pearson_within_category_actor": 0.5341,
+    "published_pcc_libreface": 0.63
+   },
+   "AU02": {
+    "n_clips": 243,
+    "pearson": 0.42,
+    "spearman": 0.4341,
+    "pearson_within_category_actor": 0.5459,
+    "published_pcc_libreface": 0.72
+   },
+   "AU04": {
+    "n_clips": 243,
+    "pearson": 0.6168,
+    "spearman": 0.6063,
+    "pearson_within_category_actor": 0.6355,
+    "published_pcc_libreface": 0.78
+   },
+   "AU06": {
+    "n_clips": 243,
+    "pearson": 0.5845,
+    "spearman": 0.5941,
+    "pearson_within_category_actor": 0.3721,
+    "published_pcc_libreface": 0.59
+   },
+   "AU09": {
+    "n_clips": 243,
+    "pearson": 0.5144,
+    "spearman": 0.5366,
+    "pearson_within_category_actor": 0.4107,
+    "published_pcc_libreface": 0.62
+   },
+   "AU12": {
+    "n_clips": 243,
+    "pearson": 0.7704,
+    "spearman": 0.6415,
+    "pearson_within_category_actor": 0.4822,
+    "published_pcc_libreface": 0.85
+   },
+   "AU25": {
+    "n_clips": 243,
+    "pearson": 0.8053,
+    "spearman": 0.7997,
+    "pearson_within_category_actor": 0.7151,
+    "published_pcc_libreface": 0.94
+   },
+   "AU26": {
+    "n_clips": 243,
+    "pearson": 0.6607,
+    "spearman": 0.6746,
+    "pearson_within_category_actor": 0.5761,
+    "published_pcc_libreface": 0.68
+   }
+  },
+  "model_1fps": {
+   "AU01": {
+    "n_clips": 243,
+    "pearson": 0.2201,
+    "spearman": 0.259,
+    "pearson_within_category_actor": 0.507,
+    "published_pcc_libreface": 0.63
+   },
+   "AU02": {
+    "n_clips": 243,
+    "pearson": 0.3682,
+    "spearman": 0.4737,
+    "pearson_within_category_actor": 0.5187,
+    "published_pcc_libreface": 0.72
+   },
+   "AU04": {
+    "n_clips": 243,
+    "pearson": 0.5664,
+    "spearman": 0.5969,
+    "pearson_within_category_actor": 0.5884,
+    "published_pcc_libreface": 0.78
+   },
+   "AU06": {
+    "n_clips": 243,
+    "pearson": 0.5517,
+    "spearman": 0.5939,
+    "pearson_within_category_actor": 0.3115,
+    "published_pcc_libreface": 0.59
+   },
+   "AU09": {
+    "n_clips": 243,
+    "pearson": 0.4819,
+    "spearman": 0.564,
+    "pearson_within_category_actor": 0.3266,
+    "published_pcc_libreface": 0.62
+   },
+   "AU12": {
+    "n_clips": 243,
+    "pearson": 0.7536,
+    "spearman": 0.6189,
+    "pearson_within_category_actor": 0.4633,
+    "published_pcc_libreface": 0.85
+   },
+   "AU25": {
+    "n_clips": 243,
+    "pearson": 0.7812,
+    "spearman": 0.768,
+    "pearson_within_category_actor": 0.7154,
+    "published_pcc_libreface": 0.94
+   },
+   "AU26": {
+    "n_clips": 243,
+    "pearson": 0.6208,
+    "spearman": 0.6319,
+    "pearson_within_category_actor": 0.6011,
+    "published_pcc_libreface": 0.68
+   }
+  }
+ },
+ "human": {
+  "all": {
+   "libreface": {
+    "lam": 10.0,
+    "lam_frozen": false,
+    "max_t_critical": 3.698,
+    "heldout_ce_cues": 0.258479,
+    "heldout_ce_category_only": 0.25958,
+    "heldout_gain": 0.00424,
+    "gain_per_actor": {
+     "B": 0.00223,
+     "C": 0.01446,
+     "D": 0.0047,
+     "E": -0.0088,
+     "F": 0.01823,
+     "G": -0.00039,
+     "H": 0.00613,
+     "I": -0.00307,
+     "J": 0.016,
+     "K": -3e-05,
+     "L": 0.00786,
+     "M": 0.01973,
+     "N": -0.00848,
+     "O": -0.01343,
+     "P": 0.00521,
+     "R": 0.00399,
+     "S": -0.00016
+    }
+   },
+   "openface3": {
+    "lam": 10.0,
+    "lam_frozen": false,
+    "max_t_critical": 3.574,
+    "heldout_ce_cues": 0.258419,
+    "heldout_ce_category_only": 0.25958,
+    "heldout_gain": 0.00447,
+    "gain_per_actor": {
+     "B": -0.00466,
+     "C": 0.00031,
+     "D": 0.00117,
+     "E": -0.00149,
+     "F": 0.01655,
+     "G": -0.01855,
+     "H": -0.00203,
+     "I": 0.01087,
+     "J": 0.01683,
+     "K": 0.00647,
+     "L": 0.00647,
+     "M": 0.0216,
+     "N": 0.00869,
+     "O": 0.01211,
+     "P": 0.00898,
+     "R": -0.0022,
+     "S": -0.00842
+    }
+   },
+   "composite": {
+    "lam": 10.0,
+    "lam_frozen": false,
+    "max_t_critical": 3.617,
+    "heldout_ce_cues": 0.258296,
+    "heldout_ce_category_only": 0.25958,
+    "heldout_gain": 0.00494,
+    "gain_per_actor": {
+     "B": -0.00249,
+     "C": 0.01437,
+     "D": 0.00316,
+     "E": -0.00472,
+     "F": 0.02408,
+     "G": -0.0116,
+     "H": -0.00176,
+     "I": 0.00637,
+     "J": 0.01918,
+     "K": 0.00381,
+     "L": 0.01107,
+     "M": 0.03117,
+     "N": 0.00433,
+     "O": 0.00222,
+     "P": 0.00799,
+     "R": 7e-05,
+     "S": -0.03024
+    }
+   }
+  },
+  "model_1fps": {
+   "libreface": {
+    "lam": 30.0,
+    "lam_frozen": false,
+    "max_t_critical": 3.547,
+    "heldout_ce_cues": 0.259512,
+    "heldout_ce_category_only": 0.25958,
+    "heldout_gain": 0.00026,
+    "gain_per_actor": {
+     "B": 0.00161,
+     "C": 0.00583,
+     "D": 0.00168,
+     "E": -0.00793,
+     "F": 0.00507,
+     "G": -0.00363,
+     "H": 0.00341,
+     "I": -0.00046,
+     "J": 0.00676,
+     "K": -0.00035,
+     "L": 0.00568,
+     "M": 0.01103,
+     "N": -0.00027,
+     "O": -0.01366,
+     "P": -0.01569,
+     "R": 0.00279,
+     "S": 0.00076
+    }
+   },
+   "openface3": {
+    "lam": 10.0,
+    "lam_frozen": false,
+    "max_t_critical": 3.635,
+    "heldout_ce_cues": 0.259285,
+    "heldout_ce_category_only": 0.25958,
+    "heldout_gain": 0.00113,
+    "gain_per_actor": {
+     "B": -0.00138,
+     "C": -0.00087,
+     "D": -0.00108,
+     "E": -0.00512,
+     "F": 0.01117,
+     "G": -0.01516,
+     "H": 0.00462,
+     "I": 0.00666,
+     "J": 0.00883,
+     "K": 0.00283,
+     "L": 0.00434,
+     "M": 0.01014,
+     "N": 0.00342,
+     "O": 0.00746,
+     "P": -0.00548,
+     "R": -0.00566,
+     "S": -0.00475
+    }
+   },
+   "composite": {
+    "lam": 10.0,
+    "lam_frozen": false,
+    "max_t_critical": 3.543,
+    "heldout_ce_cues": 0.25874,
+    "heldout_ce_category_only": 0.25958,
+    "heldout_gain": 0.00323,
+    "gain_per_actor": {
+     "B": -3e-05,
+     "C": 0.0085,
+     "D": 0.00128,
+     "E": -0.00567,
+     "F": 0.01412,
+     "G": -0.01094,
+     "H": 0.00489,
+     "I": 0.00921,
+     "J": 0.01277,
+     "K": -0.00029,
+     "L": 0.0116,
+     "M": 0.01573,
+     "N": 0.00423,
+     "O": 0.00341,
+     "P": -0.01228,
+     "R": -0.00067,
+     "S": -0.00159
+    }
+   }
+  },
+  "libreface_all_cues": {
+   "lam": 30.0,
+   "lam_frozen": false,
+   "max_t_critical": 3.734,
+   "heldout_ce_cues": 0.258756,
+   "heldout_ce_category_only": 0.25958,
+   "heldout_gain": 0.00317,
+   "gain_per_actor": {
+    "B": 0.00472,
+    "C": 0.01439,
+    "D": 0.00858,
+    "E": -0.00423,
+    "F": 0.01317,
+    "G": 0.00049,
+    "H": -6e-05,
+    "I": -0.00245,
+    "J": 0.01107,
+    "K": 0.00328,
+    "L": 0.00608,
+    "M": 0.01515,
+    "N": -0.01656,
+    "O": -0.00787,
+    "P": 0.00398,
+    "R": 0.00082,
+    "S": -0.00103
+   }
+  }
+ },
+ "verdict_counts": {
+  "all": {
+   "neither": 144,
+   "one_detector": 24,
+   "robust": 8
+  },
+  "model_1fps": {
+   "neither": 154,
+   "one_detector": 19,
+   "robust": 3
+  }
+ },
+ "human_matrix_all_vs_model_frames_pearson": 0.9535
+}

@@ -19,6 +19,8 @@ Test: amendment A1, real versus mismatch across five rotations. A model that fai
 Which facial cues (action units, gaze, head angle, dynamics) change the judgement of a given mental state, and do they have the same direction and relative weight in models as in humans?
 Test: compare the matrix of cue effects on each answer option in humans (randomised action units, Snoek data) with the same matrix in models, against a human noise ceiling.
 
+Unit of analysis on natural clips: AU families and whole-matrix pattern, not single AUs, because single-AU effects were not recoverable (DECISIONS 2026-11-04). Randomised Snoek data can still support single-AU estimates.
+
 **RQ2. Causal stimulus test: if you change the cue, does the judgement change the way a human's does?**
 Holding identity and everything else fixed, is a human-diagnostic cue necessary and sufficient to move a model's judgement, for example from happy to sad, and does the dose-response follow the human curve?
 Test: graded edits of one cue against a zero-delta edit through the same generator, with verified action units.

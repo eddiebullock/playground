@@ -125,3 +125,11 @@ Non-trivial decisions. Date, decision, alternatives, why. Do not rewrite history
 - **Decision:** `research/PREREG_A2_DRAFT.md` stays a draft. The blind prompt failed coverage on Gemma 4 (lexicon mass 2e-5 to 0.004 against a proposed 0.05), so the prompt must change. Gate B2 is not lowered to fit.
 - **Known deviation from Rule 2:** the 3-item smoke saw edited stimuli before predictions were committed. The draft discloses this and repeats the analysis without those items.
 
+## 2026-11-04 — RQ1 same-clip analysis moves to AU families and matrix pattern
+
+- **Decision:** Compare human and model cue use at AU-family level (brow raise AU01-02, brow lower AU04-09, smile AU06-12, mouth open AU25-26, others single) and by whole-matrix pattern. Single AU cells are exploratory. Written before any model matrix exists. Criteria were not loosened; the estimand changed because the old one is not identifiable.
+- **Why:** Recovery failed the stated criteria in every condition. Planted observers reached r = .39 to .64 with the oracle, .64 even with perfect detectors, because AU pairs are collinear within cells (r .68 to .74) and estimates shrink strongly. Prior-only observers stayed essentially null but narrowly missed both false-positive limits (.060 and .014). Pooled analysis without a category control is invalid (.257).
+- **Status of human results:** Provisional. 8 of 176 cells passed on both detectors, against about 3 expected from the null rate. Held-out gain over category alone is small: 0.49%.
+- **Consequence:** The family-level analysis needs its own recovery run before freezing. Rule 8 is unmet for AU15 and AU20, which have one detector. Saved outputs contain human results only.
+- **Disclosure:** While testing its loader, the job opened partial rotation files, for frame indices and a loader check. No saved output holds model values, but this was not a clean separation. RQ0 is computed only by the frozen script once all runs finish.
+
