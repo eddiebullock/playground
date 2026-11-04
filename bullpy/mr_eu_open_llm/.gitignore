@@ -103,3 +103,10 @@ research/logs/*
 
 # Snoek AU + emotion raw data (CC BY 4.0, re-download via DOI 10.21942/uva.21261885)
 data/external/snoek_au/
+
+# CREMA-D raw ratings (ODbL/DbCL, re-download per research/CREMA_D_PLAN.md); no videos on this machine
+data/external/crema_d/
+
+# `datasets/` above is meant for data, but it also hid this source package
+!src/paper_v2/datasets/
+!src/paper_v2/datasets/*.py

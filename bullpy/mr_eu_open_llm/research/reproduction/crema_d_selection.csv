@@ -1,0 +1,820 @@
+clip_id,actor_id,sentence,emotion,level,role,n_face,votes_A,votes_D,votes_F,votes_H,votes_N,votes_S,target_position,sex,age,race,ethnicity
+1001_IEO_HAP_LO,1001,IEO,H,LO,extra,10,0,0,0,9,1,0,5,Male,51,Caucasian,Not Hispanic
+1001_IOM_DIS_XX,1001,IOM,D,XX,base,9,4,5,0,0,0,0,3,Male,51,Caucasian,Not Hispanic
+1001_ITH_SAD_XX,1001,ITH,S,XX,extra,11,0,0,0,0,10,1,4,Male,51,Caucasian,Not Hispanic
+1001_ITS_NEU_XX,1001,ITS,N,XX,extra,8,0,0,0,0,8,0,5,Male,51,Caucasian,Not Hispanic
+1001_IWL_NEU_XX,1001,IWL,N,XX,base,11,0,1,0,2,8,0,1,Male,51,Caucasian,Not Hispanic
+1001_IWW_FEA_XX,1001,IWW,F,XX,base,11,6,2,2,0,1,0,0,Male,51,Caucasian,Not Hispanic
+1001_MTI_ANG_XX,1001,MTI,A,XX,base,11,3,0,0,0,6,2,1,Male,51,Caucasian,Not Hispanic
+1001_TAI_HAP_XX,1001,TAI,H,XX,base,10,0,0,0,9,1,0,2,Male,51,Caucasian,Not Hispanic
+1001_TSI_SAD_XX,1001,TSI,S,XX,base,10,1,1,1,0,3,4,3,Male,51,Caucasian,Not Hispanic
+1002_DFA_ANG_XX,1002,DFA,A,XX,base,10,9,1,0,0,0,0,2,Female,21,Caucasian,Not Hispanic
+1002_IEO_SAD_HI,1002,IEO,S,HI,base,10,0,0,0,0,9,1,3,Female,21,Caucasian,Not Hispanic
+1002_ITH_ANG_XX,1002,ITH,A,XX,extra,9,6,1,0,0,2,0,2,Female,21,Caucasian,Not Hispanic
+1002_ITS_DIS_XX,1002,ITS,D,XX,extra,9,1,8,0,0,0,0,2,Female,21,Caucasian,Not Hispanic
+1002_IWW_NEU_XX,1002,IWW,N,XX,base,10,0,0,2,1,7,0,3,Female,21,Caucasian,Not Hispanic
+1002_TAI_FEA_XX,1002,TAI,F,XX,extra,10,0,5,4,0,1,0,0,Female,21,Caucasian,Not Hispanic
+1002_TIE_FEA_XX,1002,TIE,F,XX,base,8,0,1,5,0,1,1,3,Female,21,Caucasian,Not Hispanic
+1002_TSI_HAP_XX,1002,TSI,H,XX,base,9,0,0,0,7,2,0,1,Female,21,Caucasian,Not Hispanic
+1002_WSI_DIS_XX,1002,WSI,D,XX,base,10,0,2,6,1,1,0,4,Female,21,Caucasian,Not Hispanic
+1003_DFA_NEU_XX,1003,DFA,N,XX,base,10,0,0,0,0,10,0,4,Female,21,Caucasian,Not Hispanic
+1003_IOM_FEA_XX,1003,IOM,F,XX,base,9,0,0,6,0,1,2,4,Female,21,Caucasian,Not Hispanic
+1003_ITH_HAP_XX,1003,ITH,H,XX,extra,10,0,0,0,10,0,0,1,Female,21,Caucasian,Not Hispanic
+1003_IWL_HAP_XX,1003,IWL,H,XX,base,10,0,0,0,10,0,0,1,Female,21,Caucasian,Not Hispanic
+1003_IWW_SAD_XX,1003,IWW,S,XX,extra,10,0,3,1,0,6,0,5,Female,21,Caucasian,Not Hispanic
+1003_MTI_DIS_XX,1003,MTI,D,XX,base,9,0,3,0,0,0,6,0,Female,21,Caucasian,Not Hispanic
+1003_TAI_NEU_XX,1003,TAI,N,XX,extra,10,0,1,0,1,8,0,2,Female,21,Caucasian,Not Hispanic
+1003_TIE_ANG_XX,1003,TIE,A,XX,base,11,4,1,1,4,1,0,2,Female,21,Caucasian,Not Hispanic
+1003_WSI_SAD_XX,1003,WSI,S,XX,base,10,0,0,1,1,3,5,3,Female,21,Caucasian,Not Hispanic
+1004_DFA_DIS_XX,1004,DFA,D,XX,base,9,0,2,2,0,0,5,5,Female,42,Caucasian,Not Hispanic
+1004_IEO_ANG_HI,1004,IEO,A,HI,base,10,9,0,0,0,1,0,1,Female,42,Caucasian,Not Hispanic
+1004_IOM_SAD_XX,1004,IOM,S,XX,base,10,0,0,1,0,2,7,4,Female,42,Caucasian,Not Hispanic
+1004_ITS_FEA_XX,1004,ITS,F,XX,base,10,0,1,8,0,0,1,1,Female,42,Caucasian,Not Hispanic
+1004_IWL_DIS_XX,1004,IWL,D,XX,extra,11,0,2,0,0,0,9,3,Female,42,Caucasian,Not Hispanic
+1004_MTI_NEU_XX,1004,MTI,N,XX,base,10,0,0,0,2,7,1,5,Female,42,Caucasian,Not Hispanic
+1004_TIE_HAP_XX,1004,TIE,H,XX,base,9,1,0,1,6,1,0,1,Female,42,Caucasian,Not Hispanic
+1004_TSI_ANG_XX,1004,TSI,A,XX,extra,10,8,0,1,0,1,0,1,Female,42,Caucasian,Not Hispanic
+1004_WSI_FEA_XX,1004,WSI,F,XX,extra,9,2,0,7,0,0,0,3,Female,42,Caucasian,Not Hispanic
+1005_DFA_FEA_XX,1005,DFA,F,XX,extra,8,1,0,4,0,3,0,3,Male,29,African American,Not Hispanic
+1005_IEO_DIS_MD,1005,IEO,D,MD,base,10,0,8,1,0,1,0,0,Male,29,African American,Not Hispanic
+1005_ITH_NEU_XX,1005,ITH,N,XX,base,10,0,0,0,0,9,1,2,Male,29,African American,Not Hispanic
+1005_IWL_SAD_XX,1005,IWL,S,XX,base,10,0,0,0,0,7,3,1,Male,29,African American,Not Hispanic
+1005_IWW_HAP_XX,1005,IWW,H,XX,base,10,0,0,1,4,5,0,0,Male,29,African American,Not Hispanic
+1005_MTI_FEA_XX,1005,MTI,F,XX,base,10,0,0,4,0,6,0,4,Male,29,African American,Not Hispanic
+1005_TAI_ANG_XX,1005,TAI,A,XX,extra,10,0,0,0,0,10,0,5,Male,29,African American,Not Hispanic
+1005_TSI_DIS_XX,1005,TSI,D,XX,extra,11,1,7,1,0,2,0,2,Male,29,African American,Not Hispanic
+1005_WSI_ANG_XX,1005,WSI,A,XX,base,9,1,1,1,2,4,0,2,Male,29,African American,Not Hispanic
+1006_DFA_HAP_XX,1006,DFA,H,XX,extra,8,0,0,0,7,1,0,5,Female,58,Caucasian,Not Hispanic
+1006_IEO_FEA_MD,1006,IEO,F,MD,base,10,0,0,3,0,1,6,5,Female,58,Caucasian,Not Hispanic
+1006_IOM_ANG_XX,1006,IOM,A,XX,base,10,8,0,0,0,1,1,5,Female,58,Caucasian,Not Hispanic
+1006_ITS_HAP_XX,1006,ITS,H,XX,base,9,0,1,0,7,1,0,3,Female,58,Caucasian,Not Hispanic
+1006_MTI_SAD_XX,1006,MTI,S,XX,base,9,0,1,0,0,0,8,0,Female,58,Caucasian,Not Hispanic
+1006_TAI_SAD_XX,1006,TAI,S,XX,extra,10,0,0,3,0,0,7,3,Female,58,Caucasian,Not Hispanic
+1006_TIE_DIS_XX,1006,TIE,D,XX,base,11,0,6,0,0,0,5,0,Female,58,Caucasian,Not Hispanic
+1006_TSI_NEU_XX,1006,TSI,N,XX,extra,10,1,1,0,0,8,0,4,Female,58,Caucasian,Not Hispanic
+1006_WSI_NEU_XX,1006,WSI,N,XX,base,10,0,0,0,0,9,1,0,Female,58,Caucasian,Not Hispanic
+1007_IOM_HAP_XX,1007,IOM,H,XX,base,8,0,2,0,5,0,1,3,Female,38,African American,Not Hispanic
+1007_ITH_DIS_XX,1007,ITH,D,XX,base,11,0,8,2,0,0,1,2,Female,38,African American,Not Hispanic
+1007_ITS_SAD_XX,1007,ITS,S,XX,base,8,0,4,0,0,0,4,3,Female,38,African American,Not Hispanic
+1007_IWL_ANG_XX,1007,IWL,A,XX,extra,10,4,5,0,0,1,0,1,Female,38,African American,Not Hispanic
+1007_IWL_FEA_XX,1007,IWL,F,XX,base,8,0,2,3,0,1,2,0,Female,38,African American,Not Hispanic
+1007_IWW_ANG_XX,1007,IWW,A,XX,base,10,5,1,0,0,4,0,2,Female,38,African American,Not Hispanic
+1007_TAI_DIS_XX,1007,TAI,D,XX,extra,10,0,8,0,0,0,2,4,Female,38,African American,Not Hispanic
+1007_TIE_NEU_XX,1007,TIE,N,XX,base,9,1,2,0,0,6,0,0,Female,38,African American,Not Hispanic
+1007_TSI_FEA_XX,1007,TSI,F,XX,extra,9,0,2,2,0,1,4,5,Female,38,African American,Not Hispanic
+1008_DFA_SAD_XX,1008,DFA,S,XX,extra,8,1,0,2,0,1,4,5,Female,46,Caucasian,Not Hispanic
+1008_IEO_HAP_MD,1008,IEO,H,MD,extra,10,0,0,0,10,0,0,0,Female,46,Caucasian,Not Hispanic
+1008_IEO_NEU_XX,1008,IEO,N,XX,extra,10,1,1,2,0,6,0,0,Female,46,Caucasian,Not Hispanic
+1008_IOM_NEU_XX,1008,IOM,N,XX,base,10,1,0,3,0,5,1,5,Female,46,Caucasian,Not Hispanic
+1008_ITH_FEA_XX,1008,ITH,F,XX,base,10,1,0,4,0,0,5,1,Female,46,Caucasian,Not Hispanic
+1008_ITS_ANG_XX,1008,ITS,A,XX,base,9,5,2,1,0,1,0,0,Female,46,Caucasian,Not Hispanic
+1008_IWW_DIS_XX,1008,IWW,D,XX,base,9,0,1,3,0,0,5,2,Female,46,Caucasian,Not Hispanic
+1008_MTI_HAP_XX,1008,MTI,H,XX,base,10,0,0,0,10,0,0,0,Female,46,Caucasian,Not Hispanic
+1008_TIE_SAD_XX,1008,TIE,S,XX,base,10,0,0,2,0,0,8,3,Female,46,Caucasian,Not Hispanic
+1009_DFA_ANG_XX,1009,DFA,A,XX,extra,9,8,1,0,0,0,0,4,Female,24,Caucasian,Not Hispanic
+1009_IOM_SAD_XX,1009,IOM,S,XX,base,10,2,2,0,0,3,3,2,Female,24,Caucasian,Not Hispanic
+1009_IWL_DIS_XX,1009,IWL,D,XX,base,10,1,5,1,0,0,3,2,Female,24,Caucasian,Not Hispanic
+1009_IWW_NEU_XX,1009,IWW,N,XX,base,10,1,0,0,3,5,1,1,Female,24,Caucasian,Not Hispanic
+1009_TAI_FEA_XX,1009,TAI,F,XX,extra,9,0,0,9,0,0,0,2,Female,24,Caucasian,Not Hispanic
+1009_TIE_DIS_XX,1009,TIE,D,XX,extra,10,0,5,0,0,0,5,1,Female,24,Caucasian,Not Hispanic
+1009_TSI_FEA_XX,1009,TSI,F,XX,base,9,0,0,9,0,0,0,0,Female,24,Caucasian,Not Hispanic
+1009_WSI_ANG_XX,1009,WSI,A,XX,base,10,10,0,0,0,0,0,3,Female,24,Caucasian,Not Hispanic
+1009_WSI_HAP_XX,1009,WSI,H,XX,base,9,0,0,0,8,1,0,0,Female,24,Caucasian,Not Hispanic
+1010_DFA_HAP_XX,1010,DFA,H,XX,base,10,0,0,0,10,0,0,2,Female,27,Caucasian,Not Hispanic
+1010_IEO_SAD_LO,1010,IEO,S,LO,base,10,0,1,0,0,7,2,3,Female,27,Caucasian,Not Hispanic
+1010_ITH_FEA_XX,1010,ITH,F,XX,base,10,8,1,1,0,0,0,1,Female,27,Caucasian,Not Hispanic
+1010_ITS_ANG_XX,1010,ITS,A,XX,base,11,7,3,0,0,1,0,3,Female,27,Caucasian,Not Hispanic
+1010_MTI_DIS_XX,1010,MTI,D,XX,base,10,3,7,0,0,0,0,3,Female,27,Caucasian,Not Hispanic
+1010_TAI_NEU_XX,1010,TAI,N,XX,base,10,0,0,0,1,8,1,1,Female,27,Caucasian,Not Hispanic
+1010_TIE_HAP_XX,1010,TIE,H,XX,extra,9,0,0,0,9,0,0,3,Female,27,Caucasian,Not Hispanic
+1010_TSI_NEU_XX,1010,TSI,N,XX,extra,10,0,0,0,5,5,0,1,Female,27,Caucasian,Not Hispanic
+1010_WSI_SAD_XX,1010,WSI,S,XX,extra,10,0,0,1,0,9,0,1,Female,27,Caucasian,Not Hispanic
+1011_DFA_SAD_XX,1011,DFA,S,XX,base,10,0,0,1,0,5,4,4,Male,32,Caucasian,Not Hispanic
+1011_IOM_HAP_XX,1011,IOM,H,XX,extra,10,0,0,0,9,1,0,2,Male,32,Caucasian,Not Hispanic
+1011_ITH_ANG_XX,1011,ITH,A,XX,base,9,5,1,0,0,3,0,2,Male,32,Caucasian,Not Hispanic
+1011_ITS_FEA_XX,1011,ITS,F,XX,base,10,0,1,3,0,3,3,5,Male,32,Caucasian,Not Hispanic
+1011_IWL_HAP_XX,1011,IWL,H,XX,base,10,0,0,0,10,0,0,5,Male,32,Caucasian,Not Hispanic
+1011_IWW_DIS_XX,1011,IWW,D,XX,base,10,1,8,0,0,1,0,3,Male,32,Caucasian,Not Hispanic
+1011_MTI_NEU_XX,1011,MTI,N,XX,base,9,0,0,0,1,8,0,4,Male,32,Caucasian,Not Hispanic
+1011_TIE_NEU_XX,1011,TIE,N,XX,extra,10,2,0,0,0,7,1,4,Male,32,Caucasian,Not Hispanic
+1011_TSI_SAD_XX,1011,TSI,S,XX,extra,9,0,0,1,0,5,3,2,Male,32,Caucasian,Not Hispanic
+1012_IEO_ANG_LO,1012,IEO,A,LO,base,10,2,2,0,1,4,1,0,Female,23,Caucasian,Not Hispanic
+1012_IOM_ANG_XX,1012,IOM,A,XX,extra,11,3,1,2,4,1,0,5,Female,23,Caucasian,Not Hispanic
+1012_ITH_DIS_XX,1012,ITH,D,XX,base,9,0,8,0,0,1,0,3,Female,23,Caucasian,Not Hispanic
+1012_ITS_NEU_XX,1012,ITS,N,XX,base,9,0,0,0,0,9,0,2,Female,23,Caucasian,Not Hispanic
+1012_IWL_FEA_XX,1012,IWL,F,XX,extra,11,0,1,10,0,0,0,1,Female,23,Caucasian,Not Hispanic
+1012_IWW_HAP_XX,1012,IWW,H,XX,base,10,0,0,0,10,0,0,3,Female,23,Caucasian,Not Hispanic
+1012_MTI_FEA_XX,1012,MTI,F,XX,base,10,1,0,7,0,0,2,0,Female,23,Caucasian,Not Hispanic
+1012_TAI_SAD_XX,1012,TAI,S,XX,base,10,0,0,3,0,1,6,3,Female,23,Caucasian,Not Hispanic
+1012_WSI_DIS_XX,1012,WSI,D,XX,extra,10,0,10,0,0,0,0,5,Female,23,Caucasian,Not Hispanic
+1013_DFA_NEU_XX,1013,DFA,N,XX,extra,10,0,0,1,0,9,0,2,Female,22,Caucasian,Hispanic
+1013_IEO_DIS_LO,1013,IEO,D,LO,base,10,0,3,1,0,1,5,4,Female,22,Caucasian,Hispanic
+1013_IOM_FEA_XX,1013,IOM,F,XX,base,10,0,2,7,0,1,0,2,Female,22,Caucasian,Hispanic
+1013_ITH_SAD_XX,1013,ITH,S,XX,base,10,0,0,6,0,3,1,1,Female,22,Caucasian,Hispanic
+1013_ITS_HAP_XX,1013,ITS,H,XX,base,11,0,0,0,11,0,0,0,Female,22,Caucasian,Hispanic
+1013_IWL_NEU_XX,1013,IWL,N,XX,base,8,1,1,0,0,6,0,0,Female,22,Caucasian,Hispanic
+1013_IWW_ANG_XX,1013,IWW,A,XX,base,10,8,1,0,0,1,0,4,Female,22,Caucasian,Hispanic
+1013_MTI_SAD_XX,1013,MTI,S,XX,extra,8,0,0,1,0,5,2,1,Female,22,Caucasian,Hispanic
+1013_WSI_HAP_XX,1013,WSI,H,XX,extra,10,0,0,0,9,1,0,0,Female,22,Caucasian,Hispanic
+1014_DFA_DIS_XX,1014,DFA,D,XX,extra,10,2,5,1,0,2,0,0,Male,24,Caucasian,Not Hispanic
+1014_IEO_NEU_XX,1014,IEO,N,XX,base,11,0,0,0,0,10,1,0,Male,24,Caucasian,Not Hispanic
+1014_ITH_HAP_XX,1014,ITH,H,XX,base,11,0,0,0,11,0,0,1,Male,24,Caucasian,Not Hispanic
+1014_IWL_SAD_XX,1014,IWL,S,XX,base,10,0,0,1,0,9,0,5,Male,24,Caucasian,Not Hispanic
+1014_MTI_ANG_XX,1014,MTI,A,XX,extra,9,4,5,0,0,0,0,4,Male,24,Caucasian,Not Hispanic
+1014_TAI_ANG_XX,1014,TAI,A,XX,base,10,7,2,0,0,1,0,2,Male,24,Caucasian,Not Hispanic
+1014_TIE_FEA_XX,1014,TIE,F,XX,base,9,1,0,3,0,2,3,0,Male,24,Caucasian,Not Hispanic
+1014_TSI_DIS_XX,1014,TSI,D,XX,base,10,0,9,0,0,0,1,4,Male,24,Caucasian,Not Hispanic
+1014_WSI_FEA_XX,1014,WSI,F,XX,extra,11,0,2,7,0,1,1,4,Male,24,Caucasian,Not Hispanic
+1015_IOM_NEU_XX,1015,IOM,N,XX,base,10,0,0,0,7,3,0,5,Male,32,African American,Not Hispanic
+1015_ITS_SAD_XX,1015,ITS,S,XX,base,11,1,2,0,0,4,4,5,Male,32,African American,Not Hispanic
+1015_IWW_FEA_XX,1015,IWW,F,XX,base,10,0,0,0,3,6,1,5,Male,32,African American,Not Hispanic
+1015_IWW_SAD_XX,1015,IWW,S,XX,extra,9,1,1,1,3,2,1,3,Male,32,African American,Not Hispanic
+1015_MTI_HAP_XX,1015,MTI,H,XX,extra,8,0,1,1,1,5,0,5,Male,32,African American,Not Hispanic
+1015_TAI_DIS_XX,1015,TAI,D,XX,base,10,0,5,0,0,0,5,2,Male,32,African American,Not Hispanic
+1015_TIE_ANG_XX,1015,TIE,A,XX,base,10,9,1,0,0,0,0,4,Male,32,African American,Not Hispanic
+1015_TSI_HAP_XX,1015,TSI,H,XX,base,10,0,0,0,10,0,0,2,Male,32,African American,Not Hispanic
+1015_WSI_NEU_XX,1015,WSI,N,XX,extra,10,0,0,0,5,5,0,5,Male,32,African American,Not Hispanic
+1016_DFA_FEA_XX,1016,DFA,F,XX,extra,10,1,3,4,0,1,1,5,Male,61,Caucasian,Not Hispanic
+1016_IEO_FEA_LO,1016,IEO,F,LO,base,10,2,0,0,0,8,0,0,Male,61,Caucasian,Not Hispanic
+1016_IOM_DIS_XX,1016,IOM,D,XX,base,10,2,8,0,0,0,0,3,Male,61,Caucasian,Not Hispanic
+1016_ITH_NEU_XX,1016,ITH,N,XX,base,10,0,1,0,0,7,2,3,Male,61,Caucasian,Not Hispanic
+1016_ITS_DIS_XX,1016,ITS,D,XX,extra,11,0,11,0,0,0,0,1,Male,61,Caucasian,Not Hispanic
+1016_IWL_ANG_XX,1016,IWL,A,XX,extra,8,7,1,0,0,0,0,1,Male,61,Caucasian,Not Hispanic
+1016_TAI_HAP_XX,1016,TAI,H,XX,base,10,0,0,0,10,0,0,3,Male,61,Caucasian,Not Hispanic
+1016_TIE_SAD_XX,1016,TIE,S,XX,base,9,1,3,1,0,2,2,5,Male,61,Caucasian,Not Hispanic
+1016_TSI_ANG_XX,1016,TSI,A,XX,base,9,8,0,0,0,1,0,3,Male,61,Caucasian,Not Hispanic
+1017_DFA_DIS_XX,1017,DFA,D,XX,base,9,5,1,0,0,3,0,3,Male,42,Caucasian,Not Hispanic
+1017_IEO_ANG_MD,1017,IEO,A,MD,base,9,4,1,0,0,4,0,5,Male,42,Caucasian,Not Hispanic
+1017_IOM_SAD_XX,1017,IOM,S,XX,extra,9,1,1,0,1,5,1,5,Male,42,Caucasian,Not Hispanic
+1017_ITS_NEU_XX,1017,ITS,N,XX,base,9,1,2,0,0,6,0,5,Male,42,Caucasian,Not Hispanic
+1017_IWL_SAD_XX,1017,IWL,S,XX,base,10,0,0,0,0,9,1,0,Male,42,Caucasian,Not Hispanic
+1017_MTI_HAP_XX,1017,MTI,H,XX,extra,10,0,0,0,9,1,0,0,Male,42,Caucasian,Not Hispanic
+1017_TAI_NEU_XX,1017,TAI,N,XX,extra,9,1,1,0,0,7,0,4,Male,42,Caucasian,Not Hispanic
+1017_TSI_HAP_XX,1017,TSI,H,XX,base,10,0,0,0,10,0,0,1,Male,42,Caucasian,Not Hispanic
+1017_WSI_FEA_XX,1017,WSI,F,XX,base,10,4,2,2,0,2,0,1,Male,42,Caucasian,Not Hispanic
+1018_DFA_ANG_XX,1018,DFA,A,XX,extra,10,3,2,0,1,4,0,4,Female,25,Caucasian,Hispanic
+1018_IEO_HAP_HI,1018,IEO,H,HI,base,10,0,0,0,9,1,0,3,Female,25,Caucasian,Hispanic
+1018_ITH_DIS_XX,1018,ITH,D,XX,base,11,0,7,4,0,0,0,4,Female,25,Caucasian,Hispanic
+1018_ITS_FEA_XX,1018,ITS,F,XX,extra,11,0,1,9,0,1,0,3,Female,25,Caucasian,Hispanic
+1018_IWL_NEU_XX,1018,IWL,N,XX,base,10,0,0,0,1,8,1,4,Female,25,Caucasian,Hispanic
+1018_IWW_FEA_XX,1018,IWW,F,XX,base,10,0,1,5,0,1,3,1,Female,25,Caucasian,Hispanic
+1018_MTI_SAD_XX,1018,MTI,S,XX,base,10,0,0,2,0,6,2,0,Female,25,Caucasian,Hispanic
+1018_TAI_DIS_XX,1018,TAI,D,XX,extra,10,0,9,1,0,0,0,4,Female,25,Caucasian,Hispanic
+1018_TIE_ANG_XX,1018,TIE,A,XX,base,9,7,1,1,0,0,0,4,Female,25,Caucasian,Hispanic
+1019_IEO_SAD_MD,1019,IEO,S,MD,base,10,0,0,0,0,7,3,5,Male,29,Asian,Not Hispanic
+1019_IOM_HAP_XX,1019,IOM,H,XX,base,10,0,0,0,10,0,0,4,Male,29,Asian,Not Hispanic
+1019_ITS_DIS_XX,1019,ITS,D,XX,extra,10,0,4,1,0,3,2,3,Male,29,Asian,Not Hispanic
+1019_IWL_ANG_XX,1019,IWL,A,XX,extra,10,0,0,0,1,9,0,0,Male,29,Asian,Not Hispanic
+1019_IWW_DIS_XX,1019,IWW,D,XX,base,9,0,5,0,0,1,3,4,Male,29,Asian,Not Hispanic
+1019_TAI_FEA_XX,1019,TAI,F,XX,extra,10,0,0,1,0,7,2,3,Male,29,Asian,Not Hispanic
+1019_TIE_NEU_XX,1019,TIE,N,XX,base,9,0,0,0,0,9,0,2,Male,29,Asian,Not Hispanic
+1019_TSI_FEA_XX,1019,TSI,F,XX,base,10,0,0,0,0,5,5,4,Male,29,Asian,Not Hispanic
+1019_WSI_ANG_XX,1019,WSI,A,XX,base,11,7,4,0,0,0,0,2,Male,29,Asian,Not Hispanic
+1020_DFA_FEA_XX,1020,DFA,F,XX,base,9,0,1,2,0,3,3,0,Female,61,Caucasian,Not Hispanic
+1020_IOM_NEU_XX,1020,IOM,N,XX,extra,10,0,0,1,0,8,1,2,Female,61,Caucasian,Not Hispanic
+1020_ITH_ANG_XX,1020,ITH,A,XX,base,8,5,0,0,0,1,2,2,Female,61,Caucasian,Not Hispanic
+1020_ITS_HAP_XX,1020,ITS,H,XX,extra,11,0,0,0,10,1,0,1,Female,61,Caucasian,Not Hispanic
+1020_IWW_NEU_XX,1020,IWW,N,XX,base,9,0,2,1,0,5,1,0,Female,61,Caucasian,Not Hispanic
+1020_TAI_SAD_XX,1020,TAI,S,XX,extra,10,0,2,1,0,2,5,4,Female,61,Caucasian,Not Hispanic
+1020_TIE_HAP_XX,1020,TIE,H,XX,base,9,0,0,0,7,2,0,0,Female,61,Caucasian,Not Hispanic
+1020_TSI_SAD_XX,1020,TSI,S,XX,base,10,0,0,2,0,0,8,2,Female,61,Caucasian,Not Hispanic
+1020_WSI_DIS_XX,1020,WSI,D,XX,base,11,0,2,2,0,0,7,3,Female,61,Caucasian,Not Hispanic
+1021_DFA_HAP_XX,1021,DFA,H,XX,base,10,0,0,0,10,0,0,2,Female,30,Caucasian,Not Hispanic
+1021_IEO_DIS_HI,1021,IEO,D,HI,base,9,0,7,1,1,0,0,4,Female,30,Caucasian,Not Hispanic
+1021_IOM_ANG_XX,1021,IOM,A,XX,extra,10,4,1,0,1,4,0,2,Female,30,Caucasian,Not Hispanic
+1021_ITH_FEA_XX,1021,ITH,F,XX,base,10,0,0,6,0,1,3,4,Female,30,Caucasian,Not Hispanic
+1021_IWL_DIS_XX,1021,IWL,D,XX,extra,10,0,1,4,0,1,4,4,Female,30,Caucasian,Not Hispanic
+1021_MTI_ANG_XX,1021,MTI,A,XX,base,9,1,2,0,0,6,0,4,Female,30,Caucasian,Not Hispanic
+1021_MTI_FEA_XX,1021,MTI,F,XX,extra,10,0,0,2,0,1,7,5,Female,30,Caucasian,Not Hispanic
+1021_TIE_SAD_XX,1021,TIE,S,XX,base,9,0,0,1,0,6,2,2,Female,30,Caucasian,Not Hispanic
+1021_TSI_NEU_XX,1021,TSI,N,XX,base,9,0,1,0,0,8,0,0,Female,30,Caucasian,Not Hispanic
+1022_DFA_SAD_XX,1022,DFA,S,XX,extra,9,0,0,1,0,7,1,2,Male,22,Caucasian,Not Hispanic
+1022_IEO_FEA_HI,1022,IEO,F,HI,base,10,1,1,5,0,3,0,3,Male,22,Caucasian,Not Hispanic
+1022_ITH_NEU_XX,1022,ITH,N,XX,base,10,0,0,0,0,9,1,5,Male,22,Caucasian,Not Hispanic
+1022_ITS_SAD_XX,1022,ITS,S,XX,base,10,0,3,0,0,3,4,3,Male,22,Caucasian,Not Hispanic
+1022_IWL_HAP_XX,1022,IWL,H,XX,extra,10,0,0,0,9,1,0,4,Male,22,Caucasian,Not Hispanic
+1022_IWW_ANG_XX,1022,IWW,A,XX,base,10,5,5,0,0,0,0,2,Male,22,Caucasian,Not Hispanic
+1022_MTI_NEU_XX,1022,MTI,N,XX,extra,11,0,0,0,0,10,1,1,Male,22,Caucasian,Not Hispanic
+1022_TSI_DIS_XX,1022,TSI,D,XX,base,10,0,8,0,0,2,0,3,Male,22,Caucasian,Not Hispanic
+1022_WSI_HAP_XX,1022,WSI,H,XX,base,11,0,0,0,10,1,0,1,Male,22,Caucasian,Not Hispanic
+1023_IOM_DIS_XX,1023,IOM,D,XX,base,10,0,5,1,0,0,4,5,Male,22,Caucasian,Not Hispanic
+1023_ITH_HAP_XX,1023,ITH,H,XX,base,10,0,0,0,10,0,0,3,Male,22,Caucasian,Not Hispanic
+1023_IWL_FEA_XX,1023,IWL,F,XX,extra,8,1,3,1,0,3,0,3,Male,22,Caucasian,Not Hispanic
+1023_IWW_SAD_XX,1023,IWW,S,XX,base,10,0,1,5,0,2,2,2,Male,22,Caucasian,Not Hispanic
+1023_MTI_DIS_XX,1023,MTI,D,XX,extra,10,1,2,1,0,0,6,3,Male,22,Caucasian,Not Hispanic
+1023_TAI_ANG_XX,1023,TAI,A,XX,base,10,5,4,0,0,1,0,5,Male,22,Caucasian,Not Hispanic
+1023_TIE_FEA_XX,1023,TIE,F,XX,base,9,0,2,6,0,1,0,3,Male,22,Caucasian,Not Hispanic
+1023_TSI_ANG_XX,1023,TSI,A,XX,extra,10,10,0,0,0,0,0,4,Male,22,Caucasian,Not Hispanic
+1023_WSI_NEU_XX,1023,WSI,N,XX,base,9,0,0,0,0,9,0,4,Male,22,Caucasian,Not Hispanic
+1024_DFA_NEU_XX,1024,DFA,N,XX,base,10,0,1,0,0,8,1,1,Female,59,Caucasian,Not Hispanic
+1024_IEO_NEU_XX,1024,IEO,N,XX,extra,9,0,0,0,0,8,1,3,Female,59,Caucasian,Not Hispanic
+1024_IOM_FEA_XX,1024,IOM,F,XX,base,8,0,0,2,0,1,5,0,Female,59,Caucasian,Not Hispanic
+1024_ITH_SAD_XX,1024,ITH,S,XX,extra,9,0,2,2,0,1,4,1,Female,59,Caucasian,Not Hispanic
+1024_ITS_ANG_XX,1024,ITS,A,XX,base,9,8,1,0,0,0,0,1,Female,59,Caucasian,Not Hispanic
+1024_IWW_HAP_XX,1024,IWW,H,XX,extra,11,0,0,0,10,1,0,3,Female,59,Caucasian,Not Hispanic
+1024_TAI_HAP_XX,1024,TAI,H,XX,base,10,1,0,0,3,6,0,1,Female,59,Caucasian,Not Hispanic
+1024_TIE_DIS_XX,1024,TIE,D,XX,base,10,0,2,1,1,1,5,2,Female,59,Caucasian,Not Hispanic
+1024_WSI_SAD_XX,1024,WSI,S,XX,base,9,0,0,1,0,2,6,5,Female,59,Caucasian,Not Hispanic
+1025_DFA_FEA_XX,1025,DFA,F,XX,base,10,3,0,7,0,0,0,5,Female,48,Caucasian,Not Hispanic
+1025_IEO_ANG_LO,1025,IEO,A,LO,base,10,7,3,0,0,0,0,0,Female,48,Caucasian,Not Hispanic
+1025_ITS_DIS_XX,1025,ITS,D,XX,extra,9,0,6,1,0,0,2,5,Female,48,Caucasian,Not Hispanic
+1025_IWL_ANG_XX,1025,IWL,A,XX,extra,10,10,0,0,0,0,0,1,Female,48,Caucasian,Not Hispanic
+1025_MTI_HAP_XX,1025,MTI,H,XX,base,9,0,0,0,8,1,0,0,Female,48,Caucasian,Not Hispanic
+1025_TAI_FEA_XX,1025,TAI,F,XX,extra,9,2,2,4,0,1,0,2,Female,48,Caucasian,Not Hispanic
+1025_TIE_DIS_XX,1025,TIE,D,XX,base,10,0,6,0,0,1,3,5,Female,48,Caucasian,Not Hispanic
+1025_TSI_NEU_XX,1025,TSI,N,XX,base,10,1,1,0,0,8,0,2,Female,48,Caucasian,Not Hispanic
+1025_WSI_SAD_XX,1025,WSI,S,XX,base,9,2,0,0,0,2,5,5,Female,48,Caucasian,Not Hispanic
+1026_IEO_HAP_LO,1026,IEO,H,LO,base,9,0,0,1,7,1,0,0,Male,33,Caucasian,Not Hispanic
+1026_IOM_ANG_XX,1026,IOM,A,XX,base,10,2,2,2,0,4,0,5,Male,33,Caucasian,Not Hispanic
+1026_ITH_DIS_XX,1026,ITH,D,XX,base,9,1,6,0,0,0,2,2,Male,33,Caucasian,Not Hispanic
+1026_ITS_SAD_XX,1026,ITS,S,XX,extra,10,0,1,1,0,7,1,2,Male,33,Caucasian,Not Hispanic
+1026_IWL_NEU_XX,1026,IWL,N,XX,extra,10,0,1,0,0,8,1,1,Male,33,Caucasian,Not Hispanic
+1026_IWW_FEA_XX,1026,IWW,F,XX,base,11,0,1,2,0,8,0,1,Male,33,Caucasian,Not Hispanic
+1026_MTI_SAD_XX,1026,MTI,S,XX,base,10,1,0,0,1,8,0,0,Male,33,Caucasian,Not Hispanic
+1026_TIE_NEU_XX,1026,TIE,N,XX,base,11,0,1,1,0,7,2,4,Male,33,Caucasian,Not Hispanic
+1026_TSI_HAP_XX,1026,TSI,H,XX,extra,11,0,0,0,11,0,0,2,Male,33,Caucasian,Not Hispanic
+1027_DFA_ANG_XX,1027,DFA,A,XX,base,10,10,0,0,0,0,0,1,Male,44,Caucasian,Not Hispanic
+1027_IEO_DIS_HI,1027,IEO,D,HI,extra,10,0,2,2,0,0,6,1,Male,44,Caucasian,Not Hispanic
+1027_IOM_FEA_XX,1027,IOM,F,XX,base,10,2,0,0,0,8,0,2,Male,44,Caucasian,Not Hispanic
+1027_ITH_HAP_XX,1027,ITH,H,XX,base,10,0,0,0,10,0,0,1,Male,44,Caucasian,Not Hispanic
+1027_IWW_SAD_XX,1027,IWW,S,XX,base,10,1,1,3,0,2,3,0,Male,44,Caucasian,Not Hispanic
+1027_MTI_ANG_XX,1027,MTI,A,XX,extra,11,8,3,0,0,0,0,3,Male,44,Caucasian,Not Hispanic
+1027_TAI_NEU_XX,1027,TAI,N,XX,base,9,0,1,0,0,6,2,3,Male,44,Caucasian,Not Hispanic
+1027_TIE_FEA_XX,1027,TIE,F,XX,extra,9,5,1,0,0,3,0,3,Male,44,Caucasian,Not Hispanic
+1027_WSI_DIS_XX,1027,WSI,D,XX,base,9,0,5,1,1,0,2,4,Male,44,Caucasian,Not Hispanic
+1028_DFA_NEU_XX,1028,DFA,N,XX,extra,10,4,2,0,0,3,1,3,Female,57,Caucasian,Not Hispanic
+1028_IEO_SAD_HI,1028,IEO,S,HI,extra,10,0,0,3,0,2,5,4,Female,57,Caucasian,Not Hispanic
+1028_IOM_SAD_XX,1028,IOM,S,XX,base,10,0,0,1,1,1,7,5,Female,57,Caucasian,Not Hispanic
+1028_ITH_NEU_XX,1028,ITH,N,XX,base,10,0,1,1,0,8,0,3,Female,57,Caucasian,Not Hispanic
+1028_ITS_FEA_XX,1028,ITS,F,XX,base,10,1,4,1,0,0,4,1,Female,57,Caucasian,Not Hispanic
+1028_IWL_DIS_XX,1028,IWL,D,XX,base,9,1,8,0,0,0,0,1,Female,57,Caucasian,Not Hispanic
+1028_TAI_HAP_XX,1028,TAI,H,XX,base,9,0,0,1,8,0,0,2,Female,57,Caucasian,Not Hispanic
+1028_TSI_ANG_XX,1028,TSI,A,XX,base,10,10,0,0,0,0,0,5,Female,57,Caucasian,Not Hispanic
+1028_WSI_HAP_XX,1028,WSI,H,XX,extra,10,0,1,0,8,1,0,5,Female,57,Caucasian,Not Hispanic
+1029_DFA_DIS_XX,1029,DFA,D,XX,base,8,4,4,0,0,0,0,3,Female,33,African American,Not Hispanic
+1029_IOM_DIS_XX,1029,IOM,D,XX,extra,9,1,7,0,0,1,0,2,Female,33,African American,Not Hispanic
+1029_ITH_SAD_XX,1029,ITH,S,XX,base,10,0,0,4,0,0,6,4,Female,33,African American,Not Hispanic
+1029_ITS_NEU_XX,1029,ITS,N,XX,base,10,0,0,1,0,8,1,2,Female,33,African American,Not Hispanic
+1029_IWL_FEA_XX,1029,IWL,F,XX,extra,10,3,0,7,0,0,0,1,Female,33,African American,Not Hispanic
+1029_IWW_ANG_XX,1029,IWW,A,XX,base,10,3,1,1,0,4,1,3,Female,33,African American,Not Hispanic
+1029_MTI_FEA_XX,1029,MTI,F,XX,base,10,0,1,5,0,0,4,3,Female,33,African American,Not Hispanic
+1029_TIE_HAP_XX,1029,TIE,H,XX,base,10,0,0,0,10,0,0,3,Female,33,African American,Not Hispanic
+1029_WSI_ANG_XX,1029,WSI,A,XX,extra,10,5,4,0,1,0,0,5,Female,33,African American,Not Hispanic
+1030_DFA_SAD_XX,1030,DFA,S,XX,base,10,2,2,0,0,0,6,0,Female,42,African American,Not Hispanic
+1030_IEO_NEU_XX,1030,IEO,N,XX,extra,9,0,0,0,1,7,1,4,Female,42,African American,Not Hispanic
+1030_IOM_HAP_XX,1030,IOM,H,XX,base,9,0,0,0,9,0,0,4,Female,42,African American,Not Hispanic
+1030_ITS_HAP_XX,1030,ITS,H,XX,extra,10,0,0,1,9,0,0,2,Female,42,African American,Not Hispanic
+1030_IWL_SAD_XX,1030,IWL,S,XX,extra,10,1,2,1,0,2,4,4,Female,42,African American,Not Hispanic
+1030_IWW_DIS_XX,1030,IWW,D,XX,base,10,0,10,0,0,0,0,5,Female,42,African American,Not Hispanic
+1030_TAI_ANG_XX,1030,TAI,A,XX,base,9,9,0,0,0,0,0,3,Female,42,African American,Not Hispanic
+1030_TSI_FEA_XX,1030,TSI,F,XX,base,10,0,1,9,0,0,0,2,Female,42,African American,Not Hispanic
+1030_WSI_NEU_XX,1030,WSI,N,XX,base,9,0,0,0,0,9,0,5,Female,42,African American,Not Hispanic
+1031_DFA_HAP_XX,1031,DFA,H,XX,extra,9,1,0,1,2,3,2,2,Male,31,Caucasian,Hispanic
+1031_IOM_NEU_XX,1031,IOM,N,XX,extra,10,2,0,0,0,8,0,0,Male,31,Caucasian,Hispanic
+1031_ITH_FEA_XX,1031,ITH,F,XX,base,9,1,3,3,0,1,1,1,Male,31,Caucasian,Hispanic
+1031_IWW_HAP_XX,1031,IWW,H,XX,base,9,0,0,0,2,6,1,0,Male,31,Caucasian,Hispanic
+1031_MTI_NEU_XX,1031,MTI,N,XX,base,10,1,1,0,0,8,0,4,Male,31,Caucasian,Hispanic
+1031_TAI_SAD_XX,1031,TAI,S,XX,base,10,0,0,0,0,5,5,1,Male,31,Caucasian,Hispanic
+1031_TIE_ANG_XX,1031,TIE,A,XX,base,10,7,2,0,0,0,1,4,Male,31,Caucasian,Hispanic
+1031_TIE_SAD_XX,1031,TIE,S,XX,extra,10,0,2,0,0,3,5,0,Male,31,Caucasian,Hispanic
+1031_TSI_DIS_XX,1031,TSI,D,XX,base,10,2,8,0,0,0,0,4,Male,31,Caucasian,Hispanic
+1032_IEO_FEA_HI,1032,IEO,F,HI,base,9,1,1,4,3,0,0,5,Male,30,African American,Not Hispanic
+1032_ITH_ANG_XX,1032,ITH,A,XX,base,9,2,3,2,0,2,0,4,Male,30,African American,Not Hispanic
+1032_ITS_ANG_XX,1032,ITS,A,XX,extra,9,0,3,0,0,4,2,1,Male,30,African American,Not Hispanic
+1032_IWL_HAP_XX,1032,IWL,H,XX,base,10,0,0,2,7,1,0,4,Male,30,African American,Not Hispanic
+1032_IWW_NEU_XX,1032,IWW,N,XX,base,9,0,1,0,0,8,0,4,Male,30,African American,Not Hispanic
+1032_TAI_DIS_XX,1032,TAI,D,XX,base,9,0,2,1,1,1,4,1,Male,30,African American,Not Hispanic
+1032_TSI_SAD_XX,1032,TSI,S,XX,base,9,0,7,0,0,1,1,1,Male,30,African American,Not Hispanic
+1032_WSI_DIS_XX,1032,WSI,D,XX,extra,9,3,1,0,0,2,3,3,Male,30,African American,Not Hispanic
+1032_WSI_FEA_XX,1032,WSI,F,XX,extra,10,3,2,2,0,2,1,5,Male,30,African American,Not Hispanic
+1033_DFA_NEU_XX,1033,DFA,N,XX,extra,10,0,0,0,0,8,2,5,Male,31,Caucasian,Not Hispanic
+1033_IEO_FEA_LO,1033,IEO,F,LO,base,11,0,2,7,0,2,0,3,Male,31,Caucasian,Not Hispanic
+1033_ITS_SAD_XX,1033,ITS,S,XX,base,10,0,2,1,0,4,3,1,Male,31,Caucasian,Not Hispanic
+1033_IWL_SAD_XX,1033,IWL,S,XX,extra,10,0,2,0,0,5,3,3,Male,31,Caucasian,Not Hispanic
+1033_IWW_HAP_XX,1033,IWW,H,XX,extra,10,0,0,1,8,1,0,2,Male,31,Caucasian,Not Hispanic
+1033_MTI_ANG_XX,1033,MTI,A,XX,base,9,3,5,0,0,0,1,1,Male,31,Caucasian,Not Hispanic
+1033_MTI_DIS_XX,1033,MTI,D,XX,base,10,5,4,0,0,1,0,5,Male,31,Caucasian,Not Hispanic
+1033_TAI_NEU_XX,1033,TAI,N,XX,base,10,3,2,0,0,5,0,2,Male,31,Caucasian,Not Hispanic
+1033_TSI_HAP_XX,1033,TSI,H,XX,base,10,0,0,0,9,1,0,2,Male,31,Caucasian,Not Hispanic
+1034_DFA_ANG_XX,1034,DFA,A,XX,extra,8,4,4,0,0,0,0,0,Male,74,Caucasian,Not Hispanic
+1034_IEO_HAP_HI,1034,IEO,H,HI,base,10,0,1,0,7,0,2,2,Male,74,Caucasian,Not Hispanic
+1034_IOM_FEA_XX,1034,IOM,F,XX,base,9,0,0,1,0,4,4,4,Male,74,Caucasian,Not Hispanic
+1034_ITH_DIS_XX,1034,ITH,D,XX,base,9,0,0,0,0,4,5,5,Male,74,Caucasian,Not Hispanic
+1034_ITS_DIS_XX,1034,ITS,D,XX,extra,8,0,4,0,0,2,2,5,Male,74,Caucasian,Not Hispanic
+1034_IWL_NEU_XX,1034,IWL,N,XX,base,10,1,0,1,0,6,2,5,Male,74,Caucasian,Not Hispanic
+1034_TIE_ANG_XX,1034,TIE,A,XX,base,8,1,0,3,0,3,1,3,Male,74,Caucasian,Not Hispanic
+1034_TSI_SAD_XX,1034,TSI,S,XX,base,10,0,0,0,0,7,3,5,Male,74,Caucasian,Not Hispanic
+1034_WSI_FEA_XX,1034,WSI,F,XX,extra,10,0,0,1,0,7,2,0,Male,74,Caucasian,Not Hispanic
+1035_DFA_SAD_XX,1035,DFA,S,XX,extra,10,0,1,0,0,2,7,4,Male,48,Caucasian,Not Hispanic
+1035_IEO_NEU_XX,1035,IEO,N,XX,extra,10,0,1,0,0,7,2,1,Male,48,Caucasian,Not Hispanic
+1035_IOM_HAP_XX,1035,IOM,H,XX,base,8,0,0,0,8,0,0,5,Male,48,Caucasian,Not Hispanic
+1035_ITH_NEU_XX,1035,ITH,N,XX,base,10,0,1,0,0,8,1,4,Male,48,Caucasian,Not Hispanic
+1035_ITS_HAP_XX,1035,ITS,H,XX,extra,10,0,0,0,10,0,0,4,Male,48,Caucasian,Not Hispanic
+1035_IWW_ANG_XX,1035,IWW,A,XX,base,8,4,2,0,0,1,1,1,Male,48,Caucasian,Not Hispanic
+1035_MTI_DIS_XX,1035,MTI,D,XX,base,9,0,9,0,0,0,0,4,Male,48,Caucasian,Not Hispanic
+1035_TAI_SAD_XX,1035,TAI,S,XX,base,9,1,4,2,0,1,1,0,Male,48,Caucasian,Not Hispanic
+1035_TIE_FEA_XX,1035,TIE,F,XX,base,9,1,1,3,0,2,2,0,Male,48,Caucasian,Not Hispanic
+1036_IOM_ANG_XX,1036,IOM,A,XX,extra,11,4,3,2,0,0,2,1,Male,49,African American,Not Hispanic
+1036_ITH_FEA_XX,1036,ITH,F,XX,base,9,0,0,8,0,0,1,3,Male,49,African American,Not Hispanic
+1036_IWL_DIS_XX,1036,IWL,D,XX,base,10,2,5,0,0,0,3,0,Male,49,African American,Not Hispanic
+1036_IWW_FEA_XX,1036,IWW,F,XX,extra,10,1,1,5,0,0,3,4,Male,49,African American,Not Hispanic
+1036_MTI_SAD_XX,1036,MTI,S,XX,base,11,0,0,2,0,2,7,4,Male,49,African American,Not Hispanic
+1036_TAI_ANG_XX,1036,TAI,A,XX,base,10,9,1,0,0,0,0,0,Male,49,African American,Not Hispanic
+1036_TIE_HAP_XX,1036,TIE,H,XX,base,9,0,0,1,0,2,6,4,Male,49,African American,Not Hispanic
+1036_TSI_DIS_XX,1036,TSI,D,XX,extra,9,1,7,0,1,0,0,5,Male,49,African American,Not Hispanic
+1036_WSI_NEU_XX,1036,WSI,N,XX,base,10,0,0,0,0,10,0,2,Male,49,African American,Not Hispanic
+1037_IEO_ANG_MD,1037,IEO,A,MD,base,10,9,1,0,0,0,0,2,Female,45,Caucasian,Not Hispanic
+1037_ITH_ANG_XX,1037,ITH,A,XX,extra,11,7,3,0,0,0,1,5,Female,45,Caucasian,Not Hispanic
+1037_ITS_FEA_XX,1037,ITS,F,XX,extra,9,0,0,8,0,1,0,5,Female,45,Caucasian,Not Hispanic
+1037_IWL_HAP_XX,1037,IWL,H,XX,base,10,0,0,0,10,0,0,3,Female,45,Caucasian,Not Hispanic
+1037_IWW_SAD_XX,1037,IWW,S,XX,base,10,0,0,1,0,0,9,1,Female,45,Caucasian,Not Hispanic
+1037_MTI_NEU_XX,1037,MTI,N,XX,base,9,0,0,1,0,5,3,3,Female,45,Caucasian,Not Hispanic
+1037_TAI_DIS_XX,1037,TAI,D,XX,extra,9,1,8,0,0,0,0,1,Female,45,Caucasian,Not Hispanic
+1037_TIE_DIS_XX,1037,TIE,D,XX,base,9,2,5,1,0,0,1,5,Female,45,Caucasian,Not Hispanic
+1037_TSI_FEA_XX,1037,TSI,F,XX,base,9,0,0,9,0,0,0,4,Female,45,Caucasian,Not Hispanic
+1038_DFA_DIS_XX,1038,DFA,D,XX,base,10,2,8,0,0,0,0,1,Male,21,African American,Not Hispanic
+1038_IEO_SAD_MD,1038,IEO,S,MD,base,8,0,2,2,0,2,2,2,Male,21,African American,Not Hispanic
+1038_IOM_NEU_XX,1038,IOM,N,XX,base,9,0,2,0,0,7,0,3,Male,21,African American,Not Hispanic
+1038_ITH_HAP_XX,1038,ITH,H,XX,base,10,0,2,0,8,0,0,2,Male,21,African American,Not Hispanic
+1038_IWL_FEA_XX,1038,IWL,F,XX,base,10,1,1,8,0,0,0,5,Male,21,African American,Not Hispanic
+1038_IWW_NEU_XX,1038,IWW,N,XX,extra,10,1,5,0,0,4,0,3,Male,21,African American,Not Hispanic
+1038_TAI_HAP_XX,1038,TAI,H,XX,extra,10,0,0,0,8,2,0,0,Male,21,African American,Not Hispanic
+1038_TIE_SAD_XX,1038,TIE,S,XX,extra,9,1,1,1,1,2,3,3,Male,21,African American,Not Hispanic
+1038_WSI_ANG_XX,1038,WSI,A,XX,base,10,7,3,0,0,0,0,3,Male,21,African American,Not Hispanic
+1039_DFA_FEA_XX,1039,DFA,F,XX,base,10,0,1,6,0,1,2,3,Male,51,African American,Not Hispanic
+1039_IEO_DIS_MD,1039,IEO,D,MD,extra,10,0,7,0,0,0,3,5,Male,51,African American,Not Hispanic
+1039_IOM_DIS_XX,1039,IOM,D,XX,base,9,0,5,0,0,0,4,2,Male,51,African American,Not Hispanic
+1039_ITS_NEU_XX,1039,ITS,N,XX,base,10,0,2,0,0,6,2,0,Male,51,African American,Not Hispanic
+1039_IWL_ANG_XX,1039,IWL,A,XX,extra,9,8,1,0,0,0,0,3,Male,51,African American,Not Hispanic
+1039_MTI_HAP_XX,1039,MTI,H,XX,base,10,0,0,0,9,1,0,4,Male,51,African American,Not Hispanic
+1039_TAI_FEA_XX,1039,TAI,F,XX,extra,10,0,0,7,0,0,3,0,Male,51,African American,Not Hispanic
+1039_TSI_ANG_XX,1039,TSI,A,XX,base,10,9,1,0,0,0,0,0,Male,51,African American,Not Hispanic
+1039_WSI_SAD_XX,1039,WSI,S,XX,base,9,0,0,1,0,1,7,2,Male,51,African American,Not Hispanic
+1040_DFA_HAP_XX,1040,DFA,H,XX,extra,10,0,0,0,10,0,0,4,Male,42,Caucasian,Not Hispanic
+1040_IOM_SAD_XX,1040,IOM,S,XX,extra,10,0,0,2,2,3,3,0,Male,42,Caucasian,Not Hispanic
+1040_ITH_SAD_XX,1040,ITH,S,XX,base,10,0,0,0,0,8,2,4,Male,42,Caucasian,Not Hispanic
+1040_ITS_ANG_XX,1040,ITS,A,XX,base,8,4,3,0,0,1,0,1,Male,42,Caucasian,Not Hispanic
+1040_IWW_DIS_XX,1040,IWW,D,XX,base,10,0,2,1,0,0,7,1,Male,42,Caucasian,Not Hispanic
+1040_MTI_FEA_XX,1040,MTI,F,XX,base,9,1,0,3,0,5,0,3,Male,42,Caucasian,Not Hispanic
+1040_TIE_NEU_XX,1040,TIE,N,XX,base,9,0,0,0,0,9,0,5,Male,42,Caucasian,Not Hispanic
+1040_TSI_NEU_XX,1040,TSI,N,XX,extra,11,0,0,0,0,11,0,1,Male,42,Caucasian,Not Hispanic
+1040_WSI_HAP_XX,1040,WSI,H,XX,base,10,0,0,0,9,1,0,4,Male,42,Caucasian,Not Hispanic
+1041_DFA_FEA_XX,1041,DFA,F,XX,extra,9,3,2,1,0,3,0,0,Male,42,Caucasian,Not Hispanic
+1041_IEO_ANG_HI,1041,IEO,A,HI,base,10,8,1,0,0,1,0,2,Male,42,Caucasian,Not Hispanic
+1041_IOM_DIS_XX,1041,IOM,D,XX,extra,9,1,6,0,0,2,0,2,Male,42,Caucasian,Not Hispanic
+1041_ITH_DIS_XX,1041,ITH,D,XX,base,9,0,8,0,0,0,1,4,Male,42,Caucasian,Not Hispanic
+1041_ITS_HAP_XX,1041,ITS,H,XX,base,10,0,0,0,5,5,0,1,Male,42,Caucasian,Not Hispanic
+1041_IWL_NEU_XX,1041,IWL,N,XX,base,10,0,1,0,0,8,1,5,Male,42,Caucasian,Not Hispanic
+1041_IWW_FEA_XX,1041,IWW,F,XX,base,10,1,1,4,0,4,0,5,Male,42,Caucasian,Not Hispanic
+1041_TIE_ANG_XX,1041,TIE,A,XX,extra,9,8,0,1,0,0,0,0,Male,42,Caucasian,Not Hispanic
+1041_WSI_SAD_XX,1041,WSI,S,XX,base,10,2,1,0,0,6,1,5,Male,42,Caucasian,Not Hispanic
+1042_DFA_NEU_XX,1042,DFA,N,XX,base,11,0,0,1,0,8,2,1,Male,37,African American,Not Hispanic
+1042_IEO_HAP_MD,1042,IEO,H,MD,base,9,0,0,0,7,2,0,5,Male,37,African American,Not Hispanic
+1042_IOM_HAP_XX,1042,IOM,H,XX,extra,8,0,1,1,6,0,0,5,Male,37,African American,Not Hispanic
+1042_ITS_SAD_XX,1042,ITS,S,XX,extra,10,0,3,0,0,7,0,3,Male,37,African American,Not Hispanic
+1042_IWW_SAD_XX,1042,IWW,S,XX,base,10,0,0,1,0,4,5,0,Male,37,African American,Not Hispanic
+1042_MTI_DIS_XX,1042,MTI,D,XX,base,10,1,3,1,0,1,4,5,Male,37,African American,Not Hispanic
+1042_TAI_ANG_XX,1042,TAI,A,XX,base,10,6,2,0,0,0,2,3,Male,37,African American,Not Hispanic
+1042_TIE_NEU_XX,1042,TIE,N,XX,extra,10,0,0,0,0,8,2,3,Male,37,African American,Not Hispanic
+1042_TSI_FEA_XX,1042,TSI,F,XX,base,9,0,2,2,0,1,4,1,Male,37,African American,Not Hispanic
+1043_IEO_SAD_LO,1043,IEO,S,LO,extra,9,1,0,3,0,2,3,0,Female,25,Caucasian,Hispanic
+1043_IOM_NEU_XX,1043,IOM,N,XX,extra,9,1,0,0,0,7,1,3,Female,25,Caucasian,Hispanic
+1043_ITH_ANG_XX,1043,ITH,A,XX,base,9,2,4,1,0,2,0,0,Female,25,Caucasian,Hispanic
+1043_IWL_DIS_XX,1043,IWL,D,XX,base,9,0,7,2,0,0,0,2,Female,25,Caucasian,Hispanic
+1043_IWW_HAP_XX,1043,IWW,H,XX,extra,10,0,0,0,10,0,0,4,Female,25,Caucasian,Hispanic
+1043_MTI_SAD_XX,1043,MTI,S,XX,base,9,0,2,0,0,3,4,4,Female,25,Caucasian,Hispanic
+1043_TAI_NEU_XX,1043,TAI,N,XX,base,10,0,0,0,1,9,0,2,Female,25,Caucasian,Hispanic
+1043_TSI_HAP_XX,1043,TSI,H,XX,base,10,0,0,0,9,1,0,3,Female,25,Caucasian,Hispanic
+1043_WSI_FEA_XX,1043,WSI,F,XX,base,9,0,5,4,0,0,0,0,Female,25,Caucasian,Hispanic
+1044_DFA_SAD_XX,1044,DFA,S,XX,base,9,1,0,1,0,6,1,4,Male,40,Caucasian,Not Hispanic
+1044_ITH_FEA_XX,1044,ITH,F,XX,base,10,1,1,8,0,0,0,0,Male,40,Caucasian,Not Hispanic
+1044_ITS_ANG_XX,1044,ITS,A,XX,base,9,8,1,0,0,0,0,3,Male,40,Caucasian,Not Hispanic
+1044_IWL_HAP_XX,1044,IWL,H,XX,base,9,0,0,0,8,1,0,5,Male,40,Caucasian,Not Hispanic
+1044_MTI_NEU_XX,1044,MTI,N,XX,base,10,2,1,1,0,6,0,2,Male,40,Caucasian,Not Hispanic
+1044_TAI_DIS_XX,1044,TAI,D,XX,extra,9,0,1,3,0,0,5,3,Male,40,Caucasian,Not Hispanic
+1044_TIE_FEA_XX,1044,TIE,F,XX,extra,10,0,1,7,0,2,0,0,Male,40,Caucasian,Not Hispanic
+1044_TSI_ANG_XX,1044,TSI,A,XX,extra,10,9,1,0,0,0,0,5,Male,40,Caucasian,Not Hispanic
+1044_WSI_DIS_XX,1044,WSI,D,XX,base,9,1,0,6,0,0,2,4,Male,40,Caucasian,Not Hispanic
+1045_DFA_HAP_XX,1045,DFA,H,XX,base,10,0,0,0,6,4,0,0,Male,22,Asian,Not Hispanic
+1045_IEO_DIS_LO,1045,IEO,D,LO,base,10,0,9,1,0,0,0,2,Male,22,Asian,Not Hispanic
+1045_IOM_ANG_XX,1045,IOM,A,XX,base,10,3,3,3,0,1,0,2,Male,22,Asian,Not Hispanic
+1045_ITS_FEA_XX,1045,ITS,F,XX,base,10,0,0,9,0,1,0,0,Male,22,Asian,Not Hispanic
+1045_IWL_SAD_XX,1045,IWL,S,XX,extra,10,0,1,0,1,7,1,1,Male,22,Asian,Not Hispanic
+1045_IWW_NEU_XX,1045,IWW,N,XX,base,8,0,1,0,0,7,0,3,Male,22,Asian,Not Hispanic
+1045_TAI_SAD_XX,1045,TAI,S,XX,base,11,0,5,1,0,2,3,1,Male,22,Asian,Not Hispanic
+1045_TIE_HAP_XX,1045,TIE,H,XX,extra,9,0,0,0,9,0,0,4,Male,22,Asian,Not Hispanic
+1045_TSI_NEU_XX,1045,TSI,N,XX,extra,10,2,4,0,0,4,0,5,Male,22,Asian,Not Hispanic
+1046_IEO_NEU_XX,1046,IEO,N,XX,base,10,0,0,0,1,9,0,4,Female,22,Caucasian,Hispanic
+1046_IOM_SAD_XX,1046,IOM,S,XX,base,10,0,0,0,0,10,0,0,Female,22,Caucasian,Hispanic
+1046_ITH_HAP_XX,1046,ITH,H,XX,base,10,0,0,0,6,4,0,2,Female,22,Caucasian,Hispanic
+1046_ITS_DIS_XX,1046,ITS,D,XX,extra,9,0,4,0,1,2,2,1,Female,22,Caucasian,Hispanic
+1046_IWW_ANG_XX,1046,IWW,A,XX,extra,9,1,4,0,0,4,0,3,Female,22,Caucasian,Hispanic
+1046_MTI_FEA_XX,1046,MTI,F,XX,base,9,0,0,1,0,1,7,2,Female,22,Caucasian,Hispanic
+1046_TAI_FEA_XX,1046,TAI,F,XX,extra,10,0,0,5,0,2,3,3,Female,22,Caucasian,Hispanic
+1046_TSI_DIS_XX,1046,TSI,D,XX,base,9,1,4,0,1,2,1,2,Female,22,Caucasian,Hispanic
+1046_WSI_ANG_XX,1046,WSI,A,XX,base,10,3,2,0,0,5,0,4,Female,22,Caucasian,Hispanic
+1047_DFA_ANG_XX,1047,DFA,A,XX,base,8,4,1,1,2,0,0,5,Female,22,Unknown,Hispanic
+1047_ITH_NEU_XX,1047,ITH,N,XX,base,10,1,0,7,0,1,1,4,Female,22,Unknown,Hispanic
+1047_ITH_SAD_XX,1047,ITH,S,XX,extra,8,0,0,1,0,7,0,5,Female,22,Unknown,Hispanic
+1047_ITS_NEU_XX,1047,ITS,N,XX,extra,10,0,0,0,0,10,0,1,Female,22,Unknown,Hispanic
+1047_IWL_FEA_XX,1047,IWL,F,XX,base,10,0,0,10,0,0,0,0,Female,22,Unknown,Hispanic
+1047_MTI_HAP_XX,1047,MTI,H,XX,extra,10,0,1,1,8,0,0,4,Female,22,Unknown,Hispanic
+1047_TIE_DIS_XX,1047,TIE,D,XX,base,9,0,3,3,2,1,0,1,Female,22,Unknown,Hispanic
+1047_TSI_SAD_XX,1047,TSI,S,XX,base,10,0,1,8,0,1,0,1,Female,22,Unknown,Hispanic
+1047_WSI_HAP_XX,1047,WSI,H,XX,base,10,0,0,0,10,0,0,5,Female,22,Unknown,Hispanic
+1048_DFA_DIS_XX,1048,DFA,D,XX,extra,9,1,6,0,0,0,2,3,Male,38,Caucasian,Hispanic
+1048_IEO_FEA_MD,1048,IEO,F,MD,base,10,1,0,9,0,0,0,4,Male,38,Caucasian,Hispanic
+1048_IOM_FEA_XX,1048,IOM,F,XX,extra,11,0,0,4,0,4,3,5,Male,38,Caucasian,Hispanic
+1048_IWL_ANG_XX,1048,IWL,A,XX,base,10,6,3,0,0,0,1,1,Male,38,Caucasian,Hispanic
+1048_IWW_DIS_XX,1048,IWW,D,XX,base,10,0,9,0,0,1,0,3,Male,38,Caucasian,Hispanic
+1048_MTI_ANG_XX,1048,MTI,A,XX,extra,10,7,2,1,0,0,0,4,Male,38,Caucasian,Hispanic
+1048_MTI_SAD_XX,1048,MTI,S,XX,base,9,0,0,0,0,9,0,3,Male,38,Caucasian,Hispanic
+1048_TAI_HAP_XX,1048,TAI,H,XX,base,8,0,0,0,8,0,0,0,Male,38,Caucasian,Hispanic
+1048_WSI_NEU_XX,1048,WSI,N,XX,base,11,0,1,0,0,10,0,5,Male,38,Caucasian,Hispanic
+1049_IEO_DIS_MD,1049,IEO,D,MD,base,10,0,2,2,0,0,6,4,Female,25,Caucasian,Hispanic
+1049_ITH_HAP_XX,1049,ITH,H,XX,base,10,0,0,0,10,0,0,1,Female,25,Caucasian,Hispanic
+1049_ITS_ANG_XX,1049,ITS,A,XX,extra,11,6,5,0,0,0,0,5,Female,25,Caucasian,Hispanic
+1049_IWL_FEA_XX,1049,IWL,F,XX,base,8,0,0,5,0,0,3,4,Female,25,Caucasian,Hispanic
+1049_TAI_FEA_XX,1049,TAI,F,XX,extra,10,0,0,8,0,0,2,2,Female,25,Caucasian,Hispanic
+1049_TIE_ANG_XX,1049,TIE,A,XX,base,10,8,2,0,0,0,0,4,Female,25,Caucasian,Hispanic
+1049_TIE_SAD_XX,1049,TIE,S,XX,base,9,0,2,2,0,5,0,2,Female,25,Caucasian,Hispanic
+1049_TSI_DIS_XX,1049,TSI,D,XX,extra,11,0,6,0,1,0,4,2,Female,25,Caucasian,Hispanic
+1049_WSI_NEU_XX,1049,WSI,N,XX,base,8,0,0,1,0,6,1,2,Female,25,Caucasian,Hispanic
+1050_DFA_DIS_XX,1050,DFA,D,XX,base,8,2,4,0,0,2,0,3,Male,62,African American,Not Hispanic
+1050_IEO_HAP_LO,1050,IEO,H,LO,base,8,0,0,0,7,1,0,4,Male,62,African American,Not Hispanic
+1050_IOM_FEA_XX,1050,IOM,F,XX,base,10,0,0,1,1,8,0,5,Male,62,African American,Not Hispanic
+1050_ITH_SAD_XX,1050,ITH,S,XX,extra,10,0,1,2,0,5,2,1,Male,62,African American,Not Hispanic
+1050_ITS_NEU_XX,1050,ITS,N,XX,extra,10,0,3,0,0,4,3,4,Male,62,African American,Not Hispanic
+1050_IWW_ANG_XX,1050,IWW,A,XX,base,9,6,2,0,1,0,0,2,Male,62,African American,Not Hispanic
+1050_MTI_NEU_XX,1050,MTI,N,XX,base,9,3,4,0,0,1,1,0,Male,62,African American,Not Hispanic
+1050_TAI_HAP_XX,1050,TAI,H,XX,extra,10,0,1,0,9,0,0,1,Male,62,African American,Not Hispanic
+1050_TSI_SAD_XX,1050,TSI,S,XX,base,10,1,3,2,0,4,0,5,Male,62,African American,Not Hispanic
+1051_DFA_FEA_XX,1051,DFA,F,XX,base,10,7,0,2,0,1,0,1,Male,56,Caucasian,Not Hispanic
+1051_IEO_ANG_HI,1051,IEO,A,HI,extra,10,10,0,0,0,0,0,2,Male,56,Caucasian,Not Hispanic
+1051_IOM_DIS_XX,1051,IOM,D,XX,base,9,0,2,4,0,0,3,4,Male,56,Caucasian,Not Hispanic
+1051_IWL_NEU_XX,1051,IWL,N,XX,base,10,1,2,1,0,6,0,2,Male,56,Caucasian,Not Hispanic
+1051_IWW_SAD_XX,1051,IWW,S,XX,base,10,0,0,0,0,9,1,0,Male,56,Caucasian,Not Hispanic
+1051_MTI_FEA_XX,1051,MTI,F,XX,extra,9,1,2,4,0,1,1,2,Male,56,Caucasian,Not Hispanic
+1051_TAI_DIS_XX,1051,TAI,D,XX,extra,9,0,1,3,1,0,4,2,Male,56,Caucasian,Not Hispanic
+1051_TIE_HAP_XX,1051,TIE,H,XX,base,10,0,0,0,9,1,0,5,Male,56,Caucasian,Not Hispanic
+1051_WSI_ANG_XX,1051,WSI,A,XX,base,11,11,0,0,0,0,0,2,Male,56,Caucasian,Not Hispanic
+1052_DFA_NEU_XX,1052,DFA,N,XX,extra,9,0,1,0,0,4,4,1,Female,33,Caucasian,Not Hispanic
+1052_IOM_SAD_XX,1052,IOM,S,XX,extra,9,0,2,2,0,4,1,2,Female,33,Caucasian,Not Hispanic
+1052_ITH_NEU_XX,1052,ITH,N,XX,base,10,0,0,1,1,6,2,1,Female,33,Caucasian,Not Hispanic
+1052_ITS_HAP_XX,1052,ITS,H,XX,base,9,0,0,0,9,0,0,3,Female,33,Caucasian,Not Hispanic
+1052_IWL_ANG_XX,1052,IWL,A,XX,base,10,5,4,0,0,1,0,1,Female,33,Caucasian,Not Hispanic
+1052_IWW_HAP_XX,1052,IWW,H,XX,extra,10,0,0,0,10,0,0,1,Female,33,Caucasian,Not Hispanic
+1052_TIE_DIS_XX,1052,TIE,D,XX,base,9,1,3,1,0,3,1,0,Female,33,Caucasian,Not Hispanic
+1052_TSI_FEA_XX,1052,TSI,F,XX,base,10,0,1,7,0,0,2,2,Female,33,Caucasian,Not Hispanic
+1052_WSI_SAD_XX,1052,WSI,S,XX,base,11,0,1,1,1,7,1,3,Female,33,Caucasian,Not Hispanic
+1053_DFA_ANG_XX,1053,DFA,A,XX,extra,10,7,2,0,0,1,0,0,Female,35,Caucasian,Not Hispanic
+1053_IEO_FEA_MD,1053,IEO,F,MD,base,10,0,0,4,0,2,4,1,Female,35,Caucasian,Not Hispanic
+1053_IOM_ANG_XX,1053,IOM,A,XX,base,9,8,1,0,0,0,0,2,Female,35,Caucasian,Not Hispanic
+1053_ITH_FEA_XX,1053,ITH,F,XX,extra,10,0,2,6,0,1,1,4,Female,35,Caucasian,Not Hispanic
+1053_ITS_SAD_XX,1053,ITS,S,XX,base,8,0,0,3,0,1,4,4,Female,35,Caucasian,Not Hispanic
+1053_IWW_DIS_XX,1053,IWW,D,XX,base,9,1,7,0,0,0,1,1,Female,35,Caucasian,Not Hispanic
+1053_TAI_NEU_XX,1053,TAI,N,XX,base,10,0,2,0,1,7,0,4,Female,35,Caucasian,Not Hispanic
+1053_TSI_HAP_XX,1053,TSI,H,XX,base,9,0,0,0,9,0,0,4,Female,35,Caucasian,Not Hispanic
+1053_WSI_DIS_XX,1053,WSI,D,XX,extra,10,6,4,0,0,0,0,2,Female,35,Caucasian,Not Hispanic
+1054_DFA_HAP_XX,1054,DFA,H,XX,extra,11,0,0,0,11,0,0,0,Female,36,Caucasian,Not Hispanic
+1054_IEO_SAD_HI,1054,IEO,S,HI,base,10,0,0,3,0,2,5,2,Female,36,Caucasian,Not Hispanic
+1054_IWL_DIS_XX,1054,IWL,D,XX,base,10,1,7,1,0,1,0,5,Female,36,Caucasian,Not Hispanic
+1054_IWW_NEU_XX,1054,IWW,N,XX,base,9,2,0,2,0,4,1,1,Female,36,Caucasian,Not Hispanic
+1054_MTI_ANG_XX,1054,MTI,A,XX,base,11,9,2,0,0,0,0,0,Female,36,Caucasian,Not Hispanic
+1054_TAI_SAD_XX,1054,TAI,S,XX,extra,10,0,0,6,0,0,4,0,Female,36,Caucasian,Not Hispanic
+1054_TIE_FEA_XX,1054,TIE,F,XX,base,10,2,2,4,0,2,0,1,Female,36,Caucasian,Not Hispanic
+1054_TSI_NEU_XX,1054,TSI,N,XX,extra,11,1,2,0,0,8,0,4,Female,36,Caucasian,Not Hispanic
+1054_WSI_HAP_XX,1054,WSI,H,XX,base,10,0,0,0,10,0,0,3,Female,36,Caucasian,Not Hispanic
+1055_DFA_SAD_XX,1055,DFA,S,XX,base,10,1,0,0,0,9,0,4,Female,57,Caucasian,Not Hispanic
+1055_ITH_ANG_XX,1055,ITH,A,XX,base,10,7,1,1,0,1,0,5,Female,57,Caucasian,Not Hispanic
+1055_ITH_DIS_XX,1055,ITH,D,XX,extra,9,1,7,1,0,0,0,0,Female,57,Caucasian,Not Hispanic
+1055_ITS_FEA_XX,1055,ITS,F,XX,base,10,1,1,7,0,0,1,4,Female,57,Caucasian,Not Hispanic
+1055_IWL_HAP_XX,1055,IWL,H,XX,base,9,0,0,0,9,0,0,3,Female,57,Caucasian,Not Hispanic
+1055_IWW_FEA_XX,1055,IWW,F,XX,extra,8,0,1,7,0,0,0,2,Female,57,Caucasian,Not Hispanic
+1055_MTI_DIS_XX,1055,MTI,D,XX,base,9,0,5,0,2,2,0,4,Female,57,Caucasian,Not Hispanic
+1055_TIE_NEU_XX,1055,TIE,N,XX,base,9,2,3,0,0,4,0,1,Female,57,Caucasian,Not Hispanic
+1055_TSI_ANG_XX,1055,TSI,A,XX,extra,11,3,7,1,0,0,0,4,Female,57,Caucasian,Not Hispanic
+1056_IEO_NEU_XX,1056,IEO,N,XX,base,8,0,0,0,0,8,0,3,Female,52,African American,Not Hispanic
+1056_IOM_HAP_XX,1056,IOM,H,XX,base,9,0,0,0,8,1,0,2,Female,52,African American,Not Hispanic
+1056_IOM_NEU_XX,1056,IOM,N,XX,extra,9,0,1,0,0,7,1,0,Female,52,African American,Not Hispanic
+1056_ITS_DIS_XX,1056,ITS,D,XX,base,8,0,1,4,0,0,3,2,Female,52,African American,Not Hispanic
+1056_IWL_SAD_XX,1056,IWL,S,XX,extra,11,1,1,0,0,1,8,3,Female,52,African American,Not Hispanic
+1056_MTI_HAP_XX,1056,MTI,H,XX,extra,10,0,1,0,9,0,0,2,Female,52,African American,Not Hispanic
+1056_TAI_ANG_XX,1056,TAI,A,XX,base,10,1,8,0,1,0,0,2,Female,52,African American,Not Hispanic
+1056_TIE_SAD_XX,1056,TIE,S,XX,base,10,0,1,0,0,3,6,2,Female,52,African American,Not Hispanic
+1056_WSI_FEA_XX,1056,WSI,F,XX,base,10,0,0,9,0,0,1,5,Female,52,African American,Not Hispanic
+1057_DFA_HAP_XX,1057,DFA,H,XX,extra,10,0,0,0,9,1,0,5,Male,25,Caucasian,Not Hispanic
+1057_IEO_ANG_LO,1057,IEO,A,LO,base,10,4,0,0,3,3,0,3,Male,25,Caucasian,Not Hispanic
+1057_IOM_FEA_XX,1057,IOM,F,XX,base,9,0,0,2,4,3,0,3,Male,25,Caucasian,Not Hispanic
+1057_ITS_SAD_XX,1057,ITS,S,XX,base,10,1,0,0,0,8,1,1,Male,25,Caucasian,Not Hispanic
+1057_IWL_NEU_XX,1057,IWL,N,XX,extra,11,0,1,0,0,10,0,0,Male,25,Caucasian,Not Hispanic
+1057_MTI_DIS_XX,1057,MTI,D,XX,base,10,0,6,4,0,0,0,1,Male,25,Caucasian,Not Hispanic
+1057_TAI_NEU_XX,1057,TAI,N,XX,base,11,0,0,0,0,11,0,5,Male,25,Caucasian,Not Hispanic
+1057_TIE_HAP_XX,1057,TIE,H,XX,base,9,0,1,0,7,1,0,4,Male,25,Caucasian,Not Hispanic
+1057_WSI_SAD_XX,1057,WSI,S,XX,extra,9,1,0,1,0,7,0,0,Male,25,Caucasian,Not Hispanic
+1058_IEO_HAP_HI,1058,IEO,H,HI,base,11,0,0,0,11,0,0,0,Female,36,Caucasian,Not Hispanic
+1058_IOM_ANG_XX,1058,IOM,A,XX,extra,10,3,7,0,0,0,0,5,Female,36,Caucasian,Not Hispanic
+1058_ITH_FEA_XX,1058,ITH,F,XX,base,9,1,0,3,0,0,5,4,Female,36,Caucasian,Not Hispanic
+1058_ITS_FEA_XX,1058,ITS,F,XX,extra,9,1,1,7,0,0,0,2,Female,36,Caucasian,Not Hispanic
+1058_IWL_DIS_XX,1058,IWL,D,XX,extra,10,0,7,1,0,0,2,0,Female,36,Caucasian,Not Hispanic
+1058_IWW_DIS_XX,1058,IWW,D,XX,base,9,0,8,0,0,0,1,1,Female,36,Caucasian,Not Hispanic
+1058_TIE_SAD_XX,1058,TIE,S,XX,base,9,0,0,1,0,0,8,1,Female,36,Caucasian,Not Hispanic
+1058_TSI_ANG_XX,1058,TSI,A,XX,base,10,9,0,0,0,1,0,5,Female,36,Caucasian,Not Hispanic
+1058_WSI_NEU_XX,1058,WSI,N,XX,base,11,0,0,0,1,6,4,4,Female,36,Caucasian,Not Hispanic
+1059_DFA_FEA_XX,1059,DFA,F,XX,base,9,1,0,5,0,1,2,2,Male,21,African American,Not Hispanic
+1059_IEO_DIS_LO,1059,IEO,D,LO,extra,10,0,8,0,0,0,2,1,Male,21,African American,Not Hispanic
+1059_ITH_SAD_XX,1059,ITH,S,XX,base,9,0,0,4,0,4,1,3,Male,21,African American,Not Hispanic
+1059_IWL_FEA_XX,1059,IWL,F,XX,extra,10,2,2,3,2,1,0,2,Male,21,African American,Not Hispanic
+1059_IWW_NEU_XX,1059,IWW,N,XX,base,9,1,1,0,0,6,1,0,Male,21,African American,Not Hispanic
+1059_MTI_HAP_XX,1059,MTI,H,XX,base,9,0,0,0,7,2,0,2,Male,21,African American,Not Hispanic
+1059_TAI_ANG_XX,1059,TAI,A,XX,base,10,9,0,0,0,1,0,4,Male,21,African American,Not Hispanic
+1059_TSI_DIS_XX,1059,TSI,D,XX,base,10,1,8,0,0,1,0,0,Male,21,African American,Not Hispanic
+1059_WSI_ANG_XX,1059,WSI,A,XX,extra,10,8,2,0,0,0,0,3,Male,21,African American,Not Hispanic
+1060_DFA_SAD_XX,1060,DFA,S,XX,base,10,0,0,1,0,8,1,0,Female,28,African American,Not Hispanic
+1060_IEO_SAD_LO,1060,IEO,S,LO,extra,10,0,1,0,0,3,6,2,Female,28,African American,Not Hispanic
+1060_IOM_NEU_XX,1060,IOM,N,XX,extra,11,0,1,0,0,9,1,2,Female,28,African American,Not Hispanic
+1060_ITH_DIS_XX,1060,ITH,D,XX,base,10,0,4,0,0,3,3,0,Female,28,African American,Not Hispanic
+1060_ITS_HAP_XX,1060,ITS,H,XX,base,11,0,0,0,11,0,0,3,Female,28,African American,Not Hispanic
+1060_IWW_HAP_XX,1060,IWW,H,XX,extra,9,0,0,0,9,0,0,2,Female,28,African American,Not Hispanic
+1060_MTI_ANG_XX,1060,MTI,A,XX,base,9,2,5,0,0,2,0,0,Female,28,African American,Not Hispanic
+1060_TAI_FEA_XX,1060,TAI,F,XX,base,11,3,5,0,0,3,0,1,Female,28,African American,Not Hispanic
+1060_TSI_NEU_XX,1060,TSI,N,XX,base,9,1,1,0,0,4,3,1,Female,28,African American,Not Hispanic
+1061_DFA_ANG_XX,1061,DFA,A,XX,extra,10,6,3,0,0,1,0,1,Female,51,African American,Not Hispanic
+1061_IEO_FEA_LO,1061,IEO,F,LO,extra,10,0,1,0,0,8,1,5,Female,51,African American,Not Hispanic
+1061_IOM_DIS_XX,1061,IOM,D,XX,extra,9,3,5,0,1,0,0,1,Female,51,African American,Not Hispanic
+1061_ITS_NEU_XX,1061,ITS,N,XX,base,9,0,1,0,0,7,1,0,Female,51,African American,Not Hispanic
+1061_IWW_SAD_XX,1061,IWW,S,XX,base,10,0,2,3,0,4,1,2,Female,51,African American,Not Hispanic
+1061_MTI_FEA_XX,1061,MTI,F,XX,base,9,1,1,7,0,0,0,5,Female,51,African American,Not Hispanic
+1061_TIE_ANG_XX,1061,TIE,A,XX,base,9,5,3,0,0,1,0,0,Female,51,African American,Not Hispanic
+1061_TSI_HAP_XX,1061,TSI,H,XX,base,10,0,0,0,10,0,0,3,Female,51,African American,Not Hispanic
+1061_WSI_DIS_XX,1061,WSI,D,XX,base,10,3,3,1,0,1,2,0,Female,51,African American,Not Hispanic
+1062_DFA_NEU_XX,1062,DFA,N,XX,extra,10,0,0,2,0,7,1,5,Male,56,Caucasian,Not Hispanic
+1062_IOM_HAP_XX,1062,IOM,H,XX,extra,10,0,1,0,8,1,0,1,Male,56,Caucasian,Not Hispanic
+1062_ITH_ANG_XX,1062,ITH,A,XX,base,9,0,2,4,0,0,3,3,Male,56,Caucasian,Not Hispanic
+1062_IWL_HAP_XX,1062,IWL,H,XX,base,10,0,1,1,6,1,1,4,Male,56,Caucasian,Not Hispanic
+1062_IWL_SAD_XX,1062,IWL,S,XX,extra,9,0,0,0,0,2,7,1,Male,56,Caucasian,Not Hispanic
+1062_MTI_NEU_XX,1062,MTI,N,XX,base,10,1,0,3,0,3,3,5,Male,56,Caucasian,Not Hispanic
+1062_TAI_DIS_XX,1062,TAI,D,XX,base,8,0,3,1,0,1,3,3,Male,56,Caucasian,Not Hispanic
+1062_TIE_FEA_XX,1062,TIE,F,XX,base,10,2,1,6,0,0,1,4,Male,56,Caucasian,Not Hispanic
+1062_TSI_SAD_XX,1062,TSI,S,XX,base,9,0,0,3,0,4,2,4,Male,56,Caucasian,Not Hispanic
+1063_IEO_NEU_XX,1063,IEO,N,XX,base,10,0,2,0,0,6,2,0,Female,33,African American,Not Hispanic
+1063_ITH_HAP_XX,1063,ITH,H,XX,base,10,0,0,0,10,0,0,4,Female,33,African American,Not Hispanic
+1063_ITS_ANG_XX,1063,ITS,A,XX,base,10,3,5,1,0,1,0,5,Female,33,African American,Not Hispanic
+1063_MTI_SAD_XX,1063,MTI,S,XX,extra,9,0,0,2,0,1,6,5,Female,33,African American,Not Hispanic
+1063_TAI_SAD_XX,1063,TAI,S,XX,base,10,0,0,5,0,1,4,1,Female,33,African American,Not Hispanic
+1063_TIE_DIS_XX,1063,TIE,D,XX,base,10,0,0,2,0,0,8,2,Female,33,African American,Not Hispanic
+1063_TIE_NEU_XX,1063,TIE,N,XX,extra,9,0,2,0,0,6,1,5,Female,33,African American,Not Hispanic
+1063_WSI_FEA_XX,1063,WSI,F,XX,base,11,0,0,10,0,0,1,0,Female,33,African American,Not Hispanic
+1063_WSI_HAP_XX,1063,WSI,H,XX,extra,10,0,0,0,10,0,0,3,Female,33,African American,Not Hispanic
+1064_DFA_DIS_XX,1064,DFA,D,XX,base,9,0,1,0,0,0,8,0,Male,53,Caucasian,Not Hispanic
+1064_IOM_SAD_XX,1064,IOM,S,XX,base,9,0,3,0,0,3,3,4,Male,53,Caucasian,Not Hispanic
+1064_ITH_NEU_XX,1064,ITH,N,XX,base,10,0,1,1,0,5,3,0,Male,53,Caucasian,Not Hispanic
+1064_ITS_DIS_XX,1064,ITS,D,XX,extra,10,0,9,1,0,0,0,1,Male,53,Caucasian,Not Hispanic
+1064_IWL_ANG_XX,1064,IWL,A,XX,extra,9,8,1,0,0,0,0,0,Male,53,Caucasian,Not Hispanic
+1064_IWW_ANG_XX,1064,IWW,A,XX,base,9,6,3,0,0,0,0,4,Male,53,Caucasian,Not Hispanic
+1064_IWW_FEA_XX,1064,IWW,F,XX,extra,10,5,1,3,0,1,0,5,Male,53,Caucasian,Not Hispanic
+1064_TAI_HAP_XX,1064,TAI,H,XX,base,9,0,0,0,9,0,0,5,Male,53,Caucasian,Not Hispanic
+1064_TSI_FEA_XX,1064,TSI,F,XX,base,10,0,1,8,0,1,0,3,Male,53,Caucasian,Not Hispanic
+1065_IEO_ANG_MD,1065,IEO,A,MD,base,11,9,0,2,0,0,0,0,Male,38,Caucasian,Not Hispanic
+1065_IOM_HAP_XX,1065,IOM,H,XX,base,10,0,0,0,10,0,0,0,Male,38,Caucasian,Not Hispanic
+1065_ITH_NEU_XX,1065,ITH,N,XX,extra,10,0,1,3,0,6,0,5,Male,38,Caucasian,Not Hispanic
+1065_ITS_SAD_XX,1065,ITS,S,XX,base,9,1,0,4,0,4,0,1,Male,38,Caucasian,Not Hispanic
+1065_IWL_HAP_XX,1065,IWL,H,XX,extra,10,0,0,0,10,0,0,4,Male,38,Caucasian,Not Hispanic
+1065_MTI_DIS_XX,1065,MTI,D,XX,base,9,0,1,7,0,0,1,0,Male,38,Caucasian,Not Hispanic
+1065_TAI_SAD_XX,1065,TAI,S,XX,extra,9,0,0,4,0,4,1,5,Male,38,Caucasian,Not Hispanic
+1065_TSI_NEU_XX,1065,TSI,N,XX,base,10,2,2,1,0,5,0,2,Male,38,Caucasian,Not Hispanic
+1065_WSI_FEA_XX,1065,WSI,F,XX,base,9,1,0,7,0,1,0,2,Male,38,Caucasian,Not Hispanic
+1066_DFA_DIS_XX,1066,DFA,D,XX,base,10,0,5,0,0,1,4,5,Male,25,Caucasian,Not Hispanic
+1066_IEO_HAP_MD,1066,IEO,H,MD,base,9,0,0,0,8,1,0,4,Male,25,Caucasian,Not Hispanic
+1066_ITH_DIS_XX,1066,ITH,D,XX,extra,10,0,1,1,0,0,8,2,Male,25,Caucasian,Not Hispanic
+1066_ITS_NEU_XX,1066,ITS,N,XX,base,9,0,0,1,0,8,0,0,Male,25,Caucasian,Not Hispanic
+1066_IWL_SAD_XX,1066,IWL,S,XX,base,10,1,0,0,0,8,1,1,Male,25,Caucasian,Not Hispanic
+1066_IWW_ANG_XX,1066,IWW,A,XX,base,10,7,2,0,1,0,0,4,Male,25,Caucasian,Not Hispanic
+1066_MTI_FEA_XX,1066,MTI,F,XX,extra,11,1,1,4,0,4,1,3,Male,25,Caucasian,Not Hispanic
+1066_TIE_FEA_XX,1066,TIE,F,XX,base,10,1,1,0,1,7,0,0,Male,25,Caucasian,Not Hispanic
+1066_TSI_ANG_XX,1066,TSI,A,XX,extra,9,2,7,0,0,0,0,0,Male,25,Caucasian,Not Hispanic
+1067_DFA_ANG_XX,1067,DFA,A,XX,base,9,6,2,0,0,1,0,2,Male,66,Caucasian,Not Hispanic
+1067_IEO_SAD_MD,1067,IEO,S,MD,extra,10,1,0,5,3,1,0,0,Male,66,Caucasian,Not Hispanic
+1067_IOM_NEU_XX,1067,IOM,N,XX,base,10,0,3,0,0,6,1,1,Male,66,Caucasian,Not Hispanic
+1067_ITS_HAP_XX,1067,ITS,H,XX,extra,9,0,0,1,6,2,0,1,Male,66,Caucasian,Not Hispanic
+1067_IWW_DIS_XX,1067,IWW,D,XX,base,9,2,5,0,0,2,0,1,Male,66,Caucasian,Not Hispanic
+1067_MTI_NEU_XX,1067,MTI,N,XX,extra,9,0,4,0,0,2,3,3,Male,66,Caucasian,Not Hispanic
+1067_TAI_FEA_XX,1067,TAI,F,XX,base,10,0,1,9,0,0,0,0,Male,66,Caucasian,Not Hispanic
+1067_TIE_HAP_XX,1067,TIE,H,XX,base,10,0,0,0,10,0,0,0,Male,66,Caucasian,Not Hispanic
+1067_WSI_SAD_XX,1067,WSI,S,XX,base,10,2,3,1,0,4,0,3,Male,66,Caucasian,Not Hispanic
+1068_DFA_SAD_XX,1068,DFA,S,XX,base,9,1,1,2,0,3,2,0,Male,34,Caucasian,Not Hispanic
+1068_IEO_FEA_MD,1068,IEO,F,MD,extra,10,1,0,4,0,5,0,1,Male,34,Caucasian,Not Hispanic
+1068_IOM_ANG_XX,1068,IOM,A,XX,extra,10,9,0,0,0,1,0,0,Male,34,Caucasian,Not Hispanic
+1068_ITH_ANG_XX,1068,ITH,A,XX,base,10,6,2,0,0,2,0,5,Male,34,Caucasian,Not Hispanic
+1068_IWL_DIS_XX,1068,IWL,D,XX,extra,8,0,7,0,0,0,1,5,Male,34,Caucasian,Not Hispanic
+1068_IWW_FEA_XX,1068,IWW,F,XX,base,9,4,2,2,1,0,0,2,Male,34,Caucasian,Not Hispanic
+1068_TAI_NEU_XX,1068,TAI,N,XX,base,9,1,0,0,0,8,0,5,Male,34,Caucasian,Not Hispanic
+1068_TSI_DIS_XX,1068,TSI,D,XX,base,9,0,7,0,2,0,0,4,Male,34,Caucasian,Not Hispanic
+1068_WSI_HAP_XX,1068,WSI,H,XX,base,10,0,0,0,10,0,0,2,Male,34,Caucasian,Not Hispanic
+1069_DFA_FEA_XX,1069,DFA,F,XX,base,8,0,0,4,0,4,0,4,Male,27,Caucasian,Not Hispanic
+1069_IOM_DIS_XX,1069,IOM,D,XX,base,10,0,8,0,0,0,2,2,Male,27,Caucasian,Not Hispanic
+1069_ITH_SAD_XX,1069,ITH,S,XX,base,10,0,0,3,0,1,6,0,Male,27,Caucasian,Not Hispanic
+1069_IWL_NEU_XX,1069,IWL,N,XX,base,11,0,1,0,0,10,0,0,Male,27,Caucasian,Not Hispanic
+1069_IWW_NEU_XX,1069,IWW,N,XX,extra,9,1,0,0,0,7,1,1,Male,27,Caucasian,Not Hispanic
+1069_MTI_HAP_XX,1069,MTI,H,XX,base,10,0,0,0,10,0,0,5,Male,27,Caucasian,Not Hispanic
+1069_TAI_HAP_XX,1069,TAI,H,XX,extra,10,0,0,0,9,1,0,5,Male,27,Caucasian,Not Hispanic
+1069_TIE_ANG_XX,1069,TIE,A,XX,base,10,9,1,0,0,0,0,4,Male,27,Caucasian,Not Hispanic
+1069_TSI_SAD_XX,1069,TSI,S,XX,extra,10,0,0,3,0,1,6,2,Male,27,Caucasian,Not Hispanic
+1070_IEO_DIS_HI,1070,IEO,D,HI,extra,11,0,11,0,0,0,0,0,Male,25,African American,Not Hispanic
+1070_ITH_FEA_XX,1070,ITH,F,XX,extra,10,1,4,0,0,5,0,2,Male,25,African American,Not Hispanic
+1070_ITS_ANG_XX,1070,ITS,A,XX,base,10,4,0,0,2,3,1,5,Male,25,African American,Not Hispanic
+1070_IWW_HAP_XX,1070,IWW,H,XX,base,10,0,0,0,10,0,0,2,Male,25,African American,Not Hispanic
+1070_MTI_SAD_XX,1070,MTI,S,XX,base,10,0,2,0,1,5,2,5,Male,25,African American,Not Hispanic
+1070_TAI_ANG_XX,1070,TAI,A,XX,extra,9,7,1,1,0,0,0,4,Male,25,African American,Not Hispanic
+1070_TIE_DIS_XX,1070,TIE,D,XX,base,10,0,10,0,0,0,0,5,Male,25,African American,Not Hispanic
+1070_TSI_FEA_XX,1070,TSI,F,XX,base,10,0,1,3,0,5,1,4,Male,25,African American,Not Hispanic
+1070_WSI_NEU_XX,1070,WSI,N,XX,base,9,1,4,0,0,3,1,1,Male,25,African American,Not Hispanic
+1071_DFA_HAP_XX,1071,DFA,H,XX,base,8,0,0,0,7,1,0,0,Male,41,Caucasian,Not Hispanic
+1071_IEO_NEU_XX,1071,IEO,N,XX,extra,10,1,0,0,0,7,2,4,Male,41,Caucasian,Not Hispanic
+1071_IOM_FEA_XX,1071,IOM,F,XX,base,10,3,1,1,0,4,1,2,Male,41,Caucasian,Not Hispanic
+1071_IOM_SAD_XX,1071,IOM,S,XX,extra,10,0,0,0,1,6,3,5,Male,41,Caucasian,Not Hispanic
+1071_IWL_ANG_XX,1071,IWL,A,XX,base,10,7,3,0,0,0,0,4,Male,41,Caucasian,Not Hispanic
+1071_IWW_SAD_XX,1071,IWW,S,XX,base,9,0,2,0,0,5,2,4,Male,41,Caucasian,Not Hispanic
+1071_TIE_NEU_XX,1071,TIE,N,XX,base,9,0,1,0,0,7,1,0,Male,41,Caucasian,Not Hispanic
+1071_TSI_HAP_XX,1071,TSI,H,XX,extra,11,0,0,0,10,1,0,1,Male,41,Caucasian,Not Hispanic
+1071_WSI_DIS_XX,1071,WSI,D,XX,base,9,3,3,0,0,3,0,1,Male,41,Caucasian,Not Hispanic
+1072_DFA_NEU_XX,1072,DFA,N,XX,base,10,2,1,0,0,7,0,4,Female,33,Asian,Not Hispanic
+1072_ITH_HAP_XX,1072,ITH,H,XX,base,10,0,0,0,10,0,0,1,Female,33,Asian,Not Hispanic
+1072_ITS_DIS_XX,1072,ITS,D,XX,base,10,1,8,0,0,0,1,0,Female,33,Asian,Not Hispanic
+1072_ITS_FEA_XX,1072,ITS,F,XX,extra,10,0,1,8,0,0,1,4,Female,33,Asian,Not Hispanic
+1072_IWL_FEA_XX,1072,IWL,F,XX,base,11,0,0,11,0,0,0,1,Female,33,Asian,Not Hispanic
+1072_MTI_ANG_XX,1072,MTI,A,XX,base,9,9,0,0,0,0,0,2,Female,33,Asian,Not Hispanic
+1072_TAI_DIS_XX,1072,TAI,D,XX,extra,10,8,2,0,0,0,0,4,Female,33,Asian,Not Hispanic
+1072_TIE_SAD_XX,1072,TIE,S,XX,base,10,1,1,1,0,7,0,5,Female,33,Asian,Not Hispanic
+1072_WSI_ANG_XX,1072,WSI,A,XX,extra,9,9,0,0,0,0,0,1,Female,33,Asian,Not Hispanic
+1073_DFA_FEA_XX,1073,DFA,F,XX,base,10,0,0,8,0,0,2,5,Female,24,African American,Hispanic
+1073_IEO_ANG_HI,1073,IEO,A,HI,base,9,2,0,7,0,0,0,5,Female,24,African American,Hispanic
+1073_IOM_NEU_XX,1073,IOM,N,XX,extra,10,0,0,0,0,9,1,2,Female,24,African American,Hispanic
+1073_ITH_SAD_XX,1073,ITH,S,XX,extra,10,0,0,3,0,1,6,5,Female,24,African American,Hispanic
+1073_ITS_NEU_XX,1073,ITS,N,XX,base,10,0,0,1,0,8,1,4,Female,24,African American,Hispanic
+1073_IWW_DIS_XX,1073,IWW,D,XX,base,9,0,2,0,0,0,7,0,Female,24,African American,Hispanic
+1073_TAI_HAP_XX,1073,TAI,H,XX,extra,10,0,0,1,8,1,0,3,Female,24,African American,Hispanic
+1073_TIE_HAP_XX,1073,TIE,H,XX,base,8,0,0,0,7,1,0,4,Female,24,African American,Hispanic
+1073_TSI_SAD_XX,1073,TSI,S,XX,base,9,0,0,1,0,6,2,3,Female,24,African American,Hispanic
+1074_DFA_ANG_XX,1074,DFA,A,XX,extra,10,7,2,0,0,1,0,2,Female,31,African American,Not Hispanic
+1074_IEO_HAP_MD,1074,IEO,H,MD,base,9,0,0,0,9,0,0,4,Female,31,African American,Not Hispanic
+1074_IOM_DIS_XX,1074,IOM,D,XX,extra,10,0,8,0,1,0,1,0,Female,31,African American,Not Hispanic
+1074_ITH_NEU_XX,1074,ITH,N,XX,base,9,0,0,1,0,8,0,1,Female,31,African American,Not Hispanic
+1074_IWL_DIS_XX,1074,IWL,D,XX,base,9,0,2,0,0,0,7,4,Female,31,African American,Not Hispanic
+1074_IWW_FEA_XX,1074,IWW,F,XX,extra,10,0,0,1,0,1,8,4,Female,31,African American,Not Hispanic
+1074_MTI_FEA_XX,1074,MTI,F,XX,base,10,0,0,5,0,1,4,1,Female,31,African American,Not Hispanic
+1074_TAI_SAD_XX,1074,TAI,S,XX,base,10,0,1,2,1,0,6,2,Female,31,African American,Not Hispanic
+1074_WSI_ANG_XX,1074,WSI,A,XX,base,10,7,3,0,0,0,0,0,Female,31,African American,Not Hispanic
+1075_DFA_NEU_XX,1075,DFA,N,XX,extra,9,0,2,0,0,6,1,1,Female,40,Caucasian,Not Hispanic
+1075_IEO_SAD_HI,1075,IEO,S,HI,extra,10,0,2,1,0,3,4,0,Female,40,Caucasian,Not Hispanic
+1075_ITH_HAP_XX,1075,ITH,H,XX,extra,11,0,0,1,9,1,0,5,Female,40,Caucasian,Not Hispanic
+1075_ITS_FEA_XX,1075,ITS,F,XX,base,9,2,2,2,0,3,0,1,Female,40,Caucasian,Not Hispanic
+1075_IWL_NEU_XX,1075,IWL,N,XX,base,10,0,0,0,0,7,3,2,Female,40,Caucasian,Not Hispanic
+1075_MTI_DIS_XX,1075,MTI,D,XX,base,9,0,1,3,0,0,5,5,Female,40,Caucasian,Not Hispanic
+1075_TIE_SAD_XX,1075,TIE,S,XX,base,9,0,1,2,0,2,4,2,Female,40,Caucasian,Not Hispanic
+1075_TSI_ANG_XX,1075,TSI,A,XX,base,9,6,3,0,0,0,0,5,Female,40,Caucasian,Not Hispanic
+1075_WSI_HAP_XX,1075,WSI,H,XX,base,10,0,0,0,9,1,0,5,Female,40,Caucasian,Not Hispanic
+1076_IOM_FEA_XX,1076,IOM,F,XX,base,10,0,1,2,1,5,1,3,Female,25,Caucasian,Not Hispanic
+1076_ITS_ANG_XX,1076,ITS,A,XX,extra,10,1,7,0,0,2,0,0,Female,25,Caucasian,Not Hispanic
+1076_IWL_SAD_XX,1076,IWL,S,XX,base,10,0,2,2,0,2,4,2,Female,25,Caucasian,Not Hispanic
+1076_IWW_NEU_XX,1076,IWW,N,XX,base,9,1,1,1,0,6,0,5,Female,25,Caucasian,Not Hispanic
+1076_MTI_ANG_XX,1076,MTI,A,XX,base,10,2,6,1,0,1,0,5,Female,25,Caucasian,Not Hispanic
+1076_TAI_DIS_XX,1076,TAI,D,XX,base,9,0,2,2,0,0,5,3,Female,25,Caucasian,Not Hispanic
+1076_TIE_FEA_XX,1076,TIE,F,XX,extra,8,0,1,2,0,4,1,4,Female,25,Caucasian,Not Hispanic
+1076_TSI_HAP_XX,1076,TSI,H,XX,base,9,0,0,0,8,1,0,3,Female,25,Caucasian,Not Hispanic
+1076_WSI_DIS_XX,1076,WSI,D,XX,extra,10,0,8,1,0,0,1,0,Female,25,Caucasian,Not Hispanic
+1077_DFA_DIS_XX,1077,DFA,D,XX,extra,9,7,1,1,0,0,0,4,Male,20,Caucasian,Not Hispanic
+1077_IEO_DIS_MD,1077,IEO,D,MD,base,10,0,4,1,0,2,3,2,Male,20,Caucasian,Not Hispanic
+1077_IOM_ANG_XX,1077,IOM,A,XX,base,11,9,1,1,0,0,0,3,Male,20,Caucasian,Not Hispanic
+1077_ITH_FEA_XX,1077,ITH,F,XX,base,10,0,0,1,1,8,0,0,Male,20,Caucasian,Not Hispanic
+1077_ITS_SAD_XX,1077,ITS,S,XX,base,9,0,1,1,0,6,1,5,Male,20,Caucasian,Not Hispanic
+1077_IWW_HAP_XX,1077,IWW,H,XX,base,9,0,0,0,7,2,0,5,Male,20,Caucasian,Not Hispanic
+1077_TAI_FEA_XX,1077,TAI,F,XX,extra,9,0,0,4,0,5,0,3,Male,20,Caucasian,Not Hispanic
+1077_TIE_ANG_XX,1077,TIE,A,XX,extra,10,6,1,0,0,3,0,1,Male,20,Caucasian,Not Hispanic
+1077_TSI_NEU_XX,1077,TSI,N,XX,base,11,1,0,0,0,10,0,0,Male,20,Caucasian,Not Hispanic
+1078_DFA_SAD_XX,1078,DFA,S,XX,extra,10,0,3,1,0,4,2,0,Female,21,Caucasian,Not Hispanic
+1078_IEO_NEU_XX,1078,IEO,N,XX,base,10,0,2,0,0,7,1,0,Female,21,Caucasian,Not Hispanic
+1078_IOM_SAD_XX,1078,IOM,S,XX,base,10,0,0,3,0,3,4,1,Female,21,Caucasian,Not Hispanic
+1078_ITS_HAP_XX,1078,ITS,H,XX,extra,10,0,0,0,8,2,0,3,Female,21,Caucasian,Not Hispanic
+1078_IWL_ANG_XX,1078,IWL,A,XX,base,8,7,1,0,0,0,0,3,Female,21,Caucasian,Not Hispanic
+1078_MTI_HAP_XX,1078,MTI,H,XX,base,10,0,0,0,10,0,0,5,Female,21,Caucasian,Not Hispanic
+1078_TIE_NEU_XX,1078,TIE,N,XX,extra,10,1,0,0,0,8,1,2,Female,21,Caucasian,Not Hispanic
+1078_TSI_DIS_XX,1078,TSI,D,XX,base,10,1,8,0,0,0,1,5,Female,21,Caucasian,Not Hispanic
+1078_WSI_FEA_XX,1078,WSI,F,XX,base,10,0,0,9,0,1,0,3,Female,21,Caucasian,Not Hispanic
+1079_IEO_FEA_HI,1079,IEO,F,HI,extra,10,0,0,10,0,0,0,4,Female,21,Caucasian,Hispanic
+1079_IOM_HAP_XX,1079,IOM,H,XX,base,9,0,0,0,9,0,0,5,Female,21,Caucasian,Hispanic
+1079_ITH_ANG_XX,1079,ITH,A,XX,extra,9,1,4,0,0,3,1,0,Female,21,Caucasian,Hispanic
+1079_ITH_DIS_XX,1079,ITH,D,XX,base,10,0,1,2,0,0,7,1,Female,21,Caucasian,Hispanic
+1079_IWL_FEA_XX,1079,IWL,F,XX,base,9,0,1,6,0,0,2,5,Female,21,Caucasian,Hispanic
+1079_IWW_ANG_XX,1079,IWW,A,XX,base,10,2,8,0,0,0,0,4,Female,21,Caucasian,Hispanic
+1079_TAI_NEU_XX,1079,TAI,N,XX,base,10,0,0,0,0,9,1,2,Female,21,Caucasian,Hispanic
+1079_TIE_DIS_XX,1079,TIE,D,XX,extra,9,1,6,0,0,0,2,1,Female,21,Caucasian,Hispanic
+1079_WSI_SAD_XX,1079,WSI,S,XX,base,9,5,3,0,0,0,1,4,Female,21,Caucasian,Hispanic
+1080_DFA_HAP_XX,1080,DFA,H,XX,base,10,0,0,0,8,2,0,0,Male,21,African American,Not Hispanic
+1080_ITS_DIS_XX,1080,ITS,D,XX,base,9,0,8,0,0,1,0,0,Male,21,African American,Not Hispanic
+1080_IWL_HAP_XX,1080,IWL,H,XX,extra,9,0,0,0,8,1,0,3,Male,21,African American,Not Hispanic
+1080_IWW_SAD_XX,1080,IWW,S,XX,base,10,0,1,2,0,1,6,3,Male,21,African American,Not Hispanic
+1080_MTI_NEU_XX,1080,MTI,N,XX,base,10,0,0,0,1,9,0,5,Male,21,African American,Not Hispanic
+1080_MTI_SAD_XX,1080,MTI,S,XX,extra,10,0,0,3,0,4,3,4,Male,21,African American,Not Hispanic
+1080_TAI_ANG_XX,1080,TAI,A,XX,base,8,1,3,0,2,2,0,5,Male,21,African American,Not Hispanic
+1080_TSI_FEA_XX,1080,TSI,F,XX,base,10,1,1,5,0,2,1,1,Male,21,African American,Not Hispanic
+1080_WSI_NEU_XX,1080,WSI,N,XX,extra,10,0,1,0,0,9,0,0,Male,21,African American,Not Hispanic
+1081_DFA_FEA_XX,1081,DFA,F,XX,extra,10,1,1,2,0,5,1,0,Male,30,Asian,Not Hispanic
+1081_IEO_ANG_MD,1081,IEO,A,MD,base,10,6,1,0,0,3,0,1,Male,30,Asian,Not Hispanic
+1081_ITH_FEA_XX,1081,ITH,F,XX,base,10,1,1,6,0,2,0,2,Male,30,Asian,Not Hispanic
+1081_IWL_DIS_XX,1081,IWL,D,XX,base,9,0,7,0,1,0,1,3,Male,30,Asian,Not Hispanic
+1081_IWW_SAD_XX,1081,IWW,S,XX,base,10,0,0,0,0,10,0,4,Male,30,Asian,Not Hispanic
+1081_TAI_ANG_XX,1081,TAI,A,XX,extra,9,6,3,0,0,0,0,3,Male,30,Asian,Not Hispanic
+1081_TIE_DIS_XX,1081,TIE,D,XX,extra,10,5,4,0,0,1,0,4,Male,30,Asian,Not Hispanic
+1081_TSI_NEU_XX,1081,TSI,N,XX,base,8,1,0,1,1,4,1,2,Male,30,Asian,Not Hispanic
+1081_WSI_HAP_XX,1081,WSI,H,XX,base,9,0,0,0,9,0,0,1,Male,30,Asian,Not Hispanic
+1082_IEO_HAP_LO,1082,IEO,H,LO,base,10,0,0,0,10,0,0,4,Female,20,Caucasian,Not Hispanic
+1082_IOM_DIS_XX,1082,IOM,D,XX,base,9,2,7,0,0,0,0,1,Female,20,Caucasian,Not Hispanic
+1082_ITS_ANG_XX,1082,ITS,A,XX,base,10,10,0,0,0,0,0,0,Female,20,Caucasian,Not Hispanic
+1082_IWL_HAP_XX,1082,IWL,H,XX,extra,10,0,0,0,10,0,0,1,Female,20,Caucasian,Not Hispanic
+1082_MTI_FEA_XX,1082,MTI,F,XX,base,9,0,0,2,0,0,7,4,Female,20,Caucasian,Not Hispanic
+1082_TAI_NEU_XX,1082,TAI,N,XX,base,10,0,1,0,0,8,1,3,Female,20,Caucasian,Not Hispanic
+1082_TIE_SAD_XX,1082,TIE,S,XX,extra,9,2,0,0,0,3,4,0,Female,20,Caucasian,Not Hispanic
+1082_TSI_SAD_XX,1082,TSI,S,XX,base,9,0,0,1,0,0,8,3,Female,20,Caucasian,Not Hispanic
+1082_WSI_NEU_XX,1082,WSI,N,XX,extra,10,0,1,1,1,5,2,2,Female,20,Caucasian,Not Hispanic
+1083_DFA_ANG_XX,1083,DFA,A,XX,base,9,9,0,0,0,0,0,1,Male,45,African American,Not Hispanic
+1083_IEO_SAD_LO,1083,IEO,S,LO,base,9,0,1,0,0,1,7,2,Male,45,African American,Not Hispanic
+1083_IOM_FEA_XX,1083,IOM,F,XX,base,9,0,1,1,0,0,7,2,Male,45,African American,Not Hispanic
+1083_ITH_HAP_XX,1083,ITH,H,XX,base,9,0,0,0,9,0,0,1,Male,45,African American,Not Hispanic
+1083_ITS_NEU_XX,1083,ITS,N,XX,base,8,0,0,1,0,7,0,3,Male,45,African American,Not Hispanic
+1083_IWL_NEU_XX,1083,IWL,N,XX,extra,10,0,1,1,0,4,4,3,Male,45,African American,Not Hispanic
+1083_IWW_HAP_XX,1083,IWW,H,XX,extra,10,0,0,0,10,0,0,0,Male,45,African American,Not Hispanic
+1083_MTI_DIS_XX,1083,MTI,D,XX,base,10,0,1,1,0,0,8,5,Male,45,African American,Not Hispanic
+1083_TAI_SAD_XX,1083,TAI,S,XX,extra,8,0,0,2,0,1,5,2,Male,45,African American,Not Hispanic
+1084_DFA_DIS_XX,1084,DFA,D,XX,extra,10,1,8,0,0,0,1,5,Female,46,Caucasian,Not Hispanic
+1084_IOM_HAP_XX,1084,IOM,H,XX,base,10,0,0,0,10,0,0,5,Female,46,Caucasian,Not Hispanic
+1084_ITH_NEU_XX,1084,ITH,N,XX,base,9,0,0,0,0,9,0,1,Female,46,Caucasian,Not Hispanic
+1084_ITS_FEA_XX,1084,ITS,F,XX,extra,9,0,0,5,0,1,3,2,Female,46,Caucasian,Not Hispanic
+1084_IWW_FEA_XX,1084,IWW,F,XX,base,9,0,1,7,0,0,1,5,Female,46,Caucasian,Not Hispanic
+1084_MTI_ANG_XX,1084,MTI,A,XX,extra,10,4,2,2,0,1,1,3,Female,46,Caucasian,Not Hispanic
+1084_TIE_ANG_XX,1084,TIE,A,XX,base,9,2,6,0,0,1,0,3,Female,46,Caucasian,Not Hispanic
+1084_TSI_DIS_XX,1084,TSI,D,XX,base,10,0,10,0,0,0,0,0,Female,46,Caucasian,Not Hispanic
+1084_WSI_SAD_XX,1084,WSI,S,XX,base,9,0,0,6,0,3,0,4,Female,46,Caucasian,Not Hispanic
+1085_DFA_HAP_XX,1085,DFA,H,XX,base,10,0,0,0,9,1,0,1,Male,34,Asian,Not Hispanic
+1085_IEO_DIS_HI,1085,IEO,D,HI,base,10,0,9,0,0,1,0,3,Male,34,Asian,Not Hispanic
+1085_IOM_SAD_XX,1085,IOM,S,XX,base,10,0,0,0,1,8,1,2,Male,34,Asian,Not Hispanic
+1085_ITH_ANG_XX,1085,ITH,A,XX,base,10,3,2,2,0,3,0,0,Male,34,Asian,Not Hispanic
+1085_ITS_DIS_XX,1085,ITS,D,XX,extra,10,1,8,0,0,0,1,3,Male,34,Asian,Not Hispanic
+1085_IWL_ANG_XX,1085,IWL,A,XX,extra,9,6,2,0,0,1,0,1,Male,34,Asian,Not Hispanic
+1085_MTI_NEU_XX,1085,MTI,N,XX,base,10,0,0,0,0,10,0,3,Male,34,Asian,Not Hispanic
+1085_TAI_FEA_XX,1085,TAI,F,XX,extra,10,0,7,0,0,2,1,1,Male,34,Asian,Not Hispanic
+1085_TSI_FEA_XX,1085,TSI,F,XX,base,9,0,2,1,0,0,6,3,Male,34,Asian,Not Hispanic
+1086_DFA_NEU_XX,1086,DFA,N,XX,extra,9,0,0,0,1,8,0,5,Male,33,Caucasian,Not Hispanic
+1086_IEO_NEU_XX,1086,IEO,N,XX,base,10,0,0,0,1,9,0,0,Male,33,Caucasian,Not Hispanic
+1086_ITH_SAD_XX,1086,ITH,S,XX,extra,9,1,2,0,0,6,0,4,Male,33,Caucasian,Not Hispanic
+1086_ITS_HAP_XX,1086,ITS,H,XX,extra,10,0,0,0,8,2,0,5,Male,33,Caucasian,Not Hispanic
+1086_IWW_DIS_XX,1086,IWW,D,XX,base,10,0,8,0,0,1,1,1,Male,33,Caucasian,Not Hispanic
+1086_MTI_SAD_XX,1086,MTI,S,XX,base,10,1,5,0,1,3,0,5,Male,33,Caucasian,Not Hispanic
+1086_TIE_FEA_XX,1086,TIE,F,XX,base,9,1,2,3,0,3,0,3,Male,33,Caucasian,Not Hispanic
+1086_TSI_HAP_XX,1086,TSI,H,XX,base,10,0,0,0,10,0,0,4,Male,33,Caucasian,Not Hispanic
+1086_WSI_ANG_XX,1086,WSI,A,XX,base,11,11,0,0,0,0,0,0,Male,33,Caucasian,Not Hispanic
+1087_DFA_SAD_XX,1087,DFA,S,XX,base,10,0,1,1,3,4,1,1,Male,62,Caucasian,Not Hispanic
+1087_IEO_FEA_LO,1087,IEO,F,LO,extra,10,0,0,2,0,6,2,5,Male,62,Caucasian,Not Hispanic
+1087_IOM_ANG_XX,1087,IOM,A,XX,base,10,0,0,2,0,6,2,3,Male,62,Caucasian,Not Hispanic
+1087_IWL_FEA_XX,1087,IWL,F,XX,base,8,0,3,2,0,3,0,2,Male,62,Caucasian,Not Hispanic
+1087_IWW_NEU_XX,1087,IWW,N,XX,base,9,0,0,0,0,9,0,3,Male,62,Caucasian,Not Hispanic
+1087_TAI_DIS_XX,1087,TAI,D,XX,extra,8,0,1,3,0,3,1,4,Male,62,Caucasian,Not Hispanic
+1087_TIE_HAP_XX,1087,TIE,H,XX,base,10,0,0,0,8,2,0,2,Male,62,Caucasian,Not Hispanic
+1087_TSI_ANG_XX,1087,TSI,A,XX,extra,10,6,2,0,0,0,2,3,Male,62,Caucasian,Not Hispanic
+1087_WSI_DIS_XX,1087,WSI,D,XX,base,9,0,6,1,0,1,1,1,Male,62,Caucasian,Not Hispanic
+1088_IOM_NEU_XX,1088,IOM,N,XX,extra,11,0,1,0,0,10,0,4,Male,23,African American,Not Hispanic
+1088_ITH_DIS_XX,1088,ITH,D,XX,base,10,0,3,3,0,1,3,0,Male,23,African American,Not Hispanic
+1088_ITS_SAD_XX,1088,ITS,S,XX,extra,10,0,2,1,0,6,1,5,Male,23,African American,Not Hispanic
+1088_IWL_SAD_XX,1088,IWL,S,XX,base,10,0,0,0,0,10,0,0,Male,23,African American,Not Hispanic
+1088_IWW_ANG_XX,1088,IWW,A,XX,base,10,6,4,0,0,0,0,2,Male,23,African American,Not Hispanic
+1088_MTI_HAP_XX,1088,MTI,H,XX,base,9,0,0,0,8,1,0,2,Male,23,African American,Not Hispanic
+1088_TAI_HAP_XX,1088,TAI,H,XX,extra,11,0,0,0,11,0,0,5,Male,23,African American,Not Hispanic
+1088_TIE_NEU_XX,1088,TIE,N,XX,base,10,0,0,1,0,8,1,1,Male,23,African American,Not Hispanic
+1088_WSI_FEA_XX,1088,WSI,F,XX,base,9,0,0,2,0,6,1,1,Male,23,African American,Not Hispanic
+1089_DFA_DIS_XX,1089,DFA,D,XX,base,10,0,10,0,0,0,0,5,Female,24,Caucasian,Not Hispanic
+1089_IEO_ANG_LO,1089,IEO,A,LO,base,10,9,1,0,0,0,0,3,Female,24,Caucasian,Not Hispanic
+1089_IOM_NEU_XX,1089,IOM,N,XX,base,10,1,0,1,0,8,0,3,Female,24,Caucasian,Not Hispanic
+1089_ITS_SAD_XX,1089,ITS,S,XX,extra,10,0,2,1,0,4,3,3,Female,24,Caucasian,Not Hispanic
+1089_IWL_HAP_XX,1089,IWL,H,XX,base,9,1,2,0,5,1,0,0,Female,24,Caucasian,Not Hispanic
+1089_TAI_SAD_XX,1089,TAI,S,XX,base,10,0,2,5,0,1,2,1,Female,24,Caucasian,Not Hispanic
+1089_TIE_FEA_XX,1089,TIE,F,XX,base,10,1,1,7,0,0,1,4,Female,24,Caucasian,Not Hispanic
+1089_TSI_HAP_XX,1089,TSI,H,XX,extra,10,0,0,0,9,1,0,3,Female,24,Caucasian,Not Hispanic
+1089_WSI_NEU_XX,1089,WSI,N,XX,extra,10,0,0,0,0,10,0,3,Female,24,Caucasian,Not Hispanic
+1090_DFA_FEA_XX,1090,DFA,F,XX,extra,10,0,2,5,0,3,0,2,Male,50,Asian,Not Hispanic
+1090_IEO_HAP_HI,1090,IEO,H,HI,base,10,0,0,0,9,1,0,3,Male,50,Asian,Not Hispanic
+1090_ITH_FEA_XX,1090,ITH,F,XX,base,10,0,3,6,0,0,1,4,Male,50,Asian,Not Hispanic
+1090_ITS_DIS_XX,1090,ITS,D,XX,extra,10,0,6,3,0,1,0,5,Male,50,Asian,Not Hispanic
+1090_IWL_NEU_XX,1090,IWL,N,XX,base,9,0,0,1,2,5,1,4,Male,50,Asian,Not Hispanic
+1090_IWW_DIS_XX,1090,IWW,D,XX,base,9,0,0,4,0,1,4,3,Male,50,Asian,Not Hispanic
+1090_MTI_ANG_XX,1090,MTI,A,XX,base,10,2,2,1,1,1,3,1,Male,50,Asian,Not Hispanic
+1090_TAI_ANG_XX,1090,TAI,A,XX,extra,10,1,2,1,0,6,0,4,Male,50,Asian,Not Hispanic
+1090_TSI_SAD_XX,1090,TSI,S,XX,base,8,0,2,0,3,0,3,1,Male,50,Asian,Not Hispanic
+1091_IEO_DIS_LO,1091,IEO,D,LO,extra,10,0,0,1,0,0,9,0,Female,29,Asian,Not Hispanic
+1091_IOM_FEA_XX,1091,IOM,F,XX,base,11,0,0,7,0,0,4,5,Female,29,Asian,Not Hispanic
+1091_ITH_ANG_XX,1091,ITH,A,XX,base,8,3,0,0,0,2,3,1,Female,29,Asian,Not Hispanic
+1091_IWL_FEA_XX,1091,IWL,F,XX,extra,8,0,0,7,0,1,0,2,Female,29,Asian,Not Hispanic
+1091_IWW_NEU_XX,1091,IWW,N,XX,base,9,0,0,7,0,1,1,3,Female,29,Asian,Not Hispanic
+1091_MTI_SAD_XX,1091,MTI,S,XX,base,10,0,0,2,0,0,8,2,Female,29,Asian,Not Hispanic
+1091_TIE_HAP_XX,1091,TIE,H,XX,base,10,0,0,0,8,2,0,0,Female,29,Asian,Not Hispanic
+1091_TSI_ANG_XX,1091,TSI,A,XX,extra,10,9,0,0,0,1,0,4,Female,29,Asian,Not Hispanic
+1091_WSI_DIS_XX,1091,WSI,D,XX,base,10,1,8,0,0,0,1,2,Female,29,Asian,Not Hispanic
