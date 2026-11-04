@@ -101,6 +101,7 @@ FAMILYWISE_ALPHA = 0.05
 PATTERN_ALPHA = 0.05
 HUMAN_SCALE_GRID = (1.0, 2.0, 4.0, 8.0, 16.0, 32.0, 64.0)
 HALF_SHARED = 0.5  # true weight correlation of the partly matching observer
+MAX_LOST_CLIPS_PERCENT = 5  # of a model's clips, before its RQ1 result is descriptive
 
 # Fixed before any full recovery run. The first two blocks repeat the earlier thresholds.
 # The family-wise limit is new. Its allowance is Monte Carlo error only: the observed share
@@ -532,10 +533,10 @@ def family_conditions(lam_frozen=None):
     return conditions
 
 
-def pattern_conditions(calibrated_scale):
+def pattern_conditions(calibrated_scale, factors=(0.5, 1.0, 2.0)):
     """A human-like observer at the calibrated strength, half of it and twice it."""
     conditions = []
-    for i, factor in enumerate((0.5, 1.0, 2.0)):
+    for i, factor in enumerate(factors):
         conditions.append({"name": f"pattern_{factor}x_human_effect", "factor": factor,
                            "scale": factor * calibrated_scale, "spec": "within", "noise": True,
                            "shared_error": 0.0, "pcc": "published", "n_resp_model": 100,
@@ -872,7 +873,9 @@ def run_recovery(args):
     n_resp = human.drop_duplicates("trial_id").set_index("trial_id").loc[template.trial_ids, "n"].to_numpy()
 
     calibration, scale = None, 1.0
-    if T0 is not None:
+    if args.fixed_scale is not None:
+        scale = args.fixed_scale  # 1x stays the strength the earlier route run calibrated
+    elif T0 is not None:
         scale, calibration = calibrate_human_scale(
             template, T0, au_names, W_ref, n_resp, pcc_tables["published"], target_gain,
             workers=args.workers, seed_offset=args.seed_offset)
@@ -898,7 +901,7 @@ def run_recovery(args):
     pattern_report = []
     if args.route_pattern:
         lams = dict(zip(("composite", "first", "second"), lam_real))
-        for cond in pattern_conditions(scale):
+        for cond in pattern_conditions(scale, tuple(args.pattern_factors)):
             cond = {**cond, **shared, "_lams": lams}
             tasks = [(template, T0, au_names, cond, s, args.pattern_perm) for s in range(args.n_sims)]
             started = time.time()
@@ -1073,29 +1076,70 @@ def frozen_route(human: pd.DataFrame, responses: pd.DataFrame, cue_inputs: dict,
     return out
 
 
+def clip_coverage(all_ids, kept_ids, categories):
+    """Which clips a model lost, and whether its RQ1 result stays eligible.
+
+    Over 5 percent lost makes the result descriptive. Exactly 5 percent does not. The
+    test is on integers, so it cannot turn on rounding.
+    """
+    kept = set(kept_ids)
+    dropped = [t for t in sorted(all_ids) if t not in kept]
+    limit = MAX_LOST_CLIPS_PERCENT
+    return {
+        "n_clips": len(all_ids), "n_kept": len(all_ids) - len(dropped), "n_dropped": len(dropped),
+        "share_dropped": round(len(dropped) / len(all_ids), 4),
+        "max_share_lost": limit / 100,
+        "over_loss_limit": len(dropped) * 100 > limit * len(all_ids),
+        "dropped": [{"trial_id": t, "label": str(categories[t]), "actor": scc.actor_of(t)}
+                    for t in dropped],
+    }
+
+
 def model_route(eval_paths, human_path, au_csv, *, n_perm, seed=42):
     """One clean rotation run through the confirmatory route, by its evaluation files.
 
     Families, the frames models saw, the attempt 1 null of record. The loader refuses
-    partial, smoke, mismatch and target-first runs. A clip the model failed on stops the
-    route, because the comparison needs the same clips as the human matrix.
+    partial, smoke, mismatch and target-first runs. Ridge strength is chosen once for each
+    input on the human matrix over all clips. A clip with no usable response then leaves
+    both matrices for this model, and the null draws are made on the clips that remain,
+    with ridge strength unchanged.
     """
     human = scc.load_human(human_path)
     responses = scc.load_rotation_run(eval_paths, human_path, allow_partial=False)
-    if responses.attrs["n_trial_errors"]:
-        raise ValueError(f"{responses.attrs['n_trial_errors']} clips have no usable response")
+    if responses.empty:
+        raise ValueError("No clip has a usable response")
     a, b, composite = pair_tables(au_csv, None, list(CUE_SETS["families"]), frame_set="model_1fps")
     ids = sorted(set(a.index) & set(b.index) & set(human.trial_id))
     cue_inputs = {"composite": composite.loc[ids], "first": a.loc[ids], "second": b.loc[ids]}
-    result = frozen_route(human, responses, cue_inputs, n_perm=n_perm, seed=seed,
-                          scheme="within_category")
-    return result, responses.attrs
+    lams = {key: scc.choose_lambda(scc.build_design(human, table))
+            for key, table in cue_inputs.items()}
+    kept = sorted(set(ids) & set(responses.trial_id))
+    categories = human.drop_duplicates("trial_id").set_index("trial_id").category
+    coverage = clip_coverage(ids, kept, categories)
+    rotations = len(responses.attrs["rotations"])
+    counts = responses.attrs["rotations_by_trial"]
+    coverage["partial_rotation_clips"] = [
+        {"trial_id": t, "label": str(categories[t]), "actor": scc.actor_of(t),
+         "n_rotations": counts[t]} for t in kept if counts[t] < rotations]
+    result = frozen_route(human[human.trial_id.isin(kept)], responses[responses.trial_id.isin(kept)],
+                          {key: table.loc[kept] for key, table in cue_inputs.items()},
+                          n_perm=n_perm, seed=seed, scheme="within_category", lams=lams)
+    return result, {**responses.attrs, "coverage": coverage}
+
+
+def rq1_status(coverage):
+    if coverage["over_loss_limit"]:
+        return "descriptive: over 5 percent of clips lost"
+    return "eligible: confirmatory only if the strength rule in DECISIONS.md passed"
 
 
 def model_route_summary(result, attrs):
     """Numbers for the output file: pattern scores, and matrices labelled exploratory."""
+    coverage = attrs["coverage"]
     out = {"confirmatory_unit": "family pattern score, model frames, composite input",
+           "rq1_status": rq1_status(coverage),
            "cells_are_exploratory": True,
+           "coverage": coverage,
            "unparsed_share": attrs["unparsed_share"], "rotations": attrs["rotations"]}
     for key, part in result.items():
         out[key] = {"lam": part["lam"],
@@ -1278,6 +1322,9 @@ def main(argv=None):
                         help="pattern recovery through frozen_route; needs a measured --au-csv")
     parser.add_argument("--model-route", action="store_true",
                         help="one clean rotation run through the confirmatory route")
+    parser.add_argument("--pattern-factors", nargs="+", type=float, default=[0.5, 1.0, 2.0],
+                        help="multiples of the calibrated human effect, for --route-pattern")
+    parser.add_argument("--fixed-scale", type=float, help="calibrated scale, instead of recalibrating")
     parser.add_argument("--model", help="model name for --model-route")
     parser.add_argument("--model-evals", nargs="*", help="rotation eval files or globs")
     args = parser.parse_args(argv)

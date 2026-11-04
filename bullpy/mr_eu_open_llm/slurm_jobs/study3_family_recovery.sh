@@ -61,6 +61,14 @@ case "${STEP}" in
       --cue-set families --frame-set model_1fps --scheme "${SCHEME}" --seed-offset 200000 \
       --recovery-out "research/reproduction/same_clip_family_route_pattern_${SCHEME}.json" "${ARGS[@]}"
     ;;
+  route_pattern_075)
+    # The one 0.75x run set by the strength rule in DECISIONS.md. 1x stays calibrated scale 2.
+    SCHEME="${SCHEME:-within_category}"
+    python research/scripts/same_clip_family_analysis.py --recovery --route-pattern \
+      --cue-set families --frame-set model_1fps --scheme "${SCHEME}" --seed-offset 300000 \
+      --pattern-factors 0.75 --fixed-scale 2.0 \
+      --recovery-out "research/reproduction/same_clip_family_route_pattern_075x_${SCHEME}.json" "${ARGS[@]}"
+    ;;
   human)
     python research/scripts/same_clip_family_analysis.py "${ARGS[@]}"
     ;;

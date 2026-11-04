@@ -469,14 +469,16 @@ def lookup_file(tmp_path, rng):
     return path, trials
 
 
-def rotation_files(tmp_path, trials, rng, rotations=scc.ROTATIONS, drop=None):
+def rotation_files(tmp_path, trials, rng, rotations=scc.ROTATIONS, drop=(), drop_in=None):
+    """Eval files. Clips in `drop` fail in every rotation, or in `drop_in` rotations if given."""
     paths = []
     for r in rotations:
         items = []
         for tid, rec in trials.items():
             options = scc.rotate_options(rec["human_options"], r)
             probs = rng.dirichlet(np.ones(len(options)) * 8)
-            items.append({"trial_id": tid, "error": "failed" if tid == drop else None,
+            failed = tid in drop and (drop_in is None or r in drop_in)
+            items.append({"trial_id": tid, "error": "failed" if failed else None,
                           "vision_source_trial_id": None,
                           "stage2": {"options": options, "fc_n_samples": 20,
                                      "response_distribution": dict(zip(options, probs.tolist()))}})
@@ -520,12 +522,110 @@ def test_model_route_refuses_a_partial_run(tmp_path):
         fam.model_route(paths, human, cue_csv(tmp_path, trials, rng), n_perm=9)
 
 
-def test_model_route_stops_on_a_failed_clip(tmp_path):
+def test_failed_clips_leave_both_matrices_and_are_listed(tmp_path):
     rng = np.random.default_rng(22)
     human, trials = lookup_file(tmp_path, rng)
-    paths = rotation_files(tmp_path, trials, rng, drop=sorted(trials)[0])
-    with pytest.raises(ValueError, match="no usable response"):
+    lost = sorted(trials)[:2]
+    paths = rotation_files(tmp_path, trials, rng, drop=lost)
+    au = cue_csv(tmp_path, trials, rng)
+    result, attrs = fam.model_route(paths, human, au, n_perm=19)
+    coverage = attrs["coverage"]
+    assert coverage["n_dropped"] == 2 and coverage["n_kept"] == len(trials) - 2
+    assert [d["trial_id"] for d in coverage["dropped"]] == lost
+    for entry in coverage["dropped"]:
+        assert entry["label"] == trials[entry["trial_id"]]["human_target_label"]
+        assert entry["actor"] == scc.actor_of(entry["trial_id"])
+    for part in result.values():
+        assert part["B"].shape == part["reference"].shape
+        assert len(part["res"]["null"]) == 19
+    json.dumps(fam.model_route_summary(result, attrs))
+
+
+def test_dropping_a_clip_does_not_rechoose_lambda(tmp_path, monkeypatch):
+    rng = np.random.default_rng(26)
+    human, trials = lookup_file(tmp_path, rng)
+    paths = rotation_files(tmp_path, trials, rng, drop=sorted(trials)[:3])
+    au = cue_csv(tmp_path, trials, rng)
+    calls = []
+    real = scc.choose_lambda
+
+    def spy(design, *a, **k):
+        calls.append(len(design.trial_ids))
+        return real(design, *a, **k)
+
+    monkeypatch.setattr(scc, "choose_lambda", spy)
+    result, _ = fam.model_route(paths, human, au, n_perm=9)
+    assert calls == [len(trials)] * 3
+    assert len(result) == 3
+
+
+def test_null_draws_are_made_on_kept_clips_only(tmp_path, monkeypatch):
+    rng = np.random.default_rng(27)
+    human, trials = lookup_file(tmp_path, rng)
+    paths = rotation_files(tmp_path, trials, rng, drop=sorted(trials)[:4])
+    au = cue_csv(tmp_path, trials, rng)
+    sizes = []
+    real = fam.null_plan
+
+    def spy(categories, actors, *a, **k):
+        sizes.append(len(categories))
+        return real(categories, actors, *a, **k)
+
+    monkeypatch.setattr(fam, "null_plan", spy)
+    fam.model_route(paths, human, au, n_perm=9)
+    assert sizes == [len(trials) - 4] * 3
+
+
+@pytest.mark.parametrize("n_clips, n_lost, over", [
+    (100, 4, False), (100, 5, False), (100, 6, True),  # exactly 5 percent is not over it
+    (243, 12, False), (243, 13, True),  # the real clip count: 4.9 and 5.3 percent
+    (20, 1, False), (20, 2, True), (243, 0, False),
+])
+def test_loss_limit_boundary(n_clips, n_lost, over):
+    ids = [trial_id("Happy", "B", i) for i in range(n_clips)]
+    categories = {t: "Happy" for t in ids}
+    coverage = fam.clip_coverage(ids, ids[n_lost:], categories)
+    assert coverage["n_dropped"] == n_lost
+    assert coverage["over_loss_limit"] is over
+    assert fam.rq1_status(coverage).startswith("descriptive") is over
+
+
+def test_loss_limit_end_to_end(tmp_path):
+    rng = np.random.default_rng(28)
+    human, trials = lookup_file(tmp_path, rng)  # 108 clips, so 5 percent is 5.4
+    au = cue_csv(tmp_path, trials, rng)
+    ids = sorted(trials)
+    for n_lost, status in ((5, "eligible"), (6, "descriptive")):
+        lost = ids[::9][:n_lost]
+        paths = rotation_files(tmp_path, trials, rng, drop=lost)
+        result, attrs = fam.model_route(paths, human, au, n_perm=9)
+        assert fam.model_route_summary(result, attrs)["rq1_status"].startswith(status)
+
+
+def test_a_clip_failing_in_some_rotations_is_kept_and_listed(tmp_path):
+    rng = np.random.default_rng(29)
+    human, trials = lookup_file(tmp_path, rng)
+    clip = sorted(trials)[0]
+    paths = rotation_files(tmp_path, trials, rng, drop=[clip], drop_in=(0, 3))
+    _, attrs = fam.model_route(paths, human, cue_csv(tmp_path, trials, rng), n_perm=9)
+    coverage = attrs["coverage"]
+    assert coverage["n_dropped"] == 0
+    assert coverage["partial_rotation_clips"][0]["trial_id"] == clip
+    assert coverage["partial_rotation_clips"][0]["n_rotations"] == 3
+
+
+def test_model_route_stops_if_no_clip_is_usable(tmp_path):
+    rng = np.random.default_rng(30)
+    human, trials = lookup_file(tmp_path, rng)
+    paths = rotation_files(tmp_path, trials, rng, drop=sorted(trials))
+    with pytest.raises(ValueError, match="No clip"):
         fam.model_route(paths, human, cue_csv(tmp_path, trials, rng), n_perm=9)
+
+
+def test_strength_conditions_default_is_unchanged_and_075_is_available():
+    assert [c["factor"] for c in fam.pattern_conditions(2.0)] == [0.5, 1.0, 2.0]
+    only = fam.pattern_conditions(2.0, (0.75,))
+    assert len(only) == 1 and only[0]["scale"] == 1.5
 
 
 def test_frozen_route_uses_given_lambdas_without_choosing(monkeypatch):
