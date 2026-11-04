@@ -1100,9 +1100,10 @@ def model_route(eval_paths, human_path, au_csv, *, n_perm, seed=42):
 
     Families, the frames models saw, the attempt 1 null of record. The loader refuses
     partial, smoke, mismatch and target-first runs. Ridge strength is chosen once for each
-    input on the human matrix over all clips. A clip with no usable response then leaves
-    both matrices for this model, and the null draws are made on the clips that remain,
-    with ridge strength unchanged.
+    input on the human matrix over all clips. A clip needs a usable response on all five
+    rotations, so that position confound cannot return through it. Any other clip leaves
+    both matrices for this model, and counts towards the 5 percent limit. The null draws
+    are made on the clips that remain, with ridge strength unchanged.
     """
     human = scc.load_human(human_path)
     responses = scc.load_rotation_run(eval_paths, human_path, allow_partial=False)
@@ -1113,14 +1114,18 @@ def model_route(eval_paths, human_path, au_csv, *, n_perm, seed=42):
     cue_inputs = {"composite": composite.loc[ids], "first": a.loc[ids], "second": b.loc[ids]}
     lams = {key: scc.choose_lambda(scc.build_design(human, table))
             for key, table in cue_inputs.items()}
-    kept = sorted(set(ids) & set(responses.trial_id))
+    rotations = len(scc.ROTATIONS)
+    counts = responses.attrs["rotations_by_trial"]
+    present = set(responses.trial_id)
+    kept = [t for t in ids if t in present and counts.get(t, 0) == rotations]
+    if not kept:
+        raise ValueError("No clip has a usable response on all rotations")
     categories = human.drop_duplicates("trial_id").set_index("trial_id").category
     coverage = clip_coverage(ids, kept, categories)
-    rotations = len(responses.attrs["rotations"])
-    counts = responses.attrs["rotations_by_trial"]
+    for entry in coverage["dropped"]:
+        entry["n_rotations"] = counts.get(entry["trial_id"], 0) if entry["trial_id"] in present else 0
     coverage["partial_rotation_clips"] = [
-        {"trial_id": t, "label": str(categories[t]), "actor": scc.actor_of(t),
-         "n_rotations": counts[t]} for t in kept if counts[t] < rotations]
+        entry for entry in coverage["dropped"] if entry["n_rotations"] > 0]
     result = frozen_route(human[human.trial_id.isin(kept)], responses[responses.trial_id.isin(kept)],
                           {key: table.loc[kept] for key, table in cue_inputs.items()},
                           n_perm=n_perm, seed=seed, scheme="within_category", lams=lams)

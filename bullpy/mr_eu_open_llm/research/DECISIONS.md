@@ -277,3 +277,7 @@ The single 0.75x run the rule above set: `research/reproduction/same_clip_family
 - **Still exploratory:** Single family cells and family-wise cells. Actor-prior calibration for cells is not fixed, and sparse 0.5 still narrowly fails cell-level recovery on this route.
 - **Clip rule, as built:** `model_route` chooses lambda once on the human matrix over all clips. A clip is dropped only if no rotation gave a usable response. A clip usable in some rotations stays and is listed under `partial_rotation_clips`, because the rule covers only clips with no usable response, though such a clip keeps some position confound.
 
+## 2026-11-04: Partial clips are dropped in the model route
+
+Decided before any model run. A clip counts as usable in `model_route` only with a usable response on all 5 rotations, matching A3's rule and keeping position confound out. Partial clips leave both matrices, count towards the 5 percent limit, and stay listed with their rotation count. This replaces the last bullet of the strength rule result entry above.
+
