@@ -175,3 +175,34 @@ def test_mmlu_sample_is_stable_and_hashed():
     assert hash_mmlu(first) == hash_mmlu(list(first))
     with pytest.raises(RuntimeError, match="MMLU pool"):
         sample_mmlu(pairs[:5], n=20)
+
+
+def test_restore_keeps_cuda_rng_on_cpu(monkeypatch):
+    torch = pytest.importorskip("torch")
+    from scog.train.lora import restore_rng
+
+    seen = {}
+
+    def capture_states(states):
+        seen["states"] = [state.clone() for state in states]
+
+    monkeypatch.setattr(torch.cuda, "is_available", lambda: True)
+    monkeypatch.setattr(torch.cuda, "set_rng_state_all", capture_states)
+    order = torch.Generator(device="cpu")
+    order.manual_seed(20261029)
+    saved_order = order.get_state().clone()
+    order.manual_seed(1)
+    restore_rng(
+        {
+            "python": __import__("random").getstate(),
+            "numpy": np.random.get_state(),
+            "torch_cpu": torch.get_rng_state(),
+            "order_gen": saved_order,
+            "cuda": [torch.arange(16, dtype=torch.uint8)],
+        },
+        order,
+    )
+    assert seen["states"][0].device.type == "cpu"
+    assert seen["states"][0].dtype == torch.uint8
+    assert torch.equal(seen["states"][0], torch.arange(16, dtype=torch.uint8))
+    assert torch.equal(order.get_state(), saved_order)

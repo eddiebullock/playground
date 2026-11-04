@@ -6,7 +6,7 @@
   "grad_accum": 8,
   "lora_dropout": 0.05,
   "dev_nll_n": 2000,
-  "max_chunks_exploratory": 80,
+  "max_chunks_exploratory": 160,
   "max_chunks_confirmatory": 200,
   "target_modules": ["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"],
   "grid": [
