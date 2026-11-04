@@ -40,7 +40,7 @@ import platform
 import sys
 import time
 from collections import Counter, defaultdict
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Callable, Dict, Iterable, List, Optional, Sequence, Tuple
 
@@ -568,9 +568,7 @@ class ModelHandle:
     blind_prefill: List[int]
     mcq_prefill: List[int]
     forwards: int = 0
-    use_cache: Optional[bool] = None
-    cache_gap: Optional[float] = None
-    cache_error: Optional[str] = None
+    cache_checks: Dict[str, Dict[str, Any]] = field(default_factory=dict)
 
 
 def load_handle(model_key: str, dtype_name: str) -> ModelHandle:
@@ -614,6 +612,40 @@ def step_logprobs(handle: ModelHandle, inputs: Dict[str, Any], prefix: Sequence[
 CACHE_TOLERANCE = 0.25  # nats; bfloat16 logits near 20 have a step of about 0.125
 
 
+def continuation_inputs(
+    handle: ModelHandle, step: Dict[str, Any], new_ids: Any, base_len: int, cache: Any
+) -> Dict[str, Any]:
+    """Text-only forward on top of a KV cache.
+
+    Qwen gets explicit 3D positions from its stored rope delta: left to itself it builds
+    them from the full attention mask, so new tokens get the wrong positions and the
+    logits are off by about 21 nats. The other models go through their generation hook.
+    """
+    import torch
+
+    if handle.key == "qwen3vl":
+        count = new_ids.shape[1]
+        text = torch.arange(base_len, base_len + count, device=new_ids.device).view(1, 1, -1)
+        delta = handle.model.model.rope_deltas.to(new_ids.device).view(1, 1, 1)
+        return {
+            "input_ids": new_ids,
+            "attention_mask": step["attention_mask"],
+            "position_ids": (text + delta).expand(3, 1, -1),
+            "past_key_values": cache,
+            "use_cache": True,
+        }
+    position = torch.arange(base_len, step["input_ids"].shape[1], device=new_ids.device)
+    extra = {k: step[k] for k in ("mm_token_type_ids", "token_type_ids") if k in step}
+    return handle.model.prepare_inputs_for_generation(
+        step["input_ids"],
+        past_key_values=cache,
+        attention_mask=step["attention_mask"],
+        cache_position=position,
+        use_cache=True,
+        **extra,
+    )
+
+
 def cached_tables(
     handle: ModelHandle,
     inputs: Dict[str, Any],
@@ -621,7 +653,13 @@ def cached_tables(
     prefixes: Sequence[Tuple[int, ...]],
     needed: Dict[Tuple[int, ...], List[int]],
 ) -> Dict[Tuple[int, ...], Dict[int, float]]:
-    """One image forward, then text-only continuations from a cropped KV cache."""
+    """One image forward, then text-only continuations from the cache.
+
+    Gemma's sliding-window layers cannot be cropped once extended, so it copies the cache
+    for each prefix. The others crop back after each one.
+    """
+    import copy
+
     import torch
 
     from scripts.vision_gates import append_tokens
@@ -633,24 +671,19 @@ def cached_tables(
     handle.forwards += 1
     cache = out.past_key_values
     table = {(): {t: float(v) for t, v in zip(needed[()], torch.log_softmax(out.logits[0, -1].float(), -1)[needed[()]])}}
-    keep = {k: v for k, v in base.items() if k in ("mm_token_type_ids", "token_type_ids")}
+    keep = {k: v for k, v in base.items() if k in ("attention_mask", "mm_token_type_ids", "token_type_ids")}
+    copies = handle.key == "gemma4"
     for prefix in prefixes:
         if not prefix:
             continue
-        step = append_tokens({"input_ids": base["input_ids"], "attention_mask": base["attention_mask"], **keep}, list(prefix))
-        position = torch.arange(base_len, base_len + len(prefix), device=base["input_ids"].device)
-        prepared = handle.model.prepare_inputs_for_generation(
-            step["input_ids"],
-            past_key_values=cache,
-            attention_mask=step["attention_mask"],
-            cache_position=position,
-            use_cache=True,
-            **{k: step[k] for k in keep},
-        )
+        step = append_tokens({"input_ids": base["input_ids"], **keep}, list(prefix))
+        new_ids = step["input_ids"][:, base_len:]
+        active = copy.deepcopy(cache) if copies else cache
         with torch.no_grad():
-            logits = handle.model(**prepared).logits[0, -1].float()
+            logits = handle.model(**continuation_inputs(handle, step, new_ids, base_len, active)).logits[0, -1].float()
         handle.forwards += 1
-        cache.crop(base_len)
+        if not copies:
+            cache.crop(base_len)
         ids = needed[prefix]
         table[prefix] = {t: float(v) for t, v in zip(ids, torch.log_softmax(logits, -1)[ids])}
     return table
@@ -675,24 +708,22 @@ def score_sequences(
 ) -> List[float]:
     """Joint logprob of each token sequence after the prefill.
 
-    The first call on a model checks the cached path against full forwards. If they
-    disagree beyond tolerance, or the cached path raises, the model keeps full forwards.
-    Either way the path and worst gap are recorded on the handle.
+    The first call for each media kind checks the cached path against full forwards. If
+    they disagree beyond tolerance, or the cached path raises, that kind keeps full
+    forwards. The decision and worst gap per kind are recorded on the handle.
     """
     needed = needed_tokens(sequences)
     prefixes = internal_prefixes(sequences)
-    if handle.use_cache is None:
-        full = full_tables(handle, inputs, prefill, prefixes, needed)
+    kind = "video" if "pixel_values_videos" in inputs else "image"
+    if kind not in handle.cache_checks:
+        table = full_tables(handle, inputs, prefill, prefixes, needed)
         try:
             cached = cached_tables(handle, inputs, prefill, prefixes, needed)
-            gap = max(abs(cached[p][t] - full[p][t]) for p in full for t in full[p])
-            handle.cache_gap = gap
-            handle.use_cache = bool(gap <= CACHE_TOLERANCE)
+            gap = max(abs(cached[p][t] - table[p][t]) for p in table for t in table[p])
+            handle.cache_checks[kind] = {"used": bool(gap <= CACHE_TOLERANCE), "gap": gap, "error": None}
         except Exception as exc:  # recorded: the fallback is the safe path
-            handle.cache_error = f"{type(exc).__name__}: {exc}"[:300]
-            handle.use_cache = False
-        table = full
-    elif handle.use_cache:
+            handle.cache_checks[kind] = {"used": False, "gap": None, "error": f"{type(exc).__name__}: {exc}"[:300]}
+    elif handle.cache_checks[kind]["used"]:
         table = cached_tables(handle, inputs, prefill, prefixes, needed)
     else:
         table = full_tables(handle, inputs, prefill, prefixes, needed)
@@ -1085,7 +1116,7 @@ def step_run(args: argparse.Namespace) -> None:
                     "failure_reasons": dict(Counter(f["reason"] for f in report["failures"])),
                     "mean_seconds_per_cell": {k: round(float(np.mean(v)), 3) for k, v in timing.items()},
                     "forwards_total": handle.forwards,
-                    "cached_scoring": {"used": handle.use_cache, "gap": handle.cache_gap, "error": handle.cache_error},
+                    "cached_scoring": handle.cache_checks,
                     "seconds": round(time.time() - started, 1),
                     "peak_gpu_gb": round(torch.cuda.max_memory_allocated() / 1e9, 2)
                     if torch.cuda.is_available()
