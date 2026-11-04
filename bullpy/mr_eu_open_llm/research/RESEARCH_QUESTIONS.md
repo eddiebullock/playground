@@ -52,7 +52,7 @@ No human data will be collected. Every human comparison uses existing data, and 
 
 | Source | Gives | Type of evidence | Used for | Access |
 |---|---|---|---|---|
-| Snoek AU data | Trial-level judgements of randomised action units, including bored, confused, interested, thinking | Causal on the human side, on avatars | RQ1, RQ2 predictions | Open, CC BY 4.0; downloaded |
+| Snoek AU data | Trial-level judgements of randomised action units, including bored, confused, interested, thinking (conversational set n = 20 per group) | Causal on the human side, on avatars | RQ1, RQ2 predictions | Open, CC BY 4.0; downloaded |
 | EU-Emotion norms | Item-level option distributions on the clips the models see | Observational, complex states, fixed options | RQ1, RQ4 | Held |
 | CREMA-D | Per-clip face-only votes; all clips share one option set; 91 actors | Observational, basic emotions | RQ1, RQ5 | Ratings public; videos need a registration form |
 | RMET and MRMET open data | Per-person item selections | Observational, eyes | RQ4 | Workbooks open; stimuli need a form |
@@ -69,7 +69,7 @@ No human data will be collected. Every human comparison uses existing data, and 
 7. **Recovery.** Run synthetic observers with known cue weights through the same pipeline, and report whether the analysis recovers them, including a pure prior-driven observer.
 8. **Measurement error.** Use two action-unit detectors of different lineage and treat disagreement as uncertainty. Detection is weak for AU15 and AU20.
 
-**What this costs.** RQ2 loses a direct human dose-response on the same edited clips, so that is reported as a limitation and offered as future work. RQ1 is unaffected on the randomised data. RQ5 moves to CREMA-D, where all clips share options and confusion does not depend on which foils were offered; EU-Emotion stays for complex states with that limit stated.
+**What this costs.** RQ2 loses a direct human dose-response on the same edited clips, so that is reported as a limitation and offered as future work. RQ1's randomised human evidence covers action units on about 8 of the 21 EU-Emotion labels, with no gaze, head or timing and none of Worried, Disappointed, Kind or Unfriendly. Other labels and cues rest on observational same-clip estimates or literature direction, so human-referenced reach must be stated label by label. RQ5 moves to CREMA-D, where all clips share options and confusion does not depend on which foils were offered; EU-Emotion stays for complex states with that limit stated.
 
 ## What changed from the old questions
 
