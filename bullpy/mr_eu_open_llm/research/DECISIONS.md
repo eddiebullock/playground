@@ -166,3 +166,13 @@ Non-trivial decisions. Date, decision, alternatives, why. Do not rewrite history
 - **Families plus singles:** All 10 cue-observer conditions fail (r .34 to .65). Adding seven singles at 11 cues loses what the families gained.
 - **Consequence:** Human family cells stay provisional. Any change to the shuffle needs a new lock and new seeds, and this result stays on record as the failure of the first attempt.
 
+
+## 2026-11-04 — Full forwards on all models; no cached scoring
+
+- **Decision:** `CACHED_MODELS` is empty. Gemma 4, Qwen3-VL and Molmo2 all score by full forwards, so every model uses one scoring path. The 0.25 nat parity tolerance was not changed, and it no longer gates anything.
+- **Evidence:** `research/reproduction/cache_parity_qwen3vl_bfloat16.json`, 3 clips on `single_face` and `video_face`. On the blind readout the worst gap per sequence was 0.127 to 0.249 nats, and the mean was 0.004 to 0.011. All of it sat at prefix length 1, on second tokens of multi-token lexicon words such as " sickened", " unem" and " melancholy"; length 2 was at most 0.0001. On MCQ the gap was at most 0.000001. Two repeats of a full forward differed by 0.0. Values cluster at one or two bfloat16 steps at this logit scale, which suggests rounding, but float32 was not awaited and that cause is unconfirmed.
+- **Gemma 4:** the cached path raised a CUDA device-side index assert (job 39987786), which poisons the process, so a try and fallback cannot be used.
+- **Molmo2:** the cached path was not tried.
+- **Alternatives:** (a) Keep the cache on Qwen, which passed the tolerance and saves time; (b) wait for float32 and decide then.
+- **Why:** Full forwards are exact where the cached path is not. The gap falls on lexicon terms, so it could differ between stimulus conditions and reach the contrasts under test. Identical scoring across models is worth more than the time saved.
+- **Cost:** Qwen stays at about 0.37 s per forward. Cost figures in the A2 and A3 drafts use full-forward timings.
