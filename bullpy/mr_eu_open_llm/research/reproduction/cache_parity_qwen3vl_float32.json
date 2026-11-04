@@ -1,0 +1,504 @@
+{
+ "model": "qwen3vl",
+ "dtype": "float32",
+ "rows": [
+  {
+   "trial_id": "emotions_38/EDITED/Hurt/OF10_cut.mp4",
+   "route": "single_face",
+   "readout": "blind",
+   "n_tokens_scored": 136,
+   "max_gap": 0.000134,
+   "mean_gap": 3e-06,
+   "max_gap_by_prefix_length": {
+    "0": 0.0,
+    "1": 0.000134,
+    "2": 0.0
+   },
+   "repeat_full_max_gap": 0.0,
+   "worst_tokens": [
+    [
+     0.00013,
+     1,
+     " melancholy"
+    ],
+    [
+     6e-05,
+     1,
+     " sickened"
+    ],
+    [
+     4e-05,
+     1,
+     " pained"
+    ],
+    [
+     4e-05,
+     1,
+     " uninterested"
+    ],
+    [
+     4e-05,
+     1,
+     " devious"
+    ]
+   ]
+  },
+  {
+   "trial_id": "emotions_38/EDITED/Hurt/OF10_cut.mp4",
+   "route": "single_face",
+   "readout": "mcq",
+   "n_tokens_scored": 13,
+   "max_gap": 0.0,
+   "mean_gap": 0.0,
+   "max_gap_by_prefix_length": {
+    "0": 0.0,
+    "1": 0.0,
+    "2": 0.0,
+    "3": 0.0
+   },
+   "repeat_full_max_gap": 0.0,
+   "worst_tokens": [
+    [
+     0.0,
+     3,
+     " None of the above"
+    ],
+    [
+     0.0,
+     2,
+     " Surprised"
+    ],
+    [
+     0.0,
+     2,
+     " None of the"
+    ],
+    [
+     0.0,
+     1,
+     " Worried"
+    ],
+    [
+     0.0,
+     1,
+     " Unfriendly"
+    ]
+   ]
+  },
+  {
+   "trial_id": "emotions_38/EDITED/Hurt/OF10_cut.mp4",
+   "route": "video_face",
+   "readout": "blind",
+   "n_tokens_scored": 136,
+   "max_gap": 4.8e-05,
+   "mean_gap": 2e-06,
+   "max_gap_by_prefix_length": {
+    "0": 0.0,
+    "1": 4.8e-05,
+    "2": 0.0
+   },
+   "repeat_full_max_gap": 0.0,
+   "worst_tokens": [
+    [
+     5e-05,
+     1,
+     " melancholy"
+    ],
+    [
+     4e-05,
+     1,
+     " pained"
+    ],
+    [
+     3e-05,
+     1,
+     " sly"
+    ],
+    [
+     3e-05,
+     1,
+     " downcast"
+    ],
+    [
+     2e-05,
+     1,
+     " unfriendly"
+    ]
+   ]
+  },
+  {
+   "trial_id": "emotions_38/EDITED/Hurt/OF10_cut.mp4",
+   "route": "video_face",
+   "readout": "mcq",
+   "n_tokens_scored": 13,
+   "max_gap": 0.0,
+   "mean_gap": 0.0,
+   "max_gap_by_prefix_length": {
+    "0": 0.0,
+    "1": 0.0,
+    "2": 0.0,
+    "3": 0.0
+   },
+   "repeat_full_max_gap": 0.0,
+   "worst_tokens": [
+    [
+     0.0,
+     3,
+     " None of the above"
+    ],
+    [
+     0.0,
+     2,
+     " Surprised"
+    ],
+    [
+     0.0,
+     2,
+     " None of the"
+    ],
+    [
+     0.0,
+     1,
+     " Worried"
+    ],
+    [
+     0.0,
+     1,
+     " Unfriendly"
+    ]
+   ]
+  },
+  {
+   "trial_id": "emotions_7/EDITED/Interested/JF21v1_cut.mp4",
+   "route": "single_face",
+   "readout": "blind",
+   "n_tokens_scored": 136,
+   "max_gap": 8.2e-05,
+   "mean_gap": 3e-06,
+   "max_gap_by_prefix_length": {
+    "0": 0.0,
+    "1": 8.2e-05,
+    "2": 0.0
+   },
+   "repeat_full_max_gap": 0.0,
+   "worst_tokens": [
+    [
+     8e-05,
+     1,
+     " melancholy"
+    ],
+    [
+     6e-05,
+     1,
+     " repuls"
+    ],
+    [
+     5e-05,
+     1,
+     " sly"
+    ],
+    [
+     5e-05,
+     1,
+     " disdainful"
+    ],
+    [
+     4e-05,
+     1,
+     " devious"
+    ]
+   ]
+  },
+  {
+   "trial_id": "emotions_7/EDITED/Interested/JF21v1_cut.mp4",
+   "route": "single_face",
+   "readout": "mcq",
+   "n_tokens_scored": 12,
+   "max_gap": 0.0,
+   "mean_gap": 0.0,
+   "max_gap_by_prefix_length": {
+    "0": 0.0,
+    "1": 0.0,
+    "2": 0.0,
+    "3": 0.0
+   },
+   "repeat_full_max_gap": 0.0,
+   "worst_tokens": [
+    [
+     0.0,
+     3,
+     " None of the above"
+    ],
+    [
+     0.0,
+     2,
+     " None of the"
+    ],
+    [
+     0.0,
+     1,
+     " None of"
+    ],
+    [
+     0.0,
+     1,
+     " Joking"
+    ],
+    [
+     0.0,
+     1,
+     " Excited"
+    ]
+   ]
+  },
+  {
+   "trial_id": "emotions_7/EDITED/Interested/JF21v1_cut.mp4",
+   "route": "video_face",
+   "readout": "blind",
+   "n_tokens_scored": 136,
+   "max_gap": 5.3e-05,
+   "mean_gap": 2e-06,
+   "max_gap_by_prefix_length": {
+    "0": 0.0,
+    "1": 5.3e-05,
+    "2": 0.0
+   },
+   "repeat_full_max_gap": 0.0,
+   "worst_tokens": [
+    [
+     5e-05,
+     1,
+     " disheart"
+    ],
+    [
+     4e-05,
+     1,
+     " pained"
+    ],
+    [
+     4e-05,
+     1,
+     " unkind"
+    ],
+    [
+     3e-05,
+     1,
+     " uninterested"
+    ],
+    [
+     1e-05,
+     1,
+     " unfriendly"
+    ]
+   ]
+  },
+  {
+   "trial_id": "emotions_7/EDITED/Interested/JF21v1_cut.mp4",
+   "route": "video_face",
+   "readout": "mcq",
+   "n_tokens_scored": 12,
+   "max_gap": 0.0,
+   "mean_gap": 0.0,
+   "max_gap_by_prefix_length": {
+    "0": 0.0,
+    "1": 0.0,
+    "2": 0.0,
+    "3": 0.0
+   },
+   "repeat_full_max_gap": 0.0,
+   "worst_tokens": [
+    [
+     0.0,
+     3,
+     " None of the above"
+    ],
+    [
+     0.0,
+     2,
+     " None of the"
+    ],
+    [
+     0.0,
+     1,
+     " None of"
+    ],
+    [
+     0.0,
+     1,
+     " Joking"
+    ],
+    [
+     0.0,
+     1,
+     " Excited"
+    ]
+   ]
+  },
+  {
+   "trial_id": "emotions_4/EDITED/Sneaky/HF26_cut.mp4",
+   "route": "single_face",
+   "readout": "blind",
+   "n_tokens_scored": 136,
+   "max_gap": 6.9e-05,
+   "mean_gap": 3e-06,
+   "max_gap_by_prefix_length": {
+    "0": 0.0,
+    "1": 6.9e-05,
+    "2": 0.0
+   },
+   "repeat_full_max_gap": 0.0,
+   "worst_tokens": [
+    [
+     7e-05,
+     1,
+     " devious"
+    ],
+    [
+     4e-05,
+     1,
+     " humiliated"
+    ],
+    [
+     4e-05,
+     1,
+     " uninterested"
+    ],
+    [
+     3e-05,
+     1,
+     " downcast"
+    ],
+    [
+     3e-05,
+     1,
+     " unfriendly"
+    ]
+   ]
+  },
+  {
+   "trial_id": "emotions_4/EDITED/Sneaky/HF26_cut.mp4",
+   "route": "single_face",
+   "readout": "mcq",
+   "n_tokens_scored": 12,
+   "max_gap": 0.0,
+   "mean_gap": 0.0,
+   "max_gap_by_prefix_length": {
+    "0": 0.0,
+    "1": 0.0,
+    "2": 0.0,
+    "3": 0.0
+   },
+   "repeat_full_max_gap": 0.0,
+   "worst_tokens": [
+    [
+     0.0,
+     3,
+     " None of the above"
+    ],
+    [
+     0.0,
+     2,
+     " None of the"
+    ],
+    [
+     0.0,
+     1,
+     " Sneaky"
+    ],
+    [
+     0.0,
+     1,
+     " None of"
+    ],
+    [
+     0.0,
+     1,
+     " Disappointed"
+    ]
+   ]
+  },
+  {
+   "trial_id": "emotions_4/EDITED/Sneaky/HF26_cut.mp4",
+   "route": "video_face",
+   "readout": "blind",
+   "n_tokens_scored": 136,
+   "max_gap": 9.7e-05,
+   "mean_gap": 3e-06,
+   "max_gap_by_prefix_length": {
+    "0": 0.0,
+    "1": 9.7e-05,
+    "2": 0.0
+   },
+   "repeat_full_max_gap": 0.0,
+   "worst_tokens": [
+    [
+     0.0001,
+     1,
+     " sickened"
+    ],
+    [
+     7e-05,
+     1,
+     " envious"
+    ],
+    [
+     4e-05,
+     1,
+     " downcast"
+    ],
+    [
+     4e-05,
+     1,
+     " unkind"
+    ],
+    [
+     3e-05,
+     1,
+     " devious"
+    ]
+   ]
+  },
+  {
+   "trial_id": "emotions_4/EDITED/Sneaky/HF26_cut.mp4",
+   "route": "video_face",
+   "readout": "mcq",
+   "n_tokens_scored": 12,
+   "max_gap": 0.0,
+   "mean_gap": 0.0,
+   "max_gap_by_prefix_length": {
+    "0": 0.0,
+    "1": 0.0,
+    "2": 0.0,
+    "3": 0.0
+   },
+   "repeat_full_max_gap": 0.0,
+   "worst_tokens": [
+    [
+     0.0,
+     3,
+     " None of the above"
+    ],
+    [
+     0.0,
+     2,
+     " None of the"
+    ],
+    [
+     0.0,
+     1,
+     " Sneaky"
+    ],
+    [
+     0.0,
+     1,
+     " None of"
+    ],
+    [
+     0.0,
+     1,
+     " Disappointed"
+    ]
+   ]
+  }
+ ]
+}

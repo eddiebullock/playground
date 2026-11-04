@@ -176,3 +176,9 @@ Non-trivial decisions. Date, decision, alternatives, why. Do not rewrite history
 - **Alternatives:** (a) Keep the cache on Qwen, which passed the tolerance and saves time; (b) wait for float32 and decide then.
 - **Why:** Full forwards are exact where the cached path is not. The gap falls on lexicon terms, so it could differ between stimulus conditions and reach the contrasts under test. Identical scoring across models is worth more than the time saved.
 - **Cost:** Qwen stays at about 0.37 s per forward. Cost figures in the A2 and A3 drafts use full-forward timings.
+
+## 2026-11-04 — Cache parity under float32: the gap is rounding, decision stands
+
+- **Result:** `research/reproduction/cache_parity_qwen3vl_float32.json`, same clips and routes as the bfloat16 run. Blind readout: worst gap per sequence 0.00005 to 0.00013 nats, mean 0.000003 at most. MCQ: 0.0. Repeated full forwards: 0.0.
+- **Reading:** The Qwen position fix is correct. The bfloat16 gap of up to 0.25 nats was rounding between two compute paths, not a logic fault, which answers the cause left open in the entry above.
+- **Decision:** Unchanged. Runs use bfloat16, where the gap is real, so all models keep full forwards.
