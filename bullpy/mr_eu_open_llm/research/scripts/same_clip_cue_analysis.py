@@ -155,7 +155,7 @@ def load_rotation_run(paths, human_lookup, *, allow_partial=False) -> pd.DataFra
     if missing and not allow_partial:
         raise ValueError(f"Missing rotations {missing}; a partial run keeps position confounds")
     trials = json.loads(Path(human_lookup).read_text(encoding="utf-8"))["trials"]
-    sums, parsed = {}, {}
+    sums, parsed, counted = {}, {}, {}
     n_errors, n_samples = 0, 0
     for rotation, path in sorted(by_rotation.items()):
         payload = json.loads(path.read_text(encoding="utf-8"))
@@ -178,6 +178,7 @@ def load_rotation_run(paths, human_lookup, *, allow_partial=False) -> pd.DataFra
             n_samples += samples
             dist = stage2["response_distribution"]  # also holds __unparsed__
             total = sums.setdefault(trial_id, {o: 0.0 for o in expected})
+            counted[trial_id] = counted.get(trial_id, 0) + 1
             for option in expected:
                 total[option] += float(dist.get(option, 0.0)) * samples
                 parsed[trial_id] = parsed.get(trial_id, 0.0) + float(dist.get(option, 0.0)) * samples
@@ -202,6 +203,7 @@ def load_rotation_run(paths, human_lookup, *, allow_partial=False) -> pd.DataFra
         "n_trial_errors": n_errors,
         "unparsed_share": round(1 - sum(parsed.values()) / n_samples, 4) if n_samples else None,
         "partial": bool(missing),
+        "rotations_by_trial": counted,
     })
     return table
 

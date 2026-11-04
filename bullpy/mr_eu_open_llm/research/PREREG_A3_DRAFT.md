@@ -92,12 +92,12 @@ After all three finish, one job combines them. This applies the Holm correction 
 
 ## Cost
 
-From `smoke_v2`, full forwards, `single_face`: 243 items by 5 rotations by 2 conditions is 2,430 cells, each one prompt of about 7 forwards.
+Measured by `--mechanics_only 2` on each model (jobs 39999429 to 39999431): all 20 of 20 cells ran, partners included, on full forwards. 243 items by 5 rotations by 2 conditions is 2,430 cells.
 
-| Model | s per forward, original crop | GPU-hours |
-|---|---|---|
-| Gemma 4 | 0.11 | About 0.5 |
-| Qwen3-VL | 0.14 | About 0.7 |
-| Molmo2 | 0.20 | About 1.0 |
+| Model | Forwards per cell | s per cell | GPU-hours for 2,430 cells |
+|---|---|---|---|
+| Gemma 4 | 7 | 1.22 | 0.82 |
+| Qwen3-VL | 11 | 1.66 | 1.12 |
+| Molmo2 | 11 | 2.01 | 1.36 |
 
-About 2.5 GPU-hours in total, including 10% for decoding. Each model fits in one job. Rough for Qwen and Molmo, since per-forward times are read from mixed crop sizes.
+About 3.3 GPU-hours in total. These two-item means include one clip decode per face, so they are close to what a full run pays. Each model fits one job at the 1 h 45 min limit, which leaves about 25% margin on Molmo, and a job that stops resumes.
