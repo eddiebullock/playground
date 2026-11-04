@@ -1,0 +1,163 @@
+{
+ "detector": "ME-GraphAU ResNet-50, BP4D fold 1, stage two",
+ "n_clips": 243,
+ "n_frames_all": 46597,
+ "n_frames_model": 1771,
+ "model_frame_source": "scripts/frame_sampling.py policy; no eval file read",
+ "clips_whose_model_frames_reproduce_libreface_aggregates": 243,
+ "face_rate": {
+  "mean": 1.0,
+  "min": 1.0,
+  "clips_below_min_rate": 0
+ },
+ "score_range": [
+  0.17569,
+  0.75217
+ ],
+ "frame_level_agreement": {
+  "AU01": {
+   "libreface_occurrence": {
+    "frames": 46548,
+    "pearson_all_frames": 0.2469,
+    "pearson_within_clip": 0.3001
+   },
+   "libreface_intensity": {
+    "frames": 46548,
+    "pearson_all_frames": 0.2685,
+    "pearson_within_clip": 0.2325
+   },
+   "openface3": {
+    "frames": 46548,
+    "pearson_all_frames": 0.1105,
+    "pearson_within_clip": 0.2036
+   }
+  },
+  "AU02": {
+   "libreface_occurrence": {
+    "frames": 46548,
+    "pearson_all_frames": 0.4162,
+    "pearson_within_clip": 0.3783
+   },
+   "libreface_intensity": {
+    "frames": 46548,
+    "pearson_all_frames": 0.2106,
+    "pearson_within_clip": 0.3116
+   },
+   "openface3": {
+    "frames": 46548,
+    "pearson_all_frames": 0.293,
+    "pearson_within_clip": 0.3114
+   }
+  },
+  "AU04": {
+   "libreface_occurrence": {
+    "frames": 46548,
+    "pearson_all_frames": 0.4545,
+    "pearson_within_clip": 0.295
+   },
+   "libreface_intensity": {
+    "frames": 46548,
+    "pearson_all_frames": 0.2946,
+    "pearson_within_clip": 0.153
+   },
+   "openface3": {
+    "frames": 46548,
+    "pearson_all_frames": 0.4352,
+    "pearson_within_clip": 0.2285
+   }
+  },
+  "AU06": {
+   "libreface_occurrence": {
+    "frames": 46548,
+    "pearson_all_frames": 0.6122,
+    "pearson_within_clip": 0.4906
+   },
+   "libreface_intensity": {
+    "frames": 46548,
+    "pearson_all_frames": 0.5141,
+    "pearson_within_clip": 0.3847
+   },
+   "openface3": {
+    "frames": 46548,
+    "pearson_all_frames": 0.404,
+    "pearson_within_clip": 0.2508
+   }
+  },
+  "AU07": {
+   "libreface_occurrence": {
+    "frames": 46548,
+    "pearson_all_frames": 0.4709,
+    "pearson_within_clip": 0.2801
+   }
+  },
+  "AU10": {
+   "libreface_occurrence": {
+    "frames": 46548,
+    "pearson_all_frames": 0.6534,
+    "pearson_within_clip": 0.4619
+   }
+  },
+  "AU12": {
+   "libreface_occurrence": {
+    "frames": 46548,
+    "pearson_all_frames": 0.5091,
+    "pearson_within_clip": 0.3005
+   },
+   "libreface_intensity": {
+    "frames": 46548,
+    "pearson_all_frames": 0.4195,
+    "pearson_within_clip": 0.2162
+   },
+   "openface3": {
+    "frames": 46548,
+    "pearson_all_frames": 0.4238,
+    "pearson_within_clip": 0.2368
+   }
+  },
+  "AU14": {
+   "libreface_occurrence": {
+    "frames": 46548,
+    "pearson_all_frames": 0.4591,
+    "pearson_within_clip": 0.396
+   }
+  },
+  "AU15": {
+   "libreface_occurrence": {
+    "frames": 46548,
+    "pearson_all_frames": 0.5945,
+    "pearson_within_clip": 0.4684
+   },
+   "libreface_intensity": {
+    "frames": 46548,
+    "pearson_all_frames": 0.3409,
+    "pearson_within_clip": 0.1482
+   }
+  },
+  "AU17": {
+   "libreface_occurrence": {
+    "frames": 46548,
+    "pearson_all_frames": 0.5846,
+    "pearson_within_clip": 0.5403
+   },
+   "libreface_intensity": {
+    "frames": 46548,
+    "pearson_all_frames": 0.4475,
+    "pearson_within_clip": 0.2992
+   }
+  },
+  "AU23": {
+   "libreface_occurrence": {
+    "frames": 46548,
+    "pearson_all_frames": 0.4407,
+    "pearson_within_clip": 0.358
+   }
+  },
+  "AU24": {
+   "libreface_occurrence": {
+    "frames": 46548,
+    "pearson_all_frames": 0.522,
+    "pearson_within_clip": 0.5257
+   }
+  }
+ }
+}

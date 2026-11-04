@@ -1,0 +1,113 @@
+{
+ "criteria": {
+  "cue_observer": {
+   "median_pearson_min": 0.7,
+   "median_sign_accuracy_min": 0.9
+  },
+  "null_observer": {
+   "pointwise_fpr_max": 0.05,
+   "two_detector_fpr_max": 0.01,
+   "abs_pearson_with_any_fixed_matrix_max": 0.1,
+   "any_cell_familywise_max": 0.05,
+   "any_cell_familywise_mc_se_allowance": 2.0
+  },
+  "pattern_score": {
+   "size_max": 0.05,
+   "size_mc_se_allowance": 2.0,
+   "power_min": 0.8
+  },
+  "decision_rule": "A condition passes only if it meets every limit for its observer type. Expected failures are not excused. Groupings, estimator, thresholds and the condition list stay fixed once a full run has started."
+ },
+ "criteria_sha256": "4b0a8c3cde345e6cc6043907f75d7af0fbd4a92382a448f565e5454d2df8b66d",
+ "script_sha256_at_lock": "9f7380a4fe633d6d50ceb2519695ebc3d0a7bdf77dfd8c979c2fd432cb31c31e",
+ "families": {
+  "brow_raise": [
+   "AU01",
+   "AU02"
+  ],
+  "brow_lower": [
+   "AU04",
+   "AU09"
+  ],
+  "smile": [
+   "AU06",
+   "AU12"
+  ],
+  "mouth_open": [
+   "AU25",
+   "AU26"
+  ]
+ },
+ "cue_sets": {
+  "families": [
+   "brow_raise",
+   "brow_lower",
+   "smile",
+   "mouth_open"
+  ],
+  "families_singles": [
+   "brow_raise",
+   "brow_lower",
+   "smile",
+   "mouth_open",
+   "AU07",
+   "AU10",
+   "AU14",
+   "AU15",
+   "AU17",
+   "AU23",
+   "AU24"
+  ],
+  "au_exploratory": [
+   "AU01",
+   "AU02",
+   "AU04",
+   "AU06",
+   "AU09",
+   "AU12",
+   "AU25",
+   "AU26",
+   "AU07",
+   "AU10",
+   "AU14",
+   "AU15",
+   "AU17",
+   "AU23",
+   "AU24"
+  ]
+ },
+ "conditions": [
+  "sparse_1.0_published_noise",
+  "sparse_0.5_published_noise",
+  "sparse_0.25_published_noise",
+  "dense_0.3_published_noise",
+  "sparse_0.5_perfect_detectors",
+  "sparse_0.5_shared_detector_error",
+  "sparse_0.5_model_sampling_n100",
+  "sparse_0.5_empirical_detector_agreement",
+  "human_like_published_noise",
+  "human_like_perfect_detectors",
+  "prior_only_within",
+  "prior_only_perfect_detectors",
+  "prior_only_empirical_detector_agreement",
+  "prior_only_within_category_spec",
+  "prior_only_pooled_spec",
+  "actor_prior_within",
+  "actor_prior_within_category_spec",
+  "sparse_0.5_frozen_lambda",
+  "prior_only_frozen_lambda",
+  "actor_prior_frozen_lambda"
+ ],
+ "pattern_conditions": [
+  "pattern_0.5x_human_effect",
+  "pattern_1.0x_human_effect",
+  "pattern_2.0x_human_effect"
+ ],
+ "levels": {
+  "pointwise": 0.05,
+  "two_detector": 0.01,
+  "familywise": 0.05,
+  "pattern": 0.05
+ },
+ "locked_at_utc": "2026-11-04T15:12:57+00:00"
+}

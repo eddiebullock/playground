@@ -155,3 +155,14 @@ Non-trivial decisions. Date, decision, alternatives, why. Do not rewrite history
 - **Molmo:** `single_full` passes narrowly (median 8.05, 55% of clips) and is not used for causal cue tests; `single_face` (median 12.96, 100%) is its route. Its native video route fails gate 1, so temporal cues are not testable on Molmo, and that is reported as a limit.
 - **Why:** An every-clip rule would remove Gemma's only face routes because of a few small faces, whereas the sensitivity check exposes any dependence on them.
 
+## 2026-11-04 — Family recovery result: partial pass, actor-prior null fails
+
+- **Result of record:** `research/reproduction/same_clip_family_recovery.json`, 200 observers per condition, on the locked criteria (hash 4b0a8c3c). No threshold, grouping or test was changed after the run. Eight of 20 conditions pass. Three of the 12 failures are specs other than the primary one, and pooled was expected to fail.
+- **Passes:** Family matrices recover planted observers at weights of 0.5 and 1.0 (r .80 to .85, sign .92 to .95).
+- **Fails, cue side:** Weak sparse weights (0.25), dense weights, shared detector error (sign .896), and the human-like observer (r .78 passes, sign .83 fails, and .86 even with perfect detectors). So the matrix pattern is usable at human effect size, but the sign of a single family cell is not.
+- **Fails, null side:** The actor-prior observer fails all three false-positive limits in the primary spec (.066 pointwise, .014 two-detector, .115 family-wise). Family-wise calibration is fixed for prior-only (.065) and not for actor-prior. Prior-only passes in the primary spec, narrowly (.0498, .0096), and misses pointwise at .053 with empirical noise and .051 with frozen ridge strength, which is the route a model takes.
+- **Likely cause, not yet tested by a fix:** Cues are orthogonal to actor over all clips but not on the clips offering one option. The shuffle moves cues across actors and lowers that leakage (between-actor share of cue variance .27 against .33 observed), so the null is too narrow when actors differ in response.
+- **Pattern score:** Separates a human-like observer from prior-only with power 1.0, and AUC at least .999, at half, one and two times the human effect. Size is .025 to .08. An observer sharing half the weights has power .55 to .97. This rests on simulated observers sharing true weights, and on independent noise.
+- **Families plus singles:** All 10 cue-observer conditions fail (r .34 to .65). Adding seven singles at 11 cues loses what the families gained.
+- **Consequence:** Human family cells stay provisional. Any change to the shuffle needs a new lock and new seeds, and this result stays on record as the failure of the first attempt.
+
