@@ -610,9 +610,10 @@ def step_logprobs(handle: ModelHandle, inputs: Dict[str, Any], prefix: Sequence[
 
 
 CACHE_TOLERANCE = 0.25  # nats; bfloat16 logits near 20 have a step of about 0.125
-# Only models where the cached path passed parity on a real run. On Gemma 4 it raised a
-# CUDA device-side assert, which poisons the process, so a try and fallback cannot be used.
-CACHED_MODELS = frozenset({"qwen3vl"})
+# Empty by decision, 2026-11-04 (research/DECISIONS.md). On Qwen the cached path reached 0.25
+# nats on lexicon terms where repeated full forwards differ by 0.0, and on Gemma 4 it
+# raised a CUDA index assert. All models use full forwards, so scoring is the same path.
+CACHED_MODELS: frozenset = frozenset()
 
 
 def continuation_inputs(
