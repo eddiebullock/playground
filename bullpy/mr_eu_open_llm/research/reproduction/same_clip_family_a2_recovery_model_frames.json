@@ -1,0 +1,205 @@
+{
+ "attempt": 2,
+ "attempt_label": "Post-hoc second attempt, prompted by the actor-prior failure of attempt 1. Not a replacement. Attempt 1 outputs stay unchanged and on record.",
+ "scheme": "within_actor",
+ "seed_offset": 100000,
+ "frame_set": "model_1fps",
+ "cue_set": "families",
+ "cue_source": "measured EU-Emotion cues",
+ "cues": [
+  "brow_raise",
+  "brow_lower",
+  "smile",
+  "mouth_open"
+ ],
+ "aus": [
+  "AU01",
+  "AU02",
+  "AU04",
+  "AU09",
+  "AU06",
+  "AU12",
+  "AU25",
+  "AU26"
+ ],
+ "n_sims": 200,
+ "n_perm": 499,
+ "pattern_perm": 199,
+ "criteria": {
+  "cue_observer": {
+   "median_pearson_min": 0.7,
+   "median_sign_accuracy_min": 0.9
+  },
+  "null_observer": {
+   "pointwise_fpr_max": 0.05,
+   "two_detector_fpr_max": 0.01,
+   "abs_pearson_with_any_fixed_matrix_max": 0.1,
+   "any_cell_familywise_max": 0.05,
+   "any_cell_familywise_mc_se_allowance": 2.0
+  },
+  "pattern_score": {
+   "size_max": 0.05,
+   "size_mc_se_allowance": 2.0,
+   "power_min": 0.8
+  },
+  "decision_rule": "A condition passes only if it meets every limit for its observer type. Expected failures are not excused. Groupings, estimator, thresholds and the condition list stay fixed once a full run has started."
+ },
+ "criteria_sha256": "4b0a8c3cde345e6cc6043907f75d7af0fbd4a92382a448f565e5454d2df8b66d",
+ "script_sha256": "cb5ad541614dcdd8dc3f21c8ab5c4b1999deaf1907d8463d89336b28b6291bc2",
+ "pcc_used": {
+  "published": {
+   "AU01": 0.63,
+   "AU02": 0.72,
+   "AU04": 0.78,
+   "AU05": 0.59,
+   "AU06": 0.59,
+   "AU09": 0.62,
+   "AU12": 0.85,
+   "AU15": 0.36,
+   "AU17": 0.5,
+   "AU20": 0.34,
+   "AU25": 0.94,
+   "AU26": 0.68,
+   "AU07": 0.5,
+   "AU10": 0.5,
+   "AU14": 0.5,
+   "AU23": 0.5,
+   "AU24": 0.5
+  },
+  "empirical": {
+   "AU01": 0.7308,
+   "AU02": 0.7389,
+   "AU04": 0.7972,
+   "AU09": 0.6409,
+   "AU06": 0.61,
+   "AU12": 0.6944,
+   "AU25": 0.8456,
+   "AU26": 0.759
+  }
+ },
+ "assumed_pcc": {
+  "AU07": 0.5,
+  "AU10": 0.5,
+  "AU14": 0.5,
+  "AU23": 0.5,
+  "AU24": 0.5
+ },
+ "human_scale_calibration": {
+  "target_human_gain": 0.00377,
+  "n_sims": 24,
+  "median_gain_by_scale": {
+   "1.0": 0.00043,
+   "2.0": 0.00281,
+   "4.0": 0.01211,
+   "8.0": 0.03932,
+   "16.0": 0.07173,
+   "32.0": 0.09922,
+   "64.0": 0.08823
+  },
+  "chosen_scale": 2.0
+ },
+ "real_human_lambda": [
+  10.0,
+  10.0,
+  10.0
+ ],
+ "notes": [
+  "True cues in simulation are the measured LibreFace AUs, then detector noise is added at the AU level, so measured cues here are noisier than the real ones.",
+  "Item and actor noise are independent between simulated observers, so a shared unmeasured cue that lifts real human-model agreement is not simulated.",
+  "Oracle is the matrix this analysis returns on true family scores with no noise.",
+  "human_like weights are a multiple of the estimated human family matrix, chosen only by held-out gain, so they carry that matrix's own estimation error."
+ ],
+ "conditions": [
+  {
+   "name": "sparse_0.5_frozen_lambda",
+   "observer": "sparse",
+   "scale": 0.5,
+   "noise": true,
+   "spec": "within",
+   "shared_error": 0.0,
+   "pcc": "published",
+   "n_sims": 200,
+   "median_lambda": 10.0,
+   "median_heldout_gain": 0.0112,
+   "pointwise_fpr": 0.0417,
+   "familywise_cell_fpr": 0.0014,
+   "two_detector_fpr": 0.0086,
+   "two_detector_fpr_old_rule": 0.015,
+   "share_sims_any_familywise_cell": 0.96,
+   "share_sims_any_two_detector_cell": 1.0,
+   "pearson_with_oracle": 0.7517,
+   "pearson_with_oracle_powered": 0.7666,
+   "pearson_single_detector": 0.7217,
+   "pearson_with_planted_weights": 0.6036,
+   "attenuation_slope": 0.2086,
+   "sign_accuracy_strong": 0.8981,
+   "tpr_pointwise": 0.3333,
+   "tpr_familywise": 0.06,
+   "tpr_two_detector": 0.16,
+   "n_strong_cells": 52.0,
+   "per_cue_sign_accuracy": {
+    "brow_raise": 0.899,
+    "brow_lower": 0.832,
+    "smile": 0.915,
+    "mouth_open": 0.938
+   },
+   "pass_pearson": true,
+   "pass_sign": false,
+   "recovered": false,
+   "seconds": 65.8
+  },
+  {
+   "name": "prior_only_frozen_lambda",
+   "observer": "prior_only",
+   "scale": 0.0,
+   "noise": true,
+   "spec": "within",
+   "shared_error": 0.0,
+   "pcc": "published",
+   "n_sims": 200,
+   "median_lambda": 10.0,
+   "median_heldout_gain": -0.0005,
+   "pointwise_fpr": 0.0488,
+   "familywise_cell_fpr": 0.001,
+   "two_detector_fpr": 0.0096,
+   "two_detector_fpr_old_rule": 0.0146,
+   "share_sims_any_familywise_cell": 0.085,
+   "share_sims_any_two_detector_cell": 0.58,
+   "median_abs_pearson_with_fixed_matrix": 0.0804,
+   "familywise_limit_with_mc_allowance": 0.0808,
+   "pass_pointwise": true,
+   "pass_two_detector": true,
+   "pass_familywise": false,
+   "pass_fixed_matrix": true,
+   "recovered": false,
+   "seconds": 67.6
+  },
+  {
+   "name": "actor_prior_frozen_lambda",
+   "observer": "actor_prior",
+   "scale": 0.0,
+   "noise": true,
+   "spec": "within",
+   "shared_error": 0.0,
+   "pcc": "published",
+   "n_sims": 200,
+   "median_lambda": 10.0,
+   "median_heldout_gain": -0.0019,
+   "pointwise_fpr": 0.0603,
+   "familywise_cell_fpr": 0.0011,
+   "two_detector_fpr": 0.0127,
+   "two_detector_fpr_old_rule": 0.0198,
+   "share_sims_any_familywise_cell": 0.09,
+   "share_sims_any_two_detector_cell": 0.665,
+   "median_abs_pearson_with_fixed_matrix": 0.0874,
+   "familywise_limit_with_mc_allowance": 0.0808,
+   "pass_pointwise": false,
+   "pass_two_detector": false,
+   "pass_familywise": false,
+   "pass_fixed_matrix": true,
+   "recovered": false,
+   "seconds": 69.5
+  }
+ ],
+ "pattern": []
+}
