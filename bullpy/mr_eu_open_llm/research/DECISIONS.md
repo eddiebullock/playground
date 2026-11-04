@@ -108,3 +108,8 @@ Non-trivial decisions. Date, decision, alternatives, why. Do not rewrite history
 - **Decision:** Do not use "models know where humans are uncertain, but don't show it in their answers" as the main claim. The category label alone reproduces the pilot LOO probes (0.501 for human entropy; 0.526 to 0.703 for model 1-p_target).
 - **Bored-Unfriendly:** Not resolved. Its option overlap (Jaccard 0.43) ties for the highest of 210 label pairs (18 pairs share that value), so shared prompt text is a live explanation and has to be ruled out. Overlap alone cannot prove it, since other pairs tie. Human confusion for this pair could only run one way, because Unfriendly was not offered on Bored items.
 
+## 2026-11-04 — Keep acted labels, add human-referenced scoring
+
+- **Decision:** Report results against the human response distribution as well as the acted label, and flag Kind, Unfriendly and Jealous (26 items; human p_target 0.229, 0.241, 0.257 vs chance 0.167).
+- **Why:** These labels are barely recognisable from the face alone, so acted-label accuracy is a poor ground truth there. Amendment A1 is unchanged; this is a report-level addition.
+
