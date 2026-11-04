@@ -149,3 +149,9 @@ Non-trivial decisions. Date, decision, alternatives, why. Do not rewrite history
 - **Reach:** cv2 4.13 dates from 2026-03-16, before all baselines (July and August 2026). Image-dependent numbers in `RESULTS_REGISTRY.md` are affected, including accuracies, within-category correlations and the older shuffled 4AFC runs if run in this environment. Clean: AU measures, landmarks, and the readout ladder and delivery jobs run under cv2 4.11. Prompt-only findings stand.
 - **Why the old gates missed it:** Nothing tested decoding, and frames were never hashed. Gate 3 of the delivery check caught it.
 
+## 2026-11-04 — Gate 1 is read as the median; clips under 8 are a sensitivity check
+
+- **Decision:** Keep gate 1 as median over clips of at least 8 tokens across the face, as run, with no change after seeing results. In A2 and A3, repeat each confirmatory analysis on clips at 8 or more, and report the share excluded. Gemma `single_face` has 90% of clips at 8 or more.
+- **Molmo:** `single_full` passes narrowly (median 8.05, 55% of clips) and is not used for causal cue tests; `single_face` (median 12.96, 100%) is its route. Its native video route fails gate 1, so temporal cues are not testable on Molmo, and that is reported as a limit.
+- **Why:** An every-clip rule would remove Gemma's only face routes because of a few small faces, whereas the sensitivity check exposes any dependence on them.
+
