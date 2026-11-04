@@ -281,3 +281,17 @@ The single 0.75x run the rule above set: `research/reproduction/same_clip_family
 
 Decided before any model run. A clip counts as usable in `model_route` only with a usable response on all 5 rotations, matching A3's rule and keeping position confound out. Partial clips leave both matrices, count towards the 5 percent limit, and stay listed with their rotation count. This replaces the last bullet of the strength rule result entry above.
 
+
+## 2026-11-04: Vision gates G2 to G4, Gemma and Molmo (Qwen pending)
+
+Run under cv2 4.11 per A1.1. Files: `research/reproduction/vision_gates_{gemma4,molmo2}.json`. Qwen full job 39981392 is queued, so Qwen has no gate result. Its 2-clip smoke is not a result, and anything below marked provisional comes from that smoke.
+
+- **Gemma 4:** G2, G3 and G4 pass.
+- **Molmo2:** G3 passes. G2 fails at bfloat16 (worst relative L2 .0406 against .01; float32 is exactly zero). G4 fails: monotonic, 2.28 nats at 100 percent, but flip rate 0 against .25.
+- **Both failures stand.** Tolerances and thresholds were fixed before any model ran and are not changed. G4's "large" thresholds were set by the implementer, not by the brief, and Molmo's G4 failure rests on the flip part alone. That is disclosed, not a reason to relax it.
+- **Consequence:** A2 as drafted requires G2 to G4, so Molmo is not eligible for the stimulus suite. Any route back in needs a dated rule written before new data, and must be disclosed as such.
+- **G2 explanation is untested.** Two of 80 comparisons are non-zero; the gates run attributes both to foreign option sets of different length (SF12, FF20). The stored JSON holds per-layer aggregates only, so this attribution cannot be rechecked from the file. Sequence-length-dependent bfloat16 rounding fits, since masks block image-to-text and float32 is zero, but it is an inference. Diagnostic if Molmo clears RQ0: rerun those clips at bfloat16 with padded lengths, saving per-comparison rows. Deferred because the result only matters if Molmo survives RQ0.
+- **Molmo answers "None of the above" on 40 of 40 gate clips**, accuracy 0. Logprobs still move toward the donor (+3.41 nats), so image content reaches the output distribution but not the argmax. Read RQ0 and any Molmo argmax measure with this in mind.
+- **Gemma layers 24 to 41 reuse keys and values stored at layers 22 and 23.** Image-position patches at L24 or later change logits by exactly 0, so they are guaranteed false nulls. Patch at L6 to L23 only. No registered result is affected: the only registered ablation is Qwen L4, and `scripts/path_patching.py` output appears in neither the registry nor the paper. The script has no guard, so its default of all saved layers must not be used for Gemma.
+- **Vision cuts:** Gemma needs both routes cut at L0 (.000 remaining; 42 percent from L1). Molmo from L1 leaves a mean of 11.7 percent. Qwen after LM layer 2 leaves 31 percent at bfloat16 and 46 percent at float32 (provisional). No cut at a later layer is a complete cut on any model.
+- **Pilot ablation caveat:** Qwen L4 (5 of 180 flips) patched after LM layer 2. If the Qwen gate confirms this, that null covers an incomplete path and says less about the axes than it appeared to.
