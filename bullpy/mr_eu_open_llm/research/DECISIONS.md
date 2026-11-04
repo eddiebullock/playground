@@ -103,3 +103,8 @@ Non-trivial decisions. Date, decision, alternatives, why. Do not rewrite history
 
 - **Decision:** Correct `STATE.md`. Jobs 39709579, 39709583, 39709584 show CANCELLED on 2026-11-02 18:21 with 0 elapsed. Cause not recorded here.
 
+## 2026-11-04 — The 3 Nov study note matches this repo; its main claim is not supported as stated
+
+- **Decision:** Do not use "models know where humans are uncertain, but don't show it in their answers" as the main claim. The category label alone reproduces the pilot LOO probes (0.501 for human entropy; 0.526 to 0.703 for model 1-p_target).
+- **Bored-Unfriendly:** Not resolved. Its option overlap (Jaccard 0.43) ties for the highest of 210 label pairs (18 pairs share that value), so shared prompt text is a live explanation and has to be ruled out. Overlap alone cannot prove it, since other pairs tie. Human confusion for this pair could only run one way, because Unfriendly was not offered on Bored items.
+
