@@ -239,11 +239,30 @@ Family sizes differ, so raw between-family comparison is biased. Within-item cha
 
 ## Cost
 
-Measured on Gemma 4 E4B, A100, bfloat16: about 3.3 to 4.1 s per cell at about 0.11 s per forward (30 to 32 forwards per cell), peak 16.6 GB. With 32 cells per item, 243 items take about 7.4 GPU-hours, excluding delivery checks. Qwen3-VL and Molmo2 have not been timed. Qwen3-VL's image list route carries 16,320 media tokens against 253 on Gemma 4, so it will cost far more and may need a reduced `legacy_full` condition set.
+Measured on `smoke_v2`: A100, bfloat16, full forwards on every model, the chosen readout, 3 items. An item has 29 cells: 20 on `single_face`, 7 on `video_face`, 1 each on `single_full` and `legacy_full`.
 
-## Appendix: pending results
+| Model | `single_face` s per cell | `single_full` | `video_face` | Forwards per cell | Peak GB | GPU-hours, 243 items |
+|---|---|---|---|---|---|---|
+| Gemma 4 | 3.3 | 3.2 | 14.6 | 31 | 18.3 | 11.6 |
+| Qwen3-VL | 5.4 | 17.9 | 17.0 | 46 | 23.5 | 16.5 |
+| Molmo2 | 7.7 | 11.1 | 8.1 | 46 | 17.1 | 15.0 |
 
-Recovery and predictor numbers are not entered here yet. Read them from `research/reproduction/recovery_stimulus_interventions.json` and `research/reproduction/human_response_predictor.json` once written. The Cost section predates the fixed 768 crop, `legacy_full` reduced to `original`, 280 tokens per Gemma video frame, and cached scoring, so it must be remeasured.
+Hours are cell time only, so allow about 10% for decoding and delivery checks: about 47 GPU-hours in total. `legacy_full` is left out because it is not a causal route. If Molmo's `video_face` stays out, since it fails gate 1, Molmo falls to 11.2 hours.
+
+**Wall time.** `--shard` is enough, and no offset splitting is needed. Items go to shards by position in the round-robin actor order, so shards are balanced by actor. Three shards per model (`sbatch --array=0-2`) give about 4 to 6 hours each against the 12 h limit. Each shard writes its own cells file, which is concatenated before analysis.
+
+## Appendix: recovery and predictor
+
+**Recovery** (`research/reproduction/recovery_stimulus_interventions.json`, 100 replicates, after the leave-target-out fix): all five observers pass. Expected contrasts were recovered in 100% of replicates. Replicates with an unexpected contrast: prior-only 6%, frame-bag 7%, mouth-only 8%, eyes-only 8%, human-like 0%. Two families at alpha .05 sit near the 10% limit, so these rates are close to it by construction. Aperture is not in the family.
+
+**Predictor** (`research/reproduction/human_response_predictor.json`). A model of human judgement, never human data.
+
+| Dataset | Unseen subjects and stimuli: log loss (base rate), r | Slopes from the other group: log loss (base rate), r |
+|---|---|---|
+| basic_WC | 1.618 (1.935), .69 | 1.658 (1.928), .66 |
+| basic_EA | 1.567 (1.906), .82 | 1.624 (1.903), .77 |
+| conversational_WC | 1.494 (1.613), .59 | 1.479 (1.590), .63 |
+| conversational_EA | 1.491 (1.591), .64 | 1.481 (1.555), .65 |
 
 ## Appendix: smoke run
 
@@ -254,3 +273,14 @@ Job 39974985, Gemma 4 E4B, 3 items: `emotions_38/EDITED/Hurt/OF10_cut.mp4`, `emo
 **Aperture dose is not verified.** Re-detected lid gaps on 5 clips were 1.02 to 1.24 for nominal 1.25 and 0.77 to 0.93 for nominal 0.75. Direction was right, but size fell short of nominal. FaceMesh may under-read lids, or the warp may do less on real faces than on synthetic ones. Resolve this before freezing P11.
 
 **Other.** 2 of 96 cells failed, both `eye_closed` on one apex frame, and were logged. One clip had donor alignment flagged on all neutral and first-frame masks (residual about 0.11 of eye span), so head pose at the apex can exceed the similarity fit.
+
+## Appendix: smoke_v2
+
+Jobs 39995347 to 39995349, the same 3 items, one run per model on the chosen readout. Mechanics only.
+
+- **Run:** 85 of 87 cells ran on each model. The 2 failures are `aperture_wide` and `aperture_narrow` on `JF21v1`, reason `eye_closed`, as in the first smoke. Aperture is out of the family.
+- **Checks:** the sham equals the original exactly, repeat forwards change nothing, and `design_sha256` starts `a1924d80` on all three.
+- **Coverage on cells, median lexicon mass:** Gemma .58 to .71, Qwen .82 to .96, Molmo .66 to .71 by route.
+- **Lexicon mass is not image signal.** Image-free mass on `single_face` is .49 on Gemma, .62 on Qwen and .42 on Molmo. Grey is .02, .08 and .46. Coverage (B2) can pass on the prior alone, so B3 to B5 carry the image claim.
+- **The image-free baseline depends on route on Qwen.** Mass is .62 on `single_face` and `video_face`, but .001 on `single_full` and `legacy_full`. So its use as a prior in B3 needs review before freezing.
+- **Alignment:** 8 cells flagged per model, all on `OF10`, as in the first smoke.
