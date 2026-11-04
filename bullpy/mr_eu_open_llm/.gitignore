@@ -100,3 +100,6 @@ Thumbs.db
 # Keep log bodies out of git; .gitkeep so the directory exists
 research/logs/*
 !research/logs/.gitkeep
+
+# Snoek AU + emotion raw data (CC BY 4.0, re-download via DOI 10.21942/uva.21261885)
+data/external/snoek_au/

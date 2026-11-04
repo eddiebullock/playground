@@ -46,6 +46,31 @@ Test: on options crossed with images, change the cue that drives a human confusi
 - **RMET.** It loads on vocabulary, so language-backed models need a text-only control and a foil swap.
 - **Actor and label** are only partly crossed: each face actor portrayed 10 emotions plus neutral (O'Reilly 2016).
 
+## No new human participants
+
+No human data will be collected. Every human comparison uses existing data, and claims are scoped to match.
+
+| Source | Gives | Type of evidence | Used for | Access |
+|---|---|---|---|---|
+| Snoek AU data | Trial-level judgements of randomised action units, including bored, confused, interested, thinking | Causal on the human side, on avatars | RQ1, RQ2 predictions | Open, CC BY 4.0; downloaded |
+| EU-Emotion norms | Item-level option distributions on the clips the models see | Observational, complex states, fixed options | RQ1, RQ4 | Held |
+| CREMA-D | Per-clip face-only votes; all clips share one option set; 91 actors | Observational, basic emotions | RQ1, RQ5 | Ratings public; videos need a registration form |
+| RMET and MRMET open data | Per-person item selections | Observational, eyes | RQ4 | Workbooks open; stimuli need a form |
+| Published experiments | Direction of effects (speed, adaptation, gaze, composites) | Causal, other stimuli | RQ2 predictions | Literature |
+
+**Rules that keep this robust**
+
+1. **Scope.** Causal claims are about the model. The human side is a fixed target. Never write that humans would respond to an edited clip in a given way, only that the model does or does not match a stated human prediction.
+2. **Fix human targets first.** Human effect estimates and predicted directions are committed before a model sees the relevant stimuli.
+3. **Like with like.** On shared clips, regress human and model responses on the same measured cues, then use model interventions to test whether the model's link is causal. A human observational estimate is compared only with a model observational estimate.
+4. **Triangulate.** A cue counts as human-aligned only if at least two independent human sources agree in direction, ideally one randomised (Snoek) and one on natural clips.
+5. **Human response predictor, labelled as prediction.** Fit a predictor of human judgement from cues on Snoek, validate it on held-out Snoek and on EU-Emotion and CREMA-D, and use it to generate predictions for edited clips. Report its validated error. It is a model of humans and never counts as human data.
+6. **Noise ceilings.** Normalise alignment by human reliability. From Snoek, a model as similar to the group as one human scores about 0.75. Use the ceiling that matches the comparison: 0.88 to 0.96 when stimuli differ.
+7. **Recovery.** Run synthetic observers with known cue weights through the same pipeline, and report whether the analysis recovers them, including a pure prior-driven observer.
+8. **Measurement error.** Use two action-unit detectors of different lineage and treat disagreement as uncertainty. Detection is weak for AU15 and AU20.
+
+**What this costs.** RQ2 loses a direct human dose-response on the same edited clips, so that is reported as a limitation and offered as future work. RQ1 is unaffected on the randomised data. RQ5 moves to CREMA-D, where all clips share options and confusion does not depend on which foils were offered; EU-Emotion stays for complex states with that limit stated.
+
 ## What changed from the old questions
 
 | Old question | Problem | Now |
