@@ -1,0 +1,4458 @@
+{
+ "source": {
+  "doi": "10.21942/uva.21261885.v1",
+  "licence": "CC BY 4.0",
+  "file": "au_emotion_data.zip",
+  "md5": "1c8938c50b7702022b03d66987c79402",
+  "read_from": "zip members in place, nothing extracted or executed"
+ },
+ "method": {
+  "model": "One ridge logistic per subject and label, one-vs-rest, on 33 AU amplitudes plus centred face gender. Intercept and gender unpenalised.",
+  "aggregate": "Equal-weight mean of subject estimates.",
+  "ci": "95 percent percentile, resampling subjects within stimulus set. Conditional on the fixed stimulus set; see beta_se_stimulus in the CSV.",
+  "beta_units": "log odds per unit amplitude (0 to 1); composites are L plus R",
+  "do_effect": "Difference in P(label) for do(AU=1) minus do(AU=0), others at observed values, averaged over the subject's trials. One-vs-rest probabilities are renormalised over labels per trial, so effects sum to zero across labels. do(AU=1) is full amplitude, at the top of the tested range.",
+  "ceiling": "family_25 is the recommended basis. Use the same-stimuli ceiling if a model sees these configurations; use the subjects_and_stimuli ceiling if it sees others. Keep beta and do_effect separate.",
+  "seed": 20261104,
+  "n_boot": 2000,
+  "n_stimulus_boot": 500,
+  "n_splits": 500,
+  "n_cross_splits": 200
+ },
+ "datasets": {
+  "basic_WC": {
+   "structure": {
+    "tsv_files": 60,
+    "empty_tsv_files": 0,
+    "n_subjects": 60,
+    "n_trials": 140910,
+    "n_trials_excluding_other": 119387,
+    "trials_per_subject": {
+     "min": 2342,
+     "median": 2342.0,
+     "max": 2368
+    },
+    "subjects_with_under_half_median_trials": {},
+    "n_au_columns": 33,
+    "n_unique_au_configurations": 4659,
+    "n_unique_stimuli_config_plus_face": 4701,
+    "n_distinct_face_ids": 967,
+    "stimulus_sets": {
+     "A_sub01_15": 15,
+     "B_sub16_60": 45
+    },
+    "stimulus_set_config_counts": {
+     "A_sub01_15": 2351,
+     "B_sub16_60": 2311
+    },
+    "label_counts": {
+     "disgust": 26685,
+     "other": 21523,
+     "anger": 21049,
+     "happy": 20953,
+     "surprise": 19820,
+     "sadness": 16406,
+     "fear": 14474
+    },
+    "amplitude_values_in_columns": [
+     0.0,
+     0.1,
+     0.2,
+     0.3,
+     0.4,
+     0.5,
+     0.6,
+     0.7,
+     0.8,
+     1.0
+    ],
+    "active_aus_per_trial_mean": 3.781,
+    "au_active_rate_min_max": [
+     0.048,
+     0.248
+    ],
+    "largest_au_correlation": {
+     "pair": [
+      "AU02R",
+      "AU02L"
+     ],
+     "r": 0.786
+    },
+    "max_vif_over_configurations": 3.19,
+    "subject_label_pairs_never_used": 0
+   },
+   "ridge_lambda_selected": 0.1,
+   "heldout_log_loss_by_lambda": {
+    "0.01": 0.30915,
+    "0.1": 0.3063,
+    "1.0": 0.3065,
+    "3.0": 0.3146,
+    "10.0": 0.33316,
+    "30.0": 0.35394,
+    "intercept_only": 0.38688
+   },
+   "effect_names": [
+    "AU01",
+    "AU02L",
+    "AU02R",
+    "AU04",
+    "AU05",
+    "AU06L",
+    "AU06R",
+    "AU07L",
+    "AU07R",
+    "AU09",
+    "AU10L",
+    "AU10R",
+    "AU11L",
+    "AU11R",
+    "AU12L",
+    "AU12R",
+    "AU13",
+    "AU14L",
+    "AU14R",
+    "AU15",
+    "AU16",
+    "AU17",
+    "AU20L",
+    "AU20R",
+    "AU22",
+    "AU23",
+    "AU24",
+    "AU25",
+    "AU26",
+    "AU27",
+    "AU38",
+    "AU39",
+    "AU43",
+    "AU02_bilateral",
+    "AU06_bilateral",
+    "AU07_bilateral",
+    "AU10_bilateral",
+    "AU11_bilateral",
+    "AU12_bilateral",
+    "AU14_bilateral",
+    "AU20_bilateral"
+   ],
+   "labels": [
+    "anger",
+    "disgust",
+    "fear",
+    "happy",
+    "sadness",
+    "surprise",
+    "other"
+   ],
+   "subjects_with_no_use_of_label": {
+    "anger": 0,
+    "disgust": 0,
+    "fear": 0,
+    "happy": 0,
+    "sadness": 0,
+    "surprise": 0,
+    "other": 0
+   },
+   "beta_log_odds_per_unit_amplitude": [
+    [
+     -1.8944,
+     -0.676,
+     -0.4535,
+     -0.883,
+     0.0786,
+     0.246,
+     -0.3343,
+     0.2621,
+     0.4178,
+     1.7678,
+     1.0414,
+     1.0247,
+     0.2067,
+     -0.0764,
+     -0.7674,
+     -0.3159,
+     -0.568,
+     -0.7793,
+     -0.6947,
+     -0.267,
+     0.6004,
+     -0.7936,
+     -1.0104,
+     -0.9682,
+     0.5558,
+     0.5741,
+     0.7071,
+     1.0695,
+     -0.0366,
+     -0.0135,
+     0.4919,
+     -0.5241,
+     -1.7259,
+     -1.1295,
+     -0.0883,
+     0.6799,
+     2.0661,
+     0.1302,
+     -1.0834,
+     -1.4741,
+     -1.9786
+    ],
+    [
+     -1.2797,
+     -0.5087,
+     -0.7204,
+     -1.2173,
+     -1.538,
+     0.3893,
+     0.7331,
+     0.0702,
+     0.1838,
+     3.6344,
+     1.4764,
+     1.1405,
+     1.0595,
+     0.8933,
+     -0.8736,
+     -0.6958,
+     -0.2254,
+     -0.5878,
+     -0.7161,
+     0.2117,
+     -0.7376,
+     0.0747,
+     0.2905,
+     0.1729,
+     -1.9443,
+     -0.4537,
+     -0.2213,
+     -1.1053,
+     -1.5612,
+     -2.3154,
+     -0.2036,
+     0.2986,
+     0.7994,
+     -1.2291,
+     1.1224,
+     0.254,
+     2.617,
+     1.9528,
+     -1.5694,
+     -1.3038,
+     0.4634
+    ],
+    [
+     -0.2907,
+     -0.6337,
+     0.1887,
+     1.5337,
+     1.3509,
+     -0.204,
+     -0.1225,
+     -0.091,
+     -0.0378,
+     -3.3101,
+     -1.3748,
+     -0.8988,
+     -0.3431,
+     -0.8748,
+     -0.6626,
+     -0.9151,
+     -1.147,
+     -0.5008,
+     -0.1445,
+     0.3019,
+     -0.0911,
+     -0.7543,
+     1.6834,
+     1.9298,
+     -1.9637,
+     0.1584,
+     -0.3827,
+     0.504,
+     0.3837,
+     -0.1967,
+     -0.3003,
+     0.2699,
+     -2.0301,
+     -0.445,
+     -0.3265,
+     -0.1289,
+     -2.2736,
+     -1.2179,
+     -1.5777,
+     -0.6452,
+     3.6132
+    ],
+    [
+     -0.118,
+     -0.5162,
+     0.5865,
+     -2.6928,
+     -1.5109,
+     -0.507,
+     -0.4136,
+     -0.5202,
+     -0.4619,
+     -4.737,
+     -2.1545,
+     -2.1595,
+     -0.9351,
+     -0.6359,
+     2.6311,
+     2.4558,
+     1.6185,
+     1.8711,
+     1.3832,
+     -1.5207,
+     -2.567,
+     -1.7645,
+     -1.1692,
+     -1.7021,
+     -4.2189,
+     -0.6605,
+     -1.93,
+     -0.8721,
+     -2.0899,
+     -3.6863,
+     -0.0786,
+     -0.6097,
+     -1.6011,
+     0.0703,
+     -0.9207,
+     -0.982,
+     -4.314,
+     -1.571,
+     5.0869,
+     3.2543,
+     -2.8713
+    ],
+    [
+     0.2842,
+     -1.3584,
+     -0.133,
+     1.6617,
+     -2.4762,
+     -0.2915,
+     -0.4292,
+     -0.1166,
+     -0.2775,
+     -4.3273,
+     -2.1806,
+     -2.1746,
+     -0.9337,
+     -0.6302,
+     -0.5848,
+     -0.697,
+     -0.6082,
+     -0.3997,
+     -0.1187,
+     0.7598,
+     -1.6042,
+     1.257,
+     -0.466,
+     -0.6729,
+     -3.2142,
+     -0.004,
+     0.7683,
+     -1.8702,
+     -1.9363,
+     -3.1296,
+     -0.5334,
+     0.1633,
+     2.8451,
+     -1.4914,
+     -0.7207,
+     -0.3941,
+     -4.3552,
+     -1.5639,
+     -1.2818,
+     -0.5185,
+     -1.1389
+    ],
+    [
+     1.7564,
+     2.0477,
+     0.4041,
+     -0.5133,
+     2.1342,
+     -0.4138,
+     -0.6412,
+     -0.4353,
+     -0.5651,
+     -3.5364,
+     -1.5022,
+     -1.2286,
+     -0.8976,
+     -0.818,
+     -1.1223,
+     -1.1601,
+     -1.7246,
+     -0.9201,
+     -0.8801,
+     -0.4498,
+     -0.248,
+     -0.6584,
+     -1.2088,
+     -0.9983,
+     -0.3701,
+     -0.4603,
+     -1.3987,
+     0.4087,
+     2.2595,
+     2.8721,
+     -0.125,
+     -0.5993,
+     -2.6836,
+     2.4519,
+     -1.055,
+     -1.0004,
+     -2.7308,
+     -1.7155,
+     -2.2824,
+     -1.8002,
+     -2.2071
+    ],
+    [
+     -0.568,
+     -0.3195,
+     -0.2124,
+     -1.0466,
+     -1.1356,
+     -0.3152,
+     -0.1494,
+     -0.1798,
+     -0.1818,
+     -2.0929,
+     -0.4883,
+     -0.2225,
+     -0.4903,
+     -0.1242,
+     -0.4261,
+     -0.3423,
+     -0.1939,
+     -0.1668,
+     -0.1483,
+     -0.1514,
+     0.1385,
+     0.3224,
+     -0.2447,
+     -0.3301,
+     1.6992,
+     0.004,
+     -0.288,
+     0.2359,
+     -0.0234,
+     -0.5604,
+     -0.1049,
+     -0.0466,
+     -0.6552,
+     -0.532,
+     -0.4646,
+     -0.3616,
+     -0.7109,
+     -0.6145,
+     -0.7684,
+     -0.3152,
+     -0.5748
+    ]
+   ],
+   "do_effect_probability_au_full_vs_none": [
+    [
+     -0.0997,
+     -0.0399,
+     -0.0285,
+     -0.0319,
+     0.0106,
+     0.0289,
+     -0.0225,
+     0.0325,
+     0.0476,
+     0.1659,
+     0.1158,
+     0.1157,
+     0.0241,
+     0.0066,
+     -0.0427,
+     -0.0171,
+     -0.0228,
+     -0.0441,
+     -0.0378,
+     -0.0205,
+     0.0969,
+     -0.0464,
+     -0.0706,
+     -0.0633,
+     0.1018,
+     0.0683,
+     0.107,
+     0.1044,
+     -0.0024,
+     0.0326,
+     0.0556,
+     -0.0303,
+     -0.0901,
+     -0.0646,
+     0.0014,
+     0.079,
+     0.1918,
+     0.0237,
+     -0.0706,
+     -0.0784,
+     -0.1156
+    ],
+    [
+     -0.0841,
+     -0.0408,
+     -0.0503,
+     -0.0836,
+     -0.1113,
+     0.0448,
+     0.0843,
+     0.007,
+     0.0176,
+     0.4288,
+     0.1953,
+     0.1475,
+     0.133,
+     0.114,
+     -0.0693,
+     -0.0581,
+     -0.0039,
+     -0.0408,
+     -0.0513,
+     0.0225,
+     -0.0268,
+     0.0112,
+     0.0535,
+     0.0402,
+     -0.0822,
+     -0.0441,
+     -0.0184,
+     -0.0851,
+     -0.096,
+     -0.1222,
+     -0.019,
+     0.0431,
+     0.0938,
+     -0.0855,
+     0.1311,
+     0.0227,
+     0.2825,
+     0.2461,
+     -0.1255,
+     -0.0903,
+     0.0633
+    ],
+    [
+     -0.0134,
+     -0.0296,
+     0.014,
+     0.1322,
+     0.1257,
+     -0.0025,
+     0.0104,
+     0.0094,
+     0.0052,
+     -0.0896,
+     -0.0535,
+     -0.0374,
+     -0.0096,
+     -0.0297,
+     -0.0295,
+     -0.0425,
+     -0.038,
+     -0.0142,
+     0.0007,
+     0.025,
+     0.0333,
+     -0.0322,
+     0.1726,
+     0.2078,
+     -0.0389,
+     0.0148,
+     -0.0084,
+     0.0405,
+     0.0473,
+     0.0332,
+     -0.0048,
+     0.0209,
+     -0.0689,
+     -0.0274,
+     0.0078,
+     0.0189,
+     -0.0757,
+     -0.041,
+     -0.0696,
+     -0.0224,
+     0.3808
+    ],
+    [
+     -0.0012,
+     -0.0307,
+     0.0426,
+     -0.11,
+     -0.073,
+     -0.0234,
+     -0.021,
+     -0.0261,
+     -0.0245,
+     -0.1417,
+     -0.0891,
+     -0.0862,
+     -0.0426,
+     -0.0303,
+     0.2618,
+     0.2388,
+     0.157,
+     0.1628,
+     0.1175,
+     -0.0743,
+     -0.1006,
+     -0.0815,
+     -0.0581,
+     -0.0801,
+     -0.1221,
+     -0.0364,
+     -0.0853,
+     -0.0436,
+     -0.0954,
+     -0.1187,
+     0.0003,
+     -0.0276,
+     -0.0804,
+     0.0061,
+     -0.0423,
+     -0.0488,
+     -0.1357,
+     -0.0673,
+     0.5045,
+     0.2953,
+     -0.1197
+    ],
+    [
+     0.0416,
+     -0.0693,
+     0.0077,
+     0.1742,
+     -0.0944,
+     -0.0129,
+     -0.0173,
+     -0.0002,
+     -0.0123,
+     -0.1154,
+     -0.0839,
+     -0.0828,
+     -0.0437,
+     -0.0302,
+     -0.0292,
+     -0.0363,
+     -0.0107,
+     -0.0081,
+     0.0069,
+     0.0622,
+     -0.0683,
+     0.1241,
+     -0.0287,
+     -0.0348,
+     -0.1048,
+     0.0077,
+     0.0805,
+     -0.0864,
+     -0.0835,
+     -0.1065,
+     -0.0252,
+     0.0122,
+     0.2965,
+     -0.065,
+     -0.0291,
+     -0.0127,
+     -0.1192,
+     -0.0666,
+     -0.0641,
+     -0.0071,
+     -0.0612
+    ],
+    [
+     0.1947,
+     0.2187,
+     0.0367,
+     -0.0164,
+     0.2158,
+     -0.0216,
+     -0.0314,
+     -0.0203,
+     -0.032,
+     -0.1253,
+     -0.0703,
+     -0.0607,
+     -0.0446,
+     -0.0379,
+     -0.0635,
+     -0.0633,
+     -0.079,
+     -0.0484,
+     -0.0462,
+     -0.024,
+     0.0182,
+     -0.0248,
+     -0.0616,
+     -0.0518,
+     0.0283,
+     -0.023,
+     -0.0668,
+     0.0327,
+     0.2226,
+     0.3064,
+     -0.0043,
+     -0.0326,
+     -0.1082,
+     0.2765,
+     -0.0502,
+     -0.0499,
+     -0.1138,
+     -0.076,
+     -0.1135,
+     -0.0884,
+     -0.1009
+    ],
+    [
+     -0.0379,
+     -0.0083,
+     -0.0222,
+     -0.0645,
+     -0.0734,
+     -0.0133,
+     -0.0025,
+     -0.0024,
+     -0.0016,
+     -0.1228,
+     -0.0143,
+     0.0039,
+     -0.0167,
+     0.0075,
+     -0.0276,
+     -0.0214,
+     -0.0025,
+     -0.0072,
+     0.0103,
+     0.0091,
+     0.0473,
+     0.0496,
+     -0.0071,
+     -0.0179,
+     0.2178,
+     0.0127,
+     -0.0085,
+     0.0375,
+     0.0075,
+     -0.0248,
+     -0.0026,
+     0.0144,
+     -0.0427,
+     -0.0402,
+     -0.0187,
+     -0.0091,
+     -0.0299,
+     -0.019,
+     -0.0612,
+     -0.0087,
+     -0.0467
+    ]
+   ],
+   "reliability": {
+    "beta_family_25": {
+     "overall": {
+      "split_half_r": 0.9797,
+      "split_half_r_sd": 0.0047,
+      "spearman_brown": 0.9898,
+      "ceiling_r_noise_free_vs_full_sample": 0.9949
+     },
+     "per_label": {
+      "anger": {
+       "split_half_r": 0.9614,
+       "split_half_r_sd": 0.0206,
+       "spearman_brown": 0.9803,
+       "ceiling_r_noise_free_vs_full_sample": 0.9901
+      },
+      "disgust": {
+       "split_half_r": 0.9815,
+       "split_half_r_sd": 0.0101,
+       "spearman_brown": 0.9907,
+       "ceiling_r_noise_free_vs_full_sample": 0.9953
+      },
+      "fear": {
+       "split_half_r": 0.973,
+       "split_half_r_sd": 0.0135,
+       "spearman_brown": 0.9863,
+       "ceiling_r_noise_free_vs_full_sample": 0.9931
+      },
+      "happy": {
+       "split_half_r": 0.9934,
+       "split_half_r_sd": 0.0025,
+       "spearman_brown": 0.9967,
+       "ceiling_r_noise_free_vs_full_sample": 0.9983
+      },
+      "sadness": {
+       "split_half_r": 0.9862,
+       "split_half_r_sd": 0.0057,
+       "spearman_brown": 0.993,
+       "ceiling_r_noise_free_vs_full_sample": 0.9965
+      },
+      "surprise": {
+       "split_half_r": 0.9866,
+       "split_half_r_sd": 0.0068,
+       "spearman_brown": 0.9933,
+       "ceiling_r_noise_free_vs_full_sample": 0.9966
+      },
+      "other": {
+       "split_half_r": 0.9418,
+       "split_half_r_sd": 0.0239,
+       "spearman_brown": 0.97,
+       "ceiling_r_noise_free_vs_full_sample": 0.9849
+      }
+     },
+     "leave_one_subject_out_mean_r": 0.7618
+    },
+    "do_effect_family_25": {
+     "overall": {
+      "split_half_r": 0.9765,
+      "split_half_r_sd": 0.0063,
+      "spearman_brown": 0.9881,
+      "ceiling_r_noise_free_vs_full_sample": 0.994
+     },
+     "per_label": {
+      "anger": {
+       "split_half_r": 0.9529,
+       "split_half_r_sd": 0.0236,
+       "spearman_brown": 0.9759,
+       "ceiling_r_noise_free_vs_full_sample": 0.9879
+      },
+      "disgust": {
+       "split_half_r": 0.9816,
+       "split_half_r_sd": 0.0096,
+       "spearman_brown": 0.9907,
+       "ceiling_r_noise_free_vs_full_sample": 0.9953
+      },
+      "fear": {
+       "split_half_r": 0.9715,
+       "split_half_r_sd": 0.0169,
+       "spearman_brown": 0.9855,
+       "ceiling_r_noise_free_vs_full_sample": 0.9927
+      },
+      "happy": {
+       "split_half_r": 0.9973,
+       "split_half_r_sd": 0.0012,
+       "spearman_brown": 0.9986,
+       "ceiling_r_noise_free_vs_full_sample": 0.9993
+      },
+      "sadness": {
+       "split_half_r": 0.9841,
+       "split_half_r_sd": 0.0094,
+       "spearman_brown": 0.992,
+       "ceiling_r_noise_free_vs_full_sample": 0.996
+      },
+      "surprise": {
+       "split_half_r": 0.9871,
+       "split_half_r_sd": 0.0085,
+       "spearman_brown": 0.9935,
+       "ceiling_r_noise_free_vs_full_sample": 0.9967
+      },
+      "other": {
+       "split_half_r": 0.9563,
+       "split_half_r_sd": 0.0188,
+       "spearman_brown": 0.9776,
+       "ceiling_r_noise_free_vs_full_sample": 0.9888
+      }
+     },
+     "leave_one_subject_out_mean_r": 0.7397
+    },
+    "beta_column_33": {
+     "overall": {
+      "split_half_r": 0.9766,
+      "split_half_r_sd": 0.0053,
+      "spearman_brown": 0.9881,
+      "ceiling_r_noise_free_vs_full_sample": 0.9941
+     },
+     "per_label": {
+      "anger": {
+       "split_half_r": 0.9498,
+       "split_half_r_sd": 0.0266,
+       "spearman_brown": 0.9743,
+       "ceiling_r_noise_free_vs_full_sample": 0.987
+      },
+      "disgust": {
+       "split_half_r": 0.9786,
+       "split_half_r_sd": 0.0118,
+       "spearman_brown": 0.9892,
+       "ceiling_r_noise_free_vs_full_sample": 0.9946
+      },
+      "fear": {
+       "split_half_r": 0.9658,
+       "split_half_r_sd": 0.017,
+       "spearman_brown": 0.9826,
+       "ceiling_r_noise_free_vs_full_sample": 0.9913
+      },
+      "happy": {
+       "split_half_r": 0.992,
+       "split_half_r_sd": 0.0028,
+       "spearman_brown": 0.996,
+       "ceiling_r_noise_free_vs_full_sample": 0.998
+      },
+      "sadness": {
+       "split_half_r": 0.9853,
+       "split_half_r_sd": 0.0058,
+       "spearman_brown": 0.9926,
+       "ceiling_r_noise_free_vs_full_sample": 0.9963
+      },
+      "surprise": {
+       "split_half_r": 0.9835,
+       "split_half_r_sd": 0.0083,
+       "spearman_brown": 0.9917,
+       "ceiling_r_noise_free_vs_full_sample": 0.9958
+      },
+      "other": {
+       "split_half_r": 0.9361,
+       "split_half_r_sd": 0.0257,
+       "spearman_brown": 0.967,
+       "ceiling_r_noise_free_vs_full_sample": 0.9834
+      }
+     },
+     "leave_one_subject_out_mean_r": 0.7388
+    },
+    "do_effect_column_33": {
+     "overall": {
+      "split_half_r": 0.9709,
+      "split_half_r_sd": 0.0073,
+      "spearman_brown": 0.9853,
+      "ceiling_r_noise_free_vs_full_sample": 0.9926
+     },
+     "per_label": {
+      "anger": {
+       "split_half_r": 0.9449,
+       "split_half_r_sd": 0.0276,
+       "spearman_brown": 0.9717,
+       "ceiling_r_noise_free_vs_full_sample": 0.9857
+      },
+      "disgust": {
+       "split_half_r": 0.9784,
+       "split_half_r_sd": 0.011,
+       "spearman_brown": 0.9891,
+       "ceiling_r_noise_free_vs_full_sample": 0.9945
+      },
+      "fear": {
+       "split_half_r": 0.9557,
+       "split_half_r_sd": 0.0252,
+       "spearman_brown": 0.9774,
+       "ceiling_r_noise_free_vs_full_sample": 0.9886
+      },
+      "happy": {
+       "split_half_r": 0.9951,
+       "split_half_r_sd": 0.0017,
+       "spearman_brown": 0.9975,
+       "ceiling_r_noise_free_vs_full_sample": 0.9988
+      },
+      "sadness": {
+       "split_half_r": 0.9826,
+       "split_half_r_sd": 0.0097,
+       "spearman_brown": 0.9912,
+       "ceiling_r_noise_free_vs_full_sample": 0.9956
+      },
+      "surprise": {
+       "split_half_r": 0.9842,
+       "split_half_r_sd": 0.0099,
+       "spearman_brown": 0.992,
+       "ceiling_r_noise_free_vs_full_sample": 0.996
+      },
+      "other": {
+       "split_half_r": 0.9497,
+       "split_half_r_sd": 0.0212,
+       "spearman_brown": 0.9742,
+       "ceiling_r_noise_free_vs_full_sample": 0.987
+      }
+     },
+     "leave_one_subject_out_mean_r": 0.7039
+    },
+    "beta_family_25_subjects_and_stimuli_split_pooled_fit": {
+     "split_half_r": 0.96,
+     "spearman_brown": 0.9796,
+     "ceiling_r_noise_free_vs_full_sample": 0.9897,
+     "per_label_split_half_r": {
+      "anger": 0.9344,
+      "disgust": 0.9628,
+      "fear": 0.9455,
+      "happy": 0.9735,
+      "sadness": 0.9703,
+      "surprise": 0.9738,
+      "other": 0.9217
+     }
+    }
+   },
+   "checks": {
+    "sum_do_effect_over_labels_abs_max_33_columns": 0.0,
+    "r_per_subject_mean_vs_pooled_fit": 0.9915,
+    "r_selected_lambda_vs_lowest_lambda": 0.9943,
+    "slope_selected_on_lowest_lambda": 0.8862,
+    "median_stimulus_se_over_subject_se_pooled_vs_per_subject": 0.842,
+    "stim_set_agreement_beta_family_25": {
+     "sets": [
+      "A_sub01_15",
+      "B_sub16_60"
+     ],
+     "r": 0.8124
+    }
+   }
+  },
+  "basic_EA": {
+   "structure": {
+    "tsv_files": 60,
+    "empty_tsv_files": 0,
+    "n_subjects": 60,
+    "n_trials": 139728,
+    "n_trials_excluding_other": 128400,
+    "trials_per_subject": {
+     "min": 783,
+     "median": 2355.0,
+     "max": 2355
+    },
+    "subjects_with_under_half_median_trials": {
+     "43EA": 783
+    },
+    "n_au_columns": 33,
+    "n_unique_au_configurations": 2323,
+    "n_unique_stimuli_config_plus_face": 2343,
+    "n_distinct_face_ids": 8,
+    "stimulus_sets": {
+     "single": 60
+    },
+    "stimulus_set_config_counts": {
+     "single": 2323
+    },
+    "label_counts": {
+     "happy": 26654,
+     "disgust": 24827,
+     "surprise": 24149,
+     "anger": 21864,
+     "sadness": 18698,
+     "fear": 12208,
+     "other": 11328
+    },
+    "amplitude_values_in_columns": [
+     0.0,
+     0.2,
+     0.3,
+     0.5,
+     0.7,
+     0.8,
+     1.0
+    ],
+    "active_aus_per_trial_mean": 3.64,
+    "au_active_rate_min_max": [
+     0.047,
+     0.254
+    ],
+    "largest_au_correlation": {
+     "pair": [
+      "AU02R",
+      "AU02L"
+     ],
+     "r": 0.789
+    },
+    "max_vif_over_configurations": 2.91,
+    "subject_label_pairs_never_used": 1
+   },
+   "ridge_lambda_selected": 0.1,
+   "heldout_log_loss_by_lambda": {
+    "0.01": 0.29968,
+    "0.1": 0.29604,
+    "1.0": 0.29734,
+    "3.0": 0.3078,
+    "10.0": 0.33015,
+    "30.0": 0.35374,
+    "intercept_only": 0.38861
+   },
+   "effect_names": [
+    "AU01",
+    "AU02L",
+    "AU02R",
+    "AU04",
+    "AU05",
+    "AU06L",
+    "AU06R",
+    "AU07L",
+    "AU07R",
+    "AU09",
+    "AU10L",
+    "AU10R",
+    "AU11L",
+    "AU11R",
+    "AU12L",
+    "AU12R",
+    "AU13",
+    "AU14L",
+    "AU14R",
+    "AU15",
+    "AU16",
+    "AU17",
+    "AU20L",
+    "AU20R",
+    "AU22",
+    "AU23",
+    "AU24",
+    "AU25",
+    "AU26",
+    "AU27",
+    "AU38",
+    "AU39",
+    "AU43",
+    "AU02_bilateral",
+    "AU06_bilateral",
+    "AU07_bilateral",
+    "AU10_bilateral",
+    "AU11_bilateral",
+    "AU12_bilateral",
+    "AU14_bilateral",
+    "AU20_bilateral"
+   ],
+   "labels": [
+    "anger",
+    "disgust",
+    "fear",
+    "happy",
+    "sadness",
+    "surprise",
+    "other"
+   ],
+   "subjects_with_no_use_of_label": {
+    "anger": 0,
+    "disgust": 0,
+    "fear": 0,
+    "happy": 0,
+    "sadness": 0,
+    "surprise": 0,
+    "other": 1
+   },
+   "beta_log_odds_per_unit_amplitude": [
+    [
+     -1.3761,
+     -0.5957,
+     -0.3974,
+     -0.7403,
+     0.8094,
+     -0.4716,
+     -0.5553,
+     0.0084,
+     -0.1418,
+     3.1828,
+     1.5347,
+     1.0448,
+     0.7269,
+     0.2838,
+     -0.7753,
+     -0.4943,
+     -0.8188,
+     -0.6409,
+     -0.4313,
+     -0.4365,
+     0.1967,
+     -0.621,
+     -0.9476,
+     -0.6022,
+     -0.5562,
+     0.7664,
+     0.9416,
+     0.7345,
+     -0.7081,
+     -0.9501,
+     0.694,
+     -0.0832,
+     -1.8964,
+     -0.993,
+     -1.027,
+     -0.1335,
+     2.5795,
+     1.0107,
+     -1.2697,
+     -1.0722,
+     -1.5498
+    ],
+    [
+     -0.8158,
+     -0.5132,
+     -0.7195,
+     0.0298,
+     -2.3595,
+     -0.1271,
+     0.0744,
+     0.1465,
+     -0.0778,
+     1.7708,
+     0.9544,
+     0.8286,
+     0.4569,
+     0.5225,
+     -0.5138,
+     -0.6521,
+     -0.5484,
+     -0.1314,
+     -0.4237,
+     -0.1414,
+     -0.5304,
+     -0.0634,
+     0.6408,
+     0.8091,
+     -0.0374,
+     -0.5933,
+     -0.3166,
+     -0.5624,
+     -1.6595,
+     -2.8004,
+     -0.4265,
+     -0.2006,
+     0.0767,
+     -1.2327,
+     -0.0527,
+     0.0687,
+     1.783,
+     0.9793,
+     -1.166,
+     -0.5551,
+     1.45
+    ],
+    [
+     0.0686,
+     0.2921,
+     0.3663,
+     0.965,
+     2.4489,
+     0.552,
+     0.6514,
+     0.0791,
+     0.4357,
+     -0.9259,
+     -0.0927,
+     0.1823,
+     -0.2002,
+     -0.1698,
+     -0.5851,
+     -0.5899,
+     -0.7592,
+     -0.4642,
+     -0.1821,
+     0.3388,
+     1.2126,
+     -0.8625,
+     1.3643,
+     1.2551,
+     -0.2103,
+     -0.1392,
+     -0.0752,
+     1.4362,
+     1.8577,
+     1.9802,
+     0.1135,
+     0.1661,
+     -1.3944,
+     0.6584,
+     1.2033,
+     0.5149,
+     0.0896,
+     -0.3701,
+     -1.175,
+     -0.6463,
+     2.6194
+    ],
+    [
+     -0.1545,
+     -0.5035,
+     0.5886,
+     -3.6506,
+     -1.8478,
+     0.2211,
+     0.2439,
+     -0.1654,
+     -0.0797,
+     -4.9242,
+     -1.7738,
+     -2.2436,
+     -0.5598,
+     -0.4219,
+     2.7413,
+     2.8293,
+     2.3126,
+     1.4791,
+     1.488,
+     -1.6379,
+     -3.1261,
+     -1.4486,
+     -1.828,
+     -2.0925,
+     -5.4383,
+     -0.8526,
+     -2.1324,
+     -2.3637,
+     -3.8411,
+     -5.9597,
+     -0.328,
+     -1.384,
+     -0.2906,
+     0.0851,
+     0.4651,
+     -0.2451,
+     -4.0174,
+     -0.9817,
+     5.5706,
+     2.9672,
+     -3.9205
+    ],
+    [
+     -0.7327,
+     -1.515,
+     -0.6175,
+     2.5047,
+     -3.243,
+     -0.1402,
+     -0.4303,
+     -0.094,
+     -0.3352,
+     -3.7216,
+     -1.9889,
+     -1.8752,
+     -0.5921,
+     -0.8327,
+     -1.4064,
+     -1.0342,
+     -0.6934,
+     -0.6131,
+     -0.2575,
+     1.1254,
+     -1.7499,
+     2.367,
+     0.4267,
+     0.0771,
+     -3.2773,
+     0.5447,
+     1.365,
+     -1.543,
+     -2.3466,
+     -3.8103,
+     -0.1386,
+     1.195,
+     2.1254,
+     -2.1325,
+     -0.5706,
+     -0.4292,
+     -3.864,
+     -1.4248,
+     -2.4405,
+     -0.8706,
+     0.5038
+    ],
+    [
+     1.3688,
+     1.3352,
+     0.5064,
+     -1.5526,
+     1.2234,
+     -0.5144,
+     -0.6031,
+     -0.3286,
+     -0.2094,
+     -4.2455,
+     -1.2673,
+     -0.9331,
+     -0.7601,
+     -0.7205,
+     -1.2972,
+     -1.5912,
+     -1.8657,
+     -1.0097,
+     -0.6588,
+     -0.3318,
+     0.8545,
+     -1.5714,
+     -1.239,
+     -1.1128,
+     -0.2453,
+     -0.7048,
+     -1.3834,
+     1.4942,
+     2.9979,
+     3.5679,
+     -0.1519,
+     -0.6315,
+     -2.5013,
+     1.8416,
+     -1.1175,
+     -0.5379,
+     -2.2003,
+     -1.4806,
+     -2.8884,
+     -1.6685,
+     -2.3518
+    ],
+    [
+     -0.3354,
+     -0.0814,
+     -0.6957,
+     -1.3923,
+     -1.8397,
+     -0.4493,
+     -0.344,
+     -0.1552,
+     -0.1572,
+     -2.3106,
+     -0.8169,
+     -0.3127,
+     -0.4863,
+     -0.3352,
+     -0.5827,
+     -0.5246,
+     -0.4289,
+     -0.1988,
+     -0.1922,
+     -0.0474,
+     -0.635,
+     -0.243,
+     -0.6235,
+     -0.2361,
+     0.5558,
+     -0.1833,
+     -0.4042,
+     -0.2655,
+     -0.9132,
+     -1.7773,
+     -0.4234,
+     -0.2692,
+     0.1739,
+     -0.7771,
+     -0.7933,
+     -0.3125,
+     -1.1295,
+     -0.8216,
+     -1.1073,
+     -0.391,
+     -0.8596
+    ]
+   ],
+   "do_effect_probability_au_full_vs_none": [
+    [
+     -0.0806,
+     -0.0407,
+     -0.0171,
+     -0.0443,
+     0.0832,
+     -0.0278,
+     -0.0351,
+     0.0047,
+     -0.0026,
+     0.3446,
+     0.1751,
+     0.1211,
+     0.0736,
+     0.035,
+     -0.0477,
+     -0.0309,
+     -0.043,
+     -0.0334,
+     -0.0239,
+     -0.0283,
+     0.0531,
+     -0.0376,
+     -0.0609,
+     -0.0388,
+     0.028,
+     0.0933,
+     0.1142,
+     0.0593,
+     -0.0319,
+     -0.0196,
+     0.0784,
+     0.0038,
+     -0.1004,
+     -0.0596,
+     -0.063,
+     0.0013,
+     0.2579,
+     0.1068,
+     -0.0856,
+     -0.0574,
+     -0.0927
+    ],
+    [
+     -0.0584,
+     -0.0403,
+     -0.0626,
+     0.0098,
+     -0.1485,
+     -0.0025,
+     0.0182,
+     0.0189,
+     -0.0034,
+     0.1987,
+     0.1232,
+     0.1139,
+     0.0533,
+     0.0752,
+     -0.0377,
+     -0.0592,
+     -0.0361,
+     -0.001,
+     -0.0355,
+     -0.0101,
+     -0.0286,
+     -0.0031,
+     0.0937,
+     0.1066,
+     0.0643,
+     -0.0532,
+     -0.0332,
+     -0.0657,
+     -0.1197,
+     -0.1399,
+     -0.0409,
+     -0.0205,
+     0.0234,
+     -0.0958,
+     0.0082,
+     0.0135,
+     0.187,
+     0.127,
+     -0.1056,
+     -0.0462,
+     0.1537
+    ],
+    [
+     0.0167,
+     0.0237,
+     0.0299,
+     0.0756,
+     0.2384,
+     0.0508,
+     0.0548,
+     0.0096,
+     0.0379,
+     -0.0303,
+     0.004,
+     0.0187,
+     -0.0015,
+     0.0026,
+     -0.0216,
+     -0.0197,
+     -0.021,
+     -0.0127,
+     -0.004,
+     0.0343,
+     0.112,
+     -0.0289,
+     0.1273,
+     0.1072,
+     0.0225,
+     0.0008,
+     0.0021,
+     0.1046,
+     0.1513,
+     0.1762,
+     0.0079,
+     0.0204,
+     -0.0382,
+     0.0502,
+     0.1134,
+     0.0475,
+     0.0121,
+     -0.0031,
+     -0.0472,
+     -0.0202,
+     0.2355
+    ],
+    [
+     -0.0022,
+     -0.0296,
+     0.0531,
+     -0.1555,
+     -0.1003,
+     0.0239,
+     0.0233,
+     -0.0064,
+     -0.0033,
+     -0.1742,
+     -0.1031,
+     -0.1168,
+     -0.0342,
+     -0.0219,
+     0.2785,
+     0.2872,
+     0.2215,
+     0.1357,
+     0.1266,
+     -0.0882,
+     -0.1408,
+     -0.0828,
+     -0.1029,
+     -0.1089,
+     -0.1741,
+     -0.0508,
+     -0.1101,
+     -0.1222,
+     -0.1631,
+     -0.1875,
+     -0.019,
+     -0.0774,
+     -0.0242,
+     0.0151,
+     0.0424,
+     -0.0102,
+     -0.1745,
+     -0.059,
+     0.5444,
+     0.2725,
+     -0.1736
+    ],
+    [
+     -0.0347,
+     -0.0732,
+     -0.0273,
+     0.2506,
+     -0.1146,
+     -0.0006,
+     -0.0199,
+     -0.0017,
+     -0.015,
+     -0.1159,
+     -0.0892,
+     -0.0835,
+     -0.0288,
+     -0.0417,
+     -0.072,
+     -0.0599,
+     -0.0288,
+     -0.031,
+     -0.0159,
+     0.1064,
+     -0.0706,
+     0.2383,
+     0.0459,
+     0.0104,
+     -0.0931,
+     0.0552,
+     0.1255,
+     -0.0778,
+     -0.0886,
+     -0.1064,
+     -0.0014,
+     0.1126,
+     0.2239,
+     -0.0959,
+     -0.019,
+     -0.0151,
+     -0.1265,
+     -0.0646,
+     -0.1124,
+     -0.0484,
+     0.0428
+    ],
+    [
+     0.1623,
+     0.1489,
+     0.0535,
+     -0.0894,
+     0.1014,
+     -0.033,
+     -0.0357,
+     -0.0216,
+     -0.0098,
+     -0.1537,
+     -0.079,
+     -0.0587,
+     -0.0484,
+     -0.0416,
+     -0.0828,
+     -0.0995,
+     -0.0992,
+     -0.0601,
+     -0.0482,
+     -0.0221,
+     0.0851,
+     -0.0887,
+     -0.0825,
+     -0.0723,
+     0.0428,
+     -0.0474,
+     -0.0887,
+     0.1134,
+     0.2861,
+     0.3291,
+     -0.0096,
+     -0.0413,
+     -0.1159,
+     0.2115,
+     -0.0677,
+     -0.0305,
+     -0.1208,
+     -0.083,
+     -0.1579,
+     -0.1006,
+     -0.1323
+    ],
+    [
+     -0.0032,
+     0.0112,
+     -0.0294,
+     -0.0468,
+     -0.0596,
+     -0.0109,
+     -0.0055,
+     -0.0034,
+     -0.0038,
+     -0.0692,
+     -0.0311,
+     0.0053,
+     -0.014,
+     -0.0075,
+     -0.0168,
+     -0.018,
+     0.0066,
+     0.0025,
+     0.001,
+     0.008,
+     -0.0102,
+     0.0028,
+     -0.0204,
+     -0.0042,
+     0.1095,
+     0.0022,
+     -0.0099,
+     -0.0115,
+     -0.0341,
+     -0.052,
+     -0.0153,
+     0.0025,
+     0.0314,
+     -0.0255,
+     -0.0143,
+     -0.0065,
+     -0.0351,
+     -0.0241,
+     -0.0357,
+     0.0005,
+     -0.0333
+    ]
+   ],
+   "reliability": {
+    "beta_family_25": {
+     "overall": {
+      "split_half_r": 0.9807,
+      "split_half_r_sd": 0.0051,
+      "spearman_brown": 0.9903,
+      "ceiling_r_noise_free_vs_full_sample": 0.9951
+     },
+     "per_label": {
+      "anger": {
+       "split_half_r": 0.965,
+       "split_half_r_sd": 0.0212,
+       "spearman_brown": 0.9822,
+       "ceiling_r_noise_free_vs_full_sample": 0.991
+      },
+      "disgust": {
+       "split_half_r": 0.964,
+       "split_half_r_sd": 0.0208,
+       "spearman_brown": 0.9817,
+       "ceiling_r_noise_free_vs_full_sample": 0.9908
+      },
+      "fear": {
+       "split_half_r": 0.9605,
+       "split_half_r_sd": 0.0219,
+       "spearman_brown": 0.9798,
+       "ceiling_r_noise_free_vs_full_sample": 0.9899
+      },
+      "happy": {
+       "split_half_r": 0.9962,
+       "split_half_r_sd": 0.0014,
+       "spearman_brown": 0.9981,
+       "ceiling_r_noise_free_vs_full_sample": 0.9991
+      },
+      "sadness": {
+       "split_half_r": 0.9859,
+       "split_half_r_sd": 0.0059,
+       "spearman_brown": 0.9929,
+       "ceiling_r_noise_free_vs_full_sample": 0.9964
+      },
+      "surprise": {
+       "split_half_r": 0.9867,
+       "split_half_r_sd": 0.0071,
+       "spearman_brown": 0.9933,
+       "ceiling_r_noise_free_vs_full_sample": 0.9966
+      },
+      "other": {
+       "split_half_r": 0.9141,
+       "split_half_r_sd": 0.033,
+       "spearman_brown": 0.9551,
+       "ceiling_r_noise_free_vs_full_sample": 0.9773
+      }
+     },
+     "leave_one_subject_out_mean_r": 0.7806
+    },
+    "do_effect_family_25": {
+     "overall": {
+      "split_half_r": 0.973,
+      "split_half_r_sd": 0.0081,
+      "spearman_brown": 0.9863,
+      "ceiling_r_noise_free_vs_full_sample": 0.9931
+     },
+     "per_label": {
+      "anger": {
+       "split_half_r": 0.9636,
+       "split_half_r_sd": 0.0221,
+       "spearman_brown": 0.9815,
+       "ceiling_r_noise_free_vs_full_sample": 0.9907
+      },
+      "disgust": {
+       "split_half_r": 0.9523,
+       "split_half_r_sd": 0.0268,
+       "spearman_brown": 0.9756,
+       "ceiling_r_noise_free_vs_full_sample": 0.9877
+      },
+      "fear": {
+       "split_half_r": 0.953,
+       "split_half_r_sd": 0.0297,
+       "spearman_brown": 0.9759,
+       "ceiling_r_noise_free_vs_full_sample": 0.9879
+      },
+      "happy": {
+       "split_half_r": 0.9971,
+       "split_half_r_sd": 0.0014,
+       "spearman_brown": 0.9985,
+       "ceiling_r_noise_free_vs_full_sample": 0.9993
+      },
+      "sadness": {
+       "split_half_r": 0.9795,
+       "split_half_r_sd": 0.0109,
+       "spearman_brown": 0.9896,
+       "ceiling_r_noise_free_vs_full_sample": 0.9948
+      },
+      "surprise": {
+       "split_half_r": 0.984,
+       "split_half_r_sd": 0.0104,
+       "spearman_brown": 0.9919,
+       "ceiling_r_noise_free_vs_full_sample": 0.996
+      },
+      "other": {
+       "split_half_r": 0.9078,
+       "split_half_r_sd": 0.0535,
+       "spearman_brown": 0.9517,
+       "ceiling_r_noise_free_vs_full_sample": 0.9755
+      }
+     },
+     "leave_one_subject_out_mean_r": 0.729
+    },
+    "beta_column_33": {
+     "overall": {
+      "split_half_r": 0.9786,
+      "split_half_r_sd": 0.0056,
+      "spearman_brown": 0.9892,
+      "ceiling_r_noise_free_vs_full_sample": 0.9946
+     },
+     "per_label": {
+      "anger": {
+       "split_half_r": 0.9562,
+       "split_half_r_sd": 0.0262,
+       "spearman_brown": 0.9776,
+       "ceiling_r_noise_free_vs_full_sample": 0.9887
+      },
+      "disgust": {
+       "split_half_r": 0.9593,
+       "split_half_r_sd": 0.0238,
+       "spearman_brown": 0.9792,
+       "ceiling_r_noise_free_vs_full_sample": 0.9896
+      },
+      "fear": {
+       "split_half_r": 0.9554,
+       "split_half_r_sd": 0.024,
+       "spearman_brown": 0.9772,
+       "ceiling_r_noise_free_vs_full_sample": 0.9885
+      },
+      "happy": {
+       "split_half_r": 0.9957,
+       "split_half_r_sd": 0.0015,
+       "spearman_brown": 0.9978,
+       "ceiling_r_noise_free_vs_full_sample": 0.9989
+      },
+      "sadness": {
+       "split_half_r": 0.9851,
+       "split_half_r_sd": 0.0061,
+       "spearman_brown": 0.9925,
+       "ceiling_r_noise_free_vs_full_sample": 0.9962
+      },
+      "surprise": {
+       "split_half_r": 0.9845,
+       "split_half_r_sd": 0.0083,
+       "spearman_brown": 0.9922,
+       "ceiling_r_noise_free_vs_full_sample": 0.9961
+      },
+      "other": {
+       "split_half_r": 0.9161,
+       "split_half_r_sd": 0.0307,
+       "spearman_brown": 0.9562,
+       "ceiling_r_noise_free_vs_full_sample": 0.9779
+      }
+     },
+     "leave_one_subject_out_mean_r": 0.7631
+    },
+    "do_effect_column_33": {
+     "overall": {
+      "split_half_r": 0.9687,
+      "split_half_r_sd": 0.0092,
+      "spearman_brown": 0.9841,
+      "ceiling_r_noise_free_vs_full_sample": 0.992
+     },
+     "per_label": {
+      "anger": {
+       "split_half_r": 0.9567,
+       "split_half_r_sd": 0.0255,
+       "spearman_brown": 0.9779,
+       "ceiling_r_noise_free_vs_full_sample": 0.9889
+      },
+      "disgust": {
+       "split_half_r": 0.9454,
+       "split_half_r_sd": 0.029,
+       "spearman_brown": 0.9719,
+       "ceiling_r_noise_free_vs_full_sample": 0.9859
+      },
+      "fear": {
+       "split_half_r": 0.9513,
+       "split_half_r_sd": 0.0298,
+       "spearman_brown": 0.975,
+       "ceiling_r_noise_free_vs_full_sample": 0.9874
+      },
+      "happy": {
+       "split_half_r": 0.9961,
+       "split_half_r_sd": 0.0015,
+       "spearman_brown": 0.9981,
+       "ceiling_r_noise_free_vs_full_sample": 0.999
+      },
+      "sadness": {
+       "split_half_r": 0.9792,
+       "split_half_r_sd": 0.0109,
+       "spearman_brown": 0.9895,
+       "ceiling_r_noise_free_vs_full_sample": 0.9947
+      },
+      "surprise": {
+       "split_half_r": 0.9813,
+       "split_half_r_sd": 0.0112,
+       "spearman_brown": 0.9906,
+       "ceiling_r_noise_free_vs_full_sample": 0.9953
+      },
+      "other": {
+       "split_half_r": 0.8996,
+       "split_half_r_sd": 0.0558,
+       "spearman_brown": 0.9471,
+       "ceiling_r_noise_free_vs_full_sample": 0.9732
+      }
+     },
+     "leave_one_subject_out_mean_r": 0.7005
+    },
+    "beta_family_25_subjects_and_stimuli_split_pooled_fit": {
+     "split_half_r": 0.9594,
+     "spearman_brown": 0.9793,
+     "ceiling_r_noise_free_vs_full_sample": 0.9896,
+     "per_label_split_half_r": {
+      "anger": 0.9411,
+      "disgust": 0.9462,
+      "fear": 0.9393,
+      "happy": 0.9804,
+      "sadness": 0.9584,
+      "surprise": 0.974,
+      "other": 0.8767
+     }
+    }
+   },
+   "checks": {
+    "sum_do_effect_over_labels_abs_max_33_columns": 0.0,
+    "r_per_subject_mean_vs_pooled_fit": 0.9913,
+    "r_selected_lambda_vs_lowest_lambda": 0.9946,
+    "slope_selected_on_lowest_lambda": 0.8804,
+    "median_stimulus_se_over_subject_se_pooled_vs_per_subject": 0.797
+   }
+  },
+  "conversational_WC": {
+   "structure": {
+    "tsv_files": 60,
+    "empty_tsv_files": 40,
+    "n_subjects": 20,
+    "n_trials": 47300,
+    "n_trials_excluding_other": 40540,
+    "trials_per_subject": {
+     "min": 2365,
+     "median": 2365.0,
+     "max": 2365
+    },
+    "subjects_with_under_half_median_trials": {},
+    "n_au_columns": 33,
+    "n_unique_au_configurations": 2318,
+    "n_unique_stimuli_config_plus_face": 2356,
+    "n_distinct_face_ids": 4,
+    "stimulus_sets": {
+     "single": 20
+    },
+    "stimulus_set_config_counts": {
+     "single": 2318
+    },
+    "label_counts": {
+     "bored": 11499,
+     "interested": 11024,
+     "confused": 9880,
+     "thinking": 8137,
+     "other": 6760
+    },
+    "amplitude_values_in_columns": [
+     0.0,
+     0.2,
+     0.3,
+     0.5,
+     0.7,
+     0.8,
+     1.0
+    ],
+    "active_aus_per_trial_mean": 3.641,
+    "au_active_rate_min_max": [
+     0.038,
+     0.252
+    ],
+    "largest_au_correlation": {
+     "pair": [
+      "AU02L",
+      "AU02R"
+     ],
+     "r": 0.777
+    },
+    "max_vif_over_configurations": 2.82,
+    "subject_label_pairs_never_used": 0
+   },
+   "ridge_lambda_selected": 1.0,
+   "heldout_log_loss_by_lambda": {
+    "0.01": 0.40242,
+    "0.1": 0.4,
+    "1.0": 0.39839,
+    "3.0": 0.404,
+    "10.0": 0.41987,
+    "30.0": 0.43889,
+    "intercept_only": 0.46729
+   },
+   "effect_names": [
+    "AU01",
+    "AU02L",
+    "AU02R",
+    "AU04",
+    "AU05",
+    "AU06L",
+    "AU06R",
+    "AU07L",
+    "AU07R",
+    "AU09",
+    "AU10L",
+    "AU10R",
+    "AU11L",
+    "AU11R",
+    "AU12L",
+    "AU12R",
+    "AU13",
+    "AU14L",
+    "AU14R",
+    "AU15",
+    "AU16",
+    "AU17",
+    "AU20L",
+    "AU20R",
+    "AU22",
+    "AU23",
+    "AU24",
+    "AU25",
+    "AU26",
+    "AU27",
+    "AU38",
+    "AU39",
+    "AU43",
+    "AU02_bilateral",
+    "AU06_bilateral",
+    "AU07_bilateral",
+    "AU10_bilateral",
+    "AU11_bilateral",
+    "AU12_bilateral",
+    "AU14_bilateral",
+    "AU20_bilateral"
+   ],
+   "labels": [
+    "bored",
+    "confused",
+    "interested",
+    "thinking",
+    "other"
+   ],
+   "subjects_with_no_use_of_label": {
+    "bored": 0,
+    "confused": 0,
+    "interested": 0,
+    "thinking": 0,
+    "other": 0
+   },
+   "beta_log_odds_per_unit_amplitude": [
+    [
+     -0.4366,
+     -0.726,
+     -0.0072,
+     -2.1146,
+     -0.8193,
+     -0.161,
+     -0.2491,
+     -0.4002,
+     -0.3738,
+     -0.3873,
+     0.6795,
+     0.4661,
+     0.3129,
+     0.5191,
+     -0.4397,
+     -0.2255,
+     0.2901,
+     -0.2071,
+     -0.2054,
+     -0.2255,
+     -0.6269,
+     0.071,
+     -0.5413,
+     -0.8797,
+     -1.0981,
+     -0.4554,
+     -0.4324,
+     -0.5623,
+     -0.2144,
+     -0.1695,
+     -0.0672,
+     -0.3341,
+     2.0202,
+     -0.7332,
+     -0.4101,
+     -0.7741,
+     1.1456,
+     0.832,
+     -0.6652,
+     -0.4125,
+     -1.421
+    ],
+    [
+     -0.8119,
+     -0.4821,
+     -0.4275,
+     3.1509,
+     0.1019,
+     0.3277,
+     0.6692,
+     0.3044,
+     0.3112,
+     1.2968,
+     0.0526,
+     0.1009,
+     0.1428,
+     -0.0534,
+     -0.4175,
+     -0.5188,
+     -0.4295,
+     -0.3433,
+     -0.0708,
+     0.2447,
+     0.3717,
+     0.1448,
+     1.2024,
+     1.3178,
+     -1.1373,
+     -0.1802,
+     0.0431,
+     0.159,
+     -0.0353,
+     -0.624,
+     -0.2068,
+     0.4284,
+     -1.2408,
+     -0.9097,
+     0.997,
+     0.6156,
+     0.1536,
+     0.0894,
+     -0.9363,
+     -0.4141,
+     2.5202
+    ],
+    [
+     1.3968,
+     1.4106,
+     0.2996,
+     -1.544,
+     0.9881,
+     -0.2581,
+     -0.3216,
+     -0.1898,
+     -0.3024,
+     -2.1726,
+     -0.9571,
+     -0.9221,
+     -0.5653,
+     -0.6755,
+     0.8453,
+     0.8576,
+     0.0584,
+     0.4292,
+     0.3852,
+     -0.3154,
+     -0.2383,
+     -0.6382,
+     -1.0901,
+     -1.0798,
+     -1.1509,
+     -0.3147,
+     -0.6646,
+     -0.2865,
+     -0.0626,
+     -0.0344,
+     0.0565,
+     -0.217,
+     -1.0812,
+     1.7103,
+     -0.5796,
+     -0.4922,
+     -1.8792,
+     -1.2408,
+     1.7029,
+     0.8144,
+     -2.1699
+    ],
+    [
+     -0.6715,
+     -0.1156,
+     -0.4771,
+     -0.4647,
+     -1.2845,
+     -0.1353,
+     -0.2586,
+     0.243,
+     0.341,
+     -1.4137,
+     -1.1409,
+     -1.1368,
+     -0.27,
+     -0.564,
+     -0.5127,
+     -0.624,
+     -0.455,
+     -0.1353,
+     -0.2,
+     0.1913,
+     -1.361,
+     0.0061,
+     -0.5361,
+     -0.3592,
+     -2.2251,
+     0.6148,
+     0.6159,
+     -1.1008,
+     -1.704,
+     -2.243,
+     0.0022,
+     -0.1468,
+     -0.9809,
+     -0.5928,
+     -0.3939,
+     0.5841,
+     -2.2777,
+     -0.834,
+     -1.1367,
+     -0.3353,
+     -0.8953
+    ],
+    [
+     -0.4176,
+     -0.4521,
+     0.0874,
+     -0.7537,
+     0.4238,
+     -0.028,
+     -0.2269,
+     -0.0919,
+     -0.0794,
+     1.0327,
+     0.4938,
+     0.4962,
+     0.0728,
+     0.1543,
+     0.0633,
+     0.1389,
+     0.1116,
+     -0.1412,
+     -0.274,
+     0.0856,
+     1.2667,
+     0.0628,
+     0.1173,
+     0.3721,
+     3.549,
+     0.1577,
+     0.1322,
+     1.2002,
+     1.2748,
+     1.6777,
+     0.2067,
+     0.1864,
+     0.0217,
+     -0.3647,
+     -0.2549,
+     -0.1713,
+     0.99,
+     0.2271,
+     0.2022,
+     -0.4152,
+     0.4895
+    ]
+   ],
+   "do_effect_probability_au_full_vs_none": [
+    [
+     -0.0509,
+     -0.0935,
+     0.0073,
+     -0.1937,
+     -0.0909,
+     -0.0208,
+     -0.0303,
+     -0.0504,
+     -0.0489,
+     -0.0359,
+     0.115,
+     0.0836,
+     0.0539,
+     0.0844,
+     -0.0595,
+     -0.0292,
+     0.0507,
+     -0.0289,
+     -0.026,
+     -0.0288,
+     -0.0696,
+     0.0207,
+     -0.0693,
+     -0.1052,
+     -0.1121,
+     -0.0508,
+     -0.0462,
+     -0.0692,
+     -0.0181,
+     -0.0063,
+     -0.0097,
+     -0.0395,
+     0.3222,
+     -0.0919,
+     -0.0517,
+     -0.0914,
+     0.1698,
+     0.1352,
+     -0.0877,
+     -0.0545,
+     -0.1559
+    ],
+    [
+     -0.0814,
+     -0.0533,
+     -0.0387,
+     0.4542,
+     0.0067,
+     0.0472,
+     0.0958,
+     0.0394,
+     0.0406,
+     0.1829,
+     0.0103,
+     0.0238,
+     0.0265,
+     0.0062,
+     -0.0448,
+     -0.0508,
+     -0.0408,
+     -0.0333,
+     -0.0065,
+     0.0262,
+     0.0508,
+     0.0283,
+     0.1811,
+     0.2064,
+     -0.0938,
+     -0.0199,
+     0.0097,
+     0.0258,
+     -0.0047,
+     -0.0503,
+     -0.0227,
+     0.0586,
+     -0.1187,
+     -0.0875,
+     0.1435,
+     0.0779,
+     0.0151,
+     0.0281,
+     -0.0928,
+     -0.0392,
+     0.3562
+    ],
+    [
+     0.2134,
+     0.1945,
+     0.0536,
+     -0.1547,
+     0.1359,
+     -0.0272,
+     -0.035,
+     -0.0239,
+     -0.037,
+     -0.1703,
+     -0.0899,
+     -0.0813,
+     -0.0595,
+     -0.0658,
+     0.1292,
+     0.1251,
+     0.0205,
+     0.0691,
+     0.0592,
+     -0.0379,
+     -0.0131,
+     -0.065,
+     -0.0946,
+     -0.0962,
+     -0.075,
+     -0.0288,
+     -0.0703,
+     -0.0108,
+     0.0114,
+     0.0209,
+     0.0065,
+     -0.0273,
+     -0.1109,
+     0.2547,
+     -0.0621,
+     -0.0624,
+     -0.1501,
+     -0.1154,
+     0.2417,
+     0.1278,
+     -0.1597
+    ],
+    [
+     -0.0503,
+     -0.012,
+     -0.0345,
+     -0.0457,
+     -0.0987,
+     -0.0031,
+     -0.0204,
+     0.032,
+     0.0446,
+     -0.1091,
+     -0.0973,
+     -0.0945,
+     -0.0281,
+     -0.0462,
+     -0.0463,
+     -0.0578,
+     -0.0415,
+     -0.0021,
+     -0.0118,
+     0.0253,
+     -0.1159,
+     0.0186,
+     -0.0458,
+     -0.0349,
+     -0.1492,
+     0.0794,
+     0.0983,
+     -0.0941,
+     -0.1264,
+     -0.1518,
+     0.0039,
+     -0.0191,
+     -0.0835,
+     -0.0518,
+     -0.0219,
+     0.0739,
+     -0.1495,
+     -0.072,
+     -0.0923,
+     -0.0126,
+     -0.0813
+    ],
+    [
+     -0.0308,
+     -0.0356,
+     0.0123,
+     -0.0601,
+     0.0469,
+     0.0039,
+     -0.01,
+     0.0028,
+     0.0007,
+     0.1323,
+     0.062,
+     0.0684,
+     0.0072,
+     0.0213,
+     0.0213,
+     0.0127,
+     0.011,
+     -0.0048,
+     -0.0148,
+     0.0152,
+     0.1478,
+     -0.0025,
+     0.0286,
+     0.0298,
+     0.4301,
+     0.0201,
+     0.0085,
+     0.1483,
+     0.1377,
+     0.1876,
+     0.022,
+     0.0273,
+     -0.0091,
+     -0.0236,
+     -0.0078,
+     0.002,
+     0.1147,
+     0.0242,
+     0.0312,
+     -0.0216,
+     0.0408
+    ]
+   ],
+   "reliability": {
+    "beta_family_25": {
+     "overall": {
+      "split_half_r": 0.9356,
+      "split_half_r_sd": 0.0183,
+      "spearman_brown": 0.9667,
+      "ceiling_r_noise_free_vs_full_sample": 0.9832
+     },
+     "per_label": {
+      "bored": {
+       "split_half_r": 0.9056,
+       "split_half_r_sd": 0.0446,
+       "spearman_brown": 0.9505,
+       "ceiling_r_noise_free_vs_full_sample": 0.9749
+      },
+      "confused": {
+       "split_half_r": 0.9556,
+       "split_half_r_sd": 0.0229,
+       "spearman_brown": 0.9773,
+       "ceiling_r_noise_free_vs_full_sample": 0.9886
+      },
+      "interested": {
+       "split_half_r": 0.9464,
+       "split_half_r_sd": 0.0283,
+       "spearman_brown": 0.9725,
+       "ceiling_r_noise_free_vs_full_sample": 0.9861
+      },
+      "thinking": {
+       "split_half_r": 0.9385,
+       "split_half_r_sd": 0.0253,
+       "spearman_brown": 0.9683,
+       "ceiling_r_noise_free_vs_full_sample": 0.984
+      },
+      "other": {
+       "split_half_r": 0.9494,
+       "split_half_r_sd": 0.0215,
+       "spearman_brown": 0.974,
+       "ceiling_r_noise_free_vs_full_sample": 0.9869
+      }
+     },
+     "leave_one_subject_out_mean_r": 0.7515
+    },
+    "do_effect_family_25": {
+     "overall": {
+      "split_half_r": 0.9274,
+      "split_half_r_sd": 0.024,
+      "spearman_brown": 0.9623,
+      "ceiling_r_noise_free_vs_full_sample": 0.981
+     },
+     "per_label": {
+      "bored": {
+       "split_half_r": 0.9075,
+       "split_half_r_sd": 0.0419,
+       "spearman_brown": 0.9515,
+       "ceiling_r_noise_free_vs_full_sample": 0.9755
+      },
+      "confused": {
+       "split_half_r": 0.9593,
+       "split_half_r_sd": 0.0228,
+       "spearman_brown": 0.9792,
+       "ceiling_r_noise_free_vs_full_sample": 0.9896
+      },
+      "interested": {
+       "split_half_r": 0.9383,
+       "split_half_r_sd": 0.0377,
+       "spearman_brown": 0.9682,
+       "ceiling_r_noise_free_vs_full_sample": 0.984
+      },
+      "thinking": {
+       "split_half_r": 0.9328,
+       "split_half_r_sd": 0.0305,
+       "spearman_brown": 0.9652,
+       "ceiling_r_noise_free_vs_full_sample": 0.9825
+      },
+      "other": {
+       "split_half_r": 0.946,
+       "split_half_r_sd": 0.0283,
+       "spearman_brown": 0.9723,
+       "ceiling_r_noise_free_vs_full_sample": 0.986
+      }
+     },
+     "leave_one_subject_out_mean_r": 0.7272
+    },
+    "beta_column_33": {
+     "overall": {
+      "split_half_r": 0.9288,
+      "split_half_r_sd": 0.0201,
+      "spearman_brown": 0.9631,
+      "ceiling_r_noise_free_vs_full_sample": 0.9814
+     },
+     "per_label": {
+      "bored": {
+       "split_half_r": 0.8942,
+       "split_half_r_sd": 0.0497,
+       "spearman_brown": 0.9441,
+       "ceiling_r_noise_free_vs_full_sample": 0.9717
+      },
+      "confused": {
+       "split_half_r": 0.9473,
+       "split_half_r_sd": 0.0246,
+       "spearman_brown": 0.9729,
+       "ceiling_r_noise_free_vs_full_sample": 0.9864
+      },
+      "interested": {
+       "split_half_r": 0.9317,
+       "split_half_r_sd": 0.037,
+       "spearman_brown": 0.9646,
+       "ceiling_r_noise_free_vs_full_sample": 0.9822
+      },
+      "thinking": {
+       "split_half_r": 0.9376,
+       "split_half_r_sd": 0.026,
+       "spearman_brown": 0.9678,
+       "ceiling_r_noise_free_vs_full_sample": 0.9838
+      },
+      "other": {
+       "split_half_r": 0.954,
+       "split_half_r_sd": 0.017,
+       "spearman_brown": 0.9765,
+       "ceiling_r_noise_free_vs_full_sample": 0.9882
+      }
+     },
+     "leave_one_subject_out_mean_r": 0.7315
+    },
+    "do_effect_column_33": {
+     "overall": {
+      "split_half_r": 0.9187,
+      "split_half_r_sd": 0.026,
+      "spearman_brown": 0.9576,
+      "ceiling_r_noise_free_vs_full_sample": 0.9786
+     },
+     "per_label": {
+      "bored": {
+       "split_half_r": 0.8961,
+       "split_half_r_sd": 0.0453,
+       "spearman_brown": 0.9452,
+       "ceiling_r_noise_free_vs_full_sample": 0.9722
+      },
+      "confused": {
+       "split_half_r": 0.9523,
+       "split_half_r_sd": 0.0227,
+       "spearman_brown": 0.9756,
+       "ceiling_r_noise_free_vs_full_sample": 0.9877
+      },
+      "interested": {
+       "split_half_r": 0.9199,
+       "split_half_r_sd": 0.0467,
+       "spearman_brown": 0.9583,
+       "ceiling_r_noise_free_vs_full_sample": 0.9789
+      },
+      "thinking": {
+       "split_half_r": 0.922,
+       "split_half_r_sd": 0.0361,
+       "spearman_brown": 0.9594,
+       "ceiling_r_noise_free_vs_full_sample": 0.9795
+      },
+      "other": {
+       "split_half_r": 0.9515,
+       "split_half_r_sd": 0.0247,
+       "spearman_brown": 0.9752,
+       "ceiling_r_noise_free_vs_full_sample": 0.9875
+      }
+     },
+     "leave_one_subject_out_mean_r": 0.7044
+    },
+    "beta_family_25_subjects_and_stimuli_split_pooled_fit": {
+     "split_half_r": 0.9083,
+     "spearman_brown": 0.9519,
+     "ceiling_r_noise_free_vs_full_sample": 0.9757,
+     "per_label_split_half_r": {
+      "bored": 0.8692,
+      "confused": 0.9317,
+      "interested": 0.906,
+      "thinking": 0.9117,
+      "other": 0.918
+     }
+    }
+   },
+   "checks": {
+    "sum_do_effect_over_labels_abs_max_33_columns": 0.0,
+    "r_per_subject_mean_vs_pooled_fit": 0.9848,
+    "r_selected_lambda_vs_lowest_lambda": 0.9794,
+    "slope_selected_on_lowest_lambda": 0.7122,
+    "median_stimulus_se_over_subject_se_pooled_vs_per_subject": 0.643
+   }
+  },
+  "conversational_EA": {
+   "structure": {
+    "tsv_files": 60,
+    "empty_tsv_files": 40,
+    "n_subjects": 20,
+    "n_trials": 47460,
+    "n_trials_excluding_other": 43000,
+    "trials_per_subject": {
+     "min": 2373,
+     "median": 2373.0,
+     "max": 2373
+    },
+    "subjects_with_under_half_median_trials": {},
+    "n_au_columns": 33,
+    "n_unique_au_configurations": 2325,
+    "n_unique_stimuli_config_plus_face": 2360,
+    "n_distinct_face_ids": 4,
+    "stimulus_sets": {
+     "single": 20
+    },
+    "stimulus_set_config_counts": {
+     "single": 2325
+    },
+    "label_counts": {
+     "interested": 12416,
+     "bored": 12373,
+     "confused": 10026,
+     "thinking": 8185,
+     "other": 4460
+    },
+    "amplitude_values_in_columns": [
+     0.0,
+     0.2,
+     0.3,
+     0.5,
+     0.7,
+     0.8,
+     1.0
+    ],
+    "active_aus_per_trial_mean": 3.622,
+    "au_active_rate_min_max": [
+     0.047,
+     0.252
+    ],
+    "largest_au_correlation": {
+     "pair": [
+      "AU02L",
+      "AU02R"
+     ],
+     "r": 0.789
+    },
+    "max_vif_over_configurations": 2.91,
+    "subject_label_pairs_never_used": 0
+   },
+   "ridge_lambda_selected": 1.0,
+   "heldout_log_loss_by_lambda": {
+    "0.01": 0.39562,
+    "0.1": 0.39359,
+    "1.0": 0.39296,
+    "3.0": 0.39855,
+    "10.0": 0.4132,
+    "30.0": 0.43032,
+    "intercept_only": 0.45896
+   },
+   "effect_names": [
+    "AU01",
+    "AU02L",
+    "AU02R",
+    "AU04",
+    "AU05",
+    "AU06L",
+    "AU06R",
+    "AU07L",
+    "AU07R",
+    "AU09",
+    "AU10L",
+    "AU10R",
+    "AU11L",
+    "AU11R",
+    "AU12L",
+    "AU12R",
+    "AU13",
+    "AU14L",
+    "AU14R",
+    "AU15",
+    "AU16",
+    "AU17",
+    "AU20L",
+    "AU20R",
+    "AU22",
+    "AU23",
+    "AU24",
+    "AU25",
+    "AU26",
+    "AU27",
+    "AU38",
+    "AU39",
+    "AU43",
+    "AU02_bilateral",
+    "AU06_bilateral",
+    "AU07_bilateral",
+    "AU10_bilateral",
+    "AU11_bilateral",
+    "AU12_bilateral",
+    "AU14_bilateral",
+    "AU20_bilateral"
+   ],
+   "labels": [
+    "bored",
+    "confused",
+    "interested",
+    "thinking",
+    "other"
+   ],
+   "subjects_with_no_use_of_label": {
+    "bored": 0,
+    "confused": 0,
+    "interested": 0,
+    "thinking": 0,
+    "other": 0
+   },
+   "beta_log_odds_per_unit_amplitude": [
+    [
+     -0.7471,
+     -1.0448,
+     -0.3371,
+     -1.6824,
+     -1.8174,
+     0.0006,
+     0.1189,
+     -0.1177,
+     -0.3024,
+     -0.197,
+     0.5271,
+     0.2948,
+     0.2429,
+     0.4716,
+     -0.1182,
+     -0.2864,
+     -0.0848,
+     -0.0423,
+     -0.1751,
+     0.2294,
+     -0.0984,
+     0.4631,
+     0.3897,
+     0.3881,
+     0.4618,
+     -0.3659,
+     0.0581,
+     -0.4038,
+     -0.3908,
+     -0.743,
+     -0.3084,
+     -0.2141,
+     1.8442,
+     -1.382,
+     0.1195,
+     -0.4201,
+     0.8219,
+     0.7145,
+     -0.4046,
+     -0.2173,
+     0.7778
+    ],
+    [
+     -0.3038,
+     -0.1436,
+     -0.6248,
+     2.9184,
+     -0.8986,
+     0.2108,
+     0.2154,
+     0.1695,
+     0.3388,
+     1.0003,
+     -0.0219,
+     0.1777,
+     -0.1659,
+     -0.1687,
+     -0.8759,
+     -0.5841,
+     -0.5855,
+     -0.3549,
+     -0.3415,
+     0.054,
+     0.5546,
+     0.2545,
+     0.1994,
+     0.2868,
+     -0.3321,
+     -0.1159,
+     0.2341,
+     0.6113,
+     1.3488,
+     1.6852,
+     -0.2057,
+     0.3215,
+     -1.3735,
+     -0.7683,
+     0.4262,
+     0.5084,
+     0.1559,
+     -0.3346,
+     -1.46,
+     -0.6964,
+     0.4862
+    ],
+    [
+     0.9737,
+     1.1842,
+     0.6415,
+     -2.1992,
+     2.0443,
+     -0.0695,
+     -0.1391,
+     -0.0416,
+     -0.0753,
+     -2.4679,
+     -0.9541,
+     -1.1563,
+     -0.3478,
+     -0.4238,
+     1.129,
+     1.0822,
+     0.7804,
+     0.6629,
+     0.6229,
+     -0.6916,
+     -1.0692,
+     -0.8978,
+     -1.0741,
+     -1.0716,
+     -1.7901,
+     -0.1129,
+     -0.9371,
+     -0.8061,
+     -1.3189,
+     -1.6858,
+     0.0757,
+     -0.5294,
+     -0.8824,
+     1.8257,
+     -0.2086,
+     -0.1169,
+     -2.1104,
+     -0.7716,
+     2.2112,
+     1.2858,
+     -2.1457
+    ],
+    [
+     0.0563,
+     0.0863,
+     -0.4585,
+     -0.1577,
+     -0.6898,
+     -0.2887,
+     -0.431,
+     0.0535,
+     0.0315,
+     -0.4171,
+     -0.7789,
+     -0.5176,
+     -0.2818,
+     -0.3053,
+     -0.8113,
+     -0.6661,
+     -0.5433,
+     -0.4617,
+     -0.2891,
+     0.1324,
+     -0.7413,
+     -0.1406,
+     -0.4369,
+     -0.2581,
+     -0.9492,
+     0.4941,
+     0.4851,
+     -0.3803,
+     -0.9748,
+     -1.2312,
+     0.1116,
+     0.0649,
+     -0.6005,
+     -0.3722,
+     -0.7197,
+     0.085,
+     -1.2965,
+     -0.5871,
+     -1.4774,
+     -0.7508,
+     -0.695
+    ],
+    [
+     -0.492,
+     -0.4261,
+     0.0722,
+     -0.5952,
+     0.5262,
+     -0.3645,
+     -0.0507,
+     -0.1959,
+     -0.143,
+     1.047,
+     0.4637,
+     0.4216,
+     0.2416,
+     -0.0297,
+     0.0573,
+     -0.0672,
+     -0.1557,
+     -0.3258,
+     -0.075,
+     0.1773,
+     0.8121,
+     -0.1405,
+     0.4558,
+     0.4359,
+     1.2282,
+     0.0245,
+     0.0328,
+     0.8128,
+     0.552,
+     1.0466,
+     0.1571,
+     0.3109,
+     -0.2559,
+     -0.3538,
+     -0.4152,
+     -0.3389,
+     0.8853,
+     0.2119,
+     -0.0099,
+     -0.4008,
+     0.8916
+    ]
+   ],
+   "do_effect_probability_au_full_vs_none": [
+    [
+     -0.0935,
+     -0.1348,
+     -0.0337,
+     -0.1788,
+     -0.1968,
+     0.0068,
+     0.017,
+     -0.0175,
+     -0.0401,
+     -0.0341,
+     0.0868,
+     0.0576,
+     0.0371,
+     0.0837,
+     -0.0154,
+     -0.0427,
+     -0.011,
+     -0.0032,
+     -0.0295,
+     0.0409,
+     -0.0146,
+     0.0733,
+     0.0685,
+     0.0581,
+     0.0756,
+     -0.0476,
+     0.0088,
+     -0.0542,
+     -0.0504,
+     -0.0864,
+     -0.0399,
+     -0.0237,
+     0.2954,
+     -0.1628,
+     0.0202,
+     -0.056,
+     0.1235,
+     0.1203,
+     -0.0635,
+     -0.0388,
+     0.1048
+    ],
+    [
+     -0.0346,
+     -0.0188,
+     -0.0561,
+     0.4447,
+     -0.0954,
+     0.0321,
+     0.0301,
+     0.0264,
+     0.045,
+     0.1334,
+     0.0067,
+     0.0316,
+     -0.0141,
+     -0.0119,
+     -0.0867,
+     -0.0606,
+     -0.0582,
+     -0.038,
+     -0.0345,
+     0.0065,
+     0.0793,
+     0.0374,
+     0.0266,
+     0.0409,
+     -0.0264,
+     -0.0089,
+     0.0231,
+     0.0814,
+     0.1825,
+     0.2084,
+     -0.0155,
+     0.0434,
+     -0.1278,
+     -0.0782,
+     0.0591,
+     0.0725,
+     0.025,
+     -0.0258,
+     -0.14,
+     -0.0734,
+     0.056
+    ],
+    [
+     0.1424,
+     0.1632,
+     0.1055,
+     -0.1919,
+     0.2892,
+     0.0033,
+     -0.0119,
+     -0.0027,
+     -0.0084,
+     -0.1919,
+     -0.0908,
+     -0.1091,
+     -0.0366,
+     -0.0494,
+     0.1668,
+     0.1546,
+     0.1071,
+     0.0945,
+     0.0809,
+     -0.0752,
+     -0.1083,
+     -0.0927,
+     -0.106,
+     -0.1111,
+     -0.1533,
+     -0.0149,
+     -0.0984,
+     -0.0875,
+     -0.13,
+     -0.155,
+     0.0127,
+     -0.0585,
+     -0.0981,
+     0.2804,
+     -0.0078,
+     -0.0119,
+     -0.1672,
+     -0.0835,
+     0.3086,
+     0.1779,
+     -0.1873
+    ],
+    [
+     0.0092,
+     0.0186,
+     -0.0296,
+     -0.03,
+     -0.0651,
+     -0.0313,
+     -0.0334,
+     0.003,
+     0.0065,
+     -0.0176,
+     -0.0547,
+     -0.0234,
+     -0.0171,
+     -0.029,
+     -0.0692,
+     -0.051,
+     -0.0385,
+     -0.0349,
+     -0.0178,
+     0.0077,
+     -0.0362,
+     -0.0019,
+     -0.0297,
+     -0.0213,
+     -0.0379,
+     0.07,
+     0.0583,
+     -0.0096,
+     -0.0543,
+     -0.0711,
+     0.0245,
+     0.0199,
+     -0.0486,
+     -0.021,
+     -0.0599,
+     0.008,
+     -0.0666,
+     -0.0447,
+     -0.1049,
+     -0.048,
+     -0.0533
+    ],
+    [
+     -0.0235,
+     -0.0281,
+     0.014,
+     -0.0441,
+     0.0681,
+     -0.011,
+     -0.0018,
+     -0.0092,
+     -0.003,
+     0.1102,
+     0.0519,
+     0.0434,
+     0.0306,
+     0.0066,
+     0.0044,
+     -0.0003,
+     0.0006,
+     -0.0184,
+     0.001,
+     0.0201,
+     0.0798,
+     -0.0161,
+     0.0406,
+     0.0334,
+     0.142,
+     0.0014,
+     0.0082,
+     0.0699,
+     0.0522,
+     0.1042,
+     0.0182,
+     0.0189,
+     -0.021,
+     -0.0185,
+     -0.0115,
+     -0.0126,
+     0.0853,
+     0.0337,
+     -0.0002,
+     -0.0177,
+     0.0798
+    ]
+   ],
+   "reliability": {
+    "beta_family_25": {
+     "overall": {
+      "split_half_r": 0.9269,
+      "split_half_r_sd": 0.02,
+      "spearman_brown": 0.962,
+      "ceiling_r_noise_free_vs_full_sample": 0.9808
+     },
+     "per_label": {
+      "bored": {
+       "split_half_r": 0.9212,
+       "split_half_r_sd": 0.0433,
+       "spearman_brown": 0.959,
+       "ceiling_r_noise_free_vs_full_sample": 0.9793
+      },
+      "confused": {
+       "split_half_r": 0.946,
+       "split_half_r_sd": 0.0241,
+       "spearman_brown": 0.9723,
+       "ceiling_r_noise_free_vs_full_sample": 0.986
+      },
+      "interested": {
+       "split_half_r": 0.9741,
+       "split_half_r_sd": 0.014,
+       "spearman_brown": 0.9869,
+       "ceiling_r_noise_free_vs_full_sample": 0.9934
+      },
+      "thinking": {
+       "split_half_r": 0.7858,
+       "split_half_r_sd": 0.0899,
+       "spearman_brown": 0.8801,
+       "ceiling_r_noise_free_vs_full_sample": 0.9381
+      },
+      "other": {
+       "split_half_r": 0.8483,
+       "split_half_r_sd": 0.0495,
+       "spearman_brown": 0.9179,
+       "ceiling_r_noise_free_vs_full_sample": 0.9581
+      }
+     },
+     "leave_one_subject_out_mean_r": 0.7176
+    },
+    "do_effect_family_25": {
+     "overall": {
+      "split_half_r": 0.9241,
+      "split_half_r_sd": 0.0216,
+      "spearman_brown": 0.9605,
+      "ceiling_r_noise_free_vs_full_sample": 0.9801
+     },
+     "per_label": {
+      "bored": {
+       "split_half_r": 0.9203,
+       "split_half_r_sd": 0.0417,
+       "spearman_brown": 0.9585,
+       "ceiling_r_noise_free_vs_full_sample": 0.979
+      },
+      "confused": {
+       "split_half_r": 0.9442,
+       "split_half_r_sd": 0.0267,
+       "spearman_brown": 0.9713,
+       "ceiling_r_noise_free_vs_full_sample": 0.9855
+      },
+      "interested": {
+       "split_half_r": 0.9745,
+       "split_half_r_sd": 0.0178,
+       "spearman_brown": 0.9871,
+       "ceiling_r_noise_free_vs_full_sample": 0.9935
+      },
+      "thinking": {
+       "split_half_r": 0.6162,
+       "split_half_r_sd": 0.1454,
+       "spearman_brown": 0.7625,
+       "ceiling_r_noise_free_vs_full_sample": 0.8732
+      },
+      "other": {
+       "split_half_r": 0.8286,
+       "split_half_r_sd": 0.068,
+       "spearman_brown": 0.9063,
+       "ceiling_r_noise_free_vs_full_sample": 0.952
+      }
+     },
+     "leave_one_subject_out_mean_r": 0.7185
+    },
+    "beta_column_33": {
+     "overall": {
+      "split_half_r": 0.9179,
+      "split_half_r_sd": 0.0214,
+      "spearman_brown": 0.9572,
+      "ceiling_r_noise_free_vs_full_sample": 0.9784
+     },
+     "per_label": {
+      "bored": {
+       "split_half_r": 0.9126,
+       "split_half_r_sd": 0.0428,
+       "spearman_brown": 0.9543,
+       "ceiling_r_noise_free_vs_full_sample": 0.9769
+      },
+      "confused": {
+       "split_half_r": 0.9396,
+       "split_half_r_sd": 0.0248,
+       "spearman_brown": 0.9689,
+       "ceiling_r_noise_free_vs_full_sample": 0.9843
+      },
+      "interested": {
+       "split_half_r": 0.9698,
+       "split_half_r_sd": 0.0155,
+       "spearman_brown": 0.9847,
+       "ceiling_r_noise_free_vs_full_sample": 0.9923
+      },
+      "thinking": {
+       "split_half_r": 0.7372,
+       "split_half_r_sd": 0.1011,
+       "spearman_brown": 0.8487,
+       "ceiling_r_noise_free_vs_full_sample": 0.9213
+      },
+      "other": {
+       "split_half_r": 0.8499,
+       "split_half_r_sd": 0.0461,
+       "spearman_brown": 0.9189,
+       "ceiling_r_noise_free_vs_full_sample": 0.9586
+      }
+     },
+     "leave_one_subject_out_mean_r": 0.6958
+    },
+    "do_effect_column_33": {
+     "overall": {
+      "split_half_r": 0.9132,
+      "split_half_r_sd": 0.0223,
+      "spearman_brown": 0.9546,
+      "ceiling_r_noise_free_vs_full_sample": 0.9771
+     },
+     "per_label": {
+      "bored": {
+       "split_half_r": 0.9123,
+       "split_half_r_sd": 0.0388,
+       "spearman_brown": 0.9541,
+       "ceiling_r_noise_free_vs_full_sample": 0.9768
+      },
+      "confused": {
+       "split_half_r": 0.9384,
+       "split_half_r_sd": 0.0261,
+       "spearman_brown": 0.9682,
+       "ceiling_r_noise_free_vs_full_sample": 0.984
+      },
+      "interested": {
+       "split_half_r": 0.9674,
+       "split_half_r_sd": 0.0192,
+       "spearman_brown": 0.9834,
+       "ceiling_r_noise_free_vs_full_sample": 0.9917
+      },
+      "thinking": {
+       "split_half_r": 0.5529,
+       "split_half_r_sd": 0.1616,
+       "spearman_brown": 0.7121,
+       "ceiling_r_noise_free_vs_full_sample": 0.8438
+      },
+      "other": {
+       "split_half_r": 0.8329,
+       "split_half_r_sd": 0.0645,
+       "spearman_brown": 0.9089,
+       "ceiling_r_noise_free_vs_full_sample": 0.9533
+      }
+     },
+     "leave_one_subject_out_mean_r": 0.6912
+    },
+    "beta_family_25_subjects_and_stimuli_split_pooled_fit": {
+     "split_half_r": 0.8815,
+     "spearman_brown": 0.937,
+     "ceiling_r_noise_free_vs_full_sample": 0.968,
+     "per_label_split_half_r": {
+      "bored": 0.9066,
+      "confused": 0.9266,
+      "interested": 0.9555,
+      "thinking": 0.5134,
+      "other": 0.8176
+     }
+    }
+   },
+   "checks": {
+    "sum_do_effect_over_labels_abs_max_33_columns": 0.0,
+    "r_per_subject_mean_vs_pooled_fit": 0.9888,
+    "r_selected_lambda_vs_lowest_lambda": 0.9774,
+    "slope_selected_on_lowest_lambda": 0.7352,
+    "median_stimulus_se_over_subject_se_pooled_vs_per_subject": 0.659
+   }
+  }
+ },
+ "sanity_check_classic_patterns": {
+  "basic_WC": {
+   "happy": {
+    "prototype_aus_supported": "1/2",
+    "prototype": [
+     {
+      "au": "AU06_bilateral",
+      "beta": -0.921,
+      "ci95": [
+       -1.114,
+       -0.725
+      ],
+      "do_effect": -0.042,
+      "rank_of_25_by_beta": 10,
+      "ci_excludes_zero_positive": false,
+      "raw_choice_rate_au_on_off": [
+       0.185,
+       0.136
+      ]
+     },
+     {
+      "au": "AU12_bilateral",
+      "beta": 5.087,
+      "ci95": [
+       4.819,
+       5.351
+      ],
+      "do_effect": 0.504,
+      "rank_of_25_by_beta": 1,
+      "ci_excludes_zero_positive": true,
+      "raw_choice_rate_au_on_off": [
+       0.349,
+       0.068
+      ]
+     }
+    ],
+    "top5_by_beta": [
+     "AU12_bilateral",
+     "AU14_bilateral",
+     "AU13",
+     "AU02_bilateral",
+     "AU38"
+    ]
+   },
+   "sadness": {
+    "prototype_aus_supported": "3/3",
+    "prototype": [
+     {
+      "au": "AU01",
+      "beta": 0.284,
+      "ci95": [
+       0.072,
+       0.486
+      ],
+      "do_effect": 0.042,
+      "rank_of_25_by_beta": 6,
+      "ci_excludes_zero_positive": true,
+      "raw_choice_rate_au_on_off": [
+       0.127,
+       0.115
+      ]
+     },
+     {
+      "au": "AU04",
+      "beta": 1.662,
+      "ci95": [
+       1.31,
+       2.023
+      ],
+      "do_effect": 0.174,
+      "rank_of_25_by_beta": 2,
+      "ci_excludes_zero_positive": true,
+      "raw_choice_rate_au_on_off": [
+       0.264,
+       0.106
+      ]
+     },
+     {
+      "au": "AU15",
+      "beta": 0.76,
+      "ci95": [
+       0.612,
+       0.907
+      ],
+      "do_effect": 0.062,
+      "rank_of_25_by_beta": 5,
+      "ci_excludes_zero_positive": true,
+      "raw_choice_rate_au_on_off": [
+       0.163,
+       0.113
+      ]
+     }
+    ],
+    "top5_by_beta": [
+     "AU43",
+     "AU04",
+     "AU17",
+     "AU24",
+     "AU15"
+    ]
+   },
+   "surprise": {
+    "prototype_aus_supported": "4/4",
+    "prototype": [
+     {
+      "au": "AU01",
+      "beta": 1.756,
+      "ci95": [
+       1.563,
+       1.977
+      ],
+      "do_effect": 0.195,
+      "rank_of_25_by_beta": 5,
+      "ci_excludes_zero_positive": true,
+      "raw_choice_rate_au_on_off": [
+       0.348,
+       0.109
+      ]
+     },
+     {
+      "au": "AU02_bilateral",
+      "beta": 2.452,
+      "ci95": [
+       2.244,
+       2.668
+      ],
+      "do_effect": 0.277,
+      "rank_of_25_by_beta": 2,
+      "ci_excludes_zero_positive": true,
+      "raw_choice_rate_au_on_off": [
+       0.328,
+       0.096
+      ]
+     },
+     {
+      "au": "AU05",
+      "beta": 2.134,
+      "ci95": [
+       1.777,
+       2.47
+      ],
+      "do_effect": 0.216,
+      "rank_of_25_by_beta": 4,
+      "ci_excludes_zero_positive": true,
+      "raw_choice_rate_au_on_off": [
+       0.287,
+       0.129
+      ]
+     },
+     {
+      "au": "AU26",
+      "beta": 2.26,
+      "ci95": [
+       1.923,
+       2.601
+      ],
+      "do_effect": 0.223,
+      "rank_of_25_by_beta": 3,
+      "ci_excludes_zero_positive": true,
+      "raw_choice_rate_au_on_off": [
+       0.289,
+       0.131
+      ]
+     }
+    ],
+    "top5_by_beta": [
+     "AU27",
+     "AU02_bilateral",
+     "AU26",
+     "AU05",
+     "AU01"
+    ]
+   },
+   "fear": {
+    "prototype_aus_supported": "3/6",
+    "prototype": [
+     {
+      "au": "AU01",
+      "beta": -0.291,
+      "ci95": [
+       -0.515,
+       -0.081
+      ],
+      "do_effect": -0.013,
+      "rank_of_25_by_beta": 12,
+      "ci_excludes_zero_positive": false,
+      "raw_choice_rate_au_on_off": [
+       0.087,
+       0.105
+      ]
+     },
+     {
+      "au": "AU02_bilateral",
+      "beta": -0.445,
+      "ci95": [
+       -0.673,
+       -0.228
+      ],
+      "do_effect": -0.027,
+      "rank_of_25_by_beta": 16,
+      "ci_excludes_zero_positive": false,
+      "raw_choice_rate_au_on_off": [
+       0.086,
+       0.107
+      ]
+     },
+     {
+      "au": "AU04",
+      "beta": 1.534,
+      "ci95": [
+       1.203,
+       1.852
+      ],
+      "do_effect": 0.132,
+      "rank_of_25_by_beta": 2,
+      "ci_excludes_zero_positive": true,
+      "raw_choice_rate_au_on_off": [
+       0.187,
+       0.097
+      ]
+     },
+     {
+      "au": "AU05",
+      "beta": 1.351,
+      "ci95": [
+       0.895,
+       1.848
+      ],
+      "do_effect": 0.126,
+      "rank_of_25_by_beta": 3,
+      "ci_excludes_zero_positive": true,
+      "raw_choice_rate_au_on_off": [
+       0.178,
+       0.097
+      ]
+     },
+     {
+      "au": "AU20_bilateral",
+      "beta": 3.613,
+      "ci95": [
+       3.081,
+       4.129
+      ],
+      "do_effect": 0.381,
+      "rank_of_25_by_beta": 1,
+      "ci_excludes_zero_positive": true,
+      "raw_choice_rate_au_on_off": [
+       0.236,
+       0.067
+      ]
+     },
+     {
+      "au": "AU26",
+      "beta": 0.384,
+      "ci95": [
+       -0.074,
+       0.856
+      ],
+      "do_effect": 0.047,
+      "rank_of_25_by_beta": 5,
+      "ci_excludes_zero_positive": false,
+      "raw_choice_rate_au_on_off": [
+       0.11,
+       0.102
+      ]
+     }
+    ],
+    "top5_by_beta": [
+     "AU20_bilateral",
+     "AU04",
+     "AU05",
+     "AU25",
+     "AU26"
+    ]
+   },
+   "anger": {
+    "prototype_aus_supported": "2/4",
+    "prototype": [
+     {
+      "au": "AU04",
+      "beta": -0.883,
+      "ci95": [
+       -1.235,
+       -0.536
+      ],
+      "do_effect": -0.032,
+      "rank_of_25_by_beta": 19,
+      "ci_excludes_zero_positive": false,
+      "raw_choice_rate_au_on_off": [
+       0.115,
+       0.152
+      ]
+     },
+     {
+      "au": "AU05",
+      "beta": 0.079,
+      "ci95": [
+       -0.222,
+       0.368
+      ],
+      "do_effect": 0.011,
+      "rank_of_25_by_beta": 11,
+      "ci_excludes_zero_positive": false,
+      "raw_choice_rate_au_on_off": [
+       0.155,
+       0.149
+      ]
+     },
+     {
+      "au": "AU07_bilateral",
+      "beta": 0.68,
+      "ci95": [
+       0.456,
+       0.886
+      ],
+      "do_effect": 0.079,
+      "rank_of_25_by_beta": 5,
+      "ci_excludes_zero_positive": true,
+      "raw_choice_rate_au_on_off": [
+       0.171,
+       0.144
+      ]
+     },
+     {
+      "au": "AU23",
+      "beta": 0.574,
+      "ci95": [
+       0.416,
+       0.748
+      ],
+      "do_effect": 0.068,
+      "rank_of_25_by_beta": 7,
+      "ci_excludes_zero_positive": true,
+      "raw_choice_rate_au_on_off": [
+       0.184,
+       0.147
+      ]
+     }
+    ],
+    "top5_by_beta": [
+     "AU10_bilateral",
+     "AU09",
+     "AU25",
+     "AU24",
+     "AU07_bilateral"
+    ]
+   },
+   "disgust": {
+    "prototype_aus_supported": "3/4",
+    "prototype": [
+     {
+      "au": "AU09",
+      "beta": 3.634,
+      "ci95": [
+       3.154,
+       4.057
+      ],
+      "do_effect": 0.429,
+      "rank_of_25_by_beta": 1,
+      "ci_excludes_zero_positive": true,
+      "raw_choice_rate_au_on_off": [
+       0.501,
+       0.165
+      ]
+     },
+     {
+      "au": "AU10_bilateral",
+      "beta": 2.617,
+      "ci95": [
+       2.313,
+       2.933
+      ],
+      "do_effect": 0.283,
+      "rank_of_25_by_beta": 2,
+      "ci_excludes_zero_positive": true,
+      "raw_choice_rate_au_on_off": [
+       0.35,
+       0.147
+      ]
+     },
+     {
+      "au": "AU15",
+      "beta": 0.212,
+      "ci95": [
+       0.096,
+       0.334
+      ],
+      "do_effect": 0.022,
+      "rank_of_25_by_beta": 9,
+      "ci_excludes_zero_positive": true,
+      "raw_choice_rate_au_on_off": [
+       0.197,
+       0.189
+      ]
+     },
+     {
+      "au": "AU16",
+      "beta": -0.738,
+      "ci95": [
+       -1.201,
+       -0.263
+      ],
+      "do_effect": -0.027,
+      "rank_of_25_by_beta": 15,
+      "ci_excludes_zero_positive": false,
+      "raw_choice_rate_au_on_off": [
+       0.2,
+       0.189
+      ]
+     }
+    ],
+    "top5_by_beta": [
+     "AU09",
+     "AU10_bilateral",
+     "AU11_bilateral",
+     "AU06_bilateral",
+     "AU43"
+    ]
+   }
+  },
+  "basic_EA": {
+   "happy": {
+    "prototype_aus_supported": "2/2",
+    "prototype": [
+     {
+      "au": "AU06_bilateral",
+      "beta": 0.465,
+      "ci95": [
+       0.253,
+       0.672
+      ],
+      "do_effect": 0.042,
+      "rank_of_25_by_beta": 4,
+      "ci_excludes_zero_positive": true,
+      "raw_choice_rate_au_on_off": [
+       0.272,
+       0.163
+      ]
+     },
+     {
+      "au": "AU12_bilateral",
+      "beta": 5.571,
+      "ci95": [
+       5.272,
+       5.875
+      ],
+      "do_effect": 0.544,
+      "rank_of_25_by_beta": 1,
+      "ci_excludes_zero_positive": true,
+      "raw_choice_rate_au_on_off": [
+       0.408,
+       0.091
+      ]
+     }
+    ],
+    "top5_by_beta": [
+     "AU12_bilateral",
+     "AU14_bilateral",
+     "AU13",
+     "AU06_bilateral",
+     "AU02_bilateral"
+    ]
+   },
+   "sadness": {
+    "prototype_aus_supported": "2/3",
+    "prototype": [
+     {
+      "au": "AU01",
+      "beta": -0.733,
+      "ci95": [
+       -0.938,
+       -0.512
+      ],
+      "do_effect": -0.035,
+      "rank_of_25_by_beta": 13,
+      "ci_excludes_zero_positive": false,
+      "raw_choice_rate_au_on_off": [
+       0.094,
+       0.139
+      ]
+     },
+     {
+      "au": "AU04",
+      "beta": 2.505,
+      "ci95": [
+       1.974,
+       3.015
+      ],
+      "do_effect": 0.251,
+      "rank_of_25_by_beta": 1,
+      "ci_excludes_zero_positive": true,
+      "raw_choice_rate_au_on_off": [
+       0.347,
+       0.118
+      ]
+     },
+     {
+      "au": "AU15",
+      "beta": 1.125,
+      "ci95": [
+       0.938,
+       1.315
+      ],
+      "do_effect": 0.106,
+      "rank_of_25_by_beta": 6,
+      "ci_excludes_zero_positive": true,
+      "raw_choice_rate_au_on_off": [
+       0.218,
+       0.127
+      ]
+     }
+    ],
+    "top5_by_beta": [
+     "AU04",
+     "AU17",
+     "AU43",
+     "AU24",
+     "AU39"
+    ]
+   },
+   "surprise": {
+    "prototype_aus_supported": "4/4",
+    "prototype": [
+     {
+      "au": "AU01",
+      "beta": 1.369,
+      "ci95": [
+       1.192,
+       1.555
+      ],
+      "do_effect": 0.162,
+      "rank_of_25_by_beta": 5,
+      "ci_excludes_zero_positive": true,
+      "raw_choice_rate_au_on_off": [
+       0.34,
+       0.149
+      ]
+     },
+     {
+      "au": "AU02_bilateral",
+      "beta": 1.842,
+      "ci95": [
+       1.643,
+       2.031
+      ],
+      "do_effect": 0.212,
+      "rank_of_25_by_beta": 3,
+      "ci_excludes_zero_positive": true,
+      "raw_choice_rate_au_on_off": [
+       0.322,
+       0.138
+      ]
+     },
+     {
+      "au": "AU05",
+      "beta": 1.223,
+      "ci95": [
+       0.828,
+       1.626
+      ],
+      "do_effect": 0.101,
+      "rank_of_25_by_beta": 6,
+      "ci_excludes_zero_positive": true,
+      "raw_choice_rate_au_on_off": [
+       0.276,
+       0.166
+      ]
+     },
+     {
+      "au": "AU26",
+      "beta": 2.998,
+      "ci95": [
+       2.407,
+       3.582
+      ],
+      "do_effect": 0.286,
+      "rank_of_25_by_beta": 2,
+      "ci_excludes_zero_positive": true,
+      "raw_choice_rate_au_on_off": [
+       0.367,
+       0.159
+      ]
+     }
+    ],
+    "top5_by_beta": [
+     "AU27",
+     "AU26",
+     "AU02_bilateral",
+     "AU25",
+     "AU01"
+    ]
+   },
+   "fear": {
+    "prototype_aus_supported": "5/6",
+    "prototype": [
+     {
+      "au": "AU01",
+      "beta": 0.069,
+      "ci95": [
+       -0.089,
+       0.22
+      ],
+      "do_effect": 0.017,
+      "rank_of_25_by_beta": 15,
+      "ci_excludes_zero_positive": false,
+      "raw_choice_rate_au_on_off": [
+       0.091,
+       0.087
+      ]
+     },
+     {
+      "au": "AU02_bilateral",
+      "beta": 0.658,
+      "ci95": [
+       0.464,
+       0.873
+      ],
+      "do_effect": 0.05,
+      "rank_of_25_by_beta": 9,
+      "ci_excludes_zero_positive": true,
+      "raw_choice_rate_au_on_off": [
+       0.1,
+       0.085
+      ]
+     },
+     {
+      "au": "AU04",
+      "beta": 0.965,
+      "ci95": [
+       0.658,
+       1.273
+      ],
+      "do_effect": 0.076,
+      "rank_of_25_by_beta": 8,
+      "ci_excludes_zero_positive": true,
+      "raw_choice_rate_au_on_off": [
+       0.107,
+       0.086
+      ]
+     },
+     {
+      "au": "AU05",
+      "beta": 2.449,
+      "ci95": [
+       1.915,
+       2.982
+      ],
+      "do_effect": 0.238,
+      "rank_of_25_by_beta": 2,
+      "ci_excludes_zero_positive": true,
+      "raw_choice_rate_au_on_off": [
+       0.205,
+       0.08
+      ]
+     },
+     {
+      "au": "AU20_bilateral",
+      "beta": 2.619,
+      "ci95": [
+       2.151,
+       3.094
+      ],
+      "do_effect": 0.235,
+      "rank_of_25_by_beta": 1,
+      "ci_excludes_zero_positive": true,
+      "raw_choice_rate_au_on_off": [
+       0.142,
+       0.074
+      ]
+     },
+     {
+      "au": "AU26",
+      "beta": 1.858,
+      "ci95": [
+       1.386,
+       2.307
+      ],
+      "do_effect": 0.151,
+      "rank_of_25_by_beta": 4,
+      "ci_excludes_zero_positive": true,
+      "raw_choice_rate_au_on_off": [
+       0.162,
+       0.082
+      ]
+     }
+    ],
+    "top5_by_beta": [
+     "AU20_bilateral",
+     "AU05",
+     "AU27",
+     "AU26",
+     "AU25"
+    ]
+   },
+   "anger": {
+    "prototype_aus_supported": "2/4",
+    "prototype": [
+     {
+      "au": "AU04",
+      "beta": -0.74,
+      "ci95": [
+       -1.122,
+       -0.359
+      ],
+      "do_effect": -0.044,
+      "rank_of_25_by_beta": 16,
+      "ci_excludes_zero_positive": false,
+      "raw_choice_rate_au_on_off": [
+       0.124,
+       0.159
+      ]
+     },
+     {
+      "au": "AU05",
+      "beta": 0.809,
+      "ci95": [
+       0.415,
+       1.219
+      ],
+      "do_effect": 0.083,
+      "rank_of_25_by_beta": 5,
+      "ci_excludes_zero_positive": true,
+      "raw_choice_rate_au_on_off": [
+       0.237,
+       0.151
+      ]
+     },
+     {
+      "au": "AU07_bilateral",
+      "beta": -0.133,
+      "ci95": [
+       -0.286,
+       0.02
+      ],
+      "do_effect": 0.001,
+      "rank_of_25_by_beta": 11,
+      "ci_excludes_zero_positive": false,
+      "raw_choice_rate_au_on_off": [
+       0.14,
+       0.16
+      ]
+     },
+     {
+      "au": "AU23",
+      "beta": 0.766,
+      "ci95": [
+       0.615,
+       0.918
+      ],
+      "do_effect": 0.093,
+      "rank_of_25_by_beta": 6,
+      "ci_excludes_zero_positive": true,
+      "raw_choice_rate_au_on_off": [
+       0.213,
+       0.152
+      ]
+     }
+    ],
+    "top5_by_beta": [
+     "AU09",
+     "AU10_bilateral",
+     "AU11_bilateral",
+     "AU24",
+     "AU05"
+    ]
+   },
+   "disgust": {
+    "prototype_aus_supported": "2/4",
+    "prototype": [
+     {
+      "au": "AU09",
+      "beta": 1.771,
+      "ci95": [
+       1.287,
+       2.295
+      ],
+      "do_effect": 0.199,
+      "rank_of_25_by_beta": 2,
+      "ci_excludes_zero_positive": true,
+      "raw_choice_rate_au_on_off": [
+       0.344,
+       0.166
+      ]
+     },
+     {
+      "au": "AU10_bilateral",
+      "beta": 1.783,
+      "ci95": [
+       1.529,
+       2.041
+      ],
+      "do_effect": 0.187,
+      "rank_of_25_by_beta": 1,
+      "ci_excludes_zero_positive": true,
+      "raw_choice_rate_au_on_off": [
+       0.29,
+       0.151
+      ]
+     },
+     {
+      "au": "AU15",
+      "beta": -0.141,
+      "ci95": [
+       -0.292,
+       0.02
+      ],
+      "do_effect": -0.01,
+      "rank_of_25_by_beta": 11,
+      "ci_excludes_zero_positive": false,
+      "raw_choice_rate_au_on_off": [
+       0.167,
+       0.178
+      ]
+     },
+     {
+      "au": "AU16",
+      "beta": -0.53,
+      "ci95": [
+       -0.905,
+       -0.14
+      ],
+      "do_effect": -0.029,
+      "rank_of_25_by_beta": 15,
+      "ci_excludes_zero_positive": false,
+      "raw_choice_rate_au_on_off": [
+       0.184,
+       0.177
+      ]
+     }
+    ],
+    "top5_by_beta": [
+     "AU10_bilateral",
+     "AU09",
+     "AU20_bilateral",
+     "AU11_bilateral",
+     "AU43"
+    ]
+   }
+  }
+ },
+ "anger_au4_diagnostic": {
+  "basic_WC": {
+   "au4_on": {
+    "rate": 0.115,
+    "n_trials": 9450
+   },
+   "au4_off": {
+    "rate": 0.152,
+    "n_trials": 131460
+   },
+   "au4_on_AU05_on": {
+    "rate": 0.11,
+    "n_trials": 390
+   },
+   "au4_off_AU05_on": {
+    "rate": 0.157,
+    "n_trials": 9600
+   },
+   "au4_on_AU07_on": {
+    "rate": 0.146,
+    "n_trials": 1365
+   },
+   "au4_off_AU07_on": {
+    "rate": 0.173,
+    "n_trials": 24600
+   },
+   "au4_on_AU23_on": {
+    "rate": 0.071,
+    "n_trials": 480
+   },
+   "au4_off_AU23_on": {
+    "rate": 0.19,
+    "n_trials": 8970
+   },
+   "au4_on_AU24_on": {
+    "rate": 0.169,
+    "n_trials": 615
+   },
+   "au4_off_AU24_on": {
+    "rate": 0.203,
+    "n_trials": 9165
+   }
+  },
+  "basic_EA": {
+   "au4_on": {
+    "rate": 0.124,
+    "n_trials": 9442
+   },
+   "au4_off": {
+    "rate": 0.159,
+    "n_trials": 130286
+   },
+   "au4_on_AU05_on": {
+    "rate": 0.093,
+    "n_trials": 118
+   },
+   "au4_off_AU05_on": {
+    "rate": 0.239,
+    "n_trials": 8480
+   },
+   "au4_on_AU07_on": {
+    "rate": 0.131,
+    "n_trials": 1187
+   },
+   "au4_off_AU07_on": {
+    "rate": 0.14,
+    "n_trials": 26063
+   },
+   "au4_on_AU23_on": {
+    "rate": 0.183,
+    "n_trials": 476
+   },
+   "au4_off_AU23_on": {
+    "rate": 0.215,
+    "n_trials": 9372
+   },
+   "au4_on_AU24_on": {
+    "rate": 0.188,
+    "n_trials": 713
+   },
+   "au4_off_AU24_on": {
+    "rate": 0.228,
+    "n_trials": 9498
+   }
+  }
+ },
+ "wc_ea_correlation_beta_family_25": {
+  "basic": {
+   "overall": 0.8901,
+   "per_label": {
+    "anger": 0.8673,
+    "disgust": 0.8303,
+    "fear": 0.763,
+    "happy": 0.949,
+    "sadness": 0.9353,
+    "surprise": 0.95,
+    "other": 0.7888
+   }
+  },
+  "conversational": {
+   "overall": 0.7847,
+   "per_label": {
+    "bored": 0.6592,
+    "confused": 0.6908,
+    "interested": 0.8951,
+    "thinking": 0.8394,
+    "other": 0.8599
+   }
+  }
+ },
+ "no_au_control": {
+  "basic_WC_rows_with_no_active_au": 30,
+  "response_counts": {
+   "other": 25,
+   "sadness": 3,
+   "anger": 1,
+   "disgust": 1
+  }
+ },
+ "shared_au_configurations_between_datasets": {
+  "basic_WC|basic_EA": 21,
+  "basic_WC|conversational_WC": 56,
+  "basic_WC|conversational_EA": 21,
+  "basic_EA|conversational_WC": 500,
+  "basic_EA|conversational_EA": 2322,
+  "conversational_WC|conversational_EA": 501
+ },
+ "data_caveats": [
+  "Conversational data have 20 subjects per group, not 60. The zip holds 60 TSVs per group, of which 40 are header-only, an artefact of a range(1, 61) loop in Snoek's split script.",
+  "Stimuli were randomised once, then shared. Every subject in a set saw the same configuration-plus-face stimuli, and row order is identical across subjects, so trial order is not available. Subject bootstrap CIs are conditional on that set.",
+  "Western basic is two cohorts: subjects 01-15 saw blended identities (959 face codes) and subjects 16-60 saw 8 base faces. Their configurations share 3 strings.",
+  "East Asian basic and conversational use nearly the same configurations. Western basic and conversational do not. See shared_au_configurations_between_datasets.",
+  "The 33 columns are recoded from 42 raw AUs: bilateral AUs become L and R together, and compounds AU1-2, AU25-12 and AU12-6 become their parts, taking the maximum. So AU columns are correlated by construction (up to r 0.79) and estimates assume additivity.",
+  "AU02R has no unilateral condition: it is active only for bilateral AU2. Read AU02L and AU02R through AU02_bilateral.",
+  "Column amplitudes are rounded to one decimal. The EA and conversational sixths (0.16, 0.33, 0.5, 0.66, 0.83, 1) survive in the row-label strings; Western basic labels were rebuilt after rounding. The thesis says steps of 0.25, which the files do not show.",
+  "Temporal parameters were randomised but are absent, so effects are averaged over time course and say nothing about dynamics. Effects hold for GFG faces in this design.",
+  "sub_split and trial_split were not used for estimation. They were built for Snoek's prediction models, and trial_split is unbalanced.",
+  "face_id 1-4 repeats across genders in the conversational files, so a face is gender plus id.",
+  "Subject 43EA has 783 trials; 01-60 all carry equal weight in the group mean.",
+  "Ridge shrinks magnitudes, and more so where a larger lambda was selected (see slope_selected_on_lowest_lambda). Compare patterns, not sizes, across tasks."
+ ],
+ "trial_count_reconciliation": {
+  "notes_claim": "119,387 (own count) versus 121,902 (thesis) for Western basic, excluding 'other'",
+  "public_file_count_excluding_other": 119387,
+  "published_rows": 140910,
+  "design_rows": "60 subjects x 2400 trials = 144,000 (thesis and Snoek preprocessing code)",
+  "rows_missing_from_public_files": 3090,
+  "implied_other_among_missing_rows_if_thesis_used_all_144000": 575,
+  "other_rate_in_public_rows": 0.1527,
+  "thesis_mean_sd_per_subject": [
+   2031.7,
+   311.5
+  ],
+  "public_mean_sd_per_subject_excluding_other": [
+   1989.8,
+   308.2
+  ],
+  "conclusion": "Likely but not proven. Snoek's determine_train_and_test.py drops from the test split every row whose configuration also occurs in train, then rewrites the subject TSVs. That explains why public subjects have 2342 or 2368 rows, not 2400. If the thesis count was taken before that step, the 3,090 dropped rows must hold 575 'other' responses, 18.6 percent against a 15.3 percent base rate, and the mean per subject fits. The raw .mat files are not public, so this cannot be confirmed. The removal depends on the stimulus, not the response, so it should not bias AU effects."
+ },
+ "runtime_seconds": 49
+}

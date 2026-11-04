@@ -12,7 +12,8 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
 
 1. Rotation eval smoke, then 3 models x 5 rotations x real/mismatch (`slurm_jobs/study3_rotation_eval.sh`).
 2. `research/scripts/analyse_rotation.py` once all 30 runs are pulled.
-3. Redesign the study around human-derived cues and stimulus and vision-token interventions, per the literature report.
+3. Same-clip cue analysis on EU-Emotion (`research/RESEARCH_QUESTIONS.md`, no new human data).
+4. Vision gates G2 to G4 (`scripts/vision_gates.py`).
 
 Do not cancel A1/A2/CAS jobs. Ablation 39709579, 39709583, 39709584 were cancelled 2026-11-02 and are not requeued.
 
