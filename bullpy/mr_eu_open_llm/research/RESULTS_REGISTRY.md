@@ -72,3 +72,15 @@ Stimulus features (HPC job 39709870): `research/reproduction/stimulus_features.j
 
 Accuracy and probe rows above this table are confounded by the prompt; see DECISIONS 2026-11-04.
 
+
+## Family recovery and second AU detector (2026-11-04)
+
+Criteria locked 15:12:57 UTC before any measured-cue recovery (`same_clip_family_criteria.json`, hash 4b0a8c3c). No model data involved.
+
+- Families recover planted weights of 0.5 and above: r .80 to .85, sign .92 to .96. Sparse 0.25 and dense 0.3 fail.
+- Families plus singles fail recovery in every cue condition. Single family cells: sign does not recover at human effect size.
+- 8 of 20 conditions pass for families, 3 of 20 for families plus singles.
+- Pattern score separates human-like from prior-only at 0.5x, 1x and 2x (AUC .999 to 1.00). The power of 1.0 is a best case; half-shared power is .545, .88, .965.
+- Family-wise calibration fails for actor-prior observers (.115 against limit .081). Human cells stay provisional.
+- Human, families, all frames: 5 of 88 cells flagged by two detectors, 2 family-wise, held-out gain 0.61%, split-half r .31.
+- ME-GraphAU against LibreFace, within category and actor: r .33 to .57. Not independent data: both BP4D. AU20 uncovered, rule 8 unmet.

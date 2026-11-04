@@ -10,10 +10,14 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
 
 ## Next actions
 
-1. Rotation eval smoke, then 3 models x 5 rotations x real/mismatch (`slurm_jobs/study3_rotation_eval.sh`).
+1. A1 rotation evals are queued: arrays 39982133 to 39982138, restarted on the pinned decoder. Nothing read yet.
 2. `research/scripts/analyse_rotation.py` once all 30 runs are pulled.
-3. Same-clip cue analysis on EU-Emotion (`research/RESEARCH_QUESTIONS.md`, no new human data).
-4. Vision gates G2 to G4 (`scripts/vision_gates.py`).
+3. Molmo ladder 39987784, then choose the shared (prompt, prefill) pair, update `BLIND_PROMPT` and `BLIND_PREFILL`, run timed smokes in `SMOKE_DIR=smoke_v2`, and fill A2 and A3 costs.
+4. Same-clip analysis: confirmatory unit is families and the pattern score. Single family cells are provisional (family recovery, RESULTS_REGISTRY). A restricted-shuffle second attempt must be locked before any model matrix is read.
+5. Vision gates G2 to G4: 39981392 still queued.
+6. Scoring path: full forwards for all models unless DECISIONS says otherwise.
+
+Merge with true merge commits, not squash: a squash on PR 50 caused a conflict on the next PR. Cluster quota: 1097.8 of 1099.5 GB soft limit at last check.
 
 Do not cancel A1/A2/CAS jobs. Ablation 39709579, 39709583, 39709584 were cancelled 2026-11-02 and are not requeued.
 
