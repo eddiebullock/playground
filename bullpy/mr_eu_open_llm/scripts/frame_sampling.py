@@ -111,7 +111,7 @@ def load_stimulus_as_images(
     if ext in {".jpg", ".jpeg", ".png", ".webp"}:
         img = Image.open(stimulus_path).convert("RGB")
         return [img], [0]
-    if ext in {".mp4", ".mov", ".avi", ".mkv"}:
+    if ext in {".mp4", ".flv", ".mov", ".avi", ".mkv"}:
         return load_frames_from_video(stimulus_path, fps=fps, max_frames=max_frames)
     raise ValueError(f"Unsupported stimulus type: {stimulus_path}")
 
