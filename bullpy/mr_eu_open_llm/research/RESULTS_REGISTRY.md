@@ -97,5 +97,5 @@ Post-hoc second attempt, locked in `same_clip_family_a2_criteria.json` before it
 
 ## Pattern score, model-frames route (2026-11-04)
 
-Attempt 1 null, frozen lambda 10, families: size passes at 0.5x, 1x and 2x; power .775, 1.0, 1.0 against .80. Different-cues size .03 to .055. Real effect sits near 0.75x by reliability, 1x by gain. Which strength the rule applies to is open in `DECISIONS.md`.
+Attempt 1 null, frozen lambda 10, families: size passes at 0.5x, 1x and 2x; power .775, 1.0, 1.0 against .80. Different-cues size .03 to .055. Real effect sits near 0.75x by reliability, 1x by gain. The strength rule later required both 0.75x and 1x: 0.75x passes (power .995, size .035 and .06, different-cues .055, half-shared .60), so the score is confirmatory per `DECISIONS.md`.
 

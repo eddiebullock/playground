@@ -595,7 +595,7 @@ def test_loss_limit_end_to_end(tmp_path):
     human, trials = lookup_file(tmp_path, rng)  # 108 clips, so 5 percent is 5.4
     au = cue_csv(tmp_path, trials, rng)
     ids = sorted(trials)
-    for n_lost, status in ((5, "eligible"), (6, "descriptive")):
+    for n_lost, status in ((5, "confirmatory"), (6, "descriptive")):
         lost = ids[::9][:n_lost]
         paths = rotation_files(tmp_path, trials, rng, drop=lost)
         result, attrs = fam.model_route(paths, human, au, n_perm=9)

@@ -262,3 +262,18 @@ Decided after the model-frames pattern results (`same_clip_family_route_pattern_
 - Half-shared power is reported with the result, since a model sharing only part of the human weights is much harder to detect.
 
 Missing clips in the model run: a clip with no usable response is dropped from both the model and human matrices for that model, lambda stays frozen, and null draws are restricted to the kept clips. Every dropped clip is listed by label and actor. If more than 5 percent of clips are lost for a model, that model's RQ1 result is descriptive only.
+
+## 2026-11-04: Strength rule result: the family pattern score is confirmatory for RQ1
+
+The single 0.75x run the rule above set: `research/reproduction/same_clip_family_route_pattern_075x_within_category.json`, 200 observers, 199 shuffles, attempt 1 null of record, lambda 10 on all three inputs, families, criteria hash 4b0a8c3c, new seeds, scale fixed at the 1x value.
+
+- **Verdict:** Pass. Size and power pass at both 0.75x and 1x, so the family pattern score on the model-frames route is the confirmatory RQ1 unit, subject to the 5 percent clip rule per model.
+- **0.75x:** Power 0.995 against .80. Size .035 for prior-only and .06 for actor-prior against .081. AUC .999.
+- **1x, earlier run:** Power 1.0. Size .03 and .035.
+- **Different-cues size:** .055 at 0.75x, within the limit. The claim stays "aligned with the human pattern", not "uses the same cues".
+- **Half-shared power:** .60 at 0.75x and .83 at 1x. A model sharing half the human weights is missed about 40 percent of the time at 0.75x. Power .775 at 0.5x also stands as a limit. A null model result does not show absence of alignment.
+- **Attempt 2 sensitivity:** Same verdict on the composite input (power .995, size .04 and .06, different-cues .065, half-shared .63). On the second detector alone, actor-prior size is .085, above the limit. That input is not part of the pass rule.
+- **Sequence disclosed:** The rule was tightened after 0.5x, 1x and 2x were known, and this pass is on 200 observers at one strength. Power here assumes identical true weights and independent item noise.
+- **Still exploratory:** Single family cells and family-wise cells. Actor-prior calibration for cells is not fixed, and sparse 0.5 still narrowly fails cell-level recovery on this route.
+- **Clip rule, as built:** `model_route` chooses lambda once on the human matrix over all clips. A clip is dropped only if no rotation gave a usable response. A clip usable in some rotations stays and is listed under `partial_rotation_clips`, because the rule covers only clips with no usable response, though such a clip keeps some position confound.
+

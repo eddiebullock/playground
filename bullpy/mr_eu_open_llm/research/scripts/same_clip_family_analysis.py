@@ -1130,7 +1130,7 @@ def model_route(eval_paths, human_path, au_csv, *, n_perm, seed=42):
 def rq1_status(coverage):
     if coverage["over_loss_limit"]:
         return "descriptive: over 5 percent of clips lost"
-    return "eligible: confirmatory only if the strength rule in DECISIONS.md passed"
+    return "confirmatory: strength rule passed at 0.75x and 1x, at most 5 percent of clips lost"
 
 
 def model_route_summary(result, attrs):
