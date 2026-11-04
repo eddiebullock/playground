@@ -94,3 +94,8 @@ Post-hoc second attempt, locked in `same_clip_family_a2_criteria.json` before it
 - Different-cues observer exceeds .081 at 1x and 2x (.105, .115): a model using other cues could look aligned too often.
 - Model-frames route, human lambda 10: prior-only family-wise .085 fails; actor-prior fails; sparse 0.5 fails narrowly (r .752, sign .898).
 - Only Surprised with mouth open is family-wise under both nulls on all frames. All human cells are exploratory.
+
+## Pattern score, model-frames route (2026-11-04)
+
+Attempt 1 null, frozen lambda 10, families: size passes at 0.5x, 1x and 2x; power .775, 1.0, 1.0 against .80. Different-cues size .03 to .055. Real effect sits near 0.75x by reliability, 1x by gain. Which strength the rule applies to is open in `DECISIONS.md`.
+

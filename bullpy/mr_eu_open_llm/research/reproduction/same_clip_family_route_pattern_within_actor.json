@@ -1,0 +1,313 @@
+{
+ "attempt": 1,
+ "attempt_label": "First attempt",
+ "route_test": true,
+ "null_role": "sensitivity only",
+ "pass_rule_input": "composite",
+ "scheme": "within_actor",
+ "seed_offset": 200000,
+ "frame_set": "model_1fps",
+ "cue_set": "families",
+ "cue_source": "measured EU-Emotion cues",
+ "cues": [
+  "brow_raise",
+  "brow_lower",
+  "smile",
+  "mouth_open"
+ ],
+ "aus": [
+  "AU01",
+  "AU02",
+  "AU04",
+  "AU09",
+  "AU06",
+  "AU12",
+  "AU25",
+  "AU26"
+ ],
+ "n_sims": 200,
+ "n_perm": 499,
+ "pattern_perm": 199,
+ "criteria": {
+  "cue_observer": {
+   "median_pearson_min": 0.7,
+   "median_sign_accuracy_min": 0.9
+  },
+  "null_observer": {
+   "pointwise_fpr_max": 0.05,
+   "two_detector_fpr_max": 0.01,
+   "abs_pearson_with_any_fixed_matrix_max": 0.1,
+   "any_cell_familywise_max": 0.05,
+   "any_cell_familywise_mc_se_allowance": 2.0
+  },
+  "pattern_score": {
+   "size_max": 0.05,
+   "size_mc_se_allowance": 2.0,
+   "power_min": 0.8
+  },
+  "decision_rule": "A condition passes only if it meets every limit for its observer type. Expected failures are not excused. Groupings, estimator, thresholds and the condition list stay fixed once a full run has started."
+ },
+ "criteria_sha256": "4b0a8c3cde345e6cc6043907f75d7af0fbd4a92382a448f565e5454d2df8b66d",
+ "script_sha256": "8b691d77f083e72a87d18beab7b5d470ccab4322a1bb75df3b32479a0dac494e",
+ "pcc_used": {
+  "published": {
+   "AU01": 0.63,
+   "AU02": 0.72,
+   "AU04": 0.78,
+   "AU05": 0.59,
+   "AU06": 0.59,
+   "AU09": 0.62,
+   "AU12": 0.85,
+   "AU15": 0.36,
+   "AU17": 0.5,
+   "AU20": 0.34,
+   "AU25": 0.94,
+   "AU26": 0.68,
+   "AU07": 0.5,
+   "AU10": 0.5,
+   "AU14": 0.5,
+   "AU23": 0.5,
+   "AU24": 0.5
+  },
+  "empirical": {
+   "AU01": 0.7308,
+   "AU02": 0.7389,
+   "AU04": 0.7972,
+   "AU09": 0.6409,
+   "AU06": 0.61,
+   "AU12": 0.6944,
+   "AU25": 0.8456,
+   "AU26": 0.759
+  }
+ },
+ "assumed_pcc": {
+  "AU07": 0.5,
+  "AU10": 0.5,
+  "AU14": 0.5,
+  "AU23": 0.5,
+  "AU24": 0.5
+ },
+ "human_scale_calibration": {
+  "target_human_gain": 0.00377,
+  "n_sims": 24,
+  "median_gain_by_scale": {
+   "1.0": 0.00036,
+   "2.0": 0.00247,
+   "4.0": 0.0112,
+   "8.0": 0.03721,
+   "16.0": 0.0736,
+   "32.0": 0.10145,
+   "64.0": 0.0919
+  },
+  "chosen_scale": 2.0
+ },
+ "real_human_lambda": [
+  10.0,
+  10.0,
+  10.0
+ ],
+ "notes": [
+  "True cues in simulation are the measured LibreFace AUs, then detector noise is added at the AU level, so measured cues here are noisier than the real ones.",
+  "Item and actor noise are independent between simulated observers, so a shared unmeasured cue that lifts real human-model agreement is not simulated.",
+  "Oracle is the matrix this analysis returns on true family scores with no noise.",
+  "human_like weights are a multiple of the estimated human family matrix, chosen only by held-out gain, so they carry that matrix's own estimation error."
+ ],
+ "conditions": [],
+ "pattern": [
+  {
+   "name": "pattern_0.5x_human_effect",
+   "factor": 0.5,
+   "scale": 1.0,
+   "n_sims": 200,
+   "size_limit_with_mc_allowance": 0.0808,
+   "human_like": {
+    "median_score": 0.3127,
+    "q05": 0.1017,
+    "q95": 0.4812,
+    "share_p_below_alpha": 0.815
+   },
+   "half_shared": {
+    "median_score": 0.1778,
+    "q05": -0.0248,
+    "q95": 0.3703,
+    "share_p_below_alpha": 0.365
+   },
+   "different_cues": {
+    "median_score": 0.0235,
+    "q05": -0.2109,
+    "q95": 0.2202,
+    "share_p_below_alpha": 0.05
+   },
+   "prior_only": {
+    "median_score": 0.009,
+    "q05": -0.1866,
+    "q95": 0.238,
+    "share_p_below_alpha": 0.08
+   },
+   "actor_prior": {
+    "median_score": -0.0093,
+    "q05": -0.2491,
+    "q95": 0.1973,
+    "share_p_below_alpha": 0.055
+   },
+   "auc_human_like_vs_prior_only": 0.9516,
+   "auc_half_shared_vs_prior_only": 0.8244,
+   "auc_human_like_vs_different_cues": 0.9525,
+   "size_prior_only": 0.08,
+   "size_actor_prior": 0.055,
+   "size_different_cues": 0.05,
+   "power_human_like": 0.815,
+   "power_half_shared": 0.365,
+   "pass_size": true,
+   "pass_power": true,
+   "separates": true,
+   "input_first": {
+    "power_human_like": 0.775,
+    "power_half_shared": 0.335,
+    "size_prior_only": 0.07,
+    "size_actor_prior": 0.055,
+    "size_different_cues": 0.075,
+    "separates": false
+   },
+   "input_second": {
+    "power_human_like": 0.76,
+    "power_half_shared": 0.355,
+    "size_prior_only": 0.05,
+    "size_actor_prior": 0.04,
+    "size_different_cues": 0.055,
+    "separates": false
+   },
+   "seconds": 148.8
+  },
+  {
+   "name": "pattern_1.0x_human_effect",
+   "factor": 1.0,
+   "scale": 2.0,
+   "n_sims": 200,
+   "size_limit_with_mc_allowance": 0.0808,
+   "human_like": {
+    "median_score": 0.6315,
+    "q05": 0.5124,
+    "q95": 0.734,
+    "share_p_below_alpha": 1.0
+   },
+   "half_shared": {
+    "median_score": 0.3706,
+    "q05": 0.1378,
+    "q95": 0.5451,
+    "share_p_below_alpha": 0.845
+   },
+   "different_cues": {
+    "median_score": -0.0491,
+    "q05": -0.2913,
+    "q95": 0.1998,
+    "share_p_below_alpha": 0.04
+   },
+   "prior_only": {
+    "median_score": 0.0016,
+    "q05": -0.2134,
+    "q95": 0.2112,
+    "share_p_below_alpha": 0.045
+   },
+   "actor_prior": {
+    "median_score": 0.0238,
+    "q05": -0.2074,
+    "q95": 0.2019,
+    "share_p_below_alpha": 0.05
+   },
+   "auc_human_like_vs_prior_only": 1.0,
+   "auc_half_shared_vs_prior_only": 0.9737,
+   "auc_human_like_vs_different_cues": 0.9999,
+   "size_prior_only": 0.045,
+   "size_actor_prior": 0.05,
+   "size_different_cues": 0.04,
+   "power_human_like": 1.0,
+   "power_half_shared": 0.845,
+   "pass_size": true,
+   "pass_power": true,
+   "separates": true,
+   "input_first": {
+    "power_human_like": 1.0,
+    "power_half_shared": 0.815,
+    "size_prior_only": 0.045,
+    "size_actor_prior": 0.04,
+    "size_different_cues": 0.035,
+    "separates": true
+   },
+   "input_second": {
+    "power_human_like": 1.0,
+    "power_half_shared": 0.85,
+    "size_prior_only": 0.055,
+    "size_actor_prior": 0.045,
+    "size_different_cues": 0.055,
+    "separates": true
+   },
+   "seconds": 149.0
+  },
+  {
+   "name": "pattern_2.0x_human_effect",
+   "factor": 2.0,
+   "scale": 4.0,
+   "n_sims": 200,
+   "size_limit_with_mc_allowance": 0.0808,
+   "human_like": {
+    "median_score": 0.8637,
+    "q05": 0.817,
+    "q95": 0.9074,
+    "share_p_below_alpha": 1.0
+   },
+   "half_shared": {
+    "median_score": 0.5071,
+    "q05": 0.3062,
+    "q95": 0.6884,
+    "share_p_below_alpha": 0.975
+   },
+   "different_cues": {
+    "median_score": -0.0452,
+    "q05": -0.3129,
+    "q95": 0.2271,
+    "share_p_below_alpha": 0.075
+   },
+   "prior_only": {
+    "median_score": 0.0022,
+    "q05": -0.2049,
+    "q95": 0.2179,
+    "share_p_below_alpha": 0.04
+   },
+   "actor_prior": {
+    "median_score": -0.0006,
+    "q05": -0.2025,
+    "q95": 0.1778,
+    "share_p_below_alpha": 0.04
+   },
+   "auc_human_like_vs_prior_only": 1.0,
+   "auc_half_shared_vs_prior_only": 0.9948,
+   "auc_human_like_vs_different_cues": 1.0,
+   "size_prior_only": 0.04,
+   "size_actor_prior": 0.04,
+   "size_different_cues": 0.075,
+   "power_human_like": 1.0,
+   "power_half_shared": 0.975,
+   "pass_size": true,
+   "pass_power": true,
+   "separates": true,
+   "input_first": {
+    "power_human_like": 1.0,
+    "power_half_shared": 0.975,
+    "size_prior_only": 0.045,
+    "size_actor_prior": 0.04,
+    "size_different_cues": 0.085,
+    "separates": true
+   },
+   "input_second": {
+    "power_human_like": 1.0,
+    "power_half_shared": 0.98,
+    "size_prior_only": 0.06,
+    "size_actor_prior": 0.05,
+    "size_different_cues": 0.08,
+    "separates": true
+   },
+   "seconds": 147.9
+  }
+ ]
+}

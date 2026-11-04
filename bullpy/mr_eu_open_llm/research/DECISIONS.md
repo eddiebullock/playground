@@ -239,3 +239,26 @@ Decided before any model matrix exists or any rotation result is read. Two attem
 The entry above names the pattern score on the model-frames route as confirmatory, but that route has no pattern recovery: `pattern` is empty in `same_clip_family_a2_recovery_model_frames.json`. All pattern sizes and power quoted so far are from all frames. The confirmatory status is conditional until that test exists.
 
 Rule set before the test runs: use the existing criteria (size .05 plus 2 Monte Carlo SE, power .80), the attempt 1 null of record, human lambda 10, unchanged families. If the score passes on the model-frames route, it is confirmatory as stated. If it fails, RQ1 on natural clips is descriptive only, and the confirmatory test of cue use rests on RQ2. A failure does not license a new score, route or null.
+
+## 2026-11-04: Pattern score on the model-frames route, result
+
+The test the correction above asked for: `research/reproduction/same_clip_family_route_pattern_within_category.json`, 200 observers, 199 shuffles, families, run through `frozen_route` with lambda held at the human value of 10 on all three inputs. Criteria hash 4b0a8c3c. The pass rule is read on the composite input, as in earlier pattern runs.
+
+- **Attempt 1 null of record:** size passes at all three strengths (prior-only .055, .03, .05; actor-prior .035 to limit .081). Power is .775 at 0.5x, which fails .80, and 1.0 at 1x and 2x. Different-cues size is .05, .03, .055, all within the limit. Half-shared power is .34, .83, .97.
+- **Attempt 2 null, sensitivity only:** same pattern of results, and 0.5x passes at .815 with prior-only size .08. This does not change the verdict on the null of record.
+- **Unresolved reading:** The rule above says "passes" without naming a strength. Read at the calibrated human effect (1x), the score passes. Read as all three strengths, it fails at 0.5x. Held-out gain selects 1x (simulated .0025 against .0038 real, next step .011). Split-half reliability puts the real effect near 0.75x (simulated .18 at 0.5x, .28 at 0.75x, .38 at 1x, real .277). Power at 0.75x was not run. Which reading applies is not settled here, and must be fixed before any model matrix exists.
+- **Loss from all frames:** Power at 0.5x falls from 1.0 to .775, so all-frames figures overstated this route.
+- **Limits:** Power of 1.0 assumes identical true weights and independent item noise. A positive score still supports "aligned with the human pattern", not "uses the same cues".
+- **Loader:** `model_route` connects `frozen_route` to the rotation loader, for one clean complete run. It refuses partial runs, and stops if any clip has no usable response. No rotation or model result was opened.
+
+
+## 2026-11-04: Strength rule for the RQ1 pattern score, and missing clips
+
+Decided after the model-frames pattern results (`same_clip_family_route_pattern_within_category.json`: size passes at 0.5x, 1x and 2x; power .775, 1.0, 1.0) and before any model matrix exists or any rotation result is read. The earlier rule did not name a strength, so this closes a gap the coordinator left open. It is disclosed as written with the 0.5x, 1x and 2x results known.
+
+- Reading only the calibrated 1x row would favour a pass, because real-effect estimates sit at or below it: held-out gain says 1x or a little above, split-half reliability says about 0.75x.
+- Rule: run 0.75x once, under the same criteria, null of record, lambda and families. RQ1 is confirmatory only if size and power pass at both 0.75x and 1x. If 0.75x fails on either, RQ1 on natural clips is descriptive only. This can only downgrade the 1x reading.
+- 0.5x is below both estimates. Its power of .775 stays reported as a limit: an effect that small would often be missed, so a null model result does not show absence of alignment.
+- Half-shared power is reported with the result, since a model sharing only part of the human weights is much harder to detect.
+
+Missing clips in the model run: a clip with no usable response is dropped from both the model and human matrices for that model, lambda stays frozen, and null draws are restricted to the kept clips. Every dropped clip is listed by label and actor. If more than 5 percent of clips are lost for a model, that model's RQ1 result is descriptive only.
