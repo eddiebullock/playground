@@ -68,4 +68,12 @@ Accuracy against 1/6, accuracy by target position, and Spearman and within-categ
 
 ## Cost
 
-Not timed yet. 243 items by 5 rotations by 2 conditions is 2,430 cells, each one prompt scored over six options. The timed smoke on Qwen3-VL and Molmo2 sets this figure.
+From `smoke_v2`, full forwards, `single_face`: 243 items by 5 rotations by 2 conditions is 2,430 cells, each one prompt of about 7 forwards.
+
+| Model | s per forward, original crop | GPU-hours |
+|---|---|---|
+| Gemma 4 | 0.11 | About 0.5 |
+| Qwen3-VL | 0.14 | About 0.7 |
+| Molmo2 | 0.20 | About 1.0 |
+
+About 2.5 GPU-hours in total, including 10% for decoding. Each model fits in one job. Rough for Qwen and Molmo, since per-forward times are read from mixed crop sizes.

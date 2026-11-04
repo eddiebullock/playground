@@ -35,9 +35,14 @@ attempt prompted by that failure, not a replacement. It shuffles within actor, w
 seeds, the same thresholds, families, pattern score and conditions, and frozen ridge
 strength per input as a model would take it. Its outputs have the prefix same_clip_family_a2.
 
+Route test. `--route-pattern` runs the pattern recovery through `frozen_route`, on the frames
+models saw, with ridge strength frozen per input at the real human value. It is the test
+the 2026-11-04 correction in DECISIONS.md asks for, and is not a calibration attempt.
+
 Recovery criteria are fixed in FAMILY_RECOVERY_CRITERIA before any full recovery run, and
-every recovery output carries their hash. No rotation result is read anywhere here. This
-script takes no model responses; the frozen analysis runs them later.
+every recovery output carries their hash. Rotation results enter through `--model-route`
+alone, which calls `model_route` for one clean complete run. Nothing else reads them, and
+recovery and the human run never do.
 
 Usage:
     python3 research/scripts/same_clip_family_analysis.py --write-criteria
@@ -49,6 +54,7 @@ from __future__ import annotations
 
 import argparse
 import dataclasses
+import glob
 import hashlib
 import importlib.util
 import json
@@ -843,7 +849,7 @@ def run_recovery(args):
         placeholder = composite.loc[ids]
         real = scc.build_design(human[human.trial_id.isin(ids)], placeholder)
         lam_real = scc.choose_lambda(real)
-        if args.attempt_2:
+        if args.attempt_2 or args.route_pattern:
             lam_real = tuple([lam_real] + [
                 scc.choose_lambda(scc.build_design(human[human.trial_id.isin(ids)], t.loc[ids]))
                 for t in (a, b)])
@@ -874,7 +880,7 @@ def run_recovery(args):
     shared = {"_n_resp": n_resp, "_pcc_tables": pcc_tables, "_W_ref": W_ref,
               "_scheme": args.scheme, "_seed_offset": args.seed_offset}
 
-    conditions = family_conditions(lam_real)
+    conditions = [] if args.route_pattern else family_conditions(lam_real)
     if args.only:
         conditions = [c for c in conditions if c["name"] in args.only]
     report = []
@@ -890,7 +896,23 @@ def run_recovery(args):
         report.append(summary)
         print(json.dumps({k: v for k, v in summary.items() if k != "per_cue_sign_accuracy"}), flush=True)
     pattern_report = []
-    if not args.only:
+    if args.route_pattern:
+        lams = dict(zip(("composite", "first", "second"), lam_real))
+        for cond in pattern_conditions(scale):
+            cond = {**cond, **shared, "_lams": lams}
+            tasks = [(template, T0, au_names, cond, s, args.pattern_perm) for s in range(args.n_sims)]
+            started = time.time()
+            rows = _map(run_route_pattern_sim, tasks, args.workers, args.n_sims)
+            summary = summarise_pattern_condition(cond, rows)
+            for key in ("first", "second"):
+                single = summarise_pattern_condition(cond, strip_input(rows, key))
+                summary[f"input_{key}"] = {k: single[k] for k in (
+                    "power_human_like", "power_half_shared", "size_prior_only",
+                    "size_actor_prior", "size_different_cues", "separates")}
+            summary["seconds"] = round(time.time() - started, 1)
+            pattern_report.append(summary)
+            print(json.dumps(summary), flush=True)
+    elif not args.only:
         for cond in pattern_conditions(scale):
             cond = {**cond, **shared}
             tasks = [(template, T0, au_names, cond, s, args.pattern_perm) for s in range(args.n_sims)]
@@ -903,6 +925,10 @@ def run_recovery(args):
     result = {
         "attempt": 2 if args.attempt_2 else 1,
         "attempt_label": ATTEMPT_2["label"] if args.attempt_2 else "First attempt",
+        "route_test": bool(args.route_pattern),
+        "null_role": ("null of record" if args.scheme == "within_category"
+                      else "sensitivity only") if args.route_pattern else None,
+        "pass_rule_input": "composite" if args.route_pattern else None,
         "scheme": args.scheme,
         "seed_offset": args.seed_offset,
         "frame_set": args.frame_set,
@@ -1021,13 +1047,15 @@ def third_detector_check(au_csv, graphau_csv, cue_names, human, *, frame_set, st
 
 
 def frozen_route(human: pd.DataFrame, responses: pd.DataFrame, cue_inputs: dict, *, n_perm,
-                 seed, scheme, spec="within"):
+                 seed, scheme, spec="within", lams=None):
     """The route a non-human observer takes through this analysis.
 
     `responses` is a table in the load_human format, built by the caller; nothing here
     reads a response file. `cue_inputs` holds the composite, first and second cue tables.
     Ridge strength is fixed on the human matrix for each input and never chosen on the
-    observer. Clips, options and cues must match, and the null draws are the human's.
+    observer: it is chosen here on `human`, or taken from `lams` by input when a recovery
+    run holds it at the real human value. Clips, options and cues must match, and the null
+    draws are the human's.
     """
     out = {}
     for key, table in cue_inputs.items():
@@ -1036,13 +1064,95 @@ def frozen_route(human: pd.DataFrame, responses: pd.DataFrame, cue_inputs: dict,
         if (design_h.trial_ids != design_o.trial_ids or design_h.options != design_o.options
                 or design_h.cues != design_o.cues):
             raise ValueError("Frozen route needs the same clips, options and cues")
-        lam = scc.choose_lambda(design_h)
+        lam = lams[key] if lams is not None else scc.choose_lambda(design_h)
         plan = null_plan(design_o.categories, design_o.actors, n_perm, seed, spec, scheme)
         reference = Fitter(design_h, lam).matrix()
         res = observer_inference(design_o, lam, plan)
         out[key] = {"lam": lam, "B": res["B"], "reference": reference, "res": res,
                     "pattern": pattern_test(res["B"], reference, res["null"])}
     return out
+
+
+def model_route(eval_paths, human_path, au_csv, *, n_perm, seed=42):
+    """One clean rotation run through the confirmatory route, by its evaluation files.
+
+    Families, the frames models saw, the attempt 1 null of record. The loader refuses
+    partial, smoke, mismatch and target-first runs. A clip the model failed on stops the
+    route, because the comparison needs the same clips as the human matrix.
+    """
+    human = scc.load_human(human_path)
+    responses = scc.load_rotation_run(eval_paths, human_path, allow_partial=False)
+    if responses.attrs["n_trial_errors"]:
+        raise ValueError(f"{responses.attrs['n_trial_errors']} clips have no usable response")
+    a, b, composite = pair_tables(au_csv, None, list(CUE_SETS["families"]), frame_set="model_1fps")
+    ids = sorted(set(a.index) & set(b.index) & set(human.trial_id))
+    cue_inputs = {"composite": composite.loc[ids], "first": a.loc[ids], "second": b.loc[ids]}
+    result = frozen_route(human, responses, cue_inputs, n_perm=n_perm, seed=seed,
+                          scheme="within_category")
+    return result, responses.attrs
+
+
+def model_route_summary(result, attrs):
+    """Numbers for the output file: pattern scores, and matrices labelled exploratory."""
+    out = {"confirmatory_unit": "family pattern score, model frames, composite input",
+           "cells_are_exploratory": True,
+           "unparsed_share": attrs["unparsed_share"], "rotations": attrs["rotations"]}
+    for key, part in result.items():
+        out[key] = {"lam": part["lam"],
+                    **{k: round(v, 5) for k, v in part["pattern"].items()},
+                    "beta": np.round(part["B"], 4).tolist()}
+    return out
+
+
+def long_table(template, Y):
+    """Responses as a table in the load_human format, on the template's clips."""
+    rows = []
+    trial_ids = np.array(template.trial_ids)
+    for j, option in enumerate(template.options):
+        mask = ~np.isnan(template.Y[:, j])
+        rows.append(pd.DataFrame({
+            "trial_id": trial_ids[mask], "actor": template.actors[mask],
+            "category": template.categories[mask], "option": option, "p": Y[mask, j],
+        }))
+    return pd.concat(rows, ignore_index=True)
+
+
+def run_route_pattern_sim(task):
+    """Pattern recovery by `frozen_route`, with ridge strength held at the human value."""
+    template, T0, au_names, cond, sim, n_perm = task
+    rng = np.random.default_rng([cond["seed"] + cond["_seed_offset"], sim])
+    cues = template.cues
+    F = cue_matrix(T0, au_names, cues)
+    W_human = cond["scale"] * cond["_W_ref"]
+    shuffled = lambda: rng.permutation(W_human.ravel()).reshape(W_human.shape)  # noqa: E731
+    W_other, W_mix = shuffled(), shuffled()
+    W_half = HALF_SHARED * W_human + np.sqrt(1 - HALF_SHARED**2) * W_mix
+    tables = measured_inputs(T0, au_names, cues, cond, template, rng)
+    cue_inputs = {key: pd.DataFrame(x, index=template.trial_ids, columns=cues)
+                  for key, x in zip(("composite", "first", "second"), tables)}
+    Y_h, _ = scc.simulate_observer(template, F, W_human, kind="human_like", rng=rng,
+                                   n_resp=cond["_n_resp"])
+    human = long_table(template, Y_h)
+    n_model = np.full(len(template.categories), cond["n_resp_model"])
+    zero = np.zeros_like(W_human)
+    observers = {"human_like": (W_human, "human_like"), "half_shared": (W_half, "human_like"),
+                 "different_cues": (W_other, "human_like"), "prior_only": (zero, "prior_only"),
+                 "actor_prior": (zero, "actor_prior")}
+    out = {}
+    for name, (W, kind) in observers.items():
+        Y, _ = scc.simulate_observer(template, F, W, kind=kind, rng=rng, n_resp=n_model)
+        route = frozen_route(human, long_table(template, Y), cue_inputs, n_perm=n_perm,
+                             seed=177 + sim + cond["_seed_offset"], scheme=cond["_scheme"],
+                             lams=cond["_lams"])
+        for key, part in route.items():
+            prefix = "" if key == "composite" else f"{key}_"
+            out[f"{prefix}{name}_score"] = part["pattern"]["score"]
+            out[f"{prefix}{name}_p"] = part["pattern"]["p"]
+    return out
+
+
+def strip_input(rows, key):
+    return [{k[len(key) + 1:]: v for k, v in row.items() if k.startswith(f"{key}_")} for row in rows]
 
 
 def run_real(args):
@@ -1164,6 +1274,12 @@ def main(argv=None):
     parser.add_argument("--criteria-out", type=Path,
                         default=ROOT / "research/reproduction/same_clip_family_criteria.json")
     parser.add_argument("--write-attempt-2-criteria", action="store_true")
+    parser.add_argument("--route-pattern", action="store_true",
+                        help="pattern recovery through frozen_route; needs a measured --au-csv")
+    parser.add_argument("--model-route", action="store_true",
+                        help="one clean rotation run through the confirmatory route")
+    parser.add_argument("--model", help="model name for --model-route")
+    parser.add_argument("--model-evals", nargs="*", help="rotation eval files or globs")
     args = parser.parse_args(argv)
     if args.write_attempt_2_criteria:
         out = ROOT / "research/reproduction/same_clip_family_a2_criteria.json"
@@ -1172,12 +1288,24 @@ def main(argv=None):
     if args.write_criteria:
         print(json.dumps(write_criteria(args.criteria_out), indent=1))
         return
+    if args.model_route:
+        if not (args.au_csv and args.model and args.model_evals):
+            parser.error("--model-route needs --au-csv, --model and --model-evals")
+        paths = [p for pattern in args.model_evals for p in sorted(glob.glob(pattern))]
+        result, attrs = model_route(paths, args.human, args.au_csv,
+                                    n_perm=args.n_perm or 4999, seed=args.seed)
+        out = ROOT / f"research/reproduction/same_clip_family_model_{args.model}.json"
+        out.write_text(json.dumps(model_route_summary(result, attrs), indent=1) + "\n",
+                       encoding="utf-8")
+        return
     stem = "same_clip_family"
     if args.attempt_2:
         args.scheme, args.seed_offset = ATTEMPT_2["scheme"], ATTEMPT_2["seed_offset"]
         stem = "same_clip_family_a2"
         if args.out_prefix == ROOT / "research/reproduction/same_clip_family":
             args.out_prefix = ROOT / f"research/reproduction/{stem}"
+    if args.route_pattern and not (args.recovery and args.au_csv and args.recovery_out):
+        parser.error("--route-pattern needs --recovery, --au-csv and --recovery-out")
     if args.recovery:
         args.n_perm = args.n_perm or 499
         if args.recovery_out is None:

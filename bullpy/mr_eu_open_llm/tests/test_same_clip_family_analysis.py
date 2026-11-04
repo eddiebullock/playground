@@ -3,6 +3,7 @@
 import hashlib
 import importlib.util
 import inspect
+import json
 import sys
 from pathlib import Path
 
@@ -198,12 +199,15 @@ def test_human_scale_is_chosen_only_from_gain():
     assert "n_perm" not in params
 
 
-def test_scripts_take_no_model_responses():
+def test_rotation_results_enter_only_through_model_route():
     source = (ROOT / "research/scripts/same_clip_family_analysis.py").read_text()
     code = source.split('"""', 2)[2]
-    assert "load_rotation_run" not in code
-    assert "_rot" not in code
-    assert "model_evals" not in code
+    assert code.count("load_rotation_run(") == 1
+    start, end = code.index("def model_route("), code.index("def model_route_summary(")
+    assert "scc.load_rotation_run(" in code[start:end]
+    assert "allow_partial=False" in code[start:end]
+    assert "allow_partial=True" not in code
+    assert code.count("model_route(") == 2  # the definition and the --model-route branch
 
 
 def test_family_pipeline_runs_on_synthetic_cues():
@@ -441,3 +445,132 @@ def test_recovery_honours_a_frozen_lambda_per_input(monkeypatch):
     monkeypatch.setattr(scc, "choose_lambda", no_choice)
     fam.run_family_sim((template, None, names, cond, 0, 9, None))
     assert used == [3.0, 10.0, 30.0]
+
+
+# --------------------------------------------------------------------------
+# Route pattern recovery and the loader. Every eval file here is written by the test.
+# --------------------------------------------------------------------------
+
+
+def lookup_file(tmp_path, rng):
+    trials = {}
+    for category, options in OPTIONS.items():
+        for actor in ACTORS:
+            for take in (1, 2, 3):
+                probs = rng.dirichlet(np.ones(len(options)) * 8)
+                trials[trial_id(category, actor, take)] = {
+                    "human_options": options,
+                    "human_response_distribution": dict(zip(options, probs.tolist())),
+                    "human_target_label": category,
+                    "n_respondents": 80,
+                }
+    path = tmp_path / "human.json"
+    path.write_text(json.dumps({"trials": trials}), encoding="utf-8")
+    return path, trials
+
+
+def rotation_files(tmp_path, trials, rng, rotations=scc.ROTATIONS, drop=None):
+    paths = []
+    for r in rotations:
+        items = []
+        for tid, rec in trials.items():
+            options = scc.rotate_options(rec["human_options"], r)
+            probs = rng.dirichlet(np.ones(len(options)) * 8)
+            items.append({"trial_id": tid, "error": "failed" if tid == drop else None,
+                          "vision_source_trial_id": None,
+                          "stage2": {"options": options, "fc_n_samples": 20,
+                                     "response_distribution": dict(zip(options, probs.tolist()))}})
+        path = tmp_path / f"eval_v2_x_seed42_rot{r}_real.json"
+        path.write_text(json.dumps({"trials": items}), encoding="utf-8")
+        paths.append(path)
+    return paths
+
+
+def cue_csv(tmp_path, trials, rng):
+    rows = []
+    for tid in trials:
+        for detector in ("libreface", "openface3"):
+            for cue in scc.SHARED_AUS:
+                rows.append({"trial_id": tid, "detector": detector, "kind": "intensity", "cue": cue,
+                             "frame_set": "model_1fps", "mean": rng.normal()})
+    path = tmp_path / "au.csv"
+    pd.DataFrame(rows).to_csv(path, index=False)
+    return path
+
+
+def test_model_route_reads_a_clean_run_on_model_frames(tmp_path):
+    rng = np.random.default_rng(20)
+    human, trials = lookup_file(tmp_path, rng)
+    paths = rotation_files(tmp_path, trials, rng)
+    au = cue_csv(tmp_path, trials, rng)
+    result, attrs = fam.model_route(paths, human, au, n_perm=19)
+    assert set(result) == {"composite", "first", "second"}
+    assert result["composite"]["B"].shape[1] == 4
+    assert attrs["rotations"] == list(scc.ROTATIONS)
+    summary = fam.model_route_summary(result, attrs)
+    assert summary["cells_are_exploratory"] is True
+    json.dumps(summary)
+
+
+def test_model_route_refuses_a_partial_run(tmp_path):
+    rng = np.random.default_rng(21)
+    human, trials = lookup_file(tmp_path, rng)
+    paths = rotation_files(tmp_path, trials, rng, rotations=(0, 1, 2, 3))
+    with pytest.raises(ValueError, match="Missing rotations"):
+        fam.model_route(paths, human, cue_csv(tmp_path, trials, rng), n_perm=9)
+
+
+def test_model_route_stops_on_a_failed_clip(tmp_path):
+    rng = np.random.default_rng(22)
+    human, trials = lookup_file(tmp_path, rng)
+    paths = rotation_files(tmp_path, trials, rng, drop=sorted(trials)[0])
+    with pytest.raises(ValueError, match="no usable response"):
+        fam.model_route(paths, human, cue_csv(tmp_path, trials, rng), n_perm=9)
+
+
+def test_frozen_route_uses_given_lambdas_without_choosing(monkeypatch):
+    human, cues = frozen_setup()
+    other, _ = build(np.random.default_rng(23), beta=0.0)
+
+    def no_choice(*a, **k):
+        raise AssertionError("Ridge strength must not be chosen here")
+
+    monkeypatch.setattr(scc, "choose_lambda", no_choice)
+    lams = {"composite": 10.0, "first": 3.0, "second": 30.0}
+    out = fam.frozen_route(human, other, cues, n_perm=9, seed=1, scheme="within_category", lams=lams)
+    assert {k: v["lam"] for k, v in out.items()} == lams
+
+
+def test_route_pattern_sim_scores_every_input_and_observer(monkeypatch):
+    rng = np.random.default_rng(24)
+    responses, _ = build(rng)
+    ids = sorted(responses.trial_id.unique())
+    names = fam.needed_aus(fam.CUE_SETS["families"])
+    frame = pd.DataFrame(rng.normal(0, 1, (len(ids), 4)), index=ids,
+                         columns=list(fam.CUE_SETS["families"]))
+    template = scc.build_design(responses, frame)
+    T0 = rng.normal(0, 1, (len(ids), len(names)))
+    W_ref = rng.normal(0, 0.8, (len(template.options), 4))
+    cond = {**fam.pattern_conditions(1.0)[2], "_n_resp": np.full(len(ids), 200),
+            "_pcc_tables": {"published": fam.AU_PCC}, "_W_ref": W_ref, "_scheme": "within_category",
+            "_seed_offset": 200000, "_lams": {"composite": 3.0, "first": 3.0, "second": 3.0}}
+
+    def no_choice(*a, **k):
+        raise AssertionError("Ridge strength must not be chosen in the route test")
+
+    monkeypatch.setattr(scc, "choose_lambda", no_choice)
+    row = fam.run_route_pattern_sim((template, T0, names, cond, 0, 19))
+    assert row["human_like_score"] > row["prior_only_score"]
+    summary = fam.summarise_pattern_condition(cond, [row, row])
+    assert "size_different_cues" in summary
+    first = fam.summarise_pattern_condition(cond, fam.strip_input([row, row], "first"))
+    assert "power_human_like" in first
+
+
+def test_long_table_round_trips_through_the_design():
+    rng = np.random.default_rng(25)
+    responses, cues = build(rng)
+    design = scc.build_design(responses, cues)
+    rebuilt = scc.build_design(fam.long_table(design, design.Y), cues)
+    assert rebuilt.trial_ids == design.trial_ids
+    assert np.array_equal(np.nan_to_num(rebuilt.Y, nan=-1), np.nan_to_num(design.Y, nan=-1))

@@ -20,6 +20,10 @@
 #   sbatch --export=ALL,STEP=recovery,ATTEMPT_2=1,CUE_SET=families slurm_jobs/study3_family_recovery.sh
 #   sbatch --export=ALL,STEP=recovery,ATTEMPT_2=1,CUE_SET=families,FRAME_SET=model_1fps \
 #     slurm_jobs/study3_family_recovery.sh
+# Pattern recovery through frozen_route on the frames models saw:
+#   sbatch --time=01:00:00 --export=ALL,STEP=route_pattern slurm_jobs/study3_family_recovery.sh
+#   sbatch --time=01:00:00 --export=ALL,STEP=route_pattern,SCHEME=within_actor \
+#     slurm_jobs/study3_family_recovery.sh
 #   sbatch --time=02:00:00 --cpus-per-task=8 --mem=16G --export=ALL,STEP=human \
 #     slurm_jobs/study3_family_recovery.sh
 
@@ -49,6 +53,13 @@ fi
 case "${STEP}" in
   recovery)
     python research/scripts/same_clip_family_analysis.py --recovery --cue-set "${CUE_SET}" "${ARGS[@]}"
+    ;;
+  route_pattern)
+    # Null of record by default; SCHEME=within_actor is the sensitivity run.
+    SCHEME="${SCHEME:-within_category}"
+    python research/scripts/same_clip_family_analysis.py --recovery --route-pattern \
+      --cue-set families --frame-set model_1fps --scheme "${SCHEME}" --seed-offset 200000 \
+      --recovery-out "research/reproduction/same_clip_family_route_pattern_${SCHEME}.json" "${ARGS[@]}"
     ;;
   human)
     python research/scripts/same_clip_family_analysis.py "${ARGS[@]}"
