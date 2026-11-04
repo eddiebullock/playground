@@ -113,3 +113,15 @@ Non-trivial decisions. Date, decision, alternatives, why. Do not rewrite history
 - **Decision:** Report results against the human response distribution as well as the acted label, and flag Kind, Unfriendly and Jealous (26 items; human p_target 0.229, 0.241, 0.257 vs chance 0.167).
 - **Why:** These labels are barely recognisable from the face alone, so acted-label accuracy is a poor ground truth there. Amendment A1 is unchanged; this is a report-level addition.
 
+## 2026-11-04 — Input limits on A1, recorded before any rotated result was read
+
+- **Decision:** Keep A1 as frozen, with the same frame policy as the original runs. Interpret it with these limits, written before the analysis.
+- **Limits:** On composite-grid models, `make_frame_grid` keeps the first 8 frames while metadata reports all frames as used; by clip duration, 68 of 243 clips lose frames at 1 fps, cap 16. The grid also squashes 16:9 frames into square cells. On Gemma 4 the grid gives about 1 token across the face, against about 9 for a single face crop.
+- **Consequence:** A model that passes A1 passes despite this input. A model that fails A1 on a composite grid has not shown that it cannot use faces, only that it did not on this format. A failure stops its claims under A1; it does not rule out a retest on a face-crop input, which needs its own preregistration.
+- **Why now:** Written before results so that the reading cannot be fitted to them. Original metadata overstated frames used on these models; this does not change accuracy values.
+
+## 2026-11-04 — A2 is a draft and is not frozen
+
+- **Decision:** `research/PREREG_A2_DRAFT.md` stays a draft. The blind prompt failed coverage on Gemma 4 (lexicon mass 2e-5 to 0.004 against a proposed 0.05), so the prompt must change. Gate B2 is not lowered to fit.
+- **Known deviation from Rule 2:** the 3-item smoke saw edited stimuli before predictions were committed. The draft discloses this and repeats the analysis without those items.
+
