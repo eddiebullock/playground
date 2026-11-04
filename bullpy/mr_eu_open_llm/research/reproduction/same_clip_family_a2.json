@@ -1,0 +1,903 @@
+{
+ "attempt": 2,
+ "scheme": "within_actor",
+ "seed_offset": 100000,
+ "au_csv": "research/reproduction/eu_au_measures.csv",
+ "graphau_csv": "research/reproduction/eu_au_measures_graphau.csv",
+ "spec": "within",
+ "stat": "mean",
+ "n_perm": 4999,
+ "n_boot": 2000,
+ "criteria_sha256": "4b0a8c3cde345e6cc6043907f75d7af0fbd4a92382a448f565e5454d2df8b66d",
+ "note": "Human observer only. Observational. No model matrix is computed here.",
+ "cue_sets": {
+  "families": {
+   "all": {
+    "first": {
+     "lam": 3.0,
+     "n_cells": 88,
+     "n_pointwise": 7,
+     "expected_pointwise_under_null": 4.4,
+     "n_familywise": 2,
+     "heldout_ce_cues": 0.25844,
+     "heldout_ce_category_only": 0.25958,
+     "heldout_gain": 0.00439,
+     "gain_per_actor": {
+      "B": 0.00679,
+      "C": 0.01281,
+      "D": 0.00562,
+      "E": -0.01665,
+      "F": 0.02116,
+      "G": -0.00491,
+      "H": 0.00685,
+      "I": -0.00455,
+      "J": 0.01919,
+      "K": -0.00144,
+      "L": 0.01152,
+      "M": 0.02551,
+      "N": -0.00814,
+      "O": -0.01914,
+      "P": 0.002,
+      "R": 0.00616,
+      "S": 0.00092
+     }
+    },
+    "second": {
+     "lam": 10.0,
+     "n_cells": 88,
+     "n_pointwise": 11,
+     "expected_pointwise_under_null": 4.4,
+     "n_familywise": 1,
+     "heldout_ce_cues": 0.25833,
+     "heldout_ce_category_only": 0.25958,
+     "heldout_gain": 0.00481,
+     "gain_per_actor": {
+      "B": -0.00082,
+      "C": 0.00088,
+      "D": 0.00114,
+      "E": -0.00187,
+      "F": 0.02104,
+      "G": -0.01183,
+      "H": -0.00456,
+      "I": 0.00758,
+      "J": 0.0127,
+      "K": 0.00636,
+      "L": 0.01156,
+      "M": 0.01953,
+      "N": 0.00662,
+      "O": 0.00979,
+      "P": 0.00694,
+      "R": -0.00421,
+      "S": -0.00074
+     }
+    },
+    "composite": {
+     "lam": 3.0,
+     "n_cells": 88,
+     "n_pointwise": 8,
+     "expected_pointwise_under_null": 4.4,
+     "n_familywise": 2,
+     "heldout_ce_cues": 0.257989,
+     "heldout_ce_category_only": 0.25958,
+     "heldout_gain": 0.00613,
+     "gain_per_actor": {
+      "B": -0.00587,
+      "C": 0.01431,
+      "D": 0.00234,
+      "E": -0.01213,
+      "F": 0.0278,
+      "G": -0.01819,
+      "H": -0.0056,
+      "I": 0.00444,
+      "J": 0.02074,
+      "K": 0.00322,
+      "L": 0.01795,
+      "M": 0.03717,
+      "N": 0.00811,
+      "O": -0.00191,
+      "P": 0.00635,
+      "R": -0.00261,
+      "S": -0.00034
+     }
+    },
+    "two_detector": {
+     "n_flagged": 6,
+     "expected_under_null": 0.9,
+     "sign_agreement_all_cells": 0.8182,
+     "pattern_first_vs_second": 0.7357
+    },
+    "reliability_split_half_actors": {
+     "split_half_r": 0.3133,
+     "reliability": 0.4771,
+     "n_splits": 200
+    },
+    "added_detector_check": {
+     "cues": [
+      "brow_raise",
+      "brow_lower",
+      "smile"
+     ],
+     "partial_families": {
+      "brow_lower": [
+       "AU04"
+      ]
+     },
+     "pattern_with_composite": 0.3697,
+     "sign_agreement": 0.6061
+    }
+   },
+   "model_1fps": {
+    "first": {
+     "lam": 10.0,
+     "n_cells": 88,
+     "n_pointwise": 9,
+     "expected_pointwise_under_null": 4.4,
+     "n_familywise": 0,
+     "heldout_ce_cues": 0.259033,
+     "heldout_ce_category_only": 0.25958,
+     "heldout_gain": 0.0021,
+     "gain_per_actor": {
+      "B": 0.00425,
+      "C": 0.00704,
+      "D": 0.00257,
+      "E": -0.00489,
+      "F": 0.00583,
+      "G": -0.00313,
+      "H": 0.00413,
+      "I": -0.00045,
+      "J": 0.00902,
+      "K": -0.00044,
+      "L": 0.00781,
+      "M": 0.01568,
+      "N": -0.00045,
+      "O": -0.00863,
+      "P": -0.01177,
+      "R": 0.00482,
+      "S": 0.00143
+     }
+    },
+    "second": {
+     "lam": 10.0,
+     "n_cells": 88,
+     "n_pointwise": 11,
+     "expected_pointwise_under_null": 4.4,
+     "n_familywise": 0,
+     "heldout_ce_cues": 0.25872,
+     "heldout_ce_category_only": 0.25958,
+     "heldout_gain": 0.00331,
+     "gain_per_actor": {
+      "B": 0.00304,
+      "C": 3e-05,
+      "D": -0.0008,
+      "E": -0.00376,
+      "F": 0.01374,
+      "G": -0.01026,
+      "H": 0.0031,
+      "I": 0.00682,
+      "J": 0.01038,
+      "K": 0.00294,
+      "L": 0.01096,
+      "M": 0.01379,
+      "N": 0.00458,
+      "O": 0.01075,
+      "P": -0.00331,
+      "R": -0.00545,
+      "S": -0.00049
+     }
+    },
+    "composite": {
+     "lam": 10.0,
+     "n_cells": 88,
+     "n_pointwise": 10,
+     "expected_pointwise_under_null": 4.4,
+     "n_familywise": 0,
+     "heldout_ce_cues": 0.258602,
+     "heldout_ce_category_only": 0.25958,
+     "heldout_gain": 0.00377,
+     "gain_per_actor": {
+      "B": 0.00354,
+      "C": 0.00733,
+      "D": -0.00012,
+      "E": -0.00457,
+      "F": 0.01048,
+      "G": -0.00751,
+      "H": 0.00197,
+      "I": 0.00558,
+      "J": 0.01126,
+      "K": 0.00072,
+      "L": 0.01118,
+      "M": 0.02066,
+      "N": 0.00467,
+      "O": 0.00284,
+      "P": -0.00809,
+      "R": -0.00198,
+      "S": 0.00264
+     }
+    },
+    "two_detector": {
+     "n_flagged": 4,
+     "expected_under_null": 0.9,
+     "sign_agreement_all_cells": 0.7955,
+     "pattern_first_vs_second": 0.7102
+    },
+    "reliability_split_half_actors": {
+     "split_half_r": 0.2767,
+     "reliability": 0.4334,
+     "n_splits": 200
+    },
+    "added_detector_check": {
+     "cues": [
+      "brow_raise",
+      "brow_lower",
+      "smile"
+     ],
+     "partial_families": {
+      "brow_lower": [
+       "AU04"
+      ]
+     },
+     "pattern_with_composite": 0.4126,
+     "sign_agreement": 0.5909
+    }
+   }
+  },
+  "families_singles": {
+   "all": {
+    "first": {
+     "lam": 10.0,
+     "n_cells": 242,
+     "n_pointwise": 18,
+     "expected_pointwise_under_null": 12.1,
+     "n_familywise": 1,
+     "heldout_ce_cues": 0.258614,
+     "heldout_ce_category_only": 0.25958,
+     "heldout_gain": 0.00372,
+     "gain_per_actor": {
+      "B": 0.01006,
+      "C": 0.01865,
+      "D": 0.01421,
+      "E": -0.01081,
+      "F": 0.01701,
+      "G": -0.00464,
+      "H": -0.0045,
+      "I": -0.0026,
+      "J": 0.01352,
+      "K": 0.00502,
+      "L": 0.00614,
+      "M": 0.02065,
+      "N": -0.00921,
+      "O": -0.01156,
+      "P": 0.00097,
+      "R": -0.00369,
+      "S": -0.00443
+     }
+    },
+    "second": {
+     "lam": 10.0,
+     "n_cells": 242,
+     "n_pointwise": 19,
+     "expected_pointwise_under_null": 12.1,
+     "n_familywise": 0,
+     "heldout_ce_cues": 0.2585,
+     "heldout_ce_category_only": 0.25958,
+     "heldout_gain": 0.00416,
+     "gain_per_actor": {
+      "B": -0.00023,
+      "C": 0.00061,
+      "D": -0.00063,
+      "E": 0.00667,
+      "F": 0.02465,
+      "G": -0.01645,
+      "H": -0.0018,
+      "I": -0.0073,
+      "J": 0.01781,
+      "K": 0.00841,
+      "L": 0.02144,
+      "M": 0.01556,
+      "N": 0.01088,
+      "O": 0.00243,
+      "P": 0.01065,
+      "R": -0.00656,
+      "S": -0.0108
+     }
+    },
+    "composite": {
+     "lam": 10.0,
+     "n_cells": 242,
+     "n_pointwise": 17,
+     "expected_pointwise_under_null": 12.1,
+     "n_familywise": 1,
+     "heldout_ce_cues": 0.258242,
+     "heldout_ce_category_only": 0.25958,
+     "heldout_gain": 0.00515,
+     "gain_per_actor": {
+      "B": 0.00269,
+      "C": 0.01862,
+      "D": 0.00789,
+      "E": -0.00355,
+      "F": 0.02489,
+      "G": -0.01638,
+      "H": -0.0083,
+      "I": -0.00479,
+      "J": 0.01801,
+      "K": 0.00878,
+      "L": 0.01929,
+      "M": 0.02556,
+      "N": 0.00335,
+      "O": -0.0044,
+      "P": 0.00666,
+      "R": -0.00925,
+      "S": -0.00371
+     }
+    },
+    "two_detector": {
+     "n_flagged": 10,
+     "expected_under_null": 2.4,
+     "sign_agreement_all_cells": 0.6818,
+     "pattern_first_vs_second": 0.5791
+    },
+    "reliability_split_half_actors": {
+     "split_half_r": 0.216,
+     "reliability": 0.3552,
+     "n_splits": 200
+    },
+    "added_detector_check": {
+     "cues": [
+      "brow_raise",
+      "brow_lower",
+      "smile",
+      "AU07",
+      "AU10",
+      "AU14",
+      "AU15",
+      "AU17",
+      "AU23",
+      "AU24"
+     ],
+     "partial_families": {
+      "brow_lower": [
+       "AU04"
+      ]
+     },
+     "pattern_with_composite": 0.6038,
+     "sign_agreement": 0.7455
+    }
+   },
+   "model_1fps": {
+    "first": {
+     "lam": 30.0,
+     "n_cells": 242,
+     "n_pointwise": 23,
+     "expected_pointwise_under_null": 12.1,
+     "n_familywise": 0,
+     "heldout_ce_cues": 0.258663,
+     "heldout_ce_category_only": 0.25958,
+     "heldout_gain": 0.00353,
+     "gain_per_actor": {
+      "B": 0.0037,
+      "C": 0.00951,
+      "D": 0.00805,
+      "E": -0.00316,
+      "F": 0.0067,
+      "G": -0.00051,
+      "H": -0.00052,
+      "I": 0.00259,
+      "J": 0.00817,
+      "K": 0.00299,
+      "L": 0.00782,
+      "M": 0.01152,
+      "N": 0.00179,
+      "O": -0.0006,
+      "P": -0.00301,
+      "R": 0.00227,
+      "S": 3e-05
+     }
+    },
+    "second": {
+     "lam": 30.0,
+     "n_cells": 242,
+     "n_pointwise": 21,
+     "expected_pointwise_under_null": 12.1,
+     "n_familywise": 0,
+     "heldout_ce_cues": 0.258855,
+     "heldout_ce_category_only": 0.25958,
+     "heldout_gain": 0.00279,
+     "gain_per_actor": {
+      "B": 0.00095,
+      "C": 0.0005,
+      "D": 0.00203,
+      "E": 0.00385,
+      "F": 0.00898,
+      "G": -0.00573,
+      "H": 5e-05,
+      "I": 0.00014,
+      "J": 0.00989,
+      "K": 0.00512,
+      "L": 0.01243,
+      "M": 0.00888,
+      "N": 0.0073,
+      "O": 0.00425,
+      "P": -0.00104,
+      "R": -0.0045,
+      "S": -0.00285
+     }
+    },
+    "composite": {
+     "lam": 10.0,
+     "n_cells": 242,
+     "n_pointwise": 19,
+     "expected_pointwise_under_null": 12.1,
+     "n_familywise": 0,
+     "heldout_ce_cues": 0.258367,
+     "heldout_ce_category_only": 0.25958,
+     "heldout_gain": 0.00467,
+     "gain_per_actor": {
+      "B": 0.00289,
+      "C": 0.01341,
+      "D": 0.00554,
+      "E": -0.00441,
+      "F": 0.01648,
+      "G": -0.01417,
+      "H": -0.00899,
+      "I": 0.00301,
+      "J": 0.01742,
+      "K": 0.00834,
+      "L": 0.02248,
+      "M": 0.02537,
+      "N": 0.00925,
+      "O": 0.00393,
+      "P": -0.01181,
+      "R": -0.00628,
+      "S": -0.00338
+     }
+    },
+    "two_detector": {
+     "n_flagged": 6,
+     "expected_under_null": 2.4,
+     "sign_agreement_all_cells": 0.7149,
+     "pattern_first_vs_second": 0.5974
+    },
+    "reliability_split_half_actors": {
+     "split_half_r": 0.1944,
+     "reliability": 0.3255,
+     "n_splits": 200
+    },
+    "added_detector_check": {
+     "cues": [
+      "brow_raise",
+      "brow_lower",
+      "smile",
+      "AU07",
+      "AU10",
+      "AU14",
+      "AU15",
+      "AU17",
+      "AU23",
+      "AU24"
+     ],
+     "partial_families": {
+      "brow_lower": [
+       "AU04"
+      ]
+     },
+     "pattern_with_composite": 0.6314,
+     "sign_agreement": 0.7091
+    }
+   }
+  },
+  "au_exploratory": {
+   "all": {
+    "first": {
+     "lam": 30.0,
+     "n_cells": 330,
+     "n_pointwise": 31,
+     "expected_pointwise_under_null": 16.5,
+     "n_familywise": 1,
+     "heldout_ce_cues": 0.258506,
+     "heldout_ce_category_only": 0.25958,
+     "heldout_gain": 0.00413,
+     "gain_per_actor": {
+      "B": 0.00541,
+      "C": 0.01382,
+      "D": 0.00952,
+      "E": -0.00429,
+      "F": 0.01313,
+      "G": 0.00027,
+      "H": -0.00035,
+      "I": -0.00058,
+      "J": 0.01095,
+      "K": 0.00298,
+      "L": 0.00717,
+      "M": 0.01407,
+      "N": -0.00421,
+      "O": -0.00698,
+      "P": 0.00354,
+      "R": 0.00133,
+      "S": -0.00055
+     }
+    },
+    "second": {
+     "lam": 30.0,
+     "n_cells": 330,
+     "n_pointwise": 29,
+     "expected_pointwise_under_null": 16.5,
+     "n_familywise": 1,
+     "heldout_ce_cues": 0.258339,
+     "heldout_ce_category_only": 0.25958,
+     "heldout_gain": 0.00478,
+     "gain_per_actor": {
+      "B": 0.00026,
+      "C": 0.00171,
+      "D": 0.00286,
+      "E": 0.00476,
+      "F": 0.01891,
+      "G": -0.00747,
+      "H": 0.00217,
+      "I": 0.00121,
+      "J": 0.01325,
+      "K": 0.00721,
+      "L": 0.01086,
+      "M": 0.01297,
+      "N": 0.00845,
+      "O": 0.00419,
+      "P": 0.00855,
+      "R": -0.0019,
+      "S": -0.00549
+     }
+    },
+    "composite": {
+     "lam": 10.0,
+     "n_cells": 330,
+     "n_pointwise": 28,
+     "expected_pointwise_under_null": 16.5,
+     "n_familywise": 1,
+     "heldout_ce_cues": 0.258076,
+     "heldout_ce_category_only": 0.25958,
+     "heldout_gain": 0.00579,
+     "gain_per_actor": {
+      "B": 0.0001,
+      "C": 0.02081,
+      "D": 0.00913,
+      "E": -0.00461,
+      "F": 0.03108,
+      "G": -0.0228,
+      "H": -0.00645,
+      "I": -0.00145,
+      "J": 0.02051,
+      "K": 0.00914,
+      "L": 0.0198,
+      "M": 0.02983,
+      "N": 0.00284,
+      "O": -0.00184,
+      "P": 0.00847,
+      "R": -0.0073,
+      "S": -0.01069
+     }
+    },
+    "two_detector": {
+     "n_flagged": 16,
+     "expected_under_null": 3.3,
+     "sign_agreement_all_cells": 0.7061,
+     "pattern_first_vs_second": 0.5944
+    },
+    "reliability_split_half_actors": {
+     "split_half_r": 0.206,
+     "reliability": 0.3416,
+     "n_splits": 200
+    },
+    "added_detector_check": {
+     "cues": [
+      "AU01",
+      "AU02",
+      "AU04",
+      "AU06",
+      "AU12",
+      "AU07",
+      "AU10",
+      "AU14",
+      "AU15",
+      "AU17",
+      "AU23",
+      "AU24"
+     ],
+     "partial_families": {},
+     "pattern_with_composite": 0.5718,
+     "sign_agreement": 0.7235
+    }
+   },
+   "model_1fps": {
+    "first": {
+     "lam": 30.0,
+     "n_cells": 330,
+     "n_pointwise": 30,
+     "expected_pointwise_under_null": 16.5,
+     "n_familywise": 0,
+     "heldout_ce_cues": 0.258656,
+     "heldout_ce_category_only": 0.25958,
+     "heldout_gain": 0.00356,
+     "gain_per_actor": {
+      "B": 0.00371,
+      "C": 0.01044,
+      "D": 0.0079,
+      "E": -0.00418,
+      "F": 0.00868,
+      "G": -0.0012,
+      "H": 0.00076,
+      "I": 0.00196,
+      "J": 0.0098,
+      "K": 0.0024,
+      "L": 0.00915,
+      "M": 0.01373,
+      "N": 0.00086,
+      "O": -0.00362,
+      "P": -0.00534,
+      "R": 0.00272,
+      "S": -0.00019
+     }
+    },
+    "second": {
+     "lam": 30.0,
+     "n_cells": 330,
+     "n_pointwise": 25,
+     "expected_pointwise_under_null": 16.5,
+     "n_familywise": 1,
+     "heldout_ce_cues": 0.258658,
+     "heldout_ce_category_only": 0.25958,
+     "heldout_gain": 0.00355,
+     "gain_per_actor": {
+      "B": -0.00035,
+      "C": 0.00045,
+      "D": 0.00243,
+      "E": 0.00359,
+      "F": 0.01252,
+      "G": -0.00739,
+      "H": 0.00288,
+      "I": 0.00347,
+      "J": 0.01199,
+      "K": 0.00551,
+      "L": 0.01136,
+      "M": 0.01079,
+      "N": 0.008,
+      "O": 0.00641,
+      "P": -0.00091,
+      "R": -0.00448,
+      "S": -0.00334
+     }
+    },
+    "composite": {
+     "lam": 30.0,
+     "n_cells": 330,
+     "n_pointwise": 24,
+     "expected_pointwise_under_null": 16.5,
+     "n_familywise": 0,
+     "heldout_ce_cues": 0.258292,
+     "heldout_ce_category_only": 0.25958,
+     "heldout_gain": 0.00496,
+     "gain_per_actor": {
+      "B": 0.00135,
+      "C": 0.00991,
+      "D": 0.00563,
+      "E": -0.00061,
+      "F": 0.01289,
+      "G": -0.00511,
+      "H": -0.00143,
+      "I": 0.00478,
+      "J": 0.01227,
+      "K": 0.00592,
+      "L": 0.01523,
+      "M": 0.01863,
+      "N": 0.00696,
+      "O": 0.0038,
+      "P": -0.00406,
+      "R": -0.00157,
+      "S": -0.00058
+     }
+    },
+    "two_detector": {
+     "n_flagged": 11,
+     "expected_under_null": 3.3,
+     "sign_agreement_all_cells": 0.703,
+     "pattern_first_vs_second": 0.5772
+    },
+    "reliability_split_half_actors": {
+     "split_half_r": 0.2102,
+     "reliability": 0.3474,
+     "n_splits": 200
+    },
+    "added_detector_check": {
+     "cues": [
+      "AU01",
+      "AU02",
+      "AU04",
+      "AU06",
+      "AU12",
+      "AU07",
+      "AU10",
+      "AU14",
+      "AU15",
+      "AU17",
+      "AU23",
+      "AU24"
+     ],
+     "partial_families": {},
+     "pattern_with_composite": 0.6334,
+     "sign_agreement": 0.7083
+    }
+   }
+  }
+ },
+ "added_detector_agreement_with_libreface": {
+  "all": {
+   "AU01": {
+    "n_clips": 243,
+    "pearson": 0.2854,
+    "spearman": 0.2423,
+    "pearson_within_category_actor": 0.117,
+    "singly_covered_before": false
+   },
+   "AU02": {
+    "n_clips": 243,
+    "pearson": 0.1947,
+    "spearman": 0.1639,
+    "pearson_within_category_actor": 0.2284,
+    "singly_covered_before": false
+   },
+   "AU04": {
+    "n_clips": 243,
+    "pearson": 0.3388,
+    "spearman": 0.3166,
+    "pearson_within_category_actor": 0.3196,
+    "singly_covered_before": false
+   },
+   "AU06": {
+    "n_clips": 243,
+    "pearson": 0.592,
+    "spearman": 0.6454,
+    "pearson_within_category_actor": 0.3066,
+    "singly_covered_before": false
+   },
+   "AU07": {
+    "n_clips": 243,
+    "pearson": 0.554,
+    "spearman": 0.641,
+    "pearson_within_category_actor": 0.3293,
+    "singly_covered_before": true
+   },
+   "AU10": {
+    "n_clips": 243,
+    "pearson": 0.7362,
+    "spearman": 0.7032,
+    "pearson_within_category_actor": 0.5732,
+    "singly_covered_before": true
+   },
+   "AU12": {
+    "n_clips": 243,
+    "pearson": 0.5197,
+    "spearman": 0.6365,
+    "pearson_within_category_actor": 0.2255,
+    "singly_covered_before": false
+   },
+   "AU14": {
+    "n_clips": 243,
+    "pearson": 0.4977,
+    "spearman": 0.5213,
+    "pearson_within_category_actor": 0.5042,
+    "singly_covered_before": true
+   },
+   "AU15": {
+    "n_clips": 243,
+    "pearson": 0.464,
+    "spearman": 0.4388,
+    "pearson_within_category_actor": 0.1612,
+    "singly_covered_before": true
+   },
+   "AU17": {
+    "n_clips": 243,
+    "pearson": 0.5449,
+    "spearman": 0.5257,
+    "pearson_within_category_actor": 0.2537,
+    "singly_covered_before": true
+   },
+   "AU23": {
+    "n_clips": 243,
+    "pearson": 0.4945,
+    "spearman": 0.4651,
+    "pearson_within_category_actor": 0.3997,
+    "singly_covered_before": true
+   },
+   "AU24": {
+    "n_clips": 243,
+    "pearson": 0.5048,
+    "spearman": 0.5491,
+    "pearson_within_category_actor": 0.4572,
+    "singly_covered_before": true
+   }
+  },
+  "model_1fps": {
+   "AU01": {
+    "n_clips": 243,
+    "pearson": 0.2871,
+    "spearman": 0.2409,
+    "pearson_within_category_actor": 0.1807,
+    "singly_covered_before": false
+   },
+   "AU02": {
+    "n_clips": 243,
+    "pearson": 0.1572,
+    "spearman": 0.1328,
+    "pearson_within_category_actor": 0.2622,
+    "singly_covered_before": false
+   },
+   "AU04": {
+    "n_clips": 243,
+    "pearson": 0.2868,
+    "spearman": 0.2733,
+    "pearson_within_category_actor": 0.2925,
+    "singly_covered_before": false
+   },
+   "AU06": {
+    "n_clips": 243,
+    "pearson": 0.5838,
+    "spearman": 0.6417,
+    "pearson_within_category_actor": 0.2989,
+    "singly_covered_before": false
+   },
+   "AU07": {
+    "n_clips": 243,
+    "pearson": 0.5558,
+    "spearman": 0.6148,
+    "pearson_within_category_actor": 0.2974,
+    "singly_covered_before": true
+   },
+   "AU10": {
+    "n_clips": 243,
+    "pearson": 0.7248,
+    "spearman": 0.6951,
+    "pearson_within_category_actor": 0.5609,
+    "singly_covered_before": true
+   },
+   "AU12": {
+    "n_clips": 243,
+    "pearson": 0.5075,
+    "spearman": 0.6,
+    "pearson_within_category_actor": 0.2084,
+    "singly_covered_before": false
+   },
+   "AU14": {
+    "n_clips": 243,
+    "pearson": 0.4681,
+    "spearman": 0.4887,
+    "pearson_within_category_actor": 0.4673,
+    "singly_covered_before": true
+   },
+   "AU15": {
+    "n_clips": 243,
+    "pearson": 0.5045,
+    "spearman": 0.4823,
+    "pearson_within_category_actor": 0.191,
+    "singly_covered_before": true
+   },
+   "AU17": {
+    "n_clips": 243,
+    "pearson": 0.5287,
+    "spearman": 0.4975,
+    "pearson_within_category_actor": 0.2392,
+    "singly_covered_before": true
+   },
+   "AU23": {
+    "n_clips": 243,
+    "pearson": 0.4928,
+    "spearman": 0.4697,
+    "pearson_within_category_actor": 0.357,
+    "singly_covered_before": true
+   },
+   "AU24": {
+    "n_clips": 243,
+    "pearson": 0.5008,
+    "spearman": 0.5337,
+    "pearson_within_category_actor": 0.4742,
+    "singly_covered_before": true
+   }
+  }
+ }
+}

@@ -13,7 +13,7 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
 1. A1 rotation evals are queued: arrays 39982133 to 39982138, restarted on the pinned decoder. Nothing read yet.
 2. `research/scripts/analyse_rotation.py` once all 30 runs are pulled.
 3. Molmo ladder 39987784, then choose the shared (prompt, prefill) pair, update `BLIND_PROMPT` and `BLIND_PREFILL`, run timed smokes in `SMOKE_DIR=smoke_v2`, and fill A2 and A3 costs.
-4. Same-clip analysis: confirmatory unit is families and the pattern score. Single family cells are provisional (family recovery, RESULTS_REGISTRY). A restricted-shuffle second attempt must be locked before any model matrix is read.
+4. Same-clip analysis: confirmatory unit is the family pattern score on the model-frames route. Cells are exploratory. Two calibration attempts failed; no third (DECISIONS). `frozen_route` still needs a loader before the model run.
 5. Vision gates G2 to G4: 39981392 still queued.
 6. Scoring path: full forwards for all models unless DECISIONS says otherwise.
 

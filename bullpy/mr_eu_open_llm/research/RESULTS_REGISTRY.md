@@ -84,3 +84,13 @@ Criteria locked 15:12:57 UTC before any measured-cue recovery (`same_clip_family
 - Family-wise calibration fails for actor-prior observers (.115 against limit .081). Human cells stay provisional.
 - Human, families, all frames: 5 of 88 cells flagged by two detectors, 2 family-wise, held-out gain 0.61%, split-half r .31.
 - ME-GraphAU against LibreFace, within category and actor: r .33 to .57. Not independent data: both BP4D. AU20 uncovered, rule 8 unmet.
+
+## Family calibration, second attempt (2026-11-04)
+
+Post-hoc second attempt, locked in `same_clip_family_a2_criteria.json` before its runs. Failed. First attempt outputs are unchanged and remain the null of record for the primary spec.
+
+- Within-actor shuffle: 7 of 20 conditions pass, no null condition passes. Actor-prior family-wise .17 (limit .081).
+- Pattern score, families: power .995 to 1.0, size .035 to .05 on both nulls. Half-shared power .63, .925, .935.
+- Different-cues observer exceeds .081 at 1x and 2x (.105, .115): a model using other cues could look aligned too often.
+- Model-frames route, human lambda 10: prior-only family-wise .085 fails; actor-prior fails; sparse 0.5 fails narrowly (r .752, sign .898).
+- Only Surprised with mouth open is family-wise under both nulls on all frames. All human cells are exploratory.
