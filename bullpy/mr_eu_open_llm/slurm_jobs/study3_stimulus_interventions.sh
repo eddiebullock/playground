@@ -106,6 +106,10 @@ case "${STEP}" in
   probe_prompt)
     run_step probe_prompt
     ;;
+  cache_probe)
+    python -m scripts.run_stimulus_interventions --step cache_probe --model "${MODEL}" \
+      --geometry results/stimulus_interventions/geometry.json --dtype "${DTYPE:-bfloat16}" --max_items "${MAX_ITEMS:-3}"
+    ;;
   delivery)
     python -m scripts.run_stimulus_interventions --step delivery --model "${MODEL}" \
       --geometry results/stimulus_interventions/geometry.json --max_items "${MAX_ITEMS:-3}"
