@@ -1,0 +1,133 @@
+{
+ "attempt": 2,
+ "label": "Post-hoc second attempt, prompted by the actor-prior failure of attempt 1. Not a replacement. Attempt 1 outputs stay unchanged and on record.",
+ "scheme": "within_actor",
+ "seed_offset": 100000,
+ "frozen_lambda": "per input: composite, first and second detector each take the ridge strength fixed on the human matrix for that input (attempt 1 used the composite value on all three)",
+ "unchanged": [
+  "FAMILY_RECOVERY_CRITERIA thresholds",
+  "family-wise limit .081 at 200 observers",
+  "FAMILIES",
+  "pattern score",
+  "estimator",
+  "condition list",
+  "test levels"
+ ],
+ "pilot_before_lock": {
+  "cue_source": "synthetic cues only; no measured-cue recovery of this scheme ran first",
+  "n_observers_per_condition": 60,
+  "n_shuffles": 199,
+  "within_actor": {
+   "prior_only": [
+    0.0424,
+    0.0034,
+    0.0167
+   ],
+   "actor_prior": [
+    0.0413,
+    0.0047,
+    0.0833
+   ],
+   "sparse_0.5_tpr": [
+    0.3333,
+    0.0526,
+    0.1327
+   ]
+  },
+  "within_cell": {
+   "prior_only": [
+    0.0718,
+    0.0225,
+    0.7667
+   ],
+   "actor_prior": [
+    0.0642,
+    0.0208,
+    0.6833
+   ],
+   "sparse_0.5_tpr": [
+    0.1431,
+    0.0,
+    0.037
+   ]
+  },
+  "actor_sign": {
+   "prior_only": [
+    0.0388,
+    0.0045,
+    0.0
+   ],
+   "actor_prior": [
+    0.043,
+    0.0044,
+    0.0833
+   ],
+   "sparse_0.5_tpr": [
+    0.2982,
+    0.0184,
+    0.0855
+   ]
+  },
+  "order_of_values": "pointwise, two-detector, family-wise",
+  "choice": "within_actor: calibrated on both nulls in the pilot, with the most power of the calibrated schemes"
+ },
+ "note_on_mechanism": "The between-actor share of cue variance on option clips is .3346 observed, .2721 within category, .2714 within actor. Within-actor shuffling does not restore that share, so the share alone does not explain the pilot's improvement.",
+ "criteria": {
+  "cue_observer": {
+   "median_pearson_min": 0.7,
+   "median_sign_accuracy_min": 0.9
+  },
+  "null_observer": {
+   "pointwise_fpr_max": 0.05,
+   "two_detector_fpr_max": 0.01,
+   "abs_pearson_with_any_fixed_matrix_max": 0.1,
+   "any_cell_familywise_max": 0.05,
+   "any_cell_familywise_mc_se_allowance": 2.0
+  },
+  "pattern_score": {
+   "size_max": 0.05,
+   "size_mc_se_allowance": 2.0,
+   "power_min": 0.8
+  },
+  "decision_rule": "A condition passes only if it meets every limit for its observer type. Expected failures are not excused. Groupings, estimator, thresholds and the condition list stay fixed once a full run has started."
+ },
+ "criteria_sha256": "4b0a8c3cde345e6cc6043907f75d7af0fbd4a92382a448f565e5454d2df8b66d",
+ "familywise_limit_at_200_observers": 0.0808,
+ "script_sha256_at_lock": "cb5ad541614dcdd8dc3f21c8ab5c4b1999deaf1907d8463d89336b28b6291bc2",
+ "conditions": [
+  "sparse_1.0_published_noise",
+  "sparse_0.5_published_noise",
+  "sparse_0.25_published_noise",
+  "dense_0.3_published_noise",
+  "sparse_0.5_perfect_detectors",
+  "sparse_0.5_shared_detector_error",
+  "sparse_0.5_model_sampling_n100",
+  "sparse_0.5_empirical_detector_agreement",
+  "human_like_published_noise",
+  "human_like_perfect_detectors",
+  "prior_only_within",
+  "prior_only_perfect_detectors",
+  "prior_only_empirical_detector_agreement",
+  "prior_only_within_category_spec",
+  "prior_only_pooled_spec",
+  "actor_prior_within",
+  "actor_prior_within_category_spec",
+  "sparse_0.5_frozen_lambda",
+  "prior_only_frozen_lambda",
+  "actor_prior_frozen_lambda"
+ ],
+ "pattern_conditions": [
+  "pattern_0.5x_human_effect",
+  "pattern_1.0x_human_effect",
+  "pattern_2.0x_human_effect"
+ ],
+ "attempt_1_outputs_sha256": {
+  "same_clip_family_criteria.json": "dec73bed36dd4a285e046cf9efc6de339bf82cf895573b73d30f65248b335a8f",
+  "same_clip_family_recovery.json": "922979b3d5e4da1da1b27d2896f9dd50f5515842d32905989bd642eff5978f71",
+  "same_clip_family_recovery_families_singles.json": "195900675c9380158d6d3147b203cc6e220a83e86aeb521d5f67b82079404801",
+  "same_clip_family.json": "6068767495e2d82052f0b74b89c994b6e19fd5c708355906d1ad5abcc730c29c",
+  "same_clip_family_matrix.csv": "bf281a18e737a0357c444ef612cdcb538571f4f22e1d94743adc3c8f84e46329",
+  "same_clip_family_verdicts.csv": "79a320b7f4d736ea5e8b58caf7a6e3c24fffcfbe6942530631dee358485d813c"
+ },
+ "locked_at_utc": "2026-11-04T18:26:56+00:00"
+}

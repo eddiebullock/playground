@@ -29,6 +29,12 @@ a reference matrix on the same clips, cues and ridge strength. Its null shuffles
 rows for the observer only, keeping the reference fixed. Recovery estimates it from pairs
 of simulated observers, so noise in the human reference counts against it.
 
+Second attempt. The within-category shuffle above is attempt 1 and its outputs stand as
+the first result: it failed on actor-prior observers. `--attempt-2` is a post-hoc second
+attempt prompted by that failure, not a replacement. It shuffles within actor, with new
+seeds, the same thresholds, families, pattern score and conditions, and frozen ridge
+strength per input as a model would take it. Its outputs have the prefix same_clip_family_a2.
+
 Recovery criteria are fixed in FAMILY_RECOVERY_CRITERIA before any full recovery run, and
 every recovery output carries their hash. No rotation result is read anywhere here. This
 script takes no model responses; the frozen analysis runs them later.
@@ -111,6 +117,41 @@ FAMILY_RECOVERY_CRITERIA = {
         "failures are not excused. Groupings, estimator, thresholds and the condition list "
         "stay fixed once a full run has started."
     ),
+}
+
+
+ATTEMPT_2 = {
+    "label": "Post-hoc second attempt, prompted by the actor-prior failure of attempt 1. "
+             "Not a replacement. Attempt 1 outputs stay unchanged and on record.",
+    "scheme": "within_actor",
+    "seed_offset": 100000,
+    "frozen_lambda": "per input: composite, first and second detector each take the ridge "
+                     "strength fixed on the human matrix for that input (attempt 1 used the "
+                     "composite value on all three)",
+    "unchanged": ["FAMILY_RECOVERY_CRITERIA thresholds", "family-wise limit .081 at 200 "
+                  "observers", "FAMILIES", "pattern score", "estimator", "condition list",
+                  "test levels"],
+    "pilot_before_lock": {
+        "cue_source": "synthetic cues only; no measured-cue recovery of this scheme ran first",
+        "n_observers_per_condition": 60,
+        "n_shuffles": 199,
+        "within_actor": {"prior_only": [0.0424, 0.0034, 0.0167],
+                         "actor_prior": [0.0413, 0.0047, 0.0833],
+                         "sparse_0.5_tpr": [0.3333, 0.0526, 0.1327]},
+        "within_cell": {"prior_only": [0.0718, 0.0225, 0.7667],
+                        "actor_prior": [0.0642, 0.0208, 0.6833],
+                        "sparse_0.5_tpr": [0.1431, 0.0, 0.037]},
+        "actor_sign": {"prior_only": [0.0388, 0.0045, 0.0],
+                       "actor_prior": [0.043, 0.0044, 0.0833],
+                       "sparse_0.5_tpr": [0.2982, 0.0184, 0.0855]},
+        "order_of_values": "pointwise, two-detector, family-wise",
+        "choice": "within_actor: calibrated on both nulls in the pilot, with the most power "
+                  "of the calibrated schemes",
+    },
+    "note_on_mechanism": "The between-actor share of cue variance on option clips is .3346 "
+                         "observed, .2721 within category, .2714 within actor. Within-actor "
+                         "shuffling does not restore that share, so the share alone does not "
+                         "explain the pilot's improvement.",
 }
 
 
@@ -276,6 +317,46 @@ def permutation_indices(categories, n_perm, seed, spec="within"):
     return out
 
 
+class NullPlan:
+    """The null draws for one observer: row shuffles, signs by row, and whether to centre."""
+
+    def __init__(self, indices, signs=None, centre=False):
+        self.indices, self.signs, self.centre = indices, signs, centre
+
+    def __len__(self):
+        return len(self.indices)
+
+
+def as_plan(plan):
+    return plan if isinstance(plan, NullPlan) else NullPlan(plan)
+
+
+def null_plan(categories, actors, n_perm, seed, spec="within", scheme="within_category"):
+    """Null draws under one scheme.
+
+    within_category  attempt 1. Moves cues across actors.
+    within_actor     moves cues across categories inside an actor.
+    within_cell      inside one actor by category cell. Clips alone in a cell stay put, so
+                     the null has a fixed part, and the statistic is centred on its mean.
+    actor_sign       no row moves. Each actor's cue rows flip sign together, which keeps
+                     how far each actor's cues sit from zero on any option's clips.
+    """
+    categories, actors = np.asarray(categories), np.asarray(actors)
+    if scheme == "within_category":
+        return NullPlan(permutation_indices(categories, n_perm, seed, spec))
+    if scheme == "within_actor":
+        return NullPlan(permutation_indices(actors, n_perm, seed, "within"))
+    if scheme == "within_cell":
+        cells = np.char.add(np.char.add(categories.astype(str), "|"), actors.astype(str))
+        return NullPlan(permutation_indices(cells, n_perm, seed, "within"), centre=True)
+    if scheme == "actor_sign":
+        levels, codes = np.unique(actors, return_inverse=True)
+        rng = np.random.default_rng(seed)
+        flips = rng.choice([-1.0, 1.0], size=(n_perm, len(levels)))
+        return NullPlan(np.tile(np.arange(len(actors)), (n_perm, 1)), signs=flips[:, codes])
+    raise ValueError(f"Unknown scheme {scheme}")
+
+
 def control_basis(design: scc.Design):
     if design.spec == "pooled":
         return None
@@ -286,19 +367,24 @@ def control_basis(design: scc.Design):
     return Q[:, np.abs(np.diag(R)) > 1e-8]
 
 
-def shuffled_cues(X, indices, basis):
+def shuffled_cues(X, indices, basis, signs=None):
     out = X[indices]
+    if signs is not None:
+        out = out * signs[:, None]
     if basis is not None:
         out = out - basis @ (basis.T @ out)
     sd = out.std(0)
     return out / np.where(sd > 0, sd, 1.0)
 
 
-def permutation_matrices(fitter: Fitter, indices):
-    """Coefficient matrices under each shuffle, with the one shared across options."""
+def permutation_matrices(fitter: Fitter, plan):
+    """Coefficient matrices under each null draw, with one draw shared across options."""
+    plan = as_plan(plan)
     basis = control_basis(fitter.design)
     X = fitter.design.X
-    return np.stack([fitter.matrix(shuffled_cues(X, row, basis)) for row in indices])
+    signs = plan.signs if plan.signs is not None else [None] * len(plan)
+    return np.stack([fitter.matrix(shuffled_cues(X, row, basis, sign))
+                     for row, sign in zip(plan.indices, signs)])
 
 
 def studentise(B, null):
@@ -352,8 +438,13 @@ def observer_inference(design, lam, indices, *, with_null=True):
     B = fitter.matrix()
     out = {"lam": lam, "B": B, "fitter": fitter}
     if with_null:
-        null = permutation_matrices(fitter, indices)
-        T, T_null, sd = studentise(B, null)
+        plan = as_plan(indices)
+        null = permutation_matrices(fitter, plan)
+        if plan.centre:
+            middle = null.mean(0)
+            T, T_null, sd = studentise(B - middle, null - middle)
+        else:
+            T, T_null, sd = studentise(B, null)
         pointwise, familywise = cell_tests(T, T_null)
         out.update({"null": null, "T": T, "T_null": T_null, "perm_sd": sd,
                     "p_pointwise": pointwise, "p_familywise": familywise})
@@ -363,6 +454,31 @@ def observer_inference(design, lam, indices, *, with_null=True):
 # --------------------------------------------------------------------------
 # Synthetic observers
 # --------------------------------------------------------------------------
+
+
+def write_attempt_2_criteria(path: Path):
+    """Lock for the second attempt, with hashes of the attempt 1 outputs it leaves alone."""
+    root = ROOT / "research/reproduction"
+    first = {}
+    for name in ("same_clip_family_criteria.json", "same_clip_family_recovery.json",
+                 "same_clip_family_recovery_families_singles.json", "same_clip_family.json",
+                 "same_clip_family_matrix.csv", "same_clip_family_verdicts.csv"):
+        first[name] = hashlib.sha256((root / name).read_bytes()).hexdigest()
+    record = {
+        "attempt": 2,
+        **ATTEMPT_2,
+        "criteria": FAMILY_RECOVERY_CRITERIA,
+        "criteria_sha256": criteria_hash(),
+        "familywise_limit_at_200_observers": 0.0808,
+        "script_sha256_at_lock": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+        "conditions": [c["name"] for c in family_conditions(lam_frozen=(1.0, 1.0, 1.0))],
+        "pattern_conditions": [c["name"] for c in pattern_conditions(1.0)],
+        "attempt_1_outputs_sha256": first,
+        "locked_at_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+    }
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(record, indent=1) + "\n", encoding="utf-8")
+    return record
 
 
 def family_conditions(lam_frozen=None):
@@ -449,7 +565,7 @@ def template_args(template):
 def run_family_sim(task):
     """One synthetic observer through the family pipeline."""
     template, T0, au_names, cond, sim, n_perm, fixed_matrix = task
-    rng = np.random.default_rng([cond["seed"], sim])
+    rng = np.random.default_rng([cond["seed"] + cond.get("_seed_offset", 0), sim])
     cats, actors, cues = template.categories, template.actors, template.cues
     T = T0 if T0 is not None else scc.synthetic_cues(cats, actors, au_names, rng).to_numpy()
     F = cue_matrix(T, au_names, cues)
@@ -459,10 +575,17 @@ def run_family_sim(task):
     oracle = scc.oracle_matrix(template, F, clean)
     inputs = measured_inputs(T, au_names, cues, cond, template, rng)
     designs = [scc._rebuild(template_args(template), x, Y, cond["spec"]) for x in inputs]
-    indices = permutation_indices(designs[0].categories, n_perm, 77 + sim, cond["spec"])
+    indices = null_plan(designs[0].categories, designs[0].actors, n_perm,
+                        77 + sim + cond.get("_seed_offset", 0), cond["spec"],
+                        cond.get("_scheme", "within_category"))
+    frozen = cond["lam"]
     results = []
-    for design in designs:
-        lam = cond["lam"] if cond["lam"] is not None else scc.choose_lambda(design)
+    for position, design in enumerate(designs):
+        if frozen is None:
+            lam = scc.choose_lambda(design)
+        else:
+            # A tuple is (composite, first, second), each as fixed on the human matrix.
+            lam = frozen[position] if isinstance(frozen, tuple) else frozen
         results.append(observer_inference(design, lam, indices))
     gain = None
     if cond["with_gain"]:
@@ -570,8 +693,8 @@ def summarise_family_condition(cond, rows):
 
 def _sim_gain(task):
     """Held-out gain of a human-like observer at one strength; no permutations."""
-    template, T0, au_names, W_ref, scale, n_resp, pcc, sim = task
-    rng = np.random.default_rng([4000, sim, int(scale * 100)])
+    template, T0, au_names, W_ref, scale, n_resp, pcc, sim, offset = task
+    rng = np.random.default_rng([4000 + offset, sim, int(scale * 100)])
     cues = template.cues
     F = cue_matrix(T0, au_names, cues)
     Y, _ = scc.simulate_observer(template, F, scale * W_ref, kind="human_like", rng=rng, n_resp=n_resp)
@@ -583,7 +706,7 @@ def _sim_gain(task):
 
 
 def calibrate_human_scale(template, T0, au_names, W_ref, n_resp, pcc, target_gain, *, n_sims=24,
-                          workers=1):
+                          workers=1, seed_offset=0):
     """Multiple of the human matrix whose simulated held-out gain is nearest the human's.
 
     The human estimate is shrunk, so weights equal to it would understate the effect.
@@ -591,7 +714,8 @@ def calibrate_human_scale(template, T0, au_names, W_ref, n_resp, pcc, target_gai
     """
     grid = {}
     for scale in HUMAN_SCALE_GRID:
-        tasks = [(template, T0, au_names, W_ref, scale, n_resp, pcc, s) for s in range(n_sims)]
+        tasks = [(template, T0, au_names, W_ref, scale, n_resp, pcc, s, seed_offset)
+                 for s in range(n_sims)]
         if workers > 1:
             with ProcessPoolExecutor(workers) as pool:
                 gains = list(pool.map(_sim_gain, tasks))
@@ -607,7 +731,7 @@ def calibrate_human_scale(template, T0, au_names, W_ref, n_resp, pcc, target_gai
 def run_pattern_sim(task):
     """A simulated human, and five observers scored against it on the same measured cues."""
     template, T0, au_names, cond, sim, n_perm = task
-    rng = np.random.default_rng([cond["seed"], sim])
+    rng = np.random.default_rng([cond["seed"] + cond.get("_seed_offset", 0), sim])
     cats, actors, cues = template.categories, template.actors, template.cues
     T = T0 if T0 is not None else scc.synthetic_cues(cats, actors, au_names, rng).to_numpy()
     F = cue_matrix(T, au_names, cues)
@@ -623,7 +747,9 @@ def run_pattern_sim(task):
     lam = scc.choose_lambda(design_h)
     reference = Fitter(design_h, lam).matrix()
 
-    indices = permutation_indices(design_h.categories, n_perm, 177 + sim, cond["spec"])
+    indices = null_plan(design_h.categories, design_h.actors, n_perm,
+                        177 + sim + cond.get("_seed_offset", 0), cond["spec"],
+                        cond.get("_scheme", "within_category"))
     n_model = np.full(len(cats), cond["n_resp_model"])
     zero = np.zeros_like(W_human)
     out = {"lam": lam}
@@ -709,14 +835,21 @@ def run_recovery(args):
     pcc_tables = {"published": AU_PCC}
     fixed = lam_real = target_gain = W_ref = None
     if args.au_csv:
-        a, b, composite = pair_tables(args.au_csv, args.graphau_csv, cue_names)
-        T_frame = detector_aus(args.au_csv, "libreface", aus=au_names)[au_names].dropna()
+        a, b, composite = pair_tables(args.au_csv, args.graphau_csv, cue_names,
+                                      frame_set=args.frame_set)
+        T_frame = detector_aus(args.au_csv, "libreface", frame_set=args.frame_set,
+                               aus=au_names)[au_names].dropna()
         ids = sorted(set(human.trial_id) & set(T_frame.index) & set(composite.index))
         placeholder = composite.loc[ids]
         real = scc.build_design(human[human.trial_id.isin(ids)], placeholder)
         lam_real = scc.choose_lambda(real)
-        fixed = W_ref = Fitter(real, lam_real).matrix()
-        target_gain = scc.loao_gain(real, lam=lam_real)["heldout_gain"]
+        if args.attempt_2:
+            lam_real = tuple([lam_real] + [
+                scc.choose_lambda(scc.build_design(human[human.trial_id.isin(ids)], t.loc[ids]))
+                for t in (a, b)])
+        lam_composite = lam_real[0] if isinstance(lam_real, tuple) else lam_real
+        fixed = W_ref = Fitter(real, lam_composite).matrix()
+        target_gain = scc.loao_gain(real, lam=lam_composite)["heldout_gain"]
         template = real
         T = T_frame.loc[template.trial_ids].to_numpy(float)
         T0 = (T - T.mean(0)) / T.std(0)
@@ -736,9 +869,10 @@ def run_recovery(args):
     if T0 is not None:
         scale, calibration = calibrate_human_scale(
             template, T0, au_names, W_ref, n_resp, pcc_tables["published"], target_gain,
-            workers=args.workers)
+            workers=args.workers, seed_offset=args.seed_offset)
         print(json.dumps(calibration), flush=True)
-    shared = {"_n_resp": n_resp, "_pcc_tables": pcc_tables, "_W_ref": W_ref}
+    shared = {"_n_resp": n_resp, "_pcc_tables": pcc_tables, "_W_ref": W_ref,
+              "_scheme": args.scheme, "_seed_offset": args.seed_offset}
 
     conditions = family_conditions(lam_real)
     if args.only:
@@ -767,6 +901,11 @@ def run_recovery(args):
             pattern_report.append(summary)
             print(json.dumps(summary), flush=True)
     result = {
+        "attempt": 2 if args.attempt_2 else 1,
+        "attempt_label": ATTEMPT_2["label"] if args.attempt_2 else "First attempt",
+        "scheme": args.scheme,
+        "seed_offset": args.seed_offset,
+        "frame_set": args.frame_set,
         "cue_set": args.cue_set,
         "cue_source": "measured EU-Emotion cues" if T0 is not None else "synthetic cues",
         "cues": cue_names,
@@ -804,8 +943,8 @@ def run_recovery(args):
 
 
 def _inference_task(task):
-    design, lam, indices = task
-    res = observer_inference(design, lam, indices)
+    design, lam, plan = task
+    res = observer_inference(design, lam, plan)
     res.pop("fitter")
     return res
 
@@ -881,12 +1020,39 @@ def third_detector_check(au_csv, graphau_csv, cue_names, human, *, frame_set, st
     }
 
 
+def frozen_route(human: pd.DataFrame, responses: pd.DataFrame, cue_inputs: dict, *, n_perm,
+                 seed, scheme, spec="within"):
+    """The route a non-human observer takes through this analysis.
+
+    `responses` is a table in the load_human format, built by the caller; nothing here
+    reads a response file. `cue_inputs` holds the composite, first and second cue tables.
+    Ridge strength is fixed on the human matrix for each input and never chosen on the
+    observer. Clips, options and cues must match, and the null draws are the human's.
+    """
+    out = {}
+    for key, table in cue_inputs.items():
+        design_h = scc.build_design(human, table, spec=spec)
+        design_o = scc.build_design(responses, table, spec=spec)
+        if (design_h.trial_ids != design_o.trial_ids or design_h.options != design_o.options
+                or design_h.cues != design_o.cues):
+            raise ValueError("Frozen route needs the same clips, options and cues")
+        lam = scc.choose_lambda(design_h)
+        plan = null_plan(design_o.categories, design_o.actors, n_perm, seed, spec, scheme)
+        reference = Fitter(design_h, lam).matrix()
+        res = observer_inference(design_o, lam, plan)
+        out[key] = {"lam": lam, "B": res["B"], "reference": reference, "res": res,
+                    "pattern": pattern_test(res["B"], reference, res["null"])}
+    return out
+
+
 def run_real(args):
     if args.graphau_csv is None:
         raise SystemExit("The human rerun needs --graphau-csv")
     human = scc.load_human(args.human)
     categories = human.drop_duplicates("trial_id").set_index("trial_id").category
-    out = {"au_csv": str(args.au_csv), "graphau_csv": str(args.graphau_csv), "spec": args.spec,
+    out = {"attempt": 2 if args.attempt_2 else 1, "scheme": args.scheme,
+           "seed_offset": args.seed_offset,
+           "au_csv": str(args.au_csv), "graphau_csv": str(args.graphau_csv), "spec": args.spec,
            "stat": args.stat, "n_perm": args.n_perm, "n_boot": args.n_boot,
            "criteria_sha256": criteria_hash(),
            "note": "Human observer only. Observational. No model matrix is computed here.",
@@ -901,7 +1067,9 @@ def run_real(args):
             ids = sorted(set(a.index) & set(b.index) & set(human.trial_id))
             frames = {"first": a.loc[ids], "second": b.loc[ids], "composite": composite.loc[ids]}
             designs = {k: scc.build_design(human, v, spec=args.spec) for k, v in frames.items()}
-            indices = permutation_indices(designs["first"].categories, args.n_perm, args.seed, args.spec)
+            first = designs["first"]
+            indices = null_plan(first.categories, first.actors, args.n_perm,
+                                args.seed + args.seed_offset, args.spec, args.scheme)
             lams = {k: scc.choose_lambda(d) for k, d in designs.items()}
             names = list(designs)
             tasks = [(designs[k], lams[k], indices) for k in names]
@@ -981,6 +1149,13 @@ def main(argv=None):
     parser.add_argument("--out-prefix", type=Path, default=ROOT / "research/reproduction/same_clip_family")
     parser.add_argument("--cue-sets", nargs="+", default=list(CUE_SETS), choices=list(CUE_SETS))
     parser.add_argument("--recovery", action="store_true")
+    parser.add_argument("--scheme", default="within_category",
+                        choices=["within_category", "within_actor", "within_cell", "actor_sign"])
+    parser.add_argument("--seed-offset", type=int, default=0)
+    parser.add_argument("--attempt-2", action="store_true",
+                        help="the disclosed second attempt: within-actor shuffle, new seeds")
+    parser.add_argument("--frame-set", default="all", choices=["all", "model_1fps"],
+                        help="cues behind a recovery run")
     parser.add_argument("--cue-set", default="families", choices=list(CUE_SETS))
     parser.add_argument("--n-sims", type=int, default=200)
     parser.add_argument("--only", nargs="*", help="condition names, for smoke runs only")
@@ -988,16 +1163,29 @@ def main(argv=None):
     parser.add_argument("--write-criteria", action="store_true")
     parser.add_argument("--criteria-out", type=Path,
                         default=ROOT / "research/reproduction/same_clip_family_criteria.json")
+    parser.add_argument("--write-attempt-2-criteria", action="store_true")
     args = parser.parse_args(argv)
+    if args.write_attempt_2_criteria:
+        out = ROOT / "research/reproduction/same_clip_family_a2_criteria.json"
+        print(json.dumps(write_attempt_2_criteria(out), indent=1))
+        return
     if args.write_criteria:
         print(json.dumps(write_criteria(args.criteria_out), indent=1))
         return
+    stem = "same_clip_family"
+    if args.attempt_2:
+        args.scheme, args.seed_offset = ATTEMPT_2["scheme"], ATTEMPT_2["seed_offset"]
+        stem = "same_clip_family_a2"
+        if args.out_prefix == ROOT / "research/reproduction/same_clip_family":
+            args.out_prefix = ROOT / f"research/reproduction/{stem}"
     if args.recovery:
         args.n_perm = args.n_perm or 499
         if args.recovery_out is None:
-            stem = "same_clip_family_recovery" if args.cue_set == "families" \
-                else f"same_clip_family_recovery_{args.cue_set}"
-            args.recovery_out = ROOT / f"research/reproduction/{stem}.json"
+            name = f"{stem}_recovery" if args.cue_set == "families" \
+                else f"{stem}_recovery_{args.cue_set}"
+            if args.frame_set != "all":
+                name += "_model_frames"
+            args.recovery_out = ROOT / f"research/reproduction/{name}.json"
         run_recovery(args)
         return
     if not args.au_csv:

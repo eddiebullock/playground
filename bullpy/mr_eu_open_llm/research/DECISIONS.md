@@ -182,3 +182,32 @@ Non-trivial decisions. Date, decision, alternatives, why. Do not rewrite history
 - **Result:** `research/reproduction/cache_parity_qwen3vl_float32.json`, same clips and routes as the bfloat16 run. Blind readout: worst gap per sequence 0.00005 to 0.00013 nats, mean 0.000003 at most. MCQ: 0.0. Repeated full forwards: 0.0.
 - **Reading:** The Qwen position fix is correct. The bfloat16 gap of up to 0.25 nats was rounding between two compute paths, not a logic fault, which answers the cause left open in the entry above.
 - **Decision:** Unchanged. Runs use bfloat16, where the gap is real, so all models keep full forwards.
+
+## 2026-11-04 — Second attempt at family calibration, locked before it runs
+
+- **Decision:** Run a post-hoc second attempt with a within-actor shuffle, prompted by the actor-prior failure of the first. It is not a replacement. First-attempt outputs stay unchanged and on record, and their hashes are in `research/reproduction/same_clip_family_a2_criteria.json`. New outputs carry the prefix `same_clip_family_a2`.
+- **Fixed:** Thresholds (hash 4b0a8c3c), the family-wise limit of .081, families, pattern score, estimator, conditions and test levels all stay as they were. Seeds are new.
+- **One change to a condition's route:** Frozen-lambda conditions now give each input the ridge strength fixed on the human matrix for that input, as a model would take it. The first attempt used the composite value on all three inputs. The same conditions also rerun on the frames models saw, where the human values differ.
+- **Why within actor:** A pilot on synthetic cues only (60 observers per condition, 199 shuffles) compared three schemes. Within-actor gave actor-prior .041 pointwise, .005 two-detector and .083 family-wise, with power close to the first attempt. Within-cell was broken (.68 to .77 family-wise). Sign-flipping by actor was calibrated but lost power. No measured-cue recovery of this scheme ran before this lock.
+- **Correction to the earlier stated cause:** Within-actor shuffling does not restore the between-actor share of cue variance (.27 against .33 observed), yet the pilot improved. That share alone therefore does not explain the first failure.
+- **Order:** Human cells are read only after the recovery result is written. If actor-prior still fails, single family cells stay provisional, and the confirmatory RQ1 unit stays families and pattern score.
+
+
+## 2026-11-04 — Shared option-free readout: candidate 3 on rung 1
+
+- **Decision:** Prompt "In one plain word, with no formatting or punctuation, what is this person feeling?" with prefill "They feel", on all three models. It sets `BLIND_PROMPT` and `BLIND_PREFILL`.
+- **Rule:** All three models pass rung 1, so rung 1 is the highest shared rung. Among candidates passing on every model, the ladder takes the one with the highest lowest median lexicon mass (`choose_shared`). A candidate is a (prompt, prefill) pair, so the rule picks one prefill and no deviation is needed.
+- **Calibration:** 24 CREMA-D clips outside the analysis set, no labels or votes read. All candidates shown below pass coverage and image sensitivity where a number is given; "fails" is the model that failed coverage.
+
+| Candidate | Gemma 4 | Qwen3-VL | Molmo2 | Lowest |
+|---|---|---|---|---|
+| 1 "in one word" / They feel | fails | .946 | .299 | Out |
+| 2 "one plain word" / They feel | .819 | .975 | .640 | .640 |
+| 3 "In one plain word..." / They feel | .803 | .977 | .680 | .680 |
+| 4 "In one plain word..." / This person is feeling | .843 | .966 | .660 | .660 |
+| 5 "Finish the sentence" / They feel | .405 | fails | .549 | Out |
+| 6 "Finish the sentence" / They look | .615 | fails | .490 | Out |
+
+- **Margin:** .02 over candidate 4, on 24 clips, so the choice between 3 and 4 is close. It reversed once Molmo reported; Gemma and Qwen alone gave candidate 4. Candidate 3 is also Qwen's and Molmo's own best; Gemma's own best is candidate 4.
+- **Limit:** Molmo keeps .46 lexicon mass on a grey image against a median of .68 on clips, so a large part of its mass is not image-driven. Its image sensitivity still passes (100% of pairs, 100% against grey). Gate B's image checks remain the test of this.
+- **Alternatives:** Per-model prompts, which the plan allows only if no rung is shared.

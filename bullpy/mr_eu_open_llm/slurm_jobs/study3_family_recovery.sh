@@ -15,6 +15,11 @@
 #
 #   sbatch --export=ALL,STEP=recovery,CUE_SET=families slurm_jobs/study3_family_recovery.sh
 #   sbatch --export=ALL,STEP=recovery,CUE_SET=families_singles slurm_jobs/study3_family_recovery.sh
+# Disclosed second attempt, within-actor shuffle, written under the prefix same_clip_family_a2.
+# FRAME_SET=model_1fps reruns the three frozen-lambda conditions on the frames models saw.
+#   sbatch --export=ALL,STEP=recovery,ATTEMPT_2=1,CUE_SET=families slurm_jobs/study3_family_recovery.sh
+#   sbatch --export=ALL,STEP=recovery,ATTEMPT_2=1,CUE_SET=families,FRAME_SET=model_1fps \
+#     slurm_jobs/study3_family_recovery.sh
 #   sbatch --time=02:00:00 --cpus-per-task=8 --mem=16G --export=ALL,STEP=human \
 #     slurm_jobs/study3_family_recovery.sh
 
@@ -30,6 +35,13 @@ mkdir -p logs
 export OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1
 
 ARGS=(--au-csv research/reproduction/eu_au_measures.csv --workers "${SLURM_CPUS_PER_TASK:-8}")
+if [ -n "${ATTEMPT_2:-}" ]; then
+  ARGS+=(--attempt-2)
+fi
+if [ -n "${FRAME_SET:-}" ]; then
+  ARGS+=(--frame-set "${FRAME_SET}" --only sparse_0.5_frozen_lambda prior_only_frozen_lambda \
+         actor_prior_frozen_lambda)
+fi
 if [ -f "${GRAPHAU_CSV}" ]; then
   ARGS+=(--graphau-csv "${GRAPHAU_CSV}")
 fi
