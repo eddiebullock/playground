@@ -192,3 +192,22 @@ Non-trivial decisions. Date, decision, alternatives, why. Do not rewrite history
 - **Correction to the earlier stated cause:** Within-actor shuffling does not restore the between-actor share of cue variance (.27 against .33 observed), yet the pilot improved. That share alone therefore does not explain the first failure.
 - **Order:** Human cells are read only after the recovery result is written. If actor-prior still fails, single family cells stay provisional, and the confirmatory RQ1 unit stays families and pattern score.
 
+
+## 2026-11-04 — Shared option-free readout: candidate 3 on rung 1
+
+- **Decision:** Prompt "In one plain word, with no formatting or punctuation, what is this person feeling?" with prefill "They feel", on all three models. It sets `BLIND_PROMPT` and `BLIND_PREFILL`.
+- **Rule:** All three models pass rung 1, so rung 1 is the highest shared rung. Among candidates passing on every model, the ladder takes the one with the highest lowest median lexicon mass (`choose_shared`). A candidate is a (prompt, prefill) pair, so the rule picks one prefill and no deviation is needed.
+- **Calibration:** 24 CREMA-D clips outside the analysis set, no labels or votes read. All candidates shown below pass coverage and image sensitivity where a number is given; "fails" is the model that failed coverage.
+
+| Candidate | Gemma 4 | Qwen3-VL | Molmo2 | Lowest |
+|---|---|---|---|---|
+| 1 "in one word" / They feel | fails | .946 | .299 | Out |
+| 2 "one plain word" / They feel | .819 | .975 | .640 | .640 |
+| 3 "In one plain word..." / They feel | .803 | .977 | .680 | .680 |
+| 4 "In one plain word..." / This person is feeling | .843 | .966 | .660 | .660 |
+| 5 "Finish the sentence" / They feel | .405 | fails | .549 | Out |
+| 6 "Finish the sentence" / They look | .615 | fails | .490 | Out |
+
+- **Margin:** .02 over candidate 4, on 24 clips, so the choice between 3 and 4 is close. It reversed once Molmo reported; Gemma and Qwen alone gave candidate 4. Candidate 3 is also Qwen's and Molmo's own best; Gemma's own best is candidate 4.
+- **Limit:** Molmo keeps .46 lexicon mass on a grey image against a median of .68 on clips, so a large part of its mass is not image-driven. Its image sensitivity still passes (100% of pairs, 100% against grey). Gate B's image checks remain the test of this.
+- **Alternatives:** Per-model prompts, which the plan allows only if no rung is shared.

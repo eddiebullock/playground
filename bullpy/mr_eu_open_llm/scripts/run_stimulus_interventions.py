@@ -51,17 +51,18 @@ from scripts import stimulus_interventions as si
 ABSTAIN = "None of the above"
 WEAK_LABELS = ("Kind", "Unfriendly", "Jealous")
 
-BLIND_PROMPT = "Describe what this person is feeling in one word."
-BLIND_PREFILL = "They feel"
 MCQ_PREFILL = "EMOTION:"
+# Candidates in ladder order. The chosen pair comes from these by the ladder's rule, on
+# calibration clips only; see research/DECISIONS.md.
 BLIND_CANDIDATES = (
-    (BLIND_PROMPT, BLIND_PREFILL),
+    ("Describe what this person is feeling in one word.", "They feel"),
     ("Describe what this person is feeling in one plain word, with no formatting.", "They feel"),
     ("In one plain word, with no formatting or punctuation, what is this person feeling?", "They feel"),
     ("In one plain word, with no formatting or punctuation, what is this person feeling?", "This person is feeling"),
     ("Finish the sentence with one plain word and no formatting: They feel", "They feel"),
     ("Finish the sentence with one plain word and no formatting: They look", "They look"),
 )
+BLIND_PROMPT, BLIND_PREFILL = BLIND_CANDIDATES[2]
 
 # Preregistered lexicon: single-word forms from data/eu_emotion_synonyms.json that fit
 # after "They feel". Removed: multi-word entries, forms listed under two labels (anxious,

@@ -74,7 +74,7 @@ Truncation changes both content and frame density, so it is not a pure order tes
 
 ## Readouts
 
-**Blind prefill (primary).** User text: "Describe what this person is feeling in one word." Prefill: "They feel". The prompt names no label. Each word's joint logprob is read over the 106-word, 21-family lexicon in `LEXICON`, and a family's score is the log sum over its words. Word forms come from `data/eu_emotion_synonyms.json`, with multi-word entries, forms listed under two labels and forms with a mainly non-mental sense removed. The Neutral family is new.
+**Blind prefill (primary).** User text: "In one plain word, with no formatting or punctuation, what is this person feeling?" Prefill: "They feel". Chosen on rung 1 of the readout ladder, on calibration clips only, by the rule in `research/DECISIONS.md`. The prompt names no label. Each word's joint logprob is read over the 106-word, 21-family lexicon in `LEXICON`, and a family's score is the log sum over its words. Word forms come from `data/eu_emotion_synonyms.json`, with multi-word entries, forms listed under two labels and forms with a mainly non-mental sense removed. The Neutral family is new.
 
 **Rotated MCQ (bridge).** The item's six options under two rotations, never target first, assigned by item position and held fixed across conditions, so position cannot differ between an edit and its baseline. It uses `build_4afc_prompt` and scores as in the gates, by joint logprob after "EMOTION:". It never replaces or rescues a blind result, since its option sets identify the category (A1, defect 2).
 
@@ -243,13 +243,13 @@ Measured on Gemma 4 E4B, A100, bfloat16: about 3.3 to 4.1 s per cell at about 0.
 
 ## Appendix: pending results
 
-Recovery and predictor numbers are not entered here yet. Read them from `research/reproduction/recovery_stimulus_interventions.json` and `research/reproduction/human_response_predictor.json` once written. The prompt and prefill under Readouts stand until the readout ladder chooses, and may be replaced by a later rung. The Cost section predates the fixed 768 crop, `legacy_full` reduced to `original`, 280 tokens per Gemma video frame, and cached scoring, so it must be remeasured.
+Recovery and predictor numbers are not entered here yet. Read them from `research/reproduction/recovery_stimulus_interventions.json` and `research/reproduction/human_response_predictor.json` once written. The Cost section predates the fixed 768 crop, `legacy_full` reduced to `original`, 280 tokens per Gemma video frame, and cached scoring, so it must be remeasured.
 
 ## Appendix: smoke run
 
 Job 39974985, Gemma 4 E4B, 3 items: `emotions_38/EDITED/Hurt/OF10_cut.mp4`, `emotions_7/EDITED/Interested/JF21v1_cut.mp4`, `emotions_4/EDITED/Sneaky/HF26_cut.mp4`. Mechanics only.
 
-**The blind prompt above is not final.** After "They feel", Gemma 4 put almost all probability on the markdown token " **" (logprob about -0.001), and lexicon mass on cells was about 2e-5 to 0.004, far below the proposed B2 rule of 0.05. Replacement candidates are being compared on lexicon coverage alone (jobs 39975684 to 39975686, `BLIND_CANDIDATES`). A change alters `design_sha256` and needs a new smoke run. Do not lower B2 to fit the current prompt.
+**The prompt in this first smoke was replaced.** After "They feel", Gemma 4 put almost all probability on the markdown token " **" under the original prompt, and lexicon mass on cells was about 2e-5 to 0.004. The readout ladder then chose the current prompt on calibration clips. The B2 rule of 0.05 was not lowered.
 
 **Aperture dose is not verified.** Re-detected lid gaps on 5 clips were 1.02 to 1.24 for nominal 1.25 and 0.77 to 0.93 for nominal 0.75. Direction was right, but size fell short of nominal. FaceMesh may under-read lids, or the warp may do less on real faces than on synthetic ones. Resolve this before freezing P11.
 
