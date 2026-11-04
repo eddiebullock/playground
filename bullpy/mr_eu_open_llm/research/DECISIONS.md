@@ -133,3 +133,19 @@ Non-trivial decisions. Date, decision, alternatives, why. Do not rewrite history
 - **Consequence:** The family-level analysis needs its own recovery run before freezing. Rule 8 is unmet for AU15 and AU20, which have one detector. Saved outputs contain human results only.
 - **Disclosure:** While testing its loader, the job opened partial rotation files, for frame indices and a loader check. No saved output holds model values, but this was not a clean separation. RQ0 is computed only by the frozen script once all runs finish.
 
+## 2026-11-04 — Family recovery criteria and permutation tests, fixed before the full run
+
+- **Decision:** `research/scripts/same_clip_family_analysis.py` holds the family analysis and `FAMILY_RECOVERY_CRITERIA`, and `research/reproduction/same_clip_family_criteria.json` records their hash. Cue observers need median r at least .70 with the oracle and sign accuracy at least .90. Null observers need false positives at most .05 pointwise and .01 two-detector, and median absolute r at most .10 with a fixed matrix. These are the earlier thresholds.
+- **New limits, set here:** at most .05 of null observers may flag any cell family-wise, plus two binomial standard errors of Monte Carlo error at the run's size. The pattern score needs size at most .05, with the same allowance, and power at least .80 for a human-like observer. There is no allowance on the pointwise or two-detector limits.
+- **Changed method:** All tests are permutation tests, shuffling cue rows within category. This replaces bootstrap max-t, which flagged a cell on about 28% of null observers. The two-detector flag now tests the smaller of the two |t| jointly at .01, with matched shuffles. The old rule, both detectors pointwise with the same sign, is still reported. The test level does not move after a result.
+- **Pilot before locking:** 40 prior-only and 40 actor-prior observers on synthetic cues only, with 199 shuffles, to check the code and cost: pointwise .046 and .048, family-wise .025 and .05. No measured-cue recovery ran before the criteria were written.
+- **Human-like observer:** Its weights are a multiple of the estimated human family matrix, and the multiple is chosen only by matching held-out gain. Pattern power is estimated on pairs of simulated observers, so noise in the human reference counts.
+- **If it fails:** Report the failure. Groupings, estimator and conditions are not changed to pass.
+
+## 2026-11-04 — Decoder fault: restart A1 and rerun gates
+
+- **Decision:** Pin cv2 4.11, add a preflight, discard A1 runs unread, resubmit all 30, and rerun gates. See amendment A1.1.
+- **Alternatives:** Keep the runs and exclude about 49 affected clips. Rejected: the frozen design has 243 items, unread reruns are cheap on the free allocation, and decoders also differ slightly on unaffected clips.
+- **Reach:** cv2 4.13 dates from 2026-03-16, before all baselines (July and August 2026). Image-dependent numbers in `RESULTS_REGISTRY.md` are affected, including accuracies, within-category correlations and the older shuffled 4AFC runs if run in this environment. Clean: AU measures, landmarks, and the readout ladder and delivery jobs run under cv2 4.11. Prompt-only findings stand.
+- **Why the old gates missed it:** Nothing tested decoding, and frames were never hashed. Gate 3 of the delivery check caught it.
+

@@ -57,11 +57,13 @@ set -u
 
 cd "${PROJECT_ROOT}"
 mkdir -p logs results/baseline/eu_emotions/"${MODEL}"
-export PYTHONPATH="${PROJECT_ROOT}/src${PYTHONPATH:+:$PYTHONPATH}"
+# cv2 4.13 corrupts interlaced clips, so pin 4.11 ahead of the environment's copy.
+export PYTHONPATH="${PROJECT_ROOT}/venvs/molmo2_cv411:${PROJECT_ROOT}/src${PYTHONPATH:+:$PYTHONPATH}"
 export HF_HOME="${PROJECT_ROOT}/hf_cache"
 export TOKENIZERS_PARALLELISM="false"
 export MR_EU_HPC_MODELS_DIR="${ENV_ROOT}/models"
 
+python research/scripts/decoder_preflight.py
 python -m paper_v2.option_score --write_rotation_lookups
 LOOKUP="data/eu_emotions_human_entropy_rot${ROTATION}.json"
 

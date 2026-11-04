@@ -39,6 +39,9 @@ if [ "${MODEL}" = "molmo2" ]; then
   conda activate mr_eu_open_llm
   source "${PROJECT_ROOT}/venvs/molmo2/bin/activate"
   set -u
+  # cv2 4.13 in that venv returns junk frames on clips flagged interlaced. This private
+  # overlay gives the same decoder as au_tools and leaves the venv itself untouched.
+  export PYTHONPATH="${PROJECT_ROOT}/venvs/molmo2_cv411${PYTHONPATH:+:$PYTHONPATH}"
 else
   source "${PROJECT_ROOT}/venvs/au_tools/env/bin/activate"
 fi

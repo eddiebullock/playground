@@ -1,5 +1,7 @@
 # RESULTS_REGISTRY
 
+**2026-11-04: image-dependent values below came from a faulty decoder on about 20% of items; see amendment A1.1. Do not cite.**
+
 Every paper number must trace to a script, a commit, and an output file. No estimates.
 
 Status key: **verified** = recomputed or read from the named file this session; **read-only** = copied from a saved analysis JSON without rerunning the analysis that produced it; **missing** = brief/docs mention it, no file.

@@ -141,3 +141,16 @@ The gate used the frozen rule (Holm p < 0.01 across layers of one model; ≥ 1,0
 **Limits.** Human norms came from one fixed presentation order (not confirmed from the source), so human position effects are unknown. Rotations do not remove defect 2: label sets still identify category, so probes need a separate fix.
 
 **Phase 3 consequence.** Last-token ablation of Phase 2 axes is not requeued. 39709579 and 39709584 were cancelled on 2026-11-02 before running, so no full-N result exists.
+
+### 2026-11-04 — Amendment A1.1: decoder fault; A1 restarted from scratch
+
+**Written before any A1 result was read.** cv2 4.13.0.92, installed in the study environment on 2026-03-16, fails colour conversion on clips flagged interlaced and returns junk frames. Census on first frames: 49 of 243 clips unstable between reads in the conda environment and 51 in the Molmo venv; 0 under cv2 4.11. On a test clip through the unmodified loader, sampled frames were near-black or a stale buffer, and differed between calls. Those trials showed no real face.
+
+**Deviation.** All A1 runs are discarded and rerun. Completed files are moved unread to `quarantine_cv413/` beside each model's results. Design, estimand, decision rule, partners and analysis code are unchanged. Only the decoder changes: cv2 4.11 is pinned ahead of the environment's copy.
+
+**Guard.** `research/scripts/decoder_preflight.py` runs first in every job and stops it unless cv2 is 4.11 and a known interlaced clip decodes stably and is not blank.
+
+**Quarantined files.** They may be read only after the A1 result is locked, solely to measure how far the fault changed results, and that comparison is exploratory.
+
+**Earlier results.** Every run in this environment since 2026-03-16 used the faulty decoder, including the original 6AFC baselines, activations and probes, and vision gates. Results that depend on image content are unreliable on about 20% of items and are not to be cited. Prompt-based audit findings do not depend on decoding: target position, one option set per label, and category-only baselines.
+
