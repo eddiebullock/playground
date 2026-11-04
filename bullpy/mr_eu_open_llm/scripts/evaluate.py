@@ -497,6 +497,7 @@ def run_evaluation(
     fc_temperature: float = FORCED_CHOICE["temperature"],
     fc_batched: bool = True,
     human_entropy_lookup: Optional[Path] = None,
+    vision_mismatch_seed: Optional[int] = None,
 ) -> Dict[str, Any]:
     """
     Protocol v2 two-stage evaluation per trial.
@@ -655,6 +656,27 @@ def run_evaluation(
     pipe_cache: Dict[str, Any] = {}
     fp_tag = frame_policy_tag(fps, max_frames, frame_mode_key)
 
+    # Vision-mismatch control: keep each trial's prompt, show another item's video.
+    # Accuracy here is what the prompt alone earns, so real minus mismatch is the
+    # part of accuracy that needs the face.
+    trial_by_id = {str(t.get("trial_id")): t for t in trials_raw}
+    vision_partner: Dict[str, str] = {}
+    if vision_mismatch_seed is not None:
+        from paper_v2.option_score import vision_mismatch_partners
+        from paper_v2.schema import actor_id_from_eu_filename
+
+        ids = list(trial_by_id)
+        partner_labels = [
+            (human_options.get(i) or {}).get("human_target_label") or trial_by_id[i]["label"]
+            for i in ids
+        ]
+        vision_partner = vision_mismatch_partners(
+            ids,
+            partner_labels,
+            [actor_id_from_eu_filename(i) for i in ids],
+            seed=int(vision_mismatch_seed),
+        )
+
     for trial_idx, t in enumerate(trials_raw):
         trial_copy = dict(t)
         # Pin the human study's own option set where available, so RQ1.1b compares the
@@ -682,6 +704,16 @@ def run_evaluation(
             condition=condition,
             seed=seed,
         )
+        vision_source_trial_id = str(t.get("trial_id"))
+        if vision_partner:
+            vision_source_trial_id = vision_partner[str(t.get("trial_id"))]
+            video_path, _, _ = resolve_trial_media(
+                dict(trial_by_id[vision_source_trial_id]),
+                dataset_key=dataset_key,
+                dataset_root=dataset_root,
+                condition=condition,
+                seed=seed,
+            )
         stage1_prompt = build_free_response_prompt(condition=condition)
         if options and stage2_prompt_mode == "finetune_label":
             stage2_prompt = build_finetune_prompt(condition=condition)
@@ -896,6 +928,7 @@ def run_evaluation(
                     "audio_path": str(audio_path) if audio_path else None,
                     "audio_resolution_rule": audio_rule,
                     "frame_indices": frame_indices,
+                    "vision_source_trial_id": vision_source_trial_id,
                     "n_frames_used": mf_meta.get("n_frames_used", len(images)),
                     "multi_frame_strategy": mf_meta.get("multi_frame_strategy"),
                     "stage1": stage1_block if stage1_block else None,
@@ -987,6 +1020,7 @@ def run_evaluation(
         "forced_choice_n_samples": int(fc_samples),
         "forced_choice_temperature": float(fc_temperature) if fc_samples > 1 else None,
         "forced_choice_sampling_mode": ("batched" if fc_batched else "sequential") if fc_samples > 1 else None,
+        "vision_mismatch_seed": vision_mismatch_seed,
         "forced_choice_options_source": (
             "human_option_set" if human_options else "sampled_foils"
         ),
@@ -1150,6 +1184,15 @@ def main() -> None:
         ),
     )
     parser.add_argument(
+        "--vision_mismatch_seed",
+        type=int,
+        default=None,
+        help=(
+            "Control run: keep each trial's prompt and label, show another item's video "
+            "(different target label, different actor). Scores what the prompt alone earns."
+        ),
+    )
+    parser.add_argument(
         "--stage2_prompt_mode",
         type=str,
         default="4afc",
@@ -1215,6 +1258,7 @@ def main() -> None:
         fc_temperature=args.fc_temperature,
         fc_batched=not args.fc_sequential,
         human_entropy_lookup=args.human_options,
+        vision_mismatch_seed=args.vision_mismatch_seed,
     )
 
     with args.output.open("w", encoding="utf-8") as f:

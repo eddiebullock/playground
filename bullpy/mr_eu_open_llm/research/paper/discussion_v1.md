@@ -1,5 +1,7 @@
 # Discussion (draft v1)
 
+**Superseded 2026-11-04;** see `PREREGISTRATION.md` amendment A1.
+
 Numbers only from `research/RESULTS_REGISTRY.md`. Causal full-N results are not in yet; do not preview them.
 
 ## What the gate decided

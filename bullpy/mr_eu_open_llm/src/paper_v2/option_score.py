@@ -14,7 +14,7 @@ import argparse
 import hashlib
 import json
 from pathlib import Path
-from typing import Callable, Dict, List, Sequence
+from typing import Callable, Dict, List, Optional, Sequence
 
 import numpy as np
 
@@ -54,6 +54,69 @@ def write_shuffled_human_lookup(
     dest.parent.mkdir(parents=True, exist_ok=True)
     dest.write_text(json.dumps(obj, indent=2) + "\n", encoding="utf-8")
     return {"n_trials": n, "seed": int(seed), "path": str(dest)}
+
+
+ABSTAIN_LABEL = "None of the above"
+
+
+def rotate_options(options: Sequence[str], rotation: int) -> List[str]:
+    """Cyclically rotate the named labels; any abstain option stays last.
+
+    ``human_options`` lists the target first on every EU-Emotion item. Running every
+    rotation of the named labels puts each target in each named position exactly once,
+    so position cannot be confounded with correctness across a full rotation set.
+    """
+    named = [o for o in options if o != ABSTAIN_LABEL]
+    tail = [o for o in options if o == ABSTAIN_LABEL]
+    r = int(rotation) % len(named)
+    return named[r:] + named[:r] + tail
+
+
+def write_rotated_human_lookup(src: Path, dest: Path, *, rotation: int) -> Dict[str, int]:
+    """Copy human entropy JSON with each trial's named options rotated."""
+    obj = json.loads(src.read_text(encoding="utf-8"))
+    for rec in obj["trials"].values():
+        rec["human_options"] = rotate_options(rec["human_options"], rotation)
+        rec["option_rotation"] = int(rotation)
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    dest.write_text(json.dumps(obj, indent=2) + "\n", encoding="utf-8")
+    return {"n_trials": len(obj["trials"]), "rotation": int(rotation), "path": str(dest)}
+
+
+def vision_mismatch_partners(
+    trial_ids: Sequence[str],
+    labels: Sequence[str],
+    actors: Sequence[Optional[str]],
+    *,
+    seed: int,
+) -> Dict[str, str]:
+    """Map each trial to a partner whose video will replace its own.
+
+    The partner has a different target label and, where one exists, a different actor.
+    The map is one-to-one where possible: every video is reused as evenly as it can be,
+    so the mismatch condition keeps the marginal distribution of faces. Deterministic.
+    """
+    ids = list(trial_ids)
+    if len(set(ids)) != len(ids):
+        raise ValueError("trial_ids must be unique")
+    label_of = dict(zip(ids, labels))
+    actor_of = dict(zip(ids, actors))
+    use_count: Dict[str, int] = {t: 0 for t in ids}
+    out: Dict[str, str] = {}
+    order = sorted(ids, key=lambda t: _stable_seed(seed, t))
+    for tid in order:
+        pool = [c for c in ids if c != tid and label_of[c] != label_of[tid]]
+        if not pool:
+            raise ValueError(f"No mismatch partner for {tid!r}")
+        best = [c for c in pool if actor_of[c] != actor_of[tid]] or pool
+        lowest = min(use_count[c] for c in best)
+        tied = sorted(
+            (c for c in best if use_count[c] == lowest),
+            key=lambda c: _stable_seed(seed, f"{tid}|{c}"),
+        )
+        out[tid] = tied[0]
+        use_count[tied[0]] += 1
+    return out
 
 
 def option_logprob_scores(
@@ -110,8 +173,18 @@ def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--write_lookups", action="store_true")
     ap.add_argument("--seeds", type=int, nargs="+", default=[42, 43, 44])
+    ap.add_argument(
+        "--write_rotation_lookups",
+        action="store_true",
+        help="Write data/eu_emotions_human_entropy_rot{r}.json for r = 0..4.",
+    )
     args = ap.parse_args()
-    if args.write_lookups:
+    if args.write_rotation_lookups:
+        src = ROOT / "data" / "eu_emotions_human_entropy.json"
+        for r in range(5):
+            dest = ROOT / "data" / f"eu_emotions_human_entropy_rot{r}.json"
+            print(write_rotated_human_lookup(src, dest, rotation=r))
+    elif args.write_lookups:
         jobs = plan_option_order_jobs(seeds=args.seeds)
         summary = ROOT / "research/reproduction/option_order_plan.json"
         summary.parent.mkdir(parents=True, exist_ok=True)

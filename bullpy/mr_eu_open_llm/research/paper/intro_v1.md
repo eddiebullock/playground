@@ -1,5 +1,7 @@
 # Introduction (draft v1)
 
+**Superseded 2026-11-04;** see `PREREGISTRATION.md` amendment A1.
+
 Working title: Mechanisms of mental-state ambiguity in VLMs, and their alignment with human confusion structure.
 
 Numbers live in `research/RESULTS_REGISTRY.md` and `research/paper/results_v1.md`. Do not add estimates.
