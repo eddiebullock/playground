@@ -1,6 +1,8 @@
-# DRAFT amendment A3: face-input retest of RQ0
+# Amendment A3: face-input retest of RQ0
 
-**Status: DRAFT. Not frozen and not run.** The coordinator freezes this before any A3 result exists. `scripts/face_input_validity.py` refuses to run without `--a3_frozen`, which may be passed only after that.
+**Status: FROZEN 2026-11-04 by the coordinator, before any A3 scored cell exists and before any rotation result was read. Later changes are dated deviations, appended below.**
+
+Frozen code: `scripts/face_input_validity.py` sha256 `8a681a652d8e34065372d4f45bce650ba5276b5138e3aa64cf4310d65e93d818`; `slurm_jobs/study3_face_input_validity.sh` sha256 `2bf3a9f74e6d6a2929e34fc54249e79ea9216b50460f03c89c1a7d3e058d0d8a`. The filename keeps "DRAFT" so that references in the code stay valid.
 
 **Written:** 2026-11-04, before any rotated result was read. This does not edit `research/PREREGISTRATION.md` and does not replace A1.
 
@@ -61,7 +63,7 @@ Delivery and geometry were complete when this was written: 243 of 243 clips usab
 
 ## Secondary
 
-Accuracy against 1/6, accuracy by target position, and Spearman and within-category correlation with human p_target, as in A1. Results also repeated without Kind, Unfriendly and Jealous, and scored against the human modal label.
+Accuracy against 1/6, accuracy by target position, and Spearman and within-category correlation with human p_target, as in A1. Results also repeated without Kind, Unfriendly and Jealous, and scored against the human modal label. The accuracy-against-1/6 p pools cells as independent, so it is descriptive only; no decision uses it.
 
 ## Limits
 

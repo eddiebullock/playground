@@ -154,3 +154,7 @@ The gate used the frozen rule (Holm p < 0.01 across layers of one model; ≥ 1,0
 
 **Earlier results.** Every run in this environment since 2026-03-16 used the faulty decoder, including the original 6AFC baselines, activations and probes, and vision gates. Results that depend on image content are unreliable on about 20% of items and are not to be cited. Prompt-based audit findings do not depend on decoding: target position, one option set per label, and category-only baselines.
 
+
+## Amendment A3 (2026-11-04): face-input retest of RQ0
+
+Frozen 2026-11-04, before any A3 scored cell existed and before any rotation result was read. Full text: `research/PREREG_A3_DRAFT.md`. It does not replace A1, and it is its own Holm family over three models.
