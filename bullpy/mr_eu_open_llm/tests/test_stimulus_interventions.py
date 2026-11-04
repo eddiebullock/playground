@@ -550,6 +550,15 @@ def test_undetected_frames_are_recorded_and_fail_only_what_needs_them(tmp_path):
     assert err.value.reason == "no_face_box"
 
 
+def test_frames_that_decode_differently_from_geometry_fail_the_clip():
+    frame = textured_frame()
+    record = {"frame_sha256": {"0": si.array_sha256(frame)}}
+    run.check_decoder(record, {0: frame})
+    with pytest.raises(si.EditFailure) as err:
+        run.check_decoder(record, {0: textured_frame(9)})
+    assert err.value.reason == "decoder_mismatch"
+
+
 def test_full_run_is_refused_without_the_gate_flag(tmp_path):
     args = type("Args", (), {"max_items": None, "confirm_gates_passed": False})()
     with pytest.raises(SystemExit, match="G2 to G4"):

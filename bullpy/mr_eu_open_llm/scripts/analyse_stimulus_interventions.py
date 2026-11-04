@@ -97,18 +97,28 @@ class Cells:
                 self.ok[(row["trial_id"], row["input_name"], row["condition"])] = row
 
 
-def clr_of(row: Dict[str, Any], family: str) -> float:
+def clr_of(row: Dict[str, Any], family: str, leave_out: Optional[str] = None) -> float:
+    """A family's log score against the mean over families, without leave_out if given.
+
+    A contrast that predicts a rise in another label leaves the acted label out of the
+    reference. Otherwise a fall in the acted label lowers the mean and raises every other
+    label by the same amount, which reads as a rise nobody predicted.
+    """
     scores = row["blind"]["family_logprob"]
-    return float(si.clr([scores[k] for k in sorted(scores)])[sorted(scores).index(family)])
+    names = [k for k in sorted(scores) if k != leave_out]
+    return float(si.clr([scores[k] for k in names])[names.index(family)])
 
 
-def mcq_score(row: Dict[str, Any], family: str) -> float:
+def mcq_score(row: Dict[str, Any], family: str, leave_out: Optional[str] = None) -> float:
     """Mean over rotations of an option's log-ratio against its row. NaN if not an option."""
     values = []
     for rotation in row["mcq"]:
         families = [OPTION_TO_FAMILY.get(o) for o in rotation["options"]]
-        if family in families:
-            values.append(float(si.clr(rotation["joint_logprob"])[families.index(family)]))
+        kept = [i for i, f in enumerate(families) if f != leave_out]
+        names = [families[i] for i in kept]
+        if family in names:
+            scores = si.clr([rotation["joint_logprob"][i] for i in kept])
+            values.append(float(scores[names.index(family)]))
     return float(np.mean(values)) if values else float("nan")
 
 
@@ -124,13 +134,14 @@ def item_delta(
 ) -> float:
     item = cells.items[trial]
     family = outcome_family(contrast, item, target)
+    leave_out = OPTION_TO_FAMILY[item["label"]] if contrast.outcome != "acted" else None
     score = clr_of if readout == "blind" else mcq_score
     sides = []
     for side in conditions:
         rows = [cells.ok.get((trial, contrast.route, c)) for c in side]
         if any(r is None for r in rows):
             return float("nan")
-        sides.append(float(np.mean([score(r, family) for r in rows])))
+        sides.append(float(np.mean([score(r, family, leave_out) for r in rows])))
     return sides[0] - sides[1]
 
 

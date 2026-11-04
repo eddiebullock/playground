@@ -403,6 +403,17 @@ class Clip:
     apex: Optional[int]
 
 
+def check_decoder(record: Dict[str, Any], frames: Dict[int, np.ndarray]) -> None:
+    """Frames must hash as they did when geometry was fixed, or the edits sit on other pixels.
+
+    cv2 4.13 in the Molmo venv fails colour conversion on clips flagged interlaced and
+    returns a junk buffer, which is how gate 3 found this.
+    """
+    for index, expected in record.get("frame_sha256", {}).items():
+        if int(index) in frames and si.array_sha256(frames[int(index)]) != expected:
+            raise si.EditFailure("decoder_mismatch", f"frame {index}")
+
+
 def load_clip(item: Dict[str, Any], geometry_items: Dict[str, Any], neutral_by_actor: Dict[str, str]) -> Clip:
     record = geometry_items.get(item["trial_id"])
     if record is None:
@@ -413,6 +424,7 @@ def load_clip(item: Dict[str, Any], geometry_items: Dict[str, Any], neutral_by_a
     plan = si.temporal_plan(record["n_frames"], item["trial_id"], apex)
     wanted = sorted({i for row in plan.values() for i in row})
     frames, _ = si.read_frames(Path(item["path"]), wanted)
+    check_decoder(record, frames)
     landmarks = _landmark_table(record)
     geometry = si.ClipGeometry()
     if not record.get("box_failure"):

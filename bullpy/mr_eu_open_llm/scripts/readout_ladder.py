@@ -167,6 +167,7 @@ def face_views(record: Dict[str, Any]) -> Tuple[np.ndarray, np.ndarray]:
     """The apex crop at the fixed size, and the same crop with its box moved by one pixel."""
     apex = record["apex"]
     frames, _ = si.read_frames(Path(record["path"]), [apex])
+    run.check_decoder(record, frames)
     frame = frames[apex]
     box = tuple(record["face_box"])
     x0, y0, x1, y1 = box

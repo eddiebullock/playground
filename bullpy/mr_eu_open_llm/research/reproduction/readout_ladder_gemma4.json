@@ -1,0 +1,344 @@
+{
+ "model": "gemma4",
+ "route": "single_face",
+ "n_calibration_clips": 24,
+ "n_usable": 24,
+ "unusable": [],
+ "labels_or_votes_read": false,
+ "rules": "\n- Template position. The next token at the generation prompt is logged. If it is a special\n  token, the model expects structure there, and the prefill moves after an empty thought\n  block on Gemma 4. Otherwise the position stands.\n- Rung 1. A candidate passes coverage if lexicon mass >= 0.05 on >= 90 percent of clips.\n- Rung 2. P(yes) + P(no) >= 0.90 on >= 90 percent of clips, over all clip-label readings\n  taken per clip as the mean over labels.\n- Rung 3. No coverage rule.\n- Image sensitivity. A readout is a vector over 21 labels, centred within clip; distance\n  is RMS difference. A pair passes if its distance exceeds both clips' distance to their\n  own 1-pixel shifted copy, on >= 80 percent of all pairs. The plan gives no number for\n  the grey comparison, so the same 80 percent is applied to clip against grey.\n- If several rung 1 candidates pass, the one with the highest median lexicon mass is\n  taken for that model. A shared prompt maximises the lowest median across models.\n",
+ "template_position": {
+  "prompt_tail": "<image|>Describe what this person is feeling in one word.<turn|>\n<|turn>model\n",
+  "top_tokens_at_generation_position": [
+   [
+    "**",
+    -0.815
+   ],
+   [
+    "Eng",
+    -1.94
+   ],
+   [
+    "Concern",
+    -2.565
+   ],
+   [
+    "The",
+    -2.565
+   ],
+   [
+    "Int",
+    -2.565
+   ],
+   [
+    "Speaking",
+    -3.315
+   ]
+  ],
+  "next_token_is_special": false,
+  "extra_prefix": "",
+  "mass_candidate_1_after_empty_thought": 0.2322
+ },
+ "rung_1": [
+  {
+   "prompt": "Describe what this person is feeling in one word.",
+   "prefill": "They feel",
+   "lexicon_mass_by_clip": {
+    "1001_DFA_ANG_XX": 0.00028,
+    "1004_ITH_SAD_XX": 0.00034,
+    "1007_ITS_FEA_XX": 0.00365,
+    "1008_MTI_ANG_XX": 0.00436,
+    "1010_IWW_FEA_XX": 0.00013,
+    "1013_IOM_DIS_XX": 9e-05,
+    "1019_IOM_NEU_XX": 0.00093,
+    "1020_IWW_SAD_XX": 0.00105,
+    "1021_IWW_NEU_XX": 0.00152,
+    "1024_DFA_ANG_XX": 0.00023,
+    "1028_IOM_HAP_XX": 0.00073,
+    "1029_MTI_NEU_XX": 0.00011,
+    "1039_IWW_DIS_XX": 0.0001,
+    "1047_MTI_SAD_XX": 0.00595,
+    "1057_TSI_DIS_XX": 5e-05,
+    "1058_DFA_FEA_XX": 0.00056,
+    "1062_WSI_FEA_XX": 0.00026,
+    "1064_ITS_ANG_XX": 0.0012,
+    "1069_IWL_SAD_XX": 0.00021,
+    "1072_IWW_HAP_XX": 0.00115,
+    "1075_DFA_HAP_XX": 0.00045,
+    "1080_WSI_HAP_XX": 9e-05,
+    "1086_ITH_DIS_XX": 0.00016,
+    "1090_MTI_NEU_XX": 0.0032
+   },
+   "median_lexicon_mass": 0.00039,
+   "share_clips_mass_at_least_0.05": 0.0,
+   "coverage_pass": false,
+   "smoke_item_mass_mechanics_only": [
+    0.00045,
+    9e-05,
+    6e-05
+   ],
+   "pass": false
+  },
+  {
+   "prompt": "Describe what this person is feeling in one plain word, with no formatting.",
+   "prefill": "They feel",
+   "lexicon_mass_by_clip": {
+    "1001_DFA_ANG_XX": 0.62568,
+    "1004_ITH_SAD_XX": 0.86345,
+    "1007_ITS_FEA_XX": 0.99813,
+    "1008_MTI_ANG_XX": 0.98711,
+    "1010_IWW_FEA_XX": 0.48208,
+    "1013_IOM_DIS_XX": 0.25542,
+    "1019_IOM_NEU_XX": 0.98761,
+    "1020_IWW_SAD_XX": 0.80787,
+    "1021_IWW_NEU_XX": 0.96086,
+    "1024_DFA_ANG_XX": 0.82943,
+    "1028_IOM_HAP_XX": 0.99633,
+    "1029_MTI_NEU_XX": 0.47714,
+    "1039_IWW_DIS_XX": 0.57388,
+    "1047_MTI_SAD_XX": 0.99827,
+    "1057_TSI_DIS_XX": 0.13882,
+    "1058_DFA_FEA_XX": 0.50633,
+    "1062_WSI_FEA_XX": 0.39621,
+    "1064_ITS_ANG_XX": 0.99391,
+    "1069_IWL_SAD_XX": 0.61037,
+    "1072_IWW_HAP_XX": 0.99093,
+    "1075_DFA_HAP_XX": 0.98206,
+    "1080_WSI_HAP_XX": 0.10675,
+    "1086_ITH_DIS_XX": 0.54713,
+    "1090_MTI_NEU_XX": 0.99387
+   },
+   "median_lexicon_mass": 0.81865,
+   "share_clips_mass_at_least_0.05": 1.0,
+   "coverage_pass": true,
+   "smoke_item_mass_mechanics_only": [
+    0.42228,
+    0.54111,
+    0.3212
+   ],
+   "grey_lexicon_mass": 0.00595,
+   "image_sensitivity": {
+    "n_clips": 24,
+    "n_pairs": 276,
+    "median_distance_between_clips": 5.5203,
+    "median_distance_to_shifted_copy": 0.3607,
+    "median_distance_to_grey": 5.8379,
+    "share_pairs_above_shift": 1.0,
+    "share_clips_differ_from_grey": 1.0,
+    "pass": true
+   },
+   "pass": true
+  },
+  {
+   "prompt": "In one plain word, with no formatting or punctuation, what is this person feeling?",
+   "prefill": "They feel",
+   "lexicon_mass_by_clip": {
+    "1001_DFA_ANG_XX": 0.6384,
+    "1004_ITH_SAD_XX": 0.81303,
+    "1007_ITS_FEA_XX": 0.99892,
+    "1008_MTI_ANG_XX": 0.99198,
+    "1010_IWW_FEA_XX": 0.52162,
+    "1013_IOM_DIS_XX": 0.29943,
+    "1019_IOM_NEU_XX": 0.98993,
+    "1020_IWW_SAD_XX": 0.88853,
+    "1021_IWW_NEU_XX": 0.96732,
+    "1024_DFA_ANG_XX": 0.79254,
+    "1028_IOM_HAP_XX": 0.99921,
+    "1029_MTI_NEU_XX": 0.51415,
+    "1039_IWW_DIS_XX": 0.69555,
+    "1047_MTI_SAD_XX": 0.99924,
+    "1057_TSI_DIS_XX": 0.12063,
+    "1058_DFA_FEA_XX": 0.59386,
+    "1062_WSI_FEA_XX": 0.63479,
+    "1064_ITS_ANG_XX": 0.99736,
+    "1069_IWL_SAD_XX": 0.71352,
+    "1072_IWW_HAP_XX": 0.99571,
+    "1075_DFA_HAP_XX": 0.99313,
+    "1080_WSI_HAP_XX": 0.12174,
+    "1086_ITH_DIS_XX": 0.67898,
+    "1090_MTI_NEU_XX": 0.998
+   },
+   "median_lexicon_mass": 0.80278,
+   "share_clips_mass_at_least_0.05": 1.0,
+   "coverage_pass": true,
+   "smoke_item_mass_mechanics_only": [
+    0.7611,
+    0.58227,
+    0.27774
+   ],
+   "grey_lexicon_mass": 0.0181,
+   "image_sensitivity": {
+    "n_clips": 24,
+    "n_pairs": 276,
+    "median_distance_between_clips": 5.9597,
+    "median_distance_to_shifted_copy": 0.3774,
+    "median_distance_to_grey": 6.1639,
+    "share_pairs_above_shift": 1.0,
+    "share_clips_differ_from_grey": 1.0,
+    "pass": true
+   },
+   "pass": true
+  },
+  {
+   "prompt": "In one plain word, with no formatting or punctuation, what is this person feeling?",
+   "prefill": "This person is feeling",
+   "lexicon_mass_by_clip": {
+    "1001_DFA_ANG_XX": 0.53444,
+    "1004_ITH_SAD_XX": 0.88017,
+    "1007_ITS_FEA_XX": 0.9963,
+    "1008_MTI_ANG_XX": 0.95399,
+    "1010_IWW_FEA_XX": 0.46751,
+    "1013_IOM_DIS_XX": 0.17496,
+    "1019_IOM_NEU_XX": 0.99489,
+    "1020_IWW_SAD_XX": 0.85365,
+    "1021_IWW_NEU_XX": 0.97953,
+    "1024_DFA_ANG_XX": 0.83199,
+    "1028_IOM_HAP_XX": 0.9995,
+    "1029_MTI_NEU_XX": 0.28601,
+    "1039_IWW_DIS_XX": 0.66043,
+    "1047_MTI_SAD_XX": 0.99894,
+    "1057_TSI_DIS_XX": 0.05373,
+    "1058_DFA_FEA_XX": 0.52173,
+    "1062_WSI_FEA_XX": 0.52,
+    "1064_ITS_ANG_XX": 0.99754,
+    "1069_IWL_SAD_XX": 0.54884,
+    "1072_IWW_HAP_XX": 0.9958,
+    "1075_DFA_HAP_XX": 0.9906,
+    "1080_WSI_HAP_XX": 0.07702,
+    "1086_ITH_DIS_XX": 0.55562,
+    "1090_MTI_NEU_XX": 0.99841
+   },
+   "median_lexicon_mass": 0.84282,
+   "share_clips_mass_at_least_0.05": 1.0,
+   "coverage_pass": true,
+   "smoke_item_mass_mechanics_only": [
+    0.71339,
+    0.5169,
+    0.23871
+   ],
+   "grey_lexicon_mass": 0.07274,
+   "image_sensitivity": {
+    "n_clips": 24,
+    "n_pairs": 276,
+    "median_distance_between_clips": 5.8559,
+    "median_distance_to_shifted_copy": 0.3976,
+    "median_distance_to_grey": 6.5786,
+    "share_pairs_above_shift": 1.0,
+    "share_clips_differ_from_grey": 1.0,
+    "pass": true
+   },
+   "pass": true
+  },
+  {
+   "prompt": "Finish the sentence with one plain word and no formatting: They feel",
+   "prefill": "They feel",
+   "lexicon_mass_by_clip": {
+    "1001_DFA_ANG_XX": 0.35325,
+    "1004_ITH_SAD_XX": 0.43185,
+    "1007_ITS_FEA_XX": 0.57691,
+    "1008_MTI_ANG_XX": 0.91768,
+    "1010_IWW_FEA_XX": 0.37585,
+    "1013_IOM_DIS_XX": 0.57016,
+    "1019_IOM_NEU_XX": 0.39739,
+    "1020_IWW_SAD_XX": 0.06184,
+    "1021_IWW_NEU_XX": 0.29304,
+    "1024_DFA_ANG_XX": 0.28158,
+    "1028_IOM_HAP_XX": 0.89084,
+    "1029_MTI_NEU_XX": 0.50649,
+    "1039_IWW_DIS_XX": 0.18782,
+    "1047_MTI_SAD_XX": 0.61234,
+    "1057_TSI_DIS_XX": 0.14246,
+    "1058_DFA_FEA_XX": 0.25004,
+    "1062_WSI_FEA_XX": 0.39991,
+    "1064_ITS_ANG_XX": 0.4461,
+    "1069_IWL_SAD_XX": 0.35777,
+    "1072_IWW_HAP_XX": 0.95899,
+    "1075_DFA_HAP_XX": 0.90819,
+    "1080_WSI_HAP_XX": 0.43606,
+    "1086_ITH_DIS_XX": 0.4104,
+    "1090_MTI_NEU_XX": 0.31669
+   },
+   "median_lexicon_mass": 0.40516,
+   "share_clips_mass_at_least_0.05": 1.0,
+   "coverage_pass": true,
+   "smoke_item_mass_mechanics_only": [
+    0.85422,
+    0.8724,
+    0.34665
+   ],
+   "grey_lexicon_mass": 0.19033,
+   "image_sensitivity": {
+    "n_clips": 24,
+    "n_pairs": 276,
+    "median_distance_between_clips": 4.1945,
+    "median_distance_to_shifted_copy": 0.4192,
+    "median_distance_to_grey": 5.0075,
+    "share_pairs_above_shift": 1.0,
+    "share_clips_differ_from_grey": 1.0,
+    "pass": true
+   },
+   "pass": true
+  },
+  {
+   "prompt": "Finish the sentence with one plain word and no formatting: They look",
+   "prefill": "They look",
+   "lexicon_mass_by_clip": {
+    "1001_DFA_ANG_XX": 0.62556,
+    "1004_ITH_SAD_XX": 0.02235,
+    "1007_ITS_FEA_XX": 0.97303,
+    "1008_MTI_ANG_XX": 0.99567,
+    "1010_IWW_FEA_XX": 0.56477,
+    "1013_IOM_DIS_XX": 0.85536,
+    "1019_IOM_NEU_XX": 0.2663,
+    "1020_IWW_SAD_XX": 0.14316,
+    "1021_IWW_NEU_XX": 0.14748,
+    "1024_DFA_ANG_XX": 0.23192,
+    "1028_IOM_HAP_XX": 0.99253,
+    "1029_MTI_NEU_XX": 0.52501,
+    "1039_IWW_DIS_XX": 0.74021,
+    "1047_MTI_SAD_XX": 0.99197,
+    "1057_TSI_DIS_XX": 0.41028,
+    "1058_DFA_FEA_XX": 0.45634,
+    "1062_WSI_FEA_XX": 0.87108,
+    "1064_ITS_ANG_XX": 0.92754,
+    "1069_IWL_SAD_XX": 0.59865,
+    "1072_IWW_HAP_XX": 0.99416,
+    "1075_DFA_HAP_XX": 0.99865,
+    "1080_WSI_HAP_XX": 0.60407,
+    "1086_ITH_DIS_XX": 0.37255,
+    "1090_MTI_NEU_XX": 0.96584
+   },
+   "median_lexicon_mass": 0.61481,
+   "share_clips_mass_at_least_0.05": 0.9583,
+   "coverage_pass": true,
+   "smoke_item_mass_mechanics_only": [
+    0.82056,
+    0.21166,
+    0.20045
+   ],
+   "grey_lexicon_mass": 0.15087,
+   "image_sensitivity": {
+    "n_clips": 24,
+    "n_pairs": 276,
+    "median_distance_between_clips": 5.7291,
+    "median_distance_to_shifted_copy": 0.498,
+    "median_distance_to_grey": 5.9412,
+    "share_pairs_above_shift": 1.0,
+    "share_clips_differ_from_grey": 1.0,
+    "pass": true
+   },
+   "pass": true
+  }
+ ],
+ "seconds": 655.6,
+ "forwards": 5187,
+ "cached_scoring": {
+  "used": false,
+  "gap": null,
+  "error": "ValueError: Cannot `crop` a `DynamicSlidingWindowLayer` after it has seen more tokens than itssliding window (otherwise some states are lost)"
+ },
+ "rung_1_best_for_this_model": {
+  "prompt": "In one plain word, with no formatting or punctuation, what is this person feeling?",
+  "prefill": "This person is feeling"
+ },
+ "first_rung_passed": "1"
+}

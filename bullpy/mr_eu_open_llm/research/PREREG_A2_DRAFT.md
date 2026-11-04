@@ -115,7 +115,9 @@ Item i, condition c, model m, route r, and an outcome y on that item:
 
     delta(i, c) = y(i, c) - y(i, original)
 
-The primary contrast is always within item against the unedited clip on the same route. It removes clip content, actor and most of the label prior. The primary outcome y is the CLR of the acted-label family, which is scale-free across labels. Predictions about specific confusions use the named family's CLR.
+The primary contrast is always within item against the unedited clip on the same route. It removes clip content, actor and most of the label prior. The primary outcome y is the CLR of the acted-label family, which is scale-free across labels.
+
+Predictions that another label rises (P7, P8, P14, P15) use the named family's CLR with **the item's acted label left out of the reference mean**. With it included, a fall in the acted label lowers the mean and raises every other label by the same amount, so a plain loss of the target reads as a predicted rise. Recovery found this: the mouth-only observer triggered P7 in 23% of 30 replicates. The test changed; the expected sets and the pass rule did not.
 
 Each outcome is also computed for the item's **human modal label** and, on the item's named options, as **Jensen-Shannon divergence** between the model and the human response distribution (None of the above removed from both, which the blind readout cannot express).
 

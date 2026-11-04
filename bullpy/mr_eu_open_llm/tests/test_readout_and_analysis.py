@@ -138,6 +138,31 @@ def test_prior_only_observer_passes_none(data):
     assert hits("prior_only", data) == set()
 
 
+def test_a_fall_in_the_acted_label_cannot_raise_another_label():
+    names = rec.FAMILIES
+    before = {k: float(i) * 0.1 for i, k in enumerate(names)}
+    after = {**before, "Happy": before["Happy"] - 5.0}
+    item = {"trial_id": "t", "actor": "A", "label": "Happy", "human_modal_label": "Happy", "weak_label": False}
+    rows = [
+        {**item, "input_name": "single_face", "condition": c, "status": "ok", "blind": {"family_logprob": f}}
+        for c, f in (("original", before), ("mask_mouth_neutral", after))
+    ]
+    cells = an.Cells(rows)
+    p7 = next(c for c in an.CONFIRMATORY if c.id == "P7")
+    p1 = next(c for c in an.CONFIRMATORY if c.id == "P1")
+    pair = (p7.a, p7.b)
+    assert an.item_delta(cells, "t", p7, pair, "blind", "acted") == pytest.approx(0.0)
+    assert an.item_delta(cells, "t", p1, (p1.a, p1.b), "blind", "acted") < -4
+
+
+def test_mcq_reference_also_leaves_the_acted_label_out():
+    options = ["Happy", "Neutral", "Sad"]
+    row = lambda v: {"mcq": [{"options": options, "joint_logprob": v}]}  # noqa: E731
+    assert an.mcq_score(row([-5.0, -1.0, -2.0]), "Neutral", "Happy") == pytest.approx(
+        an.mcq_score(row([-1.0, -1.0, -2.0]), "Neutral", "Happy")
+    )
+
+
 def test_failed_cells_are_counted_not_used(data):
     rows = rec.synthetic_rows("prior_only", data[:20], 0)
     rows[0].update(status="failed", reason="eye_closed")

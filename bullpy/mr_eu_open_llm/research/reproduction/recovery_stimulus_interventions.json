@@ -4,7 +4,7 @@
   "actor_sd": 0.3,
   "item_sd": 0.5,
   "cell_sd": 0.2,
-  "replicates": 30,
+  "replicates": 100,
   "max_exact_actors": 0,
   "draws": 8191
  },
@@ -15,22 +15,22 @@
     "P1": 0.0,
     "P2": 0.0,
     "P3": 0.0,
-    "P4": 0.03333333333333333,
-    "P5": 0.0,
+    "P4": 0.01,
+    "P5": 0.01,
     "P6": 0.0,
-    "P7": 0.0,
+    "P7": 0.01,
     "P8": 0.0,
     "P9": 0.0,
-    "P10": 0.0,
+    "P10": 0.01,
     "P12": 0.0,
-    "P13": 0.0,
-    "P14a": 0.0,
+    "P13": 0.01,
+    "P14a": 0.01,
     "P14b": 0.0,
     "P15a": 0.0,
     "P15b": 0.0
    },
    "lowest_rate_on_expected": null,
-   "share_replicates_with_an_unexpected_contrast": 0.03333333333333333,
+   "share_replicates_with_an_unexpected_contrast": 0.06,
    "pass": true
   },
   "frame_bag": {
@@ -38,7 +38,7 @@
    "recovery_rate_by_contrast": {
     "P1": 0.0,
     "P2": 0.0,
-    "P3": 0.0,
+    "P3": 0.01,
     "P4": 0.0,
     "P5": 0.0,
     "P6": 0.0,
@@ -48,13 +48,13 @@
     "P10": 0.0,
     "P12": 0.0,
     "P13": 0.0,
-    "P14a": 0.03333333333333333,
-    "P14b": 0.0,
+    "P14a": 0.03,
+    "P14b": 0.01,
     "P15a": 0.0,
-    "P15b": 0.03333333333333333
+    "P15b": 0.03
    },
    "lowest_rate_on_expected": null,
-   "share_replicates_with_an_unexpected_contrast": 0.06666666666666667,
+   "share_replicates_with_an_unexpected_contrast": 0.07,
    "pass": true
   },
   "mouth_only": {
@@ -66,23 +66,23 @@
     "P1": 1.0,
     "P2": 1.0,
     "P3": 0.0,
-    "P4": 0.0,
-    "P5": 0.0,
-    "P6": 0.0,
-    "P7": 0.23333333333333334,
-    "P8": 0.06666666666666667,
+    "P4": 0.01,
+    "P5": 0.01,
+    "P6": 0.02,
+    "P7": 0.0,
+    "P8": 0.01,
     "P9": 0.0,
     "P10": 0.0,
     "P12": 0.0,
-    "P13": 0.03333333333333333,
-    "P14a": 0.0,
+    "P13": 0.0,
+    "P14a": 0.01,
     "P14b": 0.0,
-    "P15a": 0.03333333333333333,
+    "P15a": 0.02,
     "P15b": 0.0
    },
    "lowest_rate_on_expected": 1.0,
-   "share_replicates_with_an_unexpected_contrast": 0.3,
-   "pass": false
+   "share_replicates_with_an_unexpected_contrast": 0.08,
+   "pass": true
   },
   "eyes_only": {
    "expected": [
@@ -91,11 +91,11 @@
    ],
    "recovery_rate_by_contrast": {
     "P1": 0.0,
-    "P2": 0.0,
+    "P2": 0.02,
     "P3": 1.0,
     "P4": 1.0,
-    "P5": 0.0,
-    "P6": 0.0,
+    "P5": 0.01,
+    "P6": 0.02,
     "P7": 0.0,
     "P8": 0.0,
     "P9": 0.0,
@@ -103,12 +103,12 @@
     "P12": 0.0,
     "P13": 0.0,
     "P14a": 0.0,
-    "P14b": 0.03333333333333333,
-    "P15a": 0.03333333333333333,
+    "P14b": 0.01,
+    "P15a": 0.02,
     "P15b": 0.0
    },
    "lowest_rate_on_expected": 1.0,
-   "share_replicates_with_an_unexpected_contrast": 0.06666666666666667,
+   "share_replicates_with_an_unexpected_contrast": 0.08,
    "pass": true
   },
   "human_like": {
@@ -153,5 +153,5 @@
    "pass": true
   }
  },
- "pass": false
+ "pass": true
 }
