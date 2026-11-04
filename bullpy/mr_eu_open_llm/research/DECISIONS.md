@@ -182,3 +182,13 @@ Non-trivial decisions. Date, decision, alternatives, why. Do not rewrite history
 - **Result:** `research/reproduction/cache_parity_qwen3vl_float32.json`, same clips and routes as the bfloat16 run. Blind readout: worst gap per sequence 0.00005 to 0.00013 nats, mean 0.000003 at most. MCQ: 0.0. Repeated full forwards: 0.0.
 - **Reading:** The Qwen position fix is correct. The bfloat16 gap of up to 0.25 nats was rounding between two compute paths, not a logic fault, which answers the cause left open in the entry above.
 - **Decision:** Unchanged. Runs use bfloat16, where the gap is real, so all models keep full forwards.
+
+## 2026-11-04 — Second attempt at family calibration, locked before it runs
+
+- **Decision:** Run a post-hoc second attempt with a within-actor shuffle, prompted by the actor-prior failure of the first. It is not a replacement. First-attempt outputs stay unchanged and on record, and their hashes are in `research/reproduction/same_clip_family_a2_criteria.json`. New outputs carry the prefix `same_clip_family_a2`.
+- **Fixed:** Thresholds (hash 4b0a8c3c), the family-wise limit of .081, families, pattern score, estimator, conditions and test levels all stay as they were. Seeds are new.
+- **One change to a condition's route:** Frozen-lambda conditions now give each input the ridge strength fixed on the human matrix for that input, as a model would take it. The first attempt used the composite value on all three inputs. The same conditions also rerun on the frames models saw, where the human values differ.
+- **Why within actor:** A pilot on synthetic cues only (60 observers per condition, 199 shuffles) compared three schemes. Within-actor gave actor-prior .041 pointwise, .005 two-detector and .083 family-wise, with power close to the first attempt. Within-cell was broken (.68 to .77 family-wise). Sign-flipping by actor was calibrated but lost power. No measured-cue recovery of this scheme ran before this lock.
+- **Correction to the earlier stated cause:** Within-actor shuffling does not restore the between-actor share of cue variance (.27 against .33 observed), yet the pilot improved. That share alone therefore does not explain the first failure.
+- **Order:** Human cells are read only after the recovery result is written. If actor-prior still fails, single family cells stay provisional, and the confirmatory RQ1 unit stays families and pattern score.
+

@@ -320,3 +320,124 @@ def test_graphau_steps_read_no_eval_file():
     end = source.index("def long_measures(")
     assert "model_frame_indices" not in source[start:end]
     assert "args.evals" not in source[start:end]
+
+
+# --------------------------------------------------------------------------
+# Second attempt and the frozen route
+# --------------------------------------------------------------------------
+
+
+def test_attempt_1_draws_are_unchanged_by_the_scheme_argument():
+    categories = np.array(list("aaabbbbcc"))
+    actors = np.array(list("xyxyxyxyx"))
+    plan = fam.null_plan(categories, actors, 20, 5)
+    assert np.array_equal(plan.indices, fam.permutation_indices(categories, 20, 5))
+    assert plan.signs is None and plan.centre is False
+
+
+def test_within_actor_keeps_every_row_with_its_actor():
+    categories = np.array(list("aaabbbbcc"))
+    actors = np.array(list("xyxyxyxyx"))
+    plan = fam.null_plan(categories, actors, 50, 1, scheme="within_actor")
+    moved_category = False
+    for row in plan.indices:
+        assert np.array_equal(actors[row], actors)
+        moved_category = moved_category or not np.array_equal(categories[row], categories)
+    assert moved_category
+
+
+def test_within_actor_holds_for_specs_without_actor_control():
+    categories, actors = np.array(list("aabb")), np.array(list("xyxy"))
+    plan = fam.null_plan(categories, actors, 10, 1, spec="pooled", scheme="within_actor")
+    for row in plan.indices:
+        assert np.array_equal(actors[row], actors)
+
+
+def test_actor_sign_flips_each_actor_as_one_block():
+    actors = np.array(list("xxyy"))
+    plan = fam.null_plan(np.zeros(4), actors, 30, 1, scheme="actor_sign")
+    assert np.array_equal(plan.signs[:, 0], plan.signs[:, 1])
+    assert (plan.indices == np.arange(4)).all()
+
+
+def test_attempt_2_keeps_the_thresholds_and_is_labelled_post_hoc():
+    assert fam.ATTEMPT_2["scheme"] == "within_actor"
+    assert "second attempt" in fam.ATTEMPT_2["label"]
+    assert "Not a replacement" in fam.ATTEMPT_2["label"]
+    assert fam.criteria_hash().startswith("4b0a8c3c")
+
+
+def frozen_setup(beta=0.8):
+    rng = np.random.default_rng(12)
+    human, cues = build(rng, beta=beta)
+    second = cues + rng.normal(0, 0.3, cues.shape)
+    return human, {"composite": (cues + second) / 2, "first": cues, "second": second}
+
+
+def test_frozen_route_takes_each_lambda_from_the_human_and_never_from_the_observer(monkeypatch):
+    human, cues = frozen_setup()
+    other, _ = build(np.random.default_rng(13), beta=0.0)
+    seen = []
+    real = scc.choose_lambda
+
+    def spy(design, *a, **k):
+        seen.append(float(design.Y[0, ~np.isnan(design.Y[0])][0]))
+        return real(design, *a, **k)
+
+    monkeypatch.setattr(scc, "choose_lambda", spy)
+    out = fam.frozen_route(human, other, cues, n_perm=19, seed=1, scheme="within_actor")
+    human_design = scc.build_design(human, cues["first"])
+    assert set(seen) == {float(human_design.Y[0, ~np.isnan(human_design.Y[0])][0])}
+    assert len(seen) == 3
+    assert set(out) == {"composite", "first", "second"}
+
+
+def test_frozen_route_gives_a_perfect_score_to_the_human_itself():
+    human, cues = frozen_setup()
+    out = fam.frozen_route(human, human, cues, n_perm=49, seed=1, scheme="within_actor")
+    for part in out.values():
+        assert part["pattern"]["score"] == pytest.approx(1.0)
+        assert part["pattern"]["p"] < 0.05
+        assert np.allclose(part["B"], part["reference"])
+
+
+def test_frozen_route_does_not_flag_a_null_observer_as_human_like():
+    human, cues = frozen_setup(beta=1.0)
+    shared, _ = build(np.random.default_rng(14), beta=0.0)
+    out = fam.frozen_route(human, shared, cues, n_perm=99, seed=2, scheme="within_actor")
+    assert out["composite"]["pattern"]["p"] > 0.01
+
+
+def test_frozen_route_refuses_different_clips():
+    human, cues = frozen_setup()
+    keep = sorted(human.trial_id.unique())[:-3]
+    with pytest.raises(ValueError):
+        fam.frozen_route(human, human[human.trial_id.isin(keep)], cues, n_perm=9, seed=1,
+                         scheme="within_actor")
+
+
+def test_recovery_honours_a_frozen_lambda_per_input(monkeypatch):
+    rng = np.random.default_rng(15)
+    responses, _ = build(rng)
+    ids = sorted(responses.trial_id.unique())
+    names = fam.needed_aus(fam.CUE_SETS["families"])
+    frame = pd.DataFrame(rng.normal(0, 1, (len(ids), 4)), index=ids,
+                         columns=list(fam.CUE_SETS["families"]))
+    template = scc.build_design(responses, frame)
+    cond = next(c for c in fam.family_conditions((3.0, 10.0, 30.0))
+                if c["name"] == "prior_only_frozen_lambda")
+    assert cond["lam"] == (3.0, 10.0, 30.0)
+    cond = {**cond, "_n_resp": np.full(len(ids), 100), "with_gain": False, "_W_ref": None,
+            "_pcc_tables": {"published": fam.AU_PCC}, "_scheme": "within_actor",
+            "_seed_offset": 100000}
+    used = []
+    real = fam.observer_inference
+    monkeypatch.setattr(fam, "observer_inference",
+                        lambda d, lam, plan, **k: used.append(lam) or real(d, lam, plan, **k))
+
+    def no_choice(*a, **k):
+        raise AssertionError("Ridge strength must not be chosen on a frozen route")
+
+    monkeypatch.setattr(scc, "choose_lambda", no_choice)
+    fam.run_family_sim((template, None, names, cond, 0, 9, None))
+    assert used == [3.0, 10.0, 30.0]
