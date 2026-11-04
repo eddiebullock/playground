@@ -233,3 +233,9 @@ Decided before any model matrix exists or any rotation result is read. Two attem
 - No model or human claim rests on a family-wise cell or a single family cell. Those are descriptive, reported in full and labelled exploratory.
 - The score is not specific to the human cues. The different-cues observer reaches size .055 to .085 under attempt 1 and up to .115 under attempt 2. A positive score therefore supports "aligned with the human pattern", not "uses the same cues". That claim needs the RQ2 stimulus tests.
 - Model frames, frozen lambda, sparse 0.5 narrowly fails recovery (r .752, sign .898). The cause of the calibration failure is not established.
+
+## 2026-11-04: Correction to the RQ1 inference entry
+
+The entry above names the pattern score on the model-frames route as confirmatory, but that route has no pattern recovery: `pattern` is empty in `same_clip_family_a2_recovery_model_frames.json`. All pattern sizes and power quoted so far are from all frames. The confirmatory status is conditional until that test exists.
+
+Rule set before the test runs: use the existing criteria (size .05 plus 2 Monte Carlo SE, power .80), the attempt 1 null of record, human lambda 10, unchanged families. If the score passes on the model-frames route, it is confirmatory as stated. If it fails, RQ1 on natural clips is descriptive only, and the confirmatory test of cue use rests on RQ2. A failure does not license a new score, route or null.
