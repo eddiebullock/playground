@@ -39,3 +39,14 @@ AU27 and AU22 matter here: AU27 is the top surprise cue in both groups, and AU22
 ## Unverified
 
 Whether Glasgow will share renders. Whether FACSHuman runs on this Mac or on current MakeHuman. Whether MakeHuman's own expression targets could supply AU27. The disk impact of MakeHuman.
+
+## Checked against the paper, 2026-11-04
+
+Snoek et al. 2023 (read in full from the PMC copy) deposits data and analysis code only. The availability statement gives no route to stimuli, so renders must be requested. Snoek is marked as corresponding author. Investigation is credited to Chen, Garrod and Jack.
+
+Stimulus facts for any re-render: 1.25 s, 30 frames at 24 fps, frontal view, flat lighting, black background, one of eight base faces of the participant's own ethnicity. Each AU had six time-course parameters (onset, offset and peak latency, peak amplitude, acceleration, deceleration). The paper analysed peak amplitude only, as we do. Tasks were 7AFC (basic) and 5AFC (conversational) including "other". An example movie is in the supplement of Chen et al. 2021, J Vis.
+
+Trial count: the paper gives 119,382 Western basic trials excluding "other"; the public files give 119,387. The 5-trial difference is unexplained. It also gives 128,400 East Asian and 83,540 conversational, which match.
+
+The paper's "AU ablation" removes AUs from hypothesis models, not from stimuli shown to people. Cite it accurately: the human causal claim rests on the randomised stimuli.
+

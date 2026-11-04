@@ -19,6 +19,10 @@ Do not cancel A1/A2/CAS jobs. Ablation 39709579, 39709583, 39709584 were cancell
 
 SSH: `ssh -o ControlPath=/Users/eb2007/.ssh/cm-%r@%h:%p -o ControlMaster=no -o BatchMode=yes eb2007@login.hpc.cam.ac.uk`
 
+## Access confirmed
+
+EU-Emotion: full access and licence, per user 2026-11-04. Full RMET access. CREMA-D form done. Nothing from these goes in the public repo.
+
 ## Branch / git
 
 - Default branch: `main`.
