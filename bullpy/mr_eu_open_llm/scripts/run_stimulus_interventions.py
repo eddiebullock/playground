@@ -99,7 +99,7 @@ INPUTS: Dict[str, Dict[str, Any]] = {
     "single_face": {"kind": "image", "view": "face", "conditions": SPATIAL},
     "single_full": {"kind": "image", "view": "full", "conditions": ("original",)},
     "video_face": {"kind": "video", "view": "face", "conditions": TEMPORAL},
-    "legacy_full": {"kind": "legacy", "view": "full", "conditions": TEMPORAL},
+    "legacy_full": {"kind": "legacy", "view": "full", "conditions": ("original",)},
 }
 PIXEL_KEYS = (
     "pixel_values",
@@ -112,6 +112,8 @@ PIXEL_KEYS = (
     "video_token_pooling",
     "video_grids",
 )
+# Gemma's default of 70 tokens per video frame gives under 5 tokens across the face.
+VIDEO_KWARGS: Dict[str, Dict[str, Any]] = {"gemma4": {"max_soft_tokens": 280}}
 MEDIA_TOKEN_ATTRS = ("image_token_id", "video_token_id", "image_patch_id")
 
 
@@ -466,7 +468,7 @@ def build_media(clip: Clip, input_name: str, condition: str) -> Media:
     if view == "face":
         if clip.geometry.face_box is None:
             raise si.EditFailure("no_face_box")
-        frames = [si.crop(f, clip.geometry.face_box) for f in frames]
+        frames = [si.fixed_size(si.crop(f, clip.geometry.face_box)) for f in frames]
         log["box"] = list(clip.geometry.face_box)
     return Media(spec["kind"], frames, list(indices), log)
 
@@ -502,6 +504,7 @@ def encode_video(model_key: str, processor: Any, images: Sequence[np.ndarray], p
         video_metadata=[video_metadata(len(images), width, height)],
         do_sample_frames=False,
         return_tensors="pt",
+        **VIDEO_KWARGS.get(model_key, {}),
     )
 
 
@@ -553,6 +556,9 @@ class ModelHandle:
     blind_prefill: List[int]
     mcq_prefill: List[int]
     forwards: int = 0
+    use_cache: Optional[bool] = None
+    cache_gap: Optional[float] = None
+    cache_error: Optional[str] = None
 
 
 def load_handle(model_key: str, dtype_name: str) -> ModelHandle:
@@ -593,15 +599,91 @@ def step_logprobs(handle: ModelHandle, inputs: Dict[str, Any], prefix: Sequence[
     return torch.log_softmax(last_logits(handle.model, append_tokens(inputs, list(prefix))), dim=-1)
 
 
+CACHE_TOLERANCE = 0.25  # nats; bfloat16 logits near 20 have a step of about 0.125
+
+
+def cached_tables(
+    handle: ModelHandle,
+    inputs: Dict[str, Any],
+    prefill: Sequence[int],
+    prefixes: Sequence[Tuple[int, ...]],
+    needed: Dict[Tuple[int, ...], List[int]],
+) -> Dict[Tuple[int, ...], Dict[int, float]]:
+    """One image forward, then text-only continuations from a cropped KV cache."""
+    import torch
+
+    from scripts.vision_gates import append_tokens
+
+    base = append_tokens(inputs, list(prefill))
+    base_len = int(base["input_ids"].shape[1])
+    with torch.no_grad():
+        out = handle.model(**base, use_cache=True)
+    handle.forwards += 1
+    cache = out.past_key_values
+    table = {(): {t: float(v) for t, v in zip(needed[()], torch.log_softmax(out.logits[0, -1].float(), -1)[needed[()]])}}
+    keep = {k: v for k, v in base.items() if k in ("mm_token_type_ids", "token_type_ids")}
+    for prefix in prefixes:
+        if not prefix:
+            continue
+        step = append_tokens({"input_ids": base["input_ids"], "attention_mask": base["attention_mask"], **keep}, list(prefix))
+        position = torch.arange(base_len, base_len + len(prefix), device=base["input_ids"].device)
+        prepared = handle.model.prepare_inputs_for_generation(
+            step["input_ids"],
+            past_key_values=cache,
+            attention_mask=step["attention_mask"],
+            cache_position=position,
+            use_cache=True,
+            **{k: step[k] for k in keep},
+        )
+        with torch.no_grad():
+            logits = handle.model(**prepared).logits[0, -1].float()
+        handle.forwards += 1
+        cache.crop(base_len)
+        ids = needed[prefix]
+        table[prefix] = {t: float(v) for t, v in zip(ids, torch.log_softmax(logits, -1)[ids])}
+    return table
+
+
+def full_tables(
+    handle: ModelHandle,
+    inputs: Dict[str, Any],
+    prefill: Sequence[int],
+    prefixes: Sequence[Tuple[int, ...]],
+    needed: Dict[Tuple[int, ...], List[int]],
+) -> Dict[Tuple[int, ...], Dict[int, float]]:
+    table: Dict[Tuple[int, ...], Dict[int, float]] = {}
+    for prefix in prefixes:
+        logprobs = step_logprobs(handle, inputs, list(prefill) + list(prefix))
+        table[prefix] = {t: float(logprobs[t]) for t in needed[prefix]}
+    return table
+
+
 def score_sequences(
     handle: ModelHandle, inputs: Dict[str, Any], prefill: Sequence[int], sequences: Sequence[Sequence[int]]
 ) -> List[float]:
-    """Joint logprob of each token sequence after the prefill, one forward per shared prefix."""
+    """Joint logprob of each token sequence after the prefill.
+
+    The first call on a model checks the cached path against full forwards. If they
+    disagree beyond tolerance, or the cached path raises, the model keeps full forwards.
+    Either way the path and worst gap are recorded on the handle.
+    """
     needed = needed_tokens(sequences)
-    table: Dict[Tuple[int, ...], Dict[int, float]] = {}
-    for prefix in internal_prefixes(sequences):
-        logprobs = step_logprobs(handle, inputs, list(prefill) + list(prefix))
-        table[prefix] = {t: float(logprobs[t]) for t in needed[prefix]}
+    prefixes = internal_prefixes(sequences)
+    if handle.use_cache is None:
+        full = full_tables(handle, inputs, prefill, prefixes, needed)
+        try:
+            cached = cached_tables(handle, inputs, prefill, prefixes, needed)
+            gap = max(abs(cached[p][t] - full[p][t]) for p in full for t in full[p])
+            handle.cache_gap = gap
+            handle.use_cache = bool(gap <= CACHE_TOLERANCE)
+        except Exception as exc:  # recorded: the fallback is the safe path
+            handle.cache_error = f"{type(exc).__name__}: {exc}"[:300]
+            handle.use_cache = False
+        table = full
+    elif handle.use_cache:
+        table = cached_tables(handle, inputs, prefill, prefixes, needed)
+    else:
+        table = full_tables(handle, inputs, prefill, prefixes, needed)
     return [joint_logprob(ids, table) for ids in sequences]
 
 
@@ -690,22 +772,36 @@ def score_cell(handle: ModelHandle, media: Media, item: Dict[str, Any]) -> Dict[
 # ---------------------------------------------------------------------------
 
 
-def tokens_per_frame(counts: Dict[str, int], n_units: int) -> float:
-    return sum(counts.values()) / max(n_units, 1)
+MIN_TOKENS_ACROSS_FACE = 8.0
 
 
-def tokens_across(width_px: float, frame_width: int, frame_height: int, per_frame: float, square_cell: bool) -> float:
-    """Tokens spanned by a width of width_px in the source frame.
+def view_tokens_wide(inputs: Dict[str, Any], media: Media, composite: bool) -> float:
+    """Tokens across the width of one sent view, from the model's own grid if it has one."""
+    n_cells = 4 if composite and media.kind == "legacy" else 1
+    for key, column in (("image_grids", -1), ("video_grids", -1)):
+        if key in inputs:
+            return float(inputs[key].reshape(-1, inputs[key].shape[-1])[0, column]) / n_cells
+    media_tokens = sum(v for k, v in inputs["_counts"].items())
+    units = len(media.images)
+    if media.kind == "video" and "video_grid_thw" in inputs:
+        units = int(inputs["video_grid_thw"][0, 0])
+    per_unit = media_tokens / max(units, 1)
+    height, width = media.images[0].shape[:2]
+    aspect = 1.0 if composite and media.kind == "legacy" else width / height
+    return math.sqrt(per_unit * aspect)
 
-    Spread evenly over the delivered image. A composite cell squashes the frame to a
-    square, so its aspect is 1 whatever the source frame was.
-    """
-    aspect = 1.0 if square_cell else frame_width / frame_height
-    return math.sqrt(per_frame * aspect) * width_px / frame_width
+
+def rebuilt_sha(clip: Clip, name: str, media: Media) -> List[str]:
+    """Hash what the logged indices decode to now, by a second read of the file."""
+    frames, _ = si.read_frames(Path(clip.item["path"]), media.sent_indices)
+    images = [frames[i] for i in media.sent_indices]
+    if INPUTS[name]["view"] == "face":
+        images = [si.fixed_size(si.crop(f, clip.geometry.face_box)) for f in images]
+    return [si.array_sha256(a) for a in images]
 
 
 def delivery_for_item(handle: ModelHandle, clip: Clip, inputs_wanted: Sequence[str]) -> Dict[str, Any]:
-    """Knock out one frame at a time and see whether the logits at the prefill move."""
+    """Delivery gate checks for one item, on each route's unedited input."""
     import torch
 
     from config import FRAME_POLICY
@@ -725,7 +821,6 @@ def delivery_for_item(handle: ModelHandle, clip: Clip, inputs_wanted: Sequence[s
         "frames_lost_to_grid_cap": max(0, len(policy) - 8) if composite else 0,
     }
     for name in inputs_wanted:
-        spec = INPUTS[name]
         row: Dict[str, Any] = {}
         try:
             media = build_media(clip, name, "original")
@@ -737,49 +832,94 @@ def delivery_for_item(handle: ModelHandle, clip: Clip, inputs_wanted: Sequence[s
         again = step_logprobs(handle, base_inputs, handle.blind_prefill)
         row["repeat_forward_max_abs"] = float((base - again).abs().max())
         row["input"] = input_record(handle, base_inputs)
-        top = torch.topk(base, 8)
-        row["top_next_tokens"] = [
-            [handle.tokenizer.decode([int(i)]), round(float(v), 3)] for v, i in zip(top.values, top.indices)
-        ]
-        row["prompt_tail"] = handle.tokenizer.decode(base_inputs["input_ids"][0][-24:], skip_special_tokens=False)
-        n_units = len(media.images)
-        per_frame = tokens_per_frame(row["input"]["media_tokens"], n_units)
-        width, height = record["width"], record["height"]
-        view_width = width
-        view_height = height
-        face_width = record.get("face_width_px", 0.0)
-        if spec["view"] == "face" and clip.geometry.face_box is not None:
-            view_width = view_height = clip.geometry.face_box[2] - clip.geometry.face_box[0]
-        # Composite grids are the one route where a frame is squashed to a square.
-        squashed = media.kind == "legacy" and composite
-        row["tokens_per_frame"] = round(per_frame, 2)
-        row["face_width_tokens"] = round(tokens_across(face_width, view_width, view_height, per_frame, squashed), 2)
-        if media.kind != "image":
-            changes = []
-            for position in range(n_units):
-                blanked = list(media.images)
-                blanked[position] = np.zeros_like(blanked[position])
-                other = Media(media.kind, blanked, media.sent_indices, {})
-                other_inputs = encode_media(handle, other, BLIND_PROMPT)
-                delta = (step_logprobs(handle, other_inputs, handle.blind_prefill) - base).abs().max()
-                changes.append(round(float(delta), 4))
-            row["blank_frame_max_abs_logprob_change"] = changes
-            row["all_frames_reach_output"] = bool(all(c > 0 for c in changes))
-            shuffled = build_media(clip, name, "shuffle_a")
-            shuffled_inputs = encode_media(handle, shuffled, BLIND_PROMPT)
-            delta = (step_logprobs(handle, shuffled_inputs, handle.blind_prefill) - base).abs().max()
-            row["order_change_max_abs_logprob_change"] = round(float(delta), 4)
-            row["same_input_ids_under_shuffle"] = bool(
-                torch.equal(base_inputs["input_ids"], shuffled_inputs["input_ids"])
-            )
-            key = "pixel_values_videos"
-            if key in base_inputs and base_inputs[key].dim() >= 3 and base_inputs[key].shape[1] == n_units:
-                order = [media.sent_indices.index(i) for i in shuffled.sent_indices]
-                row["pixels_arrive_in_sent_order"] = bool(
-                    torch.equal(base_inputs[key][:, order], shuffled_inputs[key])
-                )
+        row["tokens_across_view"] = round(
+            view_tokens_wide({**base_inputs, "_counts": row["input"]["media_tokens"]}, media, composite), 2
+        )
+        view_width = record["width"]
+        if INPUTS[name]["view"] == "face":
+            view_width = clip.geometry.face_box[2] - clip.geometry.face_box[0]
+        row["view_width_source_px"] = view_width
+        row["face_width_tokens"] = round(row["tokens_across_view"] * record.get("face_width_px", 0.0) / view_width, 2)
+
+        changes = []
+        same_ids = []
+        for position in range(len(media.images)):
+            blanked = list(media.images)
+            blanked[position] = np.zeros_like(blanked[position])
+            other_inputs = encode_media(handle, Media(media.kind, blanked, media.sent_indices, {}), BLIND_PROMPT)
+            same_ids.append(bool(torch.equal(other_inputs["input_ids"], base_inputs["input_ids"])))
+            delta = (step_logprobs(handle, other_inputs, handle.blind_prefill) - base).abs().max()
+            changes.append(round(float(delta), 4))
+        row["blank_frame_max_abs_logprob_change"] = changes
+        row["gate_2_every_frame_changes_output"] = bool(all(c > 0 for c in changes))
+        row["gate_3_logged_indices_are_the_frames_sent"] = bool(
+            rebuilt_sha(clip, name, media) == [si.array_sha256(a) for a in media.images]
+        )
+        if len(media.images) > 1:
+            shuffled = build_media(clip, name, "shuffle_a") if "shuffle_a" in INPUTS[name]["conditions"] else None
+            if shuffled is not None:
+                shuffled_inputs = encode_media(handle, shuffled, BLIND_PROMPT)
+                same_ids.append(bool(torch.equal(base_inputs["input_ids"], shuffled_inputs["input_ids"])))
+                key = "pixel_values_videos"
+                if key in base_inputs and base_inputs[key].dim() >= 3 and base_inputs[key].shape[1] == len(media.images):
+                    order = [media.sent_indices.index(i) for i in shuffled.sent_indices]
+                    row["pixels_arrive_in_sent_order"] = bool(torch.equal(base_inputs[key][:, order], shuffled_inputs[key]))
+        row["gate_4_ids_unchanged_within_clip"] = bool(all(same_ids))
+        row["input_ids_sha256"] = row["input"]["input_ids_sha256"]
         report[name] = row
     return report
+
+
+def step_delivery(args: argparse.Namespace) -> None:
+    """Delivery gate for one model on every route, research/PLAN_READOUT_AND_INPUT.md."""
+    geometry = json.loads(args.geometry.read_text(encoding="utf-8"))
+    records = geometry["items"]
+    all_items = load_items(args.manifest, args.lookup, args.data_root)
+    paths = {i["trial_id"]: i["path"] for i in all_items}
+    for trial_id, record in records.items():
+        record["path"] = paths.get(trial_id, "")
+    neutral_by_actor = {i["actor"]: i["trial_id"] for i in all_items if i["label"] == "Neutral"}
+    items = select_items(all_items, args.max_items or 3)
+    handle = load_handle(args.model, args.dtype)
+    inputs_wanted = [s.strip() for s in args.inputs.split(",") if s.strip()]
+    rows = [delivery_for_item(handle, load_clip(i, records, neutral_by_actor), inputs_wanted) for i in items]
+
+    usable = [r for r in records.values() if r.get("face_width_px") and r.get("face_box")]
+    verdicts: Dict[str, Any] = {}
+    for name in inputs_wanted:
+        checked = [r[name] for r in rows if "failed" not in r.get(name, {"failed": 1})]
+        if not checked:
+            verdicts[name] = {"pass": False, "reason": "no item could be built"}
+            continue
+        across = float(np.median([c["tokens_across_view"] for c in checked]))
+        faces = []
+        for record in usable:
+            view = record["face_box"][2] - record["face_box"][0] if INPUTS[name]["view"] == "face" else record["width"]
+            faces.append(across * record["face_width_px"] / view)
+        gates = {
+            "gate_1_median_tokens_across_face": round(float(np.median(faces)), 2),
+            "gate_1_min_tokens_across_face": round(float(np.min(faces)), 2),
+            "gate_1_share_clips_at_least_8": round(float(np.mean(np.asarray(faces) >= MIN_TOKENS_ACROSS_FACE)), 4),
+            "gate_2": all(c["gate_2_every_frame_changes_output"] for c in checked),
+            "gate_3": all(c["gate_3_logged_indices_are_the_frames_sent"] for c in checked),
+            "gate_4": all(c["gate_4_ids_unchanged_within_clip"] for c in checked)
+            and len({c["input_ids_sha256"] for c in checked}) == 1,
+        }
+        gate_1 = gates["gate_1_median_tokens_across_face"] >= MIN_TOKENS_ACROSS_FACE
+        verdicts[name] = {**gates, "gate_1": bool(gate_1), "pass": bool(gate_1 and gates["gate_2"] and gates["gate_3"] and gates["gate_4"])}
+    output = {
+        "model": args.model,
+        "n_items_checked": len(rows),
+        "n_clips_for_face_width": len(usable),
+        "landmark_clips_with_failures": geometry.get("n_clips_with_failures"),
+        "gate_1_rule": "median over clips of tokens across the face at least 8",
+        "verdicts": verdicts,
+        "items": rows,
+    }
+    args.reproduction.mkdir(parents=True, exist_ok=True)
+    path = args.reproduction / f"input_delivery_{args.model}.json"
+    path.write_text(json.dumps(output, indent=1, default=str) + "\n", encoding="utf-8")
+    print(json.dumps({"model": args.model, "verdicts": verdicts}, indent=1))
 
 
 def baseline_cells(handle: ModelHandle, clip: Clip, inputs_wanted: Sequence[str]) -> List[Dict[str, Any]]:
@@ -933,6 +1073,7 @@ def step_run(args: argparse.Namespace) -> None:
                     "failure_reasons": dict(Counter(f["reason"] for f in report["failures"])),
                     "mean_seconds_per_cell": {k: round(float(np.mean(v)), 3) for k, v in timing.items()},
                     "forwards_total": handle.forwards,
+                    "cached_scoring": {"used": handle.use_cache, "gap": handle.cache_gap, "error": handle.cache_error},
                     "seconds": round(time.time() - started, 1),
                     "peak_gpu_gb": round(torch.cuda.max_memory_allocated() / 1e9, 2)
                     if torch.cuda.is_available()
@@ -1052,13 +1193,14 @@ def step_probe(args: argparse.Namespace) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
-    parser.add_argument("--step", required=True, choices=("landmarks", "run", "probe_prompt", "probe_processor"))
+    parser.add_argument("--step", required=True, choices=("landmarks", "run", "delivery", "probe_prompt", "probe_processor"))
     parser.add_argument("--model", default="gemma4", choices=("gemma4", "qwen3vl", "molmo2"))
     parser.add_argument("--manifest", type=Path, default=Path("data/eu_emotions_full_manifest.json"))
     parser.add_argument("--lookup", type=Path, default=Path("data/eu_emotions_human_entropy.json"))
     parser.add_argument("--data_root", type=Path, default=Path("data/eu_emotions"))
     parser.add_argument("--geometry", type=Path, default=Path("results/stimulus_interventions/geometry.json"))
     parser.add_argument("--output_dir", type=Path, default=Path("results/stimulus_interventions"))
+    parser.add_argument("--reproduction", type=Path, default=Path("research/reproduction"))
     parser.add_argument("--inputs", default="single_face,single_full,video_face,legacy_full")
     parser.add_argument("--max_items", type=int, default=None, help="Smoke only: first N items in fixed order.")
     parser.add_argument("--n_delivery_items", type=int, default=2)
@@ -1070,6 +1212,7 @@ def main() -> None:
     steps = {
         "landmarks": step_landmarks,
         "run": step_run,
+        "delivery": step_delivery,
         "probe_prompt": step_probe_prompt,
         "probe_processor": step_probe,
     }

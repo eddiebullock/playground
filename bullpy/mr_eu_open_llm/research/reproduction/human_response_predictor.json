@@ -1,0 +1,344 @@
+{
+ "status": "A model of human judgement. Prediction, never human data.",
+ "limits": [
+  "Glasgow generative avatars, not video.",
+  "AU amplitudes only: no gaze, head or timing.",
+  "Covers about 8 of 21 EU-Emotion labels.",
+  "Slopes in the source json were fit on all subjects of a group, so they are validated only across groups here.",
+  "Not yet validated on EU-Emotion or CREMA-D, as rule 5 asks. Snoek amplitudes and detector intensities do not share units."
+ ],
+ "datasets": {
+  "basic_WC": {
+   "labels": [
+    "anger",
+    "disgust",
+    "fear",
+    "happy",
+    "sadness",
+    "surprise",
+    "other"
+   ],
+   "lambda": 0.1,
+   "within_group_unseen_subjects_and_stimuli": {
+    "mean_over_splits": {
+     "log_loss": 1.6178,
+     "base_rate_log_loss": 1.9346,
+     "top1": 0.402,
+     "base_rate_top1": 0.1862,
+     "r_predicted_observed_by_stimulus": 0.6907
+    },
+    "splits": [
+     {
+      "n_test_trials": 35607,
+      "n_test_subjects": 30,
+      "n_test_stimuli_scored": 2351,
+      "log_loss": 1.6401,
+      "base_rate_log_loss": 1.9271,
+      "top1": 0.3961,
+      "base_rate_top1": 0.1823,
+      "r_predicted_observed_by_stimulus": 0.6855
+     },
+     {
+      "n_test_trials": 35034,
+      "n_test_subjects": 30,
+      "n_test_stimuli_scored": 2351,
+      "log_loss": 1.6305,
+      "base_rate_log_loss": 1.9382,
+      "top1": 0.4005,
+      "base_rate_top1": 0.1756,
+      "r_predicted_observed_by_stimulus": 0.6892
+     },
+     {
+      "n_test_trials": 35450,
+      "n_test_subjects": 30,
+      "n_test_stimuli_scored": 2351,
+      "log_loss": 1.5872,
+      "base_rate_log_loss": 1.9315,
+      "top1": 0.414,
+      "base_rate_top1": 0.1936,
+      "r_predicted_observed_by_stimulus": 0.7014
+     },
+     {
+      "n_test_trials": 35271,
+      "n_test_subjects": 30,
+      "n_test_stimuli_scored": 2351,
+      "log_loss": 1.617,
+      "base_rate_log_loss": 1.9334,
+      "top1": 0.3972,
+      "base_rate_top1": 0.1857,
+      "r_predicted_observed_by_stimulus": 0.6882
+     },
+     {
+      "n_test_trials": 35292,
+      "n_test_subjects": 30,
+      "n_test_stimuli_scored": 2351,
+      "log_loss": 1.6142,
+      "base_rate_log_loss": 1.943,
+      "top1": 0.4021,
+      "base_rate_top1": 0.1938,
+      "r_predicted_observed_by_stimulus": 0.6893
+     }
+    ]
+   },
+   "across_group_slopes_from": "basic_EA",
+   "across_group": {
+    "n_test_trials": 70785,
+    "n_test_subjects": 60,
+    "n_test_stimuli_scored": 2351,
+    "log_loss": 1.6577,
+    "base_rate_log_loss": 1.9282,
+    "top1": 0.3735,
+    "base_rate_top1": 0.1848,
+    "r_predicted_observed_by_stimulus": 0.6618
+   }
+  },
+  "basic_EA": {
+   "labels": [
+    "anger",
+    "disgust",
+    "fear",
+    "happy",
+    "sadness",
+    "surprise",
+    "other"
+   ],
+   "lambda": 0.1,
+   "within_group_unseen_subjects_and_stimuli": {
+    "mean_over_splits": {
+     "log_loss": 1.5671,
+     "base_rate_log_loss": 1.9063,
+     "top1": 0.4371,
+     "base_rate_top1": 0.1873,
+     "r_predicted_observed_by_stimulus": 0.8153
+    },
+    "splits": [
+     {
+      "n_test_trials": 34512,
+      "n_test_subjects": 30,
+      "n_test_stimuli_scored": 1172,
+      "log_loss": 1.6263,
+      "base_rate_log_loss": 1.927,
+      "top1": 0.4224,
+      "base_rate_top1": 0.2022,
+      "r_predicted_observed_by_stimulus": 0.7907
+     },
+     {
+      "n_test_trials": 34485,
+      "n_test_subjects": 30,
+      "n_test_stimuli_scored": 1172,
+      "log_loss": 1.5359,
+      "base_rate_log_loss": 1.9017,
+      "top1": 0.4503,
+      "base_rate_top1": 0.183,
+      "r_predicted_observed_by_stimulus": 0.827
+     },
+     {
+      "n_test_trials": 35310,
+      "n_test_subjects": 30,
+      "n_test_stimuli_scored": 1172,
+      "log_loss": 1.5761,
+      "base_rate_log_loss": 1.908,
+      "top1": 0.4324,
+      "base_rate_top1": 0.1874,
+      "r_predicted_observed_by_stimulus": 0.8117
+     },
+     {
+      "n_test_trials": 35370,
+      "n_test_subjects": 30,
+      "n_test_stimuli_scored": 1172,
+      "log_loss": 1.5272,
+      "base_rate_log_loss": 1.8923,
+      "top1": 0.4433,
+      "base_rate_top1": 0.1788,
+      "r_predicted_observed_by_stimulus": 0.8301
+     },
+     {
+      "n_test_trials": 35250,
+      "n_test_subjects": 30,
+      "n_test_stimuli_scored": 1172,
+      "log_loss": 1.5701,
+      "base_rate_log_loss": 1.9024,
+      "top1": 0.4369,
+      "base_rate_top1": 0.1852,
+      "r_predicted_observed_by_stimulus": 0.8171
+     }
+    ]
+   },
+   "across_group_slopes_from": "basic_WC",
+   "across_group": {
+    "n_test_trials": 69667,
+    "n_test_subjects": 60,
+    "n_test_stimuli_scored": 1172,
+    "log_loss": 1.624,
+    "base_rate_log_loss": 1.9034,
+    "top1": 0.4143,
+    "base_rate_top1": 0.1867,
+    "r_predicted_observed_by_stimulus": 0.7683
+   }
+  },
+  "conversational_WC": {
+   "labels": [
+    "bored",
+    "confused",
+    "interested",
+    "thinking",
+    "other"
+   ],
+   "lambda": 1.0,
+   "within_group_unseen_subjects_and_stimuli": {
+    "mean_over_splits": {
+     "log_loss": 1.4938,
+     "base_rate_log_loss": 1.6125,
+     "top1": 0.3915,
+     "base_rate_top1": 0.2624,
+     "r_predicted_observed_by_stimulus": 0.5933
+    },
+    "splits": [
+     {
+      "n_test_trials": 11830,
+      "n_test_subjects": 10,
+      "n_test_stimuli_scored": 1178,
+      "log_loss": 1.5351,
+      "base_rate_log_loss": 1.6097,
+      "top1": 0.3993,
+      "base_rate_top1": 0.2665,
+      "r_predicted_observed_by_stimulus": 0.5842
+     },
+     {
+      "n_test_trials": 11830,
+      "n_test_subjects": 10,
+      "n_test_stimuli_scored": 1178,
+      "log_loss": 1.5609,
+      "base_rate_log_loss": 1.623,
+      "top1": 0.3614,
+      "base_rate_top1": 0.2778,
+      "r_predicted_observed_by_stimulus": 0.5412
+     },
+     {
+      "n_test_trials": 11840,
+      "n_test_subjects": 10,
+      "n_test_stimuli_scored": 1178,
+      "log_loss": 1.4163,
+      "base_rate_log_loss": 1.5972,
+      "top1": 0.4203,
+      "base_rate_top1": 0.2417,
+      "r_predicted_observed_by_stimulus": 0.6501
+     },
+     {
+      "n_test_trials": 11790,
+      "n_test_subjects": 10,
+      "n_test_stimuli_scored": 1178,
+      "log_loss": 1.555,
+      "base_rate_log_loss": 1.6289,
+      "top1": 0.3572,
+      "base_rate_top1": 0.2877,
+      "r_predicted_observed_by_stimulus": 0.5352
+     },
+     {
+      "n_test_trials": 11840,
+      "n_test_subjects": 10,
+      "n_test_stimuli_scored": 1178,
+      "log_loss": 1.4015,
+      "base_rate_log_loss": 1.6035,
+      "top1": 0.4195,
+      "base_rate_top1": 0.2384,
+      "r_predicted_observed_by_stimulus": 0.6556
+     }
+    ]
+   },
+   "across_group_slopes_from": "conversational_EA",
+   "across_group": {
+    "n_test_trials": 23680,
+    "n_test_subjects": 20,
+    "n_test_stimuli_scored": 1178,
+    "log_loss": 1.4786,
+    "base_rate_log_loss": 1.5895,
+    "top1": 0.3733,
+    "base_rate_top1": 0.2417,
+    "r_predicted_observed_by_stimulus": 0.6298
+   }
+  },
+  "conversational_EA": {
+   "labels": [
+    "bored",
+    "confused",
+    "interested",
+    "thinking",
+    "other"
+   ],
+   "lambda": 1.0,
+   "within_group_unseen_subjects_and_stimuli": {
+    "mean_over_splits": {
+     "log_loss": 1.4912,
+     "base_rate_log_loss": 1.5913,
+     "top1": 0.4008,
+     "base_rate_top1": 0.283,
+     "r_predicted_observed_by_stimulus": 0.6357
+    },
+    "splits": [
+     {
+      "n_test_trials": 11860,
+      "n_test_subjects": 10,
+      "n_test_stimuli_scored": 1180,
+      "log_loss": 1.6141,
+      "base_rate_log_loss": 1.6445,
+      "top1": 0.3616,
+      "base_rate_top1": 0.2963,
+      "r_predicted_observed_by_stimulus": 0.5518
+     },
+     {
+      "n_test_trials": 11870,
+      "n_test_subjects": 10,
+      "n_test_stimuli_scored": 1180,
+      "log_loss": 1.4209,
+      "base_rate_log_loss": 1.5586,
+      "top1": 0.4098,
+      "base_rate_top1": 0.2825,
+      "r_predicted_observed_by_stimulus": 0.6772
+     },
+     {
+      "n_test_trials": 11860,
+      "n_test_subjects": 10,
+      "n_test_stimuli_scored": 1180,
+      "log_loss": 1.4978,
+      "base_rate_log_loss": 1.5716,
+      "top1": 0.3989,
+      "base_rate_top1": 0.272,
+      "r_predicted_observed_by_stimulus": 0.661
+     },
+     {
+      "n_test_trials": 11880,
+      "n_test_subjects": 10,
+      "n_test_stimuli_scored": 1180,
+      "log_loss": 1.4472,
+      "base_rate_log_loss": 1.5799,
+      "top1": 0.4113,
+      "base_rate_top1": 0.2875,
+      "r_predicted_observed_by_stimulus": 0.6606
+     },
+     {
+      "n_test_trials": 11880,
+      "n_test_subjects": 10,
+      "n_test_stimuli_scored": 1180,
+      "log_loss": 1.4762,
+      "base_rate_log_loss": 1.6019,
+      "top1": 0.4225,
+      "base_rate_top1": 0.2765,
+      "r_predicted_observed_by_stimulus": 0.6278
+     }
+    ]
+   },
+   "across_group_slopes_from": "conversational_WC",
+   "across_group": {
+    "n_test_trials": 23680,
+    "n_test_subjects": 20,
+    "n_test_stimuli_scored": 1180,
+    "log_loss": 1.4807,
+    "base_rate_log_loss": 1.5549,
+    "top1": 0.3817,
+    "base_rate_top1": 0.2603,
+    "r_predicted_observed_by_stimulus": 0.6468
+   }
+  }
+ }
+}

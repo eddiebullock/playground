@@ -64,3 +64,10 @@ A route that fails is not used for that cue. A cue smaller than one token on eve
 6. After rotation jobs finish: sync the flv fix, add `n_frames_shown`, analyse A1.
 
 **Failure risks.** Qwen's image-list route has 16,320 media tokens against 253 and could be slow. Face detection could fail on some clips; those are logged, not dropped silently. Aperture editing stays out of confirmatory tests until its dose is verified.
+
+## Implementation notes, 2026-11-04
+
+Fixed in `scripts/readout_ladder.py` before ladder results were read: rung 2 adds "Answer yes or no."; rung 2 mass is the mean over 21 labels; the real-versus-grey check passes at 80% of clips; among passing prompts a model takes the highest median mass, and a shared prompt maximises the lowest median across models; sensitivity uses all 276 clip pairs.
+
+**Deviation.** Gemma coverage on the 3 smoke items was read before the ladder ran (mass 0.26 to 0.87 on no-formatting prompts, 0.19 on grey). The plan limits those items to mechanics. Coverage only, no labels. Selection still rests on the calibration clips.
+

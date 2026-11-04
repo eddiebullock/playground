@@ -240,12 +240,29 @@ def test_eye_crop_and_eye_window(geometry):
     frame, lm = textured_frame(), fake_landmarks()
     band, log = si.apply_condition("eye_crop", frame, lm, geometry)
     x0, y0, x1, y1 = geometry.eye_box
-    assert band.shape[:2] == (y1 - y0, x1 - x0) and log["view"] == "eye_band"
-    assert band.shape[1] > band.shape[0]
+    assert band.shape[1] == si.FACE_SIZE and log["view"] == "eye_band"
+    assert band.shape[0] / band.shape[1] == pytest.approx((y1 - y0) / (x1 - x0), abs=0.01)
     assert y1 < 215  # stops above the mouth ring
     window, _ = si.apply_condition("eye_window", frame, lm, geometry, view="full")
     assert np.array_equal(window[y0:y1, x0:x1], frame[y0:y1, x0:x1])
     assert (window[225, 320] == 128).all()
+
+
+def test_face_crops_are_sent_at_a_fixed_size(geometry):
+    frame, lm = textured_frame(), fake_landmarks()
+    for name in si.SPATIAL_CONDITIONS:
+        if name != "eye_crop":
+            image, _ = si.apply_condition(name, frame, lm, geometry)
+            assert image.shape == (si.FACE_SIZE, si.FACE_SIZE, 3), name
+
+
+def test_eyes_and_mouth_mask_covers_both(geometry):
+    lm = fake_landmarks()
+    both = si.region_mask(SIZE, lm, "eyesmouth")
+    assert both[225, 320] > 0.99 and both[165, 290] > 0.99 and both[165, 350] > 0.99
+    assert both[142, 320] < 0.01
+    image, log = si.apply_condition("mask_eyesmouth_neutral", textured_frame(), lm, geometry, view="full")
+    assert log["region"] == "eyesmouth" and not np.array_equal(image, textured_frame())
 
 
 # Spatial frequency ---------------------------------------------------------
