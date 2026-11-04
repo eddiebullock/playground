@@ -40,7 +40,7 @@ if [ -n "${SLURM_ARRAY_TASK_COUNT:-}" ]; then
   N_SHARDS="${SLURM_ARRAY_TASK_COUNT}"
 fi
 
-if [ "${STEP}" != "probe_processor" ] && [ -z "${MAX_ITEMS}" ] && [ "${CONFIRM_GATES_PASSED}" != "1" ]; then
+if { [ "${STEP}" = "run" ] || [ "${STEP}" = "smoke" ]; } && [ -z "${MAX_ITEMS}" ] && [ "${CONFIRM_GATES_PASSED}" != "1" ]; then
   echo "Full runs wait on G2 to G4 and RQ0. Set MAX_ITEMS for a smoke run." >&2
   exit 1
 fi
@@ -97,6 +97,10 @@ case "${STEP}" in
     ;;
   probe_prompt)
     run_step probe_prompt
+    ;;
+  delivery)
+    python -m scripts.run_stimulus_interventions --step delivery --model "${MODEL}" \
+      --geometry results/stimulus_interventions/geometry.json --max_items "${MAX_ITEMS:-3}"
     ;;
   smoke)
     run_step landmarks

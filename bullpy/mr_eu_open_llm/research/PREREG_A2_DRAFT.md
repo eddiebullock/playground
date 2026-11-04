@@ -4,7 +4,7 @@
 
 **Written:** 2026-11-04, before any rotation result was seen and before any full intervention run.
 **Depends on:** amendment A1 (RQ0) and gates G2 to G4. No full run starts until these pass for that model.
-**Code:** `scripts/stimulus_interventions.py`, `scripts/run_stimulus_interventions.py`, `slurm_jobs/study3_stimulus_interventions.sh`. Each output carries `design_sha256`, a hash of the prompt, prefill, lexicon, conditions and frame count.
+**Code:** `scripts/stimulus_interventions.py`, `scripts/run_stimulus_interventions.py`, `slurm_jobs/study3_stimulus_interventions.sh`, `scripts/analyse_stimulus_interventions.py`, `scripts/recovery_stimulus_interventions.py`, `scripts/human_response_predictor.py`. Each output carries `design_sha256`, a hash of the prompt, prefill, lexicon, conditions and frame count.
 
 **What was seen before writing this.** A smoke run of 3 items on Gemma 4 E4B ran the pipeline before these predictions were committed, which sits against rule 2 of `RESEARCH_QUESTIONS.md`. Only mechanics were read: run status, token counts, timing, determinism, whether a blanked frame changes the logits, lexicon coverage and top next tokens on unedited clips. No contrast between conditions was computed by label or direction. The confirmatory analysis is repeated without those 3 items (listed in the appendix) as a sensitivity check. The processor probes used synthetic noise, not clips.
 
@@ -22,7 +22,7 @@ All 243 EU-Emotion face clips with six human options. Frames are decoded and edi
 
 - **Fixed frames.** k = 8 frames at uniform positions over the clip, by sequential decoding so that an index means the same frame every time. Every cell logs its sent indices in sent order, a hash of each image sent, and a hash of the model's pixel tensor.
 - **Apex frame.** Among the 8, the frame furthest from the first usable frame in lip, lid and brow landmarks, after registration on stable points. It uses landmarks only, so no model output can influence it.
-- **Face crop.** One fixed square per clip, 1.5 times the largest landmark extent, so head motion stays visible. Face crop is primary because faces fill about 18% of frame width in the clip measured so far, which leaves very few tokens on the face in a full frame (see Delivery).
+- **Face crop.** One fixed square per clip, 1.5 times the largest landmark extent, so head motion stays visible, sent at 768 by 768. Face crop is primary because faces fill about 18% of frame width in the clip measured so far, which leaves very few tokens on the face in a full frame (see Delivery).
 - **Landmarks.** MediaPipe FaceMesh 0.10.14 with `static_image_mode` and refined landmarks, one independent detection per frame. All models get the same geometry, computed once.
 - **Failures.** A frame with no face fails only the cells that need it. Every failed cell stays in the output with its reason, and failures are reported per condition and per label. No item is dropped silently and no landmarks are borrowed from another frame.
 
@@ -33,7 +33,7 @@ All 243 EU-Emotion face clips with six human options. Frames are decoded and edi
 | `single_face` | Apex frame, face crop | Spatial conditions | A lip corner is sub-token on a grid |
 | `single_full` | Apex frame, whole frame, unedited | Bridge from crop to frame | Shows what the crop changed |
 | `video_face` | 8 frames, native video processor, face crop | Temporal conditions | Only route where order is not a spatial position |
-| `legacy_full` | 8 frames through `prepare_images_for_model` | Temporal bridge | Composite grid on Gemma 4 and Molmo2, image list on Qwen3-VL |
+| `legacy_full` | 8 frames through `prepare_images_for_model`, `original` only | A1 bridge | Composite grid on Gemma 4 and Molmo2, image list on Qwen3-VL. Not for causal work |
 
 Video timestamps enter the prompt on Gemma 4, Qwen3-VL and Molmo2, so all clips and conditions use a synthetic 1 fps clock. Timestamps then depend only on position in the sent order and the token sequence is the same in every condition. A model cannot read duration from the prompt. On Qwen3-VL, native video merges pairs of frames, so order inside a pair is partly lost; 8 frames become 4 temporal units.
 
@@ -45,9 +45,9 @@ Video timestamps enter the prompt on Gemma 4, Qwen3-VL and Molmo2, so all clips 
 |---|---|
 | `original` | Unedited apex frame |
 | `sham_self_fill` | Full mask pipeline filled from the frame itself. Must equal `original` exactly |
-| `mask_{mouth,eyes,brows}_neutral` | Region filled from the same actor's neutral clip, middle sent frame, registered to the target frame |
-| `mask_{mouth,eyes,brows}_first` | Region filled from the clip's own first frame, registered |
-| `mask_{mouth,eyes,brows}_blur` | Region filled with a heavy blur of itself |
+| `mask_{mouth,eyes,brows,eyesmouth}_neutral` | Region filled from the same actor's neutral clip, middle sent frame, registered to the target frame |
+| `mask_{mouth,eyes,brows,eyesmouth}_first` | Region filled from the clip's own first frame, registered |
+| `mask_{mouth,eyes,brows,eyesmouth}_blur` | Region filled with a heavy blur of itself |
 | `eye_crop` | Band from brow top to below the lower lid, enlarged by the processor |
 | `eye_window` | The same band at face-crop scale, grey elsewhere, so scale is held fixed |
 | `sf_low` | Gaussian low-pass, half amplitude at 8 cycles per face width |
@@ -58,7 +58,7 @@ Regions are convex hulls of landmark rings, dilated and feathered by fixed fract
 
 The aperture warp stretches the iris along with the lids. That is a known artefact. Doses are opposed so that an artefact common to both can be separated from a cue, and lid movement is checked by re-detecting landmarks on the warped frame.
 
-**Temporal (on `video_face`, bridged on `legacy_full`).** All conditions send 8 frames.
+**Temporal (on `video_face`).** All conditions send 8 frames.
 
 | Condition | Definition |
 |---|---|
@@ -70,7 +70,7 @@ The aperture warp stretches the iris along with the lids. That is a known artefa
 
 Truncation changes both content and frame density, so it is not a pure order test. Clip onset is unmarked, so "first third of the clip" only approximates the "first third of the rise" in the notes.
 
-**Not in this suite.** Playback speed (needs the shuffle result first, per the design constraints), gaze, generative AU edits, morphs, adaptation, and head angle.
+**Not in this suite.** The composite grid for causal work, playback speed (needs the shuffle result first, per the design constraints), gaze, generative AU edits, morphs, adaptation, and head angle.
 
 ## Readouts
 
@@ -134,7 +134,7 @@ Effects are per model and route. Models are never pooled, because their architec
 - **Partial crossing limits what can be tested.** Happy, Afraid and Disgusted were portrayed by the same 8 actors (C, E, G, I, K, M, O, S). Sad, Angry and Surprised came from the other 8 or 9 (B, D, F, H, J, L, N, P, R), and the two sets do not overlap. A contrast between Happy and Sad is therefore also a contrast between actors. Label-by-cue interactions are tested only inside an actor set. Contrasts across the sets are descriptive.
 - **Fill rule.** The neutral fill is primary. A mask effect counts only if it passes and the first-frame and blur fills have the same sign, since the occluder is itself an intervention.
 - **Interval.** Actor-bootstrap 95% CI for each contrast, 10,000 draws.
-- **Recovery.** Before any confirmatory run, synthetic observers with known behaviour go through this analysis: a prior-only observer, a frame-bag observer with no order code, a mouth-only observer and an eyes-only observer. The analysis must recover each. **This is not yet built.**
+- **Recovery.** Before any confirmatory run, synthetic observers with known behaviour go through `scripts/analyse_stimulus_interventions.py`, by `scripts/recovery_stimulus_interventions.py`, on the real 243 items and actors: prior-only, frame-bag with no order code, mouth-only, eyes-only, and a human-like observer stating every prediction. Pass rule, fixed before running: expected contrasts recovered in at least 80% of replicates, and any other contrast in at most 10% of replicates. Results: `research/reproduction/recovery_stimulus_interventions.json` (see appendix).
 
 ## Human predictions by cue
 
@@ -154,7 +154,7 @@ The primary contrasts below are the only confirmatory ones. Evidence grades and 
 | P8 | `mask_mouth` on Disgusted, Angry family | Angry rises | Carbon 2020 | Strong, from face masks | **BASIC ONLY** | One source |
 | P9 | `sf_low` minus `sf_high` on Happy | Positive: low-pass spares Happy | Kumar and Srinivasan 2011 | Moderate | **BASIC ONLY** | One source. Use depends on task (Smith and Merlusca 2014) |
 | P10 | `sf_low` minus `sf_high` on Sad | Negative: high-pass spares Sad | Kumar and Srinivasan 2011 | Moderate | **BASIC ONLY** | One source. Low-pass results are never read as a subcortical analogue |
-| P11 | `aperture_wide` minus `aperture_narrow`, all items, CLR of {Interested, Surprised, Afraid} minus CLR of {Unfriendly, Sneaky} | Positive | Lee and Anderson 2017; Lee et al. 2013 | Moderate, mainly one lab | Complex and basic | Same lab. Mapping their sensitivity and discrimination clusters onto EU-Emotion labels comes from the notes, not the paper |
+| P11 (out of the confirmatory family until the dose is verified) | `aperture_wide` minus `aperture_narrow`, all items, CLR of {Interested, Surprised, Afraid} minus CLR of {Unfriendly, Sneaky} | Positive | Lee and Anderson 2017; Lee et al. 2013 | Moderate, mainly one lab | Complex and basic | Same lab. Mapping their sensitivity and discrimination clusters onto EU-Emotion labels comes from the notes, not the paper |
 | P12 | Mean of `shuffle_a`, `shuffle_b` on Happy and Surprised | Acted label falls | Richoz 2024; Bould 2008 | Strong | **BASIC ONLY** | Two sources. Richoz found no dynamic gain at full signal except for these two labels |
 | P13 | Mean of shuffles on Low Intensity items (48 items, 17 actors) | Acted label falls | Ambadar 2005; Bould and Morris 2008; Richoz 2024 | Strong | **BASIC ONLY** | Multiple sources |
 | P14 | `trunc_first_third` minus `trunc_last_third` on Afraid, Surprised family, and on Surprised, Afraid family | Confusable label higher on the early third | Jack 2014 | Moderate, synthetic faces; order detail is a secondary summary | **BASIC ONLY** | One source, full text unread. Check before citing. Afraid and Surprised come from separate actor sets, so tested separately |
@@ -192,7 +192,7 @@ A null in a cue counts as a null only if all of these hold. Otherwise the result
 1. A1, G2 to G4, and Gate B passed for that model and route.
 2. Delivery passed. For temporal cues, every frame position changes the output. For spatial cues, the edited region spans at least 1 token on that route.
 3. The dose was shown effective elsewhere on the same route: the model's change under `mask_mouth_blur` plus `mask_eyes_blur` on the unedited item, or the full mismatch for a temporal cue, exceeds the margin below.
-4. Joint ablation is also null: mouth and eyes masked together (not in this first suite) for region cues, `static_apex` for temporal cues. Until the joint mask is added, a region null is reported as "single-region null", because redundancy is not ruled out.
+4. Joint ablation is also null: `mask_eyesmouth_neutral` for region cues, `static_apex` for temporal cues. A region null without it is reported as "single-region null", because redundancy is not ruled out.
 5. Equivalence passes: the 90% actor-bootstrap CI of the contrast lies inside the margin. **Margin [proposed]:** 10% of that model's mean absolute CLR change under the full image mismatch of B4, fixed per model before any intervention contrast is computed.
 6. Divergence from the human prediction is reported alongside.
 
@@ -203,8 +203,7 @@ Every result appears twice: against the acted label, and against the human respo
 - **Flagged items.** Kind (9), Unfriendly (10) and Jealous (7), 26 items. Face-only humans chose the target on 23 to 26% of these (chance 17%; `data/eu_emotions_human_entropy.json`). Each output row carries `weak_label`.
 - **Scoring.** The acted label is not ground truth for these items. A model that answers Bored on an Unfriendly clip agrees with people. Label-level tables show these three labels separately, with the human modal label beside the acted label.
 - **Leakage flag.** Model accuracy well above human on these items is treated as possible non-facial leakage, not as skill.
-- **Sensitivity.** P11 is the one confirmatory contrast that includes them. It is repeated without them.
-- **No flagged label is a target of P1 to P10 or P12 to P15.**
+- **No flagged label is a target of a confirmatory contrast.** P11, which includes them, is out of the family while the dose is unverified. If it returns, it is repeated without them.
 - **Reading divergence.** Change in divergence from the human distribution under an edit is descriptive. Humans did not see the edited clip, so this does not show what they would do.
 - **Item filtering.** Disgusted (item range .01 to .96) and Angry (.14 to .91) also hold failed items. Results are repeated without items whose human mode is not the target.
 
@@ -223,7 +222,7 @@ Family sizes differ, so raw between-family comparison is biased. Within-item cha
 ## Limits
 
 - Human predictions come from other stimuli, often synthetic or still, mostly on basic labels. The review's rule stands: no located human baseline exists for these edits on EU-Emotion.
-- Rule 5's human response predictor is not built. Without it, predictions here are literature directions only.
+- Rule 5's human response predictor exists (`scripts/human_response_predictor.py`) and is validated on held-out Snoek only (appendix). It is a model of humans, never human data. It maps AU amplitudes to labels, so it cannot yet speak to any edit in this suite: masks, filters and frame order are not AU changes, and Snoek amplitudes and detector intensities do not share units. Predictions here therefore stay literature directions.
 - Prefill changes recognition into completion, and lexicon coverage may be low. Gate B checks signal, not whether the task is the same.
 - Masks fill a region with a neutral face rather than removing information, so a mask effect may mean adding a neutral cue. The three fills bound this.
 - Frames 1 fps apart cannot carry onset velocity. Eight uniform frames test order, not speed.
@@ -233,14 +232,16 @@ Family sizes differ, so raw between-family comparison is biased. Within-item cha
 
 1. Thresholds marked **[proposed]**: Gate B rules, the equivalence margin, SF cutoffs.
 2. Whether 243 items run on all three models or a reduced condition set is used; see Cost.
-3. Whether to add `mask_eyesmouth`, needed for null rule 4.
-4. Whether blind prefill text is accepted as is. A prompt change needs a new smoke run and a new `design_sha256`.
-5. Build the recovery check.
-6. Confirm Jack 2014 from the full text, or remove P14 and P15.
+3. Whether blind prefill text is accepted as is. A prompt change needs a new smoke run and a new `design_sha256`.
+4. Confirm Jack 2014 from the full text, or remove P14 and P15.
 
 ## Cost
 
 Measured on Gemma 4 E4B, A100, bfloat16: about 3.3 to 4.1 s per cell at about 0.11 s per forward (30 to 32 forwards per cell), peak 16.6 GB. With 32 cells per item, 243 items take about 7.4 GPU-hours, excluding delivery checks. Qwen3-VL and Molmo2 have not been timed. Qwen3-VL's image list route carries 16,320 media tokens against 253 on Gemma 4, so it will cost far more and may need a reduced `legacy_full` condition set.
+
+## Appendix: pending results
+
+Recovery and predictor numbers are not entered here yet. Read them from `research/reproduction/recovery_stimulus_interventions.json` and `research/reproduction/human_response_predictor.json` once written. The prompt and prefill under Readouts stand until the readout ladder chooses, and may be replaced by a later rung. The Cost section predates the fixed 768 crop, `legacy_full` reduced to `original`, 280 tokens per Gemma video frame, and cached scoring, so it must be remeasured.
 
 ## Appendix: smoke run
 

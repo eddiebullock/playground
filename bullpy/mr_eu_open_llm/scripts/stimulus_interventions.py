@@ -58,15 +58,17 @@ REGIONS: Dict[str, Tuple[Tuple[int, ...], ...]] = {
     "mouth": (MOUTH_RING,),
     "eyes": (LEFT_EYE_RING, RIGHT_EYE_RING),
     "brows": (LEFT_BROW, RIGHT_BROW),
+    "eyesmouth": (MOUTH_RING, LEFT_EYE_RING, RIGHT_EYE_RING),
 }
 # Dilation and feather as fractions of eye span. Fixed before any model saw an edit.
-REGION_DILATE = {"mouth": 0.12, "eyes": 0.10, "brows": 0.08}
+REGION_DILATE = {"mouth": 0.12, "eyes": 0.10, "brows": 0.08, "eyesmouth": 0.12}
 FEATHER_FRACTION = 0.03
 BLUR_FILL_SIGMA_FRACTION = 0.35
 MAX_ALIGN_RESIDUAL = 0.05  # of eye span; above this the row is flagged, not removed
 MIN_EYE_OPENING = 0.08  # lid gap over eye width; below this the eye counts as closed
 
 FACE_BOX_MARGIN = 1.5
+FACE_SIZE = 768  # fixed side of a face crop once it is sent; 16 by 16 tokens on Gemma 4
 LOW_SF_CPF = 8.0  # conventional low-pass cutoff, cycles per face width
 HIGH_SF_CPF = 32.0  # conventional high-pass cutoff, cycles per face width
 APERTURE_SCALES = {"wide": 1.25, "narrow": 0.75}
@@ -306,6 +308,14 @@ def crop(frame: np.ndarray, box: Tuple[int, int, int, int]) -> np.ndarray:
     return frame[y0:y1, x0:x1].copy()
 
 
+def fixed_size(image: np.ndarray, side: int = FACE_SIZE) -> np.ndarray:
+    """Scale so the width is side, keeping aspect, so one crop always sends one size."""
+    height, width = image.shape[:2]
+    target = (side, max(1, int(round(height * side / width))))
+    flags = cv2.INTER_AREA if width > side else cv2.INTER_CUBIC
+    return cv2.resize(image, target, interpolation=flags)
+
+
 def apex_index(frame_landmarks: Dict[int, Optional[np.ndarray]], order: Sequence[int]) -> Optional[int]:
     """Frame furthest from the first usable frame in expressive points, after registration.
 
@@ -499,7 +509,7 @@ def apply_condition(
     elif kind == "eye_crop":
         if geometry.eye_box is None:
             raise EditFailure("no_eye_box")
-        return crop(frame, geometry.eye_box), {**log, "view": "eye_band", "box": list(geometry.eye_box)}
+        return fixed_size(crop(frame, geometry.eye_box)), {**log, "view": "eye_band", "box": list(geometry.eye_box)}
 
     if view == "face":
         if geometry.face_box is None:
@@ -513,6 +523,8 @@ def apply_condition(
     if kind == "sf":
         image = spatial_frequency_filter(image, spec["band"], spec["cpf"], geometry.face_width_px)
         log.update({"band": spec["band"], "cpf": spec["cpf"], "face_width_px": round(geometry.face_width_px, 1)})
+    if view == "face":
+        image = fixed_size(image)
     return image.copy() if image is frame else image, log
 
 
