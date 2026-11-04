@@ -602,16 +602,63 @@ def test_loss_limit_end_to_end(tmp_path):
         assert fam.model_route_summary(result, attrs)["rq1_status"].startswith(status)
 
 
-def test_a_clip_failing_in_some_rotations_is_kept_and_listed(tmp_path):
+def test_a_clip_failing_in_some_rotations_is_dropped_and_listed(tmp_path, monkeypatch):
     rng = np.random.default_rng(29)
     human, trials = lookup_file(tmp_path, rng)
     clip = sorted(trials)[0]
     paths = rotation_files(tmp_path, trials, rng, drop=[clip], drop_in=(0, 3))
+    sizes = []
+    real = fam.null_plan
+
+    def spy(categories, actors, *a, **k):
+        sizes.append(len(categories))
+        return real(categories, actors, *a, **k)
+
+    monkeypatch.setattr(fam, "null_plan", spy)
     _, attrs = fam.model_route(paths, human, cue_csv(tmp_path, trials, rng), n_perm=9)
     coverage = attrs["coverage"]
-    assert coverage["n_dropped"] == 0
-    assert coverage["partial_rotation_clips"][0]["trial_id"] == clip
-    assert coverage["partial_rotation_clips"][0]["n_rotations"] == 3
+    assert coverage["n_dropped"] == 1
+    assert coverage["dropped"][0]["trial_id"] == clip
+    assert coverage["dropped"][0]["n_rotations"] == 3
+    assert coverage["partial_rotation_clips"] == coverage["dropped"]
+    assert sizes == [len(trials) - 1] * 3
+
+
+def test_a_rotation_with_only_unparsed_answers_does_not_count(tmp_path):
+    rng = np.random.default_rng(33)
+    human, trials = lookup_file(tmp_path, rng)
+    clip = sorted(trials)[0]
+    paths = rotation_files(tmp_path, trials, rng)
+    payload = json.loads(paths[1].read_text())
+    for item in payload["trials"]:
+        if item["trial_id"] == clip:
+            item["stage2"]["response_distribution"] = {"__unparsed__": 1.0}
+    paths[1].write_text(json.dumps(payload))
+    _, attrs = fam.model_route(paths, human, cue_csv(tmp_path, trials, rng), n_perm=9)
+    assert attrs["coverage"]["partial_rotation_clips"][0]["trial_id"] == clip
+    assert attrs["coverage"]["partial_rotation_clips"][0]["n_rotations"] == 4
+
+
+def test_a_clip_failing_in_all_rotations_is_not_called_partial(tmp_path):
+    rng = np.random.default_rng(31)
+    human, trials = lookup_file(tmp_path, rng)
+    clip = sorted(trials)[0]
+    paths = rotation_files(tmp_path, trials, rng, drop=[clip])
+    _, attrs = fam.model_route(paths, human, cue_csv(tmp_path, trials, rng), n_perm=9)
+    assert attrs["coverage"]["dropped"][0]["n_rotations"] == 0
+    assert attrs["coverage"]["partial_rotation_clips"] == []
+
+
+def test_partial_clips_count_towards_the_loss_limit(tmp_path):
+    rng = np.random.default_rng(32)
+    human, trials = lookup_file(tmp_path, rng)  # 108 clips, so 5 percent is 5.4
+    au = cue_csv(tmp_path, trials, rng)
+    ids = sorted(trials)
+    for n_partial, status in ((5, "confirmatory"), (6, "descriptive")):
+        paths = rotation_files(tmp_path, trials, rng, drop=ids[::9][:n_partial], drop_in=(2,))
+        result, attrs = fam.model_route(paths, human, au, n_perm=9)
+        assert len(attrs["coverage"]["partial_rotation_clips"]) == n_partial
+        assert fam.model_route_summary(result, attrs)["rq1_status"].startswith(status)
 
 
 def test_model_route_stops_if_no_clip_is_usable(tmp_path):

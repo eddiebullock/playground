@@ -178,10 +178,11 @@ def load_rotation_run(paths, human_lookup, *, allow_partial=False) -> pd.DataFra
             n_samples += samples
             dist = stage2["response_distribution"]  # also holds __unparsed__
             total = sums.setdefault(trial_id, {o: 0.0 for o in expected})
-            counted[trial_id] = counted.get(trial_id, 0) + 1
             for option in expected:
                 total[option] += float(dist.get(option, 0.0)) * samples
                 parsed[trial_id] = parsed.get(trial_id, 0.0) + float(dist.get(option, 0.0)) * samples
+            if samples > 0 and any(float(dist.get(option, 0.0)) > 0 for option in expected):
+                counted[trial_id] = counted.get(trial_id, 0) + 1  # some answer named an option
     rows = []
     for trial_id, total in sorted(sums.items()):
         rec = trials[trial_id]
