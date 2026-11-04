@@ -1181,6 +1181,73 @@ def step_probe_prompt(args: argparse.Namespace) -> None:
 
 
 # ---------------------------------------------------------------------------
+# Cache parity: where does a gap between cached and full forwards come from?
+# ---------------------------------------------------------------------------
+
+
+def step_cache_probe(args: argparse.Namespace) -> None:
+    """Token-level gap between cached and full scoring, one dtype per run. Scores, no labels."""
+    from scripts.prompts import build_4afc_prompt
+
+    geometry_items = json.loads(args.geometry.read_text(encoding="utf-8"))["items"]
+    all_items = load_items(args.manifest, args.lookup, args.data_root)
+    paths = {i["trial_id"]: i["path"] for i in all_items}
+    for trial_id, record in geometry_items.items():
+        record["path"] = paths.get(trial_id, "")
+    neutral_by_actor = {i["actor"]: i["trial_id"] for i in all_items if i["label"] == "Neutral"}
+    handle = load_handle(args.model, args.dtype)
+    rows: List[Dict[str, Any]] = []
+    for item in select_items(all_items, args.max_items or 3):
+        clip = load_clip(item, geometry_items, neutral_by_actor)
+        for name in ("single_face", "video_face"):
+            media = build_media(clip, name, "original")
+            mcq = build_4afc_prompt(item["options"], condition="video_only")
+            option_ids = [list(handle.tokenizer(f" {o}", add_special_tokens=False).input_ids) for o in item["options"]]
+            for readout, prompt, prefill, sequences in (
+                ("blind", BLIND_PROMPT, handle.blind_prefill, handle.word_ids),
+                ("mcq", mcq, handle.mcq_prefill, option_ids),
+            ):
+                inputs = encode_media(handle, media, prompt)
+                needed = needed_tokens(sequences)
+                prefixes = internal_prefixes(sequences)
+                full = full_tables(handle, inputs, prefill, prefixes, needed)
+                again = full_tables(handle, inputs, prefill, prefixes, needed)
+                cached = cached_tables(handle, inputs, prefill, prefixes, needed)
+                gaps = sorted(
+                    (
+                        (abs(cached[p][t] - full[p][t]), len(p), handle.tokenizer.decode(list(p) + [t]))
+                        for p in full
+                        for t in full[p]
+                    ),
+                    reverse=True,
+                )
+                by_depth = {
+                    str(d): round(max([g[0] for g in gaps if g[1] == d] or [0.0]), 6)
+                    for d in sorted({g[1] for g in gaps})
+                }
+                values = np.array([g[0] for g in gaps])
+                rows.append(
+                    {
+                        "trial_id": item["trial_id"],
+                        "route": name,
+                        "readout": readout,
+                        "n_tokens_scored": len(gaps),
+                        "max_gap": round(float(values.max()), 6),
+                        "mean_gap": round(float(values.mean()), 6),
+                        "max_gap_by_prefix_length": by_depth,
+                        "repeat_full_max_gap": round(
+                            max(abs(again[p][t] - full[p][t]) for p in full for t in full[p]), 6
+                        ),
+                        "worst_tokens": [[round(g[0], 5), g[1], g[2]] for g in gaps[:5]],
+                    }
+                )
+                args.reproduction.mkdir(parents=True, exist_ok=True)
+                path = args.reproduction / f"cache_parity_{args.model}_{args.dtype}.json"
+                path.write_text(json.dumps({"model": args.model, "dtype": args.dtype, "rows": rows}, indent=1) + "\n", encoding="utf-8")
+    print(json.dumps([{k: r[k] for k in ("route", "readout", "max_gap", "mean_gap", "max_gap_by_prefix_length", "repeat_full_max_gap")} for r in rows], indent=0))
+
+
+# ---------------------------------------------------------------------------
 # Step 4: processor probe, no weights and no clips
 # ---------------------------------------------------------------------------
 
@@ -1242,7 +1309,7 @@ def step_probe(args: argparse.Namespace) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
-    parser.add_argument("--step", required=True, choices=("landmarks", "run", "delivery", "probe_prompt", "probe_processor"))
+    parser.add_argument("--step", required=True, choices=("landmarks", "run", "delivery", "cache_probe", "probe_prompt", "probe_processor"))
     parser.add_argument("--model", default="gemma4", choices=("gemma4", "qwen3vl", "molmo2"))
     parser.add_argument("--manifest", type=Path, default=Path("data/eu_emotions_full_manifest.json"))
     parser.add_argument("--lookup", type=Path, default=Path("data/eu_emotions_human_entropy.json"))
@@ -1262,6 +1329,7 @@ def main() -> None:
         "landmarks": step_landmarks,
         "run": step_run,
         "delivery": step_delivery,
+        "cache_probe": step_cache_probe,
         "probe_prompt": step_probe_prompt,
         "probe_processor": step_probe,
     }
