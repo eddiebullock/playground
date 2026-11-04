@@ -24,4 +24,4 @@
 
 ## Not covered
 
-Google Scholar; full proceedings of VSS, CCN and CogSci 2026 (search engines only); unpublished work; the paper's own data-availability statement (PMC and publisher blocked). Scholars in the field may know of work these searches missed, so the sentence stays hedged.
+Google Scholar; full proceedings of VSS, CCN and CogSci 2026 (search engines only); unpublished work; Scholars in the field may know of work these searches missed, so the sentence stays hedged.
