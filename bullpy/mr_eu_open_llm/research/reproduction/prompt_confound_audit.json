@@ -7,7 +7,7 @@
         "n_categories": 21,
         "within_category_probe": {
           "n_perm": 2000,
-          "p_perm": 0.39480259870064965,
+          "p_perm": 0.36881559220389803,
           "r": -0.06262095692935733
         }
       },
@@ -17,7 +17,7 @@
         "n_categories": 21,
         "within_category_probe": {
           "n_perm": 2000,
-          "p_perm": 0.05247376311844078,
+          "p_perm": 0.04697651174412794,
           "r": 0.13261840822039744
         }
       },
@@ -27,7 +27,7 @@
         "n_categories": 21,
         "within_category_probe": {
           "n_perm": 2000,
-          "p_perm": 0.7211394302848576,
+          "p_perm": 0.7096451774112944,
           "r": 0.024349348656348385
         }
       }
@@ -39,7 +39,7 @@
         "n_categories": 21,
         "within_category_probe": {
           "n_perm": 2000,
-          "p_perm": 0.4077961019490255,
+          "p_perm": 0.4047976011994003,
           "r": 0.05807052726355122
         }
       },
@@ -49,7 +49,7 @@
         "n_categories": 21,
         "within_category_probe": {
           "n_perm": 2000,
-          "p_perm": 0.09245377311344327,
+          "p_perm": 0.09095452273863068,
           "r": 0.11003919453491945
         }
       },
@@ -59,7 +59,7 @@
         "n_categories": 21,
         "within_category_probe": {
           "n_perm": 2000,
-          "p_perm": 0.3493253373313343,
+          "p_perm": 0.3308345827086457,
           "r": 0.06612903800456095
         }
       }
@@ -71,7 +71,7 @@
         "n_categories": 21,
         "within_category_probe": {
           "n_perm": 2000,
-          "p_perm": 0.014992503748125937,
+          "p_perm": 0.010494752623688156,
           "r": 0.1772002992383375
         }
       },
@@ -81,7 +81,7 @@
         "n_categories": 21,
         "within_category_probe": {
           "n_perm": 2000,
-          "p_perm": 0.5792103948025987,
+          "p_perm": 0.568215892053973,
           "r": -0.0398705320838777
         }
       },
@@ -91,7 +91,7 @@
         "n_categories": 21,
         "within_category_probe": {
           "n_perm": 2000,
-          "p_perm": 0.09095452273863068,
+          "p_perm": 0.10294852573713144,
           "r": 0.11147355645723146
         }
       }
@@ -113,12 +113,12 @@
       },
       "within_category_abstain": {
         "n_perm": 10000,
-        "p_perm": 0.0044995500449955,
+        "p_perm": 0.0046995300469953,
         "r": 0.19530585714970525
       },
       "within_category_p_target": {
         "n_perm": 10000,
-        "p_perm": 0.0968903109689031,
+        "p_perm": 0.09969003099690031,
         "r": 0.09685561297310892
       }
     },
@@ -136,12 +136,12 @@
       },
       "within_category_abstain": {
         "n_perm": 10000,
-        "p_perm": 0.26377362263773624,
+        "p_perm": 0.25917408259174085,
         "r": 0.07500095497691102
       },
       "within_category_p_target": {
         "n_perm": 10000,
-        "p_perm": 0.0044995500449955,
+        "p_perm": 0.0034996500349965005,
         "r": 0.20897353609343372
       }
     },
@@ -159,17 +159,23 @@
       },
       "within_category_abstain": {
         "n_perm": 10000,
-        "p_perm": 0.0044995500449955,
+        "p_perm": 0.005599440055994401,
         "r": 0.19061667528045534
       },
       "within_category_p_target": {
         "n_perm": 10000,
-        "p_perm": 0.020497950204979503,
+        "p_perm": 0.018098190180981903,
         "r": 0.16228480896732625
       }
     }
   },
   "category_only_grouped_rho_t1": 0.5025424374347869,
+  "category_only_loo_rho_model_confusability": {
+    "gemma4": 0.7032150045711133,
+    "molmo2": 0.5257986201688929,
+    "qwen3vl": 0.6449478399133901
+  },
+  "category_only_loo_rho_t1": 0.5009558038715236,
   "lookup_target_position_counts": {
     "0": 243
   },
@@ -177,5 +183,28 @@
   "n_target_labels": 21,
   "n_unique_option_sets": 21,
   "note": "Exploratory, post hoc. Not preregistered.",
+  "option_overlap_named_pairs": {
+    "Bored-Unfriendly": {
+      "Bored_offered_on_Unfriendly_items": true,
+      "Unfriendly_offered_on_Bored_items": false,
+      "jaccard": 0.42857142857142855,
+      "n_pairs": 210,
+      "pairs_with_higher_overlap": 0
+    },
+    "Disappointed-Worried": {
+      "Disappointed_offered_on_Worried_items": true,
+      "Worried_offered_on_Disappointed_items": true,
+      "jaccard": 0.25,
+      "n_pairs": 210,
+      "pairs_with_higher_overlap": 18
+    },
+    "Interested-Kind": {
+      "Interested_offered_on_Kind_items": true,
+      "Kind_offered_on_Interested_items": false,
+      "jaccard": 0.25,
+      "n_pairs": 210,
+      "pairs_with_higher_overlap": 18
+    }
+  },
   "option_sets_per_target_max": 1
 }

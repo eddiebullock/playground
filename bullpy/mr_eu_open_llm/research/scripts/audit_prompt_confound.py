@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import collections
 import glob
+import itertools
 import json
 import re
 import sys
@@ -70,6 +71,36 @@ def grouped_rho(X, y, groups):
     for tr, te in LeaveOneGroupOut().split(X, y, groups):
         pred[te] = RidgeCV(alphas=np.logspace(-3, 3, 13)).fit(X[tr], y[tr]).predict(X[te])
     return float(spearmanr(pred, y)[0])
+
+
+def loo_category_rho(y, target):
+    """Spearman of each item's value with its category mean, excluding that item."""
+    y, target = np.asarray(y, float), np.asarray(target)
+    pred = np.empty(len(y))
+    for i in range(len(y)):
+        peers = target == target[i]
+        peers[i] = False
+        pred[i] = y[peers].mean() if peers.any() else np.delete(y, i).mean()
+    return float(spearmanr(pred, y)[0])
+
+
+def option_overlap(human, a, b):
+    """Jaccard overlap of named options, and whether each label was offered on the other's items."""
+    options = {}
+    for rec in human.values():
+        options[rec["human_target_label"]] = set(rec["human_options"]) - {"None of the above"}
+    ranked = sorted(
+        (len(options[x] & options[y]) / len(options[x] | options[y]) for x, y in itertools.combinations(sorted(options), 2)),
+        reverse=True,
+    )
+    jaccard = len(options[a] & options[b]) / len(options[a] | options[b])
+    return {
+        "jaccard": jaccard,
+        "pairs_with_higher_overlap": sum(v > jaccard for v in ranked),
+        "n_pairs": len(ranked),
+        f"{b}_offered_on_{a}_items": b in options[a],
+        f"{a}_offered_on_{b}_items": a in options[b],
+    }
 
 
 def eval_trials(model):
@@ -159,6 +190,18 @@ def main():
             str(human[k]["human_options"].index(human[k]["human_target_label"])) for k in ids
         ),
         "category_only_grouped_rho_t1": grouped_rho(one_hot(target), y, actors),
+        "category_only_loo_rho_t1": loo_category_rho(y, target),
+        "category_only_loo_rho_model_confusability": {
+            m: loo_category_rho(
+                [1 - eval_trials(m)[k]["response_distribution"].get(human[k]["human_target_label"], 0) for k in ids],
+                target,
+            )
+            for m in MODELS
+        },
+        "option_overlap_named_pairs": {
+            f"{a}-{b}": option_overlap(human, a, b)
+            for a, b in (("Bored", "Unfriendly"), ("Disappointed", "Worried"), ("Interested", "Kind"))
+        },
         "behaviour": {m: behaviour(m, human, rng) for m in MODELS},
         "activations": {m: activations(m, human, rng) for m in MODELS},
     }

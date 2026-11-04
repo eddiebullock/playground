@@ -64,6 +64,9 @@ Stimulus features (HPC job 39709870): `research/reproduction/stimulus_features.j
 | Category decode, last token, grouped | 0.959 to 1.000 (9 sites) | verified | same | same | exploratory; text supplied |
 | Within-category T1 probe | r = -0.063 to 0.177 | verified | same | same | only Qwen L13 has p < 0.05, uncorrected |
 | Within-category p_target vs human | Qwen 0.162, Gemma 0.097, Molmo 0.209 | verified | same | same | exploratory, uncorrected |
+| Category-only LOO, human entropy | 0.501 | verified | same | same | pilot probe range 0.441 to 0.532 |
+| Category-only LOO, model 1-p_target | Qwen 0.645, Gemma 0.703, Molmo 0.526 | verified | same | same | pilot probe range 0.467 to 0.611 |
+| Named pair option access | Bored offered on Unfriendly items, not the reverse; Kind and Interested likewise one way; Disappointed and Worried both | verified | same | same | humans could only confuse what was offered |
 
 Accuracy and probe rows above this table are confounded by the prompt; see DECISIONS 2026-11-04.
 
