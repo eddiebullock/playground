@@ -49,11 +49,15 @@ A model is **vision-dependent on `single_face`** if the one-sided actor-level si
 ## Preconditions
 
 - The `single_face` delivery gate passes for that model (`research/reproduction/input_delivery_{model}.json`). If not, the model is reported as not tested.
-- Geometry for all 243 clips exists in `results/stimulus_interventions/geometry.json` and is not changed after freezing.
+- Geometry for all 243 clips is `results/stimulus_interventions/geometry.json`, SHA-256 `2bc76dd60be233ee6072ba5b2049721899c5febcd953ec49bff1dcc2f2c72383`. The script refuses any other file.
 
 ## Missing data
 
-A face that cannot be localised fails every cell using it, and the reason is logged. An item enters only with all 5 real and all 5 mismatch rotations. All such failures are reported by label. If over 5% of items are lost for a model, that is stated as a limit on the result. **[proposed]**
+A face that cannot be localised fails every cell using it, and the reason is logged. An item enters only with all 5 real and all 5 mismatch rotations. All such failures are reported by label. If over 5% of items are lost for a model, the result stands and carries that as a stated limit (`over_lost_item_limit`). The decision rule does not change, and lost items are not replaced.
+
+Delivery and geometry were complete when this was written: 243 of 243 clips usable, so losses are not expected.
+
+**Partial lines.** A row counts only if it is valid JSON ending in a newline. A killed job can leave one bad final line. Resume and `--summarise` read cells through the same function, `read_cells`: that line is dropped and counted (`n_partial_lines_dropped`), and on resume it is cut from the file and its cell rescored. Scoring is deterministic, so a rescored cell equals the lost one. A bad line anywhere else stops the run.
 
 ## Secondary
 
@@ -64,7 +68,27 @@ Accuracy against 1/6, accuracy by target position, and Spearman and within-categ
 - One frame cannot carry dynamics. A3 tests face use, not the use of motion.
 - The apex is chosen by movement, so it may catch speech-like or head movement instead of expression.
 - The crop removes framing and body cues. That is the point, but Pass then Fail reads ambiguously.
+- The prompt says "Analyze video frames only" while the model sees one image. It is kept identical to A1 on purpose, so this mismatch cannot be separated from the input change.
+- A3 pins cv2 4.11 through `venvs/molmo2_cv411`, and `decoder_preflight.py` stops a job before it runs on another decoder. Results hold for that decoder's pixels.
 - A1's option-set defect stands: label sets still identify category. Rotation and mismatch control it only in the way they do for A1.
+
+## Commands
+
+A mechanics run scores nothing that can be read: `--mechanics_only N` writes only status, reason, seconds, forwards and sent frame indices, outside `results/face_input_validity`.
+
+    MECHANICS_ONLY=2 MODEL=gemma4 sbatch --time=00:15:00 slurm_jobs/study3_face_input_validity.sh
+
+After freezing, one job per model, from `~/rds/hpc-work/study3`:
+
+    A3_FROZEN=1 MODEL=gemma4 sbatch slurm_jobs/study3_face_input_validity.sh
+    A3_FROZEN=1 MODEL=qwen3vl sbatch slurm_jobs/study3_face_input_validity.sh
+    A3_FROZEN=1 MODEL=molmo2 sbatch slurm_jobs/study3_face_input_validity.sh
+
+Each writes `results/face_input_validity/cells_{model}.jsonl`. A job that stops is resubmitted with the same command and resumes.
+
+After all three finish, one job combines them. This applies the Holm correction across the three models, so it needs all three cell files, and writes `results/face_input_validity/face_input_validity_summary.json`:
+
+    A3_FROZEN=1 SUMMARISE=1 sbatch --time=00:10:00 slurm_jobs/study3_face_input_validity.sh
 
 ## Cost
 
