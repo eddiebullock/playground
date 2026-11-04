@@ -328,8 +328,10 @@ def step_ladder(args: argparse.Namespace) -> None:
 
     smoke: List[run.Media] = []
     if args.smoke_geometry and args.smoke_geometry.exists():
-        items = run.select_items(run.load_items(args.manifest, args.lookup, args.data_root), args.n_smoke)
         smoke_geometry = json.loads(args.smoke_geometry.read_text(encoding="utf-8"))["items"]
+        ordered = run.select_items(run.load_items(args.manifest, args.lookup, args.data_root), None)
+        items = [i for i in ordered if i["trial_id"] in smoke_geometry][: args.n_smoke]
+        report["n_smoke_items_used"] = len(items)
         paths = {i["trial_id"]: i["path"] for i in items}
         for trial_id, record in smoke_geometry.items():
             record["path"] = paths.get(trial_id, "")
@@ -337,6 +339,7 @@ def step_ladder(args: argparse.Namespace) -> None:
             record = smoke_geometry[item["trial_id"]]
             clip = run.Clip(item, record, {}, {}, si.ClipGeometry(), {}, record["apex"])
             clip.frames, _ = si.read_frames(Path(item["path"]), [record["apex"]])
+            run.check_decoder(record, clip.frames)
             clip.landmarks = run._landmark_table(record)
             clip.geometry.face_box = tuple(record["face_box"])
             clip.geometry.face_width_px = float(record["face_width_px"])
@@ -345,7 +348,7 @@ def step_ladder(args: argparse.Namespace) -> None:
     def save() -> None:
         report["seconds"] = round(time.time() - started, 1)
         report["forwards"] = handle.forwards
-        report["cached_scoring"] = {"used": handle.use_cache, "gap": handle.cache_gap, "error": handle.cache_error}
+        report["cached_scoring"] = handle.cache_checks
         out_path.write_text(json.dumps(report, indent=1) + "\n", encoding="utf-8")
 
     rungs = [r.strip() for r in args.rungs.split(",") if r.strip()]
@@ -380,7 +383,7 @@ def main() -> None:
     parser.add_argument("--calibration", type=Path, default=CALIBRATION_CSV)
     parser.add_argument("--video_dir", type=Path, default=Path("data/crema_d_calibration"))
     parser.add_argument("--geometry", type=Path, default=Path("results/readout_ladder/geometry.json"))
-    parser.add_argument("--smoke_geometry", type=Path, default=Path("results/stimulus_interventions/smoke/geometry.json"))
+    parser.add_argument("--smoke_geometry", type=Path, default=Path("results/stimulus_interventions/geometry.json"))
     parser.add_argument("--n_smoke", type=int, default=3)
     parser.add_argument("--manifest", type=Path, default=Path("data/eu_emotions_full_manifest.json"))
     parser.add_argument("--lookup", type=Path, default=Path("data/eu_emotions_human_entropy.json"))

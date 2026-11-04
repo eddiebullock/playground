@@ -15,7 +15,7 @@
 # scripts/run_stimulus_interventions.py. Frames are edited in memory; nothing here writes
 # a frame, crop or edited clip.
 #
-#   Smoke:     MODEL=gemma4 MAX_ITEMS=3 sbatch --time=00:50:00 --qos=intr slurm_jobs/study3_stimulus_interventions.sh
+#   Smoke:     SMOKE_DIR=smoke_v2 MODEL=gemma4 MAX_ITEMS=3 sbatch --time=00:50:00 --qos=intr slurm_jobs/study3_stimulus_interventions.sh
 #   Processor: STEP=probe_processor MODEL=qwen3vl sbatch --time=00:15:00 --qos=intr slurm_jobs/study3_stimulus_interventions.sh
 #   Prompt:    STEP=probe_prompt MAX_ITEMS=3 MODEL=gemma4 sbatch --time=00:20:00 slurm_jobs/study3_stimulus_interventions.sh
 #   Full:      not yet. Wait for G2 to G4 and RQ0, then STEP=landmarks once, then
@@ -71,7 +71,8 @@ fi
 cd "${PROJECT_ROOT}"
 OUT_DIR="results/stimulus_interventions"
 if [ -n "${MAX_ITEMS}" ]; then
-  OUT_DIR="${OUT_DIR}/smoke"
+  # A fresh SMOKE_DIR per readout, because run resumes and would skip old-prompt cells.
+  OUT_DIR="${OUT_DIR}/${SMOKE_DIR:-smoke}"
 fi
 mkdir -p logs "${OUT_DIR}"
 export PYTHONPATH="${PROJECT_ROOT}/src:${PROJECT_ROOT}${PYTHONPATH:+:$PYTHONPATH}"
@@ -84,7 +85,9 @@ export PYTHONWARNINGS="ignore::UserWarning"  # protobuf warns once per frame
 
 python research/scripts/decoder_preflight.py
 
-COMMON=(--model "${MODEL}" --geometry "${OUT_DIR}/geometry.json" --output_dir "${OUT_DIR}")
+# Geometry is fixed once for all 243 clips. Smoke runs read it and never rewrite it.
+GEOMETRY_FILE=results/stimulus_interventions/geometry.json
+COMMON=(--model "${MODEL}" --geometry "${GEOMETRY_FILE}" --output_dir "${OUT_DIR}")
 if [ -n "${MAX_ITEMS}" ]; then
   COMMON+=(--max_items "${MAX_ITEMS}")
 fi
@@ -108,7 +111,6 @@ case "${STEP}" in
       --geometry results/stimulus_interventions/geometry.json --max_items "${MAX_ITEMS:-3}"
     ;;
   smoke)
-    run_step landmarks
     run_step run --inputs "${INPUTS}"
     ;;
   run)
