@@ -1,5 +1,7 @@
 # Results (draft v1)
 
+**Superseded 2026-11-04.** The target was option 1 on every item and option sets identify the category, so accuracy and last-token probes below are confounded. See `PREREGISTRATION.md` amendment A1.
+
 Working title: Mechanisms of mental-state ambiguity in VLMs, and their alignment with human confusion structure.
 
 Every number below is in `research/RESULTS_REGISTRY.md` or the named dump. Do not add estimates. Official Phase 2 lock: **Branch B**, 2026-11-02.

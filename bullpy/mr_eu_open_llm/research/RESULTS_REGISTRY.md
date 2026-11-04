@@ -57,3 +57,13 @@ Phase 2 exploratory dump: `research/reproduction/phase2_gate.json`.
 Official Phase 2 dump: `research/reproduction/phase2_gate_all_layers.json`.
 Phase 5 dump: `research/reproduction/phase5_entanglement.json`.
 Stimulus features (HPC job 39709870): `research/reproduction/stimulus_features.json` (243/243 ok).
+
+| Target position in 6AFC prompt | option 1 on 243/243 | verified | `research/scripts/audit_prompt_confound.py` | `research/reproduction/prompt_confound_audit.json` | accuracy = P(chose option 1) |
+| Option sets per target label | 21 sets, 21 labels, 1 each | verified | same | same | prompt identifies category |
+| Category-only grouped T1 rho | 0.503 | verified | same | same | no activations used; equals peak probes |
+| Category decode, last token, grouped | 0.959 to 1.000 (9 sites) | verified | same | same | exploratory; text supplied |
+| Within-category T1 probe | r = -0.063 to 0.177 | verified | same | same | only Qwen L13 has p < 0.05, uncorrected |
+| Within-category p_target vs human | Qwen 0.162, Gemma 0.097, Molmo 0.209 | verified | same | same | exploratory, uncorrected |
+
+Accuracy and probe rows above this table are confounded by the prompt; see DECISIONS 2026-11-04.
+

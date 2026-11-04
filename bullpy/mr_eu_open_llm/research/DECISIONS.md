@@ -90,3 +90,16 @@ Non-trivial decisions. Date, decision, alternatives, why. Do not rewrite history
 
 - **Decision:** Sequence CPU work (Phase 1 refactor, tests, prereg, paper methods, Phase 5 entanglement null once activations exist) while HPC auth is broken. Do not pull Hugging Face 8B checkpoints onto a 16 GB M3 Air with 29 GB free.
 - **Why:** Disk and unified memory cannot host the GPU phases. Gemma 4 E4B on MPS is a maybe for smoke tests only, after Phase 1.
+
+## 2026-11-04 — Prompt confound; Phase 2 positive probe claim withdrawn pending rerun
+
+- **Decision:** Stop reporting 6AFC accuracy and last-token T1 probes as evidence of mental-state recognition or latent human-ambiguity knowledge. Run prereg amendment A1 (5 rotations, real and vision-mismatch, 3 models). Do not requeue last-token ablation.
+- **Numbers:** target in option 1 on 243/243 items; modal option-1 choices 92, 76, 48 equal the correct counts by construction. 21 option sets for 21 labels. Category-only grouped T1 rho = 0.503 vs peaks 0.471 / 0.492 / 0.518. Category decode from last-token activations 0.96 to 1.00, against 6AFC accuracy of 0.20 to 0.38. Within-category probes r = -0.06 to 0.18, none significant after correction across 9 site tests. File: `research/reproduction/prompt_confound_audit.json`.
+- **Partial good news:** shuffled-order 4AFC runs (n = 118) are above chance for Qwen2-VL (0.415, video-only) and Gemma 4 (0.432, multimodal); LLaVA-NeXT is at chance (0.254). Within-category model p_target tracks human p_target for Qwen (r = 0.16) and Molmo (r = 0.21), and Qwen and Gemma track human abstention (r = 0.19, 0.20). Those are small, uncorrected, exploratory.
+- **Alternatives:** Keep the Branch B narrative and add a caveat. Rejected: the confound touches the headline, and the option-order check was already listed as a caveat trigger.
+- **Why:** A paper resting on these results would fail review. The RMET arm is unaffected on position (targets at 10/11/9/6).
+
+## 2026-11-04 — Ablation jobs were cancelled, not pending
+
+- **Decision:** Correct `STATE.md`. Jobs 39709579, 39709583, 39709584 show CANCELLED on 2026-11-02 18:21 with 0 elapsed. Cause not recorded here.
+

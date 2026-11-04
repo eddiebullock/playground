@@ -122,3 +122,22 @@ Seed 42 unless a procedure specifies otherwise. Bootstrap ≥ 2,000 item resampl
 ### 2026-11-02 — Holm floor with n_perm = 1000 and all layers
 
 The gate used the frozen rule (Holm p < 0.01 across layers of one model; ≥ 1,000 T1 shuffles). All-layer extracts have 36 / 42 / 32 last-token layers. Minimum permutation p is 1/1001, so the Holm floor is n_layers/1001 (0.036 / 0.042 / 0.032), all above 0.01. No layer can pass check 1 at this n_perm. The rule was **not** retuned and n_perm was **not** increased after seeing the result. Branch B is locked. The floor is a limitation, not a silent rewrite of H1.
+
+### 2026-11-04 — Amendment A1: prompt confound found; rotated 6AFC with vision-mismatch control
+
+**Written before any rotated data exists.** Post hoc audit (`research/scripts/audit_prompt_confound.py`, `research/reproduction/prompt_confound_audit.json`) found two defects in the frozen task. The Phase 2 lock and H1/H2 stand as a record of what was run, but their interpretation changes.
+
+1. `human_options` lists the target first on 243/243 items and evaluation used that order. Accuracy therefore equals P(chose option 1), so above-chance accuracy and first-position bias cannot be separated.
+2. One option set per target label, so the prompt identifies the category. The stimulus baseline had no text features. Category alone gives grouped T1 rho = 0.503, which matches the peak probes. Last-token activations decode the 21 categories at 0.96 to 1.00 under leave-one-actor-out, which only prompt text can supply.
+
+**Confirmatory task.** Rotate the five named labels cyclically (r = 0..4) with None of the above last, so each target occupies each named position exactly once. Per model (Qwen3-VL, Gemma 4, Molmo2) run each rotation twice: `real` (the item's video) and `mismatch` (the same prompt with a partner item's video, different target label, different actor; `vision_mismatch_partners`, seed 42). Same 20 draws, frames and items as the original.
+
+**Primary estimand.** For item i, a_i = mean correct over 5 real rotations; b_i = the same for mismatch. delta = mean(a_i - b_i): accuracy that requires the matching face.
+
+**Decision.** A model is *vision-dependent* if the one-sided actor-level sign-flip p (100,000 draws) has Holm p < 0.05 across the three models and the actor-bootstrap 95% CI (10,000 draws) of delta excludes 0 from above. No new mental-state claim is made for a model that fails, whatever its accuracy versus 1/6.
+
+**Secondary.** Pooled accuracy vs 1/6; accuracy by target position; Spearman rho and within-category r of model p_target with human p_target. Implemented in `research/scripts/analyse_rotation.py`; analysis code is committed before the data.
+
+**Limits.** Human norms came from one fixed presentation order (not confirmed from the source), so human position effects are unknown. Rotations do not remove defect 2: label sets still identify category, so probes need a separate fix.
+
+**Phase 3 consequence.** Last-token ablation of Phase 2 axes is not requeued. 39709579 and 39709584 were cancelled on 2026-11-02 before running, so no full-N result exists.

@@ -1,0 +1,181 @@
+{
+  "activations": {
+    "gemma4": [
+      {
+        "category_decode_accuracy_grouped": 1.0,
+        "layer": 15,
+        "n_categories": 21,
+        "within_category_probe": {
+          "n_perm": 2000,
+          "p_perm": 0.39480259870064965,
+          "r": -0.06262095692935733
+        }
+      },
+      {
+        "category_decode_accuracy_grouped": 0.9588477366255144,
+        "layer": 31,
+        "n_categories": 21,
+        "within_category_probe": {
+          "n_perm": 2000,
+          "p_perm": 0.05247376311844078,
+          "r": 0.13261840822039744
+        }
+      },
+      {
+        "category_decode_accuracy_grouped": 1.0,
+        "layer": 5,
+        "n_categories": 21,
+        "within_category_probe": {
+          "n_perm": 2000,
+          "p_perm": 0.7211394302848576,
+          "r": 0.024349348656348385
+        }
+      }
+    ],
+    "molmo2": [
+      {
+        "category_decode_accuracy_grouped": 1.0,
+        "layer": 12,
+        "n_categories": 21,
+        "within_category_probe": {
+          "n_perm": 2000,
+          "p_perm": 0.4077961019490255,
+          "r": 0.05807052726355122
+        }
+      },
+      {
+        "category_decode_accuracy_grouped": 1.0,
+        "layer": 23,
+        "n_categories": 21,
+        "within_category_probe": {
+          "n_perm": 2000,
+          "p_perm": 0.09245377311344327,
+          "r": 0.11003919453491945
+        }
+      },
+      {
+        "category_decode_accuracy_grouped": 1.0,
+        "layer": 4,
+        "n_categories": 21,
+        "within_category_probe": {
+          "n_perm": 2000,
+          "p_perm": 0.3493253373313343,
+          "r": 0.06612903800456095
+        }
+      }
+    ],
+    "qwen3vl": [
+      {
+        "category_decode_accuracy_grouped": 0.9876543209876543,
+        "layer": 13,
+        "n_categories": 21,
+        "within_category_probe": {
+          "n_perm": 2000,
+          "p_perm": 0.014992503748125937,
+          "r": 0.1772002992383375
+        }
+      },
+      {
+        "category_decode_accuracy_grouped": 0.9958847736625515,
+        "layer": 26,
+        "n_categories": 21,
+        "within_category_probe": {
+          "n_perm": 2000,
+          "p_perm": 0.5792103948025987,
+          "r": -0.0398705320838777
+        }
+      },
+      {
+        "category_decode_accuracy_grouped": 1.0,
+        "layer": 4,
+        "n_categories": 21,
+        "within_category_probe": {
+          "n_perm": 2000,
+          "p_perm": 0.09095452273863068,
+          "r": 0.11147355645723146
+        }
+      }
+    ]
+  },
+  "behaviour": {
+    "gemma4": {
+      "modal_choice_position_counts": {
+        "0": 76,
+        "1": 29,
+        "2": 30,
+        "3": 22,
+        "4": 11,
+        "5": 72,
+        "unparsed": 3
+      },
+      "prompt_target_position_counts": {
+        "0": 243
+      },
+      "within_category_abstain": {
+        "n_perm": 10000,
+        "p_perm": 0.0044995500449955,
+        "r": 0.19530585714970525
+      },
+      "within_category_p_target": {
+        "n_perm": 10000,
+        "p_perm": 0.0968903109689031,
+        "r": 0.09685561297310892
+      }
+    },
+    "molmo2": {
+      "modal_choice_position_counts": {
+        "0": 48,
+        "1": 7,
+        "2": 13,
+        "3": 13,
+        "4": 17,
+        "5": 145
+      },
+      "prompt_target_position_counts": {
+        "0": 243
+      },
+      "within_category_abstain": {
+        "n_perm": 10000,
+        "p_perm": 0.26377362263773624,
+        "r": 0.07500095497691102
+      },
+      "within_category_p_target": {
+        "n_perm": 10000,
+        "p_perm": 0.0044995500449955,
+        "r": 0.20897353609343372
+      }
+    },
+    "qwen3vl": {
+      "modal_choice_position_counts": {
+        "0": 92,
+        "1": 35,
+        "2": 15,
+        "3": 12,
+        "4": 10,
+        "5": 79
+      },
+      "prompt_target_position_counts": {
+        "0": 243
+      },
+      "within_category_abstain": {
+        "n_perm": 10000,
+        "p_perm": 0.0044995500449955,
+        "r": 0.19061667528045534
+      },
+      "within_category_p_target": {
+        "n_perm": 10000,
+        "p_perm": 0.020497950204979503,
+        "r": 0.16228480896732625
+      }
+    }
+  },
+  "category_only_grouped_rho_t1": 0.5025424374347869,
+  "lookup_target_position_counts": {
+    "0": 243
+  },
+  "n_items": 243,
+  "n_target_labels": 21,
+  "n_unique_option_sets": 21,
+  "note": "Exploratory, post hoc. Not preregistered.",
+  "option_sets_per_target_max": 1
+}

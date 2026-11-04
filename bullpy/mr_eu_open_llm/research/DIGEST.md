@@ -2,6 +2,10 @@
 
 One entry per working day. User-facing; keep to 5–10 lines.
 
+## 2026-11-04 Europe/London — Prompt confound found
+
+The 6AFC prompt lists the correct answer first on all 243 items, so accuracy is P(chose option 1), and one option set per label means the prompt reveals the category. Category alone reaches grouped rho 0.50, matching the peak probes, and last-token activations decode category at 0.96 to 1.00. The Phase 2 probe claim is withdrawn pending a rerun. Amendment A1 frozen: 5 rotations, real and vision-mismatch, 3 models. Shuffled 4AFC runs and small within-category human correlations suggest some real signal survives.
+
 ## 2026-11-02 11:10 Europe/London — Branch B locked
 
 All-layer last-token extracts finished (Qwen 36, Gemma 42, Molmo 32 layers; n = 243). Official Phase 2 gate **locks Branch B**: no layer has Holm p < 0.01. Peak grouped T1 ρ is still high (Qwen L34 0.47, Gemma L2 0.49) with raw p_perm = 0.001; Holm floors are 0.036 / 0.042 because n_perm = 1000 cannot beat 0.01 across that many layers. Rule not retuned. Paper is above-chance, non-human-like outputs, mechanistic map, entanglement, generalisation. Phase 4 off. Ablation / f16 extract slipped to ~05:15–05:45 tomorrow behind A2. Intro/discussion drafts and an LOO-vs-grouped figure added. All-layer difficulty-matched RSA queued on icelake (does not overwrite the 3-layer RSA file). Option-order GPU still waits.
