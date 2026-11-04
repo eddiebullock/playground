@@ -82,6 +82,8 @@ export MR_EU_HPC_MODELS_DIR="${ENV_ROOT}/models"
 export PYTORCH_CUDA_ALLOC_CONF="expandable_segments:True"
 export PYTHONWARNINGS="ignore::UserWarning"  # protobuf warns once per frame
 
+python research/scripts/decoder_preflight.py
+
 COMMON=(--model "${MODEL}" --geometry "${OUT_DIR}/geometry.json" --output_dir "${OUT_DIR}")
 if [ -n "${MAX_ITEMS}" ]; then
   COMMON+=(--max_items "${MAX_ITEMS}")

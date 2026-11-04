@@ -56,6 +56,8 @@ export MR_EU_HPC_MODELS_DIR="${ENV_ROOT}/models"
 export PYTORCH_CUDA_ALLOC_CONF="expandable_segments:True"
 export PYTHONWARNINGS="ignore::UserWarning"
 
+python research/scripts/decoder_preflight.py
+
 if [ "${GEOMETRY}" = "1" ]; then
   python -m scripts.readout_ladder --step geometry
 fi
