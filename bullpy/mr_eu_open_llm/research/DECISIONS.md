@@ -251,3 +251,14 @@ The test the correction above asked for: `research/reproduction/same_clip_family
 - **Limits:** Power of 1.0 assumes identical true weights and independent item noise. A positive score still supports "aligned with the human pattern", not "uses the same cues".
 - **Loader:** `model_route` connects `frozen_route` to the rotation loader, for one clean complete run. It refuses partial runs, and stops if any clip has no usable response. No rotation or model result was opened.
 
+
+## 2026-11-04: Strength rule for the RQ1 pattern score, and missing clips
+
+Decided after the model-frames pattern results (`same_clip_family_route_pattern_within_category.json`: size passes at 0.5x, 1x and 2x; power .775, 1.0, 1.0) and before any model matrix exists or any rotation result is read. The earlier rule did not name a strength, so this closes a gap the coordinator left open. It is disclosed as written with the 0.5x, 1x and 2x results known.
+
+- Reading only the calibrated 1x row would favour a pass, because real-effect estimates sit at or below it: held-out gain says 1x or a little above, split-half reliability says about 0.75x.
+- Rule: run 0.75x once, under the same criteria, null of record, lambda and families. RQ1 is confirmatory only if size and power pass at both 0.75x and 1x. If 0.75x fails on either, RQ1 on natural clips is descriptive only. This can only downgrade the 1x reading.
+- 0.5x is below both estimates. Its power of .775 stays reported as a limit: an effect that small would often be missed, so a null model result does not show absence of alignment.
+- Half-shared power is reported with the result, since a model sharing only part of the human weights is much harder to detect.
+
+Missing clips in the model run: a clip with no usable response is dropped from both the model and human matrices for that model, lambda stays frozen, and null draws are restricted to the kept clips. Every dropped clip is listed by label and actor. If more than 5 percent of clips are lost for a model, that model's RQ1 result is descriptive only.
