@@ -5,7 +5,7 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --gres=gpu:1
-#SBATCH --time=01:30:00
+#SBATCH --time=01:45:00
 #SBATCH --cpus-per-task=2
 #SBATCH --mem=48G
 #SBATCH -o logs/study3_a3_%x_%j.out
