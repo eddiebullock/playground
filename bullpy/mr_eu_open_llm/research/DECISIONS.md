@@ -224,3 +224,12 @@ Non-trivial decisions. Date, decision, alternatives, why. Do not rewrite history
 - **Decision:** No third attempt is proposed. Single family cells stay provisional and are not confirmatory. The confirmatory RQ1 unit stays families and pattern score. The first attempt's within-category null stays the one of record for the primary spec.
 - **Human cells, read after the recovery result:** The two nulls agree on five two-detector family cells on all frames: Excited, None of the above and Surprised with mouth open, Sad with brow raise, and Worried with brow lower. Family-wise, only Surprised with mouth open holds under both. Worried with brow lower holds only under the first, and Excited with mouth open only under the second. Coefficients are identical; only the null differs.
 
+
+## 2026-11-04: RQ1 inference after two failed calibration attempts
+
+Decided before any model matrix exists or any rotation result is read. Two attempts at family-wise calibration failed for actor-prior observers (.115, then .17, limit .081). There will be no third attempt: a further scheme chosen after two failures would be a search for a null that passes.
+
+- Confirmatory RQ1 unit: the family pattern score, on the model-frames route with human lambda 10 (3 inputs frozen from the human matrix). Null of record for the primary spec: attempt 1.
+- No model or human claim rests on a family-wise cell or a single family cell. Those are descriptive, reported in full and labelled exploratory.
+- The score is not specific to the human cues. The different-cues observer reaches size .055 to .085 under attempt 1 and up to .115 under attempt 2. A positive score therefore supports "aligned with the human pattern", not "uses the same cues". That claim needs the RQ2 stimulus tests.
+- Model frames, frozen lambda, sparse 0.5 narrowly fails recovery (r .752, sign .898). The cause of the calibration failure is not established.
