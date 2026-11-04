@@ -1,0 +1,157 @@
+{
+ "settings": {
+  "evidence": 2.0,
+  "actor_sd": 0.3,
+  "item_sd": 0.5,
+  "cell_sd": 0.2,
+  "replicates": 30,
+  "max_exact_actors": 0,
+  "draws": 8191
+ },
+ "observers": {
+  "prior_only": {
+   "expected": [],
+   "recovery_rate_by_contrast": {
+    "P1": 0.0,
+    "P2": 0.0,
+    "P3": 0.0,
+    "P4": 0.03333333333333333,
+    "P5": 0.0,
+    "P6": 0.0,
+    "P7": 0.0,
+    "P8": 0.0,
+    "P9": 0.0,
+    "P10": 0.0,
+    "P12": 0.0,
+    "P13": 0.0,
+    "P14a": 0.0,
+    "P14b": 0.0,
+    "P15a": 0.0,
+    "P15b": 0.0
+   },
+   "lowest_rate_on_expected": null,
+   "share_replicates_with_an_unexpected_contrast": 0.03333333333333333,
+   "pass": true
+  },
+  "frame_bag": {
+   "expected": [],
+   "recovery_rate_by_contrast": {
+    "P1": 0.0,
+    "P2": 0.0,
+    "P3": 0.0,
+    "P4": 0.0,
+    "P5": 0.0,
+    "P6": 0.0,
+    "P7": 0.0,
+    "P8": 0.0,
+    "P9": 0.0,
+    "P10": 0.0,
+    "P12": 0.0,
+    "P13": 0.0,
+    "P14a": 0.03333333333333333,
+    "P14b": 0.0,
+    "P15a": 0.0,
+    "P15b": 0.03333333333333333
+   },
+   "lowest_rate_on_expected": null,
+   "share_replicates_with_an_unexpected_contrast": 0.06666666666666667,
+   "pass": true
+  },
+  "mouth_only": {
+   "expected": [
+    "P1",
+    "P2"
+   ],
+   "recovery_rate_by_contrast": {
+    "P1": 1.0,
+    "P2": 1.0,
+    "P3": 0.0,
+    "P4": 0.0,
+    "P5": 0.0,
+    "P6": 0.0,
+    "P7": 0.23333333333333334,
+    "P8": 0.06666666666666667,
+    "P9": 0.0,
+    "P10": 0.0,
+    "P12": 0.0,
+    "P13": 0.03333333333333333,
+    "P14a": 0.0,
+    "P14b": 0.0,
+    "P15a": 0.03333333333333333,
+    "P15b": 0.0
+   },
+   "lowest_rate_on_expected": 1.0,
+   "share_replicates_with_an_unexpected_contrast": 0.3,
+   "pass": false
+  },
+  "eyes_only": {
+   "expected": [
+    "P3",
+    "P4"
+   ],
+   "recovery_rate_by_contrast": {
+    "P1": 0.0,
+    "P2": 0.0,
+    "P3": 1.0,
+    "P4": 1.0,
+    "P5": 0.0,
+    "P6": 0.0,
+    "P7": 0.0,
+    "P8": 0.0,
+    "P9": 0.0,
+    "P10": 0.0,
+    "P12": 0.0,
+    "P13": 0.0,
+    "P14a": 0.0,
+    "P14b": 0.03333333333333333,
+    "P15a": 0.03333333333333333,
+    "P15b": 0.0
+   },
+   "lowest_rate_on_expected": 1.0,
+   "share_replicates_with_an_unexpected_contrast": 0.06666666666666667,
+   "pass": true
+  },
+  "human_like": {
+   "expected": [
+    "P1",
+    "P10",
+    "P12",
+    "P13",
+    "P14a",
+    "P14b",
+    "P15a",
+    "P15b",
+    "P2",
+    "P3",
+    "P4",
+    "P5",
+    "P6",
+    "P7",
+    "P8",
+    "P9"
+   ],
+   "recovery_rate_by_contrast": {
+    "P1": 1.0,
+    "P2": 1.0,
+    "P3": 1.0,
+    "P4": 1.0,
+    "P5": 1.0,
+    "P6": 1.0,
+    "P7": 1.0,
+    "P8": 1.0,
+    "P9": 1.0,
+    "P10": 1.0,
+    "P12": 1.0,
+    "P13": 1.0,
+    "P14a": 1.0,
+    "P14b": 1.0,
+    "P15a": 1.0,
+    "P15b": 1.0
+   },
+   "lowest_rate_on_expected": 1.0,
+   "share_replicates_with_an_unexpected_contrast": 0.0,
+   "pass": true
+  }
+ },
+ "pass": false
+}
