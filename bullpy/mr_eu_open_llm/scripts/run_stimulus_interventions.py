@@ -610,6 +610,9 @@ def step_logprobs(handle: ModelHandle, inputs: Dict[str, Any], prefix: Sequence[
 
 
 CACHE_TOLERANCE = 0.25  # nats; bfloat16 logits near 20 have a step of about 0.125
+# Only models where the cached path passed parity on a real run. On Gemma 4 it raised a
+# CUDA device-side assert, which poisons the process, so a try and fallback cannot be used.
+CACHED_MODELS = frozenset({"qwen3vl"})
 
 
 def continuation_inputs(
@@ -715,7 +718,10 @@ def score_sequences(
     needed = needed_tokens(sequences)
     prefixes = internal_prefixes(sequences)
     kind = "video" if "pixel_values_videos" in inputs else "image"
-    if kind not in handle.cache_checks:
+    if handle.key not in CACHED_MODELS:
+        handle.cache_checks.setdefault(kind, {"used": False, "gap": None, "error": "not tried on this model"})
+        table = full_tables(handle, inputs, prefill, prefixes, needed)
+    elif kind not in handle.cache_checks:
         table = full_tables(handle, inputs, prefill, prefixes, needed)
         try:
             cached = cached_tables(handle, inputs, prefill, prefixes, needed)
