@@ -1,0 +1,125 @@
+{
+  "gemma4": {
+    "accuracy_mismatch": 0.15555555555555553,
+    "accuracy_real": 0.37119341563786,
+    "delta_ci_actor_bootstrap": [
+      0.1390126928631147,
+      0.2915983893557422
+    ],
+    "delta_real_minus_mismatch": 0.21563786008230448,
+    "failure_reasons": {},
+    "n_items": 243,
+    "n_items_expected": 243,
+    "n_partial_lines_dropped": 0,
+    "over_lost_item_limit": false,
+    "p_delta_actor_sign_flip": 0.00013999860001399987,
+    "p_delta_holm": 0.00013999860001399987,
+    "secondary": {
+      "accuracy_by_target_position": {
+        "0": 0.37448559670781895,
+        "1": 0.3662551440329218,
+        "2": 0.3868312757201646,
+        "3": 0.3868312757201646,
+        "4": 0.34156378600823045
+      },
+      "accuracy_real_vs_chance_pooled_p": 1.4315052106018534e-65,
+      "delta_modal_ci_actor_bootstrap": [
+        0.15702193778136128,
+        0.29500103305785125
+      ],
+      "delta_scored_against_human_modal_label": 0.22551440329218106,
+      "delta_without_kind_unfriendly_jealous": 0.2313364055299539,
+      "delta_without_those_ci_actor_bootstrap": [
+        0.1511894160907319,
+        0.3078362686499065
+      ],
+      "mean_target_probability_real": 0.3701274350113083,
+      "rho_ptarget_human": 0.37550482602751567,
+      "within_category_r_ptarget_human": 0.165228799965808
+    },
+    "share_items_lost": 0.0,
+    "vision_dependent": true
+  },
+  "molmo2": {
+    "accuracy_mismatch": 0.009876543209876543,
+    "accuracy_real": 0.07242798353909466,
+    "delta_ci_actor_bootstrap": [
+      0.04,
+      0.08745065789473683
+    ],
+    "delta_real_minus_mismatch": 0.06255144032921811,
+    "failure_reasons": {},
+    "n_items": 243,
+    "n_items_expected": 243,
+    "n_partial_lines_dropped": 0,
+    "over_lost_item_limit": false,
+    "p_delta_actor_sign_flip": 4.999950000499995e-05,
+    "p_delta_holm": 9.99990000099999e-05,
+    "secondary": {
+      "accuracy_by_target_position": {
+        "0": 0.13991769547325103,
+        "1": 0.024691358024691357,
+        "2": 0.06995884773662552,
+        "3": 0.0823045267489712,
+        "4": 0.04526748971193416
+      },
+      "accuracy_real_vs_chance_pooled_p": 1.0,
+      "delta_modal_ci_actor_bootstrap": [
+        0.03233900150779025,
+        0.08730272108843536
+      ],
+      "delta_scored_against_human_modal_label": 0.05843621399176955,
+      "delta_without_kind_unfriendly_jealous": 0.06912442396313365,
+      "delta_without_those_ci_actor_bootstrap": [
+        0.04476190476190477,
+        0.09600088105726873
+      ],
+      "mean_target_probability_real": 0.0837816228125463,
+      "rho_ptarget_human": 0.3424562330988354,
+      "within_category_r_ptarget_human": 0.1080379467502685
+    },
+    "share_items_lost": 0.0,
+    "vision_dependent": true
+  },
+  "qwen3vl": {
+    "accuracy_mismatch": 0.03786008230452675,
+    "accuracy_real": 0.28230452674897116,
+    "delta_ci_actor_bootstrap": [
+      0.21166517857142855,
+      0.2762647563147135
+    ],
+    "delta_real_minus_mismatch": 0.24444444444444444,
+    "failure_reasons": {},
+    "n_items": 243,
+    "n_items_expected": 243,
+    "n_partial_lines_dropped": 0,
+    "over_lost_item_limit": false,
+    "p_delta_actor_sign_flip": 2.999970000299997e-05,
+    "p_delta_holm": 8.999910000899992e-05,
+    "secondary": {
+      "accuracy_by_target_position": {
+        "0": 0.32510288065843623,
+        "1": 0.2716049382716049,
+        "2": 0.2757201646090535,
+        "3": 0.27983539094650206,
+        "4": 0.25925925925925924
+      },
+      "accuracy_real_vs_chance_pooled_p": 6.0602500041016956e-24,
+      "delta_modal_ci_actor_bootstrap": [
+        0.20408163265306123,
+        0.2645669291338582
+      ],
+      "delta_scored_against_human_modal_label": 0.23374485596707817,
+      "delta_without_kind_unfriendly_jealous": 0.27096774193548384,
+      "delta_without_those_ci_actor_bootstrap": [
+        0.23511947847589076,
+        0.3077737986386264
+      ],
+      "mean_target_probability_real": 0.2871527379345014,
+      "rho_ptarget_human": 0.39155429960432125,
+      "within_category_r_ptarget_human": 0.19866124325614457
+    },
+    "share_items_lost": 0.0,
+    "vision_dependent": true
+  }
+}

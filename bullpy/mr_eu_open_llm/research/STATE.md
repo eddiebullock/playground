@@ -11,7 +11,7 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
 ## Next actions
 
 1. A1 rotation evals: arrays 39982133 to 39982138, 9 of 30 files on disk at 2026-11-04 21:36. Nothing read yet. Then `research/scripts/analyse_rotation.py` once all 30 are pulled, then `model_route` per model.
-2. A3 frozen and running: Gemma 40000202 and Qwen 40000203 complete, Molmo 40000204 queued. Summarise once, after all three: `A3_FROZEN=1 SUMMARISE=1 sbatch --time=00:10:00 slurm_jobs/study3_face_input_validity.sh`. Full reading needs A1.
+2. A3 done 2026-11-05: all three models pass on `single_face`, Molmo at accuracy .072 (RESULTS_REGISTRY). Pass tests vision dependence, not competence. Full reading needs A1.
 3. Shared readout chosen; smoke_v2 and A2 and A3 costs are done. A2 stays unfrozen until RQ0 and its two design points are reviewed.
 4. Same-clip analysis: RQ1 pattern score on model frames is confirmatory, subject to the 5 percent clip rule (DECISIONS). The claim is "aligned with the human pattern". Cells are exploratory.
 5. Vision gates: Gemma passes G2 to G4. Molmo fails G2 at bfloat16 and G4, so it is not eligible for A2 as drafted. Qwen full 39981392 still queued; pull `research/reproduction/vision_gates_qwen3vl.json` when it ends.
