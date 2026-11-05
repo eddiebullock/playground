@@ -99,3 +99,17 @@ Post-hoc second attempt, locked in `same_clip_family_a2_criteria.json` before it
 
 Attempt 1 null, frozen lambda 10, families: size passes at 0.5x, 1x and 2x; power .775, 1.0, 1.0 against .80. Different-cues size .03 to .055. Real effect sits near 0.75x by reliability, 1x by gain. The strength rule later required both 0.75x and 1x: 0.75x passes (power .995, size .035 and .06, different-cues .055, half-shared .60), so the score is confirmatory per `DECISIONS.md`.
 
+
+## A3 face input validity, `single_face` (2026-11-05)
+
+Frozen analysis, run once after all three models finished (job 40023523). Scripts matched the hashes in A3. 243 of 243 items on every model, no failures. File: `research/reproduction/face_input_validity_summary.json`.
+
+| Model | Accuracy real | Accuracy mismatch | delta (actor bootstrap 95% CI) | Holm p | Spearman with human p_target | Decision |
+|---|---|---|---|---|---|---|
+| Gemma 4 | .371 | .156 | .216 (.139 to .292) | .00014 | .376 | Pass |
+| Qwen3-VL | .282 | .038 | .244 (.212 to .276) | .00009 | .392 | Pass |
+| Molmo2 | .072 | .010 | .063 (.040 to .087) | .00010 | .342 | Pass |
+
+The A3 rule tests vision dependence only, not competence. A pass cannot be read as face use until A1 is in (A1/A3 table in `PREREG_A3_DRAFT.md`).
+
+Descriptive, outside the frozen summary and computed from the cells as the argmax of joint logprob; share answering "None of the above" (real, mismatch): Gemma .206, .305; Qwen .534, .688; Molmo .863, .886. Molmo is below 1/6 and its accuracy varies with target position (.140 at position 0, .025 at position 1), so its delta rests on a small minority of cells. The accuracy-against-1/6 p is descriptive by A3.
