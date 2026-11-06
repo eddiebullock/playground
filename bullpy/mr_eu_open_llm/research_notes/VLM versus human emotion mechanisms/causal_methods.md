@@ -210,6 +210,8 @@ Patch cut-points per model. These follow from the code above and need a unit tes
 | Read path to answer | Attention mask text queries to image keys, per layer window | Same; check attention type per layer | Same |
 
 > **Measured correction, 2026-11-04 (vision gates, cv2 4.11; `research/DECISIONS.md`).** The table above is the pre-run reading of the code. Measured: Gemma needs both routes cut at L0, and from L1 a mean of 42 percent of the image effect remains. Gemma layers 24 to 41 reuse keys and values from layers 22 and 23, so image-position patches at L24 or later are guaranteed false nulls. Gemma used 253 to 256 soft tokens here, not 280. Molmo "image positions at any layer" is wrong: a cut from L1 leaves a mean of 11.7 percent. Molmo vision features are added to the patch embedding, and its bidirectional image attention does not apply because `token_type_ids` is removed. Qwen "after LM layer index 2" is wrong on a provisional 2-clip smoke: 31 percent remains at bfloat16 and 46 percent at float32. The Qwen full gate is pending.
+>
+> **Qwen, 2026-11-05 (same DECISIONS file).** Full gate run at bfloat16, 12 clips: image positions cut after LM layer 2 leave a mean of 27 percent of the image effect (range 18 to 65), and cutting either route alone leaves about 100 percent. No cut after layer 2 is complete, and any cut must take out both routes.
 
 - The DeepStack is a direct redundancy threat: if only post-merger tokens are patched, three ViT depths still reach the LM. This is a candidate explanation for any future Qwen null.
 - Gemma's per-layer path means a residual patch at layer k may be partly re-injected downstream. I read this from excerpts, and how image positions behave depends on lines I did not fully trace.
