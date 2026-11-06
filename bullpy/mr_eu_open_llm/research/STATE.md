@@ -17,7 +17,7 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
 5. Vision gates: Gemma and Qwen pass G2 to G4, Qwen at bfloat16 only because float32 ran out of memory (DECISIONS 2026-11-05). Molmo fails G2 at bfloat16 and G4, so it is not eligible for A2 as drafted.
 6. Scoring path: full forwards for all models unless DECISIONS says otherwise. Never patch Gemma image positions at L24 or later.
 
-Merge with true merge commits, not squash: a squash on PR 50 caused a conflict on the next PR. Cluster quota: 1100.1 GB at 2026-11-06 08:59, over the 1099.5 GB soft limit since 2026-11-05 13:02, hard limit 1209.5. Grace ends about 2026-11-12 13:00; after that writes fail until usage is below the soft limit, so free space before then. Storage audit done, deletion awaits a decision.
+Merge with true merge commits, not squash: a squash on PR 50 caused a conflict on the next PR. Cluster quota: 1053.5 GB at 2026-11-06 13:00, under the 1099.5 GB soft limit, hard limit 1209.5. Deleted `es_vlm/models/qwen3vl_32b` that day after a reference scan: CASCADE loads its own copy from the project store, and es-vlm can fetch 32B again from Hugging Face at revision 0cfaf48183f594c314753d30a4c4974bc75f3ccb.
 
 Do not cancel A1/A2/CAS jobs. `cas_*` jobs belong to the separate CASCADE project (`~/rds/hpc-work/cascade/code`), and appear to be resubmitted by a local loop there (`build/chain_loop.sh`), inferred from timing. Ablation 39709579, 39709583, 39709584 were cancelled 2026-11-02 and are not requeued.
 
