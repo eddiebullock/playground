@@ -34,8 +34,11 @@ sys.path.insert(0, str(ROOT))
 from scripts import a4_analyse as an  # noqa: E402
 from scripts import a4_design as d  # noqa: E402
 
-OBSERVERS = ("human_like", "half_shared", "different_cues", "prior_only", "generic", "pair_swapped")
-DATASETS = ("basic_EA", "conversational_EA")
+OBSERVERS = ("human_like", "half_shared", "boundary", "different_cues", "prior_only", "generic",
+             "salience_profile", "pair_swapped")
+DATASETS = d.DATASETS
+STATISTICS = ("raw", "residual")
+FALSE_ALIGNED = ("different_cues", "prior_only", "generic", "salience_profile")
 
 
 def human_weights(store: Mapping[str, Any], dataset: str) -> Tuple[np.ndarray, np.ndarray]:
@@ -78,6 +81,14 @@ def observer_weights(name: str, W: np.ndarray, rng: np.random.Generator) -> np.n
         return np.zeros_like(W)
     if name == "pair_swapped":
         return swap_pairs(W)
+    if name == "boundary":
+        mix = d.RECOVERY["boundary_mix"]
+        return mix * W + np.sqrt(1 - mix**2) * shuffled
+    if name == "salience_profile":
+        # One profile for every cue, the human mean, scaled by each human cue's own size.
+        size = np.linalg.norm(W, axis=0)
+        out = np.outer(W.mean(axis=1), size)
+        return out * np.linalg.norm(W) / np.linalg.norm(out)  # as strong as the human weights
     if name == "generic":
         out = np.zeros_like(W)
         out[-1] = np.abs(W).mean()
@@ -93,15 +104,15 @@ def respond(W: np.ndarray, base: np.ndarray, X_au: np.ndarray, gender: np.ndarra
     return p / p.sum(axis=1, keepdims=True)
 
 
-def true_cfa(W: np.ndarray, base: np.ndarray, X_au: np.ndarray, gender: np.ndarray, reference: np.ndarray) -> float:
-    """CFA of the observer's noiseless do effects, by direct G-computation."""
+def true_tau(W: np.ndarray, base: np.ndarray, X_au: np.ndarray, gender: np.ndarray) -> np.ndarray:
+    """The observer's noiseless do effects, by direct G-computation."""
     tau = np.zeros((len(base), len(an.FAMILY_MEMBERS)))
     for j, members in enumerate(an.FAMILY_MEMBERS):
         on, off = X_au.copy(), X_au.copy()
         on[:, members], off[:, members] = 1.0, 0.0
         zero = np.random.default_rng(0)
         tau[:, j] = (respond(W, base, on, gender, zero, 0.0) - respond(W, base, off, gender, zero, 0.0)).mean(axis=0)
-    return an.cosine(tau, reference)
+    return tau
 
 
 def natural_correlation(W_a: np.ndarray, W_b: np.ndarray, base: np.ndarray, rng: np.random.Generator) -> float:
@@ -124,34 +135,43 @@ def natural_correlation(W_a: np.ndarray, W_b: np.ndarray, base: np.ndarray, rng:
 
 
 def one_replicate(task: Tuple) -> Dict[str, Any]:
-    name, dataset, strength, replicate, X_au, gender, W, base, human, lam, draws, cue_n, signal_n = task
+    name, dataset, strength, replicate, X_au, gender, W, base, human, lam, draws, cue_n, signal_n, splits = task
     rng = np.random.default_rng([d.SEED, DATASETS.index(dataset), OBSERVERS.index(name), int(strength * 100), replicate])
     target = strength * observer_weights(name, W, rng)
     gain = np.exp(rng.normal(0, d.RECOVERY["gain_log_sd"], (1, X_au.shape[1])))
     P = respond(target, base, X_au * gain, gender, rng, d.RECOVERY["stimulus_logit_sd"])
-    result = an.estimate(P, X_au, gender, lam, human, rng=rng, cue_n=cue_n, signal_n=signal_n, draws=draws)
-    truth = true_cfa(target * gain, base, X_au, gender, human)
-    gates = {"all": True}
-    p_two = min(1.0, 2 * result["p_cue"])  # Holm's worst case across the two eligible models
-    return {"observer": name, "dataset": dataset, "strength": strength, "cfa": result["cfa"], "truth": truth,
-            "p_cue": result["p_cue"], "p_signal": result["p_signal"], "ci": result["ci"],
-            "decision": an.decide(gates, result["p_signal"], p_two, result["cfa"], result["ci"]),
-            "natural_r": natural_correlation(W, target, base, rng) if name == "pair_swapped" else None}
+    result = an.estimate(P, X_au, gender, lam, human, rng=rng, cue_n=cue_n, signal_n=signal_n, draws=draws, splits=splits)
+    truth_tau = true_tau(target * gain, base, X_au, gender)
+    truth = {"raw": an.cosine(truth_tau, human),
+             "residual": an.cosine(an.remove_common(truth_tau), an.remove_common(human))}
+    out: Dict[str, Any] = {"observer": name, "dataset": dataset, "strength": strength, "p_signal": result["p_signal"],
+                           "natural_r": natural_correlation(W, target, base, rng) if name == "pair_swapped" else None}
+    for statistic in STATISTICS:
+        block = result[statistic]
+        p_two = min(1.0, 2 * block["p_cue"])  # Holm's worst case across the two eligible models
+        out[statistic] = {"cfa": block["cfa"], "truth": truth[statistic], "p_cue": block["p_cue"], "ci": block["ci"],
+                          "r_s": block["r_s"], "decision": an.decide({"all": True}, result["p_signal"], p_two,
+                                                                     block["cfa"], block["ci"], block["r_s"])}
+    return out
 
 
-def rates(rows: Sequence[Mapping[str, Any]]) -> Dict[str, Any]:
-    decisions = [r["decision"] for r in rows]
-    errors = [abs(r["cfa"] - r["truth"]) for r in rows]
+def rates(rows: Sequence[Mapping[str, Any]], statistic: str) -> Dict[str, Any]:
+    parts = [r[statistic] for r in rows]
+    decisions = [p["decision"] for p in parts]
+    errors = [abs(p["cfa"] - p["truth"]) for p in parts]
     naturals = [r["natural_r"] for r in rows if r["natural_r"] is not None]
-    return {"n": len(rows), "cfa_mean": round(float(np.mean([r["cfa"] for r in rows])), 3),
-            "truth_mean": round(float(np.mean([r["truth"] for r in rows])), 3),
+    above = [p["decision"] for p in parts if p["truth"] >= d.SESOI_CFA]
+    return {"n": len(rows), "cfa_mean": round(float(np.nanmean([p["cfa"] for p in parts])), 3),
+            "truth_mean": round(float(np.nanmean([p["truth"] for p in parts])), 3),
+            "r_s_mean": round(float(np.nanmean([p["r_s"] for p in parts])), 3),
             "aligned": float(np.mean([x == "Aligned" for x in decisions])),
             "not_aligned": float(np.mean([x == "Not aligned" for x in decisions])),
             "inconclusive": float(np.mean([x == "Inconclusive" for x in decisions])),
-            "alignment_p_rate": float(np.mean([r["p_cue"] < d.ALPHA / 2 for r in rows])),
+            "alignment_p_rate": float(np.mean([p["p_cue"] < d.ALPHA / 2 for p in parts])),
             "signal_rate": float(np.mean([r["p_signal"] < d.ALPHA for r in rows])),
             "share_cfa_error_within_limit": float(np.mean([e <= d.RECOVERY["pass"]["pair_cfa_error_max"] for e in errors])),
-            "natural_output_r": round(float(np.mean(naturals)), 3) if naturals else None}
+            "not_aligned_when_truth_at_bound": float(np.mean([x == "Not aligned" for x in above])) if above else 0.0,
+            "n_truth_at_bound": len(above), "natural_output_r": round(float(np.mean(naturals)), 3) if naturals else None}
 
 
 def verdict(table: Mapping[str, Mapping[str, Mapping[str, Any]]]) -> Dict[str, bool]:
@@ -161,9 +181,11 @@ def verdict(table: Mapping[str, Mapping[str, Mapping[str, Any]]]) -> Dict[str, b
         strength = key.split("|")[1]
         if strength != "0.25":
             out[f"{key}|human_like"] = cells["human_like"]["aligned"] >= rule["human_like_aligned_min"]
-        out[f"{key}|false_aligned"] = max(cells[o]["aligned"] for o in ("different_cues", "prior_only", "generic")) <= rule["false_aligned_max"]
+        out[f"{key}|false_aligned"] = max(cells[o]["aligned"] for o in FALSE_ALIGNED) <= rule["false_aligned_max"]
         out[f"{key}|prior_signal"] = cells["prior_only"]["signal_rate"] <= rule["prior_only_signal_max"]
-        out[f"{key}|pair_error"] = cells["pair_swapped"]["share_cfa_error_within_limit"] >= rule["pair_within_error_share_min"]
+        out[f"{key}|boundary"] = cells["boundary"]["not_aligned_when_truth_at_bound"] <= rule["boundary_not_aligned_max"]
+        if key not in d.RECOVERY["pair_error_withdrawn"]:
+            out[f"{key}|pair_error"] = cells["pair_swapped"]["share_cfa_error_within_limit"] >= rule["pair_within_error_share_min"]
         if strength == "1.0":
             out[f"{key}|half_alignment"] = cells["half_shared"]["alignment_p_rate"] >= rule["half_shared_alignment_min"]
             out[f"{key}|half_aligned"] = cells["half_shared"]["aligned"] >= rule["half_shared_aligned_min_at_1x"]
@@ -171,7 +193,12 @@ def verdict(table: Mapping[str, Mapping[str, Mapping[str, Any]]]) -> Dict[str, b
     return out
 
 
-def build_tasks(manifest: Sequence[Mapping[str, Any]], store, replicates, draws, cue_n, signal_n) -> List[Tuple]:
+def choose_statistic(passed: Mapping[str, bool]) -> Any:
+    """The confirmatory statistic is fixed. Recovery can only withhold it."""
+    return d.STATISTIC if passed[d.STATISTIC] else None
+
+
+def build_tasks(manifest: Sequence[Mapping[str, Any]], store, replicates, draws, cue_n, signal_n, splits) -> List[Tuple]:
     tasks = []
     for dataset in DATASETS:
         rows = [r for r in manifest if r["set"] == "main" and r["dataset"] == dataset]
@@ -181,7 +208,7 @@ def build_tasks(manifest: Sequence[Mapping[str, Any]], store, replicates, draws,
         for strength in d.RECOVERY["strengths"]:
             for name in OBSERVERS:
                 for k in range(replicates):
-                    tasks.append((name, dataset, strength, k, X_au, gender, W, base, human, lam, draws, cue_n, signal_n))
+                    tasks.append((name, dataset, strength, k, X_au, gender, W, base, human, lam, draws, cue_n, signal_n, splits))
     return tasks
 
 
@@ -197,21 +224,25 @@ def main() -> None:
     args = parser.parse_args()
     store = json.loads(args.human.read_text(encoding="utf-8"))
     manifest = pd.read_csv(args.manifest).to_dict("records")
-    tasks = build_tasks(manifest, store, args.replicates, d.RECOVERY["bootstrap_draws"],
-                        d.RECOVERY["cue_permutations"], d.RECOVERY["signal_permutations"])
+    tasks = build_tasks(manifest, store, args.replicates, d.RECOVERY["bootstrap_draws"], d.RECOVERY["cue_permutations"],
+                        d.RECOVERY["signal_permutations"], d.RECOVERY["split_half_splits"])
     with multiprocessing.Pool(args.workers) as pool:
         rows = pool.map(one_replicate, tasks, chunksize=4)
-    table: Dict[str, Dict[str, Any]] = {}
-    for dataset in DATASETS:
-        for strength in d.RECOVERY["strengths"]:
-            key = f"{dataset}|{strength}"
-            table[key] = {o: rates([r for r in rows if r["dataset"] == dataset and r["strength"] == strength
-                                    and r["observer"] == o]) for o in OBSERVERS}
-    checks = verdict(table)
-    out = {"design_sha256": d.design_hash(), "settings": {k: v for k, v in d.RECOVERY.items() if k != "pairs"},
-           "replicates": args.replicates, "table": table, "checks": checks, "pass": all(checks.values())}
+    tables: Dict[str, Dict[str, Any]] = {statistic: {} for statistic in STATISTICS}
+    for statistic in STATISTICS:
+        for dataset in DATASETS:
+            for strength in d.RECOVERY["strengths"]:
+                key = f"{dataset}|{strength}"
+                tables[statistic][key] = {o: rates([r for r in rows if r["dataset"] == dataset and r["strength"] == strength
+                                                    and r["observer"] == o], statistic) for o in OBSERVERS}
+    checks = {s: verdict(tables[s]) for s in STATISTICS}
+    passed = {s: all(checks[s].values()) for s in STATISTICS}
+    out = {"design_sha256": d.design_hash(), "replicates": args.replicates,
+           "settings": {k: v for k, v in d.RECOVERY.items() if k != "pairs"}, "tables": tables, "checks": checks,
+           "pass": passed, "confirmatory_statistic": choose_statistic(passed)}
     args.out.write_text(json.dumps(out, indent=1) + "\n", encoding="utf-8")
-    print(json.dumps({"pass": out["pass"], "failed": [k for k, v in checks.items() if not v]}))
+    print(json.dumps({"pass": passed, "statistic": out["confirmatory_statistic"],
+                      "failed": {s: [k for k, v in checks[s].items() if not v] for s in STATISTICS}}))
 
 
 if __name__ == "__main__":

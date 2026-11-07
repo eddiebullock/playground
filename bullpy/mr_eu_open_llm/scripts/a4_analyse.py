@@ -83,14 +83,31 @@ def fit_tau(P: np.ndarray, X_au: np.ndarray, gender: np.ndarray, lam: float) -> 
     return hae.do_effects(X_au, X_cov, fitted, FAMILY_MEMBERS)
 
 
+def remove_common(tau: np.ndarray) -> np.ndarray:
+    """Take out each cue's component along the matrix's own mean profile across cues.
+
+    A system that answers every cue with one profile, scaled by how salient the cue is, has
+    nothing left after this, however well its scaling matches human effect sizes.
+    """
+    mean = tau.mean(axis=1)
+    size = np.linalg.norm(mean)
+    if size == 0:
+        return tau.copy()
+    unit = mean / size
+    return tau - np.outer(unit, unit @ tau)
+
+
 def cue_null_p(tau: np.ndarray, human: np.ndarray, n: int, rng: np.random.Generator) -> Tuple[float, float]:
     """One-sided p from shuffling cue labels. Returns (p, null 95th percentile).
 
     Shuffling columns keeps each cue's profile and any effect common to all cues, so a system
-    that responds to every cue alike cannot pass, however similar its mean profile is.
+    that responds to every cue alike cannot pass, however similar its mean profile is. A flat
+    matrix has no cosine, so its p is 1.
     """
-    observed = cosine(tau, human)
     norm = np.linalg.norm(tau) * np.linalg.norm(human)
+    if norm == 0:
+        return 1.0, float("nan")
+    observed = cosine(tau, human)
     order = np.argsort(rng.random((n, tau.shape[1])), axis=1)
     null = np.einsum("nkj,kj->n", tau[:, order].transpose(1, 0, 2), human) / norm
     return float((1 + np.sum(null >= observed - 1e-12)) / (n + 1)), float(np.quantile(null, 0.95))
@@ -107,57 +124,83 @@ def signal_test(P: np.ndarray, X_au: np.ndarray, gender: np.ndarray, n: int, rng
     return float((1 + hits) / (n + 1))
 
 
-def bootstrap_ci(P, X_au, gender, lam, human, draws, rng) -> Tuple[float, float]:
-    """Percentile CI of CFA, resampling stimuli."""
-    values = []
+def bootstrap_ci(P, X_au, gender, lam, human, draws, rng) -> Dict[str, Tuple[float, float]]:
+    """Percentile CIs of both statistics, resampling stimuli."""
+    raw, residual = [], []
+    plain = remove_common(human)
     for _ in range(draws):
         i = rng.integers(0, len(P), len(P))
-        values.append(cosine(fit_tau(P[i], X_au[i], gender[i], lam), human))
-    low, high = np.nanquantile(values, [0.025, 0.975])
-    return float(low), float(high)
+        tau = fit_tau(P[i], X_au[i], gender[i], lam)
+        raw.append(cosine(tau, human))
+        residual.append(cosine(remove_common(tau), plain))
+    ci = lambda v: tuple(float(x) for x in np.nanquantile(v, [0.025, 0.975])) if np.isfinite(v).any() else (float("nan"),) * 2  # noqa: E731
+    return {"raw": ci(np.array(raw)), "residual": ci(np.array(residual))}
 
 
-def split_half(P, X_au, gender, lam, splits, rng) -> float:
+def split_half(P, X_au, gender, lam, splits, rng) -> Dict[str, float]:
     """Reliability of the model's matrix over stimuli, Spearman-Brown corrected."""
-    rs = []
+    raw, residual = [], []
     for _ in range(splits):
         order = rng.permutation(len(P))
         a, b = order[: len(P) // 2], order[len(P) // 2 :]
-        rs.append(cosine(fit_tau(P[a], X_au[a], gender[a], lam), fit_tau(P[b], X_au[b], gender[b], lam)))
-    return float(hae.spearman_brown(np.mean(rs)))
+        first, second = fit_tau(P[a], X_au[a], gender[a], lam), fit_tau(P[b], X_au[b], gender[b], lam)
+        raw.append(cosine(first, second))
+        residual.append(cosine(remove_common(first), remove_common(second)))
+    brown = lambda v: float(hae.spearman_brown(np.nanmean(v))) if np.isfinite(v).any() else float("nan")  # noqa: E731
+    return {"raw": brown(np.array(raw)), "residual": brown(np.array(residual))}
 
 
 def decide(gates: Mapping[str, Any], p_signal: float, p_holm: float, cfa: float,
-           ci: Sequence[float]) -> str:
-    """Missing or failed gates give Inconclusive, as does no measurable AU signal."""
+           ci: Sequence[float], r_s: float) -> str:
+    """Missing or failed gates give Inconclusive, as does no measurable AU signal.
+
+    Not aligned must clear the bound after disattenuation for the model's own reliability, so
+    a noisy matrix cannot earn a null. Raw CFA can only understate, so Aligned needs no such
+    step. A reliability that is missing or not positive cannot support Not aligned.
+    """
     if not gates or not all(v is True for v in gates.values()):
         return "Inconclusive"
     if not p_signal < d.ALPHA:
         return "Inconclusive"
     if p_holm < d.ALPHA and cfa >= d.SESOI_CFA and ci[0] > 0:
         return "Aligned"
-    if ci[1] < d.SESOI_CFA:
+    if r_s > 0 and ci[1] / np.sqrt(r_s) < d.SESOI_CFA:
         return "Not aligned"
     return "Inconclusive"
 
 
-def estimate(P, X_au, gender, lam, human, *, rng, cue_n=d.CUE_PERMUTATIONS,
-             signal_n=d.SIGNAL_PERMUTATIONS, draws=d.BOOTSTRAP_DRAWS) -> Dict[str, Any]:
+def estimate(P, X_au, gender, lam, human, *, rng, cue_n=d.CUE_PERMUTATIONS, signal_n=d.SIGNAL_PERMUTATIONS,
+             draws=d.BOOTSTRAP_DRAWS, splits=d.SPLIT_HALF_SPLITS) -> Dict[str, Any]:
+    """Both statistics, each with its null, interval and reliability, on the same fits."""
     tau = fit_tau(P, X_au, gender, lam)
-    p, q95 = cue_null_p(tau, human, cue_n, rng)
-    return {"cfa": cosine(tau, human), "p_cue": p, "null_q95": q95,
-            "p_signal": signal_test(P, X_au, gender, signal_n, rng),
-            "ci": bootstrap_ci(P, X_au, gender, lam, human, draws, rng), "tau": tau}
+    cis = bootstrap_ci(P, X_au, gender, lam, human, draws, rng)
+    reliability = split_half(P, X_au, gender, lam, splits, rng)
+    out: Dict[str, Any] = {"tau": tau, "p_signal": signal_test(P, X_au, gender, signal_n, rng)}
+    for name, a, b in (("raw", tau, human), ("residual", remove_common(tau), remove_common(human))):
+        p, q95 = cue_null_p(a, b, cue_n, rng)
+        out[name] = {"cfa": cosine(a, b), "p_cue": p, "null_q95": q95, "ci": cis[name], "r_s": reliability[name]}
+    return out
+
+
+def family_columns(names: Sequence[str]) -> List[int]:
+    return [j for j, f in enumerate(FAMILIES) if f in names]
 
 
 def keep_families(tau: np.ndarray, drop: Sequence[str]) -> np.ndarray:
     return tau[:, [j for j, f in enumerate(FAMILIES) if f not in drop]]
 
 
-def sensitivities(tau: np.ndarray, human: np.ndarray) -> Dict[str, float]:
-    return {"without_AU22_AU27": cosine(keep_families(tau, d.APPROXIMATED_FAMILIES),
-                                        keep_families(human, d.APPROXIMATED_FAMILIES)),
-            "without_other": cosine(tau[:-1], human[:-1])}
+def sensitivities(tau: np.ndarray, human: np.ndarray) -> Dict[str, Dict[str, float]]:
+    """Each subset on both statistics. The residual takes the profile from the full matrix."""
+    flagged = [f for f in FAMILIES if f not in d.CONFIRMED_FAMILIES]
+    plain_tau, plain_human = remove_common(tau), remove_common(human)
+    pair = lambda a, b: {"raw": cosine(a(tau), a(human)), "residual": cosine(b(plain_tau), b(plain_human))}  # noqa: E731
+    columns = lambda names: (lambda m: m[:, family_columns(names)])  # noqa: E731
+    without = lambda m: keep_families(m, d.APPROXIMATED_FAMILIES)  # noqa: E731
+    no_other = lambda m: m[:-1]  # noqa: E731
+    return {"without_AU22_AU27": pair(without, without), "without_other": pair(no_other, no_other),
+            "flagged_families": pair(columns(flagged), columns(flagged)),
+            "confirmed_families": pair(columns(d.CONFIRMED_FAMILIES), columns(d.CONFIRMED_FAMILIES))}
 
 
 def direct_effects(responses: Mapping[str, np.ndarray], rows: Sequence[Mapping[str, Any]]) -> Tuple[np.ndarray, List[float]]:
@@ -194,18 +237,29 @@ def js(p: np.ndarray, q: np.ndarray) -> np.ndarray:
     return 0.5 * (kl(p) + kl(q))
 
 
-def replicate_check(first: np.ndarray, second: np.ndarray, rng: np.random.Generator, draws: int = 9999) -> Dict[str, float]:
+def replicate_check(first: np.ndarray, second: np.ndarray, groups: Sequence[Any], rng: np.random.Generator,
+                    draws: int = d.REPLICATE_DRAWS) -> Dict[str, float]:
     """Does a configuration carry across identities? V3, and B4's analogue.
 
-    first and second are the same configurations on two identities. The mismatch pairs each
-    configuration with the next one's replicate, so it uses no human target. Sign-flip over
-    configurations, one-sided.
+    first and second are the same configurations on two identities. Each configuration's
+    mismatch is another configuration's replicate from the same group, which holds gender and
+    the identity pair fixed, so face differences cannot pass for configuration. No human
+    target is used. Sign-flip over configurations, one-sided. Flat output gives p = 1.
     """
-    diff = js(first, np.roll(second, -1, axis=0)) - js(first, second)
-    observed = float(diff.mean())
+    keys = np.array([str(g) for g in groups])
+    partner = np.arange(len(keys))
+    for key in sorted(set(keys)):
+        members = np.where(keys == key)[0]
+        if len(members) > 1:
+            partner[members] = np.roll(members, -1)
+    usable = partner != np.arange(len(keys))
+    diff = js(first[usable], second[partner[usable]]) - js(first[usable], second[usable])
+    observed = float(diff.mean()) if len(diff) else 0.0
+    if not np.any(diff):
+        return {"delta_js": observed, "p": 1.0, "n": int(usable.sum())}
     signs = rng.choice((-1.0, 1.0), size=(draws, len(diff)))
     null = (signs * diff).mean(axis=1)
-    return {"delta_js": observed, "p": float((1 + np.sum(null >= observed)) / (draws + 1))}
+    return {"delta_js": observed, "p": float((1 + np.sum(null >= observed)) / (draws + 1)), "n": int(usable.sum())}
 
 
 def detector_gate(rows: Sequence[Mapping[str, Any]]) -> Dict[str, Any]:
@@ -216,7 +270,12 @@ def detector_gate(rows: Sequence[Mapping[str, Any]]) -> Dict[str, Any]:
     """
     groups: Dict[Tuple[str, str], Dict[float, float]] = {}
     for r in rows:
-        groups.setdefault((r["au"], r["identity"]), {})[float(r["amplitude"])] = float(r["intensity"])
+        value = r["intensity"]
+        if value == "" or value is None or value != value:
+            continue  # no face found: that pair is missing a dose, so it does not rise
+        groups.setdefault((r["au"], r["identity"]), {})[float(r["amplitude"])] = float(value)
+    for r in rows:
+        groups.setdefault((r["au"], r["identity"]), {})
     rising = {}
     for key, values in groups.items():
         series = [values.get(a) for a in d.ONE_AU_AMPLITUDES]
@@ -261,8 +320,12 @@ def human_matrix(store: Mapping[str, Any], dataset: str) -> Tuple[np.ndarray, fl
 
 
 def human_reference(store: Mapping[str, Any]) -> Dict[str, float]:
-    return {task: cosine(human_matrix(store, f"{task}_WC")[0], human_matrix(store, f"{task}_EA")[0])
-            for task in ("basic", "conversational")}
+    out: Dict[str, float] = {}
+    for task in ("basic", "conversational"):
+        wc, ea = human_matrix(store, f"{task}_WC")[0], human_matrix(store, f"{task}_EA")[0]
+        out[task] = cosine(wc, ea)
+        out[f"{task}_residual"] = cosine(remove_common(wc), remove_common(ea))
+    return out
 
 
 def pooled_do(table: Any, subjects: np.ndarray, stimuli: np.ndarray, lam: float) -> np.ndarray:
@@ -284,7 +347,7 @@ def human_do_ceiling(frame: Any, labels: Sequence[str], label_col: str, splits: 
     rng = np.random.default_rng(seed)
     groups_sub = [np.where(table.sub_set == s)[0] for s in np.unique(table.sub_set)]
     groups_stim = [np.where(table.stim_strata == s)[0] for s in np.unique(table.stim_strata)]
-    rs = []
+    rs, plain = [], []
     for _ in range(splits):
         mask = np.zeros(len(table.subs), dtype=bool)
         for g in groups_sub:
@@ -294,11 +357,59 @@ def human_do_ceiling(frame: Any, labels: Sequence[str], label_col: str, splits: 
             perm = rng.permutation(g)
             a.extend(perm[: len(perm) // 2])
             b.extend(perm[len(perm) // 2 :])
-        rs.append(cosine(pooled_do(table, mask, np.array(a), 1.0), pooled_do(table, ~mask, np.array(b), 1.0)))
-    r = float(np.mean(rs))
-    brown = hae.spearman_brown(r)
+        first, second = pooled_do(table, mask, np.array(a), 1.0), pooled_do(table, ~mask, np.array(b), 1.0)
+        rs.append(cosine(first, second))
+        plain.append(cosine(remove_common(first), remove_common(second)))
+    r, q = float(np.mean(rs)), float(np.mean(plain))
+    brown, brown_q = hae.spearman_brown(r), hae.spearman_brown(q)
     return {"split_half_r": round(r, 4), "spearman_brown": round(brown, 4),
-            "ceiling": round(float(np.sqrt(max(brown, 0))), 4), "splits": splits}
+            "ceiling": round(float(np.sqrt(max(brown, 0))), 4),
+            "split_half_r_residual": round(q, 4), "ceiling_residual": round(float(np.sqrt(max(brown_q, 0))), 4),
+            "splits": splits}
+
+
+def write_ceiling(zip_path: Path, human_path: Path, out: Path) -> Dict[str, Any]:
+    """Human data only. Writes the ceilings and the between-group reference."""
+    frames, _ = hae.load_zip(zip_path)
+    store = json.loads(human_path.read_text(encoding="utf-8"))
+    result: Dict[str, Any] = {"datasets": {}, "splits": d.CEILING_SPLITS, "seed": d.SEED,
+                              "note": "Do effects, family_25 basis, subjects and stimuli split. Human data only.",
+                              "wc_to_ea_cfa": human_reference(store), "human_energy": human_energy(store)}
+    for dataset in d.DATASETS:
+        frame, label_col = frames[dataset]
+        result["datasets"][dataset] = human_do_ceiling(frame, d.HUMAN_LABELS[d.TASK_OF[dataset]], label_col,
+                                                       d.CEILING_SPLITS, d.SEED)
+    out.write_text(json.dumps(result, indent=1) + "\n", encoding="utf-8")
+    return result
+
+
+def human_energy(store: Mapping[str, Any]) -> Dict[str, Any]:
+    """Share of each human matrix's squared effects in the approximated families and the mean profile."""
+    out = {}
+    for dataset in d.DATASETS:
+        human = human_matrix(store, dataset)[0]
+        total = float(np.sum(human**2))
+        held = [j for j, f in enumerate(FAMILIES) if f in d.APPROXIMATED_FAMILIES]
+        plain = remove_common(human)
+        confirmed = family_columns(d.CONFIRMED_FAMILIES)
+        out[dataset] = {"AU22_AU27_share": round(float(np.sum(human[:, held] ** 2)) / total, 4),
+                        "common_profile_share": round(1 - float(np.sum(plain**2)) / total, 4),
+                        "confirmed_share_of_residual": round(float(np.sum(plain[:, confirmed] ** 2) / np.sum(plain**2)), 4)}
+    return out
+
+
+def replicate_pairs(responses, wanted, manifest_rows, dataset) -> Tuple[np.ndarray, np.ndarray, List[Any]]:
+    pairs: Dict[str, Dict[str, Any]] = {}
+    for r in wanted:
+        pairs.setdefault(r["cfg"], {}).update(main=responses.get(r["stim_id"]), face=(r["identity"], r["seed"]), gender=r["gender"])
+    for r in manifest_rows:
+        if r["set"] == "replicate" and r["dataset"] == dataset and r["cfg"] in pairs:
+            pairs[r["cfg"]].update(replicate=responses.get(r["stim_id"]), other=(r["identity"], r["seed"]))
+    usable = [v for k, v in sorted(pairs.items()) if v.get("main") is not None and v.get("replicate") is not None]
+    if not usable:
+        return np.empty((0, 0)), np.empty((0, 0)), []
+    return (np.vstack([v["main"] for v in usable]), np.vstack([v["replicate"] for v in usable]),
+            [(v["gender"], v["face"], v["other"]) for v in usable])
 
 
 def analyse_dataset(rows, manifest_rows, dataset, store, ceiling, seed=d.SEED, **kw) -> Dict[str, Any]:
@@ -315,33 +426,46 @@ def analyse_dataset(rows, manifest_rows, dataset, store, ceiling, seed=d.SEED, *
     out = estimate(P, X_au, gender, lam, human, rng=rng, **kw)
     tau = out.pop("tau")
     out.update(share_lost=round(lost, 4), lost_ok=lost <= d.MAX_LOST_SHARE,
-               model_split_half=split_half(P, X_au, gender, lam, 20, rng),
                sensitivities=sensitivities(tau, human), tau=np.round(tau, 4).tolist())
-    r_s = max(out["model_split_half"], 1e-6)
-    out["cfa_over_ceiling"] = out["cfa"] / (float(ceiling[dataset]["ceiling"]) * np.sqrt(r_s))
-    pairs = {}
-    for r in wanted:
-        pairs.setdefault(r["cfg"], {})["main"] = responses.get(r["stim_id"])
-    for r in manifest_rows:
-        if r["set"] == "replicate" and r["dataset"] == dataset and r["cfg"] in pairs:
-            pairs[r["cfg"]]["replicate"] = responses.get(r["stim_id"])
-    usable = [v for v in pairs.values() if v.get("main") is not None and v.get("replicate") is not None]
-    out["replicate"] = (replicate_check(np.vstack([v["main"] for v in usable]),
-                                        np.vstack([v["replicate"] for v in usable]), rng)
-                        if len(usable) > 1 else {})
+    for name, key in (("raw", "ceiling"), ("residual", "ceiling_residual")):
+        block = out[name]
+        block["over_ceiling"] = block["cfa"] / (float(ceiling[dataset][key]) * np.sqrt(max(block["r_s"], 1e-6)))
+        block["lower_bound_only"] = not block["r_s"] >= d.R_S_LOWER_BOUND
+    first, second, groups = replicate_pairs(responses, wanted, manifest_rows, dataset)
+    out["replicate"] = replicate_check(first, second, groups, rng) if len(groups) > 1 else {}
     out["P_main_mean"] = P.mean(axis=0).tolist()
     return out
 
 
-def apply_rule(results: Dict[str, Dict[str, Any]], gates: Mapping[str, Mapping[str, Any]]) -> None:
-    """Holm across models within one dataset, then the decision per model."""
+def apply_rule(results: Dict[str, Dict[str, Any]], gates: Mapping[str, Mapping[str, Any]], statistic: str) -> None:
+    """Holm across models within one dataset, then the decision per model on one statistic."""
     eligible = [m for m in d.MODELS if m in results]
-    adjusted = dict(zip(eligible, holm([results[m]["p_cue"] for m in eligible]))) if eligible else {}
+    adjusted = dict(zip(eligible, holm([results[m][statistic]["p_cue"] for m in eligible]))) if eligible else {}
     for model, entry in results.items():
+        block = entry[statistic]
+        entry["statistic"] = statistic
         entry["p_holm"] = adjusted.get(model, float("nan"))
         entry["gates"] = {**dict(gates.get(model, {})), "clips_kept": entry.get("lost_ok") is True}
         entry["decision"] = ("Descriptive" if model not in d.MODELS else
-                             decide(entry["gates"], entry["p_signal"], entry["p_holm"], entry["cfa"], entry["ci"]))
+                             decide(entry["gates"], entry["p_signal"], entry["p_holm"], block["cfa"], block["ci"], block["r_s"]))
+
+
+def headline(decisions: Mapping[str, str]) -> Dict[str, str]:
+    """One outcome per task for one model, from its two datasets.
+
+    A task reads Aligned or Not aligned only if both observer groups agree. One of each is
+    Mixed. Anything else is Inconclusive. Basic and conversational are never pooled.
+    """
+    out = {}
+    for task in ("basic", "conversational"):
+        pair = [decisions.get(f"{task}_{g}") for g in ("WC", "EA")]
+        if pair[0] == pair[1] and pair[0] in ("Aligned", "Not aligned"):
+            out[task] = pair[0]
+        elif set(pair) == {"Aligned", "Not aligned"}:
+            out[task] = "Mixed"
+        else:
+            out[task] = "Inconclusive"
+    return out
 
 
 def image_rms(rows: Sequence[Mapping[str, Any]], task: str) -> Optional[float]:
@@ -393,11 +517,14 @@ def blind_summary(rows, manifest_rows, store) -> Dict[str, Any]:
     pairs = {}
     for r in manifest_rows:
         if r["dataset"] == d.BLIND_DATASET and r["set"] in ("main", "replicate") and r["stim_id"] in blind:
-            pairs.setdefault(r["cfg"], {})[r["set"]] = softmax([blind[r["stim_id"]]["family_logprob"][f] for f in families])
-    usable = [v for v in pairs.values() if len(v) == 2]
+            entry = pairs.setdefault(r["cfg"], {"gender": r["gender"]})
+            entry[r["set"]] = softmax([blind[r["stim_id"]]["family_logprob"][f] for f in families])
+            entry[f"{r['set']}_face"] = (r["identity"], r["seed"])
+    usable = [v for _k, v in sorted(pairs.items()) if "main" in v and "replicate" in v]
+    groups = [(v["gender"], v["main_face"], v["replicate_face"]) for v in usable]
     rng = np.random.default_rng(d.SEED)
-    check = (replicate_check(np.vstack([v["main"] for v in usable]), np.vstack([v["replicate"] for v in usable]), rng)
-             if len(usable) > 1 else {})
+    check = (replicate_check(np.vstack([v["main"] for v in usable]), np.vstack([v["replicate"] for v in usable]),
+                             groups, rng) if len(usable) > 1 else {})
     repeat = [r.get("repeat_change") for r in blind.values() if r.get("repeat_change") is not None]
     rms = blind_image_rms(rows, families)
     gate = {"b1_repeat": bool(repeat) and max(repeat) <= d.B_RULES["repeat"],
@@ -421,10 +548,14 @@ def scale_summary(rows, manifest_rows, store) -> Dict[str, float]:
             base = [main[r["cfg"]] for r in chosen if main[r["cfg"]]["stim_id"] in responses]
             if chosen:
                 ids, X_au, gender = design(chosen)
-                out[f"{dataset}_{scale}x"] = cosine(fit_tau(np.vstack([responses[s] for s in ids]), X_au, gender, lam), human)
+                tau = fit_tau(np.vstack([responses[s] for s in ids]), X_au, gender, lam)
+                out[f"{dataset}_{scale}x"] = cosine(tau, human)
+                out[f"{dataset}_{scale}x_residual"] = cosine(remove_common(tau), remove_common(human))
             if base and f"{dataset}_1x_same_configs" not in out:
                 ids, X_au, gender = design(base)
-                out[f"{dataset}_1x_same_configs"] = cosine(fit_tau(np.vstack([responses[s] for s in ids]), X_au, gender, lam), human)
+                tau = fit_tau(np.vstack([responses[s] for s in ids]), X_au, gender, lam)
+                out[f"{dataset}_1x_same_configs"] = cosine(tau, human)
+                out[f"{dataset}_1x_same_configs_residual"] = cosine(remove_common(tau), remove_common(human))
     return out
 
 
@@ -446,6 +577,30 @@ def read_shards(paths: Sequence[Path], expected_hash: str) -> List[Dict[str, Any
     return rows
 
 
+def shard_files(folder: Path, model: str) -> List[Path]:
+    """Scored shards only: a smoke file is not numbered, so it never enters the analysis."""
+    prefix = f"cells_{model}_"
+    return sorted(p for p in folder.glob(f"{prefix}*.jsonl") if p.stem[len(prefix):].isdigit())
+
+
+def rq0_gate(entry: Mapping[str, Any]) -> bool:
+    """RQ0 through the frozen A1 and A3 table, by the rule A2 uses. A4 sends one image."""
+    from scripts.analyse_stimulus_interventions import rq0_status
+
+    return rq0_status(entry.get("a1_passed"), entry.get("a3_passed"), "single_face") is True
+
+
+def confirmatory_statistic(path: Path, expected_hash: str) -> str:
+    """Set by recovery, by the rule stated before data. No passing statistic stops the run."""
+    block = json.loads(path.read_text(encoding="utf-8"))
+    if block.get("design_sha256") != expected_hash:
+        raise SystemExit("Recovery was not run on this design.")
+    statistic = block.get("confirmatory_statistic")
+    if statistic not in ("raw", "residual"):
+        raise SystemExit("Recovery passed no statistic, so A4 has no confirmatory analysis.")
+    return statistic
+
+
 def main() -> None:
     import pandas as pd
 
@@ -454,25 +609,33 @@ def main() -> None:
     parser.add_argument("--cells_dir", type=Path, default=Path("results/a4"))
     parser.add_argument("--human", type=Path, default=Path("research/reproduction/human_au_effects.json"))
     parser.add_argument("--ceiling", type=Path, default=Path("research/reproduction/a4_human_ceiling.json"))
-    parser.add_argument("--gates", type=Path, required=True,
-                        help="JSON, per model: rq0 and g2_g4 as true or false. Missing means not passed.")
-    parser.add_argument("--detector", type=Path, help="CSV of au, identity, amplitude, intensity.")
+    parser.add_argument("--recovery", type=Path, default=Path("research/reproduction/a4_recovery.json"))
+    parser.add_argument("--gates", type=Path, help="JSON, per model: a1_passed, a3_passed, g2_g4. Missing means not passed.")
+    parser.add_argument("--detector", type=Path, help="CSV from a4_detector.py. Required.")
     parser.add_argument("--zip", type=Path, default=Path("data/external/snoek_au/au_emotion_data.zip"))
     parser.add_argument("--output", type=Path, default=Path("results/a4/summary.json"))
-    parser.add_argument("--design_sha256", required=True)
+    parser.add_argument("--write_ceiling", action="store_true", help="Write the human ceiling JSON and stop.")
     args = parser.parse_args()
-    if args.design_sha256 != d.design_hash():
-        raise SystemExit("--design_sha256 is not this design block's hash.")
+    if args.write_ceiling:
+        print(json.dumps(write_ceiling(args.zip, args.human, args.ceiling), indent=1))
+        return
+    if args.detector is None or not args.detector.exists():
+        raise SystemExit("V1 needs --detector, the CSV from research/scripts/a4_detector.py. It is not optional.")
+    if args.gates is None:
+        raise SystemExit("--gates is required.")
+    d.check_manifest(args.manifest)
+    digest = d.design_hash()
+    statistic = confirmatory_statistic(args.recovery, digest)
     store = json.loads(args.human.read_text(encoding="utf-8"))
     ceiling = json.loads(args.ceiling.read_text(encoding="utf-8"))["datasets"]
     manifest = pd.read_csv(args.manifest).to_dict("records")
     recorded = json.loads(args.gates.read_text(encoding="utf-8"))
-    detector = detector_gate(pd.read_csv(args.detector).to_dict("records")) if args.detector else None
+    detector = detector_gate(pd.read_csv(args.detector, keep_default_na=False).to_dict("records"))
     frames, _ = hae.load_zip(args.zip)
-    out: Dict[str, Any] = {"design_sha256": args.design_sha256, "human_reference": human_reference(store),
+    out: Dict[str, Any] = {"design_sha256": digest, "statistic": statistic, "human_reference": human_reference(store),
                            "detector": detector, "datasets": {}, "models": {}}
-    models = [m for m in (*d.MODELS, *d.DESCRIPTIVE_MODELS) if list(args.cells_dir.glob(f"cells_{m}_*.jsonl"))]
-    cells = {m: read_shards(sorted(args.cells_dir.glob(f"cells_{m}_*.jsonl")), args.design_sha256) for m in models}
+    models = [m for m in (*d.MODELS, *d.DESCRIPTIVE_MODELS) if shard_files(args.cells_dir, m)]
+    cells = {m: read_shards(shard_files(args.cells_dir, m), digest) for m in models}
     for dataset in d.DATASETS:
         task = d.TASK_OF[dataset]
         frame, label_col = frames[dataset]
@@ -485,14 +648,17 @@ def main() -> None:
             P = np.vstack([responses[r["stim_id"]] for r in chosen])
             entry["behaviour"] = behaviour_metrics(P, np.vstack([human_table[r["cfg"]] for r in chosen]))
             direct, dose = direct_effects(responses, manifest)
-            entry["direct_cfa"], entry["direct_dose"] = cosine(direct, human_matrix(store, dataset)[0]), dose
+            target = human_matrix(store, dataset)[0]
+            entry["direct_cfa"], entry["direct_dose"] = cosine(direct, target), dose
+            entry["direct_cfa_residual"] = cosine(remove_common(direct), remove_common(target))
             given = recorded.get(model, {})
-            gates[model] = {"rq0": given.get("rq0") is True, "g2_g4": given.get("g2_g4") is True,
+            gates[model] = {"rq0": rq0_gate(given), "g2_g4": given.get("g2_g4") is True,
                             **validity_gate(P, entry["replicate"], image_rms(cells[model], task), detector)}
-        apply_rule(results, gates)
+        apply_rule(results, gates, statistic)
         out["datasets"][dataset] = results
     for model in models:
-        out["models"][model] = {"blind": blind_summary(cells[model], manifest, store),
+        decisions = {k: out["datasets"][k][model]["decision"] for k in d.DATASETS}
+        out["models"][model] = {"headline": headline(decisions), "blind": blind_summary(cells[model], manifest, store),
                                 "scale": scale_summary(cells[model], manifest, store)}
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(out, indent=1, default=float) + "\n", encoding="utf-8")

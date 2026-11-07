@@ -127,6 +127,21 @@ def render_tar(manifest: pd.DataFrame, out_dir: Path, index: int) -> int:
     return len(chosen)
 
 
+def build_assets(src: Path, out: Path) -> Dict[str, object]:
+    """Archive the render assets under a src/ prefix, which the Slurm scripts expect.
+
+    Jobs unpack this to node-local storage, because it holds thousands of small files.
+    """
+    def keep(info: tarfile.TarInfo):
+        return None if Path(info.name).name.startswith("._") or "/.git" in info.name else info
+
+    with tarfile.open(out, "w:gz") as tar:
+        tar.add(src, arcname="src", filter=keep)
+    with tarfile.open(out, "r:gz") as tar:
+        count = sum(1 for m in tar if m.isfile())
+    return {"files": count, "sha256": hashlib.sha256(out.read_bytes()).hexdigest()}
+
+
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     sub = parser.add_subparsers(dest="command", required=True)
@@ -137,8 +152,13 @@ def main(argv=None) -> int:
     b.add_argument("--manifest", type=Path, required=True)
     b.add_argument("--out-dir", type=Path, required=True)
     b.add_argument("--tar", type=int, required=True, help="0 to RENDER_TARS - 1")
+    c = sub.add_parser("assets", help="Build the one archive the cluster jobs unpack.")
+    c.add_argument("--src", type=Path, required=True, help="Folder holding FACSHuman and the rest.")
+    c.add_argument("--out", type=Path, required=True)
     args = parser.parse_args(argv)
-    if args.command == "manifest":
+    if args.command == "assets":
+        print(json.dumps(build_assets(args.src, args.out)))
+    elif args.command == "manifest":
         import human_au_effects as hae
 
         loaded, _ = hae.load_zip(args.zip)

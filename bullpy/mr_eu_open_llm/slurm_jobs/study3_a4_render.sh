@@ -35,7 +35,7 @@ set -u
 cd "${PROJECT_ROOT}"
 LOCAL_ASSETS="$(mktemp -d -p "${TMPDIR:-/tmp}" au_assets.XXXXXX)"
 trap 'rm -rf "${LOCAL_ASSETS}"' EXIT
-tar -xzf "${PROJECT_ROOT}/data/au_render_assets.tgz" -C "${LOCAL_ASSETS}"
-export AU_RENDER_ASSETS="${LOCAL_ASSETS}"
+tar -xzf "${PROJECT_ROOT}/data/au_render_assets.tgz" -C "${LOCAL_ASSETS}" 2>/dev/null
+export AU_RENDER_ASSETS="${LOCAL_ASSETS}/src"  # the archive has a src/ prefix
 python research/scripts/a4_stimuli.py render --manifest results/a4/manifest.csv \
   --out-dir results/a4/renders --tar "${SHARD}"
