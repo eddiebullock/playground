@@ -127,7 +127,7 @@ Human categorisation of basic expressions is driven by emotion-specific facial m
 ### Gaps
 - No located study intervenes on head pose and measures a happy-to-sad or complex-label change.
 - Mignault and Chaudhuri 2003 and Hess et al. 2007 are the obvious sources for pose-to-emotion mapping, but neither abstract was retrievable; I recall bowed head linked to submission and inferiority emotions, which is unverified.
-- Jack 2014 full text was blocked, so the specific AU order rests on a secondary summary and should be checked in the paper before citation.
+- Jack 2014 main text checked 2026-11-07 (https://eprints.gla.ac.uk/88928/): the early and late AU order above holds. Supplement unread.
 
 ## Holistic versus featural processing: what is established for expression as opposed to identity?
 

@@ -109,7 +109,7 @@ Three outputs in sequence fit the evidence. The first is a cross-encoding audit 
 | Forward-pass cost | Assumed 1 to 3 s | All GPU-hour figures depend on a timed smoke job |
 | Head-pose sources | Mignault 2003 and Hess 2007 abstracts unavailable; recalled link to submission unverified | Read before writing RQ1 pose predictions |
 | Sowden 2021 stimulus format | Not recorded in notes | Check before assuming transfer to EU-Emotion video |
-| Jack 2014 AU order | Secondary summary; full text blocked | Check before citation |
+| Jack 2014 AU order | Checked in the main text, 2026-11-07; supplement unread | Can be cited from the main text |
 | Author of DOI 10.1073/pnas.2423560122 | Human notes say Yan et al.; theory notes say Snoek et al., page blocked | Resolve |
 | FACSHuman repository | Two URLs in notes (montybot, uni-bremen-agst) | Confirm canonical source and licence |
 | Snoek trial count | 119,387 reproduced from the public files; likely cause of the gap to 121,902 is a test-split filtering step, inferred not proven | See `research/reproduction/human_au_effects.json` |
