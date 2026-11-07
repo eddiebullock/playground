@@ -50,3 +50,13 @@ Trial count: the paper gives 119,382 Western basic trials excluding "other"; the
 
 The paper's "AU ablation" removes AUs from hypothesis models, not from stimuli shown to people. Cite it accurately: the human causal claim rests on the randomised stimuli.
 
+## Free render route, 2026-11-07
+
+The recommended route above is superseded for this study by a headless renderer, `research/scripts/render_au_faces.py`. It needs no GUI: FACSHuman's `.target` files are plain vertex offsets, so it applies them to MakeHuman's base mesh and rasterises with numpy. Canonical repo: `montybot/FACSHuman`; `uni-bremen-agst` is a fork.
+
+- **Coverage of the 33 columns:** 31 direct; AU22 and AU27 approximated; none missing. AU22 reads as a pucker and keeps about 6 mm of lip parting. AU27 differs from AU26 by geometry only. AU11 is barely visible.
+- **Checks, with no vision-language model:** 231 checks passed on 33 columns by 7 identities at .25, .5 and 1. Mesh and pixel change are monotonic, and laterality is right. MediaPipe blendshapes respond for AU22, 26, 27, 01, 25 and 43 on all identities and never for AU06, 09 or 10, and AU27 is non-monotonic on 3 of 7.
+- **Licences:** MakeHuman assets CC0; FACSHuman targets LGPL-3.0 with no output clause, so renders are not published. Avatars are bald, and frames are static.
+- **Timing:** 3.1 s per image on the Mac.
+
+A request to Jack's group for GFG renders is still the only route to the human stimuli. Sending it is the user's decision. Use in the study: `research/PREREG_A4_DRAFT.md`.

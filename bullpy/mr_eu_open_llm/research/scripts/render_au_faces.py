@@ -54,9 +54,7 @@ import scipy.sparse as sp
 from PIL import Image, ImageDraw
 
 ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_ASSETS = Path(
-    "/private/tmp/claude-502/-Users-eb2007/cf56ec16-1588-406d-9db5-6872ba6bedc3/scratchpad/au_render/src"
-)
+DEFAULT_ASSETS = ROOT / "data" / "au_render_assets"  # override with AU_RENDER_ASSETS
 RESOLUTION = 768
 SUPERSAMPLE = 2
 AMBIENT, DIFFUSE = 0.62, 0.38  # even frontal light; shape stays legible, no cast shadows
