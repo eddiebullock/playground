@@ -351,3 +351,13 @@ The queue allowed it, so A4 was frozen ahead of A1, which keeps the choice of st
 - **Decision:** Residual CFA stays confirmatory and the V1 pilot's thin pass is disclosed as a family flag. Six dependent scripts are pinned by per-file hash in the amendment, not added to `DESIGN_FILES`, because that would change the design hash and need a further recovery run for no gain.
 - **Why not count recovery as clean:** Two accuracy cells at conversational 0.25x are exempt, at .85 and .62, so the amendment makes no accuracy claim there.
 - **Error caught at the freeze:** a commit gave run 3's file the hash of run 4's. It was corrected before the tag.
+
+## 2026-11-07: G7 becomes a scoped limit, resting on Stage 0
+
+Draft A7 found that RQ3's literal test cannot fail: under a complete cut the output is the same for every image, so a cue effect there is zero by construction. Depth inside the language model is not testable on either eligible model, and no site has yet been shown complete on `single_face` or on the blind readout, since G2 to G4 ran on the legacy input.
+
+- **Decision:** RQ3 is reported in the main paper as a scoped limit, resting on A7's Stage 0 table (about .71 GPU-hours, upper bound). The route arm is an optional supplement. This uses the allowance in `GOALS.md`.
+- **Why not on cost:** compute is not the reason. The reason is that the literal test is vacuous and a route split has no human reading.
+- **What would change this:** a pass on Stage 0's region test would give a non-vacuous cue-level answer, and G7 would be reopened by a dated entry.
+- **Open:** whether a block of a complete cut meets G7's wording goes to A7's audit. If it does not, A7 is Stage 0 plus "not testable". A7 is not frozen, and its recovery is specified, not run.
+- **Note on an earlier reading:** the stored `fraction_of_image_effect_left` is not a share, so ".93 remains" is wrong on Gemma, and reading routes as redundant fits Qwen but is not proved by the stored rows.
