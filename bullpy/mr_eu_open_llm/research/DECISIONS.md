@@ -343,3 +343,11 @@ A full read of the manuscript's references found that P7, P12 and P13 cited sour
 - **Decision:** Predictions, family and code stay frozen. Changing a prediction after the freeze would be a worse fault than a weak one, and the evidence grades are corrected openly instead.
 - **Why not drop P12 and P13:** They stay in the family, and removal would change the multiplicity correction after the freeze. Their reading is limited by the deviation.
 - **Also:** The audit claim is softened to "several", since 3 of 8 is not most. A no-image control in Hallmen et al. was missed in earlier notes. Nature Human Behaviour cannot take this as a Registered Report, so it would be an Article with a reporting summary.
+
+## 2026-11-07: Freeze A4 before A1 is read
+
+The queue allowed it, so A4 was frozen ahead of A1, which keeps the choice of statistic and thresholds independent of RQ0.
+
+- **Decision:** Residual CFA stays confirmatory and the V1 pilot's thin pass is disclosed as a family flag. Six dependent scripts are pinned by per-file hash in the amendment, not added to `DESIGN_FILES`, because that would change the design hash and need a further recovery run for no gain.
+- **Why not count recovery as clean:** Two accuracy cells at conversational 0.25x are exempt, at .85 and .62, so the amendment makes no accuracy claim there.
+- **Error caught at the freeze:** a commit gave run 3's file the hash of run 4's. It was corrected before the tag.
