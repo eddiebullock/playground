@@ -106,3 +106,13 @@ conda activate mr_eu_open_llm
 cd /Users/eb2007/playground/bullpy/mr_eu_open_llm
 python research/scripts/reproduce_headline_numbers.py
 ```
+
+## Model revisions
+
+Read on 2026-11-07 from the Hugging Face download metadata beside each local model on CSD3 (`~/rds/hpc-work/study2/models`). All A1, A2, A3 and A4 runs use these local copies.
+
+| Model | Repository | Commit |
+|---|---|---|
+| Gemma 4 | `google/gemma-4-E4B-it` | `83df0a889143b1dbfc61b591bbc639540fd9ce4c` |
+| Qwen3-VL | `Qwen/Qwen3-VL-8B-Instruct` | `0c351dd01ed87e9c1b53cbc748cba10e6187ff3b` |
+| Molmo2 | `allenai/Molmo2-O-7B` | `784410650d12be9bc086118fdefa32d2c3bced86` |
