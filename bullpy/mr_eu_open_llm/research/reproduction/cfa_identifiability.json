@@ -1,0 +1,119 @@
+{
+ "checks": {
+  "theorem_1": [
+   {
+    "r_requested": -1.0,
+    "r_achieved": -1.0,
+    "max_entry_error": 1.3877787807814457e-17
+   },
+   {
+    "r_requested": -0.5,
+    "r_achieved": -0.5,
+    "max_entry_error": 1.3877787807814457e-17
+   },
+   {
+    "r_requested": 0.0,
+    "r_achieved": -0.0,
+    "max_entry_error": 1.3877787807814457e-17
+   },
+   {
+    "r_requested": 0.5,
+    "r_achieved": 0.5,
+    "max_entry_error": 1.3877787807814457e-17
+   },
+   {
+    "r_requested": 1.0,
+    "r_achieved": 1.0,
+    "max_entry_error": 1.3877787807814457e-17
+   }
+  ],
+  "proposition_3_tight_case": {
+   "ratio": 10.601862,
+   "one_over_lambda_min": 10.601862
+  },
+  "proposition_2": [
+   {
+    "rho": 0.5,
+    "output_correlation": 0.5,
+    "mean_squared_difference": 1.0,
+    "effect_cosine": 0.0
+   },
+   {
+    "rho": 0.9,
+    "output_correlation": 0.9,
+    "mean_squared_difference": 0.19999999999999996,
+    "effect_cosine": 0.0
+   },
+   {
+    "rho": 0.99,
+    "output_correlation": 0.99,
+    "mean_squared_difference": 0.020000000000000018,
+    "effect_cosine": 0.0
+   }
+  ]
+ },
+ "eu_emotion_natural_clips": {
+  "libreface": {
+   "n_rows": 243,
+   "n_cues": 15,
+   "lambda_min": 0.05435,
+   "lambda_max": 4.1364,
+   "condition_number": 76.1,
+   "invisibility_factor_1_over_lambda_min": 18.4,
+   "mean_abs_off_diagonal_r": 0.2301,
+   "max_abs_off_diagonal_r": 0.857
+  },
+  "openface3": {
+   "n_rows": 243,
+   "n_cues": 10,
+   "lambda_min": 0.12505,
+   "lambda_max": 2.8007,
+   "condition_number": 22.4,
+   "invisibility_factor_1_over_lambda_min": 8.0,
+   "mean_abs_off_diagonal_r": 0.2082,
+   "max_abs_off_diagonal_r": 0.8385
+  }
+ },
+ "snoek_randomised_design": {
+  "basic_WC": {
+   "n_rows": 4659,
+   "n_cues": 33,
+   "lambda_min": 0.17776,
+   "lambda_max": 2.4389,
+   "condition_number": 13.72,
+   "invisibility_factor_1_over_lambda_min": 5.63,
+   "mean_abs_off_diagonal_r": 0.0358,
+   "max_abs_off_diagonal_r": 0.8199
+  },
+  "basic_EA": {
+   "n_rows": 2322,
+   "n_cues": 33,
+   "lambda_min": 0.19921,
+   "lambda_max": 2.2505,
+   "condition_number": 11.3,
+   "invisibility_factor_1_over_lambda_min": 5.02,
+   "mean_abs_off_diagonal_r": 0.0379,
+   "max_abs_off_diagonal_r": 0.7881
+  },
+  "conversational_WC": {
+   "n_rows": 2314,
+   "n_cues": 33,
+   "lambda_min": 0.20902,
+   "lambda_max": 2.3036,
+   "condition_number": 11.02,
+   "invisibility_factor_1_over_lambda_min": 4.78,
+   "mean_abs_off_diagonal_r": 0.0376,
+   "max_abs_off_diagonal_r": 0.7743
+  },
+  "conversational_EA": {
+   "n_rows": 2322,
+   "n_cues": 33,
+   "lambda_min": 0.19921,
+   "lambda_max": 2.2505,
+   "condition_number": 11.3,
+   "invisibility_factor_1_over_lambda_min": 5.02,
+   "mean_abs_off_diagonal_r": 0.0379,
+   "max_abs_off_diagonal_r": 0.7881
+  }
+ }
+}
