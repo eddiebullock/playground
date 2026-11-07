@@ -40,12 +40,12 @@ Form done, per STATE. No remaining question.
 
 The user accepted all four choices, and A2 was frozen before A1 was read (tag `a2-freeze`). No remaining question.
 
-## 7. EU-Emotion norms already public (found 2026-11-07)
+## 7. EU-Emotion licence for public norms and edited clips
 
-`data/eu_emotions_human_entropy.json` has been on `main` of the public repo since commit `2e2af35` (2026-10-30). It holds a human response distribution, options and target label for each of the 243 clips, derived from `eu_emotions_oreilly_item_level.xlsx`. `data/eu_emotions_full_manifest.json` lists clip file paths. These are not stimuli, so the no-stimuli rule was not broken, but we do not know whether the licence allows item-level norms to be public.
+Item 2 already disclosed that `data/eu_emotions_human_entropy.json` (item-level human response distributions) is committed to the public repo, as aggregated percentages and not videos, and that default was accepted. It is on `main` since commit `2e2af35` (2026-10-30). This is not a breach of the no-stimuli rule.
 
-**Needs the user, or the stimulus authors:** whether item-level norms may be public, and whether in-memory edits of clips are allowed. Asking the authors is an email, so it is the user's.
+**Still open, and needed before submission:** whether the EU-Emotion licence allows item-level norms to be public, and whether in-memory edits of clips are allowed. It needs the user or the stimulus authors. Asking the authors is an email, so it is the user's.
 
-**Not done:** nothing was removed. Deleting the file from the latest commit would leave it in history and would break reproduction, and removing it from history means rewriting a public branch, which is the user's call. If it must go, the path is to rewrite history and keep the file off the repo, with reproduction reading it from a private location.
+**If the answer is no:** the file would have to come out of history as well as the latest commit, which means rewriting a public branch, and that is the user's call. Reproduction would then read it from a private location.
 
-**Done meanwhile:** the paper files give counts instead of the seven unmatched item IDs.
+**Meanwhile:** the paper files give counts, not the seven unmatched item IDs, so that nothing further depends on the answer.
