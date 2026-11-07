@@ -1,0 +1,874 @@
+{
+ "note": "Pilot of the draft as first written, kept for the audit trail: X as p(B)/(1-p(A)) on every clip, reference leaving out A and No Emotion, fill rule by sign only, approximated by the sign of the interval midpoint. 30 replicates at 1x. Superseded by a6_recovery.json. Not a result of the amended design.",
+ "tables": {
+  "adjacency": {
+   "1.0": {
+    "n": 30,
+    "verdicts": {
+     "Inconclusive": 0.1667,
+     "Same cue": 0.2,
+     "Same cue, one direction": 0.6333
+    },
+    "reason_codes": {
+     "cue_unresolved": 0.1667
+    },
+    "mean_delta": 0.5708,
+    "mean_X": 0.2469,
+    "mean_O": 0.3536,
+    "mean_X_far": 0.0874,
+    "mean_cue_margin_C1": 0.0903,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.0,
+    "share_reaching_stage3": 1.0,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": -0.0942,
+      "match": 0.4,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": -0.1053,
+      "match": 0.6333,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": -0.2524,
+      "match": 0.0,
+      "opposes": 0.5667
+     },
+     "C4": {
+      "mean": -0.1479,
+      "match": 0.0,
+      "opposes": 0.4333
+     }
+    },
+    "any_match": 0.8333
+   }
+  },
+  "adjacency_all": {
+   "1.0": {
+    "n": 30,
+    "verdicts": {
+     "Inconclusive": 0.9667,
+     "Same cue, one direction": 0.0333
+    },
+    "reason_codes": {
+     "option_unresolved": 0.9667
+    },
+    "mean_delta": 0.4984,
+    "mean_X": 0.0586,
+    "mean_O": 0.2029,
+    "mean_X_far": -0.0088,
+    "mean_cue_margin_C1": 0.0998,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.0,
+    "share_reaching_stage3": 0.0333,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": -0.0965,
+      "match": 1.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": -0.0787,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": -0.2298,
+      "match": 0.0,
+      "opposes": 1.0
+     },
+     "C4": {
+      "mean": -0.1369,
+      "match": 0.0,
+      "opposes": 1.0
+     }
+    },
+    "any_match": 0.0333
+   }
+  },
+  "boundary_cue": {
+   "1.0": {
+    "n": 30,
+    "verdicts": {
+     "Same cue": 1.0
+    },
+    "reason_codes": {},
+    "mean_delta": 0.6494,
+    "mean_X": 0.2065,
+    "mean_O": -0.0005,
+    "mean_X_far": 0.2066,
+    "mean_cue_margin_C1": 0.1078,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.0,
+    "share_reaching_stage3": 1.0,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": -0.2152,
+      "match": 1.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": -0.2129,
+      "match": 1.0,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": -0.3611,
+      "match": 0.0,
+      "opposes": 1.0
+     },
+     "C4": {
+      "mean": -0.1498,
+      "match": 0.0,
+      "opposes": 0.5
+     }
+    },
+    "any_match": 1.0
+   }
+  },
+  "boundary_shared": {
+   "1.0": {
+    "n": 30,
+    "verdicts": {
+     "Inconclusive": 0.2333,
+     "Same cue": 0.2667,
+     "Same cue, one direction": 0.5
+    },
+    "reason_codes": {
+     "cue_unresolved": 0.2333
+    },
+    "mean_delta": 0.5757,
+    "mean_X": 0.1368,
+    "mean_O": -0.0003,
+    "mean_X_far": 0.1368,
+    "mean_cue_margin_C1": 0.0968,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.0,
+    "share_reaching_stage3": 1.0,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": -0.1025,
+      "match": 0.6,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": -0.097,
+      "match": 0.4333,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": -0.2545,
+      "match": 0.0,
+      "opposes": 0.5333
+     },
+     "C4": {
+      "mean": -0.1476,
+      "match": 0.0,
+      "opposes": 0.4667
+     }
+    },
+    "any_match": 0.7667
+   }
+  },
+  "fill_artefact": {
+   "1.0": {
+    "n": 30,
+    "verdicts": {
+     "Same cue": 1.0
+    },
+    "reason_codes": {},
+    "mean_delta": 0.6149,
+    "mean_X": 0.1973,
+    "mean_O": -0.0007,
+    "mean_X_far": 0.1975,
+    "mean_cue_margin_C1": 0.1062,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.0,
+    "share_reaching_stage3": 1.0,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": -0.5607,
+      "match": 1.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": -0.5508,
+      "match": 1.0,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": -0.2459,
+      "match": 0.0,
+      "opposes": 0.4667
+     },
+     "C4": {
+      "mean": -0.1427,
+      "match": 0.0,
+      "opposes": 0.4
+     }
+    },
+    "any_match": 1.0
+   }
+  },
+  "fill_artefact_up": {
+   "1.0": {
+    "n": 30,
+    "verdicts": {
+     "Inconclusive": 1.0
+    },
+    "reason_codes": {
+     "cue_unresolved": 1.0
+    },
+    "mean_delta": 0.5769,
+    "mean_X": 0.1963,
+    "mean_O": -0.0014,
+    "mean_X_far": 0.1967,
+    "mean_cue_margin_C1": 0.1072,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.0,
+    "share_reaching_stage3": 1.0,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": 0.3551,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": 0.3486,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": -0.2461,
+      "match": 0.0,
+      "opposes": 0.4
+     },
+     "C4": {
+      "mean": -0.1491,
+      "match": 0.0,
+      "opposes": 0.5
+     }
+    },
+    "any_match": 0.0
+   }
+  },
+  "generic_mask": {
+   "1.0": {
+    "n": 30,
+    "verdicts": {
+     "Inconclusive": 0.3667,
+     "Not this cue": 0.0333,
+     "Same cue": 0.1333,
+     "Same cue, one direction": 0.4667
+    },
+    "reason_codes": {
+     "cue_unresolved": 0.3667
+    },
+    "mean_delta": 0.5898,
+    "mean_X": 0.2023,
+    "mean_O": 0.0006,
+    "mean_X_far": 0.2021,
+    "mean_cue_margin_C1": 0.1343,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.0,
+    "share_reaching_stage3": 1.0,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": -0.0641,
+      "match": 0.4667,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": -0.0585,
+      "match": 0.2667,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": -0.1604,
+      "match": 0.0,
+      "opposes": 0.5333
+     },
+     "C4": {
+      "mean": -0.0609,
+      "match": 0.0,
+      "opposes": 0.4
+     }
+    },
+    "any_match": 0.6
+   }
+  },
+  "generic_pull": {
+   "1.0": {
+    "n": 30,
+    "verdicts": {
+     "Inconclusive": 0.4667,
+     "Same cue, one direction": 0.5333
+    },
+    "reason_codes": {
+     "cue_unresolved": 0.4667
+    },
+    "mean_delta": 0.6314,
+    "mean_X": 0.1965,
+    "mean_O": -0.0001,
+    "mean_X_far": 0.1965,
+    "mean_cue_margin_C1": 0.1211,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.0,
+    "share_reaching_stage3": 1.0,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": -0.106,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": -0.0966,
+      "match": 0.5333,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": -0.2458,
+      "match": 0.0,
+      "opposes": 0.4
+     },
+     "C4": {
+      "mean": -0.1446,
+      "match": 0.0,
+      "opposes": 0.0
+     }
+    },
+    "any_match": 0.5333
+   }
+  },
+  "global_face": {
+   "1.0": {
+    "n": 30,
+    "verdicts": {
+     "Inconclusive": 0.2667,
+     "Same cue": 0.2667,
+     "Same cue, one direction": 0.4667
+    },
+    "reason_codes": {
+     "cue_unresolved": 0.2667
+    },
+    "mean_delta": 0.6346,
+    "mean_X": 0.1983,
+    "mean_O": -0.0001,
+    "mean_X_far": 0.1983,
+    "mean_cue_margin_C1": 0.1069,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.0,
+    "share_reaching_stage3": 1.0,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": -0.1073,
+      "match": 0.5667,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": -0.0983,
+      "match": 0.4333,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": -0.2457,
+      "match": 0.0,
+      "opposes": 0.4667
+     },
+     "C4": {
+      "mean": -0.1477,
+      "match": 0.0,
+      "opposes": 0.4
+     }
+    },
+    "any_match": 0.7333
+   }
+  },
+  "human_like": {
+   "1.0": {
+    "n": 30,
+    "verdicts": {
+     "Same cue": 1.0
+    },
+    "reason_codes": {},
+    "mean_delta": 0.5472,
+    "mean_X": 0.1721,
+    "mean_O": -0.0013,
+    "mean_X_far": 0.1725,
+    "mean_cue_margin_C1": 0.1267,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.0,
+    "share_reaching_stage3": 1.0,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": -1.4735,
+      "match": 1.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": -0.4737,
+      "match": 1.0,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": 0.4971,
+      "match": 1.0,
+      "opposes": 0.0
+     },
+     "C4": {
+      "mean": 0.5312,
+      "match": 1.0,
+      "opposes": 0.0
+     }
+    },
+    "any_match": 1.0
+   }
+  },
+  "no_sharing": {
+   "1.0": {
+    "n": 30,
+    "verdicts": {
+     "Inconclusive": 0.5333,
+     "Same cue": 0.1667,
+     "Same cue, one direction": 0.3
+    },
+    "reason_codes": {
+     "cue_unresolved": 0.5333
+    },
+    "mean_delta": 0.6178,
+    "mean_X": 0.0862,
+    "mean_O": -0.0003,
+    "mean_X_far": 0.0863,
+    "mean_cue_margin_C1": 0.0895,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.0,
+    "share_reaching_stage3": 1.0,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": -0.0974,
+      "match": 0.3,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": -0.0967,
+      "match": 0.3333,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": -0.2481,
+      "match": 0.0,
+      "opposes": 0.5667
+     },
+     "C4": {
+      "mean": -0.1502,
+      "match": 0.0,
+      "opposes": 0.5333
+     }
+    },
+    "any_match": 0.4667
+   }
+  },
+  "one_way_cue": {
+   "1.0": {
+    "n": 30,
+    "verdicts": {
+     "Same cue": 0.6667,
+     "Same cue, one direction": 0.3333
+    },
+    "reason_codes": {},
+    "mean_delta": 0.6321,
+    "mean_X": 0.1805,
+    "mean_O": -0.0007,
+    "mean_X_far": 0.1807,
+    "mean_cue_margin_C1": 0.119,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.0,
+    "share_reaching_stage3": 1.0,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": -1.2048,
+      "match": 1.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": -0.1071,
+      "match": 0.6667,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": -0.2501,
+      "match": 0.0,
+      "opposes": 0.5
+     },
+     "C4": {
+      "mean": -0.1475,
+      "match": 0.0,
+      "opposes": 0.4333
+     }
+    },
+    "any_match": 1.0
+   }
+  },
+  "option_prior": {
+   "1.0": {
+    "n": 30,
+    "verdicts": {
+     "Inconclusive": 0.1,
+     "Same cue": 0.3,
+     "Same cue, one direction": 0.6
+    },
+    "reason_codes": {
+     "cue_unresolved": 0.1
+    },
+    "mean_delta": 0.5182,
+    "mean_X": 0.1481,
+    "mean_O": -0.0004,
+    "mean_X_far": 0.1481,
+    "mean_cue_margin_C1": 0.0894,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.0,
+    "share_reaching_stage3": 1.0,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": -0.1008,
+      "match": 0.6667,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": -0.1008,
+      "match": 0.5333,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": -0.2565,
+      "match": 0.0,
+      "opposes": 0.5667
+     },
+     "C4": {
+      "mean": -0.15,
+      "match": 0.0,
+      "opposes": 0.4
+     }
+    },
+    "any_match": 0.9
+   }
+  },
+  "other_cue": {
+   "1.0": {
+    "n": 30,
+    "verdicts": {
+     "Inconclusive": 0.2333,
+     "Same cue": 0.3333,
+     "Same cue, one direction": 0.4333
+    },
+    "reason_codes": {
+     "cue_unresolved": 0.2333
+    },
+    "mean_delta": 0.6006,
+    "mean_X": 0.1944,
+    "mean_O": 0.0003,
+    "mean_X_far": 0.1942,
+    "mean_cue_margin_C1": 0.1204,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.0,
+    "share_reaching_stage3": 1.0,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": -0.102,
+      "match": 0.5,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": -0.106,
+      "match": 0.6,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": -0.2482,
+      "match": 0.0,
+      "opposes": 0.4667
+     },
+     "C4": {
+      "mean": -1.3112,
+      "match": 0.0,
+      "opposes": 1.0
+     }
+    },
+    "any_match": 0.7667
+   }
+  },
+  "partner_pull": {
+   "1.0": {
+    "n": 30,
+    "verdicts": {
+     "Inconclusive": 0.6,
+     "Same cue, one direction": 0.4
+    },
+    "reason_codes": {
+     "cue_unresolved": 0.6
+    },
+    "mean_delta": 0.5939,
+    "mean_X": 0.194,
+    "mean_O": -0.0007,
+    "mean_X_far": 0.1942,
+    "mean_cue_margin_C1": 0.118,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.0,
+    "share_reaching_stage3": 1.0,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": -0.1003,
+      "match": 0.4,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": -0.0981,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": -0.2581,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C4": {
+      "mean": -0.1511,
+      "match": 0.0,
+      "opposes": 0.5333
+     }
+    },
+    "any_match": 0.4
+   }
+  },
+  "position_bias": {
+   "1.0": {
+    "n": 30,
+    "verdicts": {
+     "Inconclusive": 0.2333,
+     "Same cue": 0.1667,
+     "Same cue, one direction": 0.6
+    },
+    "reason_codes": {
+     "cue_unresolved": 0.2333
+    },
+    "mean_delta": 0.4309,
+    "mean_X": 0.0499,
+    "mean_O": -0.0473,
+    "mean_X_far": 0.0662,
+    "mean_cue_margin_C1": 0.0892,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.0,
+    "share_reaching_stage3": 1.0,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": -0.095,
+      "match": 0.4333,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": -0.0976,
+      "match": 0.5,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": -0.2567,
+      "match": 0.0,
+      "opposes": 0.6
+     },
+     "C4": {
+      "mean": -0.1551,
+      "match": 0.0,
+      "opposes": 0.4333
+     }
+    },
+    "any_match": 0.7667
+   }
+  },
+  "prior_only": {
+   "1.0": {
+    "n": 30,
+    "verdicts": {
+     "No face use on CREMA-D": 1.0
+    },
+    "reason_codes": {},
+    "mean_delta": -0.0028,
+    "mean_X": null,
+    "mean_O": null,
+    "mean_X_far": null,
+    "mean_cue_margin_C1": null,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.0
+   }
+  },
+  "reverse": {
+   "1.0": {
+    "n": 30,
+    "verdicts": {
+     "Opposes the stated cue": 1.0
+    },
+    "reason_codes": {},
+    "mean_delta": 0.5573,
+    "mean_X": 0.1812,
+    "mean_O": 0.0002,
+    "mean_X_far": 0.1811,
+    "mean_cue_margin_C1": 0.1137,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.0,
+    "share_reaching_stage3": 1.0,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": 0.9333,
+      "match": 0.0,
+      "opposes": 1.0
+     },
+     "C2": {
+      "mean": 0.214,
+      "match": 0.0,
+      "opposes": 0.9667
+     },
+     "C3": {
+      "mean": 0.069,
+      "match": 0.4667,
+      "opposes": 0.0
+     },
+     "C4": {
+      "mean": -0.1396,
+      "match": 0.0,
+      "opposes": 0.4333
+     }
+    },
+    "any_match": 0.4667
+   }
+  },
+  "same_cue": {
+   "1.0": {
+    "n": 30,
+    "verdicts": {
+     "Same cue": 1.0
+    },
+    "reason_codes": {},
+    "mean_delta": 0.5681,
+    "mean_X": 0.1958,
+    "mean_O": -0.0008,
+    "mean_X_far": 0.1959,
+    "mean_cue_margin_C1": 0.1194,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.0,
+    "share_reaching_stage3": 1.0,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": -1.2541,
+      "match": 1.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": -0.4165,
+      "match": 1.0,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": -0.5609,
+      "match": 0.0,
+      "opposes": 1.0
+     },
+     "C4": {
+      "mean": -0.1486,
+      "match": 0.0,
+      "opposes": 0.4333
+     }
+    },
+    "any_match": 1.0
+   }
+  },
+  "signal_loss": {
+   "1.0": {
+    "n": 30,
+    "verdicts": {
+     "Inconclusive": 0.1667,
+     "Same cue": 0.4,
+     "Same cue, one direction": 0.4333
+    },
+    "reason_codes": {
+     "cue_unresolved": 0.1667
+    },
+    "mean_delta": 0.5805,
+    "mean_X": 0.1857,
+    "mean_O": -0.0004,
+    "mean_X_far": 0.1858,
+    "mean_cue_margin_C1": 0.1103,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.0,
+    "share_reaching_stage3": 1.0,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": -0.2161,
+      "match": 0.6,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": -0.2159,
+      "match": 0.6333,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": -0.5119,
+      "match": 0.0,
+      "opposes": 0.5333
+     },
+     "C4": {
+      "mean": -0.416,
+      "match": 0.0,
+      "opposes": 0.4667
+     }
+    },
+    "any_match": 0.8333
+   }
+  },
+  "spread": {
+   "1.0": {
+    "n": 30,
+    "verdicts": {
+     "Inconclusive": 0.1,
+     "Same cue": 0.2333,
+     "Same cue, one direction": 0.6667
+    },
+    "reason_codes": {
+     "cue_unresolved": 0.1
+    },
+    "mean_delta": 0.5498,
+    "mean_X": 0.1885,
+    "mean_O": -0.0003,
+    "mean_X_far": 0.1885,
+    "mean_cue_margin_C1": 0.1236,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.0,
+    "share_reaching_stage3": 1.0,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": -0.0976,
+      "match": 0.4667,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": -0.1078,
+      "match": 0.6667,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": -0.2456,
+      "match": 0.0,
+      "opposes": 0.5667
+     },
+     "C4": {
+      "mean": -0.1544,
+      "match": 0.0,
+      "opposes": 0.6667
+     }
+    },
+    "any_match": 0.9
+   }
+  }
+ }
+}

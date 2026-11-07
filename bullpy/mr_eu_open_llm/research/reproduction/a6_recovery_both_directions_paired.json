@@ -1,0 +1,425 @@
+{
+ "note": "Paired comparison for the audit trail: the seeds of a6_recovery.json, with both directions forced into play, which is the rule of run 1, on the observers that bear on a false Not this cue. 500 replicates. Not a result of the amended design.",
+ "tables": {
+  "human_like": {
+   "0.5": {
+    "n": 500,
+    "verdicts": {
+     "Same cue": 0.92,
+     "Same cue, one direction": 0.08
+    },
+    "reason_codes": {},
+    "mean_delta": 0.5933,
+    "mean_X": 0.0625,
+    "mean_O": -0.0,
+    "mean_X_far": 0.0625,
+    "mean_cue_margin_C1": 0.0743,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.0,
+    "direction_states": {
+     "Anger>Disgust": {
+      "carries": 1.0,
+      "absent": 0.0,
+      "unresolved": 0.0
+     },
+     "Disgust>Anger": {
+      "carries": 1.0,
+      "absent": 0.0,
+      "unresolved": 0.0
+     }
+    },
+    "share_reaching_stage3": 1.0,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": -0.3561,
+      "match": 1.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": -0.1241,
+      "match": 0.92,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": 0.2467,
+      "match": 1.0,
+      "opposes": 0.0
+     },
+     "C4": {
+      "mean": 0.1772,
+      "match": 1.0,
+      "opposes": 0.0
+     }
+    },
+    "any_match": 1.0
+   },
+   "1.0": {
+    "n": 500,
+    "verdicts": {
+     "Same cue": 1.0
+    },
+    "reason_codes": {},
+    "mean_delta": 0.601,
+    "mean_X": 0.1231,
+    "mean_O": 0.0001,
+    "mean_X_far": 0.123,
+    "mean_cue_margin_C1": 0.0812,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.0,
+    "direction_states": {
+     "Anger>Disgust": {
+      "carries": 1.0,
+      "absent": 0.0,
+      "unresolved": 0.0
+     },
+     "Disgust>Anger": {
+      "carries": 1.0,
+      "absent": 0.0,
+      "unresolved": 0.0
+     }
+    },
+    "share_reaching_stage3": 1.0,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": -0.6581,
+      "match": 1.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": -0.2077,
+      "match": 1.0,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": 0.4176,
+      "match": 1.0,
+      "opposes": 0.0
+     },
+     "C4": {
+      "mean": 0.3296,
+      "match": 1.0,
+      "opposes": 0.0
+     }
+    },
+    "any_match": 1.0
+   }
+  },
+  "one_way_weak_cue": {
+   "0.5": {
+    "n": 500,
+    "verdicts": {
+     "Inconclusive": 0.022,
+     "No tested feature": 0.006,
+     "Not shared": 0.554,
+     "Same cue, one direction": 0.418
+    },
+    "reason_codes": {
+     "cue_unresolved": 0.022
+    },
+    "mean_delta": 0.612,
+    "mean_X": 0.0138,
+    "mean_O": 0.0,
+    "mean_X_far": 0.0137,
+    "mean_cue_margin_C1": 0.0713,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.006,
+    "direction_states": {
+     "Anger>Disgust": {
+      "carries": 1.0,
+      "absent": 0.0,
+      "unresolved": 0.0
+     },
+     "Disgust>Anger": {
+      "carries": 1.0,
+      "absent": 0.0,
+      "unresolved": 0.0
+     }
+    },
+    "share_reaching_stage3": 0.446,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": 0.0002,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": -0.1391,
+      "match": 0.9372,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": -0.1389,
+      "match": 0.0,
+      "opposes": 0.9507
+     },
+     "C4": {
+      "mean": 0.002,
+      "match": 0.0,
+      "opposes": 0.0
+     }
+    },
+    "any_match": 0.418
+   },
+   "1.0": {
+    "n": 500,
+    "verdicts": {
+     "Not shared": 0.116,
+     "Same cue, one direction": 0.884
+    },
+    "reason_codes": {},
+    "mean_delta": 0.5978,
+    "mean_X": 0.0271,
+    "mean_O": 0.0002,
+    "mean_X_far": 0.027,
+    "mean_cue_margin_C1": 0.0714,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.0,
+    "direction_states": {
+     "Anger>Disgust": {
+      "carries": 1.0,
+      "absent": 0.0,
+      "unresolved": 0.0
+     },
+     "Disgust>Anger": {
+      "carries": 1.0,
+      "absent": 0.0,
+      "unresolved": 0.0
+     }
+    },
+    "share_reaching_stage3": 0.884,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": -0.0003,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": -0.2201,
+      "match": 1.0,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": -0.2212,
+      "match": 0.0,
+      "opposes": 1.0
+     },
+     "C4": {
+      "mean": 0.0,
+      "match": 0.0,
+      "opposes": 0.0
+     }
+    },
+    "any_match": 0.884
+   }
+  },
+  "same_cue": {
+   "0.5": {
+    "n": 500,
+    "verdicts": {
+     "Same cue": 0.898,
+     "Same cue, one direction": 0.102
+    },
+    "reason_codes": {},
+    "mean_delta": 0.5991,
+    "mean_X": 0.0629,
+    "mean_O": -0.0001,
+    "mean_X_far": 0.0629,
+    "mean_cue_margin_C1": 0.0748,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.0,
+    "direction_states": {
+     "Anger>Disgust": {
+      "carries": 1.0,
+      "absent": 0.0,
+      "unresolved": 0.0
+     },
+     "Disgust>Anger": {
+      "carries": 1.0,
+      "absent": 0.0,
+      "unresolved": 0.0
+     }
+    },
+    "share_reaching_stage3": 1.0,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": -0.3779,
+      "match": 1.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": -0.1235,
+      "match": 0.898,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": -0.1249,
+      "match": 0.0,
+      "opposes": 0.864
+     },
+     "C4": {
+      "mean": 0.0,
+      "match": 0.0,
+      "opposes": 0.0
+     }
+    },
+    "any_match": 1.0
+   },
+   "1.0": {
+    "n": 500,
+    "verdicts": {
+     "Same cue": 1.0
+    },
+    "reason_codes": {},
+    "mean_delta": 0.6137,
+    "mean_X": 0.1227,
+    "mean_O": -0.0001,
+    "mean_X_far": 0.1228,
+    "mean_cue_margin_C1": 0.0793,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.0,
+    "direction_states": {
+     "Anger>Disgust": {
+      "carries": 1.0,
+      "absent": 0.0,
+      "unresolved": 0.0
+     },
+     "Disgust>Anger": {
+      "carries": 1.0,
+      "absent": 0.0,
+      "unresolved": 0.0
+     }
+    },
+    "share_reaching_stage3": 1.0,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": -0.6116,
+      "match": 1.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": -0.2153,
+      "match": 1.0,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": -0.2128,
+      "match": 0.0,
+      "opposes": 1.0
+     },
+     "C4": {
+      "mean": 0.0016,
+      "match": 0.0,
+      "opposes": 0.0
+     }
+    },
+    "any_match": 1.0
+   }
+  },
+  "split_cue": {
+   "0.5": {
+    "n": 500,
+    "verdicts": {
+     "Inconclusive": 0.096,
+     "Not this cue": 0.006,
+     "Same cue, one direction": 0.898
+    },
+    "reason_codes": {
+     "cue_unresolved": 0.096
+    },
+    "mean_delta": 0.6132,
+    "mean_X": 0.0622,
+    "mean_O": -0.0001,
+    "mean_X_far": 0.0623,
+    "mean_cue_margin_C1": 0.0739,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.0,
+    "direction_states": {
+     "Anger>Disgust": {
+      "carries": 1.0,
+      "absent": 0.0,
+      "unresolved": 0.0
+     },
+     "Disgust>Anger": {
+      "carries": 1.0,
+      "absent": 0.0,
+      "unresolved": 0.0
+     }
+    },
+    "share_reaching_stage3": 1.0,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": 0.0002,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": -0.1134,
+      "match": 0.898,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": -0.1131,
+      "match": 0.0,
+      "opposes": 0.874
+     },
+     "C4": {
+      "mean": -0.351,
+      "match": 0.0,
+      "opposes": 1.0
+     }
+    },
+    "any_match": 0.898
+   },
+   "1.0": {
+    "n": 500,
+    "verdicts": {
+     "Same cue, one direction": 1.0
+    },
+    "reason_codes": {},
+    "mean_delta": 0.5779,
+    "mean_X": 0.1234,
+    "mean_O": 0.0001,
+    "mean_X_far": 0.1234,
+    "mean_cue_margin_C1": 0.0825,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.0,
+    "direction_states": {
+     "Anger>Disgust": {
+      "carries": 1.0,
+      "absent": 0.0,
+      "unresolved": 0.0
+     },
+     "Disgust>Anger": {
+      "carries": 1.0,
+      "absent": 0.0,
+      "unresolved": 0.0
+     }
+    },
+    "share_reaching_stage3": 1.0,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": 0.0008,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": -0.2141,
+      "match": 1.0,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": -0.2144,
+      "match": 0.0,
+      "opposes": 1.0
+     },
+     "C4": {
+      "mean": -0.687,
+      "match": 0.0,
+      "opposes": 1.0
+     }
+    },
+    "any_match": 1.0
+   }
+  }
+ }
+}
