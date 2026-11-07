@@ -270,9 +270,7 @@ def null_setup(data):
         base = originals[(row["trial_id"], row["input_name"])]
         scores = dict(base["blind"]["family_logprob"])
         if row["condition"].endswith("_blur") or row["condition"] in ("sf_low", "sf_high", "static_apex"):
-            family = run.OPTION_TO_FAMILY[row["label"]]
-            sign = 1 if hash(row["trial_id"]) % 2 else -1
-            scores[family] += sign * 3.0
+            scores[run.OPTION_TO_FAMILY[row["label"]]] -= 3.0
         out.append({**row, "blind": {**row["blind"], "family_logprob": scores}, "edit": {"mask_fraction": 0.05}, "mcq": []})
     return an.Cells(out)
 
@@ -286,8 +284,50 @@ def test_null_needs_all_six_conditions_and_a_cue_with_a_joint_ablation(data):
     assert rows["P1"]["null_rule"]["null_ok"] and rows["P1"]["verdict"] == "null"
     for name in ("P5", "P6", "P9", "P10"):
         assert not rows[name]["null_rule"]["can_reach_null"] and rows[name]["verdict"] == "inconclusive"
-    video = an.analyse_route(cells, "video_face", actors, PASSED, 0.1, flip_args={"max_exact_actors": 0, "draws": 255})
-    assert all(r["verdict"] == "inconclusive" for r in video["primary_blind_acted"].values())
+    assert rows["P5"]["descriptive_label"] == "single_region_null"
+    assert rows["P6"]["descriptive_label"] is None and rows["P1"]["descriptive_label"] is None
+
+
+def test_order_cues_reach_null_only_where_frame_order_is_verified(data):
+    cells = null_setup(data)
+    actors = actors_of(data)
+    flips = {"max_exact_actors": 0, "draws": 255}
+    gemma = an.analyse_route(cells, "video_face", actors, PASSED, 0.1, flip_args=flips, frame_order_verified=True)["primary_blind_acted"]
+    qwen = an.analyse_route(cells, "video_face", actors, PASSED, 0.1, flip_args=flips, frame_order_verified=False)["primary_blind_acted"]
+    for name in ("P12", "P13"):
+        assert gemma[name]["null_rule"]["joint_inapplicable"] and gemma[name]["verdict"] == "null"
+        assert not qwen[name]["null_rule"]["can_reach_null"] and qwen[name]["verdict"] == "inconclusive"
+    for name in ("P14a", "P14b", "P15a", "P15b"):
+        assert gemma[name]["verdict"] == "inconclusive" and not gemma[name]["null_rule"]["can_reach_null"]
+
+
+def test_counts_of_contrasts_that_cannot_reach_null():
+    capped = [c.id for c in an.CONFIRMATORY if c.joint is None and not c.joint_inapplicable]
+    assert capped == ["P5", "P6", "P9", "P10", "P14a", "P14b", "P15a", "P15b"]
+    assert len(an.CONFIRMATORY) == 16
+    assert len({c.rstrip("ab") for c in capped}) == 6
+
+
+def test_frame_order_needs_every_row_to_show_it():
+    shown = {"delivery": [{"video_face": {"pixels_arrive_in_sent_order": True}}]}
+    absent = {"delivery": [{"video_face": {"pixels_change_under_shuffle": True}}]}
+    assert an.frame_order_verified([shown, shown])
+    assert not an.frame_order_verified([shown, absent]) and not an.frame_order_verified([])
+
+
+def test_a_blur_with_no_signed_effect_is_not_a_dose(data):
+    """Large item changes that cancel within actors are noise, not a working dose."""
+    p1 = an.CONFIRMATORY[0]
+    rows = []
+    for actor in ("C", "E"):
+        for n, sign in enumerate((1.0, -1.0)):
+            trial = f"{actor}{n}"
+            for condition, shift in (("original", 0.0), ("mask_mouth_blur", 3.0 * sign)):
+                rows.append(blind_row(trial, actor, "Happy", condition, {"Happy": shift, "Neutral": 0.0, "Sad": 0.0}))
+    assert an.dose_change(an.Cells(rows), p1, "mask_mouth_blur", ["C", "E"]) == pytest.approx(0.0)
+    row = {"mean_change": 0.0, "ci95": [-0.01, 0.01], "null_equivalence": True}
+    checks = an.null_conditions(an.Cells(rows), p1, row, ["C", "E"], PASSED, 0.1, {f"{a}{n}": 2000.0 for a in "CE" for n in (0, 1)})
+    assert not checks["c3_dose"]
 
 
 def test_each_null_condition_blocks_on_its_own(data):
@@ -360,12 +400,26 @@ def test_rq0_follows_the_a1_and_a3_table():
     assert not an.rq0_status(None, True, "single_face")
 
 
+def test_a3_default_path_is_the_one_a3_writes_and_only_pinned_bytes_count(tmp_path):
+    from scripts import face_input_validity as fiv
+
+    assert an.A3_OUTPUT_DIR == fiv.OUTCOME_DIR
+    assert "/ \"" + an.A3_SUMMARY_NAME + "\"" in (ROOT / "scripts/face_input_validity.py").read_text()
+    committed = ROOT / "research/reproduction"
+    assert an.a3_summary(committed, tmp_path)["gemma4"]["vision_dependent"] is True
+    frozen = (committed / an.A3_SUMMARY_NAME).read_bytes()
+    (tmp_path / an.A3_SUMMARY_NAME).write_bytes(frozen)
+    assert an.a3_summary(tmp_path / "absent", tmp_path)["gemma4"]["vision_dependent"] is True
+    (tmp_path / an.A3_SUMMARY_NAME).write_bytes(frozen + b" ")
+    assert an.a3_summary(tmp_path, tmp_path) == {}
+
+
 def test_outside_gates_read_the_files_and_missing_means_not_passed(tmp_path):
     source = ROOT / "research/reproduction"
     assert an.outside_gates(source, "molmo2", "single_face")["g2_g4"] is False
     gemma = an.outside_gates(source, "gemma4", "single_face")
     assert gemma["g2_g4"] is True and gemma["delivery_file"] is True
-    assert an.outside_gates(tmp_path, "gemma4", "single_face") == {
+    assert an.outside_gates(tmp_path, "gemma4", "single_face", tmp_path) == {
         "rq0": False, "a1": None, "a3": None, "g2_g4": False, "delivery_file": False,
     }
 
@@ -495,6 +549,7 @@ def test_analysis_runs_end_to_end_on_three_shards(tmp_path, data, monkeypatch):
         "x", "--model", "gemma4", "--cells", *cells, "--run_report", *reports, "--geometry", str(geometry),
         "--reproduction", str(tmp_path), "--output", str(out), "--a2_frozen",
     ])
+    monkeypatch.setattr(an, "a3_summary", lambda *a, **k: {})
     an.main()
     result = json.loads(out.read_text())
     assert result["design_sha256"] == design

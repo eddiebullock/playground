@@ -501,6 +501,10 @@ def test_design_hash_covers_edits_mcq_geometry_and_analysis(monkeypatch):
     assert before != run.text_sha256(json.dumps(run.readout_fields(), sort_keys=True))
     for owner, name, value in (
         (si, "FEATHER_FRACTION", 0.5),
+        (si, "OUTER_EYE_CORNERS", (0, 1)),
+        (si, "FACE_EDGES", (0, 1)),
+        (si, "EYE_BAND_MARGIN", 0.2),
+        (design, "A3_SUMMARY_SHA256", "0"),
         (si, "FACE_BOX_MARGIN", 2.0),
         (si, "SEED", 7),
         (run, "MCQ_PREFILL", "LABEL:"),

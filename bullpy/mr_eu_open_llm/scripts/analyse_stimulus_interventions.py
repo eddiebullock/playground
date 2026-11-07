@@ -13,6 +13,7 @@ analysis may run on real cells until A2 is frozen, so main refuses without --a2_
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import sys
 from collections import Counter, defaultdict
@@ -30,6 +31,7 @@ from scripts import run_stimulus_interventions as run  # noqa: E402
 from scripts import stimulus_interventions as si  # noqa: E402
 from scripts.run_stimulus_interventions import INPUTS, LEXICON, OPTION_TO_FAMILY, human_comparable, lexicon_words  # noqa: E402
 from scripts.stimulus_design import (  # noqa: E402
+    A3_SUMMARY_SHA256,
     ALPHA,
     B_RULES,
     BASIC_LABELS,
@@ -235,8 +237,11 @@ def equivalence_pass(values: np.ndarray, margin: float, *, draws: int = BOOTSTRA
     return bool(interval is not None and interval[0] > -margin and interval[1] < margin)
 
 
-def mean_absolute_change(cells: Cells, contrast: Contrast, condition: str, actors: Sequence[str], exclude: Sequence[str] = ()) -> float:
-    """Item-level size of a condition against the original, on the acted label, by actor."""
+def dose_change(cells: Cells, contrast: Contrast, condition: str, actors: Sequence[str], exclude: Sequence[str] = ()) -> float:
+    """Size of a condition's signed change on the acted label: |mean over actors of actor means|.
+
+    Signed, so that item noise alone cannot pass as a working dose.
+    """
     values: Dict[str, List[float]] = defaultdict(list)
     plain = Contrast("dose", contrast.route, (), (condition,))
     for trial, item in cells.items.items():
@@ -245,9 +250,9 @@ def mean_absolute_change(cells: Cells, contrast: Contrast, condition: str, actor
             continue
         delta = item_delta(cells, trial, plain, (plain.a, plain.b), "blind", "acted")
         if not np.isnan(delta):
-            values[item["actor"]].append(abs(delta))
+            values[item["actor"]].append(delta)
     means = [float(np.mean(values[a])) for a in actors if a in values]
-    return float(np.mean(means)) if means else float("nan")
+    return abs(float(np.mean(means))) if means else float("nan")
 
 
 def region_tokens(cells: Cells, contrast: Contrast, frame_tokens: Optional[Mapping[str, float]]) -> Optional[float]:
@@ -285,12 +290,19 @@ def null_conditions(
     margin: Optional[float],
     frame_tokens: Optional[Mapping[str, float]],
     exclude: Sequence[str] = (),
+    frame_order_verified: bool = False,
 ) -> Dict[str, Any]:
-    """The six conditions of the null rule. Anything missing leaves its condition False."""
+    """The six conditions of the null rule. Anything missing leaves its condition False.
+
+    Frame-order cues have no joint ablation to run, so condition 4 is inapplicable to them,
+    but only where delivery showed frames arrive in sent order. Otherwise an order null
+    could come from the pipeline, as on Qwen3-VL, whose native video merges pairs of frames.
+    """
     usable_margin = margin is not None and bool(np.isfinite(margin)) and margin > 0
     area = region_tokens(cells, contrast, frame_tokens)
-    doses = {c: mean_absolute_change(cells, contrast, c, actors, exclude) for c in contrast.dose}
-    joint = False
+    doses = {c: dose_change(cells, contrast, c, actors, exclude) for c in contrast.dose}
+    inapplicable = contrast.joint_inapplicable and frame_order_verified is True
+    joint = inapplicable
     if contrast.joint is not None and usable_margin:
         values = actor_effects(cells, contrast, actors, a=(contrast.joint,), b=ORIGINAL, exclude=exclude)
         joint = equivalence_pass(values, margin)
@@ -308,7 +320,8 @@ def null_conditions(
         "region_tokens": area,
         "dose_changes": doses,
         "joint_condition": contrast.joint,
-        "can_reach_null": contrast.joint is not None,
+        "joint_inapplicable": inapplicable,
+        "can_reach_null": contrast.joint is not None or inapplicable,
         "null_ok": all(checks.values()),
     }
 
@@ -402,6 +415,20 @@ def human_tables(cells: Cells, route: str, human: Dict[str, Dict[str, float]]) -
     }
 
 
+def descriptive_label(contrast: Contrast, row: Dict[str, Any], gates: Mapping[str, Any]) -> Optional[str]:
+    """A label for one masked region that meets every null condition but the joint ablation.
+
+    It describes the result and never changes the verdict, which stays Inconclusive.
+    """
+    checks = row["null_rule"]
+    others = [k for k in checks if k.startswith("c") and k[1].isdigit() and not k.startswith("c4")]
+    one_region = contrast.a[0].startswith("mask_") and not contrast.versus_labels
+    quiet = row.get("p_maxt", 0.0) >= ALPHA and row.get("p_maxt_two_sided", 0.0) >= ALPHA
+    if one_region and quiet and gates_passed(gates) and not checks["c4_joint_ablation"] and all(checks[k] for k in others):
+        return "single_region_null"
+    return None
+
+
 def top_family(row: Dict[str, Any]) -> str:
     scores = row["blind"]["family_logprob"]
     return max(sorted(scores), key=lambda k: scores[k])
@@ -468,6 +495,7 @@ def analyse_route(
     exclude: Sequence[str] = (),
     flip_args: Optional[Dict[str, Any]] = None,
     frame_tokens: Optional[Mapping[str, float]] = None,
+    frame_order_verified: bool = False,
 ) -> Dict[str, Any]:
     family = [c for c in CONFIRMATORY if c.route == route]
     primary = test_family(cells, family, actors, exclude=exclude, flip_args=flip_args)
@@ -481,8 +509,9 @@ def analyse_route(
         interval = actor_interval(values)
         row["ci95"] = list(interval) if interval else None
         row["null_equivalence"] = bool(margin is not None and equivalence_pass(values, margin))
-        row["null_rule"] = null_conditions(cells, contrast, row, actors, gates, margin, frame_tokens, exclude)
+        row["null_rule"] = null_conditions(cells, contrast, row, actors, gates, margin, frame_tokens, exclude, frame_order_verified)
         row["verdict"] = verdict(row, gates, row["null_rule"]["null_ok"])
+        row["descriptive_label"] = descriptive_label(contrast, row, gates)
     return {
         "primary_blind_acted": primary,
         "against_human_modal_label": test_family(cells, family, actors, target="human_mode", exclude=exclude, flip_args=flip_args),
@@ -554,14 +583,30 @@ def rq0_status(a1_passed: Optional[bool], a3_passed: Optional[bool], route: str)
     return a1_passed is True or (a1_passed is False and route == "single_face")
 
 
+A3_OUTPUT_DIR = Path("results/face_input_validity")
+A3_SUMMARY_NAME = "face_input_validity_summary.json"
+
+
 def _read_json(path: Path) -> Optional[Dict[str, Any]]:
     return json.loads(path.read_text(encoding="utf-8")) if path.exists() else None
 
 
-def outside_gates(reproduction: Path, model: str, route: str) -> Dict[str, Any]:
+def a3_summary(reproduction: Path, output_dir: Path = A3_OUTPUT_DIR) -> Dict[str, Any]:
+    """A3's frozen summary, from where A3 wrote it or its committed copy.
+
+    Only the pinned bytes count, so a stale or edited copy reads as no result.
+    """
+    for folder in (output_dir, reproduction):
+        path = folder / A3_SUMMARY_NAME
+        if path.exists() and hashlib.sha256(path.read_bytes()).hexdigest() == A3_SUMMARY_SHA256:
+            return json.loads(path.read_text(encoding="utf-8"))
+    return {}
+
+
+def outside_gates(reproduction: Path, model: str, route: str, a3_output_dir: Path = A3_OUTPUT_DIR) -> Dict[str, Any]:
     """RQ0, G2 to G4 and delivery from their own output files. A missing file has not passed."""
     a1 = (_read_json(reproduction / "rotation_summary.json") or {}).get(model, {}).get("vision_dependent")
-    a3 = (_read_json(reproduction / "face_input_validity_summary.json") or {}).get(model, {}).get("vision_dependent")
+    a3 = a3_summary(reproduction, a3_output_dir).get(model, {}).get("vision_dependent")
     vision = _read_json(reproduction / f"vision_gates_{model}.json") or {}
     verdicts = vision.get("verdict") or {}
     g2_g4 = not vision.get("smoke", True) and all((verdicts.get(g) or {}).get("pass") is True for g in ("G2", "G3", "G4"))
@@ -589,6 +634,12 @@ def delivery_passed(reports: Sequence[Dict[str, Any]], route: str) -> bool:
     ) and all(run.order_check(r) for r in rows) and (
         route != "video_face" or all("pixels_change_under_shuffle" in r for r in rows)
     )
+
+
+def frame_order_verified(reports: Sequence[Dict[str, Any]]) -> bool:
+    """Every delivery row showed video frames arriving in sent order. Absent is not shown."""
+    rows = delivery_rows(reports, "video_face")
+    return bool(rows) and all(r.get("pixels_arrive_in_sent_order") is True for r in rows)
 
 
 def sham_passed(cells: Cells, route: str) -> bool:
@@ -689,7 +740,7 @@ def main() -> None:
         across = float(np.median(across_values)) if across_values else None
         frame_tokens = frame_tokens_by_clip(cells.items, across, geometry)
         small = below_token_floor(cells.items, across, geometry)
-        common = {"frame_tokens": frame_tokens}
+        common = {"frame_tokens": frame_tokens, "frame_order_verified": frame_order_verified(reports)}
         out[route] = {
             "gates": {**gates, "a1": outside["a1"], "a3": outside["a3"]},
             "gate_b": gate,

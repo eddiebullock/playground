@@ -20,6 +20,8 @@ MIN_REGION_TOKENS = 1.0
 BOOTSTRAP_DRAWS = 10000
 ORIGINAL = ("original",)
 SHUFFLES = ("shuffle_a", "shuffle_b")
+# A3's frozen summary, byte-identical on the cluster and in research/reproduction on 2026-11-07.
+A3_SUMMARY_SHA256 = "c1c64e6975b32356a3314268c054f0dee483ddf74b11cd66d03b2faf972e64a4"
 GATE_KEYS = ("rq0", "g2_g4", "gate_b", "delivery", "sham")
 BASIC_LABELS = ("Afraid", "Angry", "Disgusted", "Happy", "Sad", "Surprised")
 SMOKE_ITEMS = (
@@ -43,7 +45,8 @@ class Contrast:
     other_fills: Tuple[Tuple[str, ...], ...] = field(default=())
     other_fills_b: Tuple[Tuple[str, ...], ...] = field(default=())  # the b side, where b is a mask
     dose: Tuple[str, ...] = ()  # positive controls for the null rule, each against the original
-    joint: Optional[str] = None  # joint ablation; None means this cue cannot reach Null
+    joint: Optional[str] = None  # joint ablation; None caps the cue at Inconclusive
+    joint_inapplicable: bool = False  # order cues: no ablation applies, if frame order is verified
 
 
 def _mask(region: str, fill: str = "neutral") -> Tuple[str, ...]:
@@ -83,8 +86,8 @@ CONFIRMATORY: Tuple[Contrast, ...] = (
     Contrast("P8", "single_face", ("Disgusted",), _mask("mouth"), "Angry", 1, **_region("mouth")),
     Contrast("P9", "single_face", ("Happy",), ("sf_low",), direction=1, b=("sf_high",), dose=("sf_low", "sf_high")),
     Contrast("P10", "single_face", ("Sad",), ("sf_low",), direction=-1, b=("sf_high",), dose=("sf_low", "sf_high")),
-    Contrast("P12", "video_face", ("Happy", "Surprised"), SHUFFLES, dose=TEMPORAL_DOSE),
-    Contrast("P13", "video_face", (), SHUFFLES, low_intensity=True, dose=TEMPORAL_DOSE),
+    Contrast("P12", "video_face", ("Happy", "Surprised"), SHUFFLES, dose=TEMPORAL_DOSE, joint_inapplicable=True),
+    Contrast("P13", "video_face", (), SHUFFLES, low_intensity=True, dose=TEMPORAL_DOSE, joint_inapplicable=True),
     Contrast("P14a", "video_face", ("Afraid",), ("trunc_first_third",), "Surprised", 1, ("trunc_last_third",), dose=TEMPORAL_DOSE),
     Contrast("P14b", "video_face", ("Surprised",), ("trunc_first_third",), "Afraid", 1, ("trunc_last_third",), dose=TEMPORAL_DOSE),
     Contrast("P15a", "video_face", ("Angry",), ("trunc_first_third",), "Disgusted", 1, ("trunc_last_third",), dose=TEMPORAL_DOSE),
@@ -103,6 +106,7 @@ def design_spec() -> Dict[str, Any]:
         "min_region_tokens": MIN_REGION_TOKENS,
         "bootstrap_draws": BOOTSTRAP_DRAWS,
         "gate_keys": GATE_KEYS,
+        "a3_summary_sha256": A3_SUMMARY_SHA256,
         "basic_labels": BASIC_LABELS,
         "smoke_items": SMOKE_ITEMS,
         "confirmatory": [dataclasses.asdict(c) for c in CONFIRMATORY],
