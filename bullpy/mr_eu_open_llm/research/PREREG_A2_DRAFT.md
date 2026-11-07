@@ -1,10 +1,17 @@
 # DRAFT amendment A2: blind readout gate and stimulus interventions
 
-**Status: DRAFT. Not frozen, not preregistered, not part of `research/PREREGISTRATION.md`.** Nothing here binds until it is reviewed, its open choices are settled, and it is committed and tagged before any full run. Numbers marked **[proposed]** were set by the implementer and need sign-off.
+**Status: FROZEN 2026-11-07, tag `a2-freeze`, before any A1 rotation result was read and before any full intervention run. Later changes are dated deviations, appended below. The filename keeps "DRAFT" so that references in the code stay valid.**
+
+Frozen `design_sha256`: `0ae22118d3b2690c581595890b9bb8b904e1f7860f37be9ac909f925b7058de7`.
+
+Frozen code, sha256: `scripts/stimulus_design.py` `89d256c1072e0768fc747294553c5710adaf42184a175866d7bd75bcc6104978`; `scripts/stimulus_interventions.py` `93c601eb42d6700d4f0fc8ba72317ed5c2e354105d57fcac611c59660125deb3`; `scripts/run_stimulus_interventions.py` `f7880c94e9671cc294cd4eaeece2108d7cd1d7a4c7e6f9e30a1c495964e6cd82`; `scripts/analyse_stimulus_interventions.py` `aba4f533daad6210e87f7bb4e68fc4627805cb4dfd9d9308df734fada4edc8b1`; `scripts/recovery_stimulus_interventions.py` `d0c8bf0d634101179c5feacb33cbacc341f998295b820214c008355285ed382b`; `slurm_jobs/study3_stimulus_interventions.sh` `1c8d22ea637abedd3a3c2332331639c7e33a7e7ed9cb2e741335d17ce138eec5`.
+
+**What was known at the freeze.** No A1 result. The A3 result was known: the draft was written before it, but the audit corrections of 2026-11-07 came after it, and A3's summary is hashed into the design. The vision gates and the CFA spectra were also known. Recovery was rerun on the frozen analysis: 100 replicates, all five observers pass, unchanged.
 
 **Written:** 2026-11-04, before any rotation result was seen and before any full intervention run.
-**Depends on:** amendment A1 (RQ0) and gates G2 to G4. No full run starts until these pass for that model.
-**Code:** `scripts/stimulus_interventions.py`, `scripts/run_stimulus_interventions.py`, `slurm_jobs/study3_stimulus_interventions.sh`, `scripts/analyse_stimulus_interventions.py`, `scripts/recovery_stimulus_interventions.py`, `scripts/human_response_predictor.py`. Each output carries `design_sha256`, a hash of the prompt, prefill, lexicon, conditions and frame count.
+**Depends on:** RQ0 and gates G2 to G4, per model. RQ0 is read through the frozen A1 and A3 table: Pass on both admits both routes; Fail on A1 with Pass on A3 admits `single_face` only, as that table says to use it from there; any other outcome, or a missing result, admits neither. No full run starts until these pass for that model.
+**Models.** Gemma 4 and Qwen3-VL are eligible, subject to RQ0. Molmo2 is out, since it fails G2 and G4, and any route back needs a dated rule written before new data.
+**Code:** `scripts/stimulus_design.py`, `scripts/stimulus_interventions.py`, `scripts/run_stimulus_interventions.py`, `slurm_jobs/study3_stimulus_interventions.sh`, `scripts/analyse_stimulus_interventions.py`, `scripts/recovery_stimulus_interventions.py`, `scripts/human_response_predictor.py`. Each cell, run report and analysis output carries `design_sha256`, a hash of the prompt, prefill, lexicon, conditions, frame count, edit constants, seed, MCQ prompt, prefill and rotations, video settings, the pinned geometry hash, and the analysis constants and contrasts. Analysis refuses cells whose hash differs from the code. Current value: `0ae22118d3b2690c581595890b9bb8b904e1f7860f37be9ac909f925b7058de7`.
 
 **What was seen before writing this.** A smoke run of 3 items on Gemma 4 E4B ran the pipeline before these predictions were committed, which sits against rule 2 of `RESEARCH_QUESTIONS.md`. Only mechanics were read: run status, token counts, timing, determinism, whether a blanked frame changes the logits, lexicon coverage and top next tokens on unedited clips. No contrast between conditions was computed by label or direction. The confirmatory analysis is repeated without those 3 items (listed in the appendix) as a sensitivity check. The processor probes used synthetic noise, not clips.
 
@@ -88,7 +95,7 @@ Run on the first items. These are mechanics, not tests of cue use.
 - Estimated tokens across the face.
 - One frame blanked at a time: does the output change for every position?
 - Repeat forward: is the change zero?
-- Under shuffle: do input ids stay identical, and do pixels arrive in sent order?
+- Under shuffle: do input ids stay identical, and do the pixels change? Where the pixel tensor keeps a frame axis, do they arrive in sent order? Qwen3-VL has no such axis, since it merges pairs, so only the change is checked there.
 - How many frames the existing 1 fps, 16-frame policy would drop at the composite grid (`make_frame_grid` keeps the first 8).
 
 **A route failing these checks is not analysed.** A frame that cannot reach the output makes a temporal null uninformative.
@@ -105,9 +112,9 @@ Let s_i(x) be the centred log-ratio (CLR) of item i's acted-label family on imag
 | B2 Coverage | Median lexicon mass on originals at least 0.05 |
 | B3 Image dependence | Mean RMS change in family CLR, real versus image-free, at least 0.25 nats |
 | B4 Face-specific signal | Mean of s_i(x_i) minus s_i(x_d(i)) above zero, one-sided actor-level sign-flip p < .01, and actor-bootstrap 95% CI excludes 0 from above |
-| B5 Beyond label prior | B4 repeated after subtracting each family's mean over all originals from that model and route |
+| B5 Beyond label prior | The acted family's CLR on the item, minus that family's mean CLR over clips of other labels, above zero, with B4's test and CI |
 
-A model and route that fail Gate B go no further on the blind readout for RQ1 and RQ2, and are reported as such. Reading image effects off MCQ instead is exploratory. B4 uses acted labels for continuity. It is repeated against the human modal label and with the 26 flagged items removed.
+A model and route that fail Gate B go no further on the blind readout for RQ1 and RQ2, and are reported as such. Reading image effects off MCQ instead is exploratory. B4 uses acted labels for continuity. It is repeated against the human modal label and with the 26 flagged items removed. Those repeats are reported and do not decide the gate.
 
 ## Estimands
 
@@ -125,16 +132,16 @@ Actor-level effect for contrast k:
 
     e(a, k) = mean of delta over actor a's items in contrast k
 
-Effects are per model and route. Models are never pooled, because their architectures differ and the question is about each one. Flip rate is secondary and reported against the rate between `shuffle_a` and `shuffle_b` on the same item, as a measured nuisance rate.
+Effects are per model and route. Models are never pooled, because their architectures differ and the question is about each one. Flip rate is secondary and reported against the rate between `shuffle_a` and `shuffle_b` on the same item, as a measured nuisance rate, which exists on `video_face` only and is the reference for both routes.
 
 ## Inference
 
 - **Unit.** The actor. 17 actors; 8 or 9 per basic label, 7 to 9 for most others.
-- **Test.** Sign-flip of e(a, k), flipping whole actor rows so dependence across contrasts is kept, on the one-sample t. All 2^n flips are enumerated. Implemented as `signflip_maxt`.
+- **Test.** Sign-flip of e(a, k), flipping whole actor rows so dependence across contrasts is kept, on the one-sample t. All 2^n flips are enumerated for the contrasts. Implemented as `signflip_maxt`. Gate B instead uses A1's Monte Carlo sign-flip of item-weighted actor totals, by reuse of `actor_sign_flip_p`.
 - **Multiplicity.** Westfall-Young step-down maxT within one model and route, over the contrasts in the confirmatory family below, at familywise alpha .05. Directions are as stated. Unlike the old Holm gate, the floor here depends on actors, not a permutation count.
 - **Floors.** With 8 actors, one-sided p cannot go below 1/256 = .0039. Jealous, with 7, floors at .0078 one-sided. With 17 it is about 8e-6. A label-level contrast is thus testable at .05 but only just, and nothing here supports claims beyond these actors.
 - **Partial crossing limits what can be tested.** Happy, Afraid and Disgusted were portrayed by the same 8 actors (C, E, G, I, K, M, O, S). Sad, Angry and Surprised came from the other 8 or 9 (B, D, F, H, J, L, N, P, R), and the two sets do not overlap. A contrast between Happy and Sad is therefore also a contrast between actors. Label-by-cue interactions are tested only inside an actor set. Contrasts across the sets are descriptive.
-- **Fill rule.** The neutral fill is primary. A mask effect counts only if it passes and the first-frame and blur fills have the same sign, since the occluder is itself an intervention.
+- **Fill rule.** The neutral fill is primary. A mask effect counts only if it passes and the first-frame and blur fills have the same sign, since the occluder is itself an intervention. On P6 the other fills replace both the mouth and the eyes mask.
 - **Interval.** Actor-bootstrap 95% CI for each contrast, 10,000 draws.
 - **Recovery.** Before any confirmatory run, synthetic observers with known behaviour go through `scripts/analyse_stimulus_interventions.py`, by `scripts/recovery_stimulus_interventions.py`, on the real 243 items and actors: prior-only, frame-bag with no order code, mouth-only, eyes-only, and a human-like observer stating every prediction. Pass rule, fixed before running: expected contrasts recovered in at least 80% of replicates, and any other contrast in at most 10% of replicates. Results: `research/reproduction/recovery_stimulus_interventions.json` (see appendix).
 
@@ -180,23 +187,23 @@ The primary contrasts below are the only confirmatory ones. Evidence grades and 
 
 | Outcome | Requires |
 |---|---|
-| **Matches prediction** | Gate B passed; route delivery passed; step-down p < .05 in the predicted direction on the blind readout; fill rule met |
-| **Opposes prediction** | Step-down p < .05 two-sided in the opposite direction |
-| **Null** | All conditions in the next section met |
-| **Inconclusive** | Anything else, including a sham or delivery failure |
+| **Matches prediction** | RQ0, G2 to G4, Gate B, route delivery and the sham all passed; step-down p < .05 in the predicted direction on the blind readout; fill rule met |
+| **Opposes prediction** | The same gates passed; step-down p < .05 two-sided in the opposite direction |
+| **Null** | The same gates passed; neither test significant; all conditions in the next section met |
+| **Inconclusive** | Anything else, including a sham or delivery failure. A gate with no result has not passed. The sham exists on `single_face` only |
 
 Every result states its scope tag. A BASIC ONLY match is a claim about basic labels in this stimulus set. The MCQ bridge is reported beside the blind result, and disagreement between the two is reported as such.
 
 ## Null-result rule
 
-A null in a cue counts as a null only if all of these hold. Otherwise the result is inconclusive and described as such.
+A null in a cue counts as a null only if all of these hold. Otherwise the result is inconclusive and described as such. Null is meant to be hard to reach. P1 to P4, P7 and P8 can reach it, and P12 and P13 can on a model with verified frame order. 8 of the 16 contrasts cannot reach Null, which are 6 of the 14 predictions: P5, P6, P9, P10, P14 and P15. On Qwen3-VL, P12 and P13 are capped too, making 10 of 16.
 
-1. A1, G2 to G4, and Gate B passed for that model and route.
-2. Delivery passed. For temporal cues, every frame position changes the output. For spatial cues, the edited region spans at least 1 token on that route.
-3. The dose was shown effective elsewhere on the same route: the model's change under `mask_mouth_blur` plus `mask_eyes_blur` on the unedited item, or the full mismatch for a temporal cue, exceeds the margin below.
-4. Joint ablation is also null: `mask_eyesmouth_neutral` for region cues, `static_apex` for temporal cues. A region null without it is reported as "single-region null", because redundancy is not ruled out.
-5. Equivalence passes: the 90% actor-bootstrap CI of the contrast lies inside the margin. **Margin [proposed]:** 10% of that model's mean absolute CLR change under the full image mismatch of B4, fixed per model before any intervention contrast is computed.
-6. Divergence from the human prediction is reported alongside.
+1. RQ0, G2 to G4, and Gate B passed for that model and route.
+2. Delivery passed. For temporal cues, every frame position changes the output. For region cues, the median edited area over the contrast's items is at least 1 token, from `mask_fraction`, the frame size and tokens across the crop. Filters cover the whole frame.
+3. A positive control shows the cue type can move this model on this route. Each control is the absolute value of the signed change on the acted label against `original`, as the mean over actors of actor means, over the contrast's items, and must exceed the margin. It is signed so that item noise that cancels cannot pass as a working dose. Region cues: the blur fill of the same region, for brows too, and both regions on P6. Filters: `sf_low` and `sf_high` each. Temporal cues: `static_apex`. The full mismatch is not used, since it exceeds 10% of itself by construction.
+4. Joint ablation is also null: the contrast of `mask_eyesmouth_neutral` against `original`, on the same items and outcome, has its 90% actor-bootstrap CI inside the margin. This applies to P1 to P4, P7 and P8. For P12 and P13, frame order has no joint ablation to run, so this condition is inapplicable, not failed, on a model whose delivery rows show frames arriving in sent order. That holds on Gemma 4 and not on Qwen3-VL, whose native video merges pairs of frames, so sent order cannot be verified and an order null there could come from the input. Qwen3-VL therefore stays capped on P12 and P13. No valid joint ablation exists for the rest, so they cap at Inconclusive and report their equivalence interval: brows (P5) are not in the joint mask; P6 is an interaction; filters (P9, P10) are complementary; and truncation (P14, P15) changes content, while `static_apex` is the temporal dose and cannot also be null. A single masked region that meets every condition but this one carries the descriptive label `single_region_null`, because redundancy is not ruled out. The label does not change its Inconclusive verdict.
+5. Equivalence passes: the 90% actor-bootstrap CI of the contrast lies inside the margin. **Margin [proposed]:** 10% of that model's mean absolute CLR change under the full image mismatch of B4 on that route, fixed per model and route before any intervention contrast is computed.
+6. Divergence from the human prediction is reported alongside, as the contrast's mean and 95% CI in its predicted direction.
 
 ## Human response distribution and weak labels
 
@@ -215,9 +222,10 @@ No item is excluded from the primary analysis except by a logged failure. These 
 
 - Excluding the 3 smoke items.
 - Excluding cells with `align_flagged`, where the donor residual is above 5% of eye span.
-- Excluding apex frames where the first-frame donor is the sent frame.
-- Excluding Neutral clips acting as their own neutral donor.
+- Excluding apex frames where the first-frame donor is the sent frame. Near vacuous, since the apex differs from the first frame by construction.
+- Excluding Neutral clips acting as their own neutral donor. This touches no confirmatory contrast.
 - Canonical word only, instead of the family sum, to check family-size effects.
+- Clips with 8 or more tokens across the face, per DECISIONS 2026-11-04, on each route, with the share excluded. A clip whose size cannot be read counts as under 8.
 
 Family sizes differ, so raw between-family comparison is biased. Within-item change removes this to first order, and this check tests that assumption.
 
@@ -230,21 +238,27 @@ Family sizes differ, so raw between-family comparison is biased. Within-item cha
 - Frames 1 fps apart cannot carry onset velocity. Eight uniform frames test order, not speed.
 - Actor and label are only partly crossed.
 
-## Open choices before freezing
+## Settled choices
 
-1. Thresholds marked **[proposed]**: Gate B rules, the equivalence margin, SF cutoffs.
-2. Whether 243 items run on all three models or a reduced condition set is used; see Cost.
-3. Whether blind prefill text is accepted as is. A prompt change needs a new smoke run and a new `design_sha256`.
-4. Confirm Jack 2014 from the full text, or remove P14 and P15.
+The user accepted these on 2026-11-07.
 
-### Recommendations, awaiting sign-off
+1. Thresholds marked **[proposed]** stand as drafted: Gate B rules, the equivalence margin, SF cutoffs. Any change must come before any full run.
+2. All 243 items run on the eligible models, Gemma 4 and Qwen3-VL: 28.1 GPU-hours of cell time, about 31 with the 10% allowance. The Molmo2 hours in Cost no longer apply.
+3. The blind prefill text stands. It was chosen by the DECISIONS rule on calibration clips.
+4. P14 and P15 stay, at **BASIC ONLY** and moderate standing. The main text of Jack 2014 was read on 2026-11-07 from the Glasgow repository copy (https://eprints.gla.ac.uk/88928/) and supports their direction. The supplement was not read. A result here would show the analogue on natural clips, not replicate the paper.
 
-These are the implementer's recommendations, not decisions. They bind nothing until reviewed. A1 has not been read, so choice 2 may change.
+## Disclosed limits of the analysis
 
-1. Accept the **[proposed]** thresholds as drafted. Any change must come before any full run.
-2. Run all 243 items on Gemma and Qwen: 28.1 GPU-hours of cell time, about 31 with the 10% allowance. Decide on Molmo after A1. It fails G2 and G4, so it is not eligible as drafted, and including it would need its own amendment.
-3. Accept the blind prefill text. It was chosen by the DECISIONS rule on calibration clips, and changing it now would need a new smoke run and a new `design_sha256`.
-4. Keep P14 and P15, at their current **BASIC ONLY** and moderate standing. The main text of Jack 2014 was read on 2026-11-07 from the Glasgow repository copy (https://eprints.gla.ac.uk/88928/), and it supports their direction. The supplement was not read. A result here would show the analogue on natural clips, not replicate the paper.
+- **The region rule in null condition 2 is a low bar.** It tests area in tokens, not span, so a long thin region could pass while being under a token wide.
+- **Recovery** used 8,191 Monte Carlo flips, ran `test_family` only, has independent noise and large effects, so it shows the pipeline works, not its power. It was not rerun after the audit, because no contrast or test changed.
+- **Gate B statistics** use the Monte Carlo sign-flip of item-weighted actor totals, not the contrast test.
+- **MCQ bridge** is empty for P7, P8, P14a, P14b and P15b, because those labels are not among the item's options. Acted-label MCQ scores also drop None of the above, whereas leave-target-out scores keep it.
+- **`single_full` and `legacy_full`** run but have no analysis of contrasts, and Gemma 4 fails delivery on both.
+- **The margin** comes from the acted family and is applied to other-family and double-difference outcomes, and a null may be unattainable with 8 actors.
+- **Lexicon sums** have no word-boundary check, so "kind of", or a form nested in a longer token, may inflate a family. The canonical-word sensitivity bounds part of this.
+- **Image-free inputs** keep their placeholder tokens. That may explain Qwen's route dependence, which is untested, and B3 may pass trivially there.
+- **A Fail on A1 with a Pass on A3** leaves a model's `video_face` results descriptive, under the literal A3 table.
+- **Descriptive tables** cover every condition by label and scope, including eye views, `reverse`, `static_apex` and shuffles overall. They carry no test.
 
 ## Cost
 
@@ -256,9 +270,9 @@ Measured on `smoke_v2`: A100, bfloat16, full forwards on every model, the chosen
 | Qwen3-VL | 5.4 | 17.9 | 17.0 | 46 | 23.5 | 16.5 |
 | Molmo2 | 7.7 | 11.1 | 8.1 | 46 | 17.1 | 15.0 |
 
-Hours are cell time only, so allow about 10% for decoding and delivery checks: about 47 GPU-hours in total. `legacy_full` is left out because it is not a causal route. If Molmo's `video_face` stays out, since it fails gate 1, Molmo falls to 11.2 hours.
+Hours are cell time only, so allow about 10% for decoding and delivery checks: about 47 GPU-hours in total. `legacy_full` is left out because it is not a causal route, so its cost is unmeasured. If Molmo's `video_face` stays out, since it fails gate 1, Molmo falls to 11.2 hours.
 
-**Wall time.** `--shard` is enough, and no offset splitting is needed. Items go to shards by position in the round-robin actor order, so shards are balanced by actor. Three shards per model (`sbatch --array=0-2`) give about 4 to 6 hours each against the 12 h limit. Each shard writes its own cells file, which is concatenated before analysis.
+**Wall time.** `--shard` is enough, and no offset splitting is needed. Items go to shards by position in the round-robin actor order, so shards are balanced by actor. Three shards per model (`sbatch --array=0-2`) give about 4 to 6 hours each against the 12 h limit. `N_SHARDS` must be set explicitly, so a resubmitted task cannot re-shard. Each shard writes its own cells file and report. Analysis takes all of them and refuses an incomplete set, a missing cell, duplicates, anything other than 243 items, or more than one design hash.
 
 ## Appendix: recovery and predictor
 
@@ -291,5 +305,24 @@ Jobs 39995347 to 39995349, the same 3 items, one run per model on the chosen rea
 - **Checks:** the sham equals the original exactly, repeat forwards change nothing, and `design_sha256` starts `a1924d80` on all three.
 - **Coverage on cells, median lexicon mass:** Gemma .58 to .71, Qwen .82 to .96, Molmo .66 to .71 by route.
 - **Lexicon mass is not image signal.** Image-free mass on `single_face` is .49 on Gemma, .62 on Qwen and .42 on Molmo. Grey is .02, .08 and .46. Coverage (B2) can pass on the prior alone, so B3 to B5 carry the image claim.
-- **The image-free baseline depends on route on Qwen.** Mass is .62 on `single_face` and `video_face`, but .001 on `single_full` and `legacy_full`. So its use as a prior in B3 needs review before freezing.
+- **The image-free baseline depends on route on Qwen.** Mass is .62 on `single_face` and `video_face`, but .001 on `single_full` and `legacy_full`. Gate B runs only on `single_face` and `video_face`, each with its own baseline, so the .001 cannot enter B3.
 - **Alignment:** 8 cells flagged per model, all on `OF10`, as in the first smoke.
+
+## Appendix: changes from the audit, 2026-11-07
+
+An audit of this text against the code, before any freeze, found these. No A2 contrast had been computed on any data, so these are corrections before freezing, not deviations.
+
+1. B5 was identical to B4, since the same term cancelled. Redefined.
+2. The null rule was mostly unimplemented and partly unexecutable. Its six conditions are now defined per cue type and coded, and P5, P6, P9, P10 and P12 to P15 cap at Inconclusive.
+3. Verdicts ignored delivery, the sham, A1 and G2 to G4. They now take these as inputs, and missing means not passed.
+4. A significant contrast whose fills disagreed could be called a null. It cannot now.
+5. P6 skipped the fill rule. It now takes the rule on both masks.
+6. Only one of five sensitivities ran. All run, and the smoke items are fixed in code. The repeat on clips with 8 or more tokens was missing and is added.
+7. Contrast CIs, B4 repeats, flip rates, failures by condition and label, and descriptive tables are added.
+8. `N_SHARDS` is required, the shard index is validated, and the array example is `0-2`.
+9. Analysis reads all shards, and refuses gaps. B1 now sees every shard.
+10. `design_sha256` now covers the edit, MCQ, geometry and analysis constants, appears on every output and is checked. It therefore no longer equals smoke_v2's a1924d80. No behaviour changed: the fields hashed before are unchanged, and a test reproduces a1924d80 from them. Smoke_v2 was not rerun.
+11. The run step checks the pinned geometry hash, which matches the cluster file, and landmarks refuse to overwrite it.
+12. The shuffle order check is gated. Pixels must change under shuffle on every model.
+13. RQ0 is read through the A1 and A3 table, the margin is per model and route, and the choices are settled.
+14. After a second audit: the dose control is signed, `single_region_null` is emitted, P12 and P13 can reach Null where frame order is verified, more edit constants and the A3 summary hash are in `design_sha256`, and A3 is read from its output path or its committed copy, both held to the pinned bytes, which matched on 2026-11-07.

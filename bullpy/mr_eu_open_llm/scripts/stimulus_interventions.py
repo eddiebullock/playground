@@ -64,6 +64,7 @@ REGIONS: Dict[str, Tuple[Tuple[int, ...], ...]] = {
 REGION_DILATE = {"mouth": 0.12, "eyes": 0.10, "brows": 0.08, "eyesmouth": 0.12}
 FEATHER_FRACTION = 0.03
 BLUR_FILL_SIGMA_FRACTION = 0.35
+EYE_BAND_MARGIN = 0.12  # of eye span, above and below the eye band
 MAX_ALIGN_RESIDUAL = 0.05  # of eye span; above this the row is flagged, not removed
 MIN_EYE_OPENING = 0.08  # lid gap over eye width; below this the eye counts as closed
 
@@ -296,8 +297,8 @@ def eye_band_box(landmarks: Sequence[np.ndarray], size_hw: Tuple[int, int]) -> T
     points = list(LEFT_EYE_RING + RIGHT_EYE_RING + LEFT_BROW + RIGHT_BROW)
     stack = np.concatenate([lm[points] for lm in landmarks])
     span = float(np.median([eye_span(lm) for lm in landmarks]))
-    low = stack.min(0) - 0.12 * span
-    high = stack.max(0) + 0.12 * span
+    low = stack.min(0) - EYE_BAND_MARGIN * span
+    high = stack.max(0) + EYE_BAND_MARGIN * span
     x0, y0 = int(max(0, math.floor(low[0]))), int(max(0, math.floor(low[1])))
     x1, y1 = int(min(width, math.ceil(high[0]))), int(min(height, math.ceil(high[1])))
     return x0, y0, x1, y1

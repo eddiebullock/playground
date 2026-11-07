@@ -309,3 +309,12 @@ Job 39981392, run under cv2 4.11 per A1.1, script sha256 6327b6f8, the same scri
 - **Pilot ablation:** This confirms the caveat. Qwen L4 (5 of 180 flips) patched a path that still carries about a quarter of the image effect, so that null says less about the axes than it appeared to. It remains a pilot.
 - **Descriptive:** On the 34 clips with the donor label in the options, a full swap moves logprob +14.55 nats toward the donor label. Gate-sample accuracy falls from .275 on the own clip to .05 on a full swap. These 40 clips are a gate sample, not an RQ0 result.
 - **Qwen A1 runtime:** Arrays 39982137 and 39982138 have a 12 h limit, and `scripts/evaluate.py` cannot resume, so a timeout loses the task. The only timing on this configuration (composite grid, 16 frames, 20 sequential samples, 243 items) is the August baseline, job 33520827, at 7 h 47 min, under the older decoder. A Slurm limit cannot be raised again once lowered, so it stays at 12 h. Qwen has not run this rotation path before; only Gemma and Molmo have.
+
+
+## 2026-11-07: A2 frozen before A1 is read
+
+The user accepted the four open choices and gave full autonomy. An independent audit found 14 faults before freezing, among them B5 duplicating B4, most of the null rule uncoded, and a shard resubmission that would have written all items to one file. A second audit found that the A3 path would have made every verdict Inconclusive, and that the dose check passed on noise. All are fixed; the appendix to the draft lists them.
+
+- **Why freeze now:** A1 is waiting on the queue, and freezing before reading it is stricter than the draft required.
+- **Consequence:** 8 of 16 contrasts cannot reach Null, or 10 of 16 on Qwen, and 6 of 14 predictions. Those cues read as a match, an opposition, or Inconclusive. A2 cannot show that a model ignores them.
+- **Recovery** was rerun on the frozen code and is unchanged. It shows that contrasts are recovered at large effects, not power at realistic ones.
