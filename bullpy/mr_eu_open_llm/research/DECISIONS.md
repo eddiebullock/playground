@@ -334,3 +334,12 @@ Decided before any A1 result was read. The natural-clip RQ1 route uses A1's comp
 `model_route` runs once per model in every case. Rows 2 to 4 change only how the score is read. A later analysis on `single_face` would be exploratory, or needs its own amendment before data.
 
 RQ0 text says no later RQ runs on a failing model. The frozen A3 table is the later and more specific rule, so it governs.
+
+
+## 2026-11-07: Source check after the A2 freeze
+
+A full read of the manuscript's references found that P7, P12 and P13 cited sources that do not carry them, that no cited source tests shuffling, and that Gold et al. 2013 and a VLM study point the other way. A2 has not run, so this is logged as a pre-data deviation in A2.
+
+- **Decision:** Predictions, family and code stay frozen. Changing a prediction after the freeze would be a worse fault than a weak one, and the evidence grades are corrected openly instead.
+- **Why not drop P12 and P13:** They stay in the family, and removal would change the multiplicity correction after the freeze. Their reading is limited by the deviation.
+- **Also:** The audit claim is softened to "several", since 3 of 8 is not most. A no-image control in Hallmen et al. was missed in earlier notes. Nature Human Behaviour cannot take this as a Registered Report, so it would be an Article with a reporting summary.

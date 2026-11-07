@@ -10,7 +10,7 @@ Reused text from research/paper/*_v1.md: none.
 
 ### Preregistration and order of work
 
-Each confirmatory analysis was fixed in a dated amendment before its data were read. Amendments live in the public repository [PENDING: repository archive DOI, and an external registration link if the journal requires one]. Thresholds marked as proposed below were set by the authors and have no external source.
+Each confirmatory analysis was fixed in a dated amendment before its data were read. Amendments live in the public repository [PENDING: repository archive DOI, and a dated link for each amendment. The journal strongly encourages preregistration for this kind of work, and requires a link and date for any reported one]. Thresholds marked as proposed below were set by the authors and have no external source.
 
 | Amendment | Content | Frozen | Known when frozen |
 |---|---|---|---|
@@ -32,7 +32,8 @@ Each confirmatory analysis was fixed in a dated amendment before its data were r
 5. *RQ1 unit.* The natural-clip analysis moved from single AUs to AU families after recovery failed in every condition. Two attempts at family-wise calibration then failed, and no third was run. Single cells are therefore exploratory. The strength rule below was tightened after power at 0.5, 1 and 2 times the human effect was known.
 6. *Gate thresholds.* The size threshold of gate G4 was set by the implementer before any model ran, with no source in the study brief.
 7. *Numerical precision.* Qwen3-VL's gates ran at bfloat16 only, because float32 ran out of memory.
-8. *Model revisions.* Models were loaded from local copies of Gemma 4 E4B (commit 83df0a88), Qwen3-VL 8B (0c351dd0) and Molmo2-O 7B (78441065).
+8. *Source checks after the A2 freeze.* A full read of the sources on 2026-11-07 weakened the stated support for several A2 predictions, chiefly P7, P12 and P13. The predictions, family and code are unchanged, and the change is logged as a pre-data deviation in A2.
+9. *Model revisions.* Models were loaded from local copies of Gemma 4 E4B (commit 83df0a88), Qwen3-VL 8B (0c351dd0) and Molmo2-O 7B (78441065).
 
 ### Models
 
@@ -42,11 +43,11 @@ We tested three open models: Gemma 4 E4B (`google/gemma-4-E4B-it`), Qwen3-VL-8B 
 
 No new human data were collected. [PENDING: ethics or exemption statement.]
 
-**EU-Emotion.** We used 243 silent face clips with six response options per item (five named labels and None of the above), from the 249 face clips of the published set [14]. [PENDING: why 6 of the 249 are absent from the local norms.] Clips show 21 labels (20 states plus neutral), acted by 17 face actors. Actor and label are only partly crossed: each actor portrayed 10 emotions plus neutral. Human response distributions are the face-only norms [14]. Human presentation order is not confirmed from the source, so human position effects are unknown. Happy, Afraid and Disgusted came from one set of 8 actors, and Sad, Angry and Surprised from a separate set of 8 or 9. A contrast across those sets is also a contrast between actors, so it is reported only descriptively.
+**EU-Emotion.** We used 243 silent face clips with six response options per item (five named labels and None of the above), from the 249 face clips of the published set [14]. [PENDING: why 6 of the 249 are absent from the local norms.] Clips show 21 labels (20 states plus neutral), acted by 17 face actors. Actor and label are only partly crossed: each actor portrayed 10 emotions plus neutral. Human response distributions are per-option face-only norms from the item data we hold (`data/eu_emotions_human_entropy.json`); the published paper reports recognition scores [14]. Response options were described as counterbalanced [14], but the scheme is not given and no results by position are reported, so human position effects are unknown. In our item metadata, Happy, Afraid and Disgusted came from one set of 8 actors, and Sad, Angry and Surprised from a separate set of 8 or 9. A contrast across those sets is also a contrast between actors, so it is reported only descriptively.
 
-Kind (9 items), Unfriendly (10) and Jealous (7) are flagged as weak labels. Face-only humans chose the target on 23 to 26% of these responses, against chance at 17%. Every result is reported against the acted label and against the human response distribution. Model accuracy far above human on these items is treated as possible non-facial leakage, not as skill. No flagged label is the target of a confirmatory contrast.
+Kind (9 items), Unfriendly (10) and Jealous (7) are flagged as weak labels. In our item norms, face-only humans chose the target on 23 to 26% of these responses, against chance at 17%. Every result is reported against the acted label and against the human response distribution. Model accuracy far above human on these items is treated as possible non-facial leakage, not as skill. No flagged label is the target of a confirmatory contrast.
 
-**Snoek AU data.** Human cue effects come from public trial-level data [19,25] (CC BY 4.0). Observers judged 1.25 s animations of random AU combinations on generated faces, with a frontal view, flat lighting and a black background. Basic emotions used seven options, including "other", and conversational states used five. Western (WC) and East Asian (EA) groups took part: 60 observers per group for basic emotions (140,910 and 139,728 trials) and 20 per group for conversational states (47,300 and 47,460 trials). The public files hold 33 AU amplitude columns, recoded from 42 raw AUs. They hold no timing parameters, pose or gaze, and no stimuli. Six basic emotions and four conversational states overlap about 8 of the 21 EU-Emotion labels, and include none of Worried, Disappointed, Kind or Unfriendly.
+**Snoek AU data.** Human cue effects come from public trial-level data [19,25]; the deposit [25] is CC BY 4.0. Observers judged 1.25 s computer-generated animations of random AU combinations on eight base faces per group, matched to observer ethnicity, with a frontal view, flat lighting and a black background. Basic emotions used seven options, including "other", and conversational states used five. Western (WC) and East Asian (EA) groups took part: 60 observers per group for basic emotions (140,910 and 139,728 trials) and 20 per group for conversational states (47,300 and 47,460 trials), counted in the public files with "other" responses kept. The public files hold 33 AU amplitude columns, recoded from 42 raw AUs. They hold no timing parameters, pose or gaze, and no stimuli. Six basic emotions and four conversational states overlap about 8 of the 21 EU-Emotion labels, and include none of Worried, Disappointed, Kind or Unfriendly.
 
 **Calibration clips.** The blind readout was chosen on 24 CREMA-D [26] clips outside any analysis set, with labels and votes unread.
 
@@ -54,7 +55,7 @@ Kind (9 items), Unfriendly (10) and Jealous (7) are flagged as weak labels. Face
 
 **Prompt audit.** Using the prompts alone, we recorded the target's position, the number of option sets per label, and how much of the human ambiguity measure (response entropy) a category label predicts. These findings do not depend on decoded pixels. The target was first on 243 of 243 items, and there were 21 option sets for 21 labels. Category alone gave a correlation of .503 with human entropy, cross-validated by actor (`research/reproduction/prompt_confound_audit.json`).
 
-**Literature check.** We tabulated option handling and image-free or mismatch controls in eight emotion papers [1,2,8-13]. Most were read as targeted passages. Search dates and coverage are in the Introduction and references.
+**Literature check.** We tabulated option handling and image-free or mismatch controls in eight emotion papers [1,2,8-13]. Reading status is in references; some supplements stayed out of reach. Search dates and coverage are in the Introduction and references.
 
 **Delivery audit.** For each route and model we logged media token counts, tensor shapes and estimated tokens across the face. Rule: at least 8 tokens across the face (median over clips), a change in output when any sent frame is blanked, logged frame indices equal to the frames sent, and input ids that do not change with frame content. On composite-grid models the grid keeps the first 8 frames, so 68 of 243 clips lose frames at 1 frame per second with a cap of 16, and 16:9 frames are squashed into square cells. On Gemma 4 the grid gives about 1 token across the face, against about 9 for a single face crop. A1 keeps this input as frozen, so a model that fails A1 on a grid has not shown that it cannot use faces. A3 exists for this reason.
 
@@ -91,19 +92,19 @@ Gate B runs per model and route on all 243 originals. B1: a repeat forward chang
 
 ### RQ1 on natural clips
 
-This analysis regresses human and model response probabilities on the same measured cues on the same clips. It is observational on both sides. AU intensities came from LibreFace [27] and OpenFace 3.0 [28] on the frames models saw. Four AU families are the cue set: brow raise (AU1, 2), brow lower (AU4, 9), smile (AU6, 12) and mouth open (AU25, 26). A family score is the mean of its members' z-scores, rescaled to unit variance.
+This analysis regresses human and model response probabilities on the same measured cues on the same clips. It is observational on both sides. AU intensities came from LibreFace [27], and per-AU outputs recorded as intensity from OpenFace 3.0 [28], on the frames models saw. Four AU families are the cue set: brow raise (AU1, 2), brow lower and nose wrinkle (AU4, 9), smile (AU6, 12) and mouth open (AU25, 26). A family score is the mean of its members' z-scores, rescaled to unit variance.
 
 One fractional ridge logistic is fitted per option on the clips offering it, with a category intercept and with cues residualised on category and actor. Ridge strength is frozen at the human value, 10. A category intercept absorbs the label prior and the foils offered. The confirmatory statistic is the family pattern score: the Pearson correlation over all cells between the model's and the human's matrix. Its null shuffles cue rows within category for the observer only (4,999 permutations).
 
 Model responses come from a complete real rotation run. A clip needs a usable response on all five rotations. If more than 5% of clips are lost, that model's RQ1 result is descriptive. [PENDING: rule for this analysis when a model fails A1 and passes A3; no document sets one.]
 
-Recovery with synthetic observers (200 observers, 199 shuffles per strength, on this route) gave power of .995 at 0.75 times and 1.0 at 1 times the human effect, and size of at most .06 against a limit of .081. Power was .775 at 0.5 times. For an observer sharing half the human weights, power was .60 at 0.75 times and .83 at 1 times. Size for an observer using different cues was .055 at 0.75 times. A positive score therefore supports "aligned with the human pattern", not "uses the same cues", and a null does not show absence of alignment. Proposition 4 below gives the reason. Single cells are descriptive. Detection is weak for AU15 and AU20, which are outside the four families. [PENDING: training-data lineage of the two detectors.]
+Recovery with synthetic observers (200 observers, 199 shuffles per strength, on this route) gave power of .995 at 0.75 times and 1.0 at 1 times the human effect, and size of at most .06 against a limit of .081. Power was .775 at 0.5 times. For an observer sharing half the human weights, power was .60 at 0.75 times and .83 at 1 times. Size for an observer using different cues was .055 at 0.75 times. A positive score therefore supports "aligned with the human pattern", not "uses the same cues", and a null does not show absence of alignment. Proposition 4 below gives the reason. Single cells are descriptive. Intensity estimation is weak for AU15 and AU20 in LibreFace (PCC .36 and .34 on DISFA [27]), which are outside the four families. LibreFace's intensity outputs were fine-tuned on DISFA after pre-training on EmotioNet, AffectNet and FFHQ [27]. OpenFace 3.0's AU head was trained on DISFA and BP4D, with AffectNet, gaze and landmark sets in a shared multitask model [28]. The two detectors therefore share AU training data, and neither reports training on EU-Emotion.
 
 ### RQ1 on randomised cues (A4)
 
 *A4 is a draft. Every value in this section is provisional until [PENDING: A4 freeze].*
 
-**Stimuli.** A headless renderer built each AU configuration on MakeHuman meshes using FACSHuman targets [29], at 768 by 768 pixels with a frontal view, flat lighting and a black background. This is a new stimulus set of the same AU recipes. It does not reproduce what humans saw: the original generated faces and timing parameters are not public. Avatars are bald and static, and identity coverage is narrower than for humans. Of the 33 columns, 31 map directly to targets, and AU22 and AU27 are approximated. Amplitude maps linearly to target weight, which is an assumption. No model saw a render before the freeze, and no image is published.
+**Stimuli.** A headless renderer built each AU configuration on MakeHuman meshes using FACSHuman targets [29], at 768 by 768 pixels with a frontal view, flat lighting and a black background. This is a new stimulus set of the same AU recipes. It does not reproduce what humans saw: the public deposit [25] holds neither the base faces nor timing parameters. Avatars are bald and static, and identity coverage is narrower than for humans. Of the 33 columns, 31 map directly to targets, and AU22 and AU27 are approximated. Amplitude maps linearly to target weight, which is an assumption. No model saw a render before the freeze, and no image is published.
 
 The draft manifest holds 1,200 configurations per dataset, chosen by seeded hash of the configuration string with no use of responses, each on one own-group identity; the first 200 on a second identity; each column alone at amplitudes .25, .5 and 1 on six identities, with their neutral faces; 400 configurations at 0.75 and 1.25 times amplitude for the two EA datasets; and 600 for the blind route. That is 8,400 rows and 7,102 unique images. [PENDING: final manifest hash.] The cap of 1,200 is set by cost, and recovery tests whether it is enough.
 
@@ -125,7 +126,7 @@ The draft manifest holds 1,200 configurations per dataset, chosen by seeded hash
 
 A model with no measurable signal cannot be Not aligned, because nothing shows the cues were delivered. Aligned means a reliable shared pattern, not the same strategy. Each dataset is reported alone. A model is called human-level only if its interval reaches the between-group reference, and that reading is descriptive.
 
-**Behaviour beside CFA.** On the same stimuli we report output similarity and chance-corrected modal agreement, descriptively. Snoek data have no correct answer, so error consistency proper is undefined, and modal agreement is its closest analogue. Whether these metrics disagree with CFA is an empirical result.
+**Behaviour beside CFA.** On the same AU configurations we report output similarity and chance-corrected modal agreement, descriptively. Snoek data have no correct answer, so error consistency proper is undefined, and modal agreement is its closest analogue. Whether these metrics disagree with CFA is an empirical result.
 
 **Eligibility.** A4 uses one image, so a Pass on A3 with either outcome on A1 admits a model, subject to gates G2 to G4. Any other outcome leaves it Inconclusive.
 
@@ -149,22 +150,22 @@ A model with no measurable signal cannot be Not aligned, because nothing shows t
 
 | ID | Contrast, within item | Predicted direction | Sources |
 |---|---|---|---|
-| P1 | Mouth mask on Happy | Acted label falls | [30,31] |
-| P2 | Mouth mask on Disgusted | Acted label falls | [30] |
-| P3 | Eye mask on Afraid | Acted label falls | [30] |
-| P4 | Eye mask on Sad | Acted label falls | [30] |
-| P5 | Brow mask on Angry | Acted label falls | [32] |
-| P6 | Mouth minus eye mask, Happy and Disgusted against Afraid, same 8 actors | More negative on Happy and Disgusted | [30] |
-| P7 | Mouth mask on Happy, Sad and Angry, Neutral family | Neutral rises | [33-35] |
-| P8 | Mouth mask on Disgusted, Angry family | Angry rises | [33] |
-| P9 | Low-pass minus high-pass on Happy | Positive | [36] (use depends on task [37]) |
-| P10 | Low-pass minus high-pass on Sad | Negative | [36] |
-| P12 | Mean of shuffles on Happy and Surprised | Acted label falls | [38,39] |
-| P13 | Mean of shuffles on 48 Low Intensity items | Acted label falls | [38,40,41] |
-| P14 | First minus last third, Surprised family on Afraid and Afraid family on Surprised | Confusable label higher on the early third | [42] |
-| P15 | First minus last third, Disgusted family on Angry and Angry family on Disgusted | Confusable label higher on the early third | [42] |
+| P1 | Mouth mask on Happy | Acted label falls | [30] (inferred); [31] pooled over expressions |
+| P2 | Mouth mask on Disgusted | Acted label falls | [30] (inferred) |
+| P3 | Eye mask on Afraid | Acted label falls | [30] (inferred) |
+| P4 | Eye mask on Sad | Acted label falls | [30] (inferred; the Sad cue is a non-significant brow tendency) |
+| P5 | Brow mask on Angry | Acted label falls | [32] (upper face, not brows alone) |
+| P6 | Mouth minus eye mask, Happy and Disgusted against Afraid, same 8 actors | More negative on Happy and Disgusted | [30] (inferred) |
+| P7 | Mouth mask on Happy, Sad and Angry, Neutral family | Neutral rises | [33], with a visible mask over nose and mouth |
+| P8 | Mouth mask on Disgusted, Angry family | Angry rises | [33], descriptive, with the nose covered |
+| P9 | Low-pass minus high-pass on Happy | Positive | [36] (abstract only). Task dependence on other labels [37] |
+| P10 | Low-pass minus high-pass on Sad | Negative | [36] (abstract only) |
+| P12 | Mean of shuffles on Happy and Surprised | Acted label falls | No direct shuffle source. Analogy from [39] (disrupted rhythm, subtle expressions, abstract only). Contrary: [50] |
+| P13 | Mean of shuffles on 48 Low Intensity items | Acted label falls | No direct shuffle source. Analogy from [40,41] (dynamic against static, abstract only). Contrary: [50] |
+| P14 | First minus last third, Surprised family on Afraid and Afraid family on Surprised | Confusable label higher on the early third | [42], ideal-observer classifier on Western observers' expectation models |
+| P15 | First minus last third, Disgusted family on Angry and Angry family on Disgusted | Confusable label higher on the early third | [42], as P14 |
 
-P11, on eye aperture [43,44], is outside the family until its dose is verified. These 14 predictions make 16 contrasts. P14 and P15 are analogues of a study on synthetic faces, not replications. Eye-only views have no directional prediction, because accounts conflict [31,45,46]; masks on complex labels are descriptive [46,47]; reversal describes the model's temporal code [48]. No category flip is predicted from head angle, here or later, because we located no human study showing one. A downward tilt raising perceived dominance is the located evidence [49], and this suite does not edit head angle.
+P11, on eye aperture [43], is outside the family until its dose is verified. These 14 predictions make 16 contrasts. Directions for P1 to P4 and P6 are inferred, because [30] is a reveal study in which no region was masked with the rest visible. [33] used a visible community mask over nose and mouth on static photographs, whereas our mouth masks use neutral, first-frame or blur fills and may leave the nose visible. No cited source tests frame shuffling for P12 or P13, and the closest human test found no cost of shuffled or reversed order [50]. A VLM study also found almost no change under frame shuffling [11]. P14 and P15 are analogues, not replications, of an ideal-observer analysis of expectation models on synthetic faces [42]. Those classifiers accumulate signals, so a stand-alone last third has no counterpart in that paper, and nothing shows that thirds of an EU-Emotion clip map onto its time bins. These source checks came after the freeze. They change the stated support and not the predictions (see Disclosures). Eye-only views have no directional prediction, because sources differ by label type: [45] finds the whole face better than the eyes for basic labels and the two equal for complex ones, and [31,46] are read at abstract level; masks on complex labels are descriptive [46,47]. Reversal describes whether order changes the model's judgement, and we give no human direction for it. No category flip is predicted from head angle, here or later, because we located no human study showing one. A downward tilt raising perceived dominance is the located evidence [49], and this suite does not edit head angle.
 
 **Decision rule.**
 
@@ -232,4 +233,4 @@ Analysis code, frozen hashes and derived outputs are in the public repository. [
 
 ### Reporting summary
 
-[PENDING: confirm whether the journal requires a reporting summary for this design.]
+A Nature Portfolio reporting summary is required for this journal and is to be supplied at submission. [PENDING: the summary itself.]

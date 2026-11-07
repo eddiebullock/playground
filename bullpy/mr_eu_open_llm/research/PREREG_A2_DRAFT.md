@@ -326,3 +326,28 @@ An audit of this text against the code, before any freeze, found these. No A2 co
 12. The shuffle order check is gated. Pixels must change under shuffle on every model.
 13. RQ0 is read through the A1 and A3 table, the margin is per model and route, and the choices are settled.
 14. After a second audit: the dose control is signed, `single_region_null` is emitted, P12 and P13 can reach Null where frame order is verified, more edit constants and the A3 summary hash are in `design_sha256`, and A3 is read from its output path or its committed copy, both held to the pinned bytes, which matched on 2026-11-07.
+
+## Deviations
+
+### 2026-11-07, pre-data: source support corrected
+
+A full read of the sources after the freeze (`research/paper/v2/citation_check.md`) changed what the prediction table can claim. No A2 data exist. Tests, directions, the confirmatory family and frozen code are unchanged, so the frozen hashes and `design_sha256` stand. The rows above stay as frozen, and this section governs how they are described.
+
+| Prediction | Correction | Stated support now |
+|---|---|---|
+| P1 to P4, P6 | Wegrzyn 2017 is a reveal study: no region was masked with the rest visible, so the fall under a mask is inferred. Blais 2012 is abstract only, pooled over expressions | Lower than "Strong". P4 is weakest: its Sad cue is a non-significant brow tendency |
+| P5 | Ponari 2012 tested upper and lower face, not brows, abstract only. Wegrzyn places anger at the eye | Weak for brows alone |
+| P7 | Grundmann 2021 reports no Neutral response, so it is removed as a source. Pazhoohi 2021 only restates Carbon in its text, and its S1 Table is unread | Carbon 2020 alone, not multiple sources, with a mask over nose and mouth on static photographs |
+| P8 | Carbon confirmed, descriptive only, with the nose covered. Our mouth mask may leave a nose wrinkle visible | Moderate |
+| P9, P10 | Direction rests on the abstract of Kumar and Srinivasan 2011. Smith and Merlusca 2014 concerns fear, disgust and anger | Moderate at most |
+| P12 | Richoz 2024 has no shuffled condition, so it is removed. Bould 2008 disrupted rhythm on subtle expressions, abstract only | No direct source. Lowered from "Strong" to an analogy |
+| P13 | Richoz varied phase signal, not intensity, so it is removed. Ambadar 2005 and Bould and Morris 2008 compare dynamic with static, and the Ambadar account is perception of change, which a shuffle keeps | No direct source. Lowered from "Strong" to an analogy |
+| P14, P15 | Confusions come from Bayesian classifiers on models from 60 Western observers, with cumulative signals, not from human responses over time | Analogy to an ideal-observer analysis |
+
+**Contrary evidence for P12 and P13, not named at the freeze.**
+
+- Gold et al. 2013 (Journal of Vision, abstract read) report that people recognised emotions just as efficiently from dynamic, reversed, temporally randomised and static expressions.
+- Agarwal et al. (arXiv, reference 11 of the manuscript) report almost no macro-F1 change under frame shuffling on VLMs including Qwen3-VL.
+- Richoz 2024 shows a static advantage for fear, a risk for P13 if Afraid is among the Low items.
+
+**Consequence.** A Match on P12 or P13 is a match to a weakly sourced prediction, and it cannot be read as a human-like temporal code. A failure of either does not oppose an established human result, and if anything fits the closest human test. An Opposes verdict there says nothing against human alignment. The decision rule's wording, "stated human prediction", is read in that sense for P12 to P15.
