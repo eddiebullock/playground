@@ -100,8 +100,16 @@ def eu_spectra(au_csv):
 def snoek_spectra(path):
     hae = _module("human_au_effects")
     frames, _ = hae.load_zip(path)
-    return {name: spectrum(frame[list(hae.AU_COLS)].drop_duplicates())
-            for name, (frame, _label) in frames.items()}
+    out = {}
+    for name, (frame, _label) in frames.items():
+        table = frame[list(hae.AU_COLS)].drop_duplicates()
+        out[name] = {"as_coded": spectrum(table), "left_right_merged": spectrum(merge_sides(table))}
+    return out
+
+
+def merge_sides(table):
+    """One column per AU, summing left and right, so paired columns count once."""
+    return table.T.groupby(lambda name: name.rstrip("LR")).sum().T
 
 
 def checks(seed=42):

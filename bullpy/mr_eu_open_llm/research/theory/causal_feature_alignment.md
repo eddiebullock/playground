@@ -73,7 +73,9 @@ Both bounds are attained. If lambda_min = 0, behavioural equivalence places no c
 | Snoek design, conversational WC | 2,314 | 33 | .209 | 11.0 | 4.8 | .038 |
 | Snoek design, conversational EA | 2,322 | 33 | .199 | 11.3 | 5.0 | .038 |
 
-Limits on these numbers. Cue counts differ. Most of the Snoek lambda_min comes from left and right versions of one AU, which are correlated by design (largest r about .8), so the design is much better conditioned for the family-level cues used in the study than the table shows. The EU-Emotion cues are detector estimates, so measurement noise changes the spectrum, and clip-level means ignore within-clip variation. Whether correlations differ by label or actor was not examined here.
+With left and right versions of each AU merged, the Snoek designs have 25 cues, lambda_min .44 to .47, condition number 3.4 to 3.5 and 1 / lambda_min 2.1 to 2.3. So most of the Snoek figures in the table come from bilateral pairs, which are correlated by design.
+
+Limits on these numbers. Cue counts differ. The EU-Emotion cues are detector estimates, so measurement noise changes the spectrum, and clip-level means ignore within-clip variation. Whether correlations differ by label or actor was not examined here.
 
 ## Proposition 4: measured-cue regression can show alignment without shared cues
 
