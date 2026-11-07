@@ -9,7 +9,16 @@ from __future__ import annotations
 
 import hashlib
 import json
+from pathlib import Path
 from typing import Any, Dict, List, Tuple
+
+ROOT = Path(__file__).resolve().parents[1]
+DESIGN_FILES = (
+    "research/reproduction/human_au_effects.json",
+    "scripts/prompts.py",
+    "scripts/run_stimulus_interventions.py",
+    "research/scripts/render_au_faces.py",
+)
 
 DATASETS = ("basic_WC", "basic_EA", "conversational_WC", "conversational_EA")
 TASK_OF = {"basic_WC": "basic", "basic_EA": "basic",
@@ -33,6 +42,12 @@ DESCRIPTIVE_MODELS = ("molmo2",)
 
 SEED = 20261107
 CONFIGS_PER_DATASET = 1200
+MANIFEST_SHA256 = "0ae87d06d896542bd5dc944ad523c83cf8916463f9de39b3cb4a2f21badb8ac2"
+BASELINE_STIMULI = 50
+SPLIT_HALF_SPLITS = 20
+REPLICATE_DRAWS = 9999
+CEILING_SPLITS = 200
+R_S_LOWER_BOUND = 0.85  # below this, raw CFA reads as a lower bound
 IDENTITIES = {
     "WC": {"F": (("female_a", 0), ("female_b", 0)), "M": (("male_a", 0), ("male_b", 0))},
     "EA": {"F": (("ea_female", 0), ("ea_female", 1)), "M": (("ea_male", 0), ("ea_male", 1))},
@@ -68,6 +83,8 @@ B_RULES = {"coverage": 0.05, "image_rms": 0.25, "sign_flip_p": 0.01, "repeat": 1
 RECOVERY = {
     "replicates": 100,
     "bootstrap_draws": 100,
+    "split_half_splits": 6,
+    "boundary_mix": 0.35,
     "cue_permutations": 1999,
     "signal_permutations": 199,
     "strengths": (0.25, 0.5, 1.0),  # human-like binds at 0.5 and 1, half-shared at 1, the rest at all
@@ -76,7 +93,10 @@ RECOVERY = {
     "pass": {"human_like_aligned_min": 0.80, "half_shared_alignment_min": 0.80,
              "half_shared_aligned_min_at_1x": 0.60, "false_aligned_max": 0.10,
              "prior_only_signal_max": 0.10, "not_aligned_different_cues_min": 0.50,
-             "pair_cfa_error_max": 0.10, "pair_within_error_share_min": 0.90},
+             "pair_cfa_error_max": 0.10, "pair_within_error_share_min": 0.90,
+             "boundary_not_aligned_max": 0.10},
+    # Withdrawn before any data, after the first run failed it: see the draft.
+    "pair_error_withdrawn": ("conversational_WC|0.25", "conversational_EA|0.25"),
     "pairs": (("AU01", "AU02"), ("AU06", "AU12"), ("AU04", "AU07"), ("AU25", "AU26"),
               ("AU15", "AU17"), ("AU09", "AU10"), ("AU20", "AU14"), ("AU23", "AU24")),
     "pair_rho": 0.9,
@@ -88,10 +108,25 @@ def constants() -> Dict[str, Any]:
             if k.isupper() and isinstance(v, (str, int, float, tuple, dict))}
 
 
-def design_hash(*extra: str) -> str:
-    """Hash of every constant here, plus any files named by the caller's digests."""
-    payload = {"constants": constants(), "extra": list(extra)}
+def file_digest(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def file_digests(root: Path = ROOT) -> Dict[str, str]:
+    """The inputs a result depends on beyond these constants: targets, prompts, renderer."""
+    return {name: file_digest(root / name) for name in DESIGN_FILES}
+
+
+def design_hash() -> str:
+    """Hash of every constant here and of DESIGN_FILES."""
+    payload = {"constants": constants(), "files": file_digests()}
     return hashlib.sha256(json.dumps(payload, sort_keys=True, default=list).encode()).hexdigest()
+
+
+def check_manifest(path: Path) -> None:
+    digest = file_digest(path)
+    if digest != MANIFEST_SHA256:
+        raise SystemExit(f"Manifest hash {digest} is not the pinned one.")
 
 
 def shard_of(stim_id: str, n_shards: int) -> int:

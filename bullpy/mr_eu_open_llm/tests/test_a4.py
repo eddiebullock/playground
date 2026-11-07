@@ -165,43 +165,151 @@ def test_signal_test_separates_cues_from_noise():
     assert max(ps) > 0.02
 
 
-@pytest.mark.parametrize("gates,p_sig,p_holm,cfa,ci,want", [
-    ({"a": True}, 0.01, 0.01, 0.7, (0.6, 0.8), "Aligned"),
-    ({"a": True}, 0.01, 0.01, 0.2, (0.1, 0.25), "Not aligned"),
-    ({"a": True}, 0.01, 0.01, 0.35, (0.2, 0.5), "Aligned"),
-    ({"a": True}, 0.01, 0.2, 0.35, (0.2, 0.5), "Inconclusive"),
-    ({"a": False}, 0.01, 0.01, 0.7, (0.6, 0.8), "Inconclusive"),
-    ({}, 0.01, 0.01, 0.7, (0.6, 0.8), "Inconclusive"),
-    ({"a": None}, 0.01, 0.01, 0.7, (0.6, 0.8), "Inconclusive"),
-    ({"a": True}, 0.5, 0.01, 0.1, (0.0, 0.2), "Inconclusive"),
-    ({"a": True}, float("nan"), 0.01, 0.7, (0.6, 0.8), "Inconclusive"),
+@pytest.mark.parametrize("gates,p_sig,p_holm,cfa,ci,r_s,want", [
+    ({"a": True}, 0.01, 0.01, 0.7, (0.6, 0.8), 0.9, "Aligned"),
+    ({"a": True}, 0.01, 0.01, 0.2, (0.1, 0.25), 0.95, "Not aligned"),
+    ({"a": True}, 0.01, 0.01, 0.35, (0.2, 0.5), 0.9, "Aligned"),
+    ({"a": True}, 0.01, 0.2, 0.35, (0.2, 0.5), 0.9, "Inconclusive"),
+    ({"a": False}, 0.01, 0.01, 0.7, (0.6, 0.8), 0.9, "Inconclusive"),
+    ({}, 0.01, 0.01, 0.7, (0.6, 0.8), 0.9, "Inconclusive"),
+    ({"a": None}, 0.01, 0.01, 0.7, (0.6, 0.8), 0.9, "Inconclusive"),
+    ({"a": True}, 0.5, 0.01, 0.1, (0.0, 0.2), 0.9, "Inconclusive"),
+    ({"a": True}, float("nan"), 0.01, 0.7, (0.6, 0.8), 0.9, "Inconclusive"),
+    ({"a": True}, 0.01, 0.2, 0.15, (0.05, 0.25), 0.5, "Inconclusive"),  # .25 / sqrt(.5) = .35
+    ({"a": True}, 0.01, 0.2, 0.15, (0.05, 0.25), float("nan"), "Inconclusive"),
+    ({"a": True}, 0.01, 0.01, 0.35, (0.2, 0.5), 0.3, "Aligned"),  # low reliability cannot undo Aligned
 ])
-def test_decision_rule(gates, p_sig, p_holm, cfa, ci, want):
-    assert an.decide(gates, p_sig, p_holm, cfa, ci) == want
+def test_decision_rule(gates, p_sig, p_holm, cfa, ci, r_s, want):
+    assert an.decide(gates, p_sig, p_holm, cfa, ci, r_s) == want
 
 
 def test_apply_rule_holm_and_molmo_descriptive():
-    base = {"p_signal": 0.01, "cfa": 0.6, "ci": (0.5, 0.7), "lost_ok": True}
-    results = {"gemma4": {**base, "p_cue": 0.03}, "qwen3vl": {**base, "p_cue": 0.04}, "molmo2": {**base, "p_cue": 0.0001}}
-    an.apply_rule(results, {m: {"rq0": True} for m in results})
+    block = {"cfa": 0.6, "ci": (0.5, 0.7), "r_s": 0.9}
+    entry = lambda p: {"p_signal": 0.01, "lost_ok": True, "raw": {**block, "p_cue": p}, "residual": {**block, "p_cue": 0.9}}  # noqa: E731
+    results = {"gemma4": entry(0.03), "qwen3vl": entry(0.04), "molmo2": entry(0.0001)}
+    an.apply_rule(results, {m: {"rq0": True} for m in results}, "raw")
     assert results["gemma4"]["p_holm"] == pytest.approx(0.06)
     assert results["gemma4"]["decision"] == "Inconclusive"
     assert results["molmo2"]["decision"] == "Descriptive"
+    an.apply_rule(results, {m: {"rq0": True} for m in results}, "residual")
+    assert results["gemma4"]["statistic"] == "residual"
 
 
 def test_lost_stimuli_fail_the_gate():
-    base = {"p_signal": 0.01, "cfa": 0.6, "ci": (0.5, 0.7), "p_cue": 0.001, "lost_ok": False}
-    results = {"gemma4": dict(base)}
-    an.apply_rule(results, {"gemma4": {"rq0": True}})
+    results = {"gemma4": {"p_signal": 0.01, "lost_ok": False,
+                          "raw": {"cfa": 0.6, "ci": (0.5, 0.7), "p_cue": 0.001, "r_s": 0.9}}}
+    an.apply_rule(results, {"gemma4": {"rq0": True}}, "raw")
     assert results["gemma4"]["decision"] == "Inconclusive"
+
+
+def test_flat_output_gives_p_one_and_no_decision():
+    rng = np.random.default_rng(0)
+    human = rng.normal(size=(5, 25))
+    assert an.cue_null_p(np.zeros((5, 25)), human, 99, rng)[0] == 1.0
+    X, gender, _W, _ = synthetic(100)
+    P = np.full((100, 5), 0.2)
+    assert an.signal_test(P, X, gender, 19, rng) == 1.0
+    same = rng.dirichlet(np.ones(5), size=20)
+    assert an.replicate_check(np.full((20, 5), 0.2), np.full((20, 5), 0.2), ["a"] * 20, rng)["p"] == 1.0
+    assert an.replicate_check(same, same, ["a"] * 20, rng)["p"] < 0.05
+
+
+def test_remove_common_cancels_salience_scaled_profile():
+    rng = np.random.default_rng(0)
+    profile = rng.normal(size=7)
+    profile -= profile.mean()
+    salience = rng.uniform(0.2, 3, 25)
+    tau = np.outer(profile, salience)
+    assert np.abs(an.remove_common(tau)).max() < 1e-12
+    human = rng.normal(size=(7, 25))
+    residual = an.remove_common(human)
+    mean = human.mean(axis=1) / np.linalg.norm(human.mean(axis=1))
+    assert np.abs(mean @ residual).max() < 1e-12
+
+
+def test_salience_observer_can_fool_raw_but_not_residual():
+    W = np.random.default_rng(0).normal(size=(5, 33)) + np.array([[2.0], [-1.0], [0.5], [-0.5], [-1.0]])
+    W -= W.mean(axis=0)
+    out = rec.observer_weights("salience_profile", W, np.random.default_rng(1))
+    assert np.linalg.matrix_rank(out) == 1
+
+
+def test_mismatch_stays_inside_the_group():
+    rng = np.random.default_rng(0)
+    # Each group has its own output: a mismatch across groups would look like a huge effect.
+    base = {"a": np.array([0.7, 0.1, 0.1, 0.1]), "b": np.array([0.1, 0.1, 0.1, 0.7])}
+    groups = ["a", "b"] * 30
+    first = np.vstack([base[g] for g in groups])
+    second = first.copy()
+    assert an.replicate_check(first, second, groups, rng)["p"] == 1.0
+    assert an.replicate_check(first, second, groups, rng)["delta_js"] == pytest.approx(0)
+
+
+def test_headline_rule():
+    decisions = {"basic_WC": "Aligned", "basic_EA": "Aligned", "conversational_WC": "Aligned",
+                 "conversational_EA": "Not aligned"}
+    assert an.headline(decisions) == {"basic": "Aligned", "conversational": "Mixed"}
+    assert an.headline({"basic_WC": "Aligned", "basic_EA": "Inconclusive"})["basic"] == "Inconclusive"
+
+
+def test_smoke_files_stay_out_of_the_analysis(tmp_path):
+    for name in ("cells_gemma4_0.jsonl", "cells_gemma4_7.jsonl", "cells_gemma4_smoke_0.jsonl", "cells_qwen3vl_0.jsonl"):
+        (tmp_path / name).write_text("")
+    assert [p.name for p in an.shard_files(tmp_path, "gemma4")] == ["cells_gemma4_0.jsonl", "cells_gemma4_7.jsonl"]
+
+
+def test_rq0_through_the_frozen_table():
+    assert an.rq0_gate({"a1_passed": False, "a3_passed": True}) is True
+    assert an.rq0_gate({"a1_passed": True, "a3_passed": True}) is True
+    assert an.rq0_gate({"a1_passed": True, "a3_passed": False}) is False
+    assert an.rq0_gate({"a3_passed": True}) is False
+    assert an.rq0_gate({}) is False
+
+
+def test_analysis_refuses_without_a_detector(monkeypatch):
+    monkeypatch.setattr(sys, "argv", ["a4_analyse"])
+    with pytest.raises(SystemExit, match="V1 needs"):
+        an.main()
+
+
+def test_confirmatory_statistic_comes_from_recovery(tmp_path):
+    path = tmp_path / "r.json"
+    path.write_text(json.dumps({"design_sha256": "x", "confirmatory_statistic": "residual"}))
+    assert an.confirmatory_statistic(path, "x") == "residual"
+    with pytest.raises(SystemExit):
+        an.confirmatory_statistic(path, "y")
+    path.write_text(json.dumps({"design_sha256": "x", "confirmatory_statistic": None}))
+    with pytest.raises(SystemExit):
+        an.confirmatory_statistic(path, "x")
+
+
+def test_statistic_rule_prefers_raw_then_residual():
+    assert rec.choose_statistic({"raw": True, "residual": True}) == "raw"
+    assert rec.choose_statistic({"raw": False, "residual": True}) == "residual"
+    assert rec.choose_statistic({"raw": False, "residual": False}) is None
+
+
+def test_manifest_check(tmp_path, monkeypatch):
+    path = tmp_path / "m.csv"
+    path.write_text("x")
+    with pytest.raises(SystemExit):
+        d.check_manifest(path)
+    monkeypatch.setattr(d, "MANIFEST_SHA256", d.file_digest(path))
+    d.check_manifest(path)
+
+
+def test_hash_covers_named_files(monkeypatch):
+    before = d.design_hash()
+    monkeypatch.setattr(d, "file_digests", lambda: {"x": "y"})
+    assert d.design_hash() != before
 
 
 def test_replicate_check_finds_a_carried_config():
     rng = np.random.default_rng(0)
     first = rng.dirichlet(np.ones(5), size=100)
     near = 0.9 * first + 0.1 * rng.dirichlet(np.ones(5), size=100)
-    assert an.replicate_check(first, near, rng)["p"] < 0.01
-    assert an.replicate_check(first, rng.dirichlet(np.ones(5), size=100), rng)["p"] > 0.01
+    assert an.replicate_check(first, near, ["g"] * 100, rng)["p"] < 0.01
+    assert an.replicate_check(first, rng.dirichlet(np.ones(5), size=100), ["g"] * 100, rng)["p"] > 0.01
 
 
 def test_validity_gate_treats_missing_as_failed():
@@ -269,20 +377,58 @@ def test_recovery_smoke(monkeypatch):
     W = _W[:5]
     human = np.random.default_rng(1).normal(size=(5, 25))
     human -= human.mean(axis=0)
-    task = ("human_like", "conversational_EA", 1.0, 0, X, gender, W, np.log(np.ones(5) / 5), human, 1.0, 5, 99, 19)
-    out = rec.one_replicate(task)
-    assert out["decision"] in an.OUTCOMES and -1 <= out["cfa"] <= 1
+    for name in rec.OBSERVERS:
+        task = (name, "conversational_EA", 1.0, 0, X, gender, W, np.log(np.ones(5) / 5), human, 1.0, 5, 99, 19, 2)
+        out = rec.one_replicate(task)
+        assert out["raw"]["decision"] in an.OUTCOMES and out["residual"]["decision"] in an.OUTCOMES
 
 
 def test_verdict_rule_binds_at_half_and_one():
     good = {"aligned": 0.9, "not_aligned": 0.9, "signal_rate": 0.05, "alignment_p_rate": 0.9,
-            "share_cfa_error_within_limit": 0.95}
+            "share_cfa_error_within_limit": 0.95, "not_aligned_when_truth_at_bound": 0.0}
     cells = {o: dict(good, aligned=0.0) for o in rec.OBSERVERS}
     cells["human_like"] = cells["half_shared"] = good
     out = rec.verdict({"basic_EA|1.0": cells, "basic_EA|0.25": {**cells, "human_like": {**good, "aligned": 0.1}}})
     assert all(out.values()) and "basic_EA|0.25|human_like" not in out
     worse = rec.verdict({"basic_EA|1.0": {**cells, "human_like": {**good, "aligned": 0.5}}})
     assert worse["basic_EA|1.0|human_like"] is False
+
+
+def test_withdrawn_check_is_not_applied():
+    good = {"aligned": 0.0, "not_aligned": 0.9, "signal_rate": 0.05, "alignment_p_rate": 0.9,
+            "share_cfa_error_within_limit": 0.1, "not_aligned_when_truth_at_bound": 0.0}
+    cells = {o: dict(good) for o in rec.OBSERVERS}
+    out = rec.verdict({"conversational_EA|0.25": cells, "basic_EA|0.25": cells})
+    assert "conversational_EA|0.25|pair_error" not in out and out["basic_EA|0.25|pair_error"] is False
+
+
+def test_salience_is_a_false_aligned_check():
+    good = {"aligned": 0.0, "not_aligned": 0.9, "signal_rate": 0.05, "alignment_p_rate": 0.9,
+            "share_cfa_error_within_limit": 0.95, "not_aligned_when_truth_at_bound": 0.0}
+    cells = {o: dict(good) for o in rec.OBSERVERS}
+    cells["salience_profile"] = dict(good, aligned=0.5)
+    assert rec.verdict({"basic_EA|0.25": cells})["basic_EA|0.25|false_aligned"] is False
+
+
+def test_detector_columns_map_to_outputs():
+    import a4_detector as det
+
+    assert det.readout_for("AU06L") == ("intensity", det.INTENSITY_AUS.index(6))
+    assert det.readout_for("AU07R") == ("presence", det.PRESENCE_AUS.index(7))
+    missing = sorted({c[:4] for c in AU if det.readout_for(c) is None})
+    assert missing == ["AU11", "AU13", "AU16", "AU22", "AU27", "AU38", "AU39", "AU43"]
+
+
+def test_assets_archive_has_the_src_prefix(tmp_path):
+    import tarfile
+
+    (tmp_path / "in" / "a").mkdir(parents=True)
+    (tmp_path / "in" / "a" / "f.txt").write_text("x")
+    (tmp_path / "in" / "a" / "._f.txt").write_text("x")
+    out = stim.build_assets(tmp_path / "in", tmp_path / "out.tgz")
+    assert out["files"] == 1
+    with tarfile.open(tmp_path / "out.tgz") as tar:
+        assert "src/a/f.txt" in tar.getnames()
 
 
 def test_renders_go_into_one_tar_atomically(monkeypatch, tmp_path):

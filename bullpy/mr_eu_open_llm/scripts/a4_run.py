@@ -25,7 +25,7 @@ sys.path.insert(0, str(ROOT))
 
 from scripts import a4_design as d  # noqa: E402
 
-BASELINE_STIMULI = 50
+BASELINE_STIMULI = d.BASELINE_STIMULI
 
 
 class RenderStore:
@@ -130,6 +130,7 @@ def main() -> None:
         raise SystemExit("A4 is not frozen. No model may see a render until it is.")
     if not 0 <= args.shard < args.n_shards:
         raise SystemExit("--shard must lie in 0 to n_shards - 1.")
+    d.check_manifest(args.manifest)
     digest = d.design_hash()
     manifest = pd.read_csv(args.manifest).to_dict("records")
     suffix = f"smoke_{args.shard}" if args.max_cells else str(args.shard)
