@@ -1,6 +1,16 @@
 # DRAFT amendment A4: VLMs against randomised human cue effects
 
-**Status: DRAFT. Not frozen, not preregistered.** Nothing here binds until it is audited, committed and tagged. No model has seen a render, and `scripts/a4_run.py` refuses to score until the amendment is frozen.
+**Status: FROZEN 2026-11-07, tag `a4-freeze`, before any A1 rotation result was read and before any model saw a render. Later changes are dated deviations, appended below. The filename keeps "DRAFT" so that references in the code stay valid.** `scripts/a4_run.py` refuses to score without `--a4_frozen`.
+
+Frozen `design_sha256`: `12c454da512bfe4c239e6c3ef3610d80df6fd7c2e9119a9ff8df913a3c1a3e94`. Pinned manifest sha256: `2ef1161e895224d499b360144690a07c5440bb018105e9c2ffc762f68badd2d1`.
+
+Frozen code, sha256: `scripts/a4_design.py` `a0bf7bb1c69ec7af1f11fabb5a9f31a6c694a30b92e624f1e1c241f161d062a8`; `research/scripts/a4_stimuli.py` `d0dff6930ede7f908e8d7faee2bc647adeb02f366601d04bea47353833715875`; `scripts/a4_run.py` `f842e574bf5cdaebbe9057d0ecc0e311c900dd54ff0ca221d1f9baa3768a8dc6`; `scripts/a4_analyse.py` `30f8f529d128b555ccfbf4d31ac3de70d91f90b1f5bfd52360ae9f39305fe56d`; `scripts/a4_recovery.py` `12b15e89a366d772078034fd56b105532b347f1b73afe0b4efd5548ad3302526`; `slurm_jobs/study3_a4.sh` `dd9a360b20701742fd70d849b92c964d6b992c966ded744fa4125e0166103c26`; `slurm_jobs/study3_a4_render.sh` `1988b8d579cf181ef83e8d60c85a595f42fe51740dc73bcaab343be0db463a7b`; `research/scripts/render_au_faces.py` `6bdfa4e947b06aa7c2213dc31fbd297df4f8b97ca045a40905c6de4800c001d4`; `research/scripts/a4_detector.py` `3fbd35dee68615a6fe1165df57a4d290c8097e8bf2a5ac714ee73ba15f302e42`; `slurm_jobs/study3_a4_detector.sh` `8f4b03e93888b17d11900ce2186a88f1063175a25907bd1f6b326ea938e453a8`; `research/scripts/human_au_effects.py` `c02a945ba578156cc4394e7d3a49761ad6e74495585034fbb059a4ce40199a2b`; `research/scripts/analyse_rotation.py` `98890c5bff65f13abeb0549b61fe414dc9fa30082b84bcb564671683ec12e24f`; `scripts/analyse_stimulus_interventions.py` `aba4f533daad6210e87f7bb4e68fc4627805cb4dfd9d9308df734fada4edc8b1`; `scripts/vision_gates.py` `6327b6f88e99409cba5c63d5aca0fe97348fbce4f3b08522158a8d9ba3ce8194`; `scripts/face_input_validity.py` `8a681a652d8e34065372d4f45bce650ba5276b5138e3aa64cf4310d65e93d818`; `research/scripts/extract_au_measures.py` `bc846844a3ea37fe39b80e128e0e0753b7680a2976e62180b24b296cabe00ab8`; `scripts/prompts.py` `871272d4aa6c86ff809f7631a4db81aeeb41564ba7f0a31809ea08e6dcf64ba7`; `scripts/run_stimulus_interventions.py` `f7880c94e9671cc294cd4eaeece2108d7cd1d7a4c7e6f9e30a1c495964e6cd82`.
+
+Frozen inputs and outputs, sha256: `research/reproduction/human_au_effects.json` `58c0f082cbf6aa4827054188ac2fc47da58a254c38da2c7ac202e8f52399310c`; `research/reproduction/a4_human_ceiling.json` `21fe4f8441532992ecb22b60fba4afc59c38e70aed5407b2d0e8ab48b76cd2eb`; `research/reproduction/a4_v1_pilot.csv` `c735615a034c281909c96894c700d224638e281f55f995a0959eeef8a6fb3994`; `research/reproduction/a4_recovery.json` `1ebfc8ea00da4261e3a05e6de09b3fbe7bd259ce0a5d840fe4c7ab03894bedca`.
+
+`design_sha256` covers the constants in `a4_design.py` and four of the files above. The other files are pinned by this list, as A2's were.
+
+**What was known at the freeze.** No A1 result, and no model output on any render. A3's result, the vision gates, the human Snoek effects and ceiling, and pilot V1 (detector only). Four recovery runs, on synthetic observers, shaped the choice of residual CFA as the confirmatory statistic, as the recovery section records.
 
 **Written:** 2026-11-07, before any A1 result was read and before any model saw a render. A3 was known, as were the gates, and the human Snoek effects (`research/reproduction/human_au_effects.json`).
 **Depends on:** RQ0 and gates G2 to G4, per model. RQ0 is read through the frozen A1 and A3 table by `rq0_status`, the rule A2 uses, at `single_face`. So Pass on A3 with Pass or Fail on A1 admits a model. Any other outcome, or a missing result, leaves it Inconclusive.
@@ -181,8 +191,10 @@ New in the second run: a boundary observer, mixing human weights at .35, and a s
 | 1 | 1,200 per dataset | basic_EA, conversational_EA | `a4_recovery_first_run.json`, `a0fe98dc` | Raw | 27 of 28 | FAIL: pair-swapped accuracy on conversational_EA at 0.25x, 66% |
 | 2 | 1,200 per dataset | All four | `a4_recovery_second_run.json`, `64d7d1c9` | Raw | 63 of 66 | FAIL: false Aligned on conversational_WC, up to .33 |
 | 2 | 1,200 per dataset | All four | as above | Residual | 62 of 66 | FAIL: pair-swapped accuracy in 4 cells, 76 to 88% |
-| 3 | All available | All four | `a4_recovery_run3.json`, `1ebfc8ea` | Raw | 62 of 66 | FAIL: false Aligned on conversational_WC and at conversational_EA 0.25x, up to .40 |
+| 3 | All available | All four | `a4_recovery_run3.json`, `69efb5de` | Raw | 62 of 66 | FAIL: false Aligned on conversational_WC and at conversational_EA 0.25x, up to .40 |
 | 3 | All available | All four | as above | Residual | 66 of 66 | **PASS** |
+| 4 | All available | All four | `a4_recovery.json`, `1ebfc8ea` | Raw | 62 of 66 | FAIL, as run 3 |
+| 4 | All available | All four | as above | Residual | 66 of 66 | **PASS**. Same tables and checks as run 3; only `design_sha256` differs |
 
 **Stated before data, after run 1 and before any model.** Raw accuracy at conversational 0.25x is withdrawn as a claim, in both conversational datasets. Below R_S of .85, raw CFA is a lower bound. Aligned stands, and the corrected rule decides Not aligned.
 

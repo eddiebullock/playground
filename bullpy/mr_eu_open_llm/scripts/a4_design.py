@@ -48,7 +48,7 @@ BASELINE_STIMULI = 50
 SPLIT_HALF_SPLITS = 20
 REPLICATE_DRAWS = 9999
 CEILING_SPLITS = 200
-R_S_LOWER_BOUND = 0.85  # below this, raw CFA reads as a lower bound
+R_S_LOWER_BOUND = 0.85  # below this, uncorrected CFA reads as a lower bound
 IDENTITIES = {
     "WC": {"F": (("female_a", 0), ("female_b", 0)), "M": (("male_a", 0), ("male_b", 0))},
     "EA": {"F": (("ea_female", 0), ("ea_female", 1)), "M": (("ea_male", 0), ("ea_male", 1))},
