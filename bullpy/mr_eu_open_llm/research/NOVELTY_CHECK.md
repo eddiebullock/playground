@@ -3,6 +3,10 @@
 **Run:** 2026-11-04. Claim tested: no one has tested vision-language models against randomised human cue effects on faces.
 **Result:** No counterexample found. This is absence of evidence from the searches below, not proof.
 
+## Update 2026-11-07
+
+Recheck in `research/LIT_CHECK_2026-11-07.md`. No counterexample, but the claim must be narrowed to **cue-level**: coarse counterfactuals now exist (Zhang, ICML 2026, whole-expression neutralisation; Chen, ACL 2026, race and gender edits). Huynh (arXiv 2606.15779) intervenes on latent AUs and names pixel-level edits as future work, so scoop risk is direct. Option order is partly taken: Bhattacharyya and Wang (NAACL Findings 2025) tested it on evoked-emotion images. Joint control of position and image mismatch on faces or RMET remains open. Semantic Scholar, CCN 2026 and Google Scholar were not covered, and most items were not read in full.
+
 ## Searched
 
 - arXiv API, 12 queries (action units, FACS, reverse correlation, classification images, Bubbles, psychophysics, synthetic faces, generative face grammar, counterfactual, diagnostic). Zero hits: reverse correlation with VLM, GPT or language-model terms; Bubbles with the same; generative face grammar.

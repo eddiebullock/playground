@@ -4,7 +4,7 @@
 
 **Overarching question:** how similar are vision-language models to humans in how they read mental states from faces, not only in the answers they give? (`RESEARCH_QUESTIONS.md`)
 
-**Target:** one integrated paper, written so that it stands whatever the results are, plus the public reproduction package. The claim worth citing is the first test of VLMs against randomised human cue effects, on top of a validity audit that the field needs regardless of outcome.
+**Target:** one integrated paper, written so that it stands whatever the results are, plus the public reproduction package. Primary venue Nature Human Behaviour, fallback TMLR, both to confirm at submission (`research/LIT_CHECK_2026-11-07.md`). The claim worth citing is the first cue-level test of VLMs against randomised human cue effects, on top of a validity audit that the field needs regardless of outcome.
 
 ## Rules that do not bend
 
