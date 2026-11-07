@@ -160,7 +160,7 @@ Reported beside the primary, never replacing it: without AU22 and AU27; without 
 
 ## Recovery
 
-Before any run, synthetic observers answer the real 1,200-configuration design through `scripts/a4_analyse.py`, on all four datasets, with `scripts/a4_recovery.py`. Effect sizes are multiples of the human log odds at 0.25, 0.5 and 1. Realism: logit noise of SD 1 per stimulus and option, and a lognormal gain error of log SD 0.5 per AU, standing in for the unknown amplitude mapping. So the observers do not see the cues exactly as humans did.
+Before any run, synthetic observers answer the real configuration design through `scripts/a4_analyse.py`, with `scripts/a4_recovery.py`. Effect sizes are multiples of the human log odds at 0.25, 0.5 and 1. Realism: logit noise of SD 1 per stimulus and option, and a lognormal gain error of log SD 0.5 per AU, standing in for the unknown amplitude mapping. So the observers do not see the cues exactly as humans did.
 
 **Pass rule, not changed between the second and third runs** (`RECOVERY` in `scripts/a4_design.py`), applied to each statistic:
 
