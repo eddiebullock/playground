@@ -46,10 +46,14 @@ from typing import Any, Callable, Dict, Iterable, List, Optional, Sequence, Tupl
 
 import numpy as np
 
+from scripts import stimulus_design as design
 from scripts import stimulus_interventions as si
 
 ABSTAIN = "None of the above"
 WEAK_LABELS = ("Kind", "Unfriendly", "Jealous")
+# The geometry of record, as pinned in scripts/face_input_validity.py, which is frozen by
+# A3 and so is not imported or edited here. A test holds the two equal.
+GEOMETRY_SHA256 = "2bc76dd60be233ee6072ba5b2049721899c5febcd953ec49bff1dcc2f2c72383"
 
 MCQ_PREFILL = "EMOTION:"
 # Candidates in ladder order. The chosen pair comes from these by the ladder's rule, on
@@ -127,20 +131,75 @@ def text_sha256(*parts: str) -> str:
     return hashlib.sha256("\n".join(parts).encode("utf-8")).hexdigest()
 
 
-def design_hash() -> str:
-    """Identifies the readout and conditions, so results can be tied to the prereg."""
-    payload = json.dumps(
-        {
-            "prompt": BLIND_PROMPT,
-            "prefill": BLIND_PREFILL,
-            "lexicon": LEXICON,
-            "spatial": si.SPATIAL_CONDITIONS,
-            "temporal": list(TEMPORAL),
-            "k": si.N_SENT_FRAMES,
+def readout_fields() -> Dict[str, Any]:
+    """The fields of the design hash used up to smoke_v2, a1924d80."""
+    return {
+        "prompt": BLIND_PROMPT,
+        "prefill": BLIND_PREFILL,
+        "lexicon": LEXICON,
+        "spatial": si.SPATIAL_CONDITIONS,
+        "temporal": list(TEMPORAL),
+        "k": si.N_SENT_FRAMES,
+    }
+
+
+def edit_fields() -> Dict[str, Any]:
+    """Constants of the edits themselves, which a change of conditions would not show."""
+    return {
+        "seed": si.SEED,
+        "regions": {
+            "mouth_ring": si.MOUTH_RING,
+            "left_eye_ring": si.LEFT_EYE_RING,
+            "right_eye_ring": si.RIGHT_EYE_RING,
+            "left_brow": si.LEFT_BROW,
+            "right_brow": si.RIGHT_BROW,
+            "stable_points": si.STABLE_POINTS,
+            "dilate": si.REGION_DILATE,
         },
-        sort_keys=True,
-    )
-    return text_sha256(payload)
+        "feather": si.FEATHER_FRACTION,
+        "blur_sigma": si.BLUR_FILL_SIGMA_FRACTION,
+        "max_align_residual": si.MAX_ALIGN_RESIDUAL,
+        "min_eye_opening": si.MIN_EYE_OPENING,
+        "face_box_margin": si.FACE_BOX_MARGIN,
+        "face_size": si.FACE_SIZE,
+    }
+
+
+def design_hash() -> str:
+    """Ties a result to the readout, edits, MCQ, geometry and analysis of the prereg."""
+    from scripts.prompts import build_4afc_prompt
+
+    placeholders = tuple(f"<option {n}>" for n in range(6))
+    payload = {
+        **readout_fields(),
+        "edits": edit_fields(),
+        "mcq": {
+            "prefill": MCQ_PREFILL,
+            "prompt": build_4afc_prompt(placeholders, condition="video_only"),
+            "rotations": [mcq_rotations(position) for position in range(4)],
+        },
+        "video_kwargs": VIDEO_KWARGS,
+        "geometry_sha256": GEOMETRY_SHA256,
+        "analysis": design.design_spec(),
+    }
+    return text_sha256(json.dumps(payload, sort_keys=True))
+
+
+def check_geometry(path: Path) -> None:
+    digest = hashlib.sha256(path.read_bytes()).hexdigest()
+    if digest != GEOMETRY_SHA256:
+        raise SystemExit(f"Geometry hash {digest} is not the pinned one.")
+
+
+def resolve_shards(shard: int, n_shards: Optional[int], full_run: bool) -> int:
+    """A full run must name its shard count, so a resubmitted task cannot re-shard."""
+    if n_shards is None:
+        if full_run:
+            raise SystemExit("A full run needs --n_shards, stated explicitly.")
+        n_shards = 1
+    if n_shards < 1 or not 0 <= shard < n_shards:
+        raise SystemExit(f"Shard {shard} is not valid for {n_shards} shards.")
+    return n_shards
 
 
 # ---------------------------------------------------------------------------
@@ -342,6 +401,8 @@ def clip_geometry_record(item: Dict[str, Any], detect: Callable[[np.ndarray], Op
 
 
 def step_landmarks(args: argparse.Namespace) -> None:
+    if args.geometry.exists():
+        raise SystemExit(f"{args.geometry} is fixed for all models and is not overwritten.")
     items = select_items(load_items(args.manifest, args.lookup, args.data_root), None)
     chosen = items if args.max_items is None else items[: args.max_items]
     actors = {i["actor"] for i in chosen}
@@ -915,10 +976,17 @@ def delivery_for_item(handle: ModelHandle, clip: Clip, inputs_wanted: Sequence[s
                 if key in base_inputs and base_inputs[key].dim() >= 3 and base_inputs[key].shape[1] == len(media.images):
                     order = [media.sent_indices.index(i) for i in shuffled.sent_indices]
                     row["pixels_arrive_in_sent_order"] = bool(torch.equal(base_inputs[key][:, order], shuffled_inputs[key]))
+                # Qwen has no frame axis, since it merges pairs, so this is all it can show.
+                row["pixels_change_under_shuffle"] = input_record(handle, shuffled_inputs)["pixel_sha256"] != row["input"]["pixel_sha256"]
         row["gate_4_ids_unchanged_within_clip"] = bool(all(same_ids))
         row["input_ids_sha256"] = row["input"]["input_ids_sha256"]
         report[name] = row
     return report
+
+
+def order_check(row: Dict[str, Any]) -> bool:
+    """False if a shuffle fails to reach the pixels, or a frame axis shows the wrong order."""
+    return row.get("pixels_arrive_in_sent_order") is not False and row.get("pixels_change_under_shuffle") is not False
 
 
 def step_delivery(args: argparse.Namespace) -> None:
@@ -955,9 +1023,14 @@ def step_delivery(args: argparse.Namespace) -> None:
             "gate_3": all(c["gate_3_logged_indices_are_the_frames_sent"] for c in checked),
             "gate_4": all(c["gate_4_ids_unchanged_within_clip"] for c in checked)
             and len({c["input_ids_sha256"] for c in checked}) == 1,
+            "gate_5_shuffle_order": all(order_check(c) for c in checked),
         }
         gate_1 = gates["gate_1_median_tokens_across_face"] >= MIN_TOKENS_ACROSS_FACE
-        verdicts[name] = {**gates, "gate_1": bool(gate_1), "pass": bool(gate_1 and gates["gate_2"] and gates["gate_3"] and gates["gate_4"])}
+        verdicts[name] = {
+            **gates,
+            "gate_1": bool(gate_1),
+            "pass": bool(gate_1 and gates["gate_2"] and gates["gate_3"] and gates["gate_4"] and gates["gate_5_shuffle_order"]),
+        }
     output = {
         "model": args.model,
         "n_items_checked": len(rows),
@@ -1026,6 +1099,8 @@ def step_run(args: argparse.Namespace) -> None:
 
     if args.max_items is None and not args.confirm_gates_passed:
         raise SystemExit("Full runs wait on G2 to G4 and RQ0. Pass --max_items for a smoke run.")
+    args.n_shards = resolve_shards(args.shard, args.n_shards, args.max_items is None)
+    check_geometry(args.geometry)
     geometry = json.loads(args.geometry.read_text(encoding="utf-8"))
     geometry_items = geometry["items"]
     all_items = load_items(args.manifest, args.lookup, args.data_root)
@@ -1044,13 +1119,16 @@ def step_run(args: argparse.Namespace) -> None:
     cells_path = args.output_dir / f"cells_{stem}{suffix}.jsonl"
     report_path = args.output_dir / f"run_{stem}{suffix}.json"
     done = done_cells(cells_path)
+    design_sha256 = design_hash()
 
     started = time.time()
     handle = load_handle(args.model, args.dtype)
     report: Dict[str, Any] = {
         "model": args.model,
         "smoke": args.max_items is not None,
-        "design_sha256": design_hash(),
+        "design_sha256": design_sha256,
+        "shard": args.shard,
+        "n_shards": args.n_shards,
         "blind_prompt": BLIND_PROMPT,
         "blind_prefill": BLIND_PREFILL,
         "k": si.N_SENT_FRAMES,
@@ -1084,6 +1162,7 @@ def step_run(args: argparse.Namespace) -> None:
                 "human_modal_label": item["human_modal_label"],
                 "weak_label": item["weak_label"],
                 "position": item["position"],
+                "design_sha256": design_sha256,
             }
             clip: Optional[Clip] = None
             clip_error = ""
@@ -1324,7 +1403,7 @@ def main() -> None:
     parser.add_argument("--n_delivery_items", type=int, default=2)
     parser.add_argument("--dtype", default="bfloat16", choices=("bfloat16", "float32"))
     parser.add_argument("--shard", type=int, default=0)
-    parser.add_argument("--n_shards", type=int, default=1)
+    parser.add_argument("--n_shards", type=int, default=None, help="Required for a full run.")
     parser.add_argument("--confirm_gates_passed", action="store_true")
     args = parser.parse_args()
     steps = {

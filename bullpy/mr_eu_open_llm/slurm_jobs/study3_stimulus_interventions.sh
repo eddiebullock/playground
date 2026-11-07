@@ -18,8 +18,10 @@
 #   Smoke:     SMOKE_DIR=smoke_v2 MODEL=gemma4 MAX_ITEMS=3 sbatch --time=00:50:00 --qos=intr slurm_jobs/study3_stimulus_interventions.sh
 #   Processor: STEP=probe_processor MODEL=qwen3vl sbatch --time=00:15:00 --qos=intr slurm_jobs/study3_stimulus_interventions.sh
 #   Prompt:    STEP=probe_prompt MAX_ITEMS=3 MODEL=gemma4 sbatch --time=00:20:00 slurm_jobs/study3_stimulus_interventions.sh
-#   Full:      not yet. Wait for G2 to G4 and RQ0, then STEP=landmarks once, then
-#              CONFIRM_GATES_PASSED=1 STEP=run MODEL=... sbatch --array=0-3 ...
+#   Full:      not yet. Wait for G2 to G4 and RQ0, then
+#              N_SHARDS=3 CONFIRM_GATES_PASSED=1 STEP=run MODEL=... sbatch --array=0-2 ...
+#              Resubmit a lost task with the same N_SHARDS and --array=<task>.
+#   Landmarks: already run. Geometry is pinned, and the step refuses to overwrite it.
 #
 # Landmarks need MediaPipe, which lives in the au_tools overlay. That overlay sits on the
 # shared study2 conda env, so it also runs Gemma 4 and Qwen and no new env is needed.
@@ -35,9 +37,13 @@ MAX_ITEMS="${MAX_ITEMS:-}"
 INPUTS="${INPUTS:-single_face,single_full,video_face,legacy_full}"
 CONFIRM_GATES_PASSED="${CONFIRM_GATES_PASSED:-0}"
 SHARD="${SLURM_ARRAY_TASK_ID:-0}"
-N_SHARDS="${N_SHARDS:-1}"
-if [ -n "${SLURM_ARRAY_TASK_COUNT:-}" ]; then
-  N_SHARDS="${SLURM_ARRAY_TASK_COUNT}"
+N_SHARDS="${N_SHARDS:-}"
+
+if [ "${STEP}" = "run" ] && [ -z "${MAX_ITEMS}" ]; then
+  if ! [[ "${N_SHARDS}" =~ ^[1-9][0-9]*$ ]] || [ "${SHARD}" -ge "${N_SHARDS}" ]; then
+    echo "A full run needs N_SHARDS set explicitly and a task below it, got '${N_SHARDS}' and ${SHARD}." >&2
+    exit 1
+  fi
 fi
 
 if { [ "${STEP}" = "run" ] || [ "${STEP}" = "smoke" ]; } && [ -z "${MAX_ITEMS}" ] && [ "${CONFIRM_GATES_PASSED}" != "1" ]; then
@@ -118,7 +124,7 @@ case "${STEP}" in
     run_step run --inputs "${INPUTS}"
     ;;
   run)
-    EXTRA=(--shard "${SHARD}" --n_shards "${N_SHARDS}")
+    EXTRA=(--shard "${SHARD}" --n_shards "${N_SHARDS:-1}")
     if [ "${CONFIRM_GATES_PASSED}" = "1" ]; then
       EXTRA+=(--confirm_gates_passed)
     fi

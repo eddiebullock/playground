@@ -2,6 +2,7 @@
 
 import json
 import re
+import subprocess
 import sys
 from collections import Counter
 from pathlib import Path
@@ -485,6 +486,90 @@ def test_design_hash_changes_with_the_prompt(monkeypatch):
     before = run.design_hash()
     monkeypatch.setattr(run, "BLIND_PROMPT", "Other text.")
     assert run.design_hash() != before
+
+
+def test_readout_fields_still_give_the_smoke_v2_hash():
+    """The smoke's prompt, lexicon, conditions and k are unchanged; only the hash grew."""
+    text = json.dumps(run.readout_fields(), sort_keys=True)
+    assert run.text_sha256(text) == "a1924d800453298a3406c7ce5f01918895b60a5ad8f06c0058767ccb47321084"
+
+
+def test_design_hash_covers_edits_mcq_geometry_and_analysis(monkeypatch):
+    from scripts import stimulus_design as design
+
+    before = run.design_hash()
+    assert before != run.text_sha256(json.dumps(run.readout_fields(), sort_keys=True))
+    for owner, name, value in (
+        (si, "FEATHER_FRACTION", 0.5),
+        (si, "FACE_BOX_MARGIN", 2.0),
+        (si, "SEED", 7),
+        (run, "MCQ_PREFILL", "LABEL:"),
+        (run, "GEOMETRY_SHA256", "0"),
+        (run, "VIDEO_KWARGS", {}),
+        (design, "MARGIN_FRACTION", 0.2),
+        (design, "CONFIRMATORY", design.CONFIRMATORY[:-1]),
+    ):
+        with monkeypatch.context() as patch:
+            patch.setattr(owner, name, value)
+            assert run.design_hash() != before, name
+
+
+def test_geometry_pin_matches_the_a3_pin_and_is_checked(tmp_path):
+    from scripts import face_input_validity as fiv
+
+    assert run.GEOMETRY_SHA256 == fiv.GEOMETRY_SHA256
+    path = tmp_path / "geometry.json"
+    path.write_text("{}")
+    with pytest.raises(SystemExit, match="not the pinned"):
+        run.check_geometry(path)
+
+
+def test_landmarks_refuse_to_overwrite_geometry(tmp_path):
+    path = tmp_path / "geometry.json"
+    path.write_text("{}")
+    with pytest.raises(SystemExit, match="not overwritten"):
+        run.step_landmarks(type("Args", (), {"geometry": path})())
+
+
+def test_a_full_run_must_state_its_shards():
+    assert run.resolve_shards(0, None, False) == 1
+    assert run.resolve_shards(2, 3, True) == 3
+    with pytest.raises(SystemExit, match="--n_shards"):
+        run.resolve_shards(0, None, True)
+    for shard, count in ((3, 3), (-1, 3), (0, 0)):
+        with pytest.raises(SystemExit, match="not valid"):
+            run.resolve_shards(shard, count, True)
+
+
+@pytest.mark.parametrize(
+    "env,message",
+    [
+        ({}, "N_SHARDS"),
+        ({"SLURM_ARRAY_TASK_ID": "2", "SLURM_ARRAY_TASK_COUNT": "1"}, "N_SHARDS"),
+        ({"N_SHARDS": "3", "SLURM_ARRAY_TASK_ID": "3"}, "N_SHARDS"),
+    ],
+)
+def test_slurm_script_refuses_bad_shards_before_any_setup(env, message):
+    script = ROOT / "slurm_jobs/study3_stimulus_interventions.sh"
+    result = subprocess.run(
+        ["bash", str(script)],
+        env={"PATH": "/usr/bin:/bin", "HOME": "/nonexistent", "STEP": "run", "CONFIRM_GATES_PASSED": "1", **env},
+        capture_output=True,
+        text=True,
+    )
+    assert result.returncode == 1 and message in result.stderr
+
+
+def test_order_check_blocks_a_shuffle_that_does_not_arrive():
+    assert run.order_check({})
+    assert run.order_check({"pixels_change_under_shuffle": True})
+    assert not run.order_check({"pixels_change_under_shuffle": False})
+    assert not run.order_check({"pixels_arrive_in_sent_order": False})
+
+
+def test_slurm_examples_use_three_shards():
+    text = (ROOT / "slurm_jobs/study3_stimulus_interventions.sh").read_text()
+    assert "--array=0-2" in text and "--array=0-3" not in text
 
 
 def _write_clip(path, n=60):
