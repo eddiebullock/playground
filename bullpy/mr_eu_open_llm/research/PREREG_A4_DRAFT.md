@@ -145,7 +145,30 @@ Reported beside the primary, never replacing it: without AU22 and AU27; without 
 
 Before any run, synthetic observers answer the real 1,200-configuration design through `scripts/a4_analyse.py`, on basic_EA and conversational_EA, with `scripts/a4_recovery.py`. Effect sizes are multiples of the human log odds at 0.25, 0.5 and 1. Realism: logit noise of SD 1 per stimulus and option, and a lognormal gain error of log SD 0.5 per AU, standing in for the unknown amplitude mapping. So the observers do not see the cues exactly as humans did.
 
-RECOVERY_TABLE
+**Pass rule, fixed before running** (`RECOVERY` in `scripts/a4_design.py`): human-like Aligned in at least 80% of replicates at 0.5x and 1x; at 1x, half-shared alignment p in at least 80% and Aligned in at least 60%, and different-cues Not aligned in at least 50%; at every strength, false Aligned at most 10% for different-cues, prior-only and a generic observer that answers "None of the above" for any cue, prior-only signal at most 10%, and pair-swapped CFA within .10 of its true value in at least 90%.
+
+**Result: FAIL on one check of 40.** 100 replicates per cell, `research/reproduction/a4_recovery.json`, hash `b84bd471`. The one failure: pair-swapped CFA on conversational_EA at 0.25x is within .10 of truth in 66% of replicates. The rule is reported as run, not relaxed.
+
+| Observer | Dataset | Strength | CFA (true) | Aligned | Not aligned | Inconclusive |
+|---|---|---|---|---|---|---|
+| Human-like | basic | 0.25, 0.5, 1 | .86 (.91), .90 (.92), .91 (.91) | 1.0 | 0 | 0 |
+| Human-like | conversational | 0.25, 0.5, 1 | .79 (.91), .88 (.92), .92 (.94) | 1.0 | 0 | 0 |
+| Half-shared | basic | 0.25, 0.5, 1 | .43 (.46), .44 (.44), .42 (.42) | .97, .94, .94 | .01 to .05 | .01 to .02 |
+| Half-shared | conversational | 0.25, 0.5, 1 | .41 (.47), .44 (.46), .47 (.47) | .79, .86, .92 | .03 to .08 | .05 to .13 |
+| Different cues | both | all | .03 to .06 | at most .04 | .93 to 1.0 | at most .05 |
+| Generic | both | all | -.04 to .08 | 0 | .14 to 1.0 | 0 to .86 |
+| Prior-only | both | all | near 0 | 0 | .03 to .09 | .91 to .97 |
+| Pair-swapped | basic | 0.25, 0.5, 1 | .54 (.56), .56 (.56), .54 (.54) | 1.0 | 0 | 0 |
+| Pair-swapped | conversational | 0.25, 0.5, 1 | .41 (.49), .45 (.49), .48 (.50) | .92, 1.0, 1.0 | at most .01 | at most .07 |
+
+**Reading.**
+
+- False Aligned stays at or under .04 everywhere. 1,200 configurations are enough at these strengths, with noise and gain error as modelled.
+- CFA reads low on weak conversational effects: up to about .12 for human-like at 0.25x, where ridge is stronger and effects smaller. So a weak conversational effect understates alignment. A Not aligned call at CFA just under the bound on conversational data would need that caveat.
+- Prior-only passes signal in up to 9% of replicates, close to the 10% limit, and it then reads Not aligned.
+- Recovery assumes additive log-odds observers, independent stimulus noise and the gain error above. It does not model domain shift, so it shows the analysis works, not that a real model will respond this way.
+
+**Demonstration.** Pair-swapped observers have 16 of 25 families swapped with a partner. On natural-like stimuli with paired cues at r = .9, their outputs correlate .83 to .95 with the human-weighted observer, whereas CFA on the randomised design is .41 to .56. So on synthetic data behaviour stays high while CFA falls, which is the case the theory note predicts.
 
 ## Limits
 
