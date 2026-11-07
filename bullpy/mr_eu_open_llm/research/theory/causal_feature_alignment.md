@@ -14,6 +14,8 @@ A stimulus has cues z in R^p. A system S maps z to a response distribution f_S(z
 
 Each row sums to zero, because f_S lies on the simplex.
 
+**Set-to form.** Amendment A4 and the human matrix use do(z_j = 1) minus do(z_j = 0), other cues as observed, averaged over Q. For a linear observer this equals the dose form at delta_j = 1, and Propositions 2 and 3 hold unchanged. Theorem 1 is proved for the dose form. Its construction carries to the set-to form when neither intervened point is a natural item, and that case is not covered here.
+
 **Causal Feature Alignment.** For systems S and T,
 
     CFA(S, T) = cos(tau_S, tau_T) = <tau_S, tau_T> / (||tau_S||_F ||tau_T||_F)
@@ -92,7 +94,7 @@ Let tau-hat_S = tau_S + e_S and tau-hat_H = tau_H + e_H, with e_S and e_H zero m
     E<tau-hat_S, tau-hat_H> = <tau_S, tau_H>
     E||tau-hat_S||^2 = ||tau_S||^2 + s_S, and likewise for H
 
-So the observed cosine approximates CFA times sqrt(R_S R_H), where R_S = ||tau_S||^2 / (||tau_S||^2 + s_S), as a ratio of expectations. This is Spearman's attenuation correction, on a matrix. The study estimates R_H by split-half across subjects (`human_au_effects.py`), and R_S from replicate renders or identities. When the model sees other stimuli than humans did, stimulus sampling enters s_H and s_S, so the `subjects_and_stimuli` ceiling applies, not the same-stimuli one. Corrected values above 1 can occur from sampling and are reported uncorrected beside them.
+So the observed cosine approximates CFA times sqrt(R_S R_H), where R_S = ||tau_S||^2 / (||tau_S||^2 + s_S), as a ratio of expectations. This is Spearman's attenuation correction, on a matrix. The study estimates R_H by split-half across subjects and stimuli (`a4_human_ceiling.json`), and R_S by split-half across stimuli, because a model has no response noise and stimulus sampling is its source of error. When the model sees other stimuli than humans did, stimulus sampling enters s_H and s_S, so the `subjects_and_stimuli` ceiling applies, not the same-stimuli one. Corrected values above 1 can occur from sampling and are reported uncorrected beside them.
 
 ## What the study needs from this
 

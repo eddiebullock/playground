@@ -1,0 +1,35 @@
+{
+ "datasets": {
+  "basic_WC": {
+   "split_half_r": 0.9613,
+   "spearman_brown": 0.9802,
+   "ceiling": 0.9901,
+   "splits": 200
+  },
+  "basic_EA": {
+   "split_half_r": 0.9578,
+   "spearman_brown": 0.9785,
+   "ceiling": 0.9892,
+   "splits": 200
+  },
+  "conversational_WC": {
+   "split_half_r": 0.9172,
+   "spearman_brown": 0.9568,
+   "ceiling": 0.9782,
+   "splits": 200
+  },
+  "conversational_EA": {
+   "split_half_r": 0.9032,
+   "spearman_brown": 0.9491,
+   "ceiling": 0.9742,
+   "splits": 200
+  }
+ },
+ "note": "Ceiling on do effects, family_25 basis, subjects and stimuli split. Human data only.",
+ "splits": 200,
+ "seed": 20261107,
+ "wc_to_ea_cfa": {
+  "basic": 0.8768709011510011,
+  "conversational": 0.7669662069254392
+ }
+}

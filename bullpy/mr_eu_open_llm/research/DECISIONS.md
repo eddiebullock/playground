@@ -318,3 +318,28 @@ The user accepted the four open choices and gave full autonomy. An independent a
 - **Why freeze now:** A1 is waiting on the queue, and freezing before reading it is stricter than the draft required.
 - **Consequence:** 8 of 16 contrasts cannot reach Null, or 10 of 16 on Qwen, and 6 of 14 predictions. Those cues read as a match, an opposition, or Inconclusive. A2 cannot show that a model ignores them.
 - **Recovery** was rerun on the frozen code and is unchanged. It shows that contrasts are recovered at large effects, not power at realistic ones.
+
+
+## 2026-11-07: Natural-clip RQ1 under each RQ0 outcome
+
+Decided before any A1 result was read. The natural-clip RQ1 route uses A1's composite-grid rotations, and no rule covered a model that fails A1. This closes that gap.
+
+| A1 | A3 | Natural-clip RQ1 |
+|---|---|---|
+| Pass | Pass | Confirmatory, subject to the 5 percent clip rule |
+| Fail | Pass | Computed and reported as descriptive. The grid limited that input, so the pattern score cannot carry a claim |
+| Pass | Fail | Computed and reported as descriptive, pending the inspection the A3 table requires |
+| Fail | Fail | Computed for the record, with no claim. No RQ1 to RQ5 claims for that model |
+
+`model_route` runs once per model in every case. Rows 2 to 4 change only how the score is read. A later analysis on `single_face` would be exploratory, or needs its own amendment before data.
+
+RQ0 text says no later RQ runs on a failing model. The frozen A3 table is the later and more specific rule, so it governs.
+
+
+## 2026-11-07: Source check after the A2 freeze
+
+A full read of the manuscript's references found that P7, P12 and P13 cited sources that do not carry them, that no cited source tests shuffling, and that Gold et al. 2013 and a VLM study point the other way. A2 has not run, so this is logged as a pre-data deviation in A2.
+
+- **Decision:** Predictions, family and code stay frozen. Changing a prediction after the freeze would be a worse fault than a weak one, and the evidence grades are corrected openly instead.
+- **Why not drop P12 and P13:** They stay in the family, and removal would change the multiplicity correction after the freeze. Their reading is limited by the deviation.
+- **Also:** The audit claim is softened to "several", since 3 of 8 is not most. A no-image control in Hallmen et al. was missed in earlier notes. Nature Human Behaviour cannot take this as a Registered Report, so it would be an Article with a reporting summary.

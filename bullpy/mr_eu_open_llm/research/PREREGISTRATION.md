@@ -158,3 +158,8 @@ The gate used the frozen rule (Holm p < 0.01 across layers of one model; ≥ 1,0
 ## Amendment A3 (2026-11-04): face-input retest of RQ0
 
 Frozen 2026-11-04, before any A3 scored cell existed and before any rotation result was read. Full text: `research/PREREG_A3_DRAFT.md`. It does not replace A1, and it is its own Holm family over three models.
+
+
+## Amendment A2 (2026-11-07): blind readout gate and stimulus interventions
+
+Frozen 2026-11-07, tag `a2-freeze`, before any A1 result was read and before any full intervention run. Full text: `research/PREREG_A2_DRAFT.md`, `design_sha256` 0ae22118. Gemma 4 and Qwen3-VL are eligible subject to RQ0, and Molmo2 is out.
