@@ -32,7 +32,7 @@ Each confirmatory analysis was fixed in a dated amendment before its data were r
 5. *RQ1 unit.* The natural-clip analysis moved from single AUs to AU families after recovery failed in every condition. Two attempts at family-wise calibration then failed, and no third was run. Single cells are therefore exploratory. The strength rule below was tightened after power at 0.5, 1 and 2 times the human effect was known.
 6. *Gate thresholds.* The size threshold of gate G4 was set by the implementer before any model ran, with no source in the study brief.
 7. *Numerical precision.* Qwen3-VL's gates ran at bfloat16 only, because float32 ran out of memory.
-8. *Model revisions.* Models were loaded by repository name. [PENDING: confirm the commit hash of each checkpoint used; the repo records none.]
+8. *Model revisions.* Models were loaded from local copies of Gemma 4 E4B (commit 83df0a88), Qwen3-VL 8B (0c351dd0) and Molmo2-O 7B (78441065).
 
 ### Models
 
