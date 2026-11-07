@@ -100,7 +100,7 @@ For raw CFA, each cue's effects sum to zero across options, so this equals Pears
 
 **Signal.** Do AUs move the model at all? Stimuli are shuffled against responses, 999 draws, on the summed squared OLS AU coefficients, which needs no refit. p < .05 is required. A prior-only system fails here.
 
-**Alignment.** AU labels are shuffled across the 25 columns of the model's matrix, 9,999 draws, one-sided on CFA. This keeps each cue's profile, and any effect common to all cues, so a model answering "None of the above" less whenever anything moves gains nothing. Holm across the two eligible models, within a dataset.
+**Alignment.** AU labels are shuffled across the 25 columns of the model's matrix, 9,999 draws, one-sided on CFA. This keeps each cue's profile, and any effect common to all cues, so a model answering "None of the above" less whenever anything moves gains nothing on residual CFA. Raw CFA is not protected in the same way when a common profile scales with salience, as recovery shows below, which is one reason residual CFA is primary. Holm across the two eligible models, within a dataset.
 
 **Interval.** Stimulus bootstrap, 2,000 draws, 95 percent percentile. It treats stimuli as sampled, and does not include error in the human matrix, whose reliability is near 1 here.
 
@@ -118,9 +118,9 @@ For raw CFA, each cue's effects sum to zero across options, so this equals Pears
 
 **Null rule.** Not aligned is the null, and it requires the model to be shown to respond to AUs (signal), the gates, and the equivalence bound after disattenuation. A model with no signal cannot be Not aligned: it is Inconclusive, since nothing shows that the cues were delivered. A missing or non-positive R_S cannot support Not aligned.
 
-**Asymmetric rule.** Aligned uses raw values and Not aligned uses disattenuated ones. That is deliberate: noise can only lower a cosine, so it cannot create Aligned, whereas it could create a false null. The rule therefore favours neither claim by the same margin, and Aligned can be reached at a CFA where the interval is wide.
+**Asymmetric rule.** Aligned uses uncorrected values and Not aligned uses disattenuated ones, in both cases of the statistic named by `STATISTIC`, so "uncorrected" here does not mean raw CFA. That is deliberate: noise can only lower a cosine, so it cannot create Aligned, whereas it could create a false null. The rule therefore favours neither claim by the same margin, and Aligned can be reached at a CFA where the interval is wide.
 
-**Reliability, stated before data.** Below R_S of .85, raw CFA reads as a lower bound. Aligned still stands, and the corrected rule decides Not aligned.
+**Reliability, stated before data.** Below R_S of .85, uncorrected CFA reads as a lower bound. Aligned still stands, and the corrected rule decides Not aligned.
 
 **Reading Aligned.** It means a reliable shared pattern, not the same strategy. In recovery, an observer with 16 of 25 cue families swapped in 8 pairs can still clear .30. So CFA is always reported against the WC to EA reference, and a model is called human-level only if its CI reaches that reference, which is descriptive.
 
@@ -181,7 +181,7 @@ New in the second run: a boundary observer, mixing human weights at .35, and a s
 | 1 | 1,200 per dataset | basic_EA, conversational_EA | `a4_recovery_first_run.json`, `a0fe98dc` | Raw | 27 of 28 | FAIL: pair-swapped accuracy on conversational_EA at 0.25x, 66% |
 | 2 | 1,200 per dataset | All four | `a4_recovery_second_run.json`, `64d7d1c9` | Raw | 63 of 66 | FAIL: false Aligned on conversational_WC, up to .33 |
 | 2 | 1,200 per dataset | All four | as above | Residual | 62 of 66 | FAIL: pair-swapped accuracy in 4 cells, 76 to 88% |
-| 3 | All available | All four | `a4_recovery.json`, `69efb5de` | Raw | 62 of 66 | FAIL: false Aligned on conversational_WC and at conversational_EA 0.25x, up to .40 |
+| 3 | All available | All four | `a4_recovery_run3.json`, `1ebfc8ea` | Raw | 62 of 66 | FAIL: false Aligned on conversational_WC and at conversational_EA 0.25x, up to .40 |
 | 3 | All available | All four | as above | Residual | 66 of 66 | **PASS** |
 
 **Stated before data, after run 1 and before any model.** Raw accuracy at conversational 0.25x is withdrawn as a claim, in both conversational datasets. Below R_S of .85, raw CFA is a lower bound. Aligned stands, and the corrected rule decides Not aligned.
@@ -253,7 +253,7 @@ Twelve shards per model at about 5 h, against a 6 h limit, resumable, about 121 
 
 ## Order
 
-1. Pilot V1, with no model.
+1. Pilot V1, with no model. Its output, `research/reproduction/a4_v1_pilot.csv`, is the file passed to `a4_analyse.py --detector`.
 2. Audit this amendment, then freeze with hashes and tag `a4-freeze`, before any A1 result is read if the queue allows.
 3. Render into tars. No model.
 4. After RQ0, run a timing smoke, then the full run per eligible model. Smoke files stay out of the analysis.
