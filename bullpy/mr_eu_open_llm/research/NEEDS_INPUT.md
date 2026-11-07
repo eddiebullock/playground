@@ -6,7 +6,7 @@ Questions the agent cannot resolve. Each item is standalone. Work continues on e
 
 Reuse the live ControlMaster socket `~/.ssh/cm-eb2007@login.hpc.cam.ac.uk:22` (process `ssh -fN ... ControlPersist=12h`, plus an interactive `ssh eb2007@login.hpc.cam.ac.uk`). Fresh BatchMode logins without that path still fail. 6AFC `.npy` and the n=36 ablation were pulled. GPU jobs are being submitted through this multiplexed connection.
 
-No remaining question. Keep using `-o ControlPath=/Users/eb2007/.ssh/cm-%r@%h:%p -o ControlMaster=auto`.
+No remaining question. Keep using `-o ControlPath=/Users/eb2007/.ssh/cm-%r@%h:%p -o ControlMaster=auto`. If the socket has gone, as it had on 2026-11-06 between 18:51 and 19:51, checks fail with `Permission denied`, and the user has to log in again.
 
 ## 2. GitHub repo is public
 
@@ -22,15 +22,9 @@ No remaining question. Keep using `-o ControlPath=/Users/eb2007/.ssh/cm-%r@%h:%p
 
 3-layer last-token `.npy` for Qwen/Gemma/Molmo 6AFC are local. All-layer extracts are jobs 39709580–39709583. No remaining question.
 
-## 4. CREMA-D access form (Phase 6, not blocking now)
+## 4. CREMA-D access form — RESOLVED
 
-**Context.** CREMA-D maintainers ask users to fill a short access form. Videos may be Git LFS. This is a user action.
-
-**Exact question.** When you have a moment, complete the CREMA-D access form so the video-only subset can be downloaded. No need to do this before Phases 1–2.
-
-**Recommended default.** Agent writes the adapter and the pre-registered clip-selection rule against the public `finalResponses.csv` schema without videos.
-
-**Meanwhile.** Adapter scaffolding in Phase 6, not now.
+Form done, per STATE. No remaining question.
 
 ## 5. MRMET option-level human counts (Phase 6)
 
@@ -42,6 +36,13 @@ No remaining question. Keep using `-o ControlPath=/Users/eb2007/.ssh/cm-%r@%h:%p
 
 **Meanwhile.** Unblocked.
 
----
+## 6. A2 sign-off (needed before A2 can freeze, not blocking A1)
 
-No other blocking questions. Local `main` is 11 commits behind `origin/main` with dirty `notes/notes.txt` and two submodules; those are left untouched.
+**Context.** `research/PREREG_A2_DRAFT.md` lists four open choices, and the agent's recommendations sit under them. They are recommendations only.
+
+**Exact question.** Do you accept each of the four recommendations? In particular, should P14 and P15 be removed, or can you supply the Jack 2014 full text?
+
+**Recommended default.** Hold A2 unfrozen until A1 is read and you have answered.
+
+**Meanwhile.** A1 continues.
+
