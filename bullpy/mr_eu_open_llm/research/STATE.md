@@ -10,7 +10,7 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
 
 ## Next actions
 
-**A4 frozen 2026-11-07:** tag `a4-freeze`, design hash `12c454da`, PR 73 merged as `fc4a327`, before any A1 result was read and before any model saw a render. Residual CFA is confirmatory, recovery 66 of 66 (66 of 68 counting the two withdrawn cells). Render array 40268765 submitted on icelake, 40 tars, no model. Scoring waits for RQ0, then a timing smoke per eligible model.
+**A4 frozen 2026-11-07:** tag `a4-freeze`, design hash `12c454da`, PR 73 merged as `fc4a327`, before any A1 result was read and before any model saw a render. Residual CFA is confirmatory, recovery 66 of 66 (66 of 68 counting the two withdrawn cells). Render finished 2026-11-07: arrays 40268765 and 40270481 (tasks 0 and 1 failed in 7 s on cpu-q-168 and were rerun on another node), 40 tars, 11,761 images as planned, 2.2 GB, in `results/a4/renders` on the cluster, no model. Scoring waits for RQ0, then a timing smoke per eligible model.
 
 Goals and what done means: `research/GOALS.md`. The user gave full autonomy on 2026-11-07 and accepted all recommendations, including the four A2 choices.
 
