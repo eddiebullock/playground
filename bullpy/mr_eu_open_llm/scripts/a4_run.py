@@ -62,6 +62,7 @@ def planned_cells(manifest: Sequence[Mapping[str, Any]], shard: int, n_shards: i
                 baseline[task].append(r["stim_id"])
             if r["set"] == "replicate" and r["dataset"] == d.BLIND_DATASET:
                 blind.add(r["stim_id"])
+    blind_baseline = set(sorted(blind)[:BASELINE_STIMULI])
     for stim in sorted(set(tasks) | blind):
         if d.shard_of(stim, n_shards) != shard:
             continue
@@ -72,6 +73,8 @@ def planned_cells(manifest: Sequence[Mapping[str, Any]], shard: int, n_shards: i
                 yield {"stim_id": stim, "task": task, "rotation": 0, "readout": "image_free"}
         if stim in blind:
             yield {"stim_id": stim, "task": "basic", "rotation": 0, "readout": "blind"}
+            if stim in blind_baseline:
+                yield {"stim_id": stim, "task": "basic", "rotation": 0, "readout": "blind_image_free"}
 
 
 def cell_key(cell: Mapping[str, Any]) -> tuple:
@@ -85,8 +88,10 @@ def score(handle: Any, cell: Dict[str, Any], image: np.ndarray) -> Dict[str, Any
 
     start, tick = handle.forwards, time.time()
     media = run.Media("image", [image], [0], {})
-    if cell["readout"] == "blind":
+    if cell["readout"] in ("blind", "blind_image_free"):
         inputs = run.encode_media(handle, media, run.BLIND_PROMPT)
+        if cell["readout"] == "blind_image_free":
+            inputs = strip_pixels(inputs, run.PIXEL_KEYS)
         values = run.score_sequences(handle, inputs, handle.blind_prefill, handle.word_ids)
         again = run.score_sequences(handle, inputs, handle.blind_prefill, handle.word_ids)
         cell.update(family_logprob={k: round(v, 4) for k, v in run.family_scores(handle.words, values).items()},

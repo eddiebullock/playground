@@ -11,7 +11,7 @@
 
 RQ1, on randomised cues. When a face's action units (AUs) are set at random, as they were for the human observers, does a model's judgement change with each AU the way a human's does?
 
-**Why this design.** Natural clips cannot answer this: the theory note shows that behaviour on natural items does not constrain cue effects, and EU-Emotion's cues are far more correlated than the Snoek design (condition number 76 against about 3.5). The same-clip RQ1 result supports "aligned with the human pattern", not "uses the same cues". Here the cues are randomised for both.
+**Why this design.** Natural clips cannot answer this: the theory note shows that behaviour on natural items does not constrain cue effects, and EU-Emotion's cues are far more correlated than the Snoek design: condition number 76.1 on 15 LibreFace cues and 22.4 on 10 OpenFace 3 cues, against 3.4 to 3.5 on Snoek's 25 merged cues. Cue counts differ, so this is rough (table in the theory note). The same-clip RQ1 result supports "aligned with the human pattern", not "uses the same cues". Here the cues are randomised for both.
 
 **Novelty, as far as it is known.** We located no study comparing a vision-language model's response to named facial cues with effects estimated from human observers under randomised cue presentation. Coarse image-level counterfactuals on VLMs exist (Zhang et al., ICML 2026, whose stimuli are only partly faces, with no named cue and no human data), as do latent AU interventions on an affective model (Huynh et al., arXiv 2606.15779, which act on a learned latent rather than images and use no randomised human data). Both were read in part, and the Huynh wording came through a summarising tool, so quotes need rechecking (`research/LIT_CHECK_2026-11-07.md`). The claim is cue-level, keeps its search date, and notes that Semantic Scholar was down and CCN could not be fully searched.
 
@@ -83,7 +83,11 @@ From `research/theory/causal_feature_alignment.md`: tau(j, k) is the average eff
 
     CFA = cos(tau_model, tau_human)
 
-over options by 25 families. Rows sum to zero, so this equals Pearson r over entries. It is reported raw, and over the ceiling times the square root of the model's split-half reliability across stimuli. Corrected values are not used for decisions.
+over options by 25 families. Each cue's effects sum to zero across options, so this equals Pearson r over entries. It is reported raw, and over the ceiling times the square root of the model's split-half reliability across stimuli, 20 splits. Corrected values are not used for decisions.
+
+**Dose.** The note defines tau at a dose delta from z. A4 uses the set-to form the human matrix uses: do(AU=1) minus do(AU=0), with other AUs as observed. So the dose is the full amplitude range, on both sides. The note gives the relation.
+
+**Model reliability.** A model has no response noise, so its reliability here reflects which stimuli were sampled. It is taken by split-half across stimuli. The 200 replicates vary identity alone, and they serve V3, not the correction.
 
 **Direct contrast.** The one-AU set gives the do() contrast itself: an AU alone against that identity's neutral face. At amplitude 1, bilateral sides summed. Secondary, because it tests an AU at a neutral baseline, whereas the human effect is averaged over other active AUs, and it is the only place dose can be read.
 
@@ -95,7 +99,7 @@ over options by 25 families. Rows sum to zero, so this equals Pearson r over ent
 
 **Interval.** Stimulus bootstrap, 2,000 draws, 95 percent percentile. It treats stimuli as sampled, and does not include error in the human matrix, whose reliability is near 1 here.
 
-**Smallest effect of interest.** CFA of .30 [proposed]. The half-shared observer sits near .50, so .30 is under the weakest alignment worth reporting, and it is about 9 percent of shared variance. There is no external source for this value.
+**Smallest effect of interest.** CFA of .30 [proposed]. The half-shared observer's true CFA is .42 to .47 in recovery, so .30 sits under the weakest alignment worth reporting, and it is about 9 percent of shared variance. There is no external source for this value.
 
 ## Decision rule, per model and dataset
 
@@ -126,7 +130,7 @@ None of these uses a human target. All run per model and task, and missing means
 
 **V4 limits a known risk.** On A3, Qwen and Molmo chose None of the above on .534 and .863 of cells. If that recurs on avatars, V4 stops a comparison resting on a sliver of probability.
 
-**Blind Gate B analogue.** B1 repeat change at most 1e-3, B2 median lexicon mass at least .05, B3 as V2 on the blind route where baselines are available, and B4 as V3 at p < .01. The blind result is reported only if these pass.
+**Blind Gate B analogue.** B1 repeat change at most 1e-3; B2 median lexicon mass at least .05; B3 mean RMS change in family CLR, render against pixels removed, at least 0.25 nats, on 50 stimuli; and B4 as V3 at p < .01, on basic_EA's 200 replicate configurations. The blind result is reported only if these pass.
 
 ## Descriptive: does CFA say something that behaviour does not?
 
@@ -147,7 +151,7 @@ Before any run, synthetic observers answer the real 1,200-configuration design t
 
 **Pass rule, fixed before running** (`RECOVERY` in `scripts/a4_design.py`): human-like Aligned in at least 80% of replicates at 0.5x and 1x; at 1x, half-shared alignment p in at least 80% and Aligned in at least 60%, and different-cues Not aligned in at least 50%; at every strength, false Aligned at most 10% for different-cues, prior-only and a generic observer that answers "None of the above" for any cue, prior-only signal at most 10%, and pair-swapped CFA within .10 of its true value in at least 90%.
 
-**Result: FAIL on one check of 40.** 100 replicates per cell, `research/reproduction/a4_recovery.json`, hash `b84bd471`. The one failure: pair-swapped CFA on conversational_EA at 0.25x is within .10 of truth in 66% of replicates. The rule is reported as run, not relaxed.
+**Result: FAIL on one check of 28.** 100 replicates per cell, `research/reproduction/a4_recovery.json`, hash `b84bd471`. The one failure: pair-swapped CFA on conversational_EA at 0.25x is within .10 of truth in 66% of replicates. The rule is reported as run, not relaxed.
 
 | Observer | Dataset | Strength | CFA (true) | Aligned | Not aligned | Inconclusive |
 |---|---|---|---|---|---|---|
@@ -192,8 +196,8 @@ Figures are upper bounds. No model has run this task, so A3's 1:45 job limit ove
 | Basic MCQ | 25,122 | 20.9 | 20.9 |
 | Conversational MCQ | 16,684 | 10.2 | 10.2 |
 | Blind | 800 | 0.7 | 1.2 |
-| Image-free | 100 | under 0.1 | under 0.1 |
-| **Total per model** | 42,706 | about 32 | about 32 |
+| Image-free | 150 | under 0.1 | under 0.1 |
+| **Total per model** | 42,756 | about 32 | about 32 |
 
 Eight shards per model at about 4 h, against a 6 h limit, resumable, about 64 GPU-hours for both of 2,765 available. A timing smoke after the freeze replaces these figures. Rendering: 7,102 images at 3.1 s is about 6.1 core-hours, on 40 CPU tasks. This timing comes from the Mac, not the cluster.
 

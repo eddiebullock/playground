@@ -360,6 +360,24 @@ def image_rms(rows: Sequence[Mapping[str, Any]], task: str) -> Optional[float]:
     return float(np.mean(changes)) if changes else None
 
 
+def clr(values: Sequence[float]) -> np.ndarray:
+    x = np.asarray(values, dtype=float)
+    return x - x.mean()
+
+
+def blind_image_rms(rows: Sequence[Mapping[str, Any]], families: Sequence[str]) -> Optional[float]:
+    """B3: mean RMS change in family CLR, render against pixels removed."""
+    free = {r["stim_id"]: r for r in rows if r.get("readout") == "blind_image_free" and r.get("status") == "ok"}
+    changes = []
+    for r in rows:
+        other = free.get(r["stim_id"])
+        if other is None or r.get("readout") != "blind" or r.get("status") != "ok":
+            continue
+        change = clr([r["family_logprob"][f] for f in families]) - clr([other["family_logprob"][f] for f in families])
+        changes.append(float(np.sqrt(np.mean(change**2))))
+    return float(np.mean(changes)) if changes else None
+
+
 def blind_summary(rows, manifest_rows, store) -> Dict[str, Any]:
     """Secondary route, on six basic labels. "other" has no blind family, so it is left out."""
     families = [d.BLIND_FAMILY[k] for k in d.HUMAN_LABELS["basic"][:-1]]
@@ -381,11 +399,13 @@ def blind_summary(rows, manifest_rows, store) -> Dict[str, Any]:
     check = (replicate_check(np.vstack([v["main"] for v in usable]), np.vstack([v["replicate"] for v in usable]), rng)
              if len(usable) > 1 else {})
     repeat = [r.get("repeat_change") for r in blind.values() if r.get("repeat_change") is not None]
+    rms = blind_image_rms(rows, families)
     gate = {"b1_repeat": bool(repeat) and max(repeat) <= d.B_RULES["repeat"],
             "b2_coverage": mass >= d.B_RULES["coverage"],
+            "b3_image_dependence": rms is not None and rms >= d.B_RULES["image_rms"],
             "b4_config_carries": check.get("p", 1.0) < d.B_RULES["sign_flip_p"] and check.get("delta_js", 0.0) > 0}
-    return {"median_lexicon_mass": mass, "replicate": check, "gate": gate,
-            "cfa_six_labels": cosine(tau, human[:-1])}
+    return {"median_lexicon_mass": mass, "replicate": check, "gate": gate, "image_rms": rms,
+            "passed": all(gate.values()), "cfa_six_labels": cosine(tau, human[:-1])}
 
 
 def scale_summary(rows, manifest_rows, store) -> Dict[str, float]:

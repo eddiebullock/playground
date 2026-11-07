@@ -104,7 +104,7 @@ def test_cells_partition_across_shards(monkeypatch):
     assert len(one) == len(set(one))
     assert sorted(one) == sorted(split)
     readouts = {k[3] for k in one}
-    assert readouts == {"mcq", "image_free", "blind"}
+    assert readouts == {"mcq", "image_free", "blind", "blind_image_free"}
 
 
 def test_a_stimulus_needs_a_full_rotation_set():
@@ -307,3 +307,12 @@ def test_design_asset_default_is_not_a_scratch_path():
     import render_au_faces as raf
 
     assert "scratchpad" not in str(raf.DEFAULT_ASSETS)
+
+
+def test_blind_gate_needs_b3():
+    families = [d.BLIND_FAMILY[k] for k in d.HUMAN_LABELS["basic"][:-1]]
+    real = dict(zip(families, [0.0, -1.0, -2.0, -3.0, -4.0, -5.0]))
+    rows = [{"stim_id": "a", "readout": "blind", "status": "ok", "family_logprob": real},
+            {"stim_id": "a", "readout": "blind_image_free", "status": "ok", "family_logprob": dict.fromkeys(families, -1.0)}]
+    assert an.blind_image_rms(rows, families) > 1
+    assert an.blind_image_rms(rows[:1], families) is None

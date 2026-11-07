@@ -70,7 +70,7 @@ RECOVERY = {
     "bootstrap_draws": 100,
     "cue_permutations": 1999,
     "signal_permutations": 199,
-    "strengths": (0.25, 0.5, 1.0),  # 0.25 is reported; the pass rule binds at 0.5 and 1
+    "strengths": (0.25, 0.5, 1.0),  # human-like binds at 0.5 and 1, half-shared at 1, the rest at all
     "stimulus_logit_sd": 1.0,
     "gain_log_sd": 0.5,
     "pass": {"human_like_aligned_min": 0.80, "half_shared_alignment_min": 0.80,
