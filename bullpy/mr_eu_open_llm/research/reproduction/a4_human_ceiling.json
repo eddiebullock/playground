@@ -4,32 +4,60 @@
    "split_half_r": 0.9613,
    "spearman_brown": 0.9802,
    "ceiling": 0.9901,
+   "split_half_r_residual": 0.8889,
+   "ceiling_residual": 0.9701,
    "splits": 200
   },
   "basic_EA": {
    "split_half_r": 0.9578,
    "spearman_brown": 0.9785,
    "ceiling": 0.9892,
+   "split_half_r_residual": 0.9339,
+   "ceiling_residual": 0.9828,
    "splits": 200
   },
   "conversational_WC": {
    "split_half_r": 0.9172,
    "spearman_brown": 0.9568,
    "ceiling": 0.9782,
+   "split_half_r_residual": 0.9018,
+   "ceiling_residual": 0.9738,
    "splits": 200
   },
   "conversational_EA": {
    "split_half_r": 0.9032,
    "spearman_brown": 0.9491,
    "ceiling": 0.9742,
+   "split_half_r_residual": 0.8552,
+   "ceiling_residual": 0.9602,
    "splits": 200
   }
  },
- "note": "Ceiling on do effects, family_25 basis, subjects and stimuli split. Human data only.",
  "splits": 200,
  "seed": 20261107,
+ "note": "Do effects, family_25 basis, subjects and stimuli split. Human data only.",
  "wc_to_ea_cfa": {
   "basic": 0.8768709011510011,
-  "conversational": 0.7669662069254392
+  "basic_residual": 0.7795698666450646,
+  "conversational": 0.7669662069254392,
+  "conversational_residual": 0.7323097667078877
+ },
+ "human_energy": {
+  "basic_WC": {
+   "AU22_AU27_share": 0.1091,
+   "common_profile_share": 0.2764
+  },
+  "basic_EA": {
+   "AU22_AU27_share": 0.1187,
+   "common_profile_share": 0.2634
+  },
+  "conversational_WC": {
+   "AU22_AU27_share": 0.1831,
+   "common_profile_share": 0.3242
+  },
+  "conversational_EA": {
+   "AU22_AU27_share": 0.1029,
+   "common_profile_share": 0.3535
+  }
  }
 }
