@@ -318,3 +318,19 @@ The user accepted the four open choices and gave full autonomy. An independent a
 - **Why freeze now:** A1 is waiting on the queue, and freezing before reading it is stricter than the draft required.
 - **Consequence:** 8 of 16 contrasts cannot reach Null, or 10 of 16 on Qwen, and 6 of 14 predictions. Those cues read as a match, an opposition, or Inconclusive. A2 cannot show that a model ignores them.
 - **Recovery** was rerun on the frozen code and is unchanged. It shows that contrasts are recovered at large effects, not power at realistic ones.
+
+
+## 2026-11-07: Natural-clip RQ1 under each RQ0 outcome
+
+Decided before any A1 result was read. The natural-clip RQ1 route uses A1's composite-grid rotations, and no rule covered a model that fails A1. This closes that gap.
+
+| A1 | A3 | Natural-clip RQ1 |
+|---|---|---|
+| Pass | Pass | Confirmatory, subject to the 5 percent clip rule |
+| Fail | Pass | Computed and reported as descriptive. The grid limited that input, so the pattern score cannot carry a claim |
+| Pass | Fail | Computed and reported as descriptive, pending the inspection the A3 table requires |
+| Fail | Fail | Computed for the record, with no claim. No RQ1 to RQ5 claims for that model |
+
+`model_route` runs once per model in every case. Rows 2 to 4 change only how the score is read. A later analysis on `single_face` would be exploratory, or needs its own amendment before data.
+
+RQ0 text says no later RQ runs on a failing model. The frozen A3 table is the later and more specific rule, so it governs.
