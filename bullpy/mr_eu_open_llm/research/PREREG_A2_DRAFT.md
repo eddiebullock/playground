@@ -159,7 +159,7 @@ The primary contrasts below are the only confirmatory ones. Evidence grades and 
 | P11 (out of the confirmatory family until the dose is verified) | `aperture_wide` minus `aperture_narrow`, all items, CLR of {Interested, Surprised, Afraid} minus CLR of {Unfriendly, Sneaky} | Positive | Lee and Anderson 2017; Lee et al. 2013 | Moderate, mainly one lab | Complex and basic | Same lab. Mapping their sensitivity and discrimination clusters onto EU-Emotion labels comes from the notes, not the paper |
 | P12 | Mean of `shuffle_a`, `shuffle_b` on Happy and Surprised | Acted label falls | Richoz 2024; Bould 2008 | Strong | **BASIC ONLY** | Two sources. Richoz found no dynamic gain at full signal except for these two labels |
 | P13 | Mean of shuffles on Low Intensity items (48 items, 17 actors) | Acted label falls | Ambadar 2005; Bould and Morris 2008; Richoz 2024 | Strong | **BASIC ONLY** | Multiple sources |
-| P14 | `trunc_first_third` minus `trunc_last_third` on Afraid, Surprised family, and on Surprised, Afraid family | Confusable label higher on the early third | Jack 2014 | Moderate, synthetic faces; order detail is a secondary summary | **BASIC ONLY** | One source, full text unread. Check before citing. Afraid and Surprised come from separate actor sets, so tested separately |
+| P14 | `trunc_first_third` minus `trunc_last_third` on Afraid, Surprised family, and on Surprised, Afraid family | Confusable label higher on the early third | Jack 2014 | Moderate, synthetic faces; AU order checked in the main text | **BASIC ONLY** | One source; supplement unread. Main text read 2026-11-07: confusions at t3 of 10, Surprised and Afraid separate at t6, Disgusted and Angry at t7. Its classifiers are cumulative and use reverse-correlated models with time scaled to the animation, so these clip thirds are an analogue, not a replication. Afraid and Surprised come from separate actor sets, so tested separately |
 | P15 | Same contrast on Angry, Disgusted family, and on Disgusted, Angry family | Confusable label higher on the early third | Jack 2014 | As P14 | **BASIC ONLY** | As P14 |
 
 ### No directional prediction: estimated and reported
@@ -244,7 +244,7 @@ These are the implementer's recommendations, not decisions. They bind nothing un
 1. Accept the **[proposed]** thresholds as drafted. Any change must come before any full run.
 2. Run all 243 items on Gemma and Qwen: 28.1 GPU-hours of cell time, about 31 with the 10% allowance. Decide on Molmo after A1. It fails G2 and G4, so it is not eligible as drafted, and including it would need its own amendment.
 3. Accept the blind prefill text. It was chosen by the DECISIONS rule on calibration clips, and changing it now would need a new smoke run and a new `design_sha256`.
-4. Remove P14 and P15 unless the full text of Jack 2014 is obtained and read. Each rests on one unread source with synthetic faces, and the order detail is only a secondary summary. Removing them changes the count of predictions, so any family that includes them needs rechecking before the freeze.
+4. Keep P14 and P15, at their current **BASIC ONLY** and moderate standing. The main text of Jack 2014 was read on 2026-11-07 from the Glasgow repository copy (https://eprints.gla.ac.uk/88928/), and it supports their direction. The supplement was not read. A result here would show the analogue on natural clips, not replicate the paper.
 
 ## Cost
 

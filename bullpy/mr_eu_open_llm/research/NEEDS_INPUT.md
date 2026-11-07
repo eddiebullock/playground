@@ -40,7 +40,7 @@ Form done, per STATE. No remaining question.
 
 **Context.** `research/PREREG_A2_DRAFT.md` lists four open choices, and the agent's recommendations sit under them. They are recommendations only.
 
-**Exact question.** Do you accept each of the four recommendations? In particular, should P14 and P15 be removed, or can you supply the Jack 2014 full text?
+**Exact question.** Do you accept each of the four recommendations? The Jack 2014 main text is now read, and the recommendation is to keep P14 and P15.
 
 **Recommended default.** Hold A2 unfrozen until A1 is read and you have answered.
 
