@@ -283,10 +283,9 @@ def test_confirmatory_statistic_comes_from_recovery(tmp_path):
         an.confirmatory_statistic(path, "x")
 
 
-def test_statistic_rule_prefers_raw_then_residual():
-    assert rec.choose_statistic({"raw": True, "residual": True}) == "raw"
-    assert rec.choose_statistic({"raw": False, "residual": True}) == "residual"
-    assert rec.choose_statistic({"raw": False, "residual": False}) is None
+def test_statistic_is_residual_and_recovery_can_only_withhold_it():
+    assert rec.choose_statistic({"raw": True, "residual": True}) == "residual"
+    assert rec.choose_statistic({"raw": True, "residual": False}) is None
 
 
 def test_manifest_check(tmp_path, monkeypatch):

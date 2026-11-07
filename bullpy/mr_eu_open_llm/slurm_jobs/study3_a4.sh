@@ -14,8 +14,8 @@
 # Amendment A4. See research/PREREG_A4_DRAFT.md. Resumable; shards are by stimulus id, so a
 # failed shard is resubmitted alone. N_SHARDS is required, and each run writes its own file.
 #
-#   Scored, after freezing: A4_FROZEN=1 MODEL=gemma4 N_SHARDS=8 sbatch --array=0-7 slurm_jobs/study3_a4.sh
-#   Timing smoke:           A4_FROZEN=1 MODEL=gemma4 N_SHARDS=8 MAX_CELLS=40 sbatch --array=0 --time=00:30:00 slurm_jobs/study3_a4.sh
+#   Scored, after freezing: A4_FROZEN=1 MODEL=gemma4 N_SHARDS=12 sbatch --array=0-11 slurm_jobs/study3_a4.sh
+#   Timing smoke:           A4_FROZEN=1 MODEL=gemma4 N_SHARDS=12 MAX_CELLS=40 sbatch --array=0 --time=00:30:00 slurm_jobs/study3_a4.sh
 
 set -euo pipefail
 

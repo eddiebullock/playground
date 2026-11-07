@@ -38,19 +38,19 @@ Rendered by `research/scripts/render_au_faces.py`: headless, deterministic, 768 
 
 | Set | Content | Images |
 |---|---|---|
-| `main` | 1,200 configurations per dataset, each on one identity | 4,800 rows |
+| `main` | Every available configuration in each dataset, each on one identity: 4,659, 2,323, 2,318 and 2,325 | 11,625 rows |
 | `replicate` | First 200 of those on a second identity | 800 rows |
 | `one_au` and `neutral` | Each of 33 columns alone at .25, .5 and 1, on 6 identities, plus their neutral faces | 600 rows |
 | `scale_0.75`, `scale_1.25` | 400 configurations, basic_EA and conversational_EA | 1,600 rows |
 | `blind` | First 600 basic_EA configurations, under the blind readout | 600 rows |
 
-That is 8,400 rows and 7,102 unique images. Manifest sha256 `0ae87d06`.
+That is 15,225 rows and 11,761 unique images. Manifest sha256 `2ef1161e`.
 
-**Selection.** Configurations are ranked by a seeded hash of the configuration string, by `a4_stimuli.py`, with no use of responses. The cap of 1,200 per dataset, out of 2,314 to 4,659, is set by cost. Models answer without response noise, and recovery tests whether 1,200 is enough. Face gender comes from those shown to humans with that configuration, by hash.
+**Selection.** All configurations are used, because 1,200 per dataset failed recovery (see Recovery). They are ranked by a seeded hash of the configuration string, by `a4_stimuli.py`, with no use of responses, and that order picks the replicate, scale and blind subsets. Face gender comes from those shown to humans with that configuration, by hash.
 
 **Identity.** Own-group faces, as humans saw: four Western faces (`female_a`, `female_b`, `male_a`, `male_b`) for WC sets, and four East Asian faces (`ea_female` and `ea_male`, each at seeds 0 and 1) for EA sets. Humans saw eight base faces per group, so identity coverage is narrower here, and it is not modelled beyond gender, as in the human fit. The East Asian faces are MakeHuman's macro sliders set to Asian, plus a seeded jitter for the second face. They are not based on East Asian people, and they are not independent of the Western meshes.
 
-**Storage.** The cluster is near its file quota, at 995,969 of 1,048,576 files on 2026-11-07. So images are never loose files. They are rendered into 40 tar files, built aside and moved into place, about 1.4 GB in all, and read from the tars at run time. Output is one cells file per model and shard. Assets travel as one archive, `data/au_render_assets.tgz`, unpacked to node-local storage in each task and never onto RDS, since they hold 2,590 files. Nothing rendered enters git: FACSHuman's targets are LGPL-3.0 with no output clause, so no image is published.
+**Storage.** The cluster is near its file quota, at 995,969 of 1,048,576 files on 2026-11-07. So images are never loose files. They are rendered into 40 tar files, built aside and moved into place, about 2.3 GB in all, and read from the tars at run time. Output is one cells file per model and shard. Assets travel as one archive, `data/au_render_assets.tgz`, unpacked to node-local storage in each task and never onto RDS, since they hold 2,590 files. Nothing rendered enters git: FACSHuman's targets are LGPL-3.0 with no output clause, so no image is published.
 
 **Approximations.** AU22 and AU27 are approximated in our renders (`research/notes_au_render.md`). That is our local finding: FACSHuman's own Table 9 lists AU22 as usable. The main analysis keeps them, and a sensitivity removes both families. Amplitude maps linearly to target weight, which is an assumption, so the 0.75x and 1.25x sets repeat the fit. At 1.25x amplitudes stop at 1, as the renderer's range requires, so that set compresses large amplitudes.
 
@@ -86,7 +86,7 @@ From `research/theory/causal_feature_alignment.md`: tau(j, k) is the average eff
 
 over options by 25 families. R takes out each cue's component along that matrix's own mean profile across cues. A system that answers every cue with one profile, scaled by salience, can score on raw CFA without any cue-specific agreement, and it has nothing left after R.
 
-**Which is confirmatory, stated before data.** Recovery decides, by a rule in code (`choose_statistic`): raw CFA if it passes every check, otherwise residual CFA if that passes, otherwise A4 has no confirmatory analysis and the analysis refuses to run. The other is secondary. The choice is written into `a4_recovery.json`, and the analysis reads it from there.
+**Which is confirmatory, stated before data.** Residual CFA is confirmatory, and raw CFA is secondary. Raw CFA was tried first and failed recovery on a decision: a false Aligned of up to .33 at 1,200 configurations, and .40 with all of them, on conversational_WC. Residual CFA's failures at 1,200 were of estimation only. If residual CFA fails recovery, the analysis refuses to run. The choice is written into `a4_recovery.json`, and the analysis reads it from there.
 
 For raw CFA, each cue's effects sum to zero across options, so this equals Pearson r over entries. It is reported raw, and over the ceiling times the square root of the model's split-half reliability across stimuli, 20 splits. Corrected values are not used for decisions.
 
@@ -137,7 +137,9 @@ None of these uses a human target. All run per model and task, and missing means
 
 **V1 coverage.** LibreFace covers 17 AUs: 12 with intensity (1, 2, 4, 5, 6, 9, 12, 15, 17, 20, 25, 26), and presence alone for 7, 10, 14, 23 and 24. So at least 8 of 25 families have no readout: AU11, 13, 16, 22, 27, 38, 39 and 43. The denominator is covered pairs only, and those columns are listed as unconfirmed, not as failures. LibreFace is bilateral, so L and R columns read the same output, and laterality is not tested. It was trained on natural faces, so a failure may reflect the detector and not the render; V1 does not separate them. Failing pairs are listed. The earlier MediaPipe check (`research/notes_au_render.md`) is not a substitute, as it reports blendshapes. Missing detector output stops the analysis: it is not read as an Inconclusive.
 
-**Pilot, before the freeze.** Job 40255068, on cclake, with no model: submitted 2026-11-07, result not yet read, because the SSH connection dropped. PENDING.
+**Pilot, before the freeze: passes the rule, weakly.** Job 40260039 on cclake, with no model, read 2026-11-07, `research/reproduction/a4_v1_pilot.csv`. The first job, 40255068, failed because the archive's Mac `._` files were read as meshes, which is fixed. A face was found on all 432 images, and 339 of 432 covered pairs rise, .785 against .70.
+
+**That pass is thin, and it is disclosed.** The rule counts any rise, and most are tiny. Of 96 intensity pairs, 22 rise by at least .5 on LibreFace's 0 to 5 scale, all in AU01, 05, 25 and 26. AU12 at full amplitude reads about .02, so LibreFace does not see the rendered smile, and the same holds for AU04, 06, 09, 15 and 20. V1 therefore shows the renders are monotonic where the detector responds. It does not show that a natural-face detector reads them as those AUs. The threshold was not changed after seeing this.
 
 **V4 limits a known risk.** On A3, Qwen and Molmo chose None of the above on .534 and .863 of cells. If that recurs on avatars, V4 stops a comparison resting on a sliver of probability. Its .90 limit sits only just above Molmo's .863, and it is on mean mass, not modal choice, so V4 is a weak guard: a model near .86 on None passes it.
 
@@ -160,42 +162,45 @@ Reported beside the primary, never replacing it: without AU22 and AU27; without 
 
 Before any run, synthetic observers answer the real 1,200-configuration design through `scripts/a4_analyse.py`, on all four datasets, with `scripts/a4_recovery.py`. Effect sizes are multiples of the human log odds at 0.25, 0.5 and 1. Realism: logit noise of SD 1 per stimulus and option, and a lognormal gain error of log SD 0.5 per AU, standing in for the unknown amplitude mapping. So the observers do not see the cues exactly as humans did.
 
-**First run, recorded and kept.** `research/reproduction/a4_recovery_first_run.json`, sha256 `a0fe98dc`, on basic_EA and conversational_EA: FAIL on one check of 28. Pair-swapped raw CFA on conversational_EA at 0.25x was within .10 of truth in 66% of replicates, against a rule of 90%. That run stands as a failure of that rule.
-
-**Stated before data, after that failure.** Raw CFA's accuracy at conversational 0.25x is withdrawn as a claim, in both conversational datasets. Below R_S of .85, raw CFA is a lower bound. Aligned stands, and the corrected rule decides Not aligned.
-
-**Pass rule, second run** (`RECOVERY` in `scripts/a4_design.py`), applied to each statistic:
+**Pass rule, not changed between the second and third runs** (`RECOVERY` in `scripts/a4_design.py`), applied to each statistic:
 
 - Human-like Aligned in at least 80% of replicates, at 0.5x and 1x.
 - At 1x: half-shared alignment p in at least 80%, Aligned in at least 60%, and different-cues Not aligned in at least 50%.
-- At every strength: false Aligned at most 10% for different-cues, prior-only, generic and salience-profile; prior-only signal at most 10%; Not aligned at most 10% where true CFA is at or above .30, on the boundary observer; and pair-swapped CFA within .10 of truth in at least 90%, except where withdrawn above.
+- At every strength: false Aligned at most 10% for different-cues, prior-only, generic and salience-profile; prior-only signal at most 10%; Not aligned at most 10% where true CFA is at or above .30, on the boundary observer; and pair-swapped CFA within .10 of truth in at least 90%, except where withdrawn below.
 
-New observers: boundary, mixing human weights at .35, and salience-profile, one human mean profile for every cue, scaled by each human cue's size and as strong as the human weights.
+New in the second run: a boundary observer, mixing human weights at .35, and a salience-profile observer, one human mean profile for every cue, scaled by each human cue's size and as strong as the human weights.
 
-**Result: neither statistic passes, so A4 currently has no confirmatory statistic.** `research/reproduction/a4_recovery.json`, sha256 `64d7d1c9`, 100 replicates per cell, 12 strength and dataset cells. By the rule stated above, `confirmatory_statistic` is null, and the analysis refuses to run. This must be resolved before the freeze, not read around.
+**Every attempt, in order. Failed runs are kept.**
 
-| Statistic | Checks passed | What failed |
-|---|---|---|
-| Raw CFA | 63 of 66 | False Aligned on conversational_WC: the salience-profile observer reads Aligned in 28%, 33% and 18% at 0.25x, 0.5x and 1x, with true raw CFA of .38, .33 and .25 |
-| Residual CFA | 62 of 66 | Pair-swapped accuracy, not a decision: within .10 of truth in 76%, 88% and 80% on basic_WC 0.25x, basic_WC 0.5x and basic_EA 0.25x, and 82% on conversational_EA 0.5x. Also low, withdrawn: 62% and 43% at conversational 0.25x |
+| Run | Configurations | Datasets | File, sha256 | Statistic | Checks | Result |
+|---|---|---|---|---|---|---|
+| 1 | 1,200 per dataset | basic_EA, conversational_EA | `a4_recovery_first_run.json`, `a0fe98dc` | Raw | 27 of 28 | FAIL: pair-swapped accuracy on conversational_EA at 0.25x, 66% |
+| 2 | 1,200 per dataset | All four | `a4_recovery_second_run.json`, `64d7d1c9` | Raw | 63 of 66 | FAIL: false Aligned on conversational_WC, up to .33 |
+| 2 | 1,200 per dataset | All four | as above | Residual | 62 of 66 | FAIL: pair-swapped accuracy in 4 cells, 76 to 88% |
+| 3 | All available | All four | `a4_recovery.json`, `69efb5de` | Raw | 62 of 66 | FAIL: false Aligned on conversational_WC and at conversational_EA 0.25x, up to .40 |
+| 3 | All available | All four | as above | Residual | 66 of 66 | **PASS** |
 
-| Rate, all cells unless stated | Raw CFA | Residual CFA |
+**Stated before data, after run 1 and before any model.** Raw accuracy at conversational 0.25x is withdrawn as a claim, in both conversational datasets. Below R_S of .85, raw CFA is a lower bound. Aligned stands, and the corrected rule decides Not aligned.
+
+**That exemption matters to the pass.** It was written for raw CFA after run 1, and it also covers residual CFA in run 3, where accuracy at those two cells is 85% on conversational_WC and 62% on conversational_EA. Without it, residual CFA would pass 64 of 66. So A4 makes no accuracy claim for residual CFA on weak conversational effects, and a decision there rests on the corrected rule.
+
+| Rate, run 3, all cells unless stated | Raw CFA | Residual CFA |
 |---|---|---|
 | Human-like Aligned | 1.0 | 1.0 |
-| Half-shared Aligned at 1x, lowest | .86 | .76 |
-| Different-cues Not aligned at 1x, lowest | .95 | .94 |
-| False Aligned, highest | .33 | .03 |
-| Prior-only signal, highest | .07 | .07 |
-| Not aligned with true CFA at or above .30, highest | .04 | .03 |
+| Half-shared Aligned at 1x, lowest | .87 | .79 |
+| Different-cues Not aligned at 1x, lowest | .95 | .95 |
+| False Aligned, highest | .40 | .03 |
+| Prior-only signal, highest | .08 | .08 |
+| Not aligned with true CFA at or above .30, highest | .01 | .03 |
 
 **Reading.**
 
-- Raw CFA can be fooled. On conversational_WC, a system with no cue-specific agreement reaches Aligned in up to a third of replicates, because a third of human energy there lies along the common profile. So the concern behind residual CFA is real.
-- Residual CFA makes no false Aligned above .03, and its failures are of estimation, not of decisions. It reads low on weak effects, by up to about .21 for human-like on conversational_EA at 0.25x.
-- The pair-swapped truth is a noiseless target with gain error, so low accuracy at weak effects is expected under ridge and noise, and more stimuli would reduce it. That is untested here.
+- Raw CFA can be fooled. On conversational_WC, a system with no cue-specific agreement reaches Aligned in up to .40 of replicates, because about a third of human energy there lies along the common profile. More stimuli do not help, since the error is one of the statistic. So residual CFA is the right primary.
+- Residual CFA makes no false Aligned above .03.
+- Residual CFA reads low on weak effects: at 0.25x, human-like reads .74 against a true .87 on conversational_EA.
 - Recovery assumes additive log-odds observers, independent stimulus noise and the gain error above. It does not model domain shift, so it shows how the analysis behaves, not that a real model will respond this way.
 
-**Demonstration.** Pair-swapped observers have 16 of 25 families swapped in 8 pairs. On natural-like stimuli with paired cues at a constructed r of .9, their outputs correlate .83 to .95 with the human-weighted observer, whereas raw CFA on the randomised design is .42 to .56. So on synthetic data behaviour stays high while CFA falls, which is the case the theory note predicts. The r of .9 is our construction, not a measurement: EU-Emotion's largest cue correlation is .86 on LibreFace, and most are far lower.
+**Demonstration.** Pair-swapped observers have 16 of 25 families swapped in 8 pairs. On natural-like stimuli with paired cues at a constructed r of .9, their outputs correlate .83 to .95 with the human-weighted observer, whereas raw CFA on the randomised design was .42 to .56 in run 2. So on synthetic data behaviour stays high while CFA falls, which is the case the theory note predicts. The r of .9 is our construction, not a measurement: EU-Emotion's largest cue correlation is .86 on LibreFace, and most are far lower.
 
 ## Disclosures
 
@@ -209,11 +214,11 @@ These do not change the rule. They are stated so that a reader can weigh it.
 - **East Asian faces.** Macro sliders plus jitter, so "own-group faces" is approximate for EA sets.
 - **Constructed r of .9** in the demonstration is ours.
 - **Blind CFA** is in different units, with six rows, and is not compared with MCQ CFA.
-- **Recovery** uses 100 bootstrap draws and 6 reliability splits per replicate; the real analysis uses 2,000 and 20.
+- **Recovery** uses 100 bootstrap draws and 6 reliability splits per replicate; the real analysis uses 2,000 and 20. The number of configurations was raised after failures, so the design was tuned on recovery, on synthetic data only.
 - **Bootstrap.** Stimuli only, conditional on the human matrix and on these identities.
 - **Gate B analogue** is on basic_EA only, on 200 configurations for B4.
 - **Citation gaps.** Huynh et al. and Zhang et al. were read only in part, the Huynh wording came through a summarising tool, and Semantic Scholar was down for the check. FACSHuman's Table 9 lists AU22 as usable, so "approximated" is local to our renders. Humans saw eight base faces per group, and models see the same AU configurations, not the same stimuli.
-- **V1** has a denominator of covered pairs, so a pass says nothing about the 8 families without readout, or about laterality.
+- **V1** has a denominator of covered pairs, so a pass says nothing about the 8 families without readout, or about laterality, and most of its rises are tiny.
 
 ## Limits
 
@@ -234,13 +239,13 @@ Figures are upper bounds. No model has run this task, so A3's 1:45 job limit ove
 
 | Part | Cells | Gemma 4, hours | Qwen3-VL, hours |
 |---|---|---|---|
-| Basic MCQ | 25,122 | 20.9 | 20.9 |
-| Conversational MCQ | 16,684 | 10.2 | 10.2 |
-| Blind | 800 | 0.7 | 1.2 |
-| Image-free | 150 | under 0.1 | under 0.1 |
-| **Total per model** | 42,756 | about 32 | about 32 |
+| Basic MCQ | 52,428 | 43.7 | 43.7 |
+| Conversational MCQ | 25,568 | 15.6 | 15.6 |
+| Blind | 850 | 0.7 | 1.2 |
+| Image-free | 100 | under 0.1 | under 0.1 |
+| **Total per model** | 78,946 | about 60 | about 61 |
 
-Eight shards per model at about 4 h, against a 6 h limit, resumable, about 64 GPU-hours for both of 2,765 available. A timing smoke after the freeze replaces these figures. Rendering: 7,102 images at 3.1 s is about 6.1 core-hours, on 40 CPU tasks. This timing comes from the Mac, not the cluster.
+Twelve shards per model at about 5 h, against a 6 h limit, resumable, about 121 GPU-hours for both of 2,765 available. A timing smoke after the freeze replaces these figures. Rendering: 11,761 images at 3.1 s is about 10 core-hours, on 40 CPU tasks. That timing comes from the Mac; V1's cluster job took under 19 minutes for 438 renders with detection.
 
 ## Order
 

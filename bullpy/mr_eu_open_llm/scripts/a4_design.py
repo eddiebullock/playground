@@ -41,8 +41,9 @@ MODELS = ("gemma4", "qwen3vl")  # Holm family. Molmo2 fails G2 and G4, descripti
 DESCRIPTIVE_MODELS = ("molmo2",)
 
 SEED = 20261107
-CONFIGS_PER_DATASET = 1200
-MANIFEST_SHA256 = "0ae87d06d896542bd5dc944ad523c83cf8916463f9de39b3cb4a2f21badb8ac2"
+CONFIGS_PER_DATASET = 100000  # every available configuration
+STATISTIC = "residual"  # confirmatory; raw CFA is secondary. See the draft.
+MANIFEST_SHA256 = "2ef1161e895224d499b360144690a07c5440bb018105e9c2ffc762f68badd2d1"
 BASELINE_STIMULI = 50
 SPLIT_HALF_SPLITS = 20
 REPLICATE_DRAWS = 9999

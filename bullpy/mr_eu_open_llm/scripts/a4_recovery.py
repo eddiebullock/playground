@@ -194,11 +194,8 @@ def verdict(table: Mapping[str, Mapping[str, Mapping[str, Any]]]) -> Dict[str, b
 
 
 def choose_statistic(passed: Mapping[str, bool]) -> Any:
-    """The rule stated before data: raw CFA if it passes, else the residual, else neither."""
-    for statistic in STATISTICS:
-        if passed[statistic]:
-            return statistic
-    return None
+    """The confirmatory statistic is fixed. Recovery can only withhold it."""
+    return d.STATISTIC if passed[d.STATISTIC] else None
 
 
 def build_tasks(manifest: Sequence[Mapping[str, Any]], store, replicates, draws, cue_n, signal_n, splits) -> List[Tuple]:
