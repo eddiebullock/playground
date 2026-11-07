@@ -237,6 +237,15 @@ Family sizes differ, so raw between-family comparison is biased. Within-item cha
 3. Whether blind prefill text is accepted as is. A prompt change needs a new smoke run and a new `design_sha256`.
 4. Confirm Jack 2014 from the full text, or remove P14 and P15.
 
+### Recommendations, awaiting sign-off
+
+These are the implementer's recommendations, not decisions. They bind nothing until reviewed. A1 has not been read, so choice 2 may change.
+
+1. Accept the **[proposed]** thresholds as drafted. Any change must come before any full run.
+2. Run all 243 items on Gemma and Qwen: 28.1 GPU-hours of cell time, about 31 with the 10% allowance. Decide on Molmo after A1. It fails G2 and G4, so it is not eligible as drafted, and including it would need its own amendment.
+3. Accept the blind prefill text. It was chosen by the DECISIONS rule on calibration clips, and changing it now would need a new smoke run and a new `design_sha256`.
+4. Remove P14 and P15 unless the full text of Jack 2014 is obtained and read. Each rests on one unread source with synthetic faces, and the order detail is only a secondary summary. Removing them changes the count of predictions, so any family that includes them needs rechecking before the freeze.
+
 ## Cost
 
 Measured on `smoke_v2`: A100, bfloat16, full forwards on every model, the chosen readout, 3 items. An item has 29 cells: 20 on `single_face`, 7 on `video_face`, 1 each on `single_full` and `legacy_full`.
