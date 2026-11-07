@@ -569,15 +569,26 @@ class Part:
     backface: str = "cull"  # 'cull' or 'interior'
 
 
+def asset_file(folder: Path, suffix: str) -> Path:
+    """First real file of a type. Archives made on a Mac carry "._" companions, which glob sees."""
+    found = sorted(p for p in folder.glob(f"*{suffix}") if not p.name.startswith("."))
+    if not found:
+        raise FileNotFoundError(f"no {suffix} file in {folder}")
+    return found[0]
+
+
 def proxy_part(name: str, folder: Path, texture_path: Optional[Path] = None, **kwargs) -> Part:
-    mhclo = next(folder.glob("*.mhclo"))
+    mhclo = asset_file(folder, ".mhclo")
     clothes = read_mhclo(mhclo)
-    obj = read_obj(next(p for p in sorted(folder.glob("*.obj"))))
+    source = asset_file(folder, ".obj")
+    obj = read_obj(source)
     tris, tri_uv = [], []
     for ids, uv_ids, _ in obj.faces:
         for i in range(1, len(ids) - 1):
             tris.append((ids[0], ids[i], ids[i + 1]))
             tri_uv.append((obj.uvs[uv_ids[0]], obj.uvs[uv_ids[i]], obj.uvs[uv_ids[i + 1]]))
+    if not tris:
+        raise ValueError(f"part {name!r} has no triangles, from {source}")
     if texture_path is None:
         texture_path = folder / read_diffuse_name(folder / clothes.material)
     return Part(

@@ -288,3 +288,19 @@ def test_single_au_validity_on_one_identity(column):
 def test_coverage_targets_exist_on_disk():
     for column in raf.AU_COLS:
         assert raf.au_offsets({column: 1.0}).any()
+
+
+def test_asset_lookup_skips_mac_companion_files(tmp_path):
+    (tmp_path / "._part.obj").write_bytes(b"\x00\x05\x16\x07")
+    (tmp_path / "part.obj").write_text("v 0 0 0\n")
+    assert raf.asset_file(tmp_path, ".obj").name == "part.obj"
+    with pytest.raises(FileNotFoundError, match=".mhclo"):
+        raf.asset_file(tmp_path, ".mhclo")
+
+
+def test_a_part_with_no_triangles_is_named(tmp_path, monkeypatch):
+    (tmp_path / "x.obj").write_text("v 0 0 0\n")
+    (tmp_path / "x.mhclo").write_text("")
+    monkeypatch.setattr(raf, "read_mhclo", lambda path: object())
+    with pytest.raises(ValueError, match="part 'teeth' has no triangles"):
+        raf.proxy_part("teeth", tmp_path)
