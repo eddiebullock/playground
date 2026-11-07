@@ -169,16 +169,31 @@ def test_failed_cells_are_counted_not_used(data):
     assert len(an.Cells(rows).failed) == 1
 
 
+PASSED = {k: True for k in an.GATE_KEYS}
+
+
 def test_verdict_table():
-    row = {"mean_change": -1.0, "direction": -1, "p_maxt": 0.01, "fills_agree": True, "p_maxt_two_sided": 0.02}
-    assert an.verdict(row, True, False) == "matches_prediction"
-    assert an.verdict(row, False, False) == "inconclusive"
-    assert an.verdict({**row, "fills_agree": False, "p_maxt": 0.01}, True, False) == "inconclusive"
-    opposite = {"mean_change": 1.0, "direction": -1, "p_maxt": 0.9, "fills_agree": None, "p_maxt_two_sided": 0.01}
-    assert an.verdict(opposite, True, False) == "opposes_prediction"
-    flat = {"mean_change": 0.0, "direction": -1, "p_maxt": 0.9, "fills_agree": None, "p_maxt_two_sided": 0.9}
-    assert an.verdict(flat, True, True) == "null"
-    assert an.verdict(flat, True, False) == "inconclusive"
+    row = {"mean_change": -1.0, "direction": -1, "p_maxt": 0.01, "p_maxt_two_sided": 0.02, "fills_agree": True}
+    assert an.verdict(row, PASSED, False) == "matches_prediction"
+    assert an.verdict(row, {**PASSED, "gate_b": False}, False) == "inconclusive"
+    assert an.verdict({**row, "fills_agree": False}, PASSED, False) == "inconclusive"
+    opposite = {**row, "mean_change": 1.0, "p_maxt": 0.9}
+    assert an.verdict(opposite, PASSED, False) == "opposes_prediction"
+    flat = {**row, "mean_change": -0.01, "p_maxt": 0.5, "p_maxt_two_sided": 0.6}
+    assert an.verdict(flat, PASSED, True) == "null"
+    assert an.verdict(flat, PASSED, False) == "inconclusive"
+
+
+@pytest.mark.parametrize("gate", an.GATE_KEYS)
+def test_every_gate_is_required_and_missing_means_not_passed(gate):
+    row = {"mean_change": -1.0, "direction": -1, "p_maxt": 0.01, "p_maxt_two_sided": 0.02, "fills_agree": None}
+    assert an.verdict(row, {**PASSED, gate: False}, True) == "inconclusive"
+    assert an.verdict(row, {k: v for k, v in PASSED.items() if k != gate}, True) == "inconclusive"
+
+
+def test_a_significant_contrast_is_never_a_null():
+    row = {"mean_change": -0.01, "direction": -1, "p_maxt": 0.01, "p_maxt_two_sided": 0.02, "fills_agree": False}
+    assert an.verdict(row, PASSED, True) == "inconclusive"
 
 
 def test_equivalence_needs_a_narrow_interval():
@@ -195,6 +210,303 @@ def test_gate_b_passes_a_face_reader_and_fails_a_prior_observer(data):
     assert not bad["B4"] and not bad["pass"]
 
 
+def test_b5_is_not_b4_and_fails_a_prior_observer(data):
+    partners = run_partners(data)
+    free = dict(zip(rec.FAMILIES, np.zeros(21).tolist()))
+    good = an.gate_b(an.Cells(rec.synthetic_rows("human_like", data, 1)), "single_face", partners, free)
+    bad = an.gate_b(an.Cells(rec.synthetic_rows("prior_only", data, 1)), "single_face", partners, free)
+    assert good["B5_mean"] != pytest.approx(good["B4_mean"])
+    assert good["B5_p"] != good["B4_p"] or good["B5_ci"] != good["B4_ci"]
+    assert not bad["B5"]
+
+
+def test_b4_repeats_are_reported_and_do_not_decide_the_gate(data):
+    partners = run_partners(data)
+    free = dict(zip(rec.FAMILIES, np.zeros(21).tolist()))
+    gate = an.gate_b(an.Cells(rec.synthetic_rows("human_like", data, 1)), "single_face", partners, free)
+    assert gate["B4_without_flagged_items"]["n_items"] < gate["B4_against_human_mode"]["n_items"]
+    assert gate["B4_against_human_mode"]["n_items"] <= 243
+
+
+def blind_row(trial, actor, label, condition, scores, route="single_face", **extra):
+    return {
+        "trial_id": trial, "actor": actor, "label": label, "human_modal_label": label, "input_name": route,
+        "condition": condition, "status": "ok", "blind": {"family_logprob": scores, "lexicon_mass": 0.5}, **extra,
+    }
+
+
+def test_p6_takes_the_fill_rule_on_both_sides():
+    """The other fills must replace the eyes mask too, or the rule tests something else."""
+    rows = []
+    for n, (trial, label) in enumerate((("h", "Happy"), ("a", "Afraid"))):
+        target = {"Happy": 0.0, "Afraid": 0.0, "Neutral": 0.0}
+        base = {**target, label: 2.0}
+        for condition in an.CONFIRMATORY[5].a + an.CONFIRMATORY[5].b + ("original",):
+            rows.append(blind_row(trial, "C", label, condition, base))
+        for region in ("mouth", "eyes"):
+            for fill, drop in (("first", 1.0), ("blur", 1.0)):
+                wrong = {"Happy": {"mouth": 0.0, "eyes": drop}, "Afraid": {"mouth": drop, "eyes": 0.0}}[label][region]
+                rows.append(blind_row(trial, "C", label, f"mask_{region}_{fill}", {**target, label: 2.0 - wrong}))
+    p6 = next(c for c in an.CONFIRMATORY if c.id == "P6")
+    assert p6.other_fills_b
+    effect = an.actor_effects(an.Cells(rows), p6, ["C"], a=p6.other_fills[0], b=p6.other_fills_b[0])
+    assert effect[0] == pytest.approx(an.actor_effects(an.Cells(rows), p6, ["C"], a=p6.other_fills[1], b=p6.other_fills_b[1])[0])
+    assert effect[0] * p6.direction < 0
+
+
+def test_contrast_intervals_are_reported(data):
+    actors = actors_of(data)
+    result = an.analyse_route(an.Cells([dict(r, mcq=[]) for r in rec.synthetic_rows("human_like", data, 2)]), "single_face", actors, PASSED, 0.1, flip_args={"max_exact_actors": 0, "draws": 255})
+    row = result["primary_blind_acted"]["P1"]
+    assert row["ci95"][0] < row["mean_change"] < row["ci95"][1]
+
+
+def null_setup(data):
+    """An observer that ignores every edit, with a dose control that moves it on request."""
+    rows = rec.synthetic_rows("prior_only", data, 4)
+    originals = {(r["trial_id"], r["input_name"]): r for r in rows if r["condition"] == "original"}
+    out = []
+    for row in rows:
+        base = originals[(row["trial_id"], row["input_name"])]
+        scores = dict(base["blind"]["family_logprob"])
+        if row["condition"].endswith("_blur") or row["condition"] in ("sf_low", "sf_high", "static_apex"):
+            family = run.OPTION_TO_FAMILY[row["label"]]
+            sign = 1 if hash(row["trial_id"]) % 2 else -1
+            scores[family] += sign * 3.0
+        out.append({**row, "blind": {**row["blind"], "family_logprob": scores}, "edit": {"mask_fraction": 0.05}, "mcq": []})
+    return an.Cells(out)
+
+
+def test_null_needs_all_six_conditions_and_a_cue_with_a_joint_ablation(data):
+    cells = null_setup(data)
+    actors = actors_of(data)
+    tokens = {t: 2000.0 for t in cells.items}
+    result = an.analyse_route(cells, "single_face", actors, PASSED, 0.1, frame_tokens=tokens, flip_args={"max_exact_actors": 0, "draws": 255})
+    rows = result["primary_blind_acted"]
+    assert rows["P1"]["null_rule"]["null_ok"] and rows["P1"]["verdict"] == "null"
+    for name in ("P5", "P6", "P9", "P10"):
+        assert not rows[name]["null_rule"]["can_reach_null"] and rows[name]["verdict"] == "inconclusive"
+    video = an.analyse_route(cells, "video_face", actors, PASSED, 0.1, flip_args={"max_exact_actors": 0, "draws": 255})
+    assert all(r["verdict"] == "inconclusive" for r in video["primary_blind_acted"].values())
+
+
+def test_each_null_condition_blocks_on_its_own(data):
+    cells = null_setup(data)
+    actors = actors_of(data)
+    tokens = {t: 2000.0 for t in cells.items}
+    p1 = an.CONFIRMATORY[0]
+    row = {"mean_change": 0.0, "ci95": [-0.01, 0.01], "null_equivalence": True}
+    args = (cells, p1, row, actors)
+    assert an.null_conditions(*args, PASSED, 0.1, tokens)["null_ok"]
+    assert not an.null_conditions(*args, {**PASSED, "gate_b": False}, 0.1, tokens)["c1_rq0_gates_gate_b"]
+    assert not an.null_conditions(*args, {**PASSED, "delivery": False}, 0.1, tokens)["c2_delivery_and_region"]
+    assert not an.null_conditions(*args, PASSED, 0.1, {t: 1.0 for t in tokens})["c2_delivery_and_region"]
+    assert not an.null_conditions(*args, PASSED, 0.1, None)["c2_delivery_and_region"]
+    assert not an.null_conditions(*args, PASSED, 50.0, tokens)["c3_dose"]
+    assert not an.null_conditions(*args, PASSED, None, tokens)["null_ok"]
+    assert not an.null_conditions(cells, p1, {**row, "null_equivalence": False}, actors, PASSED, 0.1, tokens)["c5_equivalence"]
+    assert not an.null_conditions(cells, p1, {**row, "ci95": None}, actors, PASSED, 0.1, tokens)["c6_divergence_reported"]
+    joint_moves = an.Cells([
+        {**r, "blind": {**r["blind"], "family_logprob": {**r["blind"]["family_logprob"], "Happy": r["blind"]["family_logprob"]["Happy"] - 5}}}
+        if r["condition"] == "mask_eyesmouth_neutral" else r
+        for r in cells.rows
+    ])
+    assert not an.null_conditions(joint_moves, p1, row, actors, PASSED, 0.1, tokens)["c4_joint_ablation"]
+
+
+def test_sensitivity_filters_remove_the_named_cells():
+    keep = {"edit": {"fill": "neutral", "align_flagged": False, "neutral_donor": {"self": False}}}
+    assert an.align_flagged({"edit": {"align_flagged": True}})
+    assert an.donor_is_sent_frame({"edit": {"donor_is_sent_frame": True}})
+    assert an.own_neutral_donor({"edit": {"neutral_donor": {"self": True}}})
+    for check in (an.align_flagged, an.donor_is_sent_frame, an.own_neutral_donor):
+        assert not check(keep) and not check({"status": "failed"})
+    scores = {"Happy": 0.0, "Neutral": 0.0}
+    rows = [blind_row("t", "A", "Happy", "original", scores), blind_row("t", "A", "Happy", "mask_mouth_neutral", scores, edit={"align_flagged": True})]
+    assert ("t", "single_face", "mask_mouth_neutral") not in an.Cells(rows).without(an.align_flagged).ok
+
+
+def test_smoke_items_are_hardcoded_and_exist(data):
+    ids = {i["trial_id"] for i in data}
+    assert len(an.SMOKE_ITEMS) == 3 and set(an.SMOKE_ITEMS) <= ids
+
+
+def test_canonical_word_replaces_the_family_sum():
+    words = run.lexicon_words()
+    logprobs = [-9.0] * len(words)
+    logprobs[words.index(("Happy", "happy"))] = -1.0
+    logprobs[words.index(("Happy", "joy"))] = -0.5
+    row = {"blind": {"word_logprob": logprobs, "family_logprob": {"Happy": -0.2}}}
+    assert an.canonical_rows([row])[0]["blind"]["family_logprob"]["Happy"] == -1.0
+    assert an.canonical_rows([{"status": "failed"}])[0] == {"status": "failed"}
+
+
+def test_token_floor_and_frame_tokens():
+    geometry = {
+        "small": {"face_box": [0, 0, 400, 400], "face_width_px": 100.0, "width": 800, "height": 400},
+        "large": {"face_box": [0, 0, 400, 400], "face_width_px": 300.0, "width": 800, "height": 400},
+    }
+    items = {"small": {}, "large": {}, "absent": {}}
+    assert sorted(an.below_token_floor(items, 16.0, geometry)) == ["absent", "small"]
+    assert len(an.below_token_floor(items, None, geometry)) == 3
+    assert an.frame_tokens_by_clip(items, 16.0, geometry)["small"] == pytest.approx(16.0**2 * 2)
+
+
+def test_rq0_follows_the_a1_and_a3_table():
+    assert an.rq0_status(True, True, "video_face")
+    assert an.rq0_status(False, True, "single_face")
+    assert not an.rq0_status(False, True, "video_face")
+    assert not an.rq0_status(True, False, "single_face")
+    assert not an.rq0_status(None, True, "single_face")
+
+
+def test_outside_gates_read_the_files_and_missing_means_not_passed(tmp_path):
+    source = ROOT / "research/reproduction"
+    assert an.outside_gates(source, "molmo2", "single_face")["g2_g4"] is False
+    gemma = an.outside_gates(source, "gemma4", "single_face")
+    assert gemma["g2_g4"] is True and gemma["delivery_file"] is True
+    assert an.outside_gates(tmp_path, "gemma4", "single_face") == {
+        "rq0": False, "a1": None, "a3": None, "g2_g4": False, "delivery_file": False,
+    }
+
+
+DELIVERED = {
+    "gate_2_every_frame_changes_output": True,
+    "gate_3_logged_indices_are_the_frames_sent": True,
+    "gate_4_ids_unchanged_within_clip": True,
+    "pixels_change_under_shuffle": True,
+}
+
+
+def test_delivery_is_read_from_every_shard_and_gates_order():
+    good = {"delivery": [{"video_face": DELIVERED}]}
+    assert an.delivery_passed([good, good], "video_face")
+    assert not an.delivery_passed([], "video_face")
+    assert not an.delivery_passed([good, {"delivery": [{"video_face": {"failed": "x"}}]}], "video_face")
+    wrong_order = {"delivery": [{"video_face": {**DELIVERED, "pixels_arrive_in_sent_order": False}}]}
+    assert not an.delivery_passed([good, wrong_order], "video_face")
+    stuck = {"delivery": [{"video_face": {**DELIVERED, "pixels_change_under_shuffle": False}}]}
+    assert not an.delivery_passed([stuck], "video_face")
+    unchecked = {k: v for k, v in DELIVERED.items() if k != "pixels_change_under_shuffle"}
+    assert not an.delivery_passed([{"delivery": [{"video_face": unchecked}]}], "video_face")
+
+
+def test_sham_must_send_the_same_pixels():
+    scores = {"Happy": 0.0}
+    same = [blind_row("t", "A", "Happy", c, scores, media_sha256=["x"]) for c in ("original", "sham_self_fill")]
+    assert an.sham_passed(an.Cells(same), "single_face")
+    differ = [same[0], {**same[1], "media_sha256": ["y"]}]
+    assert not an.sham_passed(an.Cells(differ), "single_face")
+    assert not an.sham_passed(an.Cells(same[:1]), "single_face")
+    assert an.sham_passed(an.Cells(same[:1]), "video_face")
+
+
+def test_descriptive_tables_flip_rates_and_failures(data):
+    rows = rec.synthetic_rows("human_like", data, 5)
+    rows[0] = {**rows[0], "status": "failed", "reason": "eye_closed"}
+    cells = an.Cells(rows)
+    actors = actors_of(data)
+    table = an.descriptive_changes(cells, "single_face", actors)
+    assert {"eye_crop", "eye_window"} <= set(table) and "original" not in table
+    assert set(an.BASIC_LABELS) <= set(table["eye_crop"]) and {"basic", "complex"} <= set(table["eye_crop"])
+    assert {"reverse", "static_apex", "shuffle_a"} <= set(an.descriptive_changes(cells, "video_face", actors))
+    assert 0 <= an.flip_rates(cells, "video_face")["reverse"]["flip_rate"] <= 1
+    assert 0 <= an.shuffle_nuisance(cells) <= 1
+    assert sum(an.failure_table(cells).values()) == 1
+
+
+def shard_files(tmp_path, data, hash_value="h", n_shards=3, drop=None, duplicate=False):
+    rows = [dict(r, design_sha256=hash_value) for r in rec.synthetic_rows("human_like", data, 6) if r["input_name"] == "single_face"]
+    trials = sorted({r["trial_id"] for r in rows})
+    cells, reports = [], []
+    for shard in range(n_shards):
+        part = [r for r in rows if trials.index(r["trial_id"]) % n_shards == shard]
+        if drop is not None and shard == drop:
+            continue
+        if duplicate and shard == 0:
+            part = part + part[:1]
+        path = tmp_path / f"cells_{shard}.jsonl"
+        path.write_text("".join(json.dumps(r) + "\n" for r in part))
+        report = tmp_path / f"run_{shard}.json"
+        report.write_text(json.dumps({"model": "gemma4", "smoke": False, "design_sha256": hash_value, "shard": shard, "n_shards": n_shards}))
+        cells.append(path)
+        reports.append(report)
+    return cells, reports
+
+
+def test_all_shards_load_and_any_gap_is_refused(tmp_path, data):
+    cells, reports = shard_files(tmp_path, data)
+    rows, loaded = an.load_shards(cells, reports, "gemma4", "h")
+    assert len({r["trial_id"] for r in rows}) == 243 and len(loaded) == 3
+    with pytest.raises(SystemExit, match="hashes"):
+        an.load_shards(cells, reports, "gemma4", "other")
+    with pytest.raises(SystemExit, match="full run"):
+        an.load_shards(cells, reports, "qwen3vl", "h")
+    with pytest.raises(SystemExit, match="Expected 99"):
+        an.load_shards(cells, reports, "gemma4", "h", n_items=99)
+    gap, gap_reports = shard_files(tmp_path, data, drop=1)
+    with pytest.raises(SystemExit, match="complete set"):
+        an.load_shards(gap, gap_reports, "gemma4", "h")
+    twice, twice_reports = shard_files(tmp_path, data, duplicate=True)
+    with pytest.raises(SystemExit, match="Duplicate"):
+        an.load_shards(twice, twice_reports, "gemma4", "h")
+
+
+def test_a_lost_cell_is_refused(tmp_path, data):
+    cells, reports = shard_files(tmp_path, data)
+    lines = cells[0].read_text().splitlines()
+    cells[0].write_text("\n".join(lines[1:]) + "\n")
+    with pytest.raises(SystemExit, match="missing"):
+        an.load_shards(cells, reports, "gemma4", "h")
+
+
+def test_analysis_runs_end_to_end_on_three_shards(tmp_path, data, monkeypatch):
+    """Every output section, from shard files, on made-up scores."""
+    rows = rec.synthetic_rows("human_like", data, 7)
+    rows = [r for r in rows if r["input_name"] in ("single_face", "video_face")]
+    words = run.lexicon_words()
+    design = run.design_hash()
+    trials = sorted({r["trial_id"] for r in rows})
+    for row in rows:
+        row.update({
+            "design_sha256": design,
+            "mcq": [],
+            "media_sha256": ["same"],
+            "edit": {"mask_fraction": 0.05},
+            "position": 0,
+        })
+        row["blind"]["word_logprob"] = [row["blind"]["family_logprob"][f] for f, _ in words]
+    delivery = {r: {**DELIVERED, "repeat_forward_max_abs": 0.0, "tokens_across_view": 48.0} for r in ("single_face", "video_face")}
+    free = dict(zip(rec.FAMILIES, np.zeros(21).tolist()))
+    baselines = [{"input_name": r, "condition": "image_free", "family_logprob": free} for r in delivery]
+    cells, reports = [], []
+    for shard in range(3):
+        cell = tmp_path / f"cells_{shard}.jsonl"
+        cell.write_text("".join(json.dumps(r) + "\n" for r in rows if trials.index(r["trial_id"]) % 3 == shard))
+        report = tmp_path / f"run_{shard}.json"
+        report.write_text(json.dumps({"model": "gemma4", "smoke": False, "design_sha256": design, "shard": shard, "n_shards": 3, "delivery": [delivery], "baselines": baselines}))
+        cells.append(str(cell))
+        reports.append(str(report))
+    geometry = tmp_path / "geometry.json"
+    geometry.write_text(json.dumps({"items": {t: {"face_box": [0, 0, 400, 400], "face_width_px": 200.0, "width": 800, "height": 400} for t in trials}}))
+    monkeypatch.setattr(run, "check_geometry", lambda path: None)
+    out = tmp_path / "out.json"
+    monkeypatch.setattr(sys, "argv", [
+        "x", "--model", "gemma4", "--cells", *cells, "--run_report", *reports, "--geometry", str(geometry),
+        "--reproduction", str(tmp_path), "--output", str(out), "--a2_frozen",
+    ])
+    an.main()
+    result = json.loads(out.read_text())
+    assert result["design_sha256"] == design
+    face = result["single_face"]
+    assert set(face["sensitivity"]) == {
+        "without_smoke_items", "without_weak_labels", "without_mode_not_target", "clips_at_8_tokens_or_more",
+        "without_align_flagged", "without_donor_is_sent_frame", "without_own_neutral_donor", "canonical_word_only",
+    }
+    assert face["gates"]["rq0"] is False  # no RQ0 files here, so every verdict is inconclusive
+    assert all(r["verdict"] == "inconclusive" for r in face["results"]["primary_blind_acted"].values())
+
+
 def run_partners(data):
     from paper_v2.option_score import vision_mismatch_partners
 
@@ -204,7 +516,7 @@ def run_partners(data):
 
 
 def test_analysis_refuses_until_frozen(monkeypatch, tmp_path):
-    monkeypatch.setattr(sys, "argv", ["x", "--cells", "a", "--run_report", "b", "--output", str(tmp_path / "o")])
+    monkeypatch.setattr(sys, "argv", ["x", "--model", "gemma4", "--cells", "a", "--run_report", "b", "--output", str(tmp_path / "o")])
     with pytest.raises(SystemExit, match="not frozen"):
         an.main()
 
