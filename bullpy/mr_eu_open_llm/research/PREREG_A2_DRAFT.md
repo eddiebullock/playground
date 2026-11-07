@@ -1,6 +1,12 @@
 # DRAFT amendment A2: blind readout gate and stimulus interventions
 
-**Status: DRAFT. Not frozen, not preregistered, not part of `research/PREREGISTRATION.md`.** Nothing here binds until it is committed and tagged before any full run. Choices the user accepted are recorded under Settled choices.
+**Status: FROZEN 2026-11-07, tag `a2-freeze`, before any A1 rotation result was read and before any full intervention run. Later changes are dated deviations, appended below. The filename keeps "DRAFT" so that references in the code stay valid.**
+
+Frozen `design_sha256`: `0ae22118d3b2690c581595890b9bb8b904e1f7860f37be9ac909f925b7058de7`.
+
+Frozen code, sha256: `scripts/stimulus_design.py` `89d256c1072e0768fc747294553c5710adaf42184a175866d7bd75bcc6104978`; `scripts/stimulus_interventions.py` `93c601eb42d6700d4f0fc8ba72317ed5c2e354105d57fcac611c59660125deb3`; `scripts/run_stimulus_interventions.py` `f7880c94e9671cc294cd4eaeece2108d7cd1d7a4c7e6f9e30a1c495964e6cd82`; `scripts/analyse_stimulus_interventions.py` `aba4f533daad6210e87f7bb4e68fc4627805cb4dfd9d9308df734fada4edc8b1`; `scripts/recovery_stimulus_interventions.py` `d0c8bf0d634101179c5feacb33cbacc341f998295b820214c008355285ed382b`; `slurm_jobs/study3_stimulus_interventions.sh` `1c8d22ea637abedd3a3c2332331639c7e33a7e7ed9cb2e741335d17ce138eec5`.
+
+**What was known at the freeze.** No A1 result. The A3 result was known: the draft was written before it, but the audit corrections of 2026-11-07 came after it, and A3's summary is hashed into the design. The vision gates and the CFA spectra were also known. Recovery was rerun on the frozen analysis: 100 replicates, all five observers pass, unchanged.
 
 **Written:** 2026-11-04, before any rotation result was seen and before any full intervention run.
 **Depends on:** RQ0 and gates G2 to G4, per model. RQ0 is read through the frozen A1 and A3 table: Pass on both admits both routes; Fail on A1 with Pass on A3 admits `single_face` only, as that table says to use it from there; any other outcome, or a missing result, admits neither. No full run starts until these pass for that model.
