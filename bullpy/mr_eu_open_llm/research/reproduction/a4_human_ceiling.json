@@ -45,19 +45,23 @@
  "human_energy": {
   "basic_WC": {
    "AU22_AU27_share": 0.1091,
-   "common_profile_share": 0.2764
+   "common_profile_share": 0.2764,
+   "confirmed_share_of_residual": 0.139
   },
   "basic_EA": {
    "AU22_AU27_share": 0.1187,
-   "common_profile_share": 0.2634
+   "common_profile_share": 0.2634,
+   "confirmed_share_of_residual": 0.1334
   },
   "conversational_WC": {
    "AU22_AU27_share": 0.1831,
-   "common_profile_share": 0.3242
+   "common_profile_share": 0.3242,
+   "confirmed_share_of_residual": 0.0894
   },
   "conversational_EA": {
    "AU22_AU27_share": 0.1029,
-   "common_profile_share": 0.3535
+   "common_profile_share": 0.3535,
+   "confirmed_share_of_residual": 0.1958
   }
  }
 }

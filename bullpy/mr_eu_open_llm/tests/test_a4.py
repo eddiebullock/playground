@@ -461,3 +461,44 @@ def test_blind_gate_needs_b3():
             {"stim_id": "a", "readout": "blind_image_free", "status": "ok", "family_logprob": dict.fromkeys(families, -1.0)}]
     assert an.blind_image_rms(rows, families) > 1
     assert an.blind_image_rms(rows[:1], families) is None
+
+
+def faces_design(n=200, signal=0.25, identity_sd=0.5, seed=0):
+    """Same configurations on two faces, half each way round, with face offsets on the logits."""
+    rng = np.random.default_rng(seed)
+    W = rng.normal(size=(5, 33)) * 0.8
+    W -= W.mean(axis=0)
+    X = rng.choice((0.0, 0.5, 1.0), size=(n, 33), p=(0.85, 0.1, 0.05))
+    offset = {f: rng.normal(0, identity_sd, 5) for f in ("a", "b")}
+    respond = lambda face, m: rec.respond(m, offset[face], X, np.zeros(n), np.random.default_rng(1), 0.0)  # noqa: E731
+    flip = np.arange(n) % 2 == 0
+    pa, pb = respond("a", signal * W), respond("b", signal * W)
+    first, second = np.where(flip[:, None], pa, pb), np.where(flip[:, None], pb, pa)
+    groups = [("F", "a", "b") if x else ("F", "b", "a") for x in flip]
+    return first, second, groups
+
+
+def test_v3_passes_at_quarter_signal_with_identity_noise():
+    first, second, groups = faces_design()
+    out = an.replicate_check(first, second, groups, np.random.default_rng(0))
+    assert out["p"] < d.V_RULES["replicate_p"] and out["delta_js"] > 0
+
+
+def test_v3_mismatch_never_lands_on_the_same_face():
+    # With no AU signal, only faces differ. An unordered group would pair a face with itself,
+    # and a same-face mismatch would look closer than the true pair, or further; the ordered
+    # group keeps the difference at exactly zero.
+    first, second, groups = faces_design(signal=0.0)
+    out = an.replicate_check(first, second, groups, np.random.default_rng(0))
+    assert out["p"] == 1.0
+    assert out["delta_js"] == pytest.approx(0)
+
+
+def test_sensitivities_carry_both_statistics():
+    rng = np.random.default_rng(0)
+    human = rng.normal(size=(7, 25))
+    human -= human.mean(axis=0)
+    out = an.sensitivities(human + 0.1 * rng.normal(size=human.shape), human)
+    assert set(out) == {"without_AU22_AU27", "without_other", "flagged_families", "confirmed_families"}
+    assert all(set(v) == {"raw", "residual"} for v in out.values())
+    assert out["flagged_families"]["residual"] > 0.8

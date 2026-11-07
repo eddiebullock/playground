@@ -182,14 +182,25 @@ def estimate(P, X_au, gender, lam, human, *, rng, cue_n=d.CUE_PERMUTATIONS, sign
     return out
 
 
+def family_columns(names: Sequence[str]) -> List[int]:
+    return [j for j, f in enumerate(FAMILIES) if f in names]
+
+
 def keep_families(tau: np.ndarray, drop: Sequence[str]) -> np.ndarray:
     return tau[:, [j for j, f in enumerate(FAMILIES) if f not in drop]]
 
 
-def sensitivities(tau: np.ndarray, human: np.ndarray) -> Dict[str, float]:
-    return {"without_AU22_AU27": cosine(keep_families(tau, d.APPROXIMATED_FAMILIES),
-                                        keep_families(human, d.APPROXIMATED_FAMILIES)),
-            "without_other": cosine(tau[:-1], human[:-1])}
+def sensitivities(tau: np.ndarray, human: np.ndarray) -> Dict[str, Dict[str, float]]:
+    """Each subset on both statistics. The residual takes the profile from the full matrix."""
+    flagged = [f for f in FAMILIES if f not in d.CONFIRMED_FAMILIES]
+    plain_tau, plain_human = remove_common(tau), remove_common(human)
+    pair = lambda a, b: {"raw": cosine(a(tau), a(human)), "residual": cosine(b(plain_tau), b(plain_human))}  # noqa: E731
+    columns = lambda names: (lambda m: m[:, family_columns(names)])  # noqa: E731
+    without = lambda m: keep_families(m, d.APPROXIMATED_FAMILIES)  # noqa: E731
+    no_other = lambda m: m[:-1]  # noqa: E731
+    return {"without_AU22_AU27": pair(without, without), "without_other": pair(no_other, no_other),
+            "flagged_families": pair(columns(flagged), columns(flagged)),
+            "confirmed_families": pair(columns(d.CONFIRMED_FAMILIES), columns(d.CONFIRMED_FAMILIES))}
 
 
 def direct_effects(responses: Mapping[str, np.ndarray], rows: Sequence[Mapping[str, Any]]) -> Tuple[np.ndarray, List[float]]:
@@ -379,8 +390,11 @@ def human_energy(store: Mapping[str, Any]) -> Dict[str, Any]:
         human = human_matrix(store, dataset)[0]
         total = float(np.sum(human**2))
         held = [j for j, f in enumerate(FAMILIES) if f in d.APPROXIMATED_FAMILIES]
+        plain = remove_common(human)
+        confirmed = family_columns(d.CONFIRMED_FAMILIES)
         out[dataset] = {"AU22_AU27_share": round(float(np.sum(human[:, held] ** 2)) / total, 4),
-                        "common_profile_share": round(1 - float(np.sum(remove_common(human) ** 2)) / total, 4)}
+                        "common_profile_share": round(1 - float(np.sum(plain**2)) / total, 4),
+                        "confirmed_share_of_residual": round(float(np.sum(plain[:, confirmed] ** 2) / np.sum(plain**2)), 4)}
     return out
 
 
@@ -395,7 +409,7 @@ def replicate_pairs(responses, wanted, manifest_rows, dataset) -> Tuple[np.ndarr
     if not usable:
         return np.empty((0, 0)), np.empty((0, 0)), []
     return (np.vstack([v["main"] for v in usable]), np.vstack([v["replicate"] for v in usable]),
-            [(v["gender"], *sorted((v["face"], v["other"]))) for v in usable])
+            [(v["gender"], v["face"], v["other"]) for v in usable])
 
 
 def analyse_dataset(rows, manifest_rows, dataset, store, ceiling, seed=d.SEED, **kw) -> Dict[str, Any]:
@@ -503,13 +517,14 @@ def blind_summary(rows, manifest_rows, store) -> Dict[str, Any]:
     pairs = {}
     for r in manifest_rows:
         if r["dataset"] == d.BLIND_DATASET and r["set"] in ("main", "replicate") and r["stim_id"] in blind:
-            entry = pairs.setdefault(r["cfg"], {"gender": r["gender"], "face": []})
+            entry = pairs.setdefault(r["cfg"], {"gender": r["gender"]})
             entry[r["set"]] = softmax([blind[r["stim_id"]]["family_logprob"][f] for f in families])
-            entry["face"].append((r["identity"], r["seed"]))
+            entry[f"{r['set']}_face"] = (r["identity"], r["seed"])
     usable = [v for _k, v in sorted(pairs.items()) if "main" in v and "replicate" in v]
+    groups = [(v["gender"], v["main_face"], v["replicate_face"]) for v in usable]
     rng = np.random.default_rng(d.SEED)
     check = (replicate_check(np.vstack([v["main"] for v in usable]), np.vstack([v["replicate"] for v in usable]),
-                             [(v["gender"], *sorted(v["face"])) for v in usable], rng) if len(usable) > 1 else {})
+                             groups, rng) if len(usable) > 1 else {})
     repeat = [r.get("repeat_change") for r in blind.values() if r.get("repeat_change") is not None]
     rms = blind_image_rms(rows, families)
     gate = {"b1_repeat": bool(repeat) and max(repeat) <= d.B_RULES["repeat"],
@@ -533,10 +548,14 @@ def scale_summary(rows, manifest_rows, store) -> Dict[str, float]:
             base = [main[r["cfg"]] for r in chosen if main[r["cfg"]]["stim_id"] in responses]
             if chosen:
                 ids, X_au, gender = design(chosen)
-                out[f"{dataset}_{scale}x"] = cosine(fit_tau(np.vstack([responses[s] for s in ids]), X_au, gender, lam), human)
+                tau = fit_tau(np.vstack([responses[s] for s in ids]), X_au, gender, lam)
+                out[f"{dataset}_{scale}x"] = cosine(tau, human)
+                out[f"{dataset}_{scale}x_residual"] = cosine(remove_common(tau), remove_common(human))
             if base and f"{dataset}_1x_same_configs" not in out:
                 ids, X_au, gender = design(base)
-                out[f"{dataset}_1x_same_configs"] = cosine(fit_tau(np.vstack([responses[s] for s in ids]), X_au, gender, lam), human)
+                tau = fit_tau(np.vstack([responses[s] for s in ids]), X_au, gender, lam)
+                out[f"{dataset}_1x_same_configs"] = cosine(tau, human)
+                out[f"{dataset}_1x_same_configs_residual"] = cosine(remove_common(tau), remove_common(human))
     return out
 
 
@@ -629,7 +648,9 @@ def main() -> None:
             P = np.vstack([responses[r["stim_id"]] for r in chosen])
             entry["behaviour"] = behaviour_metrics(P, np.vstack([human_table[r["cfg"]] for r in chosen]))
             direct, dose = direct_effects(responses, manifest)
-            entry["direct_cfa"], entry["direct_dose"] = cosine(direct, human_matrix(store, dataset)[0]), dose
+            target = human_matrix(store, dataset)[0]
+            entry["direct_cfa"], entry["direct_dose"] = cosine(direct, target), dose
+            entry["direct_cfa_residual"] = cosine(remove_common(direct), remove_common(target))
             given = recorded.get(model, {})
             gates[model] = {"rq0": rq0_gate(given), "g2_g4": given.get("g2_g4") is True,
                             **validity_gate(P, entry["replicate"], image_rms(cells[model], task), detector)}

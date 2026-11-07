@@ -67,6 +67,8 @@ BLIND_FAMILY = {"anger": "Angry", "disgust": "Disgusted", "fear": "Afraid", "hap
                 "sadness": "Sad", "surprise": "Surprised"}
 
 APPROXIMATED_FAMILIES = ("AU22", "AU27")
+# The only families V1 shows a detector reading: a flag, not an exclusion. Others are flagged.
+CONFIRMED_FAMILIES = ("AU01", "AU05", "AU25", "AU26")
 ALPHA = 0.05
 SESOI_CFA = 0.30
 MAX_LOST_SHARE = 0.05

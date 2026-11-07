@@ -114,6 +114,8 @@ For raw CFA, each cue's effects sum to zero across options, so this equals Pears
 | **Not aligned** | All gates; signal p < .05; CI upper bound divided by the square root of R_S below .30, where R_S is the model's split-half reliability across stimuli on that statistic |
 | **Inconclusive** | Anything else, including any failed or missing gate |
 
+**Wording.** Not aligned is always written "not aligned on these renders", since most families are unconfirmed by a detector and the avatars are a new stimulus set.
+
 **Null rule.** Not aligned is the null, and it requires the model to be shown to respond to AUs (signal), the gates, and the equivalence bound after disattenuation. A model with no signal cannot be Not aligned: it is Inconclusive, since nothing shows that the cues were delivered. A missing or non-positive R_S cannot support Not aligned.
 
 **Asymmetric rule.** Aligned uses raw values and Not aligned uses disattenuated ones. That is deliberate: noise can only lower a cosine, so it cannot create Aligned, whereas it could create a false null. The rule therefore favours neither claim by the same margin, and Aligned can be reached at a CFA where the interval is wide.
@@ -132,14 +134,16 @@ None of these uses a human target. All run per model and task, and missing means
 |---|---|
 | V1 Detector | Across pairs of covered column and identity in the one-AU set, at least 70% have detected output rising across .25, .5 and 1 |
 | V2 Image dependence | Mean RMS change in option log probability, render against pixels removed, at least 0.25 nats, on 50 stimuli |
-| V3 Configuration carries | Output closer for one configuration on two identities than for a mismatch, on the JS divergence, sign-flip over 200 configurations, one-sided p < .01. Mismatches are drawn within gender and identity pair, so face differences cannot pass for configuration. This is the real against mismatch delta, with no human target |
+| V3 Configuration carries | Output closer for one configuration on two identities than for a mismatch, on the JS divergence, sign-flip over 200 configurations, one-sided p < .01. Mismatches are drawn within gender and ordered identity pair, so each compares the same two faces and face differences cannot pass for configuration. This is the real against mismatch delta, with no human target |
 | V4 Domain limit | Mean mass on None of the above at most .90, and on any option at most .95 |
 
 **V1 coverage.** LibreFace covers 17 AUs: 12 with intensity (1, 2, 4, 5, 6, 9, 12, 15, 17, 20, 25, 26), and presence alone for 7, 10, 14, 23 and 24. So at least 8 of 25 families have no readout: AU11, 13, 16, 22, 27, 38, 39 and 43. The denominator is covered pairs only, and those columns are listed as unconfirmed, not as failures. LibreFace is bilateral, so L and R columns read the same output, and laterality is not tested. It was trained on natural faces, so a failure may reflect the detector and not the render; V1 does not separate them. Failing pairs are listed. The earlier MediaPipe check (`research/notes_au_render.md`) is not a substitute, as it reports blendshapes. Missing detector output stops the analysis: it is not read as an Inconclusive.
 
-**Pilot, before the freeze: passes the rule, weakly.** Job 40260039 on cclake, with no model, read 2026-11-07, `research/reproduction/a4_v1_pilot.csv`. The first job, 40255068, failed because the archive's Mac `._` files were read as meshes, which is fixed. A face was found on all 432 images, and 339 of 432 covered pairs rise, .785 against .70.
+**Pilot, before the freeze: passes the rule, weakly.** Job 40260039 on cclake, with no model, read 2026-11-07, `research/reproduction/a4_v1_pilot.csv`. The first job, 40255068, failed because the archive's Mac `._` files were read as meshes, which is fixed. A face was found on all 432 images, and 113 of 144 covered pairs of column and identity rise, .785 against .70.
 
-**That pass is thin, and it is disclosed.** The rule counts any rise, and most are tiny. Of 96 intensity pairs, 22 rise by at least .5 on LibreFace's 0 to 5 scale, all in AU01, 05, 25 and 26. AU12 at full amplitude reads about .02, so LibreFace does not see the rendered smile, and the same holds for AU04, 06, 09, 15 and 20. V1 therefore shows the renders are monotonic where the detector responds. It does not show that a natural-face detector reads them as those AUs. The threshold was not changed after seeing this.
+**That pass is thin, and it is disclosed.** The rule counts any rise, and most are tiny. Of 96 intensity pairs, 22 rise by at least .5 on LibreFace's 0 to 5 scale, all in AU01, 05, 25 and 26. AU12 at full amplitude reads about .02, so LibreFace does not see the rendered smile, and the same holds for AU04, 06, 09, 15 and 20. Of the 43 rising presence pairs, 35 stay at negative logits, so they rise without reaching presence. V1 therefore shows the renders are monotonic where the detector responds. It does not show that a natural-face detector reads them as those AUs. The threshold was not changed after seeing this.
+
+**Family flag, not an exclusion.** Only AU01, 05, 25 and 26 are read by the detector with a real rise. Every other family is flagged. The four hold 0.14, 0.13, 0.09 and 0.20 of residual human energy on basic_WC, basic_EA, conversational_WC and conversational_EA, so most of what A4 compares is unconfirmed by a detector. All families stay in the confirmatory statistic, and a sensitivity reports the flagged and confirmed families apart.
 
 **V4 limits a known risk.** On A3, Qwen and Molmo chose None of the above on .534 and .863 of cells. If that recurs on avatars, V4 stops a comparison resting on a sliver of probability. Its .90 limit sits only just above Molmo's .863, and it is on mean mass, not modal choice, so V4 is a weak guard: a model near .86 on None passes it.
 
@@ -156,7 +160,7 @@ Whether these disagree with CFA is an empirical result. Recovery's pair-swapped 
 
 ## Sensitivity
 
-Reported beside the primary, never replacing it: without AU22 and AU27; without the abstain row; amplitudes at 0.75x and 1.25x, against the 1x fit on the same configurations; and the direct contrast, by dose.
+Reported beside the primary, never replacing it, each on residual and raw CFA: without AU22 and AU27; without the abstain row; flagged and confirmed families apart; amplitudes at 0.75x and 1.25x, against the 1x fit on the same configurations; and the direct contrast, by dose. Subsets take the common profile from the full matrix.
 
 ## Recovery
 
@@ -182,7 +186,7 @@ New in the second run: a boundary observer, mixing human weights at .35, and a s
 
 **Stated before data, after run 1 and before any model.** Raw accuracy at conversational 0.25x is withdrawn as a claim, in both conversational datasets. Below R_S of .85, raw CFA is a lower bound. Aligned stands, and the corrected rule decides Not aligned.
 
-**That exemption matters to the pass.** It was written for raw CFA after run 1, and it also covers residual CFA in run 3, where accuracy at those two cells is 85% on conversational_WC and 62% on conversational_EA. Without it, residual CFA would pass 64 of 66. So A4 makes no accuracy claim for residual CFA on weak conversational effects, and a decision there rests on the corrected rule.
+**That exemption matters to the pass.** It was written for raw CFA after run 1, and it also covers residual CFA in run 3, where accuracy at those two cells is 85% on conversational_WC and 62% on conversational_EA. With those two cells counted, residual CFA would pass 66 of 68. So A4 makes no accuracy claim for residual CFA on weak conversational effects, and a decision there rests on the corrected rule.
 
 | Rate, run 3, all cells unless stated | Raw CFA | Residual CFA |
 |---|---|---|
