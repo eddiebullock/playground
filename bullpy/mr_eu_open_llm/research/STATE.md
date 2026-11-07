@@ -10,6 +10,8 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
 
 ## Next actions
 
+Goals and what done means: `research/GOALS.md`. The user gave full autonomy on 2026-11-07 and accepted all recommendations, including the four A2 choices.
+
 1. A1 rotation evals: Gemma and Molmo complete, 20 of 30 files on the cluster at 2026-11-07 10:02, not pulled, nothing read. Qwen arrays 39982137 and 39982138 still pending on priority, Slurm estimate 8 Nov about 19:55. The estimate has moved later since 6 Nov. Account fair share is 0, and a 59 min `cas_*` job started on 7 Nov while these 12 h tasks waited, which suggests backfill. About 8 h per task, up to 78 GPU-hours, 2,859 available. When all 30 exist, pull them, run `research/scripts/analyse_rotation.py`, then for each model run `research/scripts/same_clip_family_analysis.py --model-route --au-csv research/reproduction/eu_au_measures.csv --model M --model-evals 'results/baseline/eu_emotions/M/eval_v2_eu_emotions_M_video_only_seed42_rot*_real.json'`. `eu_au_measures.csv` is the right file: the route uses LibreFace and OpenFace 3 from it on `model_1fps` frames, passes no GraphAU file, and yields 243 clips by 4 families. Permutations default to 4,999. Do not analyse early: Holm covers all three models.
 2. A3 done 2026-11-05: all three models pass on `single_face`, Molmo at accuracy .072 (RESULTS_REGISTRY). Pass tests vision dependence, not competence. Full reading needs A1.
 3. Shared readout chosen; smoke_v2 and A2 and A3 costs are done. A2 stays unfrozen until RQ0 and its two design points are reviewed. Recommendations on its open choices are in `research/PREREG_A2_DRAFT.md`, awaiting sign-off (NEEDS_INPUT item 6).
