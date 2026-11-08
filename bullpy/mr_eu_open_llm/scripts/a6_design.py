@@ -35,7 +35,7 @@ OUTPUT_DIR = Path("results/a6")
 GEOMETRY = OUTPUT_DIR / "geometry.json"
 
 # The design block this code was written against. A change to the block needs a change here.
-DESIGN_SHA256 = "c1961048eaaf4ed9ff12d6c78ae46322975cc15dc9820d36e53094396adc04c8"
+DESIGN_SHA256 = "1554afc0c44b7e51c7cbbbfddb7b658a74ac8e956c1c0b638d2779e67ab60847"
 
 _BLOCK = re.compile(r"^```json\n(.*?)^```$", re.DOTALL | re.MULTILINE)
 _STATED = re.compile(r"design_sha256` of the block below: `([0-9a-f]{64})`")
@@ -199,6 +199,10 @@ def validate(design: Mapping[str, Any]) -> None:
         raise SystemExit("unbound_keys must be keys of the block.")
     if design["sham_region"] not in regions:
         raise SystemExit("sham_region must be a region.")
+    if design["stage3_null_claim"] != "none_reported_inconclusive":
+        raise SystemExit("stage3_null_claim must be none_reported_inconclusive (decision of 2026-11-08).")
+    if design["reference_check_sensitivity"] != "happy_inside_margin":
+        raise SystemExit("reference_check_sensitivity must be happy_inside_margin (decision of 2026-11-08).")
 
 
 def contrasts(design: Mapping[str, Any]) -> Tuple[Dict[str, Any], ...]:

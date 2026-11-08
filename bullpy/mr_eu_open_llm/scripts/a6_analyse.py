@@ -59,6 +59,17 @@ VERDICTS = (NOT_TESTED, NO_FACE_USE, NOT_SHARED, OPTION_DEPENDENT, SAME_CUE, ONE
 SCOPE = "This model, these 91 actors, this clip set, single apex frames."
 REASON_CODES = ("shared_unresolved", "option_unresolved", "cue_unresolved", "sham_failed",
                 "region_too_small", "dose_failed")
+# Decision of 2026-11-08, after recovery run 4: the Stage 3 nulls stay in the decision table,
+# which recovery judges, but carry no claim. A model whose table row is one of them is reported
+# as Inconclusive on the cue question, with this reason and with recovery's reach beside it.
+NULL_ROWS = (NOT_THIS_CUE, NO_TESTED_FEATURE)
+NULL_NO_CLAIM = "stage3_null_no_claim"
+# Recovery observers whose share on a reported row is stated beside it. Read, never judged here.
+REACH_OBSERVERS = {
+    NOT_THIS_CUE: ("other_cue", "one_way_other_cue", "spread"),
+    NO_TESTED_FEATURE: ("global_face",),
+    OPTION_DEPENDENT: ("adjacency", "adjacency_all"),
+}
 
 
 class Cells:
@@ -675,9 +686,14 @@ def condition_family(region: str) -> Dict[str, str]:
 def stage3(cells: Cells, margins: Mapping[str, Optional[float]], tokens_across: Optional[float],
            settings: Mapping[str, Any], *, dose_margins: Optional[Mapping[str, Optional[float]]] = None,
            reference: Optional[str] = None, controls: Optional[Sequence[str]] = None,
-           rows: Optional[Sequence[int]] = None) -> Dict[str, Any]:
-    """C1 to C4, neutral fill, step-down maxT, the fill rule, the Happy check and each null condition."""
+           rows: Optional[Sequence[int]] = None, reference_check: Optional[str] = None) -> Dict[str, Any]:
+    """C1 to C4, neutral fill, step-down maxT, the fill rule, the Happy check and each null condition.
+
+    reference_check: None reads the block (the partner check, primary). "happy_inside_margin"
+    is the audit's rule, reported as a sensitivity only.
+    """
     kwargs = {"reference": reference, "controls": controls, "rows": rows}
+    check = reference_check or D["reference_check"]
     effects = np.column_stack([double_difference(cells, c, condition_family(c["region"])["neutral"], **kwargs) for c in CONTRASTS])
     directions = [c["direction"] for c in CONTRASTS]
     one_sided = flip_test(effects, directions, settings)
@@ -707,7 +723,7 @@ def stage3(cells: Cells, margins: Mapping[str, Optional[float]], tokens_across: 
         reference_stable = inside(happy_ci, margin)
         partner = partner_change(cells, contrast, fills["neutral"], controls=controls, rows=rows)
         partner_ci = interval(partner, D["ci_decision"], settings)
-        if D["reference_check"] == "happy_inside_margin":
+        if check == "happy_inside_margin":
             named_check = {1: reference_stable, -1: reference_stable}
         else:
             # The partner must have moved itself, with Happy out of the reference.
@@ -879,6 +895,36 @@ def verdict(gates: Mapping[str, Any], first: Optional[Mapping[str, Any]], second
     return result(INCONCLUSIVE, "cue_unresolved", **used)
 
 
+def recovery_reach(path: Path = d.RECOVERY_OUT) -> Dict[str, Dict[str, Dict[str, float]]]:
+    """Recovery's share on each row in REACH_OBSERVERS, at the judged strengths, on this binding hash."""
+    out = json.loads(path.read_text(encoding="utf-8"))
+    if out.get("binding_sha256") != d.binding_hash():
+        raise SystemExit(f"{path} is not on this design's binding hash.")
+    strengths = [str(float(s)) for s in D["recovery"]["judged_strengths"]]
+    return {row: {name: {s: float(out["tables"][name][s]["verdicts"].get(row, 0.0)) for s in strengths} for name in names}
+            for row, names in REACH_OBSERVERS.items()}
+
+
+def reported(row: Mapping[str, Any], reach: Optional[Mapping[str, Any]] = None) -> Dict[str, Any]:
+    """What is reported for a decision-table row: the row itself, except the Stage 3 nulls.
+
+    Decision of 2026-11-08: Not this cue and No tested feature carry no claim. The verdict is
+    Inconclusive with reason stage3_null_no_claim, and the table row, its riders and recovery's
+    reach on that row are kept beside it. Every other row is reported as it is, with recovery's
+    reach beside Option-dependent, since Adjacency on all pairs reached it in .15 in run 4.
+    The table row is what recovery judges, so this function changes no recovery number.
+    """
+    out = {"verdict": row["verdict"], "reason_code": row["reason_code"], "riders": dict(row["riders"]),
+           "scope": row["scope"], "decision_table_row": row["verdict"], "table_reason_code": row["reason_code"]}
+    if row["verdict"] in NULL_ROWS and D["stage3_null_claim"] == "none_reported_inconclusive":
+        out["verdict"], out["reason_code"] = INCONCLUSIVE, NULL_NO_CLAIM
+        out["note"] = ("The decision table reads this row, which carries no claim (decision of 2026-11-08): "
+                       "recovery reached it rarely at the judged noise, so it is reported as Inconclusive on the cue question.")
+    if reach is not None and row["verdict"] in REACH_OBSERVERS:
+        out["recovery_reach"] = dict(reach[row["verdict"]])
+    return out
+
+
 # ---------------------------------------------------------------------------
 # Descriptive rows and sensitivities: all reported, none changes a verdict
 # ---------------------------------------------------------------------------
@@ -954,6 +1000,9 @@ def stage3_sensitivities(cells: Cells, margins: Mapping[str, Optional[float]], t
         "reference_own_label_out": run(reference="own_out"),
         **{f"control_{c}_only": run(controls=[c]) for c in D["control_emotions"]},
         **{f"edit_order_{EDIT_ROWS[i]}_only": run(rows=[i]) for i in range(len(EDIT_ROWS))},
+        # The audit's rule, Happy's 90% CI inside the cue margin for named results too.
+        # Reported only; the partner check stays primary (decision of 2026-11-08).
+        "reference_check_happy_equivalence": run(reference_check=D["reference_check_sensitivity"]),
     }
     plain = {}
     equal_weight = {}
@@ -1241,7 +1290,7 @@ def main() -> None:
         for model in args.models:
             first = decided.get(model, results[model])
             outcome_row = verdict(all_gates[model], first, None, None) if first is None or first.get("vision_dependent") is not True or model not in decided else None
-            verdicts[model] = outcome_row or {"verdict": None, "continues_to": "Stage 2"}
+            verdicts[model] = reported(outcome_row) if outcome_row else {"verdict": None, "continues_to": "Stage 2"}
         write("a6_stage1.json", {"gates": all_gates, "decided": decided, "descriptive": extra,
                                  "eligible": sorted(summaries), "verdicts": verdicts})
         return
@@ -1264,7 +1313,7 @@ def main() -> None:
             "model": model, "stage2": second, "pattern": pattern(cells, human), "bridge": bridge(cells, FULL_SETTINGS),
             "text_primes": text_ranks(prime_table(baselines)), "directed_target": stage2_sensitivity(cells, FULL_SETTINGS),
             "clip_sensitivities": clip_sensitivities(cells, partners, None, None, small, FULL_SETTINGS),
-            "verdict_if_stopped_here": None if second["reaches_stage3"] else verdict(first_doc["gates"][model], first, second, None),
+            "verdict_if_stopped_here": None if second["reaches_stage3"] else reported(verdict(first_doc["gates"][model], first, second, None), recovery_reach()),
         })
         return
     second_path = args.results / f"a6_stage2_{model}.json"
@@ -1284,7 +1333,7 @@ def main() -> None:
     write(f"a6_stage3_{model}.json", {
         "model": model, "stage2_sha256": hashlib.sha256(second_path.read_bytes()).hexdigest(),
         "stage3": third, "reading": reading(third),
-        "verdict": verdict(first_doc["gates"][model], first, second, third, primes),
+        "verdict": reported(verdict(first_doc["gates"][model], first, second, third, primes), recovery_reach()),
         "repeat_check_max_abs": float(np.nanmax(np.abs(cells.mcq3[:, ORIGINAL] - cells.mcq1[:, list(EDIT_ROWS)]))),
         "sensitivities": stage3_sensitivities(cells, second["cue_margin"], across, FULL_SETTINGS, second["dose_margin"]),
         "clip_sensitivities": clip_sensitivities(cells, partners, second["cue_margin"], across, small, FULL_SETTINGS, second["dose_margin"]),

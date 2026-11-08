@@ -426,3 +426,12 @@ The A7 audit (ROADMAP 0.12) took the stricter reading of the question left open 
 - **Endpoints:** every cell of an item comes from the same A7 job, unrounded; A2's stored cells are a descriptive cross-check.
 - **Timing:** A7 must be frozen (tag `a7-freeze`) before any full A2 cell is read, or A7 becomes exploratory. Its code, tests and CPU recovery are local work to finish before then.
 - Design hash after the audit: `9e40cfcf...50bb09`, checked independently by the coordinator.
+
+## 2026-11-08: A6 local items closed (ROADMAP 0.11, pre-data)
+
+- **Recovery run 5** reran on the new binding hash (`41aa6ee5...`) after the code change and matches run 4 in every table. It still fails on Other cue, One-way other cue, Spread and Global face, as before. The decision already taken on 2026-11-08 stands: the design runs with those observers named as unrecoverable, and their verdict rows carry no claim. No threshold moved.
+- **Stage 3 nulls** are reported as Inconclusive (`stage3_null_no_claim`); `verdict()`, which recovery judges, is unchanged.
+- **Adjacency on all pairs** is descriptive; its failure (.148 and .152 against .10) stays on record under `checks_descriptive_not_judged`.
+- **[proposed] values** confirmed as written, no number changed: `shared_margin`, `cue_margin_fraction`, `outcome_reference`, `reference_check`, `text_neighbour_rank`, `first_frame_au_ratio_max`. Confirmed by the coordinator before any A6 model output exists. The mid-face landmark list stays proposed until the cluster check.
+- **Mechanics run** goes before the freeze, the conservative order.
+- Design hash `1554afc0...60847`. Open items are cluster only, listed in the draft's Freeze section.

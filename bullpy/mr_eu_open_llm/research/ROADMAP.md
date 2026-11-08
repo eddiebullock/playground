@@ -60,7 +60,7 @@ Status keys: DONE, NOW (unblocked, in progress or next), WAIT (dependency named)
 | 0.8 | Paper scaffolding: results sections with the frozen decision rule and PENDING slots for every number, the discussion outline written for each outcome branch, and an abstract skeleton | G11 | Files in `research/paper/v2/`, with no result stated | DONE 2026-11-08 |
 | 0.9 | Submission pack drafts: data and code availability, ethics and preregistration links, reporting summary, `CITATION.cff` and `.zenodo.json` metadata | G11, G12 | Files committed; the DOI is USER (the Zenodo login) | DONE 2026-11-08, USER items in NEEDS_INPUT 9 |
 | 0.10 | Literature: full reads where open access exists for the snippet-level references, and a novelty recheck before submission | G10 | `references.md` levels updated | DONE 2026-11-08 (5 rows upgraded, 12 have no free copy; [50] wording fixed; CFA name clash in NEEDS_INPUT 9) |
-| 0.11 | A6 local items: everything in its freeze list that needs no cluster | G8 | Draft lists only cluster items as open | NOW |
+| 0.11 | A6 local items: everything in its freeze list that needs no cluster | G8 | Draft lists only cluster items as open | DONE 2026-11-08 (157 tests; recovery run 5 matches run 4; freeze prepared, not tagged) |
 | 0.12 | A7 audit and recovery text, local only | G7 | Draft audited; Stage 0 is the next step | DONE 2026-11-08 (audit section in the draft; DECISIONS entry) |
 | 0.13 | A7 code (`a7_*`), tests, Level 1 and 2 CPU recovery, toy Gemma hold test, independent audit, tag `a7-freeze`. Must finish before any full A2 cell is read | G7 | Tag `a7-freeze` | NOW |
 

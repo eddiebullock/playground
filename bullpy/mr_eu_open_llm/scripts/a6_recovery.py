@@ -13,6 +13,11 @@ Usage:
     python -m scripts.a6_recovery --workers 3
     python -m scripts.a6_recovery --variant both_directions --output .../a6_recovery_both_directions_paired.json
     python -m scripts.a6_recovery --variant first_draft --output .../a6_recovery_draft_as_written.json
+    python -m scripts.a6_recovery --variant happy_equivalence --output .../a6_recovery_happy_equivalence.json
+
+--checkpoint PATH appends each finished replicate to a JSON-lines file and, on a restart, reuses
+the rows already there for the same binding hash, variant and task. Every replicate has its own
+seed, so a resumed run gives the same rows as one run straight through.
 """
 
 from __future__ import annotations
@@ -92,6 +97,10 @@ SCENARIOS = {
     "actors_split": {"expected": an.INCONCLUSIVE, "reason": "shared_unresolved"},
 }
 GROUPS = sorted(set(EXPECTED) | set(BOUNDARY) | set(SCENARIOS))
+# Decision of 2026-11-08: observers whose check is reported beside the others and not judged.
+# Their rows still run on the same seeds, and their check is written under its own key.
+DESCRIPTIVE = tuple(R["descriptive_observers"])
+CHECKPOINT: Optional[Path] = None
 LADDER_OBSERVERS = ("other_cue", "one_way_other_cue", "global_face", "same_cue", "human_like")
 
 
@@ -447,7 +456,7 @@ def apply_variant(name: Optional[str]) -> None:
         an.direction_states = every_direction
         return
     if name == "happy_equivalence":
-        an.D["reference_check"] = "happy_inside_margin"
+        an.D["reference_check"] = D["reference_check_sensitivity"]
         return
     if name != "first_draft":
         raise SystemExit(f"Unknown variant {name}.")
@@ -619,11 +628,50 @@ def build_tasks(names: Sequence[str], strengths: Sequence[float], replicates: in
     return [(name, strength, k, noise, False, dict(overrides or {})) for name in names for strength in strengths for k in range(replicates)]
 
 
+def task_key(task: Tuple[Any, ...]) -> str:
+    return json.dumps([d.binding_hash(), os.environ.get(VARIANT_ENV), list(task)], sort_keys=True)
+
+
+def read_checkpoint(path: Optional[Path]) -> Dict[str, Dict[str, Any]]:
+    """Rows already finished. A torn last line, from a stop mid-write, is dropped."""
+    done: Dict[str, Dict[str, Any]] = {}
+    if path is None or not path.exists():
+        return done
+    for line in path.read_text(encoding="utf-8").splitlines():
+        try:
+            entry = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        done[entry["key"]] = entry["row"]
+    return done
+
+
 def run_tasks(tasks: Sequence[Tuple[Any, ...]], workers: int) -> List[Dict[str, Any]]:
-    if workers <= 1:
-        return [one_replicate(t) for t in tasks]
-    with multiprocessing.Pool(workers) as pool:
-        return pool.map(one_replicate, tasks, chunksize=8)
+    done = read_checkpoint(CHECKPOINT)
+    keys = [task_key(t) for t in tasks]
+    todo = [t for t, k in zip(tasks, keys) if k not in done]
+    if todo:
+        handle = CHECKPOINT.open("a", encoding="utf-8") if CHECKPOINT is not None else None
+        try:
+            if workers <= 1:
+                results = map(one_replicate, todo)
+                pool = None
+            else:
+                pool = multiprocessing.Pool(workers)
+                results = pool.imap(one_replicate, todo, chunksize=8)
+            for task, row in zip(todo, results):
+                done[task_key(task)] = row
+                if handle is not None:
+                    handle.write(json.dumps({"key": task_key(task), "row": row}) + "\n")
+                    handle.flush()
+            if pool is not None:
+                pool.close()
+                pool.join()
+        finally:
+            if handle is not None:
+                handle.close()
+    # Through JSON either way, so a resumed run and a straight run give the same objects.
+    return [json.loads(json.dumps(done[k])) for k in keys]
 
 
 def table(rows: Sequence[Mapping[str, Any]]) -> Dict[str, Dict[str, Any]]:
@@ -649,7 +697,10 @@ def main() -> None:
     parser.add_argument("--variant", choices=("both_directions", "first_draft", "happy_equivalence"), default=None,
                         help="Audit trail only: rerun on the same seeds under an earlier rule.")
     parser.add_argument("--output", type=Path, default=d.RECOVERY_OUT)
+    parser.add_argument("--checkpoint", type=Path, default=None, help="JSON lines of finished replicates, reused on restart.")
     args = parser.parse_args()
+    global CHECKPOINT
+    CHECKPOINT = args.checkpoint
     started = time.time()
     strengths = [float(s) for s in R["strengths"]]
     if args.variant:
@@ -672,7 +723,10 @@ def main() -> None:
         tasks += build_tasks(["score_scale"], strengths, args.replicates, overrides={"scale_sd": judged_scale})
     rows = run_tasks(tasks, args.workers)
     tables = table(rows)
-    checks = {name: {str(s): judge(name, tables[name][str(s)]) for s in R["judged_strengths"]} for name in names if name not in BOUNDARY}
+    checks = {name: {str(s): judge(name, tables[name][str(s)]) for s in R["judged_strengths"]} for name in names
+              if name not in BOUNDARY and name not in DESCRIPTIVE}
+    descriptive_checks = {name: {str(s): judge(name, tables[name][str(s)]) for s in R["judged_strengths"]} for name in names
+                          if name in DESCRIPTIVE}
     scenario_rows = run_tasks(build_tasks(list(SCENARIOS), [1.0], int(R["scenario_replicates"])), args.workers)
     scenarios = table(scenario_rows)
     for name, rule in SCENARIOS.items():
@@ -705,6 +759,7 @@ def main() -> None:
         "human_rates": {k: world().human[k]["X"] for k in an.DIRECTIONS},
         "tables": tables,
         "checks": checks,
+        "checks_descriptive_not_judged": descriptive_checks,
         "scenarios": scenarios,
         "noise_sensitivity_not_judged": noise_rows,
         "ladders_not_judged": ladders,

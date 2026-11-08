@@ -1,6 +1,6 @@
 {
- "binding_sha256": "f22c22530a3faf9b015f2611f2da7357475627db7fcb50b0322be173e38ec3ba",
- "design_sha256": "c1961048eaaf4ed9ff12d6c78ae46322975cc15dc9820d36e53094396adc04c8",
+ "binding_sha256": "41aa6ee5c8bc7a2d8b9f8fa8db07459c5ea9d12578f1e86c8d36d874183a788f",
+ "design_sha256": "1554afc0c44b7e51c7cbbbfddb7b658a74ac8e956c1c0b638d2779e67ab60847",
  "replicates": 500,
  "settings": {
   "replicates": 500,
@@ -96,6 +96,9 @@
   "scenario_replicates": 50,
   "noise_replicates": 100,
   "draw_check_replicates": 15,
+  "descriptive_observers": [
+   "adjacency_all"
+  ],
   "flips_used": 4999,
   "boots_used": 1000
  },
@@ -6115,24 +6118,6 @@
     }
    }
   },
-  "adjacency_all": {
-   "1.0": {
-    "pass": false,
-    "checks": {
-     "expected_verdict": true,
-     "other_named": false,
-     "inconclusive": true
-    }
-   },
-   "2.0": {
-    "pass": false,
-    "checks": {
-     "expected_verdict": true,
-     "other_named": false,
-     "inconclusive": true
-    }
-   }
-  },
   "one_way_weak_cue": {
    "1.0": {
     "pass": true,
@@ -6255,6 +6240,26 @@
     "checks": {
      "expected_verdict": true,
      "other_named": true,
+     "inconclusive": true
+    }
+   }
+  }
+ },
+ "checks_descriptive_not_judged": {
+  "adjacency_all": {
+   "1.0": {
+    "pass": false,
+    "checks": {
+     "expected_verdict": true,
+     "other_named": false,
+     "inconclusive": true
+    }
+   },
+   "2.0": {
+    "pass": false,
+    "checks": {
+     "expected_verdict": true,
+     "other_named": false,
      "inconclusive": true
     }
    }
@@ -9470,6 +9475,6 @@
  "reason_codes_not_reached": [],
  "observers_pass": false,
  "scenarios_pass": true,
- "seconds": 10832.0,
+ "seconds": 7302.3,
  "pass": false
 }

@@ -1,14 +1,14 @@
 # DRAFT amendment A6: shared errors on CREMA-D (RQ5)
 
-**Status: DRAFT. Not frozen, not tagged, not preregistered.** Nothing here binds until it is audited, committed and tagged. No model has seen a CREMA-D analysis clip, and no run starts until it is frozen and the wait below has ended.
+**Status: DRAFT. Not frozen, not tagged, not preregistered.** A freeze is prepared at the end (Freeze, prepared, not tagged), with the cluster-only pins still PENDING. Nothing here binds until it is audited, committed and tagged. No model has seen a CREMA-D analysis clip, and no run starts until it is frozen and the wait below has ended.
 
-Draft `design_sha256` of the block below: `c1961048eaaf4ed9ff12d6c78ae46322975cc15dc9820d36e53094396adc04c8`. It changes with any edit to the block and is restated at the freeze.
+Draft `design_sha256` of the block below: `1554afc0c44b7e51c7cbbbfddb7b658a74ac8e956c1c0b638d2779e67ab60847`. It changes with any edit to the block and is restated at the freeze.
 
 **Written:** 2026-11-07, before any A1 result was read and before any model output on the 819 clips exists.
 **Goal:** G8 in `research/GOALS.md`.
 **Depends on:** G1. RQ0 is read through the frozen A1 and A3 table by A2's `rq0_status`, per model. Gates G2 to G4 as in A2.
 **Models.** Gemma 4 and Qwen3-VL. Molmo2 fails G2 and G4, and any route back needs a dated rule before new data, as in A2.
-**Code, written, not yet committed:** `scripts/a6_design.py`, `scripts/a6_run.py`, `scripts/a6_analyse.py`, `scripts/a6_recovery.py`, `research/scripts/a6_human_target.py`, `slurm_jobs/study3_a6.sh`, `tests/test_a6.py`. All are new files. `a6_design.py` parses the design block from this file and refuses a hash mismatch. Frozen A2 and A3 code is imported unchanged, with hashes pinned below. Every other file the A6 code imports is pinned in `other_code_sha256`, and the A6 code itself in `a6_code_sha256`. Two files are not pinned, by design: `scripts/a6_design.py`, which holds this block's own hash and so cannot be named in it, and `tests/test_a6.py`, which no result reads. Model weights are pinned by a manifest hash in `weights_sha256`, and runs refuse other weights, another dtype, or shards on mixed library versions.
+**Code** (first committed at `0d213c5` and `b056a7e`; the changes for the decision of 2026-11-08 are not yet committed): `scripts/a6_design.py`, `scripts/a6_run.py`, `scripts/a6_analyse.py`, `scripts/a6_recovery.py`, `research/scripts/a6_human_target.py`, `slurm_jobs/study3_a6.sh`, `tests/test_a6.py`. All are new files. `a6_design.py` parses the design block from this file and refuses a hash mismatch. Frozen A2 and A3 code is imported unchanged, with hashes pinned below. Every other file the A6 code imports is pinned in `other_code_sha256`, and the A6 code itself in `a6_code_sha256`. Two files are not pinned, by design: `scripts/a6_design.py`, which holds this block's own hash and so cannot be named in it, and `tests/test_a6.py`, which no result reads. Model weights are pinned by a manifest hash in `weights_sha256`, and runs refuse other weights, another dtype, or shards on mixed library versions.
 
 **What was seen before writing this.**
 
@@ -73,9 +73,9 @@ All fixed constants are here and nowhere else. The hash is sha256 of the bytes b
     "research/reproduction/face_input_validity_summary.json": "c1c64e6975b32356a3314268c054f0dee483ddf74b11cd66d03b2faf972e64a4"
   },
   "a6_code_sha256": {
-    "scripts/a6_analyse.py": "89f578e5a44a88d9526dea6d6e1f828433e63b6c5eb79e07002d5e2908d883ed",
+    "scripts/a6_analyse.py": "6a7866980b2ae71fb0e73b8ed88db9fe26a09bee873f66fa0c3b267f60d01577",
     "scripts/a6_run.py": "9cb517006f05d2023c35225fa25b93654aee10053ae2f39cac887378b23fb958",
-    "scripts/a6_recovery.py": "c77d42ca3c511742c63b0f26f2da733038905bd4448927c867308fe99d53d189",
+    "scripts/a6_recovery.py": "fa5f66e4f7c4f0091be660ccd37e839ca203f88b6760b79f4b3f168210ae6b73",
     "research/scripts/a6_human_target.py": "f7424fa15484328c1c71c5534ff8724bd0a92c8bf0b366c823065f84ded4283d",
     "slurm_jobs/study3_a6.sh": "1cf329f486c058b72de68c0e0f10fa59a6a8a90c789b8fa1e8385573a584c1b4"
   },
@@ -149,6 +149,8 @@ All fixed constants are here and nowhere else. The hash is sha256 of the bytes b
   "sham_region": "all",
   "outcome_reference": "fixed",
   "reference_check": "partner_beyond_zero_for_named_results_happy_inside_margin_for_nulls",
+  "reference_check_sensitivity": "happy_inside_margin",
+  "stage3_null_claim": "none_reported_inconclusive",
   "prime_separator": " ",
   "conditions": ["original", "sham_self_fill", "mask_upper_neutral", "mask_upper_first", "mask_upper_blur", "mask_mid_neutral", "mask_mid_first", "mask_mid_blur", "mask_midlower_neutral", "mask_midlower_first", "mask_midlower_blur", "mask_lower_neutral", "mask_uplow_neutral", "mask_all_neutral"],
   "alpha": 0.05,
@@ -226,12 +228,13 @@ All fixed constants are here and nowhere else. The hash is sha256 of the bytes b
     "carbon_lift": 2.0,
     "scenario_replicates": 50,
     "noise_replicates": 100,
-    "draw_check_replicates": 15
+    "draw_check_replicates": 15,
+    "descriptive_observers": ["adjacency_all"]
   }
 }
 ```
 
-`shared_margin`, `cue_margin_fraction`, `text_neighbour_rank`, `outcome_reference`, `reference_check`, `first_frame_au_ratio_max` and the mid-face landmark list are **[proposed]**. The mid-face indices are drafted from the FaceMesh layout and need a check on calibration clips (see Fixed before freezing).
+`shared_margin`, `cue_margin_fraction`, `text_neighbour_rank`, `outcome_reference`, `reference_check`, `first_frame_au_ratio_max` and the mid-face landmark list were **[proposed]**. On 2026-11-08, after recovery run 4 and before any model output, every value except the mid-face list is confirmed as written, with no value changed: `shared_margin` .05 and `cue_margin_fraction` .10, because the decision of that date keeps both margins and moving either after a recovery failure would move a threshold; `outcome_reference` "fixed" and `reference_check` the partner check, which that decision keeps primary, with the audit's rule as `reference_check_sensitivity`; `text_neighbour_rank` 5, which sets only the semantics rider and no verdict; and `first_frame_au_ratio_max` .5, whose check itself needs the cluster. The mid-face indices stay **[proposed]**: they are drafted from the FaceMesh layout and need a check on calibration clips, which needs CREMA-D media (see Fixed before freezing).
 
 ## Human target, fixed before model data
 
@@ -370,6 +373,7 @@ Edits come from A2's frozen code: `read_frames`, landmarks, `align_to`, `_fill_i
 - Happy is noisier than a four-label reference, and it is one label. The two earlier references are coded as sensitivities.
 - **Happy alone can move y.** In the second audit, Happy rising by .3 nats under `mask_mid` on clips of the pair gave Same cue in 1.00 of Global face replicates and .98 of Other cue, and Happy falling gave Opposes in 1.00. So `reference_check` adds two checks, each a double difference against a reference with neither the partner, nor Happy, nor No Emotion, nor the clip's own label in it, in y's units. **A match or an opposed result** needs the partner's own change to lie wholly beyond zero in that direction (95% CI). **A null** needs Happy's own change inside the cue margin (90% CI). Otherwise the contrast is `cue_unresolved`.
 - The audit asked for Happy inside the margin for named results too. That was coded and tried first: at the noise recovery is judged at, Same cue then reached its own row in 0 of 12 replicates, because an equivalence test on Happy is as noisy as the effect itself. A named result says the partner moved, and the partner check tests exactly that, with Happy out of its reference. `--variant happy_equivalence` reruns the audit's version on the same seeds at 100 replicates (`a6_recovery_happy_equivalence.json`): Same cue reached its own row in .09 and either Same cue row in .64, against .99 under the partner check, and Happy up reached a false Same cue, one direction in .08, against .04 under the partner check.
+- **Decided 2026-11-08:** the partner check stays primary. The audit's rule is a sensitivity, named in the block as `reference_check_sensitivity`, and `a6_analyse.py` reports Stage 3 under it as `reference_check_happy_equivalence`, beside the other sensitivities, changing no verdict.
 
 **Contrast.** delta(i, c) = y(i, c) - y(i, `original`), on the same order, averaged over the two orders. The confirmatory effect is a within-actor double difference, so that it moves this pair and not others:
 
@@ -408,7 +412,7 @@ All 91 actors are in every cell, so this is valid at actor level, unlike A2's cr
 - **Fill rule.** The neutral fill is primary. A match counts only if the 95% actor-bootstrap CIs of the first and blur fills each lie wholly on the predicted side of zero, and the simple change on A clips has the predicted sign. An opposed result needs the same in the opposite direction. The first draft asked only for the same sign, which two fills with no effect share one time in four, and in recovery an artefact of the neutral fill alone reached Same cue or Same cue, one direction in about half of replicates.
 - **Cue margin.** 10% of the model's change in the same outcome on the same clips under full mismatch, fixed at Stage 2, one margin per contrast. The change is y on the partner's real cell minus y on the clip's own, at the `edit_order_rows`, over the contrast's clips of A and of the control emotions. It is signed within cells: clips are grouped by their own emotion and their partner's, the signed change is averaged in each group, and the margin is the clip-weighted mean of those group means' absolute values. The first draft took each clip's absolute change, which grows with noise, so a noisier model had a wider margin and an easier null; with pure noise of SD 2 against .5 that margin grew over 3.5 times (`tests/test_a6.py`). This avoids A2's disclosed fault of a margin taken from another outcome.
 - **Dose margin.** The dose is a change in the acted label's CLR over six options, so its margin is 10% of that same quantity's change under full mismatch, signed within cells, on the contrast's clips of A. The first draft compared the dose with the cue margin, which is on another outcome.
-- **Shared margin [proposed].** .05 on X, about three tenths of the human value under the standardised share (.166). At the human actor SD for this pair (.17) the 90% half-width is .03, and a null stays attainable up to an actor SD of about .29.
+- **Shared margin [confirmed 2026-11-08, unchanged].** .05 on X, about three tenths of the human value under the standardised share (.166). At the human actor SD for this pair (.17) the 90% half-width is .03, and a null stays attainable up to an actor SD of about .29.
 - **Models.** Never pooled.
 
 ## Decision table
@@ -424,9 +428,11 @@ Per model, on the target pair. Rows are read in order, and the first that applie
 | **Same cue** | A shared error, not option-dependent; sham equal; two directions in play, C1 and C2 both matching, with the fill rule and the partner check. It says the mid-face carries part of the shared error, and the share of the excess the mask removes is reported beside it |
 | **Same cue, one direction** | As above, with exactly one direction in play matching, and any other in play not opposing |
 | **Opposes the stated cue** | As above, with C1 or C2 significant in the opposite direction, with the first and blur fills and the simple change on A clips all in that direction |
-| **Not this cue** | The cue null in the next section met on every direction in play. The null at Stage 3 |
-| **No tested feature** | C1 and C2 not significant in either direction, delivery and the dose pass, every direction in play carries on the edit orders, Happy is inside the margin, and `mask_all_neutral` leaves the pair inside the margin, by the 90% CI of the double difference. Then the shared error does not need these regions |
+| **Not this cue** | The cue null in the next section met on every direction in play. The null at Stage 3. **Carries no claim:** reported as Inconclusive (below) |
+| **No tested feature** | C1 and C2 not significant in either direction, delivery and the dose pass, every direction in play carries on the edit orders, Happy is inside the margin, and `mask_all_neutral` leaves the pair inside the margin, by the 90% CI of the double difference. Then the shared error would not need these regions. **Carries no claim:** reported as Inconclusive (below) |
 | **Inconclusive** | A reason code from the list below |
+
+**The Stage 3 nulls carry no claim (decision of 2026-11-08, `stage3_null_claim: "none_reported_inconclusive"`).** Recovery reached Not this cue and No tested feature rarely at the judged noise (run 4: .01 to .29 at 1x), so neither row may be claimed. Both stay in the table, which is read as written and which recovery judges. A model whose row is one of them is reported as **Inconclusive** on the cue question, with reason `stage3_null_no_claim`, and the output keeps beside it the table row (`decision_table_row`), its riders, and recovery's share on that row for the observers built to reach it (`recovery_reach`: Other cue, One-way other cue and Spread for Not this cue; Global face for No tested feature). `stage3_null_no_claim` is a reporting code, not one of the table's reason codes, so recovery, which reads the table, is unchanged by it. No margin or limit moved. An Option-dependent verdict is likewise reported with recovery's reach beside it (Adjacency and Adjacency on all pairs), since Adjacency on all pairs reached it in .15 in run 4, and that observer is now descriptive (Recovery).
 
 **Which directions decide (`cue_directions: "excess_only"`).** Stage 3 asks whether a cue carries a shared error. A direction with no excess has no shared error to carry, so it cannot test the cue. In the rows from Same cue to No tested feature, "C1 and C2" means the directions whose state is carries or unresolved. An absent direction does not enter them: it neither blocks a null, nor counts for a null, a match or an opposed result, and its results are reported beside the verdict.
 
@@ -439,7 +445,7 @@ Per model, on the target pair. Rows are read in order, and the first that applie
 
 **Same cue and the share carried.** Same cue needs significance, the fill rule and the partner check, and no size floor. With half the excess on the mid-face Same cue was reached in .90 of replicates in the audit, at a quarter .32, and at an eighth .05 (`partial_share` in `a6_recovery.json` for the current rule). A floor would be a new constant with no human basis, so instead the share of the excess in y that the mask removes, with its parts, is reported with every Same cue row, and the verdict is read as "the mid-face carries part of the shared error in this model", never as all of it.
 
-**Rider: label semantics.** With Not this cue or No tested feature, the text-prime rank of the directed target cells is reported. Rank 1 is the highest X_text. If both directed target cells rank within the top `text_neighbour_rank` of 30, it reads as "label neighbours are a live account". Both are required, since either of two cells would land in the top five about a third of the time by chance. This is a correlational reading, and A6 does not show that semantics caused the error.
+**Rider: label semantics.** With Not this cue or No tested feature as the table row, and so with an Inconclusive report, the text-prime rank of the directed target cells is reported. Rank 1 is the highest X_text. If both directed target cells rank within the top `text_neighbour_rank` of 30, it reads as "label neighbours are a live account". Both are required, since either of two cells would land in the top five about a third of the time by chance. This is a correlational reading, and A6 does not show that semantics caused the error.
 
 **Rider: redundancy.** `mask_uplow_neutral` keeps only the mid-face. If the 90% CI of its double difference is inside the margin on both C1 and C2, on a null, the label `sufficient_not_necessary` is attached, and the verdict does not change.
 
@@ -449,7 +455,7 @@ Every verdict states its scope: a claim about this model, these 91 actors, this 
 
 **Null at Stage 2 (Not shared).** Stage 1 passed; X not significant; the upper limit of its 90% CI below `shared_margin`.
 
-**Null at Stage 3 (Not this cue).** All of these, on every direction in play, which is at least one (see Which directions decide). No contrast is capped, and a one-way confusion can reach it on the direction with the excess. Reachable is not likely: see Recovery result, where this null was rarely reached at the judged noise.
+**Null at Stage 3 (Not this cue).** All of these, on every direction in play, which is at least one (see Which directions decide). No contrast is capped, and a one-way confusion can reach it on the direction with the excess. Reachable is not likely: see Recovery result, where this null was rarely reached at the judged noise. **It carries no claim**: a model that meets it is reported as Inconclusive, `stage3_null_no_claim` (decision of 2026-11-08, Decision table). The same holds for No tested feature.
 
 1. Gates, Stage 1 and Stage 2 passed, and the sham equals the original exactly.
 2. Delivery passed. The median over the contrast's clips of the edited region's narrowest side is at least `min_span_tokens` token wide. This uses span, not area, since A2 disclosed that an area rule can pass a long thin region.
@@ -462,7 +468,7 @@ Every verdict states its scope: a claim about this model, these 91 actors, this 
 
 A2 asks that a joint ablation is also null. That cannot apply here: a shared error is face-dependent, so masking the whole face should move it. So condition 4 asks the reverse, and redundancy is reported by the rider. This difference is deliberate, and it is why the null here means "not needed alone".
 
-**Inconclusive.** Exactly these reason codes, in the order the code reads them: `shared_unresolved` (no shared error shown and Not shared not met), `option_unresolved` (O significant, X_far not significant, and the rest of the Option-dependent row unmet), then at Stage 3 `sham_failed`, `cue_unresolved` if no direction is in play, then the named cue rows, then `region_too_small`, `dose_failed` (read only if no direction in play is significant), and last `cue_unresolved` (a significant contrast in an absent direction, a direction in play that does not carry on the edit orders, or no row that applies). Not tested for Stage 3 losses is read before `sham_failed`.
+**Inconclusive.** Exactly these reason codes, in the order the code reads them: `shared_unresolved` (no shared error shown and Not shared not met), `option_unresolved` (O significant, X_far not significant, and the rest of the Option-dependent row unmet), then at Stage 3 `sham_failed`, `cue_unresolved` if no direction is in play, then the named cue rows, then `region_too_small`, `dose_failed` (read only if no direction in play is significant), and last `cue_unresolved` (a significant contrast in an absent direction, a direction in play that does not carry on the edit orders, or no row that applies). Not tested for Stage 3 losses is read before `sham_failed`. In the reported verdict, and only there, `stage3_null_no_claim` marks a table row of Not this cue or No tested feature (Decision table).
 
 **Inconclusive is not the default by construction at Stages 1 and 2. At Stage 3 it is the likely result for a null model (see 1).**
 
@@ -517,7 +523,8 @@ Before any model run, synthetic observers go through `a6_analyse.py` on the real
 | Signal loss | Any mask weakens each clip's own label, by area | Must not reach either Same cue row |
 | Partner pull | Any mask raises Anger on all clips, by area | Must not reach either Same cue row, or Opposes |
 | Fill artefact, down and up | The neutral fill of `mid` moves the partner, and the other fills do not | Must not reach a Same cue row, or Opposes |
-| Option prior, Position bias, Adjacency on all pairs | No pair excess, under a strong prior, position effect, or adjacency for every pair | Not shared |
+| Option prior, Position bias | No pair excess, under a strong prior or a position effect | Not shared |
+| Adjacency on all pairs | No pair excess, under adjacency for every pair | Not shared. **Descriptive only, not judged** (decision of 2026-11-08, `descriptive_observers`); its check is written under `checks_descriptive_not_judged` |
 | One-way weak cue | Mid-face excess on Disgust clips only, the weaker human direction | Must not reach Not this cue or Not shared |
 | Split cue | Upper-face excess on Anger clips and mid-face excess on Disgust clips | Must not reach Not this cue |
 | Happy up, Happy down (second audit) | Global face, with Happy moving .3 nats under `mask_mid` on clips of the pair | Must not reach a Same cue row, or Opposes |
@@ -531,9 +538,9 @@ Before any model run, synthetic observers go through `a6_analyse.py` on the real
 
 Scenarios reach what no observer does, at 50 replicates each, and show only that the row can be reached: a failed gate and 8% of clips lost (Not tested), a sham with different pixels (`sham_failed`), a region under `min_span_tokens` (`region_too_small`), acted evidence outside the regions (`dose_failed`), adjacency in the MCQ with the pair also in the blind readout (`option_unresolved`), and actors split in sign (`shared_unresolved`).
 
-Pass rule: for each non-boundary observer at 1x and 2x, the expected verdict in at least `expected_verdict_min` of replicates, any other named verdict in at most `other_named_verdict_max`, and Inconclusive in at most `inconclusive_max`. The Must not observers reach the forbidden verdict in at most `other_named_verdict_max`. Spread must also reach its rider in `expected_verdict_min`. Every scenario must reach its row, and every named row and reason code must be reached. 0.5x is reported as power and not judged. A failure is reported, and the rule is not relaxed to hide it.
+Pass rule: for each non-boundary, non-descriptive observer at 1x and 2x, the expected verdict in at least `expected_verdict_min` of replicates, any other named verdict in at most `other_named_verdict_max`, and Inconclusive in at most `inconclusive_max`. The Must not observers reach the forbidden verdict in at most `other_named_verdict_max`. Spread must also reach its rider in `expected_verdict_min`. Every scenario must reach its row, and every named row and reason code must be reached. 0.5x is reported as power and not judged. A failure is reported, and the rule is not relaxed to hide it.
 
-**Recovery result, run 4, 2026-11-08, on the binding hash of this block (`a6_recovery.json`). It does not pass.** 500 replicates per observer and strength. Every named row, every reason code and every scenario was reached, and verdicts at the recovery's draws matched the real draws in 60 of 60. The checks that failed, at 1x and 2x unless stated:
+**Recovery result, run 4, 2026-11-08 (`a6_recovery_run4.json`), repeated exactly by run 5 on this block's binding hash (`a6_recovery.json`; see Changes after first drafting). It does not pass.** 500 replicates per observer and strength. Every named row, every reason code and every scenario was reached, and verdicts at the recovery's draws matched the real draws in 60 of 60. The checks that failed, at 1x and 2x unless stated:
 
 | Observer | Expected | 1x | 2x | Check |
 |---|---|---|---|---|
@@ -541,7 +548,7 @@ Pass rule: for each non-boundary observer at 1x and 2x, the expected verdict in 
 | One-way other cue | Not this cue | .29 | .84 | FAIL at 1x |
 | Spread | Not this cue, and its rider | .01 | .11 | FAIL |
 | Global face | No tested feature | .01 | .13 | FAIL |
-| Adjacency on all pairs | Not shared, Option-dependent at most .10 | .15 | .15 | FAIL on other named verdicts |
+| Adjacency on all pairs | Not shared, Option-dependent at most .10 | .15 | .15 | FAIL on other named verdicts. Descriptive since 2026-11-08, so not judged in run 5 |
 
 Everything else passed at 1x and 2x:
 
@@ -615,6 +622,8 @@ Run 1 and run 2 differ in seeds as well as rule, because the observer list chang
 
 Run 4's failures stand in the record as failures. These decisions change what A6 may claim, not any rule or threshold, and the recovery is not rerun for them.
 
+**Implemented on 2026-11-08, and run 5.** The decisions above are now in the block (`stage3_null_claim`, `reference_check_sensitivity`, and `descriptive_observers` under `recovery`) and in the code: `reported()` in `a6_analyse.py` writes a Stage 3 null as Inconclusive with the table row beside it, `stage3_sensitivities` adds `reference_check_happy_equivalence`, and `a6_recovery.py` writes the Adjacency on all pairs check under `checks_descriptive_not_judged`, and gained `--checkpoint`. `verdict()`, the decision table that recovery judges, is unchanged. The code is pinned in the block, so the change moved the design hash from `c1961048...` to `1554afc0...` and the binding hash from `f22c2253...` to `41aa6ee5...`. So recovery was run again on the same seeds to bind to the new hash (run 5, `a6_recovery.json`), and it is not a new test of the design. **Run 5 matches run 4 exactly** in every verdict table, scenario, ladder, noise row, draw check (60 of 60) and prior-bias check, and in every judged check. Its overall result is still a **fail**, on the same four observers with the same numbers (Other cue, One-way other cue at 1x, Spread, Global face). Adjacency on all pairs is still Option-dependent in .148 at 1x and .152 at 2x, over .10, and that failure is written under `checks_descriptive_not_judged`. Run 4 is kept as `a6_recovery_run4.json`. The three audit-trail variants were also run again on the new binding hash, and their tables match the run 4 versions exactly.
+
 
 
 ## Order of work and the wait
@@ -631,11 +640,11 @@ So A6 needs no edit to `evaluate.py`. **If the cluster's `frame_sampling.py` lac
 
 **Order.**
 
-1. Now, with no cluster change: audit this text, write the code, tests and recovery. Fill PENDING items that need no cluster.
+1. Now, with no cluster change: audit this text, write the code, tests and recovery. Fill PENDING items that need no cluster. **Done 2026-11-08**: every PENDING item left needs the cluster (Freeze, prepared, not tagged).
 2. After the rotation jobs finish and G1 is recorded: sync, and confirm by hash that A2's frozen files are unchanged. Confirm or update `frame_sampling.py` on the cluster.
 3. CPU jobs with no model: landmarks on 819 clips in `venvs/au_tools`, and the AU step for the human cue check. Run a decoder preflight on `.flv` under cv2 4.11 (`a6_run.py --step decoder`), since `decoder_preflight.py` reads EU-Emotion clips only.
-4. Pin geometry and the two weight manifests (`a6_run.py --step weights`), the last PENDING items. Neither enters the binding hash, so recovery is not rerun for them. Check the first-frame AU ratio. The human target hash is pinned already, and any rerun must give the same bytes. Freeze. Tag.
-5. Mechanics run: 2 clips per model, scoring nothing readable, to replace the timings below with measured ones.
+4. Pin geometry and the two weight manifests (`a6_run.py --step weights`), the last PENDING items. Neither enters the binding hash, so recovery is not rerun for them. Check the first-frame AU ratio. The human target hash is pinned already, and any rerun must give the same bytes.
+5. Mechanics run: 2 clips per model, scoring nothing readable, to replace the timings below with measured ones. It runs before the freeze, as DECISIONS 2026-11-07 lists it [coordinator 2026-11-08: the conservative order, so a mechanics fault is found while the code can still change]. Then freeze and tag.
 6. Stage 1, read, then Stage 2, read, then Stage 3 where a model needs it.
 
 ## Cost
@@ -680,11 +689,40 @@ So about 16.1 GPU-hours of cell time, and **about 18 with A2's 10% allowance**, 
 
   False named cue rows on null observers stay low as the SD grows: at .6 and 1.0, Global face and Other cue reached a Same cue row or Opposes in at most .01, against .03 to .05 in the audit before the partner check.
 
-- **The null may be unreachable on a real model.** In recovery, at the judged actor-by-region SD of .3, Not this cue was reached in .02 (Other cue) and .29 (One-way other cue) at 1x, and No tested feature in .01; the rest was `cue_unresolved`. With no such variation they reached .62, .87 and .70. The binding conditions are equivalence inside a cue margin that is now small for C2 (Disgust read as Anger, the weak human direction), and Happy's own change inside that margin, which held in about a fifth of replicates on C2. So a model whose shared error does not use the mid-face will most likely be Inconclusive, not null, and A6 can then say only that it found no evidence either way. This is the main reason the amendment may not be worth running as it stands.
-- **The standardised share** is exact for priors, evidence and a scale per emotion, and not for a scale on the signal alone or other changes of shape. In recovery No sharing stayed Not shared in .95, .94, .96 and .88 of replicates at a scale of log SD .15, .3, .5 and 1.0, so it bears a scale per emotion of at least a factor of e either way. **Adjacency on all pairs** is not cancelled: it read as Option-dependent in .15 at 1x, over the .10 limit, which is a failed check, presumably because the standardisation is not additive across the orders in which a pair is adjacent and those in which it is not.
+- **The null may be unreachable on a real model.** In recovery, at the judged actor-by-region SD of .3, Not this cue was reached in .02 (Other cue) and .29 (One-way other cue) at 1x, and No tested feature in .01; the rest was `cue_unresolved`. With no such variation they reached .62, .87 and .70. The binding conditions are equivalence inside a cue margin that is now small for C2 (Disgust read as Anger, the weak human direction), and Happy's own change inside that margin, which held in about a fifth of replicates on C2. So a model whose shared error does not use the mid-face will most likely be Inconclusive, not null, and A6 can then say only that it found no evidence either way. This was the main reason the amendment might not be worth running as it stood. Decided on 2026-11-08: it runs, and the two nulls carry no claim, so A6 says nothing about a cue being absent, only whether a named cue carries or opposes the shared error.
+- **The standardised share** is exact for priors, evidence and a scale per emotion, and not for a scale on the signal alone or other changes of shape. In recovery No sharing stayed Not shared in .95, .94, .96 and .88 of replicates at a scale of log SD .15, .3, .5 and 1.0, so it bears a scale per emotion of at least a factor of e either way. **Adjacency on all pairs** is not cancelled: it read as Option-dependent in .15 at 1x, over the .10 limit, which is a failed check, presumably because the standardisation is not additive across the orders in which a pair is adjacent and those in which it is not. That observer is descriptive since 2026-11-08, and its failure stays on record with its number; recovery's reach is reported beside any Option-dependent verdict.
 - **First fill.** If the first frame is already expressive, the first fill hides less than it should, and the fill rule loses power. The first-frame AU check blocks the freeze above `first_frame_au_ratio_max`.
 - **Text primes** are one wording, with no test, and a model's reading of "A person feels angry." is not a measure of semantics in general.
 - **Basic emotions only.** Nothing here reaches complex states, and EU-Emotion's Bored-Unfriendly question stays open.
+
+## Freeze (prepared, not tagged)
+
+Prepared on 2026-11-08 after the decision after run 4 and run 5, before any model output on the 819 clips exists. **Not committed and not tagged.** The cluster-only items below are still PENDING, so the block's hash changes when they are filled. `binding_sha256` does not change, since its only blanked keys are those pins. `tests/test_a6.py`: 157 passed.
+
+Current draft `design_sha256`: `1554afc0c44b7e51c7cbbbfddb7b658a74ac8e956c1c0b638d2779e67ab60847`. Current `binding_sha256`: `41aa6ee5c8bc7a2d8b9f8fa8db07459c5ea9d12578f1e86c8d36d874183a788f`, which `a6_recovery.json` (run 5) carries.
+
+To be frozen `design_sha256`: **PENDING**, restated once the fields below are filled.
+
+To be frozen code, sha256: `scripts/a6_design.py` `bbc517ec0ed13dbed0b8210ee21d3a00b086280361eae66984a0f2d7345e0a86`; `scripts/a6_analyse.py` `6a7866980b2ae71fb0e73b8ed88db9fe26a09bee873f66fa0c3b267f60d01577`; `scripts/a6_run.py` `9cb517006f05d2023c35225fa25b93654aee10053ae2f39cac887378b23fb958`; `scripts/a6_recovery.py` `fa5f66e4f7c4f0091be660ccd37e839ca203f88b6760b79f4b3f168210ae6b73`; `research/scripts/a6_human_target.py` `f7424fa15484328c1c71c5534ff8724bd0a92c8bf0b366c823065f84ded4283d`; `slurm_jobs/study3_a6.sh` `1cf329f486c058b72de68c0e0f10fa59a6a8a90c789b8fa1e8385573a584c1b4`; `tests/test_a6.py` `be8ce457e3723b965cec17e98a063fe63704e286bbe619d4c5af350442055d15`. The A2, A3 and other imported files are pinned in the block and checked by `a6_design.check_pins`.
+
+To be frozen inputs and outputs, sha256: `research/reproduction/crema_d_selection.csv` `81bab36faadab729a4623d9761e93c8cd46bf3bceac497364246a7734c0bc3b5`; `research/reproduction/a6_human_target.json` `916d7a5633d23f9469e8cb414ee8408fb5ff54cb7c8bdeac8051fec11def8169`; `research/reproduction/crema_d_reliability.json` `4ffd40cf62241fe71dc3977c6cbf3d46d80496e250c66127e732ae5ecb81d9d7`; `research/reproduction/face_input_validity_summary.json` `c1c64e6975b32356a3314268c054f0dee483ddf74b11cd66d03b2faf972e64a4`; `research/reproduction/a6_recovery.json` `9d8be7ba8934de6ad9f82934efaf9fc7382c6628b9ce13d6005b720aaa7593a7`; `research/reproduction/a6_recovery_run4.json` `198d3293ec1583720fc474101c0d9ac032d45aa9f3024bc5705d20b53c4f1f20`; `research/reproduction/a6_recovery_run2.json` `44e54de49612e96e7f5ad260b1d30e64cc5f5a652a63bdc24b3c344626bd8e34`; `research/reproduction/a6_recovery_run1.json` `b04aa9825d2704425a7889d0570bdd66cf8aba6dbde8eeecbc31e847f680e250`; `research/reproduction/a6_recovery_happy_equivalence.json` `4222717539665b48e7d9b936f226cc0be6c55d10f92f21be08da92211bb8d450`; `research/reproduction/a6_recovery_both_directions_paired.json` `9d245b72ff17502afbeada91ce52f6adb58d5a1d0ccef4cf08200bbe033ed8ea`; `research/reproduction/a6_recovery_draft_as_written.json` `6783f6e4a97076456e156719f41847aa1ebcdfe16e0fcbfd4eaa7d5818b771bc`.
+
+**PENDING fields, each needing the cluster or CREMA-D media:**
+- `geometry_sha256`: PENDING (`a6_run.py --step landmarks` on the 819 clips, geometry passed at or under `lost_item_limit`).
+- `weights_sha256.gemma4`: PENDING (`a6_run.py --step weights`).
+- `weights_sha256.qwen3vl`: PENDING (`a6_run.py --step weights`).
+- `mid_hull_check`: PENDING (Fixed before freezing item 2, on the 24 calibration clips under MediaPipe 0.10.14; it closes the last **[proposed]** value).
+- `first_frame_au_ratio`: PENDING (item 6, from the no-model AU step; it blocks the freeze above `first_frame_au_ratio_max`).
+- `decoder_preflight`: PENDING (`a6_run.py --step decoder`, `.flv` under cv2 4.11).
+- `cluster_sync`: PENDING (after the rotation jobs finish: A2's frozen files are confirmed unchanged by hash, and `frame_sampling.py` on the cluster is confirmed or updated for `.flv`).
+- `mechanics_run`: PENDING (2 clips per model, timings only). Runs before the freeze and tag (coordinator, 2026-11-08; Order step 5 updated).
+
+Not freeze items, and also cluster-only: the human cue check (`a6_human_target.py --cue_frames`), which gates nothing, and the Stage 0 gates, including RQ0 from A1's `rotation_summary` through `rq0_status`.
+
+**What is known at this preparation.**
+- No model output on the 819 clips exists in this repository. `results/a6/` is absent.
+- No A1 rotation file, A2 cell, A4 model output or CREMA-D model output was read for this preparation, and no SSH was used.
+- Recovery reads synthetic observers only. Run 5 matches run 4 exactly, and both fail on the Stage 3 nulls. Adjacency on all pairs is also a recorded failure, and it is now descriptive.
 
 ## Fixed before freezing
 
@@ -695,6 +733,8 @@ So about 16.1 GPU-hours of cell time, and **about 18 with A2's 10% allowance**, 
 5. Pin the geometry hash and the weight manifests, and record the resulting `design_sha256`.
 6. The first-frame AU check from the no-model AU step: the mean first-frame AU9 and AU10 over the apex mean, on clips of the pair, at or under `first_frame_au_ratio_max` for every detector (`first_frame_blocks_freeze`).
 7. A decision on whether a design whose nulls may be unreachable is worth running as it stands (see Recovery result).
+
+**Status on 2026-11-08.** Done: 1 (audit, code, recovery runs 1 to 5), 3 for every value except the mid-face list (see the note under the block), 4, and 7 (the decision of 2026-11-08: run, with the Stage 3 nulls carrying no claim, adjacency on all pairs descriptive, and the partner check primary). Open, and each needs the cluster or CREMA-D media: 2 (the mid-face check on calibration clips, which also closes the last **[proposed]** value), 5 (geometry and weight pins) and 6 (the first-frame AU check).
 
 On item 2, a partial check only, on synthetic renders and not on calibration clips: on six FACSHuman renders under MediaPipe 1.2.2, the hull holds no lip-ring landmark, its dilated mask does not reach the undilated lip hull, it meets the dilated lip hull by 1.5% to 4.4% of its area, and about 3% of it lies on the inner eye rings. So `mid` as drafted takes a little of the inner eye corners, and `midlower` is one connected region. This does not close item 2, which needs real speaking faces under 0.10.14.
 
