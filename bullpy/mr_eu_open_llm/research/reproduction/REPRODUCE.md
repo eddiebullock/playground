@@ -34,7 +34,7 @@ python scripts/reproduce.py --fetch           # full mode: adds the long recover
 |---|---|---|---|
 | EU-Emotion item-level norms (O'Reilly et al.), reduced to `data/eu_emotions_human_entropy.json` by `scripts/human_entropy.py` | in repo | public | behaviour, A1 to A3, same-clip, prompt audit |
 | EU-Emotion manifest, definitions, synonyms (`data/eu_emotions_full_manifest.json` and others) | in repo | public (file names and labels only) | most EU-Emotion steps |
-| EU-Emotion videos | CSD3 `data/eu_emotions` | licence-restricted, never in the repo | every model run, AU extraction, stimulus features |
+| EU-Emotion videos | CSD3 `data/eu_emotions` | not in the public repo (collaborator dataset, kept out for size); the team controls EU-Emotion (confirmed by the user 2026-11-08) | every model run, AU extraction, stimulus features |
 | CREMA-D rating tables (`finishedResponses.csv`, `finishedEmoResponses.csv`, `VideoDemographics.csv`, `processedResults/tabulatedVotes.csv`, `processedResults/summaryTable.csv`) | GitHub `CheyneyComputerScience/CREMA-D` at `1658cd34`, ODbL / DbCL; gitignored locally in `data/external/crema_d` | public; sha256 pinned in `scripts/reproduce.py` and checked | CREMA-D selection, reliability, A6 human target |
 | CREMA-D videos | CSD3 | licence-restricted (access form) | readout ladder, A6 model runs, video check |
 | Snoek AU and emotion data, `au_emotion_data.zip` | DOI 10.21942/uva.21261885.v1, figshare file 37888164, CC BY 4.0; gitignored locally in `data/external/snoek_au` | public; sha256 pinned and checked | human AU effects, A4 manifest and ceiling, predictor, CFA |
@@ -42,7 +42,7 @@ python scripts/reproduce.py --fetch           # full mode: adds the long recover
 | RMET items | not used by any output listed here | licence-restricted | Phase 6 only |
 | Model weights (Gemma 4 E4B, Qwen3-VL 8B, Molmo2 O-7B) | Hugging Face, pinned commits | public weights, need a GPU | all model runs |
 | AU detector weights (LibreFace, OpenFace 3, ME-GraphAU) | CSD3 venv `au_tools` | research or non-commercial licences | AU extraction |
-| Activation caches (`results/activations/`) and rotation, A3 and A4 cells | CSD3 | cluster-only derived data (from restricted videos) | Phase 2, Phase 5, A3 summary, prompt audit activations |
+| Activation caches (`results/activations/`) and rotation, A3 and A4 cells | CSD3 | cluster-only derived data (from videos not in the repo) | Phase 2, Phase 5, A3 summary, prompt audit activations |
 | Derived AU tables `research/reproduction/eu_au_measures*.csv` | in repo | public derived numbers (per-clip AU aggregates); remaking them needs the videos | CFA, same-clip analyses |
 
 ## Output table
@@ -51,7 +51,7 @@ Mode: **quick** = run by `--quick`, **full** = run only in full mode, **cluster*
 
 ### Rerun by `scripts/reproduce.py --quick`
 
-| Output | Command (from `bullpy/mr_eu_open_llm`, `PYTHONPATH=.:src`) | Inputs | Min | GPU / restricted | Result |
+| Output | Command (from `bullpy/mr_eu_open_llm`, `PYTHONPATH=.:src`) | Inputs | Min | GPU / data not in the repo | Result |
 |---|---|---|---|---|---|
 | `research/reproduction/behaviour_summary.json` | `python -m paper_v2.behaviour` | three committed eval JSONs, norms | <0.1 | no / no | exact |
 | `research/reproduction/phase0_numbers.json` | `python research/scripts/reproduce_headline_numbers.py` (harness stages `activation_meta/*.json` as `results/activations/baseline_*_6afc/*/extract_meta.json`) | eval JSONs, `results/stats/*`, `results/mech/*` | <0.1 | no / no | every number equal; `activation_cache`, `missing` and eleven `has_*` flags skipped (machine state on 2026-10-30, before `a438754` added fields to the mech JSONs) |
@@ -104,9 +104,9 @@ These are kept as the audit trail of earlier runs. They are not expected to matc
 | `a5_recovery_run1.json` to `a5_recovery_run4*.json`, `a5_run3_*`, `a5_run4_skew_diagnostic.json`, `a5_family_diagnostic.json`, `a5_checks.json` | `565d665`, `b0f16d9`, `9644da1` | A5 drafts; owned by the A5 worker |
 | `a6_recovery_run1.json`, `a6_recovery_run2.json` | `0d213c5`, `b056a7e` | earlier A6 drafts |
 
-### Cluster only (GPU, restricted data, or cluster caches)
+### Cluster only (GPU, data not in the public repo, or cluster caches)
 
-| Output | Script and job | Inputs | GPU | Restricted |
+| Output | Script and job | Inputs | GPU | Data not in the repo |
 |---|---|---|---|---|
 | `results/baseline/eu_emotions/*/eval_v2_*_video_only_seed42.json` | `scripts/evaluate.py` via `slurm_jobs/baseline_eval.sh`; jobs 33520827, 32447858, 32447860 | EU-Emotion videos, weights | yes | EU-Emotion videos |
 | `vision_gates_{gemma4,molmo2,qwen3vl}.json` | `python -m scripts.vision_gates`, `slurm_jobs/study3_vision_gates.sh` | videos, weights | yes | yes |
@@ -118,7 +118,7 @@ These are kept as the audit trail of earlier runs. They are not expected to matc
 | `eu_au_measures.csv`, `eu_au_measures_graphau.csv`, `eu_au_extraction_graphau_summary.json` | `research/scripts/extract_au_measures.py` steps, `slurm_jobs/study3_au_extract*.sh` | videos, detector weights | optional | yes |
 | `activation_meta/*_extract_meta.json` | `python -m scripts.extract_activations`, `slurm_jobs/study3_activation_extract.sh` | videos, weights | yes | yes |
 | `phase2_gate.json`, `phase2_gate_all_layers_{model}.json` | `python -m paper_v2.probe --models M --act_dir ... --layer_set ... --out ...`, `slurm_jobs/study3_phase2_probe.sh`, jobs 39709580 to 39712192 | activation caches | no (CPU on caches) | derived from videos |
-| `phase2_gate_all_layers.json`, `phase2_all_layers_summary.csv` | **no script in the repo**: merged from the three per-model files in commit `f6dd3cf` | per-model gate JSONs | no | no |
+| `phase2_gate_all_layers.json`, `phase2_all_layers_summary.csv` | merged by hand from the three per-model files in commit `f6dd3cf`, with no script then. `python research/scripts/merge_phase2_all_layers.py` (added 2026-11-08) rebuilds both from the committed per-model JSONs; `--check` reported both byte-identical on 2026-11-08. It is CPU-only on committed inputs but not yet a step in `scripts/reproduce.py` | per-model gate JSONs | no | no |
 | `phase5_entanglement.json` | `python research/scripts/run_phase5_entanglement.py` (`paper_v2.entanglement`, n_sim 100) | activation caches | no | derived from videos |
 | `a4_v1_pilot.csv` | `research/scripts/a4_detector.py`, `slurm_jobs/study3_a4_detector.sh`, job 40260039 | A4 renders (FACSHuman) | no | FACSHuman |
 | `results/mech/*` (probe RSA, axes, steering, ablation) | `scripts/confusability_probe_rsa.py`, `causal_eu_confusion_axes.py`, `steer_eu_confusion_axes.py`, `ablate_eu_confusion_axes.py` | activation caches, weights | yes | derived from videos |
@@ -126,15 +126,11 @@ These are kept as the audit trail of earlier runs. They are not expected to matc
 
 ## Registry coverage
 
-Every row of `RESULTS_REGISTRY.md` traces to an output above. These paper numbers or outputs have no registry row, and should get one before submission:
+Every row of `RESULTS_REGISTRY.md` traces to an output above. The gaps this audit found were closed on 2026-11-08 in the registry section "Registry gaps closed (2026-11-08)": the A4 human target and ceiling, A4 recovery and the V1 pilot, the CFA cue spectra, A2 recovery, vision gates, input delivery, the readout choice, the human response predictor, CREMA-D reliability and selection, and the A6 human target. The consensus-tercile rows are now marked verified. Two new read-only scripts back numbers that no output file stored: `research/scripts/merge_phase2_all_layers.py` (the hand merge of `f6dd3cf`, rebuilt byte-identical) and `research/scripts/registry_derived_counts.py` (the V1 pilot breakdown and the 68 of 243 grid frame loss).
 
-- A4 human target and ceiling: `human_au_effects.json` and `a4_human_ceiling.json` are cited about 17 times in `research/paper/v2/methods.md` and `supplementary_note1.md` (common-profile shares .2764, .2634, .3242, .3535; residual between-group reference .780 and .732).
-- A4 recovery, 66 of 66 (`a4_recovery.json`), and the V1 pilot, 113 of 144 = .785 (`a4_v1_pilot.csv`), cited in Methods and STATE.
-- CFA cue spectra (`cfa_identifiability.json`), cited in Methods.
-- A2 recovery (`recovery_stimulus_interventions.json`), vision gates G2 to G4 per model (`vision_gates_*.json`, the eligibility in STATE), input delivery, the readout-ladder choice, the human response predictor validation, CREMA-D reliability and selection, and the A6 human target.
-- A3's descriptive "None of the above" shares (Gemma .206/.305, Qwen .534/.688, Molmo .863/.886) and Molmo's accuracy by target position name no script or output file. They were computed from the cluster cells outside the frozen summary.
-- `phase2_gate_all_layers.json` and `phase2_all_layers_summary.csv` name `paper_v2.probe` as the script, but the merge into one file and the CSV have no script in the repo.
-- Registry statuses still say "read-only" for the consensus-tercile rows; `results/stats/human_calibration.json` now reproduces from the committed eval JSONs, so those rows can be marked verified with `scripts/human_calibration.py` and this harness.
+Still untraced:
+
+- A3's descriptive "None of the above" shares (Gemma .206/.305, Qwen .534/.688, Molmo .863/.886). No script or output file holds them; they were computed from the cluster cells outside the frozen summary. They are not cited in `research/paper/v2/`, but `PREREG_A4_DRAFT.md` repeats .534 and .863. Molmo's accuracy by target position is traced: it is in `face_input_validity_summary.json`, `secondary.accuracy_by_target_position`.
 
 ## Clean-checkout test
 
