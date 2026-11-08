@@ -1,0 +1,10 @@
+<!--
+Draft v2 skeleton, 2026-11-08 (ROADMAP step 0.8). No claim below depends on a result that is not locked.
+Length. The brief asked for 150 to 200 words. Nature Human Behaviour Articles allow "up to 150 words, unreferenced" (content-types page, read with WebFetch on 2026-11-08; see submission/reporting_summary.md). The skeleton is therefore written to 150 words at most once the slots are filled, and each slot has a word budget. The fixed text is 100 words, and the slot budgets add 49, for 149.
+Locked facts used: 243 of 243 targets first (RESULTS_REGISTRY, "Target position in 6AFC prompt"); 243 clips and three models are design facts. The identifiability sentence rests on the proofs in Supplementary Note 1 and the theory note, not on data.
+Closing sentence: chosen from outline.md, "How the whole paper reads", once the scenario is known.
+-->
+
+# Abstract
+
+Some vision-language models are reported to match people at reading mental states from faces, but several claims we located cannot rule out option order or prompt text. In our own earlier task, the correct option came first on every item. We audited three open models on 243 acted clips, rotating option position and swapping faces under fixed prompts. [PENDING: RQ0 sentence, about 15 words, from `research/reproduction/rotation_summary.json` with A3 from RESULTS_REGISTRY.] We prove that agreement on natural items cannot settle which cues a system uses, because natural cues are correlated. We therefore compared model cue effects with human effects of randomised facial action units, on rendered faces. [PENDING: RQ1 sentence, about 12 words, from `results/a4/summary.json`, `models.<model>.headline`.] Stimulus interventions tested preregistered human predictions. [PENDING: RQ2 sentence, about 10 words, from the A2 output.] [PENDING: closing sentence, about 12 words, from the scenario table.]
