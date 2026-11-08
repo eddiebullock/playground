@@ -8,8 +8,10 @@ and each actor has a portrayal gain, because A2's recovery had independent noise
 effects and so showed mechanics, not power.
 
 Every replicate is a full family: the observer's cell plus `companion_cells` cells with no
-truth on either test, so the step-down runs over 8 columns, the most it can in A5, against
-columns that give it nothing. That is the worst case for power.
+truth on either test, so each of A5's two step-down families (B and E*) runs over 4
+columns, the most it can have, against columns that give it nothing. That is the worst case
+for power. The shared-gain families instead have 4 null columns that all carry the same
+actors' portrayal gains, as 2 models x 2 routes on the same 17 actors would.
 
 Pass rule and sizes are in the design block. They were written before any rate was seen. A
 40-replicate pilot then ran for mechanics and runtime, the block's recovery settings did not
@@ -86,15 +88,21 @@ class World:
         common = rng.normal(0, 1, (rows, self.loadings.shape[1])) @ self.loadings.T
         return np.sqrt(share) * common + np.sqrt(1 - share) * rng.normal(0, 1, (rows, F))
 
-    def scores(self, spec: Mapping[str, Any], rng: np.random.Generator) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
-        """Log family scores for one replicate, and the image-free and grey log scores."""
+    def scores(self, spec: Mapping[str, Any], rng: np.random.Generator,
+               log_gain: Optional[np.ndarray] = None) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+        """Log family scores for one replicate, and the image-free and grey log scores.
+
+        log_gain, if given, is each actor's log portrayal gain, so that several cells can share it.
+        """
         n_actors = len(self.actors)
         s = spec["prior"] * self.prior[None, :] + spec["item_sd"] * self.family_noise(rng, self.n)
         s = s + (spec["actor_sd"] * self.family_noise(rng, n_actors))[self.actor]
         if spec.get("identity"):
             s = s + (spec["identity"] * self.family_noise(rng, n_actors))[self.actor]
         if spec["signal"]:
-            gain = np.exp(rng.normal(0, spec["gain"], n_actors))[self.actor] * spec["signal"]
+            if log_gain is None:
+                log_gain = rng.normal(0, spec["gain"], n_actors)
+            gain = np.exp(log_gain)[self.actor] * spec["signal"]
             rows = np.arange(self.n)
             if spec["mode"] == "wrong":
                 s[rows, self.wrong[self.acted]] += gain
@@ -240,7 +248,8 @@ def observers(world: World) -> List[Dict[str, Any]]:
     add("identity", base_spec(prior=free, identity=R["identity_shift"]), "Face-dependent, no expression", True, label_free=True)
     add("noise", base_spec(prior=free, item_sd=R["noise_item_sd"]), "Face-dependent, no expression", True, label_free=True)
     null = prior_for_balance_zero(world, base_spec())
-    add("null_balance_no_evidence", null, None, False, label_free=True, true_balance_zero=True)
+    # Its truth is the "No face evidence, neither part dominant" row; stated since the run 4 audit, still not judged.
+    add("null_balance_no_evidence", null, "No face evidence, neither part dominant", False, label_free=True, true_balance_zero=True)
     add("all_null_family", null, None, False, label_free=True, true_balance_zero=True, share_of_replicates=R["all_null_replicates"] / R["replicates"],
         companion_shuffles=R["all_null_shuffles"])
     for phi in R["phi_grid"]:
@@ -253,6 +262,9 @@ def observers(world: World) -> List[Dict[str, Any]]:
         judged = signal == R["pass_signal"]
         add(f"unmapped_face_signal{signal}", prior_for_phi(world, 0.8, base_spec(signal=signal, mode="wrong")), "Face-led, unmapped", judged, signal=signal)
         add(f"unmapped_default_signal{signal}", prior_for_phi(world, 0.2, base_spec(signal=signal, mode="wrong")), "Default-led, unmapped", judged, signal=signal)
+        # Added after the run 4 audit: the only observer whose truth is this row.
+        add(f"unmapped_even_signal{signal}", prior_for_balance_zero(world, base_spec(signal=signal, mode="wrong")),
+            "Unmapped, neither part dominant", judged, signal=signal, true_balance_zero=True)
     add("spread", base_spec(signal=R["pass_signal"], mode="spread", w="flat"), "Evidence-led", True)
     for phi in R["boundary_phi"]:
         add(f"boundary_phi{phi}", boundary_spec(world, phi), None, False, phi=phi)
@@ -266,10 +278,20 @@ def observers(world: World) -> List[Dict[str, Any]]:
             base = base_spec(signal=R["pass_signal"], gain=gain)
             spec = prior_for_balance_zero(world, base) if phi == 0.5 else prior_for_phi(world, phi, base)
             add(f"gain{gain}_phi{phi}", spec, expected_for(phi), False, phi=phi, gain=gain, true_balance_zero=phi == 0.5)
+    # Added after the run 4 audit: four null columns that share the actors' portrayal gains, as
+    # 2 models x 2 routes on the same actors would. Judged familywise.
+    for gain in R["shared_family_gains"]:
+        spec = prior_for_balance_zero(world, base_spec(signal=R["pass_signal"], gain=gain))
+        add(f"shared_family_gain{gain}", spec, None, False, gain=gain, true_balance_zero=True, shared_family=True,
+            companions=R["companion_cells"])
+    # True Phi for observers placed by something other than a stated Phi, for the false-Even check.
+    for observer in out:
+        if "phi" not in observer:
+            observer["true_phi"] = shares(world, observer["spec"])[0]
     # Every observer whose truth is null on a test also runs in smaller families, down to one
     # cell, the smallest A5 can have, since a small family is where a liberal test shows.
     for observer in list(out):
-        if observer.get("label_free") or observer.get("true_balance_zero"):
+        if (observer.get("label_free") or observer.get("true_balance_zero")) and not observer.get("shared_family"):
             for k in R["companion_sweep"]:
                 out.append({**observer, "name": f"{observer['name']}|companions{k}", "companions": k, "judged": False})
     return out
@@ -283,10 +305,12 @@ def observers(world: World) -> List[Dict[str, Any]]:
 def replicate(world: World, observer: Mapping[str, Any], companion: Mapping[str, Any], index: int, number: int,
               shuffles: int = D["label_shuffles"]) -> Dict[str, Any]:
     rng = np.random.default_rng([R["seed"], index, number])
-    s, w, g = world.scores(observer["spec"], rng)
+    shared = rng.normal(0, observer["spec"]["gain"], len(world.actors)) if observer.get("shared_family") else None
+    s, w, g = world.scores(observer["spec"], rng, shared)
     cell = a5.build_cell("synthetic", ROUTE, an.Cells(world.rows(s)), world.actors, world.partners,
                          a5.baselines([world.report(w, g)], ROUTE), dict(GATES_PASSED), 0.0, shuffles)
-    others = [a5.estimate(world.judgement(world.scores(companion, rng)[0]), shuffles=min(shuffles, observer.get("companion_shuffles", R["companion_shuffles"])))
+    column = observer["spec"] if shared is not None else companion
+    others = [a5.estimate(world.judgement(world.scores(column, rng, shared)[0]), shuffles=min(shuffles, observer.get("companion_shuffles", R["companion_shuffles"])))
               for _ in range(observer.get("companions", R["companion_cells"]))]
     tests = a5.family_tests([cell.est, *others])
     row = a5.finish_cell(cell, tests[0])
@@ -359,22 +383,32 @@ def false_positive_checks(table: Mapping[str, Mapping[str, Any]], spec_of: Mappi
     reported: Dict[str, Any] = {}
     for name, row in table.items():
         meta = spec_of[name]
+        cells = meta.get("companions", R["companion_cells"]) + 1
+        small = cells < D["min_balance_cells"]
+
+        def unjudged(key: str, rate_value: float, why: str) -> None:
+            reported[f"{name}|{key}"] = {"rate": rate_value, "limit": limit, "family_cells": cells, "judged": False, "why": why}
+
         if meta.get("label_free"):
             out[f"{name}|E_star_passes"] = {"rate": row["rates"]["e_passes"], "limit": limit}
             out[f"{name}|B4_passes"] = {"rate": row["rates"]["b4"], "limit": limit}
             shown = sum(row["verdicts"].get(v, 0.0) for v in (*EVIDENCE_VERDICTS, *UNMAPPED_VERDICTS))
-            out[f"{name}|any_evidence_verdict"] = {"rate": shown, "limit": limit}
-        if meta.get("true_balance_zero"):
-            # Since run 3: the claim is judged at every family size, and the raw test only where
-            # a family is large enough for a named balance class (min_balance_cells).
-            out[f"{name}|B_dominance_named"] = {"rate": row["rates"]["b_named"], "limit": limit}
-            cells = meta.get("companions", R["companion_cells"]) + 1
-            if cells >= D["min_balance_cells"]:
-                out[f"{name}|B_significant"] = {"rate": row["rates"]["b_sig"], "limit": limit}
+            if small:  # every verdict is Inconclusive below min_balance_cells, so this is 0 by construction
+                unjudged("any_evidence_verdict", shown, "vacuous: no named verdict below min_balance_cells")
             else:
-                reported[f"{name}|B_significant"] = {"rate": row["rates"]["b_sig"], "limit": limit, "family_cells": cells,
-                                                     "judged": False, "pass": bool(row["rates"]["b_sig"] <= limit)}
-        if "phi" in meta and not low_even <= meta["phi"] <= high_even:
+                out[f"{name}|any_evidence_verdict"] = {"rate": shown, "limit": limit}
+        if meta.get("true_balance_zero"):
+            # Since run 3, the raw test is judged only where a named balance class is possible.
+            if small:
+                unjudged("B_dominance_named", row["rates"]["b_named"], "vacuous: balance withheld below min_balance_cells")
+                unjudged("B_significant", row["rates"]["b_sig"], "raw test below min_balance_cells, printed not judged")
+            else:
+                out[f"{name}|B_dominance_named"] = {"rate": row["rates"]["b_named"], "limit": limit}
+                out[f"{name}|B_significant"] = {"rate": row["rates"]["b_sig"], "limit": limit}
+        if meta.get("shared_family"):
+            out[f"{name}|any_B_column"] = {"rate": row["rates"]["any_b_sig"], "limit": limit}
+        phi = meta.get("phi", meta.get("true_phi"))
+        if phi is not None and not low_even <= phi <= high_even:
             out[f"{name}|false_even"] = {"rate": row["balance_classes"].get("Even", 0.0), "limit": limit}
     null = table.get("all_null_family")
     if null:
@@ -386,7 +420,9 @@ def false_positive_checks(table: Mapping[str, Mapping[str, Any]], spec_of: Mappi
 
 
 def build_report(table: Mapping[str, Mapping[str, Any]], meta: Mapping[str, Mapping[str, Any]], replicates: int) -> Dict[str, Any]:
-    reached = {v: max((row["verdicts"].get(v, 0.0) for row in table.values()), default=0.0) for v in NAMED}
+    # A row counts as reached only by an observer whose truth is that row (since the run 4 audit).
+    reached = {v: max((row["verdicts"].get(v, 0.0) for k, row in table.items() if meta[k].get("expected") == v
+                       and "companions" not in meta[k]), default=0.0) for v in NAMED}
     judged = {k: v["pass"] for k, v in table.items() if v["judged"]}
     false_positive, below_scope = false_positive_checks(table, meta)
     word = {k: table[k]["word_share"].get(meta[k]["share"], 0.0) for k in table if meta[k].get("share")}
@@ -410,7 +446,7 @@ def build_report(table: Mapping[str, Mapping[str, Any]], meta: Mapping[str, Mapp
         "power_by_phi_and_signal": power,
         "word_share_expected_reading_rate": word,
         "false_positives": false_positive,
-        "b_significant_below_min_balance_cells": below_scope,
+        "unjudged_below_min_balance_cells": below_scope,
         "checks": checks,
         "failed": sorted(k for k, v in checks.items() if not v),
         "pass": all(checks.values()),

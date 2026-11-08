@@ -383,3 +383,7 @@ A5 recovery run 3 (design `228bdf48...`) failed five checks. Recalibrating the b
 ## 2026-11-08: A4 human ceiling uses a related estimator, disclosed not changed
 
 Writing Supplementary Note 1 found that A4's human noise ceiling uses pooled fits at ridge 1.0 for every dataset (`a4_analyse.py:360`), while the human target is the mean of per-subject fits at the selected ridge (0.1 for basic). So R_H is the reliability of a related estimator, not of the target itself. A4 is frozen, so the code stays. The corrected values are reported as approximate, with this stated in the methods and in Supplementary Note 1, beside the uncorrected values that the decision rule uses.
+
+## 2026-11-08: EU-Emotion permissions settled
+
+The user confirmed that the team controls EU-Emotion and its creators are collaborators, with full permission for public item-level norms and for in-memory edits of clips. NEEDS_INPUT item 7 is closed. The norms file stays public. Item IDs may now appear in public files. Videos, frames and edited clips stay out of the public repo anyway: they are large, and keeping the rule simple avoids mistakes with the other stimulus sets (RMET, FACSHuman renders), whose licences differ.

@@ -495,11 +495,12 @@ def decide(
     p_B: float,
     p_E: float,
     baseline_ok: bool,
-    family_cells: Optional[int] = None,
+    *,
+    family_cells: int,
 ) -> Dict[str, Any]:
     """The decision table. Every output has a verdict, and Inconclusive has a reason code.
 
-    family_cells is the size of the B step-down family. finish_cell always passes it. Below
+    family_cells is the size of the B step-down family, and is required. Below
     `min_balance_cells`, a named balance class is withheld: balance reads Unresolved with
     reason `balance_small_family`, and the class it would have had is kept for the record.
     """
@@ -518,7 +519,7 @@ def decide(
     evidence = evidence_class(e, p_E, margin, gate, positive_control)
     balance = balance_class(b, p_B)
     withheld = None
-    if family_cells is not None and family_cells < D["min_balance_cells"] and balance in BALANCE_NAMED:
+    if family_cells < D["min_balance_cells"] and balance in BALANCE_NAMED:
         withheld, balance = balance, "Unresolved"
     reasons = []
     if evidence == "Unresolved":
@@ -658,7 +659,7 @@ def finish_cell(cell: Cell, p: Optional[Mapping[str, float]]) -> Dict[str, Any]:
     p_B = p["p_B"] if p else float("nan")
     p_E = p["p_E"] if p else float("nan")
     row = decide(cell.gates, cell.gate, est.T, est.margin, b, e, p_B, p_E, cell.base["ok"],
-                 family_cells=p.get("family_cells", 0) if p else None)
+                 family_cells=p.get("family_cells", 0) if p else 0)
     if alive["S"] is not None and alive["S"] >= D["survival_cut"] and row["verdict"] == "Evidence-led":
         row["flags"].append("survival_conflict")
     return {
@@ -961,6 +962,13 @@ ROOT = a5_design.ROOT
 A3_DIR = ROOT / an.A3_OUTPUT_DIR
 
 
+def check_a3_pin() -> None:
+    """A5 reads A3 only through A2's a3_summary, which accepts only the bytes A2 pins. This
+    stops the run if A2's pin is not the one in A5's block."""
+    if an.A3_SUMMARY_SHA256 != D["a3_summary_sha256"]:
+        raise SystemExit(f"A2 pins A3 summary {an.A3_SUMMARY_SHA256}, not A5's {D['a3_summary_sha256']}.")
+
+
 def require_gate_files(reproduction: Path, model: str) -> None:
     """A missing gate file is an error to fix, not a failed gate, so the run stops."""
     needed = [reproduction / "rotation_summary.json", reproduction / f"vision_gates_{model}.json",
@@ -1050,6 +1058,7 @@ def main() -> None:
         raise SystemExit("A5 is not frozen. No A2 cell is read for A5 before that.")
     a5_design.check_a2_code(D)
     a5_design.check_code_pins()
+    check_a3_pin()
     if run.design_hash() != D["a2_design_sha256"]:
         raise SystemExit("A2's design hash is not the one this amendment pins.")
     run.check_geometry(args.geometry)

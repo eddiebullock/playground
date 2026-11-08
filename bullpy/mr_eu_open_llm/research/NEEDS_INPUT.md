@@ -44,7 +44,9 @@ The user accepted all four choices, and A2 was frozen before A1 was read (tag `a
 
 Item 2 already disclosed that `data/eu_emotions_human_entropy.json` (item-level human response distributions) is committed to the public repo, as aggregated percentages and not videos, and that default was accepted. It is on `main` since commit `2e2af35` (2026-10-30). This is not a breach of the no-stimuli rule.
 
-**Still open, and needed before submission:** whether the EU-Emotion licence allows item-level norms to be public, and whether in-memory edits of clips are allowed. It needs the user or the stimulus authors. Asking the authors is an email, so it is the user's.
+**Resolved 2026-11-08 by the user:** the team controls EU-Emotion and its creators are collaborators, with full permission for public item-level norms and in-memory edits. The norms file stays public. Videos, frames and edited clips are still kept out of the repo, by choice, to keep the package small and the rule simple.
+
+**Was open:** whether the EU-Emotion licence allows item-level norms to be public, and whether in-memory edits of clips are allowed. It needs the user or the stimulus authors. Asking the authors is an email, so it is the user's.
 
 **If the answer is no:** the file would have to come out of history as well as the latest commit, which means rewriting a public branch, and that is the user's call. Reproduction would then read it from a private location.
 
