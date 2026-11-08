@@ -1,6 +1,6 @@
 # Outline: Results, Discussion, and how the paper reads under each outcome
 
-Drafted 2026-11-07, updated the same day after the A4 freeze. No A1 result has been read, and nothing below predicts one. Each branch uses the preregistered outcome classes and adds none. Results text is written only from locked output. A5, A6 and A7 are not frozen, so anything resting on them is marked provisional.
+Drafted 2026-11-07, updated the same day after the A4 freeze. No A1 result has been read, and nothing below predicts one. Each branch uses the preregistered outcome classes and adds none. Results text is written only from locked output. A5 was frozen on 2026-11-08 (evidence classes confirmatory, balance descriptive). A6 and A7 are not frozen, so anything resting on them is marked provisional.
 
 **Working title:** [PENDING: title]. Candidate: "Vision-language models against randomised human cue effects on faces".
 

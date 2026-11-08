@@ -42,7 +42,7 @@ EU-Emotion: full access and licence, per user 2026-11-04. Full RMET access. CREM
 - Default branch: `main`.
 - Integration branch: `paper-v2`.
 - Task branch: `p1-pipeline`.
-- Tags: `v2-phase0`, `prereg-v1`.
+- Tags: `v2-phase0`, `prereg-v1`, `a2-freeze`, `a4-freeze`, `a5-freeze`.
 - Repo visibility: **public**.
 
 ## Blockers (non-idle)

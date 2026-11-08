@@ -246,3 +246,10 @@ Every number above that the paper cites matches its file at the stated rounding.
 
 1. Methods, A4 recovery rate table, "Not aligned with true CFA at or above .30, highest": raw .01 and residual .03 are the boundary observer's rates, the observer the check uses. Over all observers, raw reaches .10 (salience-profile at conversational EA 0.5, on 10 replicates at the bound). The row does not say which observer it covers. The same row is in `PREREG_A4_DRAFT.md` line 210, which is frozen.
 2. Methods, V1 pilot, "Of 96 intensity pairs, 22 rise by at least .5": 22 pairs gain at least .5 from amplitude .25 to 1, but 2 of them (AU01 on `ea_female`, AU26 on `ea_male`) dip at .5, so they are not among the 113 that rise under the V1 rule. Same wording in `PREREG_A4_DRAFT.md` line 154.
+
+## Rows added 2026-11-08 (from the paper scaffold review)
+
+| claim | value | status | script | output file | notes |
+|---|---|---|---|---|---|
+| Weak labels, face-only human p_target (item mean) | Kind .2290 (n = 9), Unfriendly .2408 (n = 10), Jealous .2571 (n = 7); 26 items; chance 1/6 | verified | `research/scripts/make_figures.py` panel 1d (mean of `trials.*.p_target` by `human_target_label`) | `data/eu_emotions_human_entropy.json` | Matches DECISIONS 2026-11-04 (.229, .241, .257). Weak list from `WEAK_LABELS` in `scripts/run_stimulus_interventions.py` |
+| A2 sign-flip FWER under skewed gain nulls | Per route, long tail opposite the prediction, strong skew: .091 / .098 (gain SD .3), .137 / .130 (SD .5); weak skew .054 / .075, .082 / .093; at step-down P < .01, worst .046 / .044; sharp and hetero .043 to .055 | verified | `research/scripts/a2_gain_skew_sim.py` (1000 reps per cell, frozen `test_family`, exact flips) | `research/reproduction/a2_gain_skew_sim.json` (`results`, `per_route_fwer_by_threshold`) | `single_face` / `video_face`. DECISIONS 2026-11-08 |
