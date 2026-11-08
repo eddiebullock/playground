@@ -185,7 +185,7 @@ Aligned means a reliable shared pattern, not the same strategy. A model at .31 i
 
 *V1 coverage.* LibreFace outputs 17 AUs, 12 with intensity (1, 2, 4, 5, 6, 9, 12, 15, 17, 20, 25, 26) and presence alone for 7, 10, 14, 23 and 24 [27]. At least 8 of the 25 families therefore have no readout (AU11, 13, 16, 22, 27, 38, 39 and 43). The denominator is covered pairs only, and those columns are listed as unconfirmed, not as failures. LibreFace is bilateral, so laterality is not tested. It was trained on natural faces, so a failure may reflect the detector and not the render, and V1 does not separate them. Missing detector output stops the analysis and is not read as Inconclusive.
 
-*V1 pilot, before the freeze, with no model.* A face was found on all 432 images, and 113 of 144 covered pairs of column and identity rose, which is .785 against the rule of .70 (`research/reproduction/a4_v1_pilot.csv`). That pass is thin. The rule counts any rise, and most are tiny. Of 96 intensity pairs, 22 rise by at least .5 on LibreFace's 0 to 5 scale, all in AU01, 05, 25 and 26. AU12 at full amplitude reads about .02, so LibreFace does not see the rendered smile, and the same holds for AU04, 06, 09, 15 and 20. Of the 43 rising presence pairs, 35 stay at negative logits, so they rise without reaching presence. V1 therefore shows that the renders are monotonic where the detector responds. It does not show that a natural-face detector reads them as those AUs. The threshold was not changed after this was seen.
+*V1 pilot, before the freeze, with no model.* A face was found on all 432 images, and 113 of 144 covered pairs of column and identity rose, which is .785 against the rule of .70 (`research/reproduction/a4_v1_pilot.csv`). That pass is thin. The rule counts any rise, and most are tiny. Of 96 intensity pairs, 22 gain at least .5 on LibreFace's 0 to 5 scale from amplitude .25 to 1, all in AU01, 05, 25 and 26, and 20 of these rise at every step, as the V1 rule requires (`research/scripts/registry_derived_counts.py`). AU12 at full amplitude reads about .02, so LibreFace does not see the rendered smile, and the same holds for AU04, 06, 09, 15 and 20. Of the 43 rising presence pairs, 35 stay at negative logits, so they rise without reaching presence. V1 therefore shows that the renders are monotonic where the detector responds. It does not show that a natural-face detector reads them as those AUs. The threshold was not changed after this was seen.
 
 *Family flag, not an exclusion.* Only AU01, 05, 25 and 26 are read by the detector with a real rise, and every other family is flagged. These four hold .14, .13, .09 and .20 of residual human energy on basic WC, basic EA, conversational WC and conversational EA (`a4_human_ceiling.json`), so most of what A4 compares is unconfirmed by a detector. All families stay in the confirmatory statistic, and a sensitivity reports the flagged and confirmed families apart.
 
@@ -211,7 +211,7 @@ Aligned means a reliable shared pattern, not the same strategy. A model at .31 i
 | Different-cues Not aligned at 1 times, lowest | .95 | .95 |
 | False Aligned, highest | .40 | .03 |
 | Prior-only signal, highest | .08 | .08 |
-| Not aligned with true CFA at or above .30, highest | .01 | .03 |
+| Not aligned with true CFA at or above .30, highest, on the boundary observer the check uses (across all observers raw reaches .10) | .01 | .03 |
 
 *Exempt cells.* After run 1 and before any model, raw accuracy at conversational 0.25 times was withdrawn as a claim in both conversational datasets. That exemption matters to the pass, because it also covers residual CFA, where pair-swapped accuracy in those two cells is 85% on conversational WC and 62% on conversational EA (`a4_recovery.json`). Counting those two cells, residual CFA would pass 66 of 68. A4 therefore makes no accuracy claim for residual CFA on weak conversational effects, and a decision there rests on the corrected rule. Residual CFA also reads low on weak effects: at 0.25 times, the human-like observer reads .74 against a true .87 on conversational EA.
 
@@ -324,7 +324,7 @@ We ran no power analysis to set sample size, because the stimulus sets are fixed
 
 ### Data availability
 
-Snoek data are public [25]. EU-Emotion stimuli cannot be redistributed, and no clip, frame or edited image is public. [OPEN, for the user or the stimulus authors: whether the EU-Emotion licence covers in-memory edits as in A2, and which aggregated norms may be shared. Neither is settled by any document in the repository.] Renders are not published, because FACSHuman's targets are LGPL-3.0 with no output clause. [PENDING: data availability statement.]
+Snoek data are public [25]. EU-Emotion is a collaborator dataset. Its item-level norms are public in the repository, and in-memory edits as in A2 are permitted (confirmed 2026-11-08). Clips, frames and edited images are not in the public repository, for size; access is through the dataset's authors. Renders are not published, because FACSHuman's targets are LGPL-3.0 with no output clause. [PENDING: data availability statement.]
 
 ### Code availability
 

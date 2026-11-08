@@ -19,9 +19,9 @@ Phase 0 snapshot commit: `2e2af355a4c4c776d2b9675aa4a5b55c56fc44c8` (`p0-locate-
 | Qwen ρ(H_model, H_human) | −0.001325, p = 0.984, boot CI [−0.121, 0.120] | verified | `paper_v2.behaviour` | `research/reproduction/behaviour_summary.json` | CI includes 0 (H2) |
 | Gemma ρ(H_model, H_human) | +0.117246, p = 0.068, boot CI [−0.013, 0.235] | verified | same | same | CI includes 0 (H2) |
 | Molmo ρ(H_model, H_human) | −0.034423, p = 0.593, boot CI [−0.154, 0.097] | verified | same | same | CI includes 0 (H2) |
-| Qwen acc high/mid/low consensus | 0.543 / 0.383 / 0.210; p = 1.20e-05 | read-only | `scripts/human_calibration.py` (historical) | `results/stats/human_calibration.json` | n = 81 tercile |
-| Gemma acc high/mid/low | 0.506 / 0.309 / 0.123; p = 1.57e-07 | read-only | same | same | |
-| Molmo acc high/mid/low | 0.346 / 0.148 / 0.099; p = 1.57e-04 | read-only | same | same | not < 1e-4 |
+| Qwen acc high/mid/low consensus | 0.543 / 0.383 / 0.210; p = 1.20e-05 | verified | `scripts/human_calibration.py`; `scripts/reproduce.py --quick` | `results/stats/human_calibration.json` | n = 81 tercile; output commit `2e2af35`; rerun 2026-11-08 from the committed eval JSONs: accuracies equal, p within 2e-21 |
+| Gemma acc high/mid/low | 0.506 / 0.309 / 0.123; p = 1.57e-07 | verified | same | same | rerun 2026-11-08, equal |
+| Molmo acc high/mid/low | 0.346 / 0.148 / 0.099; p = 1.57e-04 | verified | same | same | not < 1e-4; rerun 2026-11-08, equal |
 | Probe confusability ρ range | 0.467–0.611 | read-only | `scripts/confusability_probe_rsa.py` | `results/mech/{qwen3vl,gemma4,molmo2}_confusability_probe_rsa.json` | pilot LOO; npy now local |
 | Probe human-entropy ρ range | 0.441–0.532 | read-only | same | same | confirmatory rerun is `paper_v2.probe` |
 | Raw RSA ρ range | −0.079 to +0.027 | read-only | same | same | Qwen L4 p_perm = 0.045 uncorrected, ρ negative |
@@ -44,12 +44,12 @@ Phase 0 snapshot commit: `2e2af355a4c4c776d2b9675aa4a5b55c56fc44c8` (`p0-locate-
 | Phase 2 stimulus baseline T1 ρ | 0.138 | verified | same | same | actor + duration/luminance/motion |
 | Phase 2 would-be branch (3-layer) | A (not locked) | verified | same | same | superseded by all-layer lock |
 | H2 output entropy CIs include 0 | Qwen [−0.121, 0.120]; Gemma [−0.013, 0.235]; Molmo [−0.154, 0.097] | verified | `paper_v2.behaviour` | `research/reproduction/behaviour_summary.json` | confirmatory H2 |
-| Official branch | **B** | verified | `paper_v2.probe` all-layer | `research/reproduction/phase2_gate_all_layers.json` | locked 2026-11-02; Holm floor |
+| Official branch | **B** | verified | `paper_v2.probe` all-layer per model; merge by `research/scripts/merge_phase2_all_layers.py` | `research/reproduction/phase2_gate_all_layers.json` | locked 2026-11-02; Holm floor. Merged by hand in `f6dd3cf` (no script then); the merge script, written 2026-11-08, rebuilds the file byte-identical from the three committed `phase2_gate_all_layers_{model}.json` |
 | All-layer Qwen peak grouped T1 ρ | L34 0.471, p_perm = 0.001, p_Holm = 0.036 | verified | jobs 39709580 / 39712190 | same | 36 layers; 20 fail only Holm |
 | All-layer Gemma peak grouped T1 ρ | L2 0.492, p_perm = 0.001, p_Holm = 0.042 | verified | jobs 39709581 / 39712191 | same | 42 layers |
 | All-layer Molmo peak grouped T1 ρ | L22 0.518, p_perm = 0.001, p_Holm = 0.032 | verified | jobs 39709582 / 39712192 | same | at chance; completeness |
 | Extract completeness | Qwen 36/36, Gemma 42/42, Molmo 32/32 npy; 0 errors | verified | extract_meta on CSD3 | HPC `baseline_*_6afc_all_layers_f4` | last_token, max_frames=4 |
-| Qwen layers failing only Holm | 20 / 36 | verified | `paper_v2.probe` gate flags | `research/reproduction/phase2_all_layers_summary.csv` `holm_only_fail` | other four checks pass |
+| Qwen layers failing only Holm | 20 / 36 | verified | `paper_v2.probe` gate flags; CSV by `research/scripts/merge_phase2_all_layers.py` | `research/reproduction/phase2_all_layers_summary.csv` `holm_only_fail` | other four checks pass. CSV made by hand in `f6dd3cf`; the merge script rebuilds it byte-identical |
 | Phase 2 grouped T1 vs layer figure | `research/figures/phase2_grouped_t1_rho.png` | verified | `research/scripts/plot_phase2_all_layers.py` | same PNG | filled markers = Holm-only fail |
 | LOO vs grouped T1 figure | `research/figures/phase2_loo_vs_grouped.png` | verified | `research/scripts/plot_phase2_loo_vs_grouped.py` | same PNG | LOO > grouped at every layer |
 | Pilot n=36 ablation flips recomputed | 5 / 180 | verified | `paper_v2.causal` | `research/reproduction/phase3_pilot_ablation.json` | entropy 0, bored 1, disappointed 1, interested 2, random 1 |
@@ -113,3 +113,136 @@ Frozen analysis, run once after all three models finished (job 40023523). Script
 The A3 rule tests vision dependence only, not competence. A pass cannot be read as face use until A1 is in (A1/A3 table in `PREREG_A3_DRAFT.md`).
 
 Descriptive, outside the frozen summary and computed from the cells as the argmax of joint logprob; share answering "None of the above" (real, mismatch): Gemma .206, .305; Qwen .534, .688; Molmo .863, .886. Molmo is below 1/6 and its accuracy varies with target position (.140 at position 0, .025 at position 1), so its delta rests on a small minority of cells. The accuracy-against-1/6 p is descriptive by A3.
+
+Trace (2026-11-08): **the "None of the above" shares are untraced.** No script and no output file in the repo holds them (searched `scripts/`, `research/scripts/`, `research/reproduction/` and the git history); they were computed from the cluster cells and first written here in `7b8b1d0`. They are not cited in the paper text (`research/paper/v2/`); `PREREG_A4_DRAFT.md` repeats .534 and .863. Accuracy by target position **is** traced: `face_input_validity_summary.json` (`7b8b1d0`), `<model>.secondary.accuracy_by_target_position`, made by `scripts/face_input_validity.py --summarise`; Molmo .13992 at position 0 and .02469 at position 1 (Gemma .342 to .387 across the five positions; Qwen .325 at position 0, .259 to .280 elsewhere).
+
+
+## Registry gaps closed (2026-11-08)
+
+Items the reproduction audit (`research/reproduction/REPRODUCE.md`, Registry coverage) found with no row. Each value was read from the named file on 2026-11-08 and checked against `research/paper/v2/methods.md`, `supplementary_note1.md`, `outline.md` and `introduction.md` where the paper cites it. "Commit" is the last commit that changed the output (`git log -1 -- <file>`). "Quick" means `scripts/reproduce.py --quick` reproduced the file in the clean-checkout test of 2026-11-08 (REPRODUCE.md); "cluster" means it cannot be rerun from public inputs. The sha256 of `human_au_effects.json`, `a4_human_ceiling.json`, `a4_v1_pilot.csv` and `a4_recovery.json` were checked on 2026-11-08 and equal the frozen pins in `PREREG_A4_DRAFT.md` line 9.
+
+### A4 human target, `human_au_effects.json` (commit `c5bdb3a`; quick, CSV exact, JSON equal)
+
+| claim | value | status | script | output file | notes |
+|---|---|---|---|---|---|
+| Snoek subjects per dataset | 60, 60, 20, 20 (basic WC, basic EA, conversational WC, conversational EA) | verified | `research/scripts/human_au_effects.py` | `research/reproduction/human_au_effects.json` `datasets.*.structure.n_subjects` | Methods, Human data |
+| Snoek trials, "other" kept | 140,910; 139,728; 47,300; 47,460 | verified | same | same, `structure.n_trials` | Methods |
+| Face codes in the public files | 967, 8, 4, 4 | verified | same | same, `structure.n_distinct_face_ids` | Methods; basic WC subjects 01-15 saw blended identities (`data_caveats`) |
+| AU columns | 33 | verified | same | same, `structure.n_au_columns` | Methods |
+| Unique AU configurations | 4,659; 2,323; 2,318; 2,325 | verified | same | same, `structure.n_unique_au_configurations` | Methods cites these from the A4 manifest; equal here |
+| Selected ridge | 0.1, 0.1, 1.0, 1.0 | verified | same | same, `ridge_lambda_selected` | Methods ceiling table; Supp. Note 1 section 1 |
+| Pooled split-half, subjects and stimuli, log odds | .960, .959, .908, .882 | verified | same | same, `reliability.beta_family_25_subjects_and_stimuli_split_pooled_fit.split_half_r` | outline.md audit row 3; not used for decisions |
+| Leave-one-subject-out mean r | log odds .762, .781, .752, .718 (mean .753); do effects .740, .729, .727, .719 | verified | same | same, `reliability.{beta,do_effect}_family_25.leave_one_subject_out_mean_r` | outline.md audit row 3; not used |
+
+### A4 human ceiling and energy shares, `a4_human_ceiling.json` (commit `4b5271c`; quick, exact)
+
+| claim | value | status | script | output file | notes |
+|---|---|---|---|---|---|
+| Ceiling, raw (sqrt R_H) | .990, .989, .978, .974 | verified | `python -m scripts.a4_analyse --write_ceiling` | `research/reproduction/a4_human_ceiling.json` `datasets.*.ceiling` | 200 splits, seed 20261107; Methods table, Supp. Note 1 section 4 |
+| Ceiling, residual | .970, .983, .974, .960 | verified | same | same, `ceiling_residual` | same |
+| WC to EA reference, raw | basic .877, conversational .767 | verified | same | same, `wc_to_ea_cfa.basic`, `.conversational` | Methods table |
+| WC to EA reference, residual | basic .780, conversational .732 | verified | same | same, `wc_to_ea_cfa.*_residual` | Methods table; Supp. Note 1 sections 4 and 5; outline "human-level" bar |
+| Common-profile share | .2764, .2634, .3242, .3535 | verified | same | same, `human_energy.*.common_profile_share` | Supp. Note 1 S2 reading; Methods ".26 to .35". sqrt: .526, .513, .569, .595 (arithmetic in Supp. Note 1, checked) |
+| AU22 and AU27 share of human squared effects | .109, .119, .183, .103 | verified | same | same, `human_energy.*.AU22_AU27_share` | Methods, Disclosures and limits |
+| Detector-confirmed share of residual energy | .14, .13, .09, .20 (.1390, .1334, .0894, .1958) | verified | same | same, `human_energy.*.confirmed_share_of_residual` | Methods, Family flag |
+
+### A4 recovery (quick: no; full mode)
+
+| claim | value | status | script | output file | notes |
+|---|---|---|---|---|---|
+| Run 4 (frozen) | residual 66 of 66, raw 62 of 66; `confirmatory_statistic` residual; design `12c454da` | verified | `python -m scripts.a4_recovery` | `research/reproduction/a4_recovery.json` `checks`, `pass` | commit `00847f4`; tables and checks identical to run 3 (compared 2026-11-08) |
+| Run 3 | raw 62 of 66 (false Aligned conversational WC 0.25, 0.5, 1 and conversational EA 0.25; highest .40); residual 66 of 66 | verified | same, at `568b6f5` | `a4_recovery_run3.json` | commit `568b6f5` |
+| Run 2 | raw 63 of 66, false Aligned conversational WC up to .33; residual 62 of 66, pair-swapped within-limit share .76, .88, .80, .82 (basic WC 0.25 and 0.5, basic EA 0.25, conversational EA 0.5) | verified | same, at `6176b61` | `a4_recovery_second_run.json` | commit `6176b61`; Methods "76 to 88%" |
+| Run 1 | 27 of 28; pair-swapped within-limit share .66 at conversational EA 0.25 | verified | same, at `17dc0cf` | `a4_recovery_first_run.json` | commit `17dc0cf` |
+| Run 3 rates, raw / residual | human-like Aligned 1.0 / 1.0; half-shared Aligned at 1x lowest .87 / .79; different-cues Not aligned at 1x lowest .95 / .95; false Aligned highest .40 / .03; prior-only signal highest .08 / .08 | verified | same | `a4_recovery_run3.json` `tables` | false Aligned is the max over different-cues, prior-only, generic and salience-profile (`FALSE_ALIGNED`) |
+| Run 3, Not aligned with true CFA at or above .30, highest | raw .01, residual .03 (boundary observer: .0132, .0263) | verified | same | same, `boundary.not_aligned_when_truth_at_bound` | the value is for the boundary observer, which the check uses. Over all observers raw reaches .10 (salience-profile, conversational EA 0.5, 10 replicates at the bound); see mismatch list |
+| Exempt cells, residual pair-swapped within-limit share | conversational WC .85, conversational EA .62 at 0.25x; 66 of 68 if counted | verified | same | `a4_recovery.json` `tables.residual` | Methods, Exempt cells |
+| Residual CFA on weak effects | human-like at conversational EA 0.25x reads .738 against truth .866 | verified | same | same, `cfa_mean`, `truth_mean` | Methods ".74 against .87"; Supp. Note 1 section 5 |
+| Pair-swapped, run 2 | natural-output r .834 to .945; raw CFA .418 to .562 | verified | same | `a4_recovery_second_run.json` `tables.raw.*.pair_swapped` | Methods ".83 to .95", ".42 to .56" |
+| Salience-profile true CFA, run 3 | residual -.129 to .059; raw .043 to .383 | verified | same | `a4_recovery_run3.json` `truth_mean` | Supp. Note 1 notes on S1 |
+
+### A4 V1 pilot, `a4_v1_pilot.csv` (commit `6176b61`; cluster, job 40260039)
+
+There is no summary file. The headline is the frozen rule `detector_gate` in `scripts/a4_analyse.py` applied to the CSV; the breakdown is printed by `research/scripts/registry_derived_counts.py` (read-only, written 2026-11-08).
+
+| claim | value | status | script | output file | notes |
+|---|---|---|---|---|---|
+| Faces found | 432 of 432 | verified | `research/scripts/a4_detector.py`; count by `registry_derived_counts.py` | `research/reproduction/a4_v1_pilot.csv` `face_found` | Methods |
+| V1 share rising | 113 of 144 = .7847 (.785), passes .70 | verified | `scripts/a4_analyse.py` `detector_gate` | same | Methods, Methods Amendment table |
+| Intensity and presence pairs | 96 and 48 | verified | `registry_derived_counts.py` | same | |
+| Intensity pairs with reading at amplitude 1 minus .25 of at least .5 | 22, all in AU01, 05, 25 and 26; 20 of the 22 also rise monotonically | verified | same | same | Methods "22 rise by at least .5"; see mismatch list |
+| AU12 at amplitude 1 | .014 to .031 | verified | same | same | Methods "about .02" |
+| Rising presence pairs | 43, of which 35 have a presence score below 0 at amplitude 1 | verified | same | same | Methods |
+
+### Cue spectra, `cfa_identifiability.json` (commit `3fddfc5`; quick, exact)
+
+| claim | value | status | script | output file | notes |
+|---|---|---|---|---|---|
+| EU-Emotion LibreFace | 243 clips, 15 cues, lambda_min .05435, condition 76.1, 1/lambda_min 18.4 | verified | `research/scripts/cfa_identifiability.py` | `research/reproduction/cfa_identifiability.json` `eu_emotion_natural_clips.libreface` | Methods table; Supp. Note 1 ".054" |
+| EU-Emotion OpenFace 3.0 | 243, 10, .12505, 22.4, 8.0 | verified | same | same, `.openface3` | Methods table |
+| Snoek as coded, 33 cues | basic WC 4,659 rows, .17776, 13.72, 5.63; basic EA 2,322, .19921, 11.3, 5.02; conversational WC 2,314, .20902, 11.02, 4.78; conversational EA 2,322, .19921, 11.3, 5.02 | verified | same | same, `snoek_randomised_design.*.as_coded` | Methods table, rounded |
+| Snoek left and right merged, 25 cues | lambda_min .43936 to .46878; condition 3.36 to 3.51; 1/lambda_min 2.13 to 2.28 | verified | same | same, `.left_right_merged` | Methods ".44 to .47, 3.4 to 3.5, 2.1 to 2.3"; Supp. Note 1 |
+
+### A2 recovery, `recovery_stimulus_interventions.json` (commit `b3af2cc`; quick, exact)
+
+| claim | value | status | script | output file | notes |
+|---|---|---|---|---|---|
+| A2 recovery | 5 observers, 100 replicates, all pass; expected contrasts recovered at 1.0; share of replicates with an unexpected contrast: prior-only .06, frame-bag .07, mouth-only .08, eyes-only .08, human-like 0 | verified | `python -m scripts.recovery_stimulus_interventions --replicates 100` | `research/reproduction/recovery_stimulus_interventions.json` | 16 contrasts; Methods, A2 Recovery |
+
+### Vision gates G2 to G4 (cluster)
+
+| claim | value | status | script | output file | notes |
+|---|---|---|---|---|---|
+| Gemma 4 | G2, G3, G4 pass at bfloat16 and float32; G4 at 100%: RMS 4.87 nats, flip rate .675 | verified | `python -m scripts.vision_gates` | `research/reproduction/vision_gates_gemma4.json` `verdict`, `stages.bfloat16.g4.verdict` | commit `61123d4`; 40 clips, 17 actors |
+| Qwen3-VL | G2, G3, G4 pass at bfloat16 only; G4 at 100%: RMS 9.30 nats, flip rate .55 | verified | same | `vision_gates_qwen3vl.json` | commit `e131dae`; float32 not in `verdict` (out of memory, Methods Disclosure 7) |
+| Molmo2 | G2 fails at bfloat16 (worst relative L2 .0406 against .01), passes at float32; G3 passes; G4 fails (RMS 2.28 nats but flip rate 0 against .25) | verified | same | `vision_gates_molmo2.json` | commit `61123d4`; Methods "failed the option-independence and token-swap gates" |
+| Eligibility | Gemma 4 and Qwen3-VL eligible for A2 and A4, Molmo2 not | verified | rule in `PREREG_A2_DRAFT.md` | the three files above | STATE item 5; Methods |
+
+### Input delivery (cluster)
+
+| claim | value | status | script | output file | notes |
+|---|---|---|---|---|---|
+| Gemma 4 tokens across the face, median | single_face 9.01 (pass), legacy grid 1.08 (fail) | verified | `python -m scripts.run_stimulus_interventions --step delivery` | `research/reproduction/input_delivery_gemma4.json` `verdicts` | commit `20077be`; Methods "about 1 ... about 9" |
+| Qwen3-VL | single_face 13.52, legacy 11.54; all four routes pass | verified | same | `input_delivery_qwen3vl.json` | commit `20077be` |
+| Molmo2 | single_face 12.96 (pass), video_face 5.07 (fail), legacy 2.01 (fail) | verified | same | `input_delivery_molmo2.json` | commit `e4c05de` |
+| Clips losing frames to the 8-cell grid | 68 of 243 | verified | `research/scripts/registry_derived_counts.py` (rule of `scripts/frame_sampling.py`) | `research/reproduction/stimulus_features.json` `duration_s` (commit `d37caea`) | Methods, Delivery audit; DECISIONS 2026-11-04. Three clips have `duration_s` 9.00, at the boundary; stored to two decimals |
+
+### Blind readout choice (cluster)
+
+| claim | value | status | script | output file | notes |
+|---|---|---|---|---|---|
+| Chosen readout | "In one plain word, with no formatting or punctuation, what is this person feeling?", prefill "They feel" | verified | `python -m scripts.readout_ladder --step ladder`; `choose_shared` rerun 2026-11-08 on the three files returns it | `research/reproduction/readout_ladder_{gemma4,qwen3vl,molmo2}.json` `rung_1` | commits `20077be`, `a343843`, `d22026b`; Methods |
+| Rule values | three candidates pass on every model; lowest median lexicon mass .640, .680, .660; chosen .680 (Gemma .803, Qwen .977, Molmo .680) | verified | same | same, `median_lexicon_mass`, `pass` | |
+| Calibration clips | 24, 24 usable, labels or votes read: false | verified | same | same, `n_calibration_clips`, `n_usable`, `labels_or_votes_read`; ids in `crema_calibration_clips.csv` (quick, exact) | Methods "24 CREMA-D clips" |
+| Lexicon | 106 words in 21 families | verified | `LEXICON` in `scripts/run_stimulus_interventions.py` | code constant, hashed in A2 | Methods |
+
+### Human response predictor, `human_response_predictor.json` (commit `58bada3`; quick, exact)
+
+| claim | value | status | script | output file | notes |
+|---|---|---|---|---|---|
+| Held-out log loss (base rate), r by stimulus, within group | basic WC 1.618 (1.935), .691; basic EA 1.567 (1.906), .815; conversational WC 1.494 (1.613), .593; conversational EA 1.491 (1.591), .636 | verified | `python -m scripts.human_response_predictor` | `research/reproduction/human_response_predictor.json` `within_group_unseen_subjects_and_stimuli.mean_over_splits` | not cited in the paper; PREREG_A2 appendix |
+| Across group | basic WC 1.658 (1.928), .662; basic EA 1.624 (1.903), .768; conversational WC 1.479 (1.590), .630; conversational EA 1.481 (1.555), .647 | verified | same | same, `across_group` | a model of humans, never human data |
+
+### CREMA-D reliability and selection (commit `e969c05`; quick, exact)
+
+| claim | value | status | script | output file | notes |
+|---|---|---|---|---|---|
+| Selection | 819 of 7,442 clips | verified | `research/scripts/crema_select.py` | `research/reproduction/crema_d_selection.csv` (819 rows); `crema_d_reliability.json` `n_selected`, `n_clips` | not cited in the paper |
+| Votes and raters | 71,654 face votes, 2,442 raters | verified | `research/scripts/crema_reliability.py` | `research/reproduction/crema_d_reliability.json` | |
+| Krippendorff alpha, nominal | all clips .4582, selected .4598 | verified | same | same | |
+| Split-half, selected clips, Spearman-Brown | p_target pooled .828; confusion off-diagonal .994 | verified | same | same, `selected_clips` | 2,000 splits |
+
+### A6 human target, `a6_human_target.json` (commit `b056a7e`; quick, exact)
+
+| claim | value | status | script | output file | notes |
+|---|---|---|---|---|---|
+| Sample | 819 clips, 91 actors | verified | `research/scripts/a6_human_target.py` | `research/reproduction/a6_human_target.json` | A6 is an unfrozen draft; Methods gives it at outline level only, with no number |
+| Target pair | Anger and Disgust; pair excess X .166, 95% CI .132 to .199 | verified | same | same, `rule.target_pair`, `pairs[0]` | |
+| Split-half rank ceiling | .984 (half rank r .938) | verified | same | same, `split_half_rank_ceiling` | |
+
+### Paper text against these files (2026-11-08)
+
+Every number above that the paper cites matches its file at the stated rounding. Two places where the wording claims slightly more than the file shows were left unchanged for the authors:
+
+1. Methods, A4 recovery rate table, "Not aligned with true CFA at or above .30, highest": raw .01 and residual .03 are the boundary observer's rates, the observer the check uses. Over all observers, raw reaches .10 (salience-profile at conversational EA 0.5, on 10 replicates at the bound). The row does not say which observer it covers. The same row is in `PREREG_A4_DRAFT.md` line 210, which is frozen.
+2. Methods, V1 pilot, "Of 96 intensity pairs, 22 rise by at least .5": 22 pairs gain at least .5 from amplitude .25 to 1, but 2 of them (AU01 on `ea_female`, AU26 on `ea_male`) dip at .5, so they are not among the 113 that rise under the V1 rule. Same wording in `PREREG_A4_DRAFT.md` line 154.
