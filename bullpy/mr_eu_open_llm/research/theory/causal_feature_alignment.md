@@ -110,4 +110,4 @@ A4's confirmatory statistic. With tau held as options by cues (the transpose of 
 
 - A finite-sample version: a confidence bound on CFA given trials per stimulus, stimuli per cue and subjects.
 - Whether the bound in Proposition 3 can be tightened for softmax observers with bounded Jacobians.
-- Relation to Teneggi and Sulam's concept tests, and to Han et al.'s system-identification limits, needs a full read before any claim of novelty for these results. They are elementary, so the contribution is the estimand and its use, not the proofs.
+- Relation to Teneggi and Sulam and to Han et al.: read 2026-11-08, see Supplementary Note 1, Section 6. Neither contains these results, but other literatures (positivity and extrapolation in causal inference, identifiability of learned representations) were not searched, so no wider novelty claim is made. The results are elementary, so the contribution is the estimand and its use, not the proofs.
