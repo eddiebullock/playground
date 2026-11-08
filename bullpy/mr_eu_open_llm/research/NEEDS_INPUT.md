@@ -51,3 +51,7 @@ Item 2 already disclosed that `data/eu_emotions_human_entropy.json` (item-level 
 **If the answer is no:** the file would have to come out of history as well as the latest commit, which means rewriting a public branch, and that is the user's call. Reproduction would then read it from a private location.
 
 **Meanwhile:** the paper files give counts, not the seven unmatched item IDs, so that nothing further depends on the answer.
+
+## 8. Snoek group contacted — AWAITING REPLY (2026-11-08)
+
+The user emailed the Snoek group on 2026-11-08 and is waiting for a reply. Nothing waits on it: A4 is frozen on the headless FACSHuman renders and runs as written. If the original GFG stimuli or renders arrive, they enter only as a sensitivity analysis on the same AU configurations, added by a dated deviation written before any model sees them. They do not replace the frozen confirmatory test.
