@@ -96,6 +96,10 @@ Let tau-hat_S = tau_S + e_S and tau-hat_H = tau_H + e_H, with e_S and e_H zero m
 
 So the observed cosine approximates CFA times sqrt(R_S R_H), where R_S = ||tau_S||^2 / (||tau_S||^2 + s_S), as a ratio of expectations. This is Spearman's attenuation correction, on a matrix. The study estimates R_H by split-half across subjects and stimuli (`a4_human_ceiling.json`), and R_S by split-half across stimuli, because a model has no response noise and stimulus sampling is its source of error. When the model sees other stimuli than humans did, stimulus sampling enters s_H and s_S, so the `subjects_and_stimuli` ceiling applies, not the same-stimuli one. Corrected values above 1 can occur from sampling and are reported uncorrected beside them.
 
+## Residual CFA (added 2026-11-08)
+
+A4's confirmatory statistic. With tau held as options by cues (the transpose of the form above), let m be the mean of tau's cue columns and u = m / ||m||. Then R(tau) = (I - u u') tau, with R(tau) = tau if m = 0, and residual CFA(S, T) = cos(R(tau_S), R(tau_T)). Each matrix uses its own u. This is `remove_common` in `scripts/a4_analyse.py:86-97`. Definition, proofs and whether each result above carries to it are in `research/paper/v2/supplementary_note1.md`. In short: R is scale free, commutes with cue permutation, and ignores any multiple of a system's own mean profile added to any cue. Theorem 1 and Corollary 1.1 carry. Proposition 2 does not carry as stated, since its pair has two options and one cue each and R removes everything. Proposition 3's upper bound carries only when the two mean directions agree. Proposition 5 holds exactly only for a fixed projector, and A4 estimates it from the data.
+
 ## What the study needs from this
 
 1. Report tau for the model under a design that breaks natural correlations, and do not treat the same-clip pattern score as causal.

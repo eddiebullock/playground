@@ -379,3 +379,7 @@ A5 recovery run 3 (design `228bdf48...`) failed five checks. Recalibrating the b
 - **Run 4** (design `df4583f0...`): every false-positive check passes. Two power checks fail at signal 2, where Inconclusive reaches .226 at Phi .5 and .398 at Phi .7, against .20. Both fail only into Inconclusive (`balance_unresolved`), with no wrong named verdict over .10. They stay recorded as failures, with the power table.
 - **Why not move a limit:** .07 and .20 are unchanged. The scope rule changes what A5 may claim, not any threshold, and it was set from evidence written down before any A2 cell was read.
 - **Cost:** if RQ0 or a gate removes a cell from a family, that model gets no balance verdict from A5.
+
+## 2026-11-08: A4 human ceiling uses a related estimator, disclosed not changed
+
+Writing Supplementary Note 1 found that A4's human noise ceiling uses pooled fits at ridge 1.0 for every dataset (`a4_analyse.py:360`), while the human target is the mean of per-subject fits at the selected ridge (0.1 for basic). So R_H is the reliability of a related estimator, not of the target itself. A4 is frozen, so the code stays. The corrected values are reported as approximate, with this stated in the methods and in Supplementary Note 1, beside the uncorrected values that the decision rule uses.
