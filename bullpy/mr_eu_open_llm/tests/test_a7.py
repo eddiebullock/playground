@@ -161,6 +161,9 @@ def test_a_stored_flag_cannot_admit_an_arm():
     forged["exit_complete"] = True
     forged["arms"] = {"route": True, "token": True}
     assert s0.arms(forged) == {"route": False, "token": False}
+    worse = copy.deepcopy(table)
+    worse["checks"]["C3"]["worst_abs_nats"] = TOL * 1.01  # a pass flag beside a worst value over the limit
+    assert s0.arms(worse) == {"route": False, "token": False} and not s0.exit_complete(worse)
     assert s0.arms(None) == {"route": False, "token": False}
     assert s0.arms({}) == {"route": False, "token": False}
 
@@ -507,6 +510,70 @@ def test_every_block_row_is_labelled_decomposition_never_cut(world):
     for row in out["rq3"].values():
         assert row["rq3"] == "not testable"
         assert row["complete_cuts"] in (["exit"], [])
+
+
+def test_claim_labels_follow_the_recovery_ruling(world):
+    """Ruling 2026-11-08: the interaction rider is descriptive; verdicts, including No effect to
+    carry and the carrying verdicts, are confirmatory, with recovery reach beside the null."""
+    out = run(world, observer("a_only"))
+    assert out["claim_scope"]["confirmatory"][0] == "verdict"
+    row = out["models"]["gemma4"]["arms"]["route"]
+    assert row["verdict"] == "Carried by A" and row["verdict_confirmatory"] is True
+    assert row["interaction_rider_confirmatory"] is False and row["confirmatory"]["verdict"] == "Carried by A"
+    assert row["descriptive"]["interaction_rider"] == [r for r in row["riders"] if r in a7.RIDERS]
+    assert all(r not in row["confirmatory"].values() for r in a7.RIDERS)
+    null = run(world, observer("prior_only"))["models"]["gemma4"]["arms"]["route"]
+    assert null["verdict"] == "No effect to carry" and null["verdict_confirmatory"] is True
+    assert null["confirmatory"]["recovery_reach_observers"] == ["prior_only", "edit_does_nothing", "edit_null_dead_block"]
+    spread = run(world, observer("token_not_local"))["models"]["gemma4"]["arms"]["token"]
+    assert spread["confirmatory"]["not_local"] is True and "not_local" not in spread["descriptive"]["interaction_rider"]
+    for model, body in out["models"].items():
+        for arm, r in body["arms"].items():
+            assert r["verdict_confirmatory"] is True and r["interaction_rider_confirmatory"] is False, (model, arm)
+
+
+def test_unlabelled_row_stops_the_analysis():
+    row = {"verdict": "Carried by A", "reason": None, "kind": "block", "label": "decomposition", "riders": []}
+    with pytest.raises(SystemExit):
+        a7.check_rows({"models": {"gemma4": {"arms": {"route": dict(row)}}}})
+    a7.check_rows({"models": {"gemma4": {"arms": {"route": a7.label_claims(dict(row))}}}})
+
+
+def test_items_missing_lists_failures_by_label_and_reason(world):
+    out = run(world, observer("a_only", drop_items=30))
+    row = out["models"]["gemma4"]["arms"]["route"]
+    assert (row["verdict"], row["reason"]) == ("Inconclusive", "items_missing")
+    assert sum(row["failures_by_label_reason"].values()) == 30
+    assert all(k.endswith("/cells_missing") for k in row["failures_by_label_reason"])
+
+
+def test_recovery_reach_reads_the_recorded_rates():
+    reach = a7.recovery_reach()
+    assert reach is not None
+    assert reach["observers"]["edit_does_nothing"]["expected"][0] == "No effect to carry"
+    assert a7.recovery_reach(ROOT / "absent.json") is None
+
+
+def test_a2_crosscheck_is_descriptive_and_pins_refuse_other_designs(world):
+    rng = np.random.default_rng(0)
+    rows, _fills = rc.model_rows(world, rng, 2.0, observer("a_only"), False)
+    words = list(np.round(rng.normal(-5, 1, W), 6))
+    for r in rows:
+        r["blind"]["word_logprob"] = words
+        r["a7_design_sha256"] = a7_design.DESIGN_SHA256
+    a2 = [{**r, "blind": {**r["blind"], "word_logprob": [round(w, 4) for w in words]}, "design_sha256": D["a2_design_sha256"]}
+          for r in rows if r["condition"] in (a7.ORIGINAL, a7.EDIT)]
+    check = a7.a2_crosscheck(rows, a2)
+    assert check["descriptive"] is True and check[a7.ORIGINAL]["n_items"] == len(world.items)
+    assert check[a7.ORIGINAL]["max_abs_word_logprob"] <= 5e-5
+    assert a7.a2_crosscheck(rows, None)["available"] is False
+    a7.check_a2_pins({"design_sha256": D["a2_design_sha256"]}, a2, rows)
+    with pytest.raises(SystemExit):
+        a7.check_a2_pins({"design_sha256": "0" * 64}, a2, rows)
+    with pytest.raises(SystemExit):
+        a7.check_a2_pins(None, [{**a2[0], "design_sha256": "0" * 64}], rows)
+    with pytest.raises(SystemExit):
+        a7.check_a2_pins(None, a2, [{**rows[0], "a7_design_sha256": "0" * 64}])
 
 
 def test_token_arm_reading_and_not_local(world):

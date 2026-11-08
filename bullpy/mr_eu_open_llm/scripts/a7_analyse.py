@@ -32,7 +32,7 @@ from __future__ import annotations
 import argparse
 import json
 import math
-from collections import defaultdict
+from collections import Counter, defaultdict
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, List, Mapping, Optional, Sequence, Tuple
@@ -73,6 +73,41 @@ REASONS = ("te_unresolved", "carrying_unresolved", "block_dead", "items_missing"
 RIDERS = ("Additive", "Redundant", "Synergic", "Interaction unresolved")
 LABEL = "decomposition"
 HEADING = "decomposition of the complete exit cut"
+
+# Ruling on the Level 2 recovery failures (2026-11-08, draft Recovery section; DECISIONS same
+# date), labelled as A5's label_claims does. Labels only: nothing below is computed differently.
+# The interaction rider (Additive, Redundant, Synergic, Interaction unresolved) is descriptive.
+# Every verdict, including the carrying verdicts and No effect to carry, and the token arm's
+# not_local null stay confirmatory, within the secondary decomposition. The ruling also names
+# "Opposed" among the riders; Opposed blocks is a carrying verdict in the verdict table, so it is
+# labelled confirmatory here, and that reading awaits a ruling before the freeze (independent
+# audit 2026-11-08).
+DESCRIPTIVE_NOTE = ("The interaction rider (Additive, Redundant, Synergic, Interaction unresolved), the carrying class "
+                    "behind a non-carrying verdict, and the PE, N and block-change riders are descriptive: no "
+                    "confirmatory claim rests on them (recovery: the Additive rider reached .758 to .792 against .80). "
+                    "No effect to carry is confirmatory with its recovery reach (.622 and .652 at the null) reported "
+                    "beside it; a null edit that ends Inconclusive is read as Inconclusive. The whole arm is a secondary "
+                    "decomposition of the complete exit cut, never an RQ3 result.")
+REACH_OBSERVERS = {NO_EFFECT: ("prior_only", "edit_does_nothing", "edit_null_dead_block")}
+
+
+def label_claims(row: Dict[str, Any]) -> Dict[str, Any]:
+    """Adds which parts of an arm's row are confirmatory. Changes no value already in the row."""
+    riders = row.get("riders") or []
+    row["verdict_confirmatory"] = True
+    row["interaction_rider_confirmatory"] = False
+    row["confirmatory"] = {"verdict": row.get("verdict"), "reason": row.get("reason"), "reading": row.get("reading"),
+                           "not_local": "not_local" in riders, "scope": "secondary decomposition, not an RQ3 result",
+                           "recovery_reach_observers": list(REACH_OBSERVERS.get(row.get("verdict"), ()))}
+    row["descriptive"] = {"interaction_rider": [r for r in riders if r in RIDERS],
+                          "carrying_class": row.get("carrying_class"),
+                          "riders_descriptive": "riders_descriptive" in row, "confirmatory": False, "note": DESCRIPTIVE_NOTE}
+    return row
+
+
+CLAIM_SCOPE = {"confirmatory": ["verdict", "reason", "reading", "not_local"],
+               "descriptive": ["interaction rider", "carrying_class behind a non-carrying verdict", "riders_descriptive"],
+               "note": DESCRIPTIVE_NOTE}
 
 
 # ---------------------------------------------------------------------------
@@ -371,7 +406,8 @@ def analyse(items: Sequence[Mapping[str, Any]], inputs: Mapping[str, ModelInputs
         cells = an.Cells(given.stage1_rows) if given.stage1_rows is not None else None
         admitted = s0.arms(given.stage0)
         gates = a2_gates(given.a2_output)
-        state: Dict[str, Any] = {"cells": cells, "given": given, "admitted": admitted, "gates": gates, "arms": {}}
+        state: Dict[str, Any] = {"cells": cells, "given": given, "admitted": admitted, "gates": gates, "arms": {},
+                                 "trial_label": {i["trial_id"]: i["label"] for i in ordered}}
         model_columns: List[Tuple[str, str, str, np.ndarray]] = []
         for arm in ARMS:
             decision = ((given.decisions or {}).get(arm)) or {}
@@ -443,9 +479,11 @@ def analyse(items: Sequence[Mapping[str, Any]], inputs: Mapping[str, ModelInputs
             "arms": {},
         }
         for arm in ARMS:
-            model_out["arms"][arm] = arm_verdict(model, arm, state, te, effect, share_margin, col_of, min_items, len(ordered),
-                                                 [trial_actor[t] for t in state["arms"][arm].get("kept", [])], actors)
+            model_out["arms"][arm] = label_claims(arm_verdict(model, arm, state, te, effect, share_margin, col_of, min_items,
+                                                              len(ordered), [trial_actor[t] for t in state["arms"][arm].get("kept", [])],
+                                                              actors))
         out["models"][model] = model_out
+    out["claim_scope"] = CLAIM_SCOPE
     check_rows(out)
     return out
 
@@ -466,6 +504,11 @@ def arm_verdict(model: str, arm: str, state: Mapping[str, Any], te: Optional[Col
         row["verdict"], row["reason"] = INCONCLUSIVE, "items_missing"
         cells = state["cells"]
         row["missing_items"] = sorted(set(t for t in (cells.items if cells is not None else {})) - set(info.get("kept", [])))[:50]
+        # Failures listed by label and reason (draft, Preconditions), over every item of the arm.
+        failed = {r["trial_id"]: r.get("reason") or "failed" for r in (cells.failed if cells is not None else [])}
+        kept = set(info.get("kept", []))
+        by = Counter(f"{label}/{failed.get(t, 'cells_missing')}" for t, label in state.get("trial_label", {}).items() if t not in kept)
+        row["failures_by_label_reason"] = dict(sorted(by.items()))
         return row
     cols = {n: col_of[(model, arm, n)] for n in COLUMNS[arm]}
     row["terms"] = {n: c.summary() for n, c in cols.items()}
@@ -531,6 +574,8 @@ def check_rows(out: Mapping[str, Any]) -> None:
                 raise SystemExit(f"{model}/{arm}: Inconclusive with no reason code.")
             if row["kind"] != "block" or row["label"] != LABEL:
                 raise SystemExit(f"{model}/{arm}: a block result must be labelled {LABEL!r}.")
+            if row.get("verdict_confirmatory") is not True or row.get("interaction_rider_confirmatory") is not False:
+                raise SystemExit(f"{model}/{arm}: no claim labels.")
 
 
 def sensitivities(items: Sequence[Mapping[str, Any]], inputs: Mapping[str, ModelInputs],
@@ -569,6 +614,60 @@ def _jsonl(paths: Sequence[str]) -> List[Dict[str, Any]]:
     return rows
 
 
+def check_a2_pins(a2_output: Optional[Mapping[str, Any]], a2_rows: Optional[Sequence[Mapping[str, Any]]],
+                  stage1_rows: Optional[Sequence[Mapping[str, Any]]]) -> None:
+    """A7 reads A2 only as produced under the A2 design and A3 summary its block pins, and its own
+    Stage 1 rows only under its own design. Anything else is a fault to fix, as in A5."""
+    from scripts.run_stimulus_interventions import design_hash
+
+    if design_hash() != D["a2_design_sha256"]:
+        raise SystemExit(f"A2's design hash is {design_hash()}, not the {D['a2_design_sha256']} that A7 pins.")
+    if an.A3_SUMMARY_SHA256 != D["a3_summary_sha256"]:
+        raise SystemExit(f"A2 pins A3 summary {an.A3_SUMMARY_SHA256}, not A7's {D['a3_summary_sha256']}.")
+    if a2_output is not None and a2_output.get("design_sha256") != D["a2_design_sha256"]:
+        raise SystemExit("A2 analysis output is not from the pinned A2 design.")
+    if any(r.get("design_sha256") != D["a2_design_sha256"] for r in (a2_rows or [])):
+        raise SystemExit("A2 cells include rows not from the pinned A2 design.")
+    if any(r.get("a7_design_sha256") != a7_design.DESIGN_SHA256 for r in (stage1_rows or [])):
+        raise SystemExit("Stage 1 cells include rows not from this A7 design.")
+
+
+def a2_crosscheck(stage1_rows: Optional[Sequence[Dict[str, Any]]], a2_rows: Optional[Sequence[Dict[str, Any]]]) -> Dict[str, Any]:
+    """Largest absolute difference of the word logprobs of A7's same-job endpoints from A2's stored
+    cells (4 decimals) for the same two conditions. Descriptive; it decides nothing (draft, Stage 1)."""
+    out: Dict[str, Any] = {"descriptive": True}
+    if stage1_rows is None or a2_rows is None:
+        return {**out, "available": False}
+    mine, theirs = an.Cells(stage1_rows), an.Cells(a2_rows)
+    for condition in (ORIGINAL, EDIT):
+        worst, n = None, 0
+        for (trial, route, cond), row in mine.ok.items():
+            other = theirs.ok.get((trial, route, cond)) if route == ROUTE and cond == condition else None
+            a = (row.get("blind") or {}).get("word_logprob")
+            b = ((other or {}).get("blind") or {}).get("word_logprob")
+            if other is None or a is None or b is None or len(a) != len(b):
+                continue
+            gap = float(np.max(np.abs(np.asarray(a, dtype=np.float64) - np.asarray(b, dtype=np.float64))))
+            worst, n = gap if worst is None else max(worst, gap), n + 1
+        out[condition] = {"max_abs_word_logprob": worst, "n_items": n}
+    return out
+
+
+def recovery_reach(path: Path = a7_design.ROOT / "research" / "reproduction" / "a7_recovery.json") -> Optional[Dict[str, Any]]:
+    """Recovery rates reported beside No effect to carry and the interaction rider, at pass_effect."""
+    if not path.exists():
+        return None
+    body = json.loads(path.read_text(encoding="utf-8"))
+    key = str(float(D["recovery"]["pass_effect"]))
+    wanted = (*REACH_OBSERVERS[NO_EFFECT], "a_only", "b_only", "additive", "redundant", "synergic", "opposed")
+    out: Dict[str, Any] = {"file": str(path.relative_to(a7_design.ROOT)), "code_sha256": body.get("code_sha256"), "observers": {}}
+    for name in wanted:
+        summary = (((body.get("observers") or {}).get(name) or {}).get("by_effect") or {}).get(key) or {}
+        out["observers"][name] = {k: summary.get(k) for k in ("expected", "expected_rate", "expected_verdict_rate",
+                                                              "inconclusive_rate", "riders")}
+    return out
+
+
 def main() -> None:  # pragma: no cover - runs on real outputs only after the freeze
     parser = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     parser.add_argument("--inputs", type=Path, required=True,
@@ -588,6 +687,9 @@ def main() -> None:  # pragma: no cover - runs on real outputs only after the fr
 
     items = [{k: i[k] for k in ("trial_id", "actor", "label", "human_modal_label", "weak_label")}
              for i in load_items(args.manifest, args.lookup, Path("."))]
+    full = stage1_items(items)
+    if len(full) != int(D["n_items_primary"]) or len(actors_of(full)) != int(D["n_actors"]):
+        raise SystemExit(f"{len(full)} items and {len(actors_of(full))} actors, not {D['n_items_primary']} and {D['n_actors']}.")
     spec = json.loads(args.inputs.read_text(encoding="utf-8"))
     inputs = {}
     for model in MODELS:
@@ -601,7 +703,11 @@ def main() -> None:  # pragma: no cover - runs on real outputs only after the fr
             _jsonl(given["a2_cells"]) if given.get("a2_cells") else None,
             given.get("decisions"),
         )
+        check_a2_pins(inputs[model].a2_output, inputs[model].a2_rows, inputs[model].stage1_rows)
     out = analyse(items, inputs)
+    for model in MODELS:
+        out["models"][model]["a2_crosscheck"] = a2_crosscheck(inputs[model].stage1_rows, inputs[model].a2_rows)
+    out["claim_scope"] = {**CLAIM_SCOPE, "recovery_reach": recovery_reach()}
     out["sensitivities"] = sensitivities(items, inputs, spec.get("below_token_floor"))
     out["code_sha256"] = pins
     args.output.parent.mkdir(parents=True, exist_ok=True)

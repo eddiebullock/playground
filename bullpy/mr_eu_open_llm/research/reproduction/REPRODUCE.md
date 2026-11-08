@@ -1,14 +1,61 @@
 # REPRODUCE
 
-How every committed output in `research/reproduction/`, `research/figures/` and the numbers in `research/RESULTS_REGISTRY.md` were made, from which inputs, and which of them anyone can rerun from public inputs. Goal G12 in `research/GOALS.md`.
+The one documented path from public inputs to every table and figure in the paper (goal G12 in `research/GOALS.md`, roadmap step 4.5). One command runs it:
 
-**Written:** 2026-11-08, at commit `34a24cc` on `p1-pipeline`. The paper's planned Figures 1 to 6 and Table 1 (`research/paper/v2/outline.md`) wait on A1, A2 and A4 model results and do not exist yet. Each will get a row here, made by a script, when it does.
+```bash
+cd bullpy/mr_eu_open_llm
+python scripts/reproduce.py --quick --fetch      # about 7 minutes on 2 idle CPU workers
+```
 
-## In short
+It extracts the committed tree (`git archive HEAD`) into a temporary directory, adds the public CREMA-D and Snoek tables (sha256-checked), and then treats every output the paper uses in one of four ways. The working tree is never written to, and the script exits non-zero if any output fails.
 
-1. The CPU-only steps whose inputs are public rerun with one command, `python scripts/reproduce.py --quick`, in about 6 minutes on 2 CPU workers. It checks out the committed tree into a temporary directory, adds the public CREMA-D and Snoek tables, reruns each step and compares the result with the committed file.
-2. Model-facing steps (evaluations, activations, vision gates, readout ladder, A3) need a GPU, the model weights and the EU-Emotion videos. They ran on CSD3 and cannot be rerun from public inputs. Their committed outputs are the record, and each names its job, script and model revision.
-3. Long CPU recoveries (A4, A5, A6, the same-clip recoveries) are in the full mode of the same script. They take from about 20 minutes to several hours on a 40-core node.
+| Class | What happens | Verdict printed |
+|---|---|---|
+| Rebuilt | The step reruns from public inputs and committed files; the result is compared with the committed copy (bytes, or fields at a stated tolerance, or pixels for PNG, or drawing operators for PDF). | `exact`, `within_tolerance` |
+| Hash-verified | The committed file is checked against a sha256 pinned in `scripts/reproduce.py` and is **not rerun**. The reason is printed per group. | `hash_verified` |
+| Pending | Output of an analysis that has not run. Listed by path only; the script never runs, opens or stats it. | `pending` |
+| Skipped | A public input is missing (pass `--external DIR` or `--fetch`). | `skipped` |
+
+A5 and A6 are unfrozen drafts, so a mismatch in their current recovery files is printed as `draft_changed`, a warning, not a failure. `python scripts/reproduce.py --list` prints every step, its class and the pending list. Without `--quick` (full mode) the long CPU recoveries rerun as well; that takes hours and is meant for a large CPU node.
+
+**Updated:** 2026-11-08, against `origin/main` `af84cf2` (same project files as `p1-pipeline` `80b389e`).
+
+## What the paper uses, and how each is reproduced
+
+| Paper item | Output(s) | Class (`--quick`) | Step |
+|---|---|---|---|
+| Figure 1 (validity audit), panels a to e | `research/paper/v2/figures/fig1.{png,pdf}`, `SOURCES.md` | rebuilt | `paper_figures_1_3` (`research/scripts/make_figures.py --all`) |
+| Figure 1 inputs | `prompt_confound_audit.json` (rebuilt), `data/eu_emotions_human_entropy.json` (in repo), `input_delivery_*.json` (cluster), `literature_table.csv` (hand-curated) | rebuilt / hash-verified | `prompt_confound_audit`, `hash_cluster_records`, `hash_curated_inputs` |
+| Figure 3 (identifiability), panels b to e | `research/paper/v2/figures/fig3.{png,pdf}` from `cfa_identifiability.json` | rebuilt | `cfa_identifiability`, then `paper_figures_1_3` |
+| Phase 2 figures (supplement) | `research/figures/phase2_grouped_t1_rho.png`, `phase2_loo_vs_grouped.png` | rebuilt | `plot_phase2_grouped`, `plot_phase2_loo` |
+| Methods tables: cue spectra, A4 human target and ceiling, human response predictor, CREMA-D reliability, A6 human target | `cfa_identifiability.json`, `human_au_effects.{json,csv}`, `a4_human_ceiling.json`, `human_response_predictor.json`, `crema_d_*`, `a6_human_target.json` | rebuilt | quick steps of the same names |
+| Behaviour, Phase 0 numbers, calibration, prompt audit, pilot ablation, Phase 2 merge | `behaviour_summary.json`, `phase0_numbers.json`, `results/stats/human_calibration.json`, `prompt_confound_audit.json`, `phase3_pilot_ablation.json`, `phase2_gate_all_layers.json`, `phase2_all_layers_summary.csv` | rebuilt | quick steps |
+| A2 recovery; same-clip human cells and criteria | `recovery_stimulus_interventions.json`, `same_clip_cue*.{json,csv}`, `same_clip_family*_criteria.json` | rebuilt | `a2_recovery`, `same_clip_cue_human`, `same_clip_family*_criteria` |
+| Counts with no output file (V1 pilot breakdown; 68 of 243 clips lose grid frames) | stdout of `research/scripts/registry_derived_counts.py` | rebuilt, against values pinned from `RESULTS_REGISTRY.md` | `registry_derived_counts` |
+| Long recoveries: A4 (run 4), A5, A6 (four files), same-clip family and route-pattern recoveries (22 files) | `a4_recovery.json`, `a5_recovery.json`, `a6_recovery*.json`, `same_clip_family*.json`, `same_clip_cue_recovery.json` | hash-verified in `--quick`; rerun and compared in full mode | `hash_long_recoveries`; full-mode steps |
+| A2 skew simulation (DECISIONS 2026-11-08) | `a2_gain_skew_sim.json` | hash-verified (1000 replicates per cell with exact 2^17 flips, no quick mode); its seeded single-column part reruns in full mode (about 50 minutes, one process) | `hash_cpu_no_quick_mode`; `a2_gain_skew_single_column` |
+| A3 table and its "None of the above" shares; vision gates; input delivery; readout choice; stimulus features; Phase 2 and 5 dumps; AU tables; V1 pilot CSV; eval JSONs; mechanistic pilot files (43 files) | see Appendix B, cluster table | hash-verified: made on the cluster from videos, weights, caches or licence-restricted renders, so they cannot be rerun from public inputs | `hash_cluster_records` |
+| Earlier recovery runs cited in Methods and the supplement (A4 runs 1 to 3, A5 runs 1 to 5 and diagnostics, A6 runs 1, 2, 4) | 20 snapshot files | hash-verified: made by earlier code; to rerun one, check out its commit (Appendix B) | `hash_snapshots` |
+
+## Committed but not yet covered
+
+| Output | Why |
+|---|---|
+| `research/reproduction/a7_recovery.json`, `a7_recovery_level1.json` | A7 draft recovery, committed in `80b389e` while this was being written and still owned by the A7 work. Listed in `UNCOVERED` in `scripts/reproduce.py` and printed as `[gap ]` on every run; add a step or a pin when A7 freezes. |
+
+## Pending (not yet produced; never run or read by the script)
+
+| Item | Path(s) the frozen code will write | Made by | Feeds |
+|---|---|---|---|
+| A1 rotation summary | `research/reproduction/rotation_summary.json`, `rotation_errored_trials.json`, `a1_pull_manifest.json` | `research/scripts/post_a1.sh`, `analyse_rotation_run.py` (cluster cells) | Figure 2, Table 1 |
+| A1 same-clip model cells | `research/reproduction/same_clip_family_model_{gemma4,qwen3vl,molmo2}.json` | `same_clip_family_analysis.py --model M`, via `post_a1.sh` | Figure 4 |
+| A2 stimulus interventions | `research/reproduction/stimulus_interventions_{gemma4,qwen3vl}.json` | `scripts/analyse_stimulus_interventions.py` | Figure 6 |
+| A4 summary | `results/a4/summary.json` | `python -m scripts.a4_analyse` | Figure 5 |
+| A5, A6, A7 analyses | `results/a5/a5_analysis.json`; `results/a6/a6_stage1.json`, `a6_stage2_{model}.json`; `results/a7/a7_analysis.json` | `scripts/a5_analyse.py`, `a6_analyse.py`, `a7_analyse.py` (draft preregistrations) | Results, supplement |
+| Figures 2, 4, 5, 6 | `research/paper/v2/figures/fig{2,4,5,6}.{pdf,png}` | `make_figures.py --fig N --real`, which refuses until its `LOCKED` inputs exist | paper |
+| Table 1 | not yet written | from the A1, A2 and A4 outputs | paper |
+
+When one of these is locked: add a step to `STEPS` in `scripts/reproduce.py` (rebuilt if CPU-only on public inputs, otherwise a pinned sha256 in `PINS` and a hash group), remove it from `PENDING`, rerun `--quick`, and update this file. `tests/test_reproduce.py` fails if a committed output under `research/reproduction/` or the figure folders is in neither class, or if a pending path appears in any step.
 
 ## Environment
 
@@ -28,7 +75,8 @@ python scripts/reproduce.py --fetch           # full mode: adds the long recover
 
 `--external DIR` takes the public tables from a folder (layout `crema_d/`, `snoek_au/`) instead of downloading them. Without either flag the harness looks in `data/external` of the main working tree. `--workers N` sets CPU workers and BLAS threads (default 2). `--keep` keeps the temporary tree. The harness exits non-zero if any output fails to reproduce. It never writes to the working tree.
 
-## Inputs and their status
+
+## Appendix A. Inputs and their status
 
 | Input | Where | Status | Used by |
 |---|---|---|---|
@@ -45,7 +93,7 @@ python scripts/reproduce.py --fetch           # full mode: adds the long recover
 | Activation caches (`results/activations/`) and rotation, A3 and A4 cells | CSD3 | cluster-only derived data (from videos not in the repo) | Phase 2, Phase 5, A3 summary, prompt audit activations |
 | Derived AU tables `research/reproduction/eu_au_measures*.csv` | in repo | public derived numbers (per-clip AU aggregates); remaking them needs the videos | CFA, same-clip analyses |
 
-## Output table
+## Appendix B. Output provenance (audit of 2026-11-08)
 
 Mode: **quick** = run by `--quick`, **full** = run only in full mode, **cluster** = cannot run from public inputs. Minutes are wall time on 2 CPU workers on the test Mac, or the logged cluster time. Result is the clean-checkout test of 2026-11-08 (see the last section).
 
@@ -118,38 +166,37 @@ These are kept as the audit trail of earlier runs. They are not expected to matc
 | `eu_au_measures.csv`, `eu_au_measures_graphau.csv`, `eu_au_extraction_graphau_summary.json` | `research/scripts/extract_au_measures.py` steps, `slurm_jobs/study3_au_extract*.sh` | videos, detector weights | optional | yes |
 | `activation_meta/*_extract_meta.json` | `python -m scripts.extract_activations`, `slurm_jobs/study3_activation_extract.sh` | videos, weights | yes | yes |
 | `phase2_gate.json`, `phase2_gate_all_layers_{model}.json` | `python -m paper_v2.probe --models M --act_dir ... --layer_set ... --out ...`, `slurm_jobs/study3_phase2_probe.sh`, jobs 39709580 to 39712192 | activation caches | no (CPU on caches) | derived from videos |
-| `phase2_gate_all_layers.json`, `phase2_all_layers_summary.csv` | merged by hand from the three per-model files in commit `f6dd3cf`, with no script then. `python research/scripts/merge_phase2_all_layers.py` (added 2026-11-08) rebuilds both from the committed per-model JSONs; `--check` reported both byte-identical on 2026-11-08. It is CPU-only on committed inputs but not yet a step in `scripts/reproduce.py` | per-model gate JSONs | no | no |
+| `phase2_gate_all_layers.json`, `phase2_all_layers_summary.csv` | merged by hand from the three per-model files in commit `f6dd3cf`, with no script then. `python research/scripts/merge_phase2_all_layers.py` (added 2026-11-08) rebuilds both from the committed per-model JSONs; `--check` reported both byte-identical on 2026-11-08. It is now the quick step `merge_phase2_all_layers` | per-model gate JSONs | no | no |
 | `phase5_entanglement.json` | `python research/scripts/run_phase5_entanglement.py` (`paper_v2.entanglement`, n_sim 100) | activation caches | no | derived from videos |
 | `a4_v1_pilot.csv` | `research/scripts/a4_detector.py`, `slurm_jobs/study3_a4_detector.sh`, job 40260039 | A4 renders (FACSHuman) | no | FACSHuman |
 | `results/mech/*` (probe RSA, axes, steering, ablation) | `scripts/confusability_probe_rsa.py`, `causal_eu_confusion_axes.py`, `steer_eu_confusion_axes.py`, `ablate_eu_confusion_axes.py` | activation caches, weights | yes | derived from videos |
 | `results/stats/rq1_1b_entropy_alignment.json` | `scripts/forced_choice_entropy.py` (historical); its numbers are recomputed in `behaviour_summary.json` | eval JSONs | no | no |
 
-## Registry coverage
-
-Every row of `RESULTS_REGISTRY.md` traces to an output above. The gaps this audit found were closed on 2026-11-08 in the registry section "Registry gaps closed (2026-11-08)": the A4 human target and ceiling, A4 recovery and the V1 pilot, the CFA cue spectra, A2 recovery, vision gates, input delivery, the readout choice, the human response predictor, CREMA-D reliability and selection, and the A6 human target. The consensus-tercile rows are now marked verified. Two new read-only scripts back numbers that no output file stored: `research/scripts/merge_phase2_all_layers.py` (the hand merge of `f6dd3cf`, rebuilt byte-identical) and `research/scripts/registry_derived_counts.py` (the V1 pilot breakdown and the 68 of 243 grid frame loss).
-
-Still untraced:
-
-- A3's descriptive "None of the above" shares (Gemma .206/.305, Qwen .534/.688, Molmo .863/.886). No script or output file holds them; they were computed from the cluster cells outside the frozen summary. They are not cited in `research/paper/v2/`, but `PREREG_A4_DRAFT.md` repeats .534 and .863. Molmo's accuracy by target position is traced: it is in `face_input_validity_summary.json`, `secondary.accuracy_by_target_position`.
 
 ## Clean-checkout test
 
-Run on 2026-11-08 in a temporary `git worktree` of HEAD `34a24cc` (with `scripts/reproduce.py` copied in, as it was not yet committed), conda env `mr_eu_open_llm`, 2 CPU workers, public inputs copied from `data/external` and checked against their sha256:
+Run on 2026-11-08 in a temporary `git worktree` of `origin/main` `af84cf2`, with only `scripts/reproduce.py`, `tests/test_reproduce.py` and this file copied in (not yet committed), conda env `mr_eu_open_llm`, Python 3.10. The worktree had no `data/external`; the script took the public tables from the main working tree and all six matched their pinned sha256. The worktree was removed afterwards.
 
 ```
-python scripts/reproduce.py --quick --workers 2
+python scripts/reproduce.py --quick --workers 1
 ```
 
-**Result: 25 of 25 outputs reproduced, 0 failed, 0 skipped, exit code 0, about 6.5 minutes.** 17 byte-identical (one of them `results/a4/manifest.csv`, checked against its pinned sha256), 8 within the stated tolerance:
+**Result: exit code 0. 33 outputs rebuilt and matched (22 byte-identical, 11 within the stated tolerance), 87 verified by hash, 0 failed, 0 skipped, 0 draft changed, 9 pending items listed, 2 uncovered A7 files listed.** 545 s with 1 worker on a machine shared with other CPU jobs (load about 8 on 8 cores); expect about 7 minutes on 2 idle workers. `tests/test_reproduce.py`: 18 passed there.
 
-| Output | Why not byte-identical |
+Not byte-identical, and why:
+
+| Output | Why |
 |---|---|
 | `phase0_numbers.json` | machine-state blocks and `has_*` flags skipped; every number equal |
 | `human_calibration.json` | largest gap 1.7e-21 (float last digit) |
 | `phase3_pilot_ablation.json` | `source` is an absolute path |
-| `prompt_confound_audit.json` | `activations` needs cluster caches (empty in a clean checkout); permutation p-values differ by up to 0.0037 (tolerance 0.01); every r equal to 1e-15 |
-| two Phase 2 PNGs | font rasterising; same plot (checked by eye too), within the pixel tolerance |
+| `prompt_confound_audit.json` | `activations` needs cluster caches; permutation p-values differ by up to 0.0037 (tolerance 0.01); every r equal to 1e-15 |
+| two Phase 2 PNGs | font rasterising; within the pixel tolerance |
 | `human_au_effects.json` | AU02L/AU02R order in one unordered pair |
-| two same-clip criteria files | lock records: script hash and lock time differ by design; criteria and `criteria_sha256` equal |
+| two same-clip criteria files | lock records: script hash and lock time differ by design |
+| `registry_derived_counts` (stdout) | no committed file; every value equal to the one pinned from the registry |
+| `fig1.pdf` | matplotlib writes some patches in hash-seed order; the same 4,720 drawing-operator lines in another order. `fig1.png`, `fig3.png`, `fig3.pdf` and `SOURCES.md` are byte-identical |
 
-Full mode was not run in this test (hours of CPU; at most 2 workers were available because other simulations were running).
+Full mode was not run (hours of CPU; at most 2 workers were free). Its A2 single-column step was run on its own: see below.
+
+**A2 single-column check (full-mode step `a2_gain_skew_single_column`), run once on its own on 2026-11-08:** `python research/scripts/a2_gain_skew_single_column.py`, one process, about 70 minutes on the loaded machine. All six output lines equal `single_column_check` in the committed `a2_gain_skew_sim.json` (compared with the script's own capture and compare rules: `within_tolerance`, equal after parsing). The 1000-replicate maxT part of that file stays hash-verified.
