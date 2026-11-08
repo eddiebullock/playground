@@ -1,7 +1,7 @@
 {
  "variant": "both_directions",
- "binding_sha256": "f22c22530a3faf9b015f2611f2da7357475627db7fcb50b0322be173e38ec3ba",
- "design_sha256": "c1961048eaaf4ed9ff12d6c78ae46322975cc15dc9820d36e53094396adc04c8",
+ "binding_sha256": "41aa6ee5c8bc7a2d8b9f8fa8db07459c5ea9d12578f1e86c8d36d874183a788f",
+ "design_sha256": "1554afc0c44b7e51c7cbbbfddb7b658a74ac8e956c1c0b638d2779e67ab60847",
  "replicates": 500,
  "note": "Audit trail only, on the seeds of a6_recovery.json, under an earlier rule. Not a result of the amended design.",
  "tables": {
@@ -518,5 +518,5 @@
    }
   }
  },
- "seconds": 991.1
+ "seconds": 478.4
 }

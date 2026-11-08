@@ -674,6 +674,82 @@ def test_a_dropped_direction_does_not_enter_the_riders():
     assert out["riders"]["directions_used"] == ["Anger>Disgust"]
 
 
+# Decision of 2026-11-08: the Stage 3 nulls carry no claim ----------------------
+
+
+@pytest.mark.parametrize("c1, c2, table_row", [
+    (row(null=True), row(null=True), an.NOT_THIS_CUE),
+    (row(pair_inside_margin=True), row(pair_inside_margin=True), an.NO_TESTED_FEATURE),
+])
+def test_stage3_nulls_are_reported_as_inconclusive_with_the_table_row_beside(c1, c2, table_row):
+    table = an.verdict(GATES, first_ok(), second_ok(), third(c1, c2))
+    assert table["verdict"] == table_row  # the table, which recovery judges, is unchanged
+    reach = {row_name: {"obs": {"1.0": 0.1, "2.0": 0.2}} for row_name in an.REACH_OBSERVERS}
+    out = an.reported(table, reach)
+    assert out["verdict"] == an.INCONCLUSIVE and out["reason_code"] == an.NULL_NO_CLAIM
+    assert out["decision_table_row"] == table_row and out["table_reason_code"] is None
+    assert out["riders"] == table["riders"] and out["recovery_reach"] == reach[table_row]
+    assert an.NULL_NO_CLAIM not in an.REASON_CODES  # recovery reads the table's reason codes only
+
+
+@pytest.mark.parametrize("two, three, expected", [
+    (second_ok("not_shared"), None, an.NOT_SHARED),
+    (second_ok("option_dependent"), None, an.OPTION_DEPENDENT),
+    (second_ok("shared_unresolved"), None, an.INCONCLUSIVE),
+    (second_ok(), third(row(match=True), row(match=True)), an.SAME_CUE),
+    (second_ok(), third(row(match=True), row()), an.ONE_DIRECTION),
+    (second_ok(), third(row(opposes=True), row()), an.OPPOSES),
+    (second_ok(), third(row(), row()), an.INCONCLUSIVE),
+])
+def test_every_other_row_is_reported_as_it_is(two, three, expected):
+    table = an.verdict(GATES, first_ok(), two, three)
+    out = an.reported(table)
+    assert out["verdict"] == table["verdict"] == expected and out["reason_code"] == table["reason_code"]
+    assert out["decision_table_row"] == expected and "recovery_reach" not in out
+
+
+def test_recovery_reach_is_read_from_this_binding_only(tmp_path):
+    reach = an.recovery_reach()
+    assert set(reach) == set(an.REACH_OBSERVERS)
+    assert set(reach[an.NOT_THIS_CUE]) == {"other_cue", "one_way_other_cue", "spread"}
+    assert set(reach[an.OPTION_DEPENDENT]["adjacency_all"]) == {"1.0", "2.0"}
+    other = json.loads(d.RECOVERY_OUT.read_text(encoding="utf-8"))
+    other["binding_sha256"] = "0" * 64
+    path = tmp_path / "a6_recovery.json"
+    path.write_text(json.dumps(other), encoding="utf-8")
+    with pytest.raises(SystemExit):
+        an.recovery_reach(path)
+
+
+def test_adjacency_on_all_pairs_is_descriptive_and_not_judged():
+    assert rec.DESCRIPTIVE == ("adjacency_all",) and "adjacency_all" in rec.EXPECTED
+    out = json.loads(d.RECOVERY_OUT.read_text(encoding="utf-8"))
+    assert "adjacency_all" not in out["checks"]
+    assert set(out["checks_descriptive_not_judged"]) == {"adjacency_all"}
+
+
+def test_the_decisions_are_in_the_block():
+    assert D["stage3_null_claim"] == "none_reported_inconclusive"
+    assert D["reference_check"].startswith("partner_beyond_zero") and D["reference_check_sensitivity"] == "happy_inside_margin"
+    assert D["recovery"]["descriptive_observers"] == ["adjacency_all"]
+
+
+def test_a_checkpointed_run_resumes_to_the_same_rows(tmp_path, monkeypatch):
+    monkeypatch.setattr(rec, "SETTINGS", FAST)
+    tasks = rec.build_tasks(["no_sharing", "prior_only"], [1.0], 2, overrides={"actor_region_sd": 0.0})
+    monkeypatch.setattr(rec, "CHECKPOINT", None)
+    straight = rec.run_tasks(tasks, 1)
+    path = tmp_path / "checkpoint.jsonl"
+    monkeypatch.setattr(rec, "CHECKPOINT", path)
+    rec.run_tasks(tasks[:2], 1)
+    path.write_text(path.read_text(encoding="utf-8") + '{"key": "torn', encoding="utf-8")  # a stop mid-write
+    calls = []
+    original = rec.one_replicate
+    monkeypatch.setattr(rec, "one_replicate", lambda task: calls.append(task) or original(task))
+    resumed = rec.run_tasks(tasks, 1)
+    assert resumed == straight and len(calls) == 2
+
+
 def test_direction_states_come_from_stage2_and_read_one_way_observers():
     obs = rec.Observer("one_way_cue", 1.0, [11])
     mcq, blind, bridge = obs.stage1_scores()
@@ -947,7 +1023,15 @@ def test_descriptive_rows_and_sensitivities_run_on_a_synthetic_replicate():
     assert isinstance(an.reading(third), str)
     out = an.stage3_sensitivities(cells, second["cue_margin"], 16.0, FAST, second["dose_margin"])
     assert {"reference_with_no_emotion", "reference_two_out_as_first_drafted", "control_Fear_only", "control_Sad_only",
-            "edit_order_2_only", "edit_order_5_only", "plain_change_on_acted_clips", "equal_weight_clips"} <= set(out)
+            "edit_order_2_only", "edit_order_5_only", "plain_change_on_acted_clips", "equal_weight_clips",
+            "reference_check_happy_equivalence"} <= set(out)
+    # The sensitivity is the audit's rule, the same as the recovery variant, and the primary stays the partner check.
+    audit = an.stage3(cells, second["cue_margin"], 16.0, FAST, dose_margins=second["dose_margin"], reference_check="happy_inside_margin")
+    for cid, v in audit["contrasts"].items():
+        assert out["reference_check_happy_equivalence"][cid]["status"] == v["status"]
+        assert v["match"] == bool(v["p_maxt"] < an.ALPHA and v["mean"] * v["direction"] > 0 and v["fill_rule"] and v["reference_stable"])
+        assert third["contrasts"][cid]["match"] == bool(v["p_maxt"] < an.ALPHA and v["mean"] * v["direction"] > 0 and v["fill_rule"]
+                                                         and an.beyond_zero(third["contrasts"][cid]["partner_part_ci95"], v["direction"]))
     subsets = an.clip_sensitivities(cells, w.partners, second["cue_margin"], 16.0, [], FAST, second["dose_margin"])
     assert {"human_mode_is_intended", "at_or_above_token_floor", "without_short_decode_h264"} <= set(subsets)
     assert subsets["without_short_decode_h264"]["n_clips"] == 819 - len(ar.SHORT_DECODE_CLIPS)
@@ -1088,7 +1172,12 @@ def test_every_row_reaches_an_output_file(tmp_path, monkeypatch, name, strength,
         return
     stage(3, "--model", model)
     third = json.loads((results / f"a6_stage3_{model}.json").read_text(encoding="utf-8"))
-    assert third["verdict"]["verdict"] == expected
+    assert third["verdict"]["decision_table_row"] == expected
+    if expected in an.NULL_ROWS:  # no claim: reported as Inconclusive, with recovery's reach beside it
+        assert third["verdict"]["verdict"] == an.INCONCLUSIVE and third["verdict"]["reason_code"] == an.NULL_NO_CLAIM
+        assert set(third["verdict"]["recovery_reach"]) == set(an.REACH_OBSERVERS[expected])
+    else:
+        assert third["verdict"]["verdict"] == expected
     assert third["stage2_sha256"] == __import__("hashlib").sha256((results / f"a6_stage2_{model}.json").read_bytes()).hexdigest()
 
 
