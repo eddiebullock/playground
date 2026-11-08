@@ -415,3 +415,14 @@ A dry run of the post-A1 runbook on synthetic files found that the frozen `resea
 - **Primary estimand:** unchanged. `bool(None)` is False, so an errored trial already scores as wrong, as A3's text says A1 does.
 - **Secondary p_target:** an errored trial counts as 0 mass on the target, which is the same no-vote treatment. This is done by a wrapper, `research/scripts/analyse_rotation_run.py`, which checks the frozen script's hash, supplies an empty distribution, and counts the errored trials per model, condition and rotation in `rotation_errored_trials.json`. With no errored trials, its output is byte-identical to the frozen script's.
 - **A trial missing between files** stays a hard stop. It means a job problem, to be fixed by a rerun, not by analysis.
+
+## 2026-11-08: A7 audit closes block admissibility (pre-data)
+
+The A7 audit (ROADMAP 0.12) took the stricter reading of the question left open on 2026-11-07. A block of a complete cut, or a token set, is not itself a cut and does not meet G7's wording. So RQ3 rests on the complete exit cut alone. The route and token arms survive only as an optional secondary decomposition of a complete exit cut and are never reported as an RQ3 result.
+
+- **Complete cut, numeric:** all 24 calibration clips and all 106 unrounded word logprobs within 1e-3 nats of the image-free reference. One word on one clip over the limit fails the site.
+- **Not testable:** any site not run, failed, or without output counts as not shown, and RQ3 is reported as "not testable" there.
+- **No look at A2:** any Stage 1 scope decision must be in this file before any A2 analysis output is opened, or Stage 1 does not run. Extra runs conditioned on A2 verdicts are exploratory only.
+- **Endpoints:** every cell of an item comes from the same A7 job, unrounded; A2's stored cells are a descriptive cross-check.
+- **Timing:** A7 must be frozen (tag `a7-freeze`) before any full A2 cell is read, or A7 becomes exploratory. Its code, tests and CPU recovery are local work to finish before then.
+- Design hash after the audit: `9e40cfcf...50bb09`, checked independently by the coordinator.
