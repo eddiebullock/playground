@@ -1,0 +1,53 @@
+# Pinned environment for the reproduction package (goal G12).
+#
+# Made on 2026-11-08 from `conda env export -n mr_eu_open_llm --no-builds` on the Mac that ran
+# the clean-checkout test (macOS 14, Apple silicon), filtered to the third-party packages the
+# project code imports (scripts/, research/scripts/, src/paper_v2/), plus their pins.
+# The top-level environment.yml lists the same packages without versions.
+#
+#   conda env create -f research/reproduction/environment_pinned.yml
+#   conda activate mr_eu_open_llm_repro
+#   python scripts/reproduce.py --quick --fetch
+#
+# Only the "CPU steps" block is needed for scripts/reproduce.py. The GPU block is what the
+# model-facing steps import; on CSD3 those ran in their own venvs with the versions each output
+# records (for example vision_gates_*.json: torch 2.10.0+cu128, transformers 5.10.1 for Gemma 4
+# and Qwen3-VL, 4.57.3 for Molmo2, cv2 4.11.0). All video decoding on the cluster is pinned to
+# cv2 4.11 by research/scripts/decoder_preflight.py (amendment A1.1); no CPU step imports the
+# local opencv below. The local env mixes conda torchvision 0.20.1 with pip torch 2.10.0, which
+# is recorded as found; a fresh GPU install should take matching torch and torchvision builds.
+name: mr_eu_open_llm_repro
+channels:
+  - conda-forge
+dependencies:
+  # CPU steps (scripts/reproduce.py)
+  - python=3.10.20
+  - numpy=1.26.4
+  - scipy=1.15.2
+  - pandas=2.3.3
+  - scikit-learn=1.7.2
+  - joblib=1.5.3
+  - matplotlib=3.10.8
+  - freetype=2.14.2        # figure text rendering; PNG comparison allows for small font differences
+  - pillow=12.1.1
+  - statsmodels=0.14.6
+  # GPU and video steps (cluster only; not needed for scripts/reproduce.py)
+  - opencv=4.13.0          # cluster video jobs use cv2 4.11, see above
+  - tqdm=4.67.3
+  - pip
+  - pip:
+      - torch==2.10.0
+      - torchvision==0.20.1
+      - transformers==5.9.0
+      - accelerate==1.13.0
+      - peft==0.19.1
+      - huggingface-hub==1.16.1
+      - safetensors==0.7.0
+      - tokenizers==0.22.2
+      - sentencepiece==0.2.1
+      - einops==0.8.2
+      - timm==1.0.27
+# Not in this env, imported by one script each and installed separately where used:
+#   openpyxl (scripts/human_entropy.py, reading the EU-Emotion norms xlsx),
+#   mediapipe, libreface, openface, ME-GraphAU (research/scripts/extract_au_measures.py, cluster
+#   venv au_tools), inspect_ai (scripts/free_response_judge.py, not used by the paper).
