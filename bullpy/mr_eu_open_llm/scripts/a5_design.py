@@ -17,9 +17,10 @@ from typing import Any, Dict, Mapping
 ROOT = Path(__file__).resolve().parents[1]
 DRAFT = ROOT / "research" / "PREREG_A5_DRAFT.md"
 # Restated in the draft. Any edit to the block must change both, on purpose.
-DESIGN_SHA256 = "2103ffef0afd37f85c0dff55fe8e84b817338f33f1877cde77f5158c977ba082"
+DESIGN_SHA256 = "df4583f0f00097136990e9ab7ffacb4eea35b2c7dbe385c82b7f16404b6046e2"
 
 _BLOCK = re.compile(r"^## Design block$.*?^```json\n(.*?)^```$", re.M | re.S)
+_CODE = re.compile(r"^## Code hashes$.*?^```text\n(.*?)^```$", re.M | re.S)
 _STATED = re.compile(r"`design_sha256` of the block below: `([0-9a-f]{64})`")
 
 
@@ -50,6 +51,30 @@ def load_design(path: Path = DRAFT, expected: str = DESIGN_SHA256) -> Dict[str, 
     if actual != stated:
         raise SystemExit(f"Design block hash {actual} is not the {stated} that the draft states.")
     return json.loads(block_bytes(path))
+
+
+def code_pins(path: Path = DRAFT) -> Dict[str, str]:
+    """A5's own code and the helpers it imports, pinned in the draft outside the block.
+
+    They sit outside the block because a5_design.py holds the block's hash, so the block
+    cannot hold this file's hash.
+    """
+    found = _CODE.search(path.read_text(encoding="utf-8"))
+    if found is None:
+        raise SystemExit(f"No code hashes in {path}.")
+    pins = {}
+    for line in found.group(1).splitlines():
+        if line.strip():
+            name, digest = line.split()
+            pins[name] = digest
+    return pins
+
+
+def check_code_pins(root: Path = ROOT, path: Path = DRAFT) -> None:
+    for name, pinned in code_pins(path).items():
+        digest = hashlib.sha256((root / name).read_bytes()).hexdigest()
+        if digest != pinned:
+            raise SystemExit(f"{name} is {digest}, not the pinned {pinned}.")
 
 
 def check_a2_code(design: Mapping[str, Any], root: Path = ROOT) -> None:

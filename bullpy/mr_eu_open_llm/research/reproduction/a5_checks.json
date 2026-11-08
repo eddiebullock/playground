@@ -1,0 +1,163 @@
+{
+ "design_sha256": "228bdf48326ef1ed4983ae2ff0d6d6e9e87891251f67481cfdb251d5b79619eb",
+ "uses_model_output": false,
+ "phi_above_one": {
+  "real_labels|leave_actor_out": {
+   "P": -0.0057,
+   "Phi": 1.012,
+   "share_of_draws_with_Phi_above_1": 1.0
+  },
+  "real_labels|all_actors": {
+   "P": 0.0058,
+   "Phi": 0.9878,
+   "share_of_draws_with_Phi_above_1": 0.0
+  },
+  "labels_random_across_clips|leave_actor_out": {
+   "P": -0.0065,
+   "Phi": 1.0136,
+   "share_of_draws_with_Phi_above_1": 0.995
+  },
+  "labels_random_across_clips|all_actors": {
+   "P": 0.0059,
+   "Phi": 0.9876,
+   "share_of_draws_with_Phi_above_1": 0.0
+  }
+ },
+ "h3_human_lambda": {
+  "n_clips": 819,
+  "n_actors": 91,
+  "templates_zero_where_votes": 0,
+  "raw": {
+   "E": 0.6002,
+   "P": 0.0314,
+   "Lambda": 0.9503
+  },
+  "pseudocount_0.5": {
+   "E": 0.3468,
+   "P": 0.0187,
+   "Lambda": 0.9489
+  }
+ },
+ "cause_of_even": {
+  "signal0.25|gain0.0": {
+   "actor_sd_of_B_over_T": 0.2,
+   "expected_half_width_90": 0.08,
+   "sd_fixed_by_label_set": 0.013,
+   "share_explained_by_log_gain": 0.0
+  },
+  "signal0.25|gain0.1": {
+   "actor_sd_of_B_over_T": 0.2,
+   "expected_half_width_90": 0.08,
+   "sd_fixed_by_label_set": 0.013,
+   "share_explained_by_log_gain": 0.001
+  },
+  "signal0.25|gain0.2": {
+   "actor_sd_of_B_over_T": 0.2,
+   "expected_half_width_90": 0.08,
+   "sd_fixed_by_label_set": 0.013,
+   "share_explained_by_log_gain": 0.001
+  },
+  "signal0.25|gain0.3": {
+   "actor_sd_of_B_over_T": 0.2,
+   "expected_half_width_90": 0.08,
+   "sd_fixed_by_label_set": 0.013,
+   "share_explained_by_log_gain": 0.002
+  },
+  "signal0.25|gain0.5": {
+   "actor_sd_of_B_over_T": 0.201,
+   "expected_half_width_90": 0.08,
+   "sd_fixed_by_label_set": 0.012,
+   "share_explained_by_log_gain": 0.008
+  },
+  "signal0.5|gain0.0": {
+   "actor_sd_of_B_over_T": 0.197,
+   "expected_half_width_90": 0.079,
+   "sd_fixed_by_label_set": 0.015,
+   "share_explained_by_log_gain": 0.0
+  },
+  "signal0.5|gain0.1": {
+   "actor_sd_of_B_over_T": 0.198,
+   "expected_half_width_90": 0.079,
+   "sd_fixed_by_label_set": 0.015,
+   "share_explained_by_log_gain": 0.003
+  },
+  "signal0.5|gain0.2": {
+   "actor_sd_of_B_over_T": 0.198,
+   "expected_half_width_90": 0.079,
+   "sd_fixed_by_label_set": 0.015,
+   "share_explained_by_log_gain": 0.008
+  },
+  "signal0.5|gain0.3": {
+   "actor_sd_of_B_over_T": 0.199,
+   "expected_half_width_90": 0.08,
+   "sd_fixed_by_label_set": 0.015,
+   "share_explained_by_log_gain": 0.019
+  },
+  "signal0.5|gain0.5": {
+   "actor_sd_of_B_over_T": 0.219,
+   "expected_half_width_90": 0.087,
+   "sd_fixed_by_label_set": 0.014,
+   "share_explained_by_log_gain": 0.095
+  },
+  "signal1.0|gain0.0": {
+   "actor_sd_of_B_over_T": 0.19,
+   "expected_half_width_90": 0.076,
+   "sd_fixed_by_label_set": 0.02,
+   "share_explained_by_log_gain": 0.0
+  },
+  "signal1.0|gain0.1": {
+   "actor_sd_of_B_over_T": 0.192,
+   "expected_half_width_90": 0.077,
+   "sd_fixed_by_label_set": 0.02,
+   "share_explained_by_log_gain": 0.027
+  },
+  "signal1.0|gain0.2": {
+   "actor_sd_of_B_over_T": 0.202,
+   "expected_half_width_90": 0.081,
+   "sd_fixed_by_label_set": 0.02,
+   "share_explained_by_log_gain": 0.106
+  },
+  "signal1.0|gain0.3": {
+   "actor_sd_of_B_over_T": 0.229,
+   "expected_half_width_90": 0.091,
+   "sd_fixed_by_label_set": 0.019,
+   "share_explained_by_log_gain": 0.238
+  },
+  "signal1.0|gain0.5": {
+   "actor_sd_of_B_over_T": 0.385,
+   "expected_half_width_90": 0.154,
+   "sd_fixed_by_label_set": 0.025,
+   "share_explained_by_log_gain": 0.401
+  },
+  "signal2.0|gain0.0": {
+   "actor_sd_of_B_over_T": 0.172,
+   "expected_half_width_90": 0.069,
+   "sd_fixed_by_label_set": 0.024,
+   "share_explained_by_log_gain": 0.0
+  },
+  "signal2.0|gain0.1": {
+   "actor_sd_of_B_over_T": 0.204,
+   "expected_half_width_90": 0.081,
+   "sd_fixed_by_label_set": 0.026,
+   "share_explained_by_log_gain": 0.273
+  },
+  "signal2.0|gain0.2": {
+   "actor_sd_of_B_over_T": 0.29,
+   "expected_half_width_90": 0.116,
+   "sd_fixed_by_label_set": 0.028,
+   "share_explained_by_log_gain": 0.563
+  },
+  "signal2.0|gain0.3": {
+   "actor_sd_of_B_over_T": 0.418,
+   "expected_half_width_90": 0.167,
+   "sd_fixed_by_label_set": 0.033,
+   "share_explained_by_log_gain": 0.64
+  },
+  "signal2.0|gain0.5": {
+   "actor_sd_of_B_over_T": 0.694,
+   "expected_half_width_90": 0.277,
+   "sd_fixed_by_label_set": 0.049,
+   "share_explained_by_log_gain": 0.635
+  }
+ }
+}

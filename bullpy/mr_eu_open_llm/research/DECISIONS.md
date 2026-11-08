@@ -370,3 +370,12 @@ A6 recovery run 4 (design `c1961048...`) fails only on the Stage 3 nulls and on 
 - **Why not loosen the margin:** that would move a threshold after seeing a failure. The nulls fail even at no actor-by-region noise (.62 and .70), so the shortfall is in the design's power, not the noise setting.
 - **Why run A6 at all:** a shared error that carries or opposes a named cue is recovered at .99, which is the cue-targeted test G8 asks for.
 - **Still before freeze:** the cluster items (geometry and weight pins, first-frame AU check, decoder preflight, a mechanics run) and the proposed values in the block.
+
+## 2026-11-08: A5 withholds balance verdicts in small families and keeps its power failures
+
+A5 recovery run 3 (design `228bdf48...`) failed five checks. Recalibrating the balance-zero observers on B itself, rather than on mean Phi, removed a small real offset but left the B false positives in one- and two-cell families at .08 to .12 under portrayal-gain SD .5. An oracle default changed nothing, so the cause is skew from gain heterogeneity in small families, not dependence between actor rows.
+
+- **Decision:** `min_balance_cells` = 4. Below it, Face, Default and Even are withheld and the verdict is Inconclusive (`balance_small_family`). Four is the only size tested at which every true-null rate was at or under .054; three was not tested, so it is not allowed.
+- **Run 4** (design `df4583f0...`): every false-positive check passes. Two power checks fail at signal 2, where Inconclusive reaches .226 at Phi .5 and .398 at Phi .7, against .20. Both fail only into Inconclusive (`balance_unresolved`), with no wrong named verdict over .10. They stay recorded as failures, with the power table.
+- **Why not move a limit:** .07 and .20 are unchanged. The scope rule changes what A5 may claim, not any threshold, and it was set from evidence written down before any A2 cell was read.
+- **Cost:** if RQ0 or a gate removes a cell from a family, that model gets no balance verdict from A5.

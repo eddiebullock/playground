@@ -1,0 +1,4353 @@
+{
+ "design_sha256": "228bdf48326ef1ed4983ae2ff0d6d6e9e87891251f67481cfdb251d5b79619eb",
+ "replicates": 500,
+ "settings": {
+  "replicates": 500,
+  "expected_verdict_min": 0.8,
+  "other_named_verdict_max": 0.1,
+  "inconclusive_max": 0.2,
+  "false_positive_max": 0.07,
+  "phi_grid": [
+   0.1,
+   0.3,
+   0.5,
+   0.7,
+   0.9
+  ],
+  "signal_grid": [
+   0.25,
+   0.5,
+   1.0,
+   2.0
+  ],
+  "pass_signal": 2.0,
+  "unmapped_signals": [
+   1.0,
+   2.0
+  ],
+  "seed": 5042,
+  "companion_cells": 3,
+  "companion_sweep": [
+   0,
+   1
+  ],
+  "companion_shuffles": 100,
+  "actor_sd": 0.3,
+  "item_sd": 0.5,
+  "portrayal_gain_log_sd": 0.3,
+  "gain_sweep": [
+   0.0,
+   0.5
+  ],
+  "gain_sweep_phi": [
+   0.1,
+   0.5,
+   0.9
+  ],
+  "family_factors": 3,
+  "family_factor_share": 0.4,
+  "prior_only_scale": 1.5,
+  "prior_only_noise": 0.1,
+  "label_free_prior_scale": 0.3,
+  "identity_shift": 1.5,
+  "noise_item_sd": 1.8,
+  "spill_share": 0.5,
+  "spill_neighbours": 2,
+  "boundary_phi": [
+   0.3334,
+   0.6666
+  ],
+  "false_even_phi": [
+   0.32,
+   0.68
+  ],
+  "false_even_signals": [
+   1.0,
+   2.0
+  ],
+  "inside_even_phi": [
+   0.4,
+   0.6
+  ],
+  "all_null_replicates": 2000,
+  "all_null_shuffles": 1000,
+  "boundary_e_share": 0.1,
+  "baseline_noise": 0.05,
+  "calibration_draws": 200
+ },
+ "uses_model_output": false,
+ "observers": {
+  "prior_only_word": {
+   "expected": "No face evidence",
+   "judged": true,
+   "n": 500,
+   "prior_scale": 1.5,
+   "signal": 0.0,
+   "verdicts": {
+    "Default-led, unmapped": 0.002,
+    "Inconclusive": 0.004,
+    "No face evidence": 0.994
+   },
+   "reason_rates": {
+    "evidence_unresolved": 0.004
+   },
+   "measured": {
+    "phi": 0.0039,
+    "T": 1.6621,
+    "b_over_t": -0.9922,
+    "e_over_t": 0.0,
+    "b_half_over_t": 0.0183,
+    "e_half_over_t": 0.0001
+   },
+   "rates": {
+    "b4": 0.004,
+    "b5": 0.02,
+    "e_sig": 0.002,
+    "e_raw_sig": 0.02,
+    "e_passes": 0.002,
+    "b_sig": 1.0,
+    "b_raw_sig": 1.0,
+    "any_b_sig": 1.0,
+    "any_e_sig": 0.012,
+    "conflict": 0.0,
+    "b3_failed": 1.0
+   },
+   "evidence_classes": {
+    "Absent": 0.994,
+    "Unmapped": 0.002,
+    "Unresolved": 0.004
+   },
+   "balance_classes": {
+    "Default": 1.0
+   },
+   "word_share": {
+    "word_prior": 1.0
+   },
+   "power": 0.994,
+   "other_named": 0.002,
+   "inconclusive": 0.004,
+   "pass": true
+  },
+  "prior_only_face_default": {
+   "expected": "No face evidence",
+   "judged": true,
+   "n": 500,
+   "prior_scale": 1.5,
+   "signal": 0.0,
+   "verdicts": {
+    "Default-led, unmapped": 0.006,
+    "Inconclusive": 0.01,
+    "No face evidence": 0.984
+   },
+   "reason_rates": {
+    "evidence_unresolved": 0.01
+   },
+   "measured": {
+    "phi": 0.0039,
+    "T": 1.6612,
+    "b_over_t": -0.9923,
+    "e_over_t": 0.0,
+    "b_half_over_t": 0.0182,
+    "e_half_over_t": 0.0001
+   },
+   "rates": {
+    "b4": 0.01,
+    "b5": 0.018,
+    "e_sig": 0.006,
+    "e_raw_sig": 0.034,
+    "e_passes": 0.006,
+    "b_sig": 1.0,
+    "b_raw_sig": 1.0,
+    "any_b_sig": 1.0,
+    "any_e_sig": 0.016,
+    "conflict": 0.0,
+    "b3_failed": 0.0
+   },
+   "evidence_classes": {
+    "Absent": 0.984,
+    "Unmapped": 0.006,
+    "Unresolved": 0.01
+   },
+   "balance_classes": {
+    "Default": 1.0
+   },
+   "word_share": {
+    "image_or_face": 1.0
+   },
+   "power": 0.984,
+   "other_named": 0.006,
+   "inconclusive": 0.01,
+   "pass": true
+  },
+  "evidence_only": {
+   "expected": "Evidence-led",
+   "judged": true,
+   "n": 500,
+   "prior_scale": 0.0,
+   "signal": 2.0,
+   "verdicts": {
+    "Evidence-led": 0.988,
+    "Inconclusive": 0.012
+   },
+   "reason_rates": {
+    "balance_unresolved": 0.012
+   },
+   "measured": {
+    "phi": 1.0122,
+    "T": 0.4816,
+    "b_over_t": 1.0244,
+    "e_over_t": 0.6692,
+    "b_half_over_t": 0.2826,
+    "e_half_over_t": 0.1771
+   },
+   "rates": {
+    "b4": 1.0,
+    "b5": 1.0,
+    "e_sig": 1.0,
+    "e_raw_sig": 1.0,
+    "e_passes": 1.0,
+    "b_sig": 0.988,
+    "b_raw_sig": 0.988,
+    "any_b_sig": 0.988,
+    "any_e_sig": 1.0,
+    "conflict": 0.0,
+    "b3_failed": 0.0
+   },
+   "evidence_classes": {
+    "Shown": 1.0
+   },
+   "balance_classes": {
+    "Face": 0.988,
+    "Unresolved": 0.012
+   },
+   "word_share": {
+    "mixed": 1.0
+   },
+   "power": 0.988,
+   "other_named": 0,
+   "inconclusive": 0.012,
+   "pass": true
+  },
+  "identity": {
+   "expected": "Face-dependent, no expression",
+   "judged": true,
+   "n": 500,
+   "prior_scale": 0.3,
+   "signal": 0.0,
+   "verdicts": {
+    "Face-dependent, no expression": 0.974,
+    "Face-led, unmapped": 0.018,
+    "Inconclusive": 0.008
+   },
+   "reason_rates": {
+    "evidence_unresolved": 0.008
+   },
+   "measured": {
+    "phi": 1.0365,
+    "T": 0.9089,
+    "b_over_t": 1.073,
+    "e_over_t": 0.0001,
+    "b_half_over_t": 0.2167,
+    "e_half_over_t": 0.0066
+   },
+   "rates": {
+    "b4": 0.008,
+    "b5": 0.012,
+    "e_sig": 0.018,
+    "e_raw_sig": 0.066,
+    "e_passes": 0.018,
+    "b_sig": 1.0,
+    "b_raw_sig": 1.0,
+    "any_b_sig": 1.0,
+    "any_e_sig": 0.03,
+    "conflict": 0.0,
+    "b3_failed": 0.0
+   },
+   "evidence_classes": {
+    "Absent": 0.974,
+    "Unmapped": 0.018,
+    "Unresolved": 0.008
+   },
+   "balance_classes": {
+    "Face": 1.0
+   },
+   "word_share": {
+    "mixed": 1.0
+   },
+   "power": 0.974,
+   "other_named": 0.018,
+   "inconclusive": 0.008,
+   "pass": true
+  },
+  "noise": {
+   "expected": "Face-dependent, no expression",
+   "judged": true,
+   "n": 500,
+   "prior_scale": 0.3,
+   "signal": 0.0,
+   "verdicts": {
+    "Face-dependent, no expression": 0.966,
+    "Face-led, unmapped": 0.01,
+    "Inconclusive": 0.024
+   },
+   "reason_rates": {
+    "evidence_unresolved": 0.024
+   },
+   "measured": {
+    "phi": 0.9709,
+    "T": 1.0656,
+    "b_over_t": 0.9418,
+    "e_over_t": -0.0003,
+    "b_half_over_t": 0.0493,
+    "e_half_over_t": 0.0267
+   },
+   "rates": {
+    "b4": 0.024,
+    "b5": 0.018,
+    "e_sig": 0.01,
+    "e_raw_sig": 0.034,
+    "e_passes": 0.01,
+    "b_sig": 1.0,
+    "b_raw_sig": 1.0,
+    "any_b_sig": 1.0,
+    "any_e_sig": 0.03,
+    "conflict": 0.0,
+    "b3_failed": 0.0
+   },
+   "evidence_classes": {
+    "Absent": 0.966,
+    "Unmapped": 0.01,
+    "Unresolved": 0.024
+   },
+   "balance_classes": {
+    "Face": 1.0
+   },
+   "word_share": {
+    "mixed": 0.166,
+    "word_prior": 0.834
+   },
+   "power": 0.966,
+   "other_named": 0.01,
+   "inconclusive": 0.024,
+   "pass": true
+  },
+  "null_balance_no_evidence": {
+   "expected": null,
+   "judged": false,
+   "n": 500,
+   "prior_scale": 0.4819,
+   "signal": 0.0,
+   "verdicts": {
+    "Face-dependent, no expression": 0.012,
+    "Inconclusive": 0.068,
+    "No face evidence, neither part dominant": 0.918,
+    "Unmapped, neither part dominant": 0.002
+   },
+   "reason_rates": {
+    "balance_unresolved": 0.06,
+    "evidence_unresolved": 0.01
+   },
+   "measured": {
+    "phi": 0.5033,
+    "T": 0.3118,
+    "b_over_t": 0.0066,
+    "e_over_t": 0.0001,
+    "b_half_over_t": 0.0879,
+    "e_half_over_t": 0.0089
+   },
+   "rates": {
+    "b4": 0.01,
+    "b5": 0.008,
+    "e_sig": 0.002,
+    "e_raw_sig": 0.026,
+    "e_passes": 0.002,
+    "b_sig": 0.012,
+    "b_raw_sig": 0.05,
+    "any_b_sig": 0.026,
+    "any_e_sig": 0.018,
+    "conflict": 0.0,
+    "b3_failed": 0.0
+   },
+   "evidence_classes": {
+    "Absent": 0.988,
+    "Unmapped": 0.002,
+    "Unresolved": 0.01
+   },
+   "balance_classes": {
+    "Even": 0.928,
+    "Face": 0.012,
+    "Unresolved": 0.06
+   },
+   "word_share": {
+    "word_prior": 1.0
+   }
+  },
+  "all_null_family": {
+   "expected": null,
+   "judged": false,
+   "n": 2000,
+   "prior_scale": 0.4819,
+   "signal": 0.0,
+   "verdicts": {
+    "Face-dependent, no expression": 0.006,
+    "Inconclusive": 0.0615,
+    "No face evidence": 0.003,
+    "No face evidence, neither part dominant": 0.925,
+    "Unmapped, neither part dominant": 0.0045
+   },
+   "reason_rates": {
+    "balance_unresolved": 0.0525,
+    "evidence_unresolved": 0.0095
+   },
+   "measured": {
+    "phi": 0.5031,
+    "T": 0.3121,
+    "b_over_t": 0.0062,
+    "e_over_t": -0.0,
+    "b_half_over_t": 0.087,
+    "e_half_over_t": 0.0089
+   },
+   "rates": {
+    "b4": 0.0095,
+    "b5": 0.0135,
+    "e_sig": 0.0045,
+    "e_raw_sig": 0.023,
+    "e_passes": 0.0045,
+    "b_sig": 0.009,
+    "b_raw_sig": 0.051,
+    "any_b_sig": 0.0355,
+    "any_e_sig": 0.015,
+    "conflict": 0.0,
+    "b3_failed": 0.0
+   },
+   "evidence_classes": {
+    "Absent": 0.986,
+    "Unmapped": 0.0045,
+    "Unresolved": 0.0095
+   },
+   "balance_classes": {
+    "Default": 0.003,
+    "Even": 0.9385,
+    "Face": 0.006,
+    "Unresolved": 0.0525
+   },
+   "word_share": {
+    "word_prior": 1.0
+   }
+  },
+  "mixed_phi0.1_signal0.25": {
+   "expected": "Default-led with evidence",
+   "judged": false,
+   "n": 500,
+   "prior_scale": 1.2215,
+   "signal": 0.25,
+   "verdicts": {
+    "Default-led with evidence": 0.03,
+    "Inconclusive": 0.956,
+    "No face evidence": 0.014
+   },
+   "reason_rates": {
+    "evidence_unresolved": 0.956
+   },
+   "measured": {
+    "phi": 0.1008,
+    "T": 1.2459,
+    "b_over_t": -0.7985,
+    "e_over_t": 0.0009,
+    "b_half_over_t": 0.0673,
+    "e_half_over_t": 0.0026
+   },
+   "rates": {
+    "b4": 0.986,
+    "b5": 1.0,
+    "e_sig": 0.03,
+    "e_raw_sig": 0.094,
+    "e_passes": 0.03,
+    "b_sig": 1.0,
+    "b_raw_sig": 1.0,
+    "any_b_sig": 1.0,
+    "any_e_sig": 0.038,
+    "conflict": 0.0,
+    "b3_failed": 0.0
+   },
+   "evidence_classes": {
+    "Absent": 0.014,
+    "Shown": 0.03,
+    "Unresolved": 0.956
+   },
+   "balance_classes": {
+    "Default": 1.0
+   },
+   "word_share": {
+    "word_prior": 1.0
+   },
+   "power": 0.03,
+   "other_named": 0.014,
+   "inconclusive": 0.956,
+   "pass": false
+  },
+  "mixed_phi0.1_signal0.5": {
+   "expected": "Default-led with evidence",
+   "judged": false,
+   "n": 500,
+   "prior_scale": 1.2414,
+   "signal": 0.5,
+   "verdicts": {
+    "Default-led with evidence": 0.282,
+    "Inconclusive": 0.718
+   },
+   "reason_rates": {
+    "evidence_unresolved": 0.718
+   },
+   "measured": {
+    "phi": 0.1003,
+    "T": 1.2743,
+    "b_over_t": -0.7994,
+    "e_over_t": 0.0038,
+    "b_half_over_t": 0.0659,
+    "e_half_over_t": 0.0031
+   },
+   "rates": {
+    "b4": 1.0,
+    "b5": 1.0,
+    "e_sig": 0.282,
+    "e_raw_sig": 0.624,
+    "e_passes": 0.282,
+    "b_sig": 1.0,
+    "b_raw_sig": 1.0,
+    "any_b_sig": 1.0,
+    "any_e_sig": 0.292,
+    "conflict": 0.0,
+    "b3_failed": 0.0
+   },
+   "evidence_classes": {
+    "Shown": 0.282,
+    "Unresolved": 0.718
+   },
+   "balance_classes": {
+    "Default": 1.0
+   },
+   "word_share": {
+    "word_prior": 1.0
+   },
+   "power": 0.282,
+   "other_named": 0,
+   "inconclusive": 0.718,
+   "pass": false
+  },
+  "mixed_phi0.1_signal1.0": {
+   "expected": "Default-led with evidence",
+   "judged": false,
+   "n": 500,
+   "prior_scale": 1.3335,
+   "signal": 1.0,
+   "verdicts": {
+    "Default-led with evidence": 0.994,
+    "Inconclusive": 0.006
+   },
+   "reason_rates": {
+    "evidence_unresolved": 0.006
+   },
+   "measured": {
+    "phi": 0.0998,
+    "T": 1.407,
+    "b_over_t": -0.8003,
+    "e_over_t": 0.0163,
+    "b_half_over_t": 0.0642,
+    "e_half_over_t": 0.0058
+   },
+   "rates": {
+    "b4": 1.0,
+    "b5": 1.0,
+    "e_sig": 0.994,
+    "e_raw_sig": 1.0,
+    "e_passes": 0.994,
+    "b_sig": 1.0,
+    "b_raw_sig": 1.0,
+    "any_b_sig": 1.0,
+    "any_e_sig": 0.994,
+    "conflict": 0.0,
+    "b3_failed": 0.0
+   },
+   "evidence_classes": {
+    "Shown": 0.994,
+    "Unresolved": 0.006
+   },
+   "balance_classes": {
+    "Default": 1.0
+   },
+   "word_share": {
+    "word_prior": 1.0
+   },
+   "power": 0.994,
+   "other_named": 0,
+   "inconclusive": 0.006,
+   "pass": true
+  },
+  "mixed_phi0.1_signal2.0": {
+   "expected": "Default-led with evidence",
+   "judged": true,
+   "n": 500,
+   "prior_scale": 1.7324,
+   "signal": 2.0,
+   "verdicts": {
+    "Default-led with evidence": 0.998,
+    "Inconclusive": 0.002
+   },
+   "reason_rates": {
+    "balance_unresolved": 0.002
+   },
+   "measured": {
+    "phi": 0.0995,
+    "T": 1.8981,
+    "b_over_t": -0.801,
+    "e_over_t": 0.0481,
+    "b_half_over_t": 0.0748,
+    "e_half_over_t": 0.015
+   },
+   "rates": {
+    "b4": 1.0,
+    "b5": 1.0,
+    "e_sig": 1.0,
+    "e_raw_sig": 1.0,
+    "e_passes": 1.0,
+    "b_sig": 0.998,
+    "b_raw_sig": 0.998,
+    "any_b_sig": 0.998,
+    "any_e_sig": 1.0,
+    "conflict": 0.0,
+    "b3_failed": 0.0
+   },
+   "evidence_classes": {
+    "Shown": 1.0
+   },
+   "balance_classes": {
+    "Default": 0.998,
+    "Unresolved": 0.002
+   },
+   "word_share": {
+    "word_prior": 1.0
+   },
+   "power": 0.998,
+   "other_named": 0,
+   "inconclusive": 0.002,
+   "pass": true
+  },
+  "mixed_phi0.3_signal0.25": {
+   "expected": "Default-led with evidence",
+   "judged": false,
+   "n": 500,
+   "prior_scale": 0.6956,
+   "signal": 0.25,
+   "verdicts": {
+    "Default-led with evidence": 0.03,
+    "Inconclusive": 0.958,
+    "No face evidence": 0.012
+   },
+   "reason_rates": {
+    "evidence_unresolved": 0.958
+   },
+   "measured": {
+    "phi": 0.3014,
+    "T": 0.5092,
+    "b_over_t": -0.3972,
+    "e_over_t": 0.0031,
+    "b_half_over_t": 0.086,
+    "e_half_over_t": 0.006
+   },
+   "rates": {
+    "b4": 0.988,
+    "b5": 1.0,
+    "e_sig": 0.03,
+    "e_raw_sig": 0.134,
+    "e_passes": 0.03,
+    "b_sig": 1.0,
+    "b_raw_sig": 1.0,
+    "any_b_sig": 1.0,
+    "any_e_sig": 0.04,
+    "conflict": 0.0,
+    "b3_failed": 0.0
+   },
+   "evidence_classes": {
+    "Absent": 0.012,
+    "Shown": 0.03,
+    "Unresolved": 0.958
+   },
+   "balance_classes": {
+    "Default": 1.0
+   },
+   "word_share": {
+    "word_prior": 1.0
+   },
+   "power": 0.03,
+   "other_named": 0.012,
+   "inconclusive": 0.958,
+   "pass": false
+  },
+  "mixed_phi0.3_signal0.5": {
+   "expected": "Default-led with evidence",
+   "judged": false,
+   "n": 500,
+   "prior_scale": 0.7099,
+   "signal": 0.5,
+   "verdicts": {
+    "Default-led with evidence": 0.704,
+    "Inconclusive": 0.296
+   },
+   "reason_rates": {
+    "evidence_unresolved": 0.296
+   },
+   "measured": {
+    "phi": 0.3009,
+    "T": 0.5268,
+    "b_over_t": -0.3982,
+    "e_over_t": 0.0139,
+    "b_half_over_t": 0.0839,
+    "e_half_over_t": 0.0076
+   },
+   "rates": {
+    "b4": 1.0,
+    "b5": 1.0,
+    "e_sig": 0.704,
+    "e_raw_sig": 0.908,
+    "e_passes": 0.704,
+    "b_sig": 1.0,
+    "b_raw_sig": 1.0,
+    "any_b_sig": 1.0,
+    "any_e_sig": 0.706,
+    "conflict": 0.0,
+    "b3_failed": 0.0
+   },
+   "evidence_classes": {
+    "Shown": 0.704,
+    "Unresolved": 0.296
+   },
+   "balance_classes": {
+    "Default": 1.0
+   },
+   "word_share": {
+    "word_prior": 1.0
+   },
+   "power": 0.704,
+   "other_named": 0,
+   "inconclusive": 0.296,
+   "pass": false
+  },
+  "mixed_phi0.3_signal1.0": {
+   "expected": "Default-led with evidence",
+   "judged": false,
+   "n": 500,
+   "prior_scale": 0.7794,
+   "signal": 1.0,
+   "verdicts": {
+    "Default-led with evidence": 0.994,
+    "Inconclusive": 0.006
+   },
+   "reason_rates": {
+    "balance_unresolved": 0.006
+   },
+   "measured": {
+    "phi": 0.3011,
+    "T": 0.6254,
+    "b_over_t": -0.3978,
+    "e_over_t": 0.0615,
+    "b_half_over_t": 0.089,
+    "e_half_over_t": 0.0189
+   },
+   "rates": {
+    "b4": 1.0,
+    "b5": 1.0,
+    "e_sig": 1.0,
+    "e_raw_sig": 1.0,
+    "e_passes": 1.0,
+    "b_sig": 0.996,
+    "b_raw_sig": 0.996,
+    "any_b_sig": 0.996,
+    "any_e_sig": 1.0,
+    "conflict": 0.0,
+    "b3_failed": 0.0
+   },
+   "evidence_classes": {
+    "Shown": 1.0
+   },
+   "balance_classes": {
+    "Default": 0.994,
+    "Unresolved": 0.006
+   },
+   "word_share": {
+    "word_prior": 1.0
+   },
+   "power": 0.994,
+   "other_named": 0,
+   "inconclusive": 0.006,
+   "pass": true
+  },
+  "mixed_phi0.3_signal2.0": {
+   "expected": "Default-led with evidence",
+   "judged": true,
+   "n": 500,
+   "prior_scale": 1.0927,
+   "signal": 2.0,
+   "verdicts": {
+    "Default-led with evidence": 0.846,
+    "Evidence, neither part dominant": 0.002,
+    "Inconclusive": 0.152
+   },
+   "reason_rates": {
+    "balance_unresolved": 0.152
+   },
+   "measured": {
+    "phi": 0.2969,
+    "T": 1.1032,
+    "b_over_t": -0.4062,
+    "e_over_t": 0.1686,
+    "b_half_over_t": 0.1468,
+    "e_half_over_t": 0.0486
+   },
+   "rates": {
+    "b4": 1.0,
+    "b5": 1.0,
+    "e_sig": 1.0,
+    "e_raw_sig": 1.0,
+    "e_passes": 1.0,
+    "b_sig": 0.862,
+    "b_raw_sig": 0.9,
+    "any_b_sig": 0.862,
+    "any_e_sig": 1.0,
+    "conflict": 0.0,
+    "b3_failed": 0.0
+   },
+   "evidence_classes": {
+    "Shown": 1.0
+   },
+   "balance_classes": {
+    "Default": 0.846,
+    "Even": 0.002,
+    "Unresolved": 0.152
+   },
+   "word_share": {
+    "word_prior": 1.0
+   },
+   "power": 0.846,
+   "other_named": 0.002,
+   "inconclusive": 0.152,
+   "pass": true
+  },
+  "mixed_phi0.5_signal0.25": {
+   "expected": "Evidence, neither part dominant",
+   "judged": false,
+   "n": 500,
+   "prior_scale": 0.486,
+   "signal": 0.25,
+   "verdicts": {
+    "Evidence, neither part dominant": 0.048,
+    "Face-dependent, no expression": 0.002,
+    "Inconclusive": 0.934,
+    "No face evidence, neither part dominant": 0.016
+   },
+   "reason_rates": {
+    "balance_unresolved": 0.05,
+    "evidence_unresolved": 0.932
+   },
+   "measured": {
+    "phi": 0.5046,
+    "T": 0.3145,
+    "b_over_t": 0.0092,
+    "e_over_t": 0.0053,
+    "b_half_over_t": 0.0868,
+    "e_half_over_t": 0.0092
+   },
+   "rates": {
+    "b4": 0.982,
+    "b5": 1.0,
+    "e_sig": 0.05,
+    "e_raw_sig": 0.176,
+    "e_passes": 0.05,
+    "b_sig": 0.008,
+    "b_raw_sig": 0.044,
+    "any_b_sig": 0.022,
+    "any_e_sig": 0.068,
+    "conflict": 0.0,
+    "b3_failed": 0.0
+   },
+   "evidence_classes": {
+    "Absent": 0.018,
+    "Shown": 0.05,
+    "Unresolved": 0.932
+   },
+   "balance_classes": {
+    "Even": 0.942,
+    "Face": 0.008,
+    "Unresolved": 0.05
+   },
+   "word_share": {
+    "word_prior": 1.0
+   },
+   "power": 0.048,
+   "other_named": 0.018000000000000002,
+   "inconclusive": 0.934,
+   "pass": false
+  },
+  "mixed_phi0.5_signal0.5": {
+   "expected": "Evidence, neither part dominant",
+   "judged": false,
+   "n": 500,
+   "prior_scale": 0.4972,
+   "signal": 0.5,
+   "verdicts": {
+    "Default-led with evidence": 0.004,
+    "Evidence, neither part dominant": 0.75,
+    "Evidence-led": 0.004,
+    "Inconclusive": 0.242
+   },
+   "reason_rates": {
+    "balance_unresolved": 0.048,
+    "evidence_unresolved": 0.2
+   },
+   "measured": {
+    "phi": 0.5031,
+    "T": 0.3278,
+    "b_over_t": 0.0062,
+    "e_over_t": 0.0251,
+    "b_half_over_t": 0.0859,
+    "e_half_over_t": 0.0122
+   },
+   "rates": {
+    "b4": 1.0,
+    "b5": 1.0,
+    "e_sig": 0.8,
+    "e_raw_sig": 0.96,
+    "e_passes": 0.8,
+    "b_sig": 0.014,
+    "b_raw_sig": 0.042,
+    "any_b_sig": 0.052,
+    "any_e_sig": 0.8,
+    "conflict": 0.0,
+    "b3_failed": 0.0
+   },
+   "evidence_classes": {
+    "Shown": 0.8,
+    "Unresolved": 0.2
+   },
+   "balance_classes": {
+    "Default": 0.006,
+    "Even": 0.938,
+    "Face": 0.008,
+    "Unresolved": 0.048
+   },
+   "word_share": {
+    "word_prior": 1.0
+   },
+   "power": 0.75,
+   "other_named": 0.008,
+   "inconclusive": 0.242,
+   "pass": false
+  },
+  "mixed_phi0.5_signal1.0": {
+   "expected": "Evidence, neither part dominant",
+   "judged": false,
+   "n": 500,
+   "prior_scale": 0.5526,
+   "signal": 1.0,
+   "verdicts": {
+    "Default-led with evidence": 0.006,
+    "Evidence, neither part dominant": 0.922,
+    "Evidence-led": 0.002,
+    "Inconclusive": 0.07
+   },
+   "reason_rates": {
+    "balance_unresolved": 0.07
+   },
+   "measured": {
+    "phi": 0.5017,
+    "T": 0.4002,
+    "b_over_t": 0.0033,
+    "e_over_t": 0.1095,
+    "b_half_over_t": 0.0998,
+    "e_half_over_t": 0.0332
+   },
+   "rates": {
+    "b4": 1.0,
+    "b5": 1.0,
+    "e_sig": 1.0,
+    "e_raw_sig": 1.0,
+    "e_passes": 1.0,
+    "b_sig": 0.008,
+    "b_raw_sig": 0.056,
+    "any_b_sig": 0.034,
+    "any_e_sig": 1.0,
+    "conflict": 0.0,
+    "b3_failed": 0.0
+   },
+   "evidence_classes": {
+    "Shown": 1.0
+   },
+   "balance_classes": {
+    "Default": 0.006,
+    "Even": 0.922,
+    "Face": 0.002,
+    "Unresolved": 0.07
+   },
+   "word_share": {
+    "word_prior": 1.0
+   },
+   "power": 0.922,
+   "other_named": 0.008,
+   "inconclusive": 0.07,
+   "pass": true
+  },
+  "mixed_phi0.5_signal2.0": {
+   "expected": "Evidence, neither part dominant",
+   "judged": true,
+   "n": 500,
+   "prior_scale": 0.8123,
+   "signal": 2.0,
+   "verdicts": {
+    "Default-led with evidence": 0.034,
+    "Evidence, neither part dominant": 0.752,
+    "Inconclusive": 0.214
+   },
+   "reason_rates": {
+    "balance_unresolved": 0.214
+   },
+   "measured": {
+    "phi": 0.4914,
+    "T": 0.7895,
+    "b_over_t": -0.0173,
+    "e_over_t": 0.2955,
+    "b_half_over_t": 0.2024,
+    "e_half_over_t": 0.0838
+   },
+   "rates": {
+    "b4": 1.0,
+    "b5": 1.0,
+    "e_sig": 1.0,
+    "e_raw_sig": 1.0,
+    "e_passes": 1.0,
+    "b_sig": 0.034,
+    "b_raw_sig": 0.084,
+    "any_b_sig": 0.058,
+    "any_e_sig": 1.0,
+    "conflict": 0.0,
+    "b3_failed": 0.0
+   },
+   "evidence_classes": {
+    "Shown": 1.0
+   },
+   "balance_classes": {
+    "Default": 0.034,
+    "Even": 0.752,
+    "Unresolved": 0.214
+   },
+   "word_share": {
+    "word_prior": 1.0
+   },
+   "power": 0.752,
+   "other_named": 0.034,
+   "inconclusive": 0.214,
+   "pass": false
+  },
+  "mixed_phi0.7_signal0.25": {
+   "expected": "Evidence-led",
+   "judged": false,
+   "n": 500,
+   "prior_scale": 0.3375,
+   "signal": 0.25,
+   "verdicts": {
+    "Evidence-led": 0.082,
+    "Face-dependent, no expression": 0.016,
+    "Inconclusive": 0.902
+   },
+   "reason_rates": {
+    "evidence_unresolved": 0.902
+   },
+   "measured": {
+    "phi": 0.7022,
+    "T": 0.228,
+    "b_over_t": 0.4045,
+    "e_over_t": 0.0083,
+    "b_half_over_t": 0.0847,
+    "e_half_over_t": 0.0124
+   },
+   "rates": {
+    "b4": 0.984,
+    "b5": 1.0,
+    "e_sig": 0.082,
+    "e_raw_sig": 0.246,
+    "e_passes": 0.082,
+    "b_sig": 1.0,
+    "b_raw_sig": 1.0,
+    "any_b_sig": 1.0,
+    "any_e_sig": 0.094,
+    "conflict": 0.004,
+    "b3_failed": 0.0
+   },
+   "evidence_classes": {
+    "Absent": 0.016,
+    "Shown": 0.082,
+    "Unresolved": 0.902
+   },
+   "balance_classes": {
+    "Face": 1.0
+   },
+   "word_share": {
+    "word_prior": 1.0
+   },
+   "power": 0.082,
+   "other_named": 0.016,
+   "inconclusive": 0.902,
+   "pass": false
+  },
+  "mixed_phi0.7_signal0.5": {
+   "expected": "Evidence-led",
+   "judged": false,
+   "n": 500,
+   "prior_scale": 0.3463,
+   "signal": 0.5,
+   "verdicts": {
+    "Evidence-led": 0.852,
+    "Inconclusive": 0.148
+   },
+   "reason_rates": {
+    "evidence_unresolved": 0.148
+   },
+   "measured": {
+    "phi": 0.702,
+    "T": 0.2378,
+    "b_over_t": 0.404,
+    "e_over_t": 0.0358,
+    "b_half_over_t": 0.0834,
+    "e_half_over_t": 0.0167
+   },
+   "rates": {
+    "b4": 1.0,
+    "b5": 1.0,
+    "e_sig": 0.852,
+    "e_raw_sig": 0.97,
+    "e_passes": 0.852,
+    "b_sig": 1.0,
+    "b_raw_sig": 1.0,
+    "any_b_sig": 1.0,
+    "any_e_sig": 0.852,
+    "conflict": 0.014,
+    "b3_failed": 0.0
+   },
+   "evidence_classes": {
+    "Shown": 0.852,
+    "Unresolved": 0.148
+   },
+   "balance_classes": {
+    "Face": 1.0
+   },
+   "word_share": {
+    "word_prior": 1.0
+   },
+   "power": 0.852,
+   "other_named": 0,
+   "inconclusive": 0.148,
+   "pass": true
+  },
+  "mixed_phi0.7_signal1.0": {
+   "expected": "Evidence-led",
+   "judged": false,
+   "n": 500,
+   "prior_scale": 0.3891,
+   "signal": 1.0,
+   "verdicts": {
+    "Evidence-led": 0.986,
+    "Inconclusive": 0.014
+   },
+   "reason_rates": {
+    "balance_unresolved": 0.014
+   },
+   "measured": {
+    "phi": 0.7029,
+    "T": 0.2936,
+    "b_over_t": 0.4057,
+    "e_over_t": 0.1583,
+    "b_half_over_t": 0.1111,
+    "e_half_over_t": 0.0476
+   },
+   "rates": {
+    "b4": 1.0,
+    "b5": 1.0,
+    "e_sig": 1.0,
+    "e_raw_sig": 1.0,
+    "e_passes": 1.0,
+    "b_sig": 0.986,
+    "b_raw_sig": 0.988,
+    "any_b_sig": 0.986,
+    "any_e_sig": 1.0,
+    "conflict": 0.0,
+    "b3_failed": 0.0
+   },
+   "evidence_classes": {
+    "Shown": 1.0
+   },
+   "balance_classes": {
+    "Face": 0.986,
+    "Unresolved": 0.014
+   },
+   "word_share": {
+    "word_prior": 1.0
+   },
+   "power": 0.986,
+   "other_named": 0,
+   "inconclusive": 0.014,
+   "pass": true
+  },
+  "mixed_phi0.7_signal2.0": {
+   "expected": "Evidence-led",
+   "judged": true,
+   "n": 500,
+   "prior_scale": 0.5969,
+   "signal": 2.0,
+   "verdicts": {
+    "Evidence, neither part dominant": 0.004,
+    "Evidence-led": 0.598,
+    "Inconclusive": 0.398
+   },
+   "reason_rates": {
+    "balance_unresolved": 0.398
+   },
+   "measured": {
+    "phi": 0.6894,
+    "T": 0.6191,
+    "b_over_t": 0.3789,
+    "e_over_t": 0.4317,
+    "b_half_over_t": 0.2368,
+    "e_half_over_t": 0.1175
+   },
+   "rates": {
+    "b4": 1.0,
+    "b5": 1.0,
+    "e_sig": 1.0,
+    "e_raw_sig": 1.0,
+    "e_passes": 1.0,
+    "b_sig": 0.598,
+    "b_raw_sig": 0.764,
+    "any_b_sig": 0.604,
+    "any_e_sig": 1.0,
+    "conflict": 0.0,
+    "b3_failed": 0.0
+   },
+   "evidence_classes": {
+    "Shown": 1.0
+   },
+   "balance_classes": {
+    "Even": 0.004,
+    "Face": 0.598,
+    "Unresolved": 0.398
+   },
+   "word_share": {
+    "word_prior": 1.0
+   },
+   "power": 0.598,
+   "other_named": 0.004,
+   "inconclusive": 0.398,
+   "pass": false
+  },
+  "mixed_phi0.9_signal0.25": {
+   "expected": "Evidence-led",
+   "judged": false,
+   "n": 500,
+   "prior_scale": 0.1909,
+   "signal": 0.25,
+   "verdicts": {
+    "Evidence-led": 0.076,
+    "Face-dependent, no expression": 0.024,
+    "Inconclusive": 0.9
+   },
+   "reason_rates": {
+    "evidence_unresolved": 0.9
+   },
+   "measured": {
+    "phi": 0.9016,
+    "T": 0.179,
+    "b_over_t": 0.8032,
+    "e_over_t": 0.011,
+    "b_half_over_t": 0.0828,
+    "e_half_over_t": 0.0158
+   },
+   "rates": {
+    "b4": 0.976,
+    "b5": 1.0,
+    "e_sig": 0.076,
+    "e_raw_sig": 0.228,
+    "e_passes": 0.076,
+    "b_sig": 1.0,
+    "b_raw_sig": 1.0,
+    "any_b_sig": 1.0,
+    "any_e_sig": 0.084,
+    "conflict": 0.0,
+    "b3_failed": 0.0
+   },
+   "evidence_classes": {
+    "Absent": 0.024,
+    "Shown": 0.076,
+    "Unresolved": 0.9
+   },
+   "balance_classes": {
+    "Face": 1.0
+   },
+   "word_share": {
+    "mixed": 0.018,
+    "word_prior": 0.982
+   },
+   "power": 0.076,
+   "other_named": 0.024,
+   "inconclusive": 0.9,
+   "pass": false
+  },
+  "mixed_phi0.9_signal0.5": {
+   "expected": "Evidence-led",
+   "judged": false,
+   "n": 500,
+   "prior_scale": 0.1968,
+   "signal": 0.5,
+   "verdicts": {
+    "Evidence-led": 0.872,
+    "Inconclusive": 0.128
+   },
+   "reason_rates": {
+    "evidence_unresolved": 0.128
+   },
+   "measured": {
+    "phi": 0.9007,
+    "T": 0.1866,
+    "b_over_t": 0.8015,
+    "e_over_t": 0.0474,
+    "b_half_over_t": 0.0813,
+    "e_half_over_t": 0.0212
+   },
+   "rates": {
+    "b4": 1.0,
+    "b5": 1.0,
+    "e_sig": 0.872,
+    "e_raw_sig": 0.978,
+    "e_passes": 0.872,
+    "b_sig": 1.0,
+    "b_raw_sig": 1.0,
+    "any_b_sig": 1.0,
+    "any_e_sig": 0.872,
+    "conflict": 0.0,
+    "b3_failed": 0.0
+   },
+   "evidence_classes": {
+    "Shown": 0.872,
+    "Unresolved": 0.128
+   },
+   "balance_classes": {
+    "Face": 1.0
+   },
+   "word_share": {
+    "mixed": 0.012,
+    "word_prior": 0.988
+   },
+   "power": 0.872,
+   "other_named": 0,
+   "inconclusive": 0.128,
+   "pass": true
+  },
+  "mixed_phi0.9_signal1.0": {
+   "expected": "Evidence-led",
+   "judged": false,
+   "n": 500,
+   "prior_scale": 0.2242,
+   "signal": 1.0,
+   "verdicts": {
+    "Evidence-led": 1.0
+   },
+   "reason_rates": {},
+   "measured": {
+    "phi": 0.9018,
+    "T": 0.2308,
+    "b_over_t": 0.8037,
+    "e_over_t": 0.2083,
+    "b_half_over_t": 0.1166,
+    "e_half_over_t": 0.0601
+   },
+   "rates": {
+    "b4": 1.0,
+    "b5": 1.0,
+    "e_sig": 1.0,
+    "e_raw_sig": 1.0,
+    "e_passes": 1.0,
+    "b_sig": 1.0,
+    "b_raw_sig": 1.0,
+    "any_b_sig": 1.0,
+    "any_e_sig": 1.0,
+    "conflict": 0.0,
+    "b3_failed": 0.0
+   },
+   "evidence_classes": {
+    "Shown": 1.0
+   },
+   "balance_classes": {
+    "Face": 1.0
+   },
+   "word_share": {
+    "mixed": 0.016,
+    "word_prior": 0.984
+   },
+   "power": 1.0,
+   "other_named": 0,
+   "inconclusive": 0.0,
+   "pass": true
+  },
+  "mixed_phi0.9_signal2.0": {
+   "expected": "Evidence-led",
+   "judged": true,
+   "n": 500,
+   "prior_scale": 0.3624,
+   "signal": 2.0,
+   "verdicts": {
+    "Evidence-led": 0.966,
+    "Inconclusive": 0.034
+   },
+   "reason_rates": {
+    "balance_unresolved": 0.034
+   },
+   "measured": {
+    "phi": 0.8968,
+    "T": 0.5211,
+    "b_over_t": 0.7936,
+    "e_over_t": 0.5828,
+    "b_half_over_t": 0.2664,
+    "e_half_over_t": 0.1551
+   },
+   "rates": {
+    "b4": 1.0,
+    "b5": 1.0,
+    "e_sig": 1.0,
+    "e_raw_sig": 1.0,
+    "e_passes": 1.0,
+    "b_sig": 0.966,
+    "b_raw_sig": 0.972,
+    "any_b_sig": 0.966,
+    "any_e_sig": 1.0,
+    "conflict": 0.0,
+    "b3_failed": 0.0
+   },
+   "evidence_classes": {
+    "Shown": 1.0
+   },
+   "balance_classes": {
+    "Face": 0.966,
+    "Unresolved": 0.034
+   },
+   "word_share": {
+    "mixed": 0.022,
+    "word_prior": 0.978
+   },
+   "power": 0.966,
+   "other_named": 0,
+   "inconclusive": 0.034,
+   "pass": true
+  },
+  "unmapped_face_signal1.0": {
+   "expected": "Face-led, unmapped",
+   "judged": false,
+   "n": 500,
+   "prior_scale": 0.3085,
+   "signal": 1.0,
+   "verdicts": {
+    "Face-led, unmapped": 0.994,
+    "Inconclusive": 0.006
+   },
+   "reason_rates": {
+    "balance_unresolved": 0.006
+   },
+   "measured": {
+    "phi": 0.8039,
+    "T": 0.2586,
+    "b_over_t": 0.6078,
+    "e_over_t": 0.1857,
+    "b_half_over_t": 0.1143,
+    "e_half_over_t": 0.0547
+   },
+   "rates": {
+    "b4": 0.0,
+    "b5": 0.0,
+    "e_sig": 1.0,
+    "e_raw_sig": 1.0,
+    "e_passes": 1.0,
+    "b_sig": 0.994,
+    "b_raw_sig": 0.994,
+    "any_b_sig": 0.994,
+    "any_e_sig": 1.0,
+    "conflict": 0.0,
+    "b3_failed": 0.0
+   },
+   "evidence_classes": {
+    "Unmapped": 1.0
+   },
+   "balance_classes": {
+    "Face": 0.994,
+    "Unresolved": 0.006
+   },
+   "word_share": {
+    "word_prior": 1.0
+   },
+   "power": 0.994,
+   "other_named": 0,
+   "inconclusive": 0.006,
+   "pass": true
+  },
+  "unmapped_default_signal1.0": {
+   "expected": "Default-led, unmapped",
+   "judged": false,
+   "n": 500,
+   "prior_scale": 0.9659,
+   "signal": 1.0,
+   "verdicts": {
+    "Default-led, unmapped": 1.0
+   },
+   "reason_rates": {},
+   "measured": {
+    "phi": 0.1998,
+    "T": 0.8736,
+    "b_over_t": -0.6003,
+    "e_over_t": 0.0381,
+    "b_half_over_t": 0.0813,
+    "e_half_over_t": 0.0122
+   },
+   "rates": {
+    "b4": 0.004,
+    "b5": 0.0,
+    "e_sig": 1.0,
+    "e_raw_sig": 1.0,
+    "e_passes": 1.0,
+    "b_sig": 1.0,
+    "b_raw_sig": 1.0,
+    "any_b_sig": 1.0,
+    "any_e_sig": 1.0,
+    "conflict": 0.0,
+    "b3_failed": 0.0
+   },
+   "evidence_classes": {
+    "Unmapped": 1.0
+   },
+   "balance_classes": {
+    "Default": 1.0
+   },
+   "word_share": {
+    "word_prior": 1.0
+   },
+   "power": 1.0,
+   "other_named": 0,
+   "inconclusive": 0.0,
+   "pass": true
+  },
+  "unmapped_face_signal2.0": {
+   "expected": "Face-led, unmapped",
+   "judged": true,
+   "n": 500,
+   "prior_scale": 0.4825,
+   "signal": 2.0,
+   "verdicts": {
+    "Face-led, unmapped": 0.882,
+    "Inconclusive": 0.118
+   },
+   "reason_rates": {
+    "balance_unresolved": 0.118
+   },
+   "measured": {
+    "phi": 0.7966,
+    "T": 0.5707,
+    "b_over_t": 0.5932,
+    "e_over_t": 0.5136,
+    "b_half_over_t": 0.2576,
+    "e_half_over_t": 0.1383
+   },
+   "rates": {
+    "b4": 0.0,
+    "b5": 0.0,
+    "e_sig": 1.0,
+    "e_raw_sig": 1.0,
+    "e_passes": 1.0,
+    "b_sig": 0.882,
+    "b_raw_sig": 0.912,
+    "any_b_sig": 0.882,
+    "any_e_sig": 1.0,
+    "conflict": 0.0,
+    "b3_failed": 0.0
+   },
+   "evidence_classes": {
+    "Unmapped": 1.0
+   },
+   "balance_classes": {
+    "Face": 0.882,
+    "Unresolved": 0.118
+   },
+   "word_share": {
+    "word_prior": 1.0
+   },
+   "power": 0.882,
+   "other_named": 0,
+   "inconclusive": 0.118,
+   "pass": true
+  },
+  "unmapped_default_signal2.0": {
+   "expected": "Default-led, unmapped",
+   "judged": true,
+   "n": 500,
+   "prior_scale": 1.3135,
+   "signal": 2.0,
+   "verdicts": {
+    "Default-led, unmapped": 0.968,
+    "Inconclusive": 0.032
+   },
+   "reason_rates": {
+    "balance_unresolved": 0.032
+   },
+   "measured": {
+    "phi": 0.1981,
+    "T": 1.3972,
+    "b_over_t": -0.6037,
+    "e_over_t": 0.1068,
+    "b_half_over_t": 0.1203,
+    "e_half_over_t": 0.0326
+   },
+   "rates": {
+    "b4": 0.0,
+    "b5": 0.0,
+    "e_sig": 1.0,
+    "e_raw_sig": 1.0,
+    "e_passes": 1.0,
+    "b_sig": 0.978,
+    "b_raw_sig": 0.982,
+    "any_b_sig": 0.978,
+    "any_e_sig": 1.0,
+    "conflict": 0.0,
+    "b3_failed": 0.0
+   },
+   "evidence_classes": {
+    "Unmapped": 1.0
+   },
+   "balance_classes": {
+    "Default": 0.968,
+    "Unresolved": 0.032
+   },
+   "word_share": {
+    "word_prior": 1.0
+   },
+   "power": 0.968,
+   "other_named": 0,
+   "inconclusive": 0.032,
+   "pass": true
+  },
+  "spread": {
+   "expected": "Evidence-led",
+   "judged": true,
+   "n": 500,
+   "prior_scale": 0.0,
+   "signal": 2.0,
+   "verdicts": {
+    "Evidence-led": 0.994,
+    "Inconclusive": 0.006
+   },
+   "reason_rates": {
+    "balance_unresolved": 0.006
+   },
+   "measured": {
+    "phi": 1.0067,
+    "T": 0.4653,
+    "b_over_t": 1.0134,
+    "e_over_t": 0.6661,
+    "b_half_over_t": 0.2499,
+    "e_half_over_t": 0.1619
+   },
+   "rates": {
+    "b4": 1.0,
+    "b5": 1.0,
+    "e_sig": 1.0,
+    "e_raw_sig": 1.0,
+    "e_passes": 1.0,
+    "b_sig": 0.994,
+    "b_raw_sig": 0.996,
+    "any_b_sig": 0.994,
+    "any_e_sig": 1.0,
+    "conflict": 0.0,
+    "b3_failed": 0.0
+   },
+   "evidence_classes": {
+    "Shown": 1.0
+   },
+   "balance_classes": {
+    "Face": 0.994,
+    "Unresolved": 0.006
+   },
+   "word_share": {
+    "mixed": 1.0
+   },
+   "power": 0.994,
+   "other_named": 0,
+   "inconclusive": 0.006,
+   "pass": true
+  },
+  "boundary_phi0.3334": {
+   "expected": null,
+   "judged": false,
+   "n": 500,
+   "prior_scale": 0.839,
+   "signal": 1.43,
+   "verdicts": {
+    "Default-led with evidence": 0.918,
+    "Evidence, neither part dominant": 0.018,
+    "Inconclusive": 0.064
+   },
+   "reason_rates": {
+    "balance_unresolved": 0.064
+   },
+   "measured": {
+    "phi": 0.333,
+    "T": 0.7301,
+    "b_over_t": -0.3339,
+    "e_over_t": 0.1274,
+    "b_half_over_t": 0.1113,
+    "e_half_over_t": 0.0378
+   },
+   "rates": {
+    "b4": 1.0,
+    "b5": 1.0,
+    "e_sig": 1.0,
+    "e_raw_sig": 1.0,
+    "e_passes": 1.0,
+    "b_sig": 0.924,
+    "b_raw_sig": 0.952,
+    "any_b_sig": 0.924,
+    "any_e_sig": 1.0,
+    "conflict": 0.0,
+    "b3_failed": 0.0
+   },
+   "evidence_classes": {
+    "Shown": 1.0
+   },
+   "balance_classes": {
+    "Default": 0.918,
+    "Even": 0.018,
+    "Unresolved": 0.064
+   },
+   "word_share": {
+    "word_prior": 1.0
+   }
+  },
+  "boundary_phi0.6666": {
+   "expected": null,
+   "judged": false,
+   "n": 500,
+   "prior_scale": 0.4195,
+   "signal": 1.034,
+   "verdicts": {
+    "Evidence-led": 0.976,
+    "Inconclusive": 0.024
+   },
+   "reason_rates": {
+    "balance_unresolved": 0.024
+   },
+   "measured": {
+    "phi": 0.6663,
+    "T": 0.3126,
+    "b_over_t": 0.3326,
+    "e_over_t": 0.1564,
+    "b_half_over_t": 0.1065,
+    "e_half_over_t": 0.0454
+   },
+   "rates": {
+    "b4": 1.0,
+    "b5": 1.0,
+    "e_sig": 1.0,
+    "e_raw_sig": 1.0,
+    "e_passes": 1.0,
+    "b_sig": 0.976,
+    "b_raw_sig": 0.986,
+    "any_b_sig": 0.976,
+    "any_e_sig": 1.0,
+    "conflict": 0.0,
+    "b3_failed": 0.0
+   },
+   "evidence_classes": {
+    "Shown": 1.0
+   },
+   "balance_classes": {
+    "Face": 0.976,
+    "Unresolved": 0.024
+   },
+   "word_share": {
+    "word_prior": 1.0
+   }
+  },
+  "false_even_phi0.32_signal1.0": {
+   "expected": null,
+   "judged": false,
+   "n": 500,
+   "prior_scale": 0.7506,
+   "signal": 1.0,
+   "verdicts": {
+    "Default-led with evidence": 0.998,
+    "Inconclusive": 0.002
+   },
+   "reason_rates": {
+    "balance_unresolved": 0.002
+   },
+   "measured": {
+    "phi": 0.3196,
+    "T": 0.5918,
+    "b_over_t": -0.3609,
+    "e_over_t": 0.0646,
+    "b_half_over_t": 0.0886,
+    "e_half_over_t": 0.0198
+   },
+   "rates": {
+    "b4": 1.0,
+    "b5": 1.0,
+    "e_sig": 1.0,
+    "e_raw_sig": 1.0,
+    "e_passes": 1.0,
+    "b_sig": 0.998,
+    "b_raw_sig": 1.0,
+    "any_b_sig": 0.998,
+    "any_e_sig": 1.0,
+    "conflict": 0.0,
+    "b3_failed": 0.0
+   },
+   "evidence_classes": {
+    "Shown": 1.0
+   },
+   "balance_classes": {
+    "Default": 0.998,
+    "Unresolved": 0.002
+   },
+   "word_share": {
+    "word_prior": 1.0
+   }
+  },
+  "false_even_phi0.32_signal2.0": {
+   "expected": null,
+   "judged": false,
+   "n": 500,
+   "prior_scale": 1.0581,
+   "signal": 2.0,
+   "verdicts": {
+    "Default-led with evidence": 0.764,
+    "Evidence, neither part dominant": 0.02,
+    "Inconclusive": 0.216
+   },
+   "reason_rates": {
+    "balance_unresolved": 0.216
+   },
+   "measured": {
+    "phi": 0.3191,
+    "T": 1.0614,
+    "b_over_t": -0.3619,
+    "e_over_t": 0.1834,
+    "b_half_over_t": 0.1587,
+    "e_half_over_t": 0.0539
+   },
+   "rates": {
+    "b4": 1.0,
+    "b5": 1.0,
+    "e_sig": 1.0,
+    "e_raw_sig": 1.0,
+    "e_passes": 1.0,
+    "b_sig": 0.766,
+    "b_raw_sig": 0.832,
+    "any_b_sig": 0.77,
+    "any_e_sig": 1.0,
+    "conflict": 0.0,
+    "b3_failed": 0.0
+   },
+   "evidence_classes": {
+    "Shown": 1.0
+   },
+   "balance_classes": {
+    "Default": 0.764,
+    "Even": 0.02,
+    "Unresolved": 0.216
+   },
+   "word_share": {
+    "word_prior": 1.0
+   }
+  },
+  "false_even_phi0.68_signal1.0": {
+   "expected": null,
+   "judged": false,
+   "n": 500,
+   "prior_scale": 0.4045,
+   "signal": 1.0,
+   "verdicts": {
+    "Evidence-led": 0.994,
+    "Inconclusive": 0.006
+   },
+   "reason_rates": {
+    "balance_unresolved": 0.006
+   },
+   "measured": {
+    "phi": 0.6777,
+    "T": 0.3023,
+    "b_over_t": 0.3553,
+    "e_over_t": 0.1509,
+    "b_half_over_t": 0.1029,
+    "e_half_over_t": 0.0441
+   },
+   "rates": {
+    "b4": 1.0,
+    "b5": 1.0,
+    "e_sig": 1.0,
+    "e_raw_sig": 1.0,
+    "e_passes": 1.0,
+    "b_sig": 0.994,
+    "b_raw_sig": 0.994,
+    "any_b_sig": 0.994,
+    "any_e_sig": 1.0,
+    "conflict": 0.0,
+    "b3_failed": 0.0
+   },
+   "evidence_classes": {
+    "Shown": 1.0
+   },
+   "balance_classes": {
+    "Face": 0.994,
+    "Unresolved": 0.006
+   },
+   "word_share": {
+    "word_prior": 1.0
+   }
+  },
+  "false_even_phi0.68_signal2.0": {
+   "expected": null,
+   "judged": false,
+   "n": 500,
+   "prior_scale": 0.6179,
+   "signal": 2.0,
+   "verdicts": {
+    "Evidence, neither part dominant": 0.01,
+    "Evidence-led": 0.466,
+    "Inconclusive": 0.524
+   },
+   "reason_rates": {
+    "balance_unresolved": 0.524
+   },
+   "measured": {
+    "phi": 0.6732,
+    "T": 0.6399,
+    "b_over_t": 0.3463,
+    "e_over_t": 0.4232,
+    "b_half_over_t": 0.234,
+    "e_half_over_t": 0.1161
+   },
+   "rates": {
+    "b4": 1.0,
+    "b5": 1.0,
+    "e_sig": 1.0,
+    "e_raw_sig": 1.0,
+    "e_passes": 1.0,
+    "b_sig": 0.466,
+    "b_raw_sig": 0.72,
+    "any_b_sig": 0.478,
+    "any_e_sig": 1.0,
+    "conflict": 0.0,
+    "b3_failed": 0.0
+   },
+   "evidence_classes": {
+    "Shown": 1.0
+   },
+   "balance_classes": {
+    "Even": 0.01,
+    "Face": 0.466,
+    "Unresolved": 0.524
+   },
+   "word_share": {
+    "word_prior": 1.0
+   }
+  },
+  "inside_even_phi0.4": {
+   "expected": null,
+   "judged": false,
+   "n": 500,
+   "prior_scale": 0.9375,
+   "signal": 2.0,
+   "verdicts": {
+    "Default-led with evidence": 0.4,
+    "Evidence, neither part dominant": 0.298,
+    "Inconclusive": 0.302
+   },
+   "reason_rates": {
+    "balance_unresolved": 0.302
+   },
+   "measured": {
+    "phi": 0.3943,
+    "T": 0.9236,
+    "b_over_t": -0.2113,
+    "e_over_t": 0.2324,
+    "b_half_over_t": 0.1784,
+    "e_half_over_t": 0.067
+   },
+   "rates": {
+    "b4": 1.0,
+    "b5": 1.0,
+    "e_sig": 1.0,
+    "e_raw_sig": 1.0,
+    "e_passes": 1.0,
+    "b_sig": 0.412,
+    "b_raw_sig": 0.55,
+    "any_b_sig": 0.418,
+    "any_e_sig": 1.0,
+    "conflict": 0.0,
+    "b3_failed": 0.0
+   },
+   "evidence_classes": {
+    "Shown": 1.0
+   },
+   "balance_classes": {
+    "Default": 0.4,
+    "Even": 0.298,
+    "Unresolved": 0.302
+   },
+   "word_share": {
+    "word_prior": 1.0
+   }
+  },
+  "inside_even_phi0.6": {
+   "expected": null,
+   "judged": false,
+   "n": 500,
+   "prior_scale": 0.7019,
+   "signal": 2.0,
+   "verdicts": {
+    "Evidence, neither part dominant": 0.272,
+    "Evidence-led": 0.072,
+    "Inconclusive": 0.656
+   },
+   "reason_rates": {
+    "balance_unresolved": 0.656
+   },
+   "measured": {
+    "phi": 0.5972,
+    "T": 0.6998,
+    "b_over_t": 0.1943,
+    "e_over_t": 0.3705,
+    "b_half_over_t": 0.2293,
+    "e_half_over_t": 0.1037
+   },
+   "rates": {
+    "b4": 1.0,
+    "b5": 1.0,
+    "e_sig": 1.0,
+    "e_raw_sig": 1.0,
+    "e_passes": 1.0,
+    "b_sig": 0.072,
+    "b_raw_sig": 0.216,
+    "any_b_sig": 0.092,
+    "any_e_sig": 1.0,
+    "conflict": 0.0,
+    "b3_failed": 0.0
+   },
+   "evidence_classes": {
+    "Shown": 1.0
+   },
+   "balance_classes": {
+    "Even": 0.272,
+    "Face": 0.072,
+    "Unresolved": 0.656
+   },
+   "word_share": {
+    "word_prior": 1.0
+   }
+  },
+  "gain0.0_phi0.1": {
+   "expected": "Default-led with evidence",
+   "judged": false,
+   "n": 500,
+   "prior_scale": 1.6015,
+   "signal": 2.0,
+   "verdicts": {
+    "Default-led with evidence": 1.0
+   },
+   "reason_rates": {},
+   "measured": {
+    "phi": 0.0999,
+    "T": 1.7534,
+    "b_over_t": -0.8003,
+    "e_over_t": 0.0462,
+    "b_half_over_t": 0.0546,
+    "e_half_over_t": 0.0065
+   },
+   "rates": {
+    "b4": 1.0,
+    "b5": 1.0,
+    "e_sig": 1.0,
+    "e_raw_sig": 1.0,
+    "e_passes": 1.0,
+    "b_sig": 1.0,
+    "b_raw_sig": 1.0,
+    "any_b_sig": 1.0,
+    "any_e_sig": 1.0,
+    "conflict": 0.0,
+    "b3_failed": 0.0
+   },
+   "evidence_classes": {
+    "Shown": 1.0
+   },
+   "balance_classes": {
+    "Default": 1.0
+   },
+   "word_share": {
+    "word_prior": 1.0
+   },
+   "power": 1.0,
+   "other_named": 0,
+   "inconclusive": 0.0,
+   "pass": true
+  },
+  "gain0.0_phi0.5": {
+   "expected": "Evidence, neither part dominant",
+   "judged": false,
+   "n": 500,
+   "prior_scale": 0.7308,
+   "signal": 2.0,
+   "verdicts": {
+    "Default-led with evidence": 0.004,
+    "Evidence, neither part dominant": 0.942,
+    "Evidence-led": 0.006,
+    "Inconclusive": 0.048
+   },
+   "reason_rates": {
+    "balance_unresolved": 0.048
+   },
+   "measured": {
+    "phi": 0.5004,
+    "T": 0.6654,
+    "b_over_t": 0.0007,
+    "e_over_t": 0.2993,
+    "b_half_over_t": 0.0752,
+    "e_half_over_t": 0.0245
+   },
+   "rates": {
+    "b4": 1.0,
+    "b5": 1.0,
+    "e_sig": 1.0,
+    "e_raw_sig": 1.0,
+    "e_passes": 1.0,
+    "b_sig": 0.01,
+    "b_raw_sig": 0.042,
+    "any_b_sig": 0.036,
+    "any_e_sig": 1.0,
+    "conflict": 0.0,
+    "b3_failed": 0.0
+   },
+   "evidence_classes": {
+    "Shown": 1.0
+   },
+   "balance_classes": {
+    "Default": 0.004,
+    "Even": 0.942,
+    "Face": 0.006,
+    "Unresolved": 0.048
+   },
+   "word_share": {
+    "word_prior": 1.0
+   },
+   "power": 0.942,
+   "other_named": 0.01,
+   "inconclusive": 0.048,
+   "pass": true
+  },
+  "gain0.0_phi0.9": {
+   "expected": "Evidence-led",
+   "judged": false,
+   "n": 500,
+   "prior_scale": 0.3181,
+   "signal": 2.0,
+   "verdicts": {
+    "Evidence-led": 1.0
+   },
+   "reason_rates": {},
+   "measured": {
+    "phi": 0.9021,
+    "T": 0.4243,
+    "b_over_t": 0.8042,
+    "e_over_t": 0.5793,
+    "b_half_over_t": 0.0652,
+    "e_half_over_t": 0.0415
+   },
+   "rates": {
+    "b4": 1.0,
+    "b5": 1.0,
+    "e_sig": 1.0,
+    "e_raw_sig": 1.0,
+    "e_passes": 1.0,
+    "b_sig": 1.0,
+    "b_raw_sig": 1.0,
+    "any_b_sig": 1.0,
+    "any_e_sig": 1.0,
+    "conflict": 0.0,
+    "b3_failed": 0.0
+   },
+   "evidence_classes": {
+    "Shown": 1.0
+   },
+   "balance_classes": {
+    "Face": 1.0
+   },
+   "word_share": {
+    "mixed": 0.008,
+    "word_prior": 0.992
+   },
+   "power": 1.0,
+   "other_named": 0,
+   "inconclusive": 0.0,
+   "pass": true
+  },
+  "gain0.5_phi0.1": {
+   "expected": "Default-led with evidence",
+   "judged": false,
+   "n": 500,
+   "prior_scale": 2.0538,
+   "signal": 2.0,
+   "verdicts": {
+    "Default-led with evidence": 0.826,
+    "Inconclusive": 0.174
+   },
+   "reason_rates": {
+    "balance_unresolved": 0.162,
+    "evidence_unresolved": 0.114
+   },
+   "measured": {
+    "phi": 0.1005,
+    "T": 2.203,
+    "b_over_t": -0.7989,
+    "e_over_t": 0.0498,
+    "b_half_over_t": 0.2167,
+    "e_half_over_t": 0.0268
+   },
+   "rates": {
+    "b4": 1.0,
+    "b5": 1.0,
+    "e_sig": 0.886,
+    "e_raw_sig": 1.0,
+    "e_passes": 0.886,
+    "b_sig": 0.862,
+    "b_raw_sig": 0.862,
+    "any_b_sig": 0.862,
+    "any_e_sig": 0.888,
+    "conflict": 0.0,
+    "b3_failed": 0.0
+   },
+   "evidence_classes": {
+    "Shown": 0.886,
+    "Unresolved": 0.114
+   },
+   "balance_classes": {
+    "Default": 0.838,
+    "Unresolved": 0.162
+   },
+   "word_share": {
+    "word_prior": 1.0
+   },
+   "power": 0.826,
+   "other_named": 0,
+   "inconclusive": 0.174,
+   "pass": true
+  },
+  "gain0.5_phi0.5": {
+   "expected": "Evidence, neither part dominant",
+   "judged": false,
+   "n": 500,
+   "prior_scale": 0.9498,
+   "signal": 2.0,
+   "verdicts": {
+    "Default-led with evidence": 0.05,
+    "Evidence, neither part dominant": 0.216,
+    "Inconclusive": 0.734
+   },
+   "reason_rates": {
+    "balance_unresolved": 0.734,
+    "evidence_unresolved": 0.002
+   },
+   "measured": {
+    "phi": 0.4933,
+    "T": 1.0219,
+    "b_over_t": -0.0134,
+    "e_over_t": 0.299,
+    "b_half_over_t": 0.4026,
+    "e_half_over_t": 0.1251
+   },
+   "rates": {
+    "b4": 1.0,
+    "b5": 1.0,
+    "e_sig": 0.998,
+    "e_raw_sig": 1.0,
+    "e_passes": 0.998,
+    "b_sig": 0.054,
+    "b_raw_sig": 0.096,
+    "any_b_sig": 0.062,
+    "any_e_sig": 0.998,
+    "conflict": 0.0,
+    "b3_failed": 0.0
+   },
+   "evidence_classes": {
+    "Shown": 0.998,
+    "Unresolved": 0.002
+   },
+   "balance_classes": {
+    "Default": 0.05,
+    "Even": 0.216,
+    "Unresolved": 0.734
+   },
+   "word_share": {
+    "mixed": 0.006,
+    "word_prior": 0.994
+   },
+   "power": 0.216,
+   "other_named": 0.05,
+   "inconclusive": 0.734,
+   "pass": false
+  },
+  "gain0.5_phi0.9": {
+   "expected": "Evidence-led",
+   "judged": false,
+   "n": 500,
+   "prior_scale": 0.4303,
+   "signal": 2.0,
+   "verdicts": {
+    "Evidence-led": 0.626,
+    "Inconclusive": 0.374
+   },
+   "reason_rates": {
+    "balance_unresolved": 0.374
+   },
+   "measured": {
+    "phi": 0.8903,
+    "T": 0.6695,
+    "b_over_t": 0.7806,
+    "e_over_t": 0.5685,
+    "b_half_over_t": 0.4804,
+    "e_half_over_t": 0.2182
+   },
+   "rates": {
+    "b4": 1.0,
+    "b5": 1.0,
+    "e_sig": 1.0,
+    "e_raw_sig": 1.0,
+    "e_passes": 1.0,
+    "b_sig": 0.626,
+    "b_raw_sig": 0.718,
+    "any_b_sig": 0.628,
+    "any_e_sig": 1.0,
+    "conflict": 0.0,
+    "b3_failed": 0.0
+   },
+   "evidence_classes": {
+    "Shown": 1.0
+   },
+   "balance_classes": {
+    "Face": 0.626,
+    "Unresolved": 0.374
+   },
+   "word_share": {
+    "mixed": 0.152,
+    "word_prior": 0.848
+   },
+   "power": 0.626,
+   "other_named": 0,
+   "inconclusive": 0.374,
+   "pass": false
+  },
+  "prior_only_word|companions0": {
+   "expected": "No face evidence",
+   "judged": false,
+   "n": 500,
+   "prior_scale": 1.5,
+   "signal": 0.0,
+   "verdicts": {
+    "Default-led, unmapped": 0.016,
+    "Inconclusive": 0.012,
+    "No face evidence": 0.972
+   },
+   "reason_rates": {
+    "evidence_unresolved": 0.012
+   },
+   "measured": {
+    "phi": 0.0039,
+    "T": 1.6628,
+    "b_over_t": -0.9923,
+    "e_over_t": -0.0,
+    "b_half_over_t": 0.0181,
+    "e_half_over_t": 0.0001
+   },
+   "rates": {
+    "b4": 0.008,
+    "b5": 0.004,
+    "e_sig": 0.02,
+    "e_raw_sig": 0.02,
+    "e_passes": 0.016,
+    "b_sig": 1.0,
+    "b_raw_sig": 1.0,
+    "any_b_sig": 1.0,
+    "any_e_sig": 0.02,
+    "conflict": 0.0,
+    "b3_failed": 1.0
+   },
+   "evidence_classes": {
+    "Absent": 0.972,
+    "Unmapped": 0.016,
+    "Unresolved": 0.012
+   },
+   "balance_classes": {
+    "Default": 1.0
+   },
+   "word_share": {
+    "word_prior": 1.0
+   },
+   "power": 0.972,
+   "other_named": 0.016,
+   "inconclusive": 0.012,
+   "pass": true
+  },
+  "prior_only_word|companions1": {
+   "expected": "No face evidence",
+   "judged": false,
+   "n": 500,
+   "prior_scale": 1.5,
+   "signal": 0.0,
+   "verdicts": {
+    "Default-led, unmapped": 0.006,
+    "Inconclusive": 0.01,
+    "No face evidence": 0.984
+   },
+   "reason_rates": {
+    "evidence_unresolved": 0.01
+   },
+   "measured": {
+    "phi": 0.0039,
+    "T": 1.6619,
+    "b_over_t": -0.9922,
+    "e_over_t": 0.0,
+    "b_half_over_t": 0.0185,
+    "e_half_over_t": 0.0001
+   },
+   "rates": {
+    "b4": 0.01,
+    "b5": 0.012,
+    "e_sig": 0.006,
+    "e_raw_sig": 0.008,
+    "e_passes": 0.006,
+    "b_sig": 1.0,
+    "b_raw_sig": 1.0,
+    "any_b_sig": 1.0,
+    "any_e_sig": 0.014,
+    "conflict": 0.0,
+    "b3_failed": 1.0
+   },
+   "evidence_classes": {
+    "Absent": 0.984,
+    "Unmapped": 0.006,
+    "Unresolved": 0.01
+   },
+   "balance_classes": {
+    "Default": 1.0
+   },
+   "word_share": {
+    "word_prior": 1.0
+   },
+   "power": 0.984,
+   "other_named": 0.006,
+   "inconclusive": 0.01,
+   "pass": true
+  },
+  "prior_only_face_default|companions0": {
+   "expected": "No face evidence",
+   "judged": false,
+   "n": 500,
+   "prior_scale": 1.5,
+   "signal": 0.0,
+   "verdicts": {
+    "Default-led, unmapped": 0.016,
+    "Inconclusive": 0.01,
+    "No face evidence": 0.974
+   },
+   "reason_rates": {
+    "evidence_unresolved": 0.01
+   },
+   "measured": {
+    "phi": 0.0038,
+    "T": 1.6634,
+    "b_over_t": -0.9923,
+    "e_over_t": -0.0,
+    "b_half_over_t": 0.018,
+    "e_half_over_t": 0.0001
+   },
+   "rates": {
+    "b4": 0.004,
+    "b5": 0.01,
+    "e_sig": 0.022,
+    "e_raw_sig": 0.022,
+    "e_passes": 0.016,
+    "b_sig": 1.0,
+    "b_raw_sig": 1.0,
+    "any_b_sig": 1.0,
+    "any_e_sig": 0.022,
+    "conflict": 0.0,
+    "b3_failed": 0.0
+   },
+   "evidence_classes": {
+    "Absent": 0.974,
+    "Unmapped": 0.016,
+    "Unresolved": 0.01
+   },
+   "balance_classes": {
+    "Default": 1.0
+   },
+   "word_share": {
+    "image_or_face": 1.0
+   },
+   "power": 0.974,
+   "other_named": 0.016,
+   "inconclusive": 0.01,
+   "pass": true
+  },
+  "prior_only_face_default|companions1": {
+   "expected": "No face evidence",
+   "judged": false,
+   "n": 500,
+   "prior_scale": 1.5,
+   "signal": 0.0,
+   "verdicts": {
+    "Default-led, unmapped": 0.004,
+    "Inconclusive": 0.006,
+    "No face evidence": 0.99
+   },
+   "reason_rates": {
+    "evidence_unresolved": 0.006
+   },
+   "measured": {
+    "phi": 0.0038,
+    "T": 1.6628,
+    "b_over_t": -0.9923,
+    "e_over_t": -0.0,
+    "b_half_over_t": 0.018,
+    "e_half_over_t": 0.0001
+   },
+   "rates": {
+    "b4": 0.006,
+    "b5": 0.014,
+    "e_sig": 0.004,
+    "e_raw_sig": 0.014,
+    "e_passes": 0.004,
+    "b_sig": 1.0,
+    "b_raw_sig": 1.0,
+    "any_b_sig": 1.0,
+    "any_e_sig": 0.01,
+    "conflict": 0.0,
+    "b3_failed": 0.0
+   },
+   "evidence_classes": {
+    "Absent": 0.99,
+    "Unmapped": 0.004,
+    "Unresolved": 0.006
+   },
+   "balance_classes": {
+    "Default": 1.0
+   },
+   "word_share": {
+    "image_or_face": 1.0
+   },
+   "power": 0.99,
+   "other_named": 0.004,
+   "inconclusive": 0.006,
+   "pass": true
+  },
+  "identity|companions0": {
+   "expected": "Face-dependent, no expression",
+   "judged": false,
+   "n": 500,
+   "prior_scale": 0.3,
+   "signal": 0.0,
+   "verdicts": {
+    "Face-dependent, no expression": 0.93,
+    "Face-led, unmapped": 0.054,
+    "Inconclusive": 0.016
+   },
+   "reason_rates": {
+    "evidence_unresolved": 0.016
+   },
+   "measured": {
+    "phi": 1.036,
+    "T": 0.9128,
+    "b_over_t": 1.0719,
+    "e_over_t": 0.0,
+    "b_half_over_t": 0.2174,
+    "e_half_over_t": 0.0068
+   },
+   "rates": {
+    "b4": 0.004,
+    "b5": 0.012,
+    "e_sig": 0.066,
+    "e_raw_sig": 0.066,
+    "e_passes": 0.054,
+    "b_sig": 1.0,
+    "b_raw_sig": 1.0,
+    "any_b_sig": 1.0,
+    "any_e_sig": 0.066,
+    "conflict": 0.0,
+    "b3_failed": 0.0
+   },
+   "evidence_classes": {
+    "Absent": 0.93,
+    "Unmapped": 0.054,
+    "Unresolved": 0.016
+   },
+   "balance_classes": {
+    "Face": 1.0
+   },
+   "word_share": {
+    "mixed": 0.998,
+    "word_prior": 0.002
+   },
+   "power": 0.93,
+   "other_named": 0.054,
+   "inconclusive": 0.016,
+   "pass": true
+  },
+  "identity|companions1": {
+   "expected": "Face-dependent, no expression",
+   "judged": false,
+   "n": 500,
+   "prior_scale": 0.3,
+   "signal": 0.0,
+   "verdicts": {
+    "Face-dependent, no expression": 0.946,
+    "Face-led, unmapped": 0.044,
+    "Inconclusive": 0.01
+   },
+   "reason_rates": {
+    "balance_unresolved": 0.002,
+    "evidence_unresolved": 0.008
+   },
+   "measured": {
+    "phi": 1.0375,
+    "T": 0.9167,
+    "b_over_t": 1.0749,
+    "e_over_t": -0.0001,
+    "b_half_over_t": 0.2204,
+    "e_half_over_t": 0.0067
+   },
+   "rates": {
+    "b4": 0.008,
+    "b5": 0.02,
+    "e_sig": 0.046,
+    "e_raw_sig": 0.068,
+    "e_passes": 0.046,
+    "b_sig": 0.998,
+    "b_raw_sig": 0.998,
+    "any_b_sig": 0.998,
+    "any_e_sig": 0.05,
+    "conflict": 0.0,
+    "b3_failed": 0.0
+   },
+   "evidence_classes": {
+    "Absent": 0.946,
+    "Unmapped": 0.046,
+    "Unresolved": 0.008
+   },
+   "balance_classes": {
+    "Face": 0.998,
+    "Unresolved": 0.002
+   },
+   "word_share": {
+    "mixed": 1.0
+   },
+   "power": 0.946,
+   "other_named": 0.044,
+   "inconclusive": 0.01,
+   "pass": true
+  },
+  "noise|companions0": {
+   "expected": "Face-dependent, no expression",
+   "judged": false,
+   "n": 500,
+   "prior_scale": 0.3,
+   "signal": 0.0,
+   "verdicts": {
+    "Face-dependent, no expression": 0.946,
+    "Face-led, unmapped": 0.028,
+    "Inconclusive": 0.026
+   },
+   "reason_rates": {
+    "evidence_unresolved": 0.026
+   },
+   "measured": {
+    "phi": 0.9712,
+    "T": 1.0674,
+    "b_over_t": 0.9423,
+    "e_over_t": 0.001,
+    "b_half_over_t": 0.0495,
+    "e_half_over_t": 0.0269
+   },
+   "rates": {
+    "b4": 0.008,
+    "b5": 0.01,
+    "e_sig": 0.046,
+    "e_raw_sig": 0.046,
+    "e_passes": 0.028,
+    "b_sig": 1.0,
+    "b_raw_sig": 1.0,
+    "any_b_sig": 1.0,
+    "any_e_sig": 0.046,
+    "conflict": 0.0,
+    "b3_failed": 0.0
+   },
+   "evidence_classes": {
+    "Absent": 0.946,
+    "Unmapped": 0.028,
+    "Unresolved": 0.026
+   },
+   "balance_classes": {
+    "Face": 1.0
+   },
+   "word_share": {
+    "mixed": 0.204,
+    "word_prior": 0.796
+   },
+   "power": 0.946,
+   "other_named": 0.028,
+   "inconclusive": 0.026,
+   "pass": true
+  },
+  "noise|companions1": {
+   "expected": "Face-dependent, no expression",
+   "judged": false,
+   "n": 500,
+   "prior_scale": 0.3,
+   "signal": 0.0,
+   "verdicts": {
+    "Face-dependent, no expression": 0.968,
+    "Face-led, unmapped": 0.02,
+    "Inconclusive": 0.012
+   },
+   "reason_rates": {
+    "evidence_unresolved": 0.012
+   },
+   "measured": {
+    "phi": 0.9705,
+    "T": 1.0663,
+    "b_over_t": 0.9409,
+    "e_over_t": -0.001,
+    "b_half_over_t": 0.0493,
+    "e_half_over_t": 0.0269
+   },
+   "rates": {
+    "b4": 0.012,
+    "b5": 0.008,
+    "e_sig": 0.02,
+    "e_raw_sig": 0.04,
+    "e_passes": 0.02,
+    "b_sig": 1.0,
+    "b_raw_sig": 1.0,
+    "any_b_sig": 1.0,
+    "any_e_sig": 0.034,
+    "conflict": 0.0,
+    "b3_failed": 0.0
+   },
+   "evidence_classes": {
+    "Absent": 0.968,
+    "Unmapped": 0.02,
+    "Unresolved": 0.012
+   },
+   "balance_classes": {
+    "Face": 1.0
+   },
+   "word_share": {
+    "mixed": 0.156,
+    "word_prior": 0.844
+   },
+   "power": 0.968,
+   "other_named": 0.02,
+   "inconclusive": 0.012,
+   "pass": true
+  },
+  "null_balance_no_evidence|companions0": {
+   "expected": null,
+   "judged": false,
+   "n": 500,
+   "prior_scale": 0.4819,
+   "signal": 0.0,
+   "verdicts": {
+    "Default-led, unmapped": 0.002,
+    "Face-dependent, no expression": 0.022,
+    "Inconclusive": 0.028,
+    "No face evidence": 0.014,
+    "No face evidence, neither part dominant": 0.918,
+    "Unmapped, neither part dominant": 0.016
+   },
+   "reason_rates": {
+    "balance_unresolved": 0.01,
+    "evidence_unresolved": 0.018
+   },
+   "measured": {
+    "phi": 0.5023,
+    "T": 0.312,
+    "b_over_t": 0.0046,
+    "e_over_t": 0.0001,
+    "b_half_over_t": 0.0877,
+    "e_half_over_t": 0.0088
+   },
+   "rates": {
+    "b4": 0.012,
+    "b5": 0.016,
+    "e_sig": 0.024,
+    "e_raw_sig": 0.024,
+    "e_passes": 0.018,
+    "b_sig": 0.04,
+    "b_raw_sig": 0.04,
+    "any_b_sig": 0.04,
+    "any_e_sig": 0.024,
+    "conflict": 0.0,
+    "b3_failed": 0.0
+   },
+   "evidence_classes": {
+    "Absent": 0.964,
+    "Unmapped": 0.018,
+    "Unresolved": 0.018
+   },
+   "balance_classes": {
+    "Default": 0.016,
+    "Even": 0.952,
+    "Face": 0.022,
+    "Unresolved": 0.01
+   },
+   "word_share": {
+    "word_prior": 1.0
+   }
+  },
+  "null_balance_no_evidence|companions1": {
+   "expected": null,
+   "judged": false,
+   "n": 500,
+   "prior_scale": 0.4819,
+   "signal": 0.0,
+   "verdicts": {
+    "Face-dependent, no expression": 0.01,
+    "Face-led, unmapped": 0.002,
+    "Inconclusive": 0.058,
+    "No face evidence": 0.014,
+    "No face evidence, neither part dominant": 0.902,
+    "Unmapped, neither part dominant": 0.014
+   },
+   "reason_rates": {
+    "balance_unresolved": 0.048,
+    "evidence_unresolved": 0.01
+   },
+   "measured": {
+    "phi": 0.5039,
+    "T": 0.3124,
+    "b_over_t": 0.0079,
+    "e_over_t": 0.0,
+    "b_half_over_t": 0.0866,
+    "e_half_over_t": 0.0089
+   },
+   "rates": {
+    "b4": 0.01,
+    "b5": 0.006,
+    "e_sig": 0.018,
+    "e_raw_sig": 0.028,
+    "e_passes": 0.018,
+    "b_sig": 0.028,
+    "b_raw_sig": 0.056,
+    "any_b_sig": 0.05,
+    "any_e_sig": 0.026,
+    "conflict": 0.0,
+    "b3_failed": 0.0
+   },
+   "evidence_classes": {
+    "Absent": 0.972,
+    "Unmapped": 0.018,
+    "Unresolved": 0.01
+   },
+   "balance_classes": {
+    "Default": 0.014,
+    "Even": 0.924,
+    "Face": 0.014,
+    "Unresolved": 0.048
+   },
+   "word_share": {
+    "word_prior": 1.0
+   }
+  },
+  "all_null_family|companions0": {
+   "expected": null,
+   "judged": false,
+   "n": 2000,
+   "prior_scale": 0.4819,
+   "signal": 0.0,
+   "verdicts": {
+    "Face-dependent, no expression": 0.025,
+    "Inconclusive": 0.0315,
+    "No face evidence": 0.0115,
+    "No face evidence, neither part dominant": 0.916,
+    "Unmapped, neither part dominant": 0.016
+   },
+   "reason_rates": {
+    "balance_unresolved": 0.019,
+    "evidence_unresolved": 0.0125
+   },
+   "measured": {
+    "phi": 0.5021,
+    "T": 0.3128,
+    "b_over_t": 0.0042,
+    "e_over_t": 0.0001,
+    "b_half_over_t": 0.0873,
+    "e_half_over_t": 0.0089
+   },
+   "rates": {
+    "b4": 0.0085,
+    "b5": 0.0095,
+    "e_sig": 0.0205,
+    "e_raw_sig": 0.0205,
+    "e_passes": 0.0165,
+    "b_sig": 0.041,
+    "b_raw_sig": 0.041,
+    "any_b_sig": 0.041,
+    "any_e_sig": 0.0205,
+    "conflict": 0.0,
+    "b3_failed": 0.0
+   },
+   "evidence_classes": {
+    "Absent": 0.971,
+    "Unmapped": 0.0165,
+    "Unresolved": 0.0125
+   },
+   "balance_classes": {
+    "Default": 0.0115,
+    "Even": 0.944,
+    "Face": 0.0255,
+    "Unresolved": 0.019
+   },
+   "word_share": {
+    "word_prior": 1.0
+   }
+  },
+  "all_null_family|companions1": {
+   "expected": null,
+   "judged": false,
+   "n": 2000,
+   "prior_scale": 0.4819,
+   "signal": 0.0,
+   "verdicts": {
+    "Face-dependent, no expression": 0.014,
+    "Inconclusive": 0.052,
+    "No face evidence": 0.0075,
+    "No face evidence, neither part dominant": 0.9165,
+    "Unmapped, neither part dominant": 0.01
+   },
+   "reason_rates": {
+    "balance_unresolved": 0.044,
+    "evidence_unresolved": 0.008
+   },
+   "measured": {
+    "phi": 0.5043,
+    "T": 0.3112,
+    "b_over_t": 0.0086,
+    "e_over_t": 0.0,
+    "b_half_over_t": 0.0868,
+    "e_half_over_t": 0.009
+   },
+   "rates": {
+    "b4": 0.008,
+    "b5": 0.01,
+    "e_sig": 0.0105,
+    "e_raw_sig": 0.02,
+    "e_passes": 0.0105,
+    "b_sig": 0.022,
+    "b_raw_sig": 0.0515,
+    "any_b_sig": 0.043,
+    "any_e_sig": 0.02,
+    "conflict": 0.0,
+    "b3_failed": 0.0
+   },
+   "evidence_classes": {
+    "Absent": 0.9815,
+    "Unmapped": 0.0105,
+    "Unresolved": 0.008
+   },
+   "balance_classes": {
+    "Default": 0.0075,
+    "Even": 0.9345,
+    "Face": 0.014,
+    "Unresolved": 0.044
+   },
+   "word_share": {
+    "word_prior": 1.0
+   }
+  },
+  "mixed_phi0.5_signal0.25|companions0": {
+   "expected": "Evidence, neither part dominant",
+   "judged": false,
+   "n": 500,
+   "prior_scale": 0.486,
+   "signal": 0.25,
+   "verdicts": {
+    "Default-led with evidence": 0.002,
+    "Evidence, neither part dominant": 0.11,
+    "Evidence-led": 0.002,
+    "Inconclusive": 0.874,
+    "No face evidence, neither part dominant": 0.012
+   },
+   "reason_rates": {
+    "balance_unresolved": 0.024,
+    "evidence_unresolved": 0.874
+   },
+   "measured": {
+    "phi": 0.5035,
+    "T": 0.3146,
+    "b_over_t": 0.0071,
+    "e_over_t": 0.0055,
+    "b_half_over_t": 0.0868,
+    "e_half_over_t": 0.0094
+   },
+   "rates": {
+    "b4": 0.986,
+    "b5": 0.998,
+    "e_sig": 0.17,
+    "e_raw_sig": 0.17,
+    "e_passes": 0.114,
+    "b_sig": 0.052,
+    "b_raw_sig": 0.052,
+    "any_b_sig": 0.052,
+    "any_e_sig": 0.17,
+    "conflict": 0.002,
+    "b3_failed": 0.0
+   },
+   "evidence_classes": {
+    "Absent": 0.012,
+    "Shown": 0.114,
+    "Unresolved": 0.874
+   },
+   "balance_classes": {
+    "Default": 0.01,
+    "Even": 0.936,
+    "Face": 0.03,
+    "Unresolved": 0.024
+   },
+   "word_share": {
+    "word_prior": 1.0
+   },
+   "power": 0.11,
+   "other_named": 0.016,
+   "inconclusive": 0.874,
+   "pass": false
+  },
+  "mixed_phi0.5_signal0.25|companions1": {
+   "expected": "Evidence, neither part dominant",
+   "judged": false,
+   "n": 500,
+   "prior_scale": 0.486,
+   "signal": 0.25,
+   "verdicts": {
+    "Evidence, neither part dominant": 0.09,
+    "Evidence-led": 0.002,
+    "Inconclusive": 0.9,
+    "No face evidence, neither part dominant": 0.008
+   },
+   "reason_rates": {
+    "balance_unresolved": 0.028,
+    "evidence_unresolved": 0.898
+   },
+   "measured": {
+    "phi": 0.5036,
+    "T": 0.3156,
+    "b_over_t": 0.0073,
+    "e_over_t": 0.0055,
+    "b_half_over_t": 0.087,
+    "e_half_over_t": 0.0093
+   },
+   "rates": {
+    "b4": 0.99,
+    "b5": 1.0,
+    "e_sig": 0.092,
+    "e_raw_sig": 0.164,
+    "e_passes": 0.092,
+    "b_sig": 0.014,
+    "b_raw_sig": 0.034,
+    "any_b_sig": 0.03,
+    "any_e_sig": 0.104,
+    "conflict": 0.0,
+    "b3_failed": 0.0
+   },
+   "evidence_classes": {
+    "Absent": 0.01,
+    "Shown": 0.092,
+    "Unresolved": 0.898
+   },
+   "balance_classes": {
+    "Default": 0.008,
+    "Even": 0.958,
+    "Face": 0.006,
+    "Unresolved": 0.028
+   },
+   "word_share": {
+    "word_prior": 1.0
+   },
+   "power": 0.09,
+   "other_named": 0.01,
+   "inconclusive": 0.9,
+   "pass": false
+  },
+  "mixed_phi0.5_signal0.5|companions0": {
+   "expected": "Evidence, neither part dominant",
+   "judged": false,
+   "n": 500,
+   "prior_scale": 0.4972,
+   "signal": 0.5,
+   "verdicts": {
+    "Default-led with evidence": 0.012,
+    "Evidence, neither part dominant": 0.892,
+    "Evidence-led": 0.03,
+    "Inconclusive": 0.066
+   },
+   "reason_rates": {
+    "balance_unresolved": 0.018,
+    "evidence_unresolved": 0.048
+   },
+   "measured": {
+    "phi": 0.503,
+    "T": 0.3277,
+    "b_over_t": 0.0059,
+    "e_over_t": 0.0255,
+    "b_half_over_t": 0.0854,
+    "e_half_over_t": 0.012
+   },
+   "rates": {
+    "b4": 1.0,
+    "b5": 1.0,
+    "e_sig": 0.97,
+    "e_raw_sig": 0.97,
+    "e_passes": 0.952,
+    "b_sig": 0.052,
+    "b_raw_sig": 0.052,
+    "any_b_sig": 0.052,
+    "any_e_sig": 0.97,
+    "conflict": 0.002,
+    "b3_failed": 0.0
+   },
+   "evidence_classes": {
+    "Shown": 0.952,
+    "Unresolved": 0.048
+   },
+   "balance_classes": {
+    "Default": 0.012,
+    "Even": 0.936,
+    "Face": 0.034,
+    "Unresolved": 0.018
+   },
+   "word_share": {
+    "word_prior": 1.0
+   },
+   "power": 0.892,
+   "other_named": 0.041999999999999996,
+   "inconclusive": 0.066,
+   "pass": true
+  },
+  "mixed_phi0.5_signal0.5|companions1": {
+   "expected": "Evidence, neither part dominant",
+   "judged": false,
+   "n": 500,
+   "prior_scale": 0.4972,
+   "signal": 0.5,
+   "verdicts": {
+    "Default-led with evidence": 0.016,
+    "Evidence, neither part dominant": 0.842,
+    "Evidence-led": 0.018,
+    "Inconclusive": 0.124
+   },
+   "reason_rates": {
+    "balance_unresolved": 0.044,
+    "evidence_unresolved": 0.086
+   },
+   "measured": {
+    "phi": 0.5012,
+    "T": 0.3284,
+    "b_over_t": 0.0024,
+    "e_over_t": 0.0249,
+    "b_half_over_t": 0.0857,
+    "e_half_over_t": 0.0122
+   },
+   "rates": {
+    "b4": 1.0,
+    "b5": 1.0,
+    "e_sig": 0.914,
+    "e_raw_sig": 0.956,
+    "e_passes": 0.914,
+    "b_sig": 0.04,
+    "b_raw_sig": 0.076,
+    "any_b_sig": 0.062,
+    "any_e_sig": 0.914,
+    "conflict": 0.006,
+    "b3_failed": 0.0
+   },
+   "evidence_classes": {
+    "Shown": 0.914,
+    "Unresolved": 0.086
+   },
+   "balance_classes": {
+    "Default": 0.02,
+    "Even": 0.916,
+    "Face": 0.02,
+    "Unresolved": 0.044
+   },
+   "word_share": {
+    "word_prior": 1.0
+   },
+   "power": 0.842,
+   "other_named": 0.034,
+   "inconclusive": 0.124,
+   "pass": true
+  },
+  "mixed_phi0.5_signal1.0|companions0": {
+   "expected": "Evidence, neither part dominant",
+   "judged": false,
+   "n": 500,
+   "prior_scale": 0.5526,
+   "signal": 1.0,
+   "verdicts": {
+    "Default-led with evidence": 0.028,
+    "Evidence, neither part dominant": 0.934,
+    "Evidence-led": 0.012,
+    "Inconclusive": 0.026
+   },
+   "reason_rates": {
+    "balance_unresolved": 0.026
+   },
+   "measured": {
+    "phi": 0.4999,
+    "T": 0.3994,
+    "b_over_t": -0.0002,
+    "e_over_t": 0.1083,
+    "b_half_over_t": 0.097,
+    "e_half_over_t": 0.0326
+   },
+   "rates": {
+    "b4": 1.0,
+    "b5": 1.0,
+    "e_sig": 1.0,
+    "e_raw_sig": 1.0,
+    "e_passes": 1.0,
+    "b_sig": 0.044,
+    "b_raw_sig": 0.044,
+    "any_b_sig": 0.044,
+    "any_e_sig": 1.0,
+    "conflict": 0.0,
+    "b3_failed": 0.0
+   },
+   "evidence_classes": {
+    "Shown": 1.0
+   },
+   "balance_classes": {
+    "Default": 0.028,
+    "Even": 0.934,
+    "Face": 0.012,
+    "Unresolved": 0.026
+   },
+   "word_share": {
+    "word_prior": 1.0
+   },
+   "power": 0.934,
+   "other_named": 0.04,
+   "inconclusive": 0.026,
+   "pass": true
+  },
+  "mixed_phi0.5_signal1.0|companions1": {
+   "expected": "Evidence, neither part dominant",
+   "judged": false,
+   "n": 500,
+   "prior_scale": 0.5526,
+   "signal": 1.0,
+   "verdicts": {
+    "Default-led with evidence": 0.018,
+    "Evidence, neither part dominant": 0.944,
+    "Evidence-led": 0.006,
+    "Inconclusive": 0.032
+   },
+   "reason_rates": {
+    "balance_unresolved": 0.032
+   },
+   "measured": {
+    "phi": 0.5037,
+    "T": 0.4015,
+    "b_over_t": 0.0075,
+    "e_over_t": 0.1109,
+    "b_half_over_t": 0.1013,
+    "e_half_over_t": 0.0336
+   },
+   "rates": {
+    "b4": 1.0,
+    "b5": 1.0,
+    "e_sig": 1.0,
+    "e_raw_sig": 1.0,
+    "e_passes": 1.0,
+    "b_sig": 0.024,
+    "b_raw_sig": 0.036,
+    "any_b_sig": 0.036,
+    "any_e_sig": 1.0,
+    "conflict": 0.0,
+    "b3_failed": 0.0
+   },
+   "evidence_classes": {
+    "Shown": 1.0
+   },
+   "balance_classes": {
+    "Default": 0.018,
+    "Even": 0.944,
+    "Face": 0.006,
+    "Unresolved": 0.032
+   },
+   "word_share": {
+    "word_prior": 1.0
+   },
+   "power": 0.944,
+   "other_named": 0.024,
+   "inconclusive": 0.032,
+   "pass": true
+  },
+  "mixed_phi0.5_signal2.0|companions0": {
+   "expected": "Evidence, neither part dominant",
+   "judged": false,
+   "n": 500,
+   "prior_scale": 0.8123,
+   "signal": 2.0,
+   "verdicts": {
+    "Default-led with evidence": 0.066,
+    "Evidence, neither part dominant": 0.744,
+    "Inconclusive": 0.19
+   },
+   "reason_rates": {
+    "balance_unresolved": 0.19
+   },
+   "measured": {
+    "phi": 0.4906,
+    "T": 0.7902,
+    "b_over_t": -0.0188,
+    "e_over_t": 0.2975,
+    "b_half_over_t": 0.1921,
+    "e_half_over_t": 0.0832
+   },
+   "rates": {
+    "b4": 1.0,
+    "b5": 1.0,
+    "e_sig": 1.0,
+    "e_raw_sig": 1.0,
+    "e_passes": 1.0,
+    "b_sig": 0.084,
+    "b_raw_sig": 0.084,
+    "any_b_sig": 0.084,
+    "any_e_sig": 1.0,
+    "conflict": 0.0,
+    "b3_failed": 0.0
+   },
+   "evidence_classes": {
+    "Shown": 1.0
+   },
+   "balance_classes": {
+    "Default": 0.066,
+    "Even": 0.744,
+    "Unresolved": 0.19
+   },
+   "word_share": {
+    "word_prior": 1.0
+   },
+   "power": 0.744,
+   "other_named": 0.066,
+   "inconclusive": 0.19,
+   "pass": false
+  },
+  "mixed_phi0.5_signal2.0|companions1": {
+   "expected": "Evidence, neither part dominant",
+   "judged": false,
+   "n": 500,
+   "prior_scale": 0.8123,
+   "signal": 2.0,
+   "verdicts": {
+    "Default-led with evidence": 0.052,
+    "Evidence, neither part dominant": 0.752,
+    "Inconclusive": 0.196
+   },
+   "reason_rates": {
+    "balance_unresolved": 0.196
+   },
+   "measured": {
+    "phi": 0.4926,
+    "T": 0.7923,
+    "b_over_t": -0.0148,
+    "e_over_t": 0.2972,
+    "b_half_over_t": 0.1969,
+    "e_half_over_t": 0.0834
+   },
+   "rates": {
+    "b4": 1.0,
+    "b5": 1.0,
+    "e_sig": 1.0,
+    "e_raw_sig": 1.0,
+    "e_passes": 1.0,
+    "b_sig": 0.054,
+    "b_raw_sig": 0.086,
+    "any_b_sig": 0.056,
+    "any_e_sig": 1.0,
+    "conflict": 0.0,
+    "b3_failed": 0.0
+   },
+   "evidence_classes": {
+    "Shown": 1.0
+   },
+   "balance_classes": {
+    "Default": 0.052,
+    "Even": 0.752,
+    "Unresolved": 0.196
+   },
+   "word_share": {
+    "word_prior": 1.0
+   },
+   "power": 0.752,
+   "other_named": 0.052,
+   "inconclusive": 0.196,
+   "pass": false
+  },
+  "gain0.0_phi0.5|companions0": {
+   "expected": "Evidence, neither part dominant",
+   "judged": false,
+   "n": 500,
+   "prior_scale": 0.7308,
+   "signal": 2.0,
+   "verdicts": {
+    "Default-led with evidence": 0.01,
+    "Evidence, neither part dominant": 0.942,
+    "Evidence-led": 0.03,
+    "Inconclusive": 0.018
+   },
+   "reason_rates": {
+    "balance_unresolved": 0.018
+   },
+   "measured": {
+    "phi": 0.5035,
+    "T": 0.665,
+    "b_over_t": 0.007,
+    "e_over_t": 0.3008,
+    "b_half_over_t": 0.0744,
+    "e_half_over_t": 0.0243
+   },
+   "rates": {
+    "b4": 1.0,
+    "b5": 1.0,
+    "e_sig": 1.0,
+    "e_raw_sig": 1.0,
+    "e_passes": 1.0,
+    "b_sig": 0.042,
+    "b_raw_sig": 0.042,
+    "any_b_sig": 0.042,
+    "any_e_sig": 1.0,
+    "conflict": 0.0,
+    "b3_failed": 0.0
+   },
+   "evidence_classes": {
+    "Shown": 1.0
+   },
+   "balance_classes": {
+    "Default": 0.01,
+    "Even": 0.942,
+    "Face": 0.03,
+    "Unresolved": 0.018
+   },
+   "word_share": {
+    "word_prior": 1.0
+   },
+   "power": 0.942,
+   "other_named": 0.04,
+   "inconclusive": 0.018,
+   "pass": true
+  },
+  "gain0.0_phi0.5|companions1": {
+   "expected": "Evidence, neither part dominant",
+   "judged": false,
+   "n": 500,
+   "prior_scale": 0.7308,
+   "signal": 2.0,
+   "verdicts": {
+    "Default-led with evidence": 0.006,
+    "Evidence, neither part dominant": 0.946,
+    "Evidence-led": 0.022,
+    "Inconclusive": 0.026
+   },
+   "reason_rates": {
+    "balance_unresolved": 0.026
+   },
+   "measured": {
+    "phi": 0.5026,
+    "T": 0.6635,
+    "b_over_t": 0.0052,
+    "e_over_t": 0.3004,
+    "b_half_over_t": 0.0737,
+    "e_half_over_t": 0.0244
+   },
+   "rates": {
+    "b4": 1.0,
+    "b5": 1.0,
+    "e_sig": 1.0,
+    "e_raw_sig": 1.0,
+    "e_passes": 1.0,
+    "b_sig": 0.028,
+    "b_raw_sig": 0.054,
+    "any_b_sig": 0.054,
+    "any_e_sig": 1.0,
+    "conflict": 0.0,
+    "b3_failed": 0.0
+   },
+   "evidence_classes": {
+    "Shown": 1.0
+   },
+   "balance_classes": {
+    "Default": 0.006,
+    "Even": 0.946,
+    "Face": 0.022,
+    "Unresolved": 0.026
+   },
+   "word_share": {
+    "word_prior": 1.0
+   },
+   "power": 0.946,
+   "other_named": 0.027999999999999997,
+   "inconclusive": 0.026,
+   "pass": true
+  },
+  "gain0.5_phi0.5|companions0": {
+   "expected": "Evidence, neither part dominant",
+   "judged": false,
+   "n": 500,
+   "prior_scale": 0.9498,
+   "signal": 2.0,
+   "verdicts": {
+    "Default-led with evidence": 0.086,
+    "Evidence, neither part dominant": 0.172,
+    "Evidence-led": 0.002,
+    "Inconclusive": 0.74
+   },
+   "reason_rates": {
+    "balance_unresolved": 0.74
+   },
+   "measured": {
+    "phi": 0.4827,
+    "T": 1.0176,
+    "b_over_t": -0.0346,
+    "e_over_t": 0.2897,
+    "b_half_over_t": 0.3928,
+    "e_half_over_t": 0.1225
+   },
+   "rates": {
+    "b4": 1.0,
+    "b5": 1.0,
+    "e_sig": 1.0,
+    "e_raw_sig": 1.0,
+    "e_passes": 1.0,
+    "b_sig": 0.12,
+    "b_raw_sig": 0.12,
+    "any_b_sig": 0.12,
+    "any_e_sig": 1.0,
+    "conflict": 0.0,
+    "b3_failed": 0.0
+   },
+   "evidence_classes": {
+    "Shown": 1.0
+   },
+   "balance_classes": {
+    "Default": 0.086,
+    "Even": 0.172,
+    "Face": 0.002,
+    "Unresolved": 0.74
+   },
+   "word_share": {
+    "mixed": 0.008,
+    "word_prior": 0.992
+   },
+   "power": 0.172,
+   "other_named": 0.088,
+   "inconclusive": 0.74,
+   "pass": false
+  },
+  "gain0.5_phi0.5|companions1": {
+   "expected": "Evidence, neither part dominant",
+   "judged": false,
+   "n": 500,
+   "prior_scale": 0.9498,
+   "signal": 2.0,
+   "verdicts": {
+    "Default-led with evidence": 0.08,
+    "Evidence, neither part dominant": 0.198,
+    "Inconclusive": 0.722
+   },
+   "reason_rates": {
+    "balance_unresolved": 0.722
+   },
+   "measured": {
+    "phi": 0.4886,
+    "T": 1.022,
+    "b_over_t": -0.0229,
+    "e_over_t": 0.296,
+    "b_half_over_t": 0.4032,
+    "e_half_over_t": 0.1233
+   },
+   "rates": {
+    "b4": 1.0,
+    "b5": 1.0,
+    "e_sig": 1.0,
+    "e_raw_sig": 1.0,
+    "e_passes": 1.0,
+    "b_sig": 0.092,
+    "b_raw_sig": 0.12,
+    "any_b_sig": 0.104,
+    "any_e_sig": 1.0,
+    "conflict": 0.0,
+    "b3_failed": 0.0
+   },
+   "evidence_classes": {
+    "Shown": 1.0
+   },
+   "balance_classes": {
+    "Default": 0.08,
+    "Even": 0.198,
+    "Unresolved": 0.722
+   },
+   "word_share": {
+    "mixed": 0.01,
+    "word_prior": 0.99
+   },
+   "power": 0.198,
+   "other_named": 0.08,
+   "inconclusive": 0.722,
+   "pass": false
+  }
+ },
+ "best_rate_of_each_named_verdict": {
+  "Evidence-led": 1.0,
+  "Default-led with evidence": 1.0,
+  "Evidence, neither part dominant": 0.946,
+  "Face-led, unmapped": 0.994,
+  "Default-led, unmapped": 1.0,
+  "Unmapped, neither part dominant": 0.016,
+  "No face evidence": 0.994,
+  "No face evidence, neither part dominant": 0.925,
+  "Face-dependent, no expression": 0.974
+ },
+ "power_by_phi_and_signal": {
+  "0.1": {
+   "0.25": 0.03,
+   "0.5": 0.282,
+   "1.0": 0.994,
+   "2.0": 0.998
+  },
+  "0.3": {
+   "0.25": 0.03,
+   "0.5": 0.704,
+   "1.0": 0.994,
+   "2.0": 0.846
+  },
+  "0.5": {
+   "0.25": 0.09,
+   "0.5": 0.842,
+   "1.0": 0.944,
+   "2.0": 0.752
+  },
+  "0.7": {
+   "0.25": 0.082,
+   "0.5": 0.852,
+   "1.0": 0.986,
+   "2.0": 0.598
+  },
+  "0.9": {
+   "0.25": 0.076,
+   "0.5": 0.872,
+   "1.0": 1.0,
+   "2.0": 0.966
+  }
+ },
+ "word_share_expected_reading_rate": {
+  "prior_only_word": 1.0,
+  "prior_only_face_default": 1.0,
+  "prior_only_word|companions0": 1.0,
+  "prior_only_word|companions1": 1.0,
+  "prior_only_face_default|companions0": 1.0,
+  "prior_only_face_default|companions1": 1.0
+ },
+ "false_positives": {
+  "prior_only_word|E_star_passes": {
+   "rate": 0.002,
+   "limit": 0.07,
+   "pass": true
+  },
+  "prior_only_word|B4_passes": {
+   "rate": 0.004,
+   "limit": 0.07,
+   "pass": true
+  },
+  "prior_only_word|any_evidence_verdict": {
+   "rate": 0.002,
+   "limit": 0.07,
+   "pass": true
+  },
+  "prior_only_face_default|E_star_passes": {
+   "rate": 0.006,
+   "limit": 0.07,
+   "pass": true
+  },
+  "prior_only_face_default|B4_passes": {
+   "rate": 0.01,
+   "limit": 0.07,
+   "pass": true
+  },
+  "prior_only_face_default|any_evidence_verdict": {
+   "rate": 0.006,
+   "limit": 0.07,
+   "pass": true
+  },
+  "identity|E_star_passes": {
+   "rate": 0.018,
+   "limit": 0.07,
+   "pass": true
+  },
+  "identity|B4_passes": {
+   "rate": 0.008,
+   "limit": 0.07,
+   "pass": true
+  },
+  "identity|any_evidence_verdict": {
+   "rate": 0.018,
+   "limit": 0.07,
+   "pass": true
+  },
+  "noise|E_star_passes": {
+   "rate": 0.01,
+   "limit": 0.07,
+   "pass": true
+  },
+  "noise|B4_passes": {
+   "rate": 0.024,
+   "limit": 0.07,
+   "pass": true
+  },
+  "noise|any_evidence_verdict": {
+   "rate": 0.01,
+   "limit": 0.07,
+   "pass": true
+  },
+  "null_balance_no_evidence|E_star_passes": {
+   "rate": 0.002,
+   "limit": 0.07,
+   "pass": true
+  },
+  "null_balance_no_evidence|B4_passes": {
+   "rate": 0.01,
+   "limit": 0.07,
+   "pass": true
+  },
+  "null_balance_no_evidence|any_evidence_verdict": {
+   "rate": 0.002,
+   "limit": 0.07,
+   "pass": true
+  },
+  "null_balance_no_evidence|B_significant": {
+   "rate": 0.012,
+   "limit": 0.07,
+   "pass": true
+  },
+  "all_null_family|E_star_passes": {
+   "rate": 0.0045,
+   "limit": 0.07,
+   "pass": true
+  },
+  "all_null_family|B4_passes": {
+   "rate": 0.0095,
+   "limit": 0.07,
+   "pass": true
+  },
+  "all_null_family|any_evidence_verdict": {
+   "rate": 0.0045,
+   "limit": 0.07,
+   "pass": true
+  },
+  "all_null_family|B_significant": {
+   "rate": 0.009,
+   "limit": 0.07,
+   "pass": true
+  },
+  "mixed_phi0.1_signal0.25|false_even": {
+   "rate": 0.0,
+   "limit": 0.07,
+   "pass": true
+  },
+  "mixed_phi0.1_signal0.5|false_even": {
+   "rate": 0.0,
+   "limit": 0.07,
+   "pass": true
+  },
+  "mixed_phi0.1_signal1.0|false_even": {
+   "rate": 0.0,
+   "limit": 0.07,
+   "pass": true
+  },
+  "mixed_phi0.1_signal2.0|false_even": {
+   "rate": 0.0,
+   "limit": 0.07,
+   "pass": true
+  },
+  "mixed_phi0.3_signal0.25|false_even": {
+   "rate": 0.0,
+   "limit": 0.07,
+   "pass": true
+  },
+  "mixed_phi0.3_signal0.5|false_even": {
+   "rate": 0.0,
+   "limit": 0.07,
+   "pass": true
+  },
+  "mixed_phi0.3_signal1.0|false_even": {
+   "rate": 0.0,
+   "limit": 0.07,
+   "pass": true
+  },
+  "mixed_phi0.3_signal2.0|false_even": {
+   "rate": 0.002,
+   "limit": 0.07,
+   "pass": true
+  },
+  "mixed_phi0.5_signal0.25|B_significant": {
+   "rate": 0.008,
+   "limit": 0.07,
+   "pass": true
+  },
+  "mixed_phi0.5_signal0.5|B_significant": {
+   "rate": 0.014,
+   "limit": 0.07,
+   "pass": true
+  },
+  "mixed_phi0.5_signal1.0|B_significant": {
+   "rate": 0.008,
+   "limit": 0.07,
+   "pass": true
+  },
+  "mixed_phi0.5_signal2.0|B_significant": {
+   "rate": 0.034,
+   "limit": 0.07,
+   "pass": true
+  },
+  "mixed_phi0.7_signal0.25|false_even": {
+   "rate": 0.0,
+   "limit": 0.07,
+   "pass": true
+  },
+  "mixed_phi0.7_signal0.5|false_even": {
+   "rate": 0.0,
+   "limit": 0.07,
+   "pass": true
+  },
+  "mixed_phi0.7_signal1.0|false_even": {
+   "rate": 0.0,
+   "limit": 0.07,
+   "pass": true
+  },
+  "mixed_phi0.7_signal2.0|false_even": {
+   "rate": 0.004,
+   "limit": 0.07,
+   "pass": true
+  },
+  "mixed_phi0.9_signal0.25|false_even": {
+   "rate": 0.0,
+   "limit": 0.07,
+   "pass": true
+  },
+  "mixed_phi0.9_signal0.5|false_even": {
+   "rate": 0.0,
+   "limit": 0.07,
+   "pass": true
+  },
+  "mixed_phi0.9_signal1.0|false_even": {
+   "rate": 0.0,
+   "limit": 0.07,
+   "pass": true
+  },
+  "mixed_phi0.9_signal2.0|false_even": {
+   "rate": 0.0,
+   "limit": 0.07,
+   "pass": true
+  },
+  "false_even_phi0.32_signal1.0|false_even": {
+   "rate": 0.0,
+   "limit": 0.07,
+   "pass": true
+  },
+  "false_even_phi0.32_signal2.0|false_even": {
+   "rate": 0.02,
+   "limit": 0.07,
+   "pass": true
+  },
+  "false_even_phi0.68_signal1.0|false_even": {
+   "rate": 0.0,
+   "limit": 0.07,
+   "pass": true
+  },
+  "false_even_phi0.68_signal2.0|false_even": {
+   "rate": 0.01,
+   "limit": 0.07,
+   "pass": true
+  },
+  "gain0.0_phi0.1|false_even": {
+   "rate": 0.0,
+   "limit": 0.07,
+   "pass": true
+  },
+  "gain0.0_phi0.5|B_significant": {
+   "rate": 0.01,
+   "limit": 0.07,
+   "pass": true
+  },
+  "gain0.0_phi0.9|false_even": {
+   "rate": 0.0,
+   "limit": 0.07,
+   "pass": true
+  },
+  "gain0.5_phi0.1|false_even": {
+   "rate": 0.0,
+   "limit": 0.07,
+   "pass": true
+  },
+  "gain0.5_phi0.5|B_significant": {
+   "rate": 0.054,
+   "limit": 0.07,
+   "pass": true
+  },
+  "gain0.5_phi0.9|false_even": {
+   "rate": 0.0,
+   "limit": 0.07,
+   "pass": true
+  },
+  "prior_only_word|companions0|E_star_passes": {
+   "rate": 0.016,
+   "limit": 0.07,
+   "pass": true
+  },
+  "prior_only_word|companions0|B4_passes": {
+   "rate": 0.008,
+   "limit": 0.07,
+   "pass": true
+  },
+  "prior_only_word|companions0|any_evidence_verdict": {
+   "rate": 0.016,
+   "limit": 0.07,
+   "pass": true
+  },
+  "prior_only_word|companions1|E_star_passes": {
+   "rate": 0.006,
+   "limit": 0.07,
+   "pass": true
+  },
+  "prior_only_word|companions1|B4_passes": {
+   "rate": 0.01,
+   "limit": 0.07,
+   "pass": true
+  },
+  "prior_only_word|companions1|any_evidence_verdict": {
+   "rate": 0.006,
+   "limit": 0.07,
+   "pass": true
+  },
+  "prior_only_face_default|companions0|E_star_passes": {
+   "rate": 0.016,
+   "limit": 0.07,
+   "pass": true
+  },
+  "prior_only_face_default|companions0|B4_passes": {
+   "rate": 0.004,
+   "limit": 0.07,
+   "pass": true
+  },
+  "prior_only_face_default|companions0|any_evidence_verdict": {
+   "rate": 0.016,
+   "limit": 0.07,
+   "pass": true
+  },
+  "prior_only_face_default|companions1|E_star_passes": {
+   "rate": 0.004,
+   "limit": 0.07,
+   "pass": true
+  },
+  "prior_only_face_default|companions1|B4_passes": {
+   "rate": 0.006,
+   "limit": 0.07,
+   "pass": true
+  },
+  "prior_only_face_default|companions1|any_evidence_verdict": {
+   "rate": 0.004,
+   "limit": 0.07,
+   "pass": true
+  },
+  "identity|companions0|E_star_passes": {
+   "rate": 0.054,
+   "limit": 0.07,
+   "pass": true
+  },
+  "identity|companions0|B4_passes": {
+   "rate": 0.004,
+   "limit": 0.07,
+   "pass": true
+  },
+  "identity|companions0|any_evidence_verdict": {
+   "rate": 0.054,
+   "limit": 0.07,
+   "pass": true
+  },
+  "identity|companions1|E_star_passes": {
+   "rate": 0.046,
+   "limit": 0.07,
+   "pass": true
+  },
+  "identity|companions1|B4_passes": {
+   "rate": 0.008,
+   "limit": 0.07,
+   "pass": true
+  },
+  "identity|companions1|any_evidence_verdict": {
+   "rate": 0.044,
+   "limit": 0.07,
+   "pass": true
+  },
+  "noise|companions0|E_star_passes": {
+   "rate": 0.028,
+   "limit": 0.07,
+   "pass": true
+  },
+  "noise|companions0|B4_passes": {
+   "rate": 0.008,
+   "limit": 0.07,
+   "pass": true
+  },
+  "noise|companions0|any_evidence_verdict": {
+   "rate": 0.028,
+   "limit": 0.07,
+   "pass": true
+  },
+  "noise|companions1|E_star_passes": {
+   "rate": 0.02,
+   "limit": 0.07,
+   "pass": true
+  },
+  "noise|companions1|B4_passes": {
+   "rate": 0.012,
+   "limit": 0.07,
+   "pass": true
+  },
+  "noise|companions1|any_evidence_verdict": {
+   "rate": 0.02,
+   "limit": 0.07,
+   "pass": true
+  },
+  "null_balance_no_evidence|companions0|E_star_passes": {
+   "rate": 0.018,
+   "limit": 0.07,
+   "pass": true
+  },
+  "null_balance_no_evidence|companions0|B4_passes": {
+   "rate": 0.012,
+   "limit": 0.07,
+   "pass": true
+  },
+  "null_balance_no_evidence|companions0|any_evidence_verdict": {
+   "rate": 0.018000000000000002,
+   "limit": 0.07,
+   "pass": true
+  },
+  "null_balance_no_evidence|companions0|B_significant": {
+   "rate": 0.04,
+   "limit": 0.07,
+   "pass": true
+  },
+  "null_balance_no_evidence|companions1|E_star_passes": {
+   "rate": 0.018,
+   "limit": 0.07,
+   "pass": true
+  },
+  "null_balance_no_evidence|companions1|B4_passes": {
+   "rate": 0.01,
+   "limit": 0.07,
+   "pass": true
+  },
+  "null_balance_no_evidence|companions1|any_evidence_verdict": {
+   "rate": 0.016,
+   "limit": 0.07,
+   "pass": true
+  },
+  "null_balance_no_evidence|companions1|B_significant": {
+   "rate": 0.028,
+   "limit": 0.07,
+   "pass": true
+  },
+  "all_null_family|companions0|E_star_passes": {
+   "rate": 0.0165,
+   "limit": 0.07,
+   "pass": true
+  },
+  "all_null_family|companions0|B4_passes": {
+   "rate": 0.0085,
+   "limit": 0.07,
+   "pass": true
+  },
+  "all_null_family|companions0|any_evidence_verdict": {
+   "rate": 0.016,
+   "limit": 0.07,
+   "pass": true
+  },
+  "all_null_family|companions0|B_significant": {
+   "rate": 0.041,
+   "limit": 0.07,
+   "pass": true
+  },
+  "all_null_family|companions1|E_star_passes": {
+   "rate": 0.0105,
+   "limit": 0.07,
+   "pass": true
+  },
+  "all_null_family|companions1|B4_passes": {
+   "rate": 0.008,
+   "limit": 0.07,
+   "pass": true
+  },
+  "all_null_family|companions1|any_evidence_verdict": {
+   "rate": 0.01,
+   "limit": 0.07,
+   "pass": true
+  },
+  "all_null_family|companions1|B_significant": {
+   "rate": 0.022,
+   "limit": 0.07,
+   "pass": true
+  },
+  "mixed_phi0.5_signal0.25|companions0|B_significant": {
+   "rate": 0.052,
+   "limit": 0.07,
+   "pass": true
+  },
+  "mixed_phi0.5_signal0.25|companions1|B_significant": {
+   "rate": 0.014,
+   "limit": 0.07,
+   "pass": true
+  },
+  "mixed_phi0.5_signal0.5|companions0|B_significant": {
+   "rate": 0.052,
+   "limit": 0.07,
+   "pass": true
+  },
+  "mixed_phi0.5_signal0.5|companions1|B_significant": {
+   "rate": 0.04,
+   "limit": 0.07,
+   "pass": true
+  },
+  "mixed_phi0.5_signal1.0|companions0|B_significant": {
+   "rate": 0.044,
+   "limit": 0.07,
+   "pass": true
+  },
+  "mixed_phi0.5_signal1.0|companions1|B_significant": {
+   "rate": 0.024,
+   "limit": 0.07,
+   "pass": true
+  },
+  "mixed_phi0.5_signal2.0|companions0|B_significant": {
+   "rate": 0.084,
+   "limit": 0.07,
+   "pass": false
+  },
+  "mixed_phi0.5_signal2.0|companions1|B_significant": {
+   "rate": 0.054,
+   "limit": 0.07,
+   "pass": true
+  },
+  "gain0.0_phi0.5|companions0|B_significant": {
+   "rate": 0.042,
+   "limit": 0.07,
+   "pass": true
+  },
+  "gain0.0_phi0.5|companions1|B_significant": {
+   "rate": 0.028,
+   "limit": 0.07,
+   "pass": true
+  },
+  "gain0.5_phi0.5|companions0|B_significant": {
+   "rate": 0.12,
+   "limit": 0.07,
+   "pass": false
+  },
+  "gain0.5_phi0.5|companions1|B_significant": {
+   "rate": 0.092,
+   "limit": 0.07,
+   "pass": false
+  },
+  "all_null_family|any_B_column": {
+   "rate": 0.0355,
+   "limit": 0.07,
+   "pass": true
+  },
+  "all_null_family|any_E_star_column": {
+   "rate": 0.015,
+   "limit": 0.07,
+   "pass": true
+  }
+ },
+ "checks": {
+  "observer|prior_only_word": true,
+  "observer|prior_only_face_default": true,
+  "observer|evidence_only": true,
+  "observer|identity": true,
+  "observer|noise": true,
+  "observer|mixed_phi0.1_signal2.0": true,
+  "observer|mixed_phi0.3_signal2.0": true,
+  "observer|mixed_phi0.5_signal2.0": false,
+  "observer|mixed_phi0.7_signal2.0": false,
+  "observer|mixed_phi0.9_signal2.0": true,
+  "observer|unmapped_face_signal2.0": true,
+  "observer|unmapped_default_signal2.0": true,
+  "observer|spread": true,
+  "reached|Evidence-led": true,
+  "reached|Default-led with evidence": true,
+  "reached|Evidence, neither part dominant": true,
+  "reached|Face-led, unmapped": true,
+  "reached|Default-led, unmapped": true,
+  "reached|Unmapped, neither part dominant": true,
+  "reached|No face evidence": true,
+  "reached|No face evidence, neither part dominant": true,
+  "reached|Face-dependent, no expression": true,
+  "false_positive|prior_only_word|E_star_passes": true,
+  "false_positive|prior_only_word|B4_passes": true,
+  "false_positive|prior_only_word|any_evidence_verdict": true,
+  "false_positive|prior_only_face_default|E_star_passes": true,
+  "false_positive|prior_only_face_default|B4_passes": true,
+  "false_positive|prior_only_face_default|any_evidence_verdict": true,
+  "false_positive|identity|E_star_passes": true,
+  "false_positive|identity|B4_passes": true,
+  "false_positive|identity|any_evidence_verdict": true,
+  "false_positive|noise|E_star_passes": true,
+  "false_positive|noise|B4_passes": true,
+  "false_positive|noise|any_evidence_verdict": true,
+  "false_positive|null_balance_no_evidence|E_star_passes": true,
+  "false_positive|null_balance_no_evidence|B4_passes": true,
+  "false_positive|null_balance_no_evidence|any_evidence_verdict": true,
+  "false_positive|null_balance_no_evidence|B_significant": true,
+  "false_positive|all_null_family|E_star_passes": true,
+  "false_positive|all_null_family|B4_passes": true,
+  "false_positive|all_null_family|any_evidence_verdict": true,
+  "false_positive|all_null_family|B_significant": true,
+  "false_positive|mixed_phi0.1_signal0.25|false_even": true,
+  "false_positive|mixed_phi0.1_signal0.5|false_even": true,
+  "false_positive|mixed_phi0.1_signal1.0|false_even": true,
+  "false_positive|mixed_phi0.1_signal2.0|false_even": true,
+  "false_positive|mixed_phi0.3_signal0.25|false_even": true,
+  "false_positive|mixed_phi0.3_signal0.5|false_even": true,
+  "false_positive|mixed_phi0.3_signal1.0|false_even": true,
+  "false_positive|mixed_phi0.3_signal2.0|false_even": true,
+  "false_positive|mixed_phi0.5_signal0.25|B_significant": true,
+  "false_positive|mixed_phi0.5_signal0.5|B_significant": true,
+  "false_positive|mixed_phi0.5_signal1.0|B_significant": true,
+  "false_positive|mixed_phi0.5_signal2.0|B_significant": true,
+  "false_positive|mixed_phi0.7_signal0.25|false_even": true,
+  "false_positive|mixed_phi0.7_signal0.5|false_even": true,
+  "false_positive|mixed_phi0.7_signal1.0|false_even": true,
+  "false_positive|mixed_phi0.7_signal2.0|false_even": true,
+  "false_positive|mixed_phi0.9_signal0.25|false_even": true,
+  "false_positive|mixed_phi0.9_signal0.5|false_even": true,
+  "false_positive|mixed_phi0.9_signal1.0|false_even": true,
+  "false_positive|mixed_phi0.9_signal2.0|false_even": true,
+  "false_positive|false_even_phi0.32_signal1.0|false_even": true,
+  "false_positive|false_even_phi0.32_signal2.0|false_even": true,
+  "false_positive|false_even_phi0.68_signal1.0|false_even": true,
+  "false_positive|false_even_phi0.68_signal2.0|false_even": true,
+  "false_positive|gain0.0_phi0.1|false_even": true,
+  "false_positive|gain0.0_phi0.5|B_significant": true,
+  "false_positive|gain0.0_phi0.9|false_even": true,
+  "false_positive|gain0.5_phi0.1|false_even": true,
+  "false_positive|gain0.5_phi0.5|B_significant": true,
+  "false_positive|gain0.5_phi0.9|false_even": true,
+  "false_positive|prior_only_word|companions0|E_star_passes": true,
+  "false_positive|prior_only_word|companions0|B4_passes": true,
+  "false_positive|prior_only_word|companions0|any_evidence_verdict": true,
+  "false_positive|prior_only_word|companions1|E_star_passes": true,
+  "false_positive|prior_only_word|companions1|B4_passes": true,
+  "false_positive|prior_only_word|companions1|any_evidence_verdict": true,
+  "false_positive|prior_only_face_default|companions0|E_star_passes": true,
+  "false_positive|prior_only_face_default|companions0|B4_passes": true,
+  "false_positive|prior_only_face_default|companions0|any_evidence_verdict": true,
+  "false_positive|prior_only_face_default|companions1|E_star_passes": true,
+  "false_positive|prior_only_face_default|companions1|B4_passes": true,
+  "false_positive|prior_only_face_default|companions1|any_evidence_verdict": true,
+  "false_positive|identity|companions0|E_star_passes": true,
+  "false_positive|identity|companions0|B4_passes": true,
+  "false_positive|identity|companions0|any_evidence_verdict": true,
+  "false_positive|identity|companions1|E_star_passes": true,
+  "false_positive|identity|companions1|B4_passes": true,
+  "false_positive|identity|companions1|any_evidence_verdict": true,
+  "false_positive|noise|companions0|E_star_passes": true,
+  "false_positive|noise|companions0|B4_passes": true,
+  "false_positive|noise|companions0|any_evidence_verdict": true,
+  "false_positive|noise|companions1|E_star_passes": true,
+  "false_positive|noise|companions1|B4_passes": true,
+  "false_positive|noise|companions1|any_evidence_verdict": true,
+  "false_positive|null_balance_no_evidence|companions0|E_star_passes": true,
+  "false_positive|null_balance_no_evidence|companions0|B4_passes": true,
+  "false_positive|null_balance_no_evidence|companions0|any_evidence_verdict": true,
+  "false_positive|null_balance_no_evidence|companions0|B_significant": true,
+  "false_positive|null_balance_no_evidence|companions1|E_star_passes": true,
+  "false_positive|null_balance_no_evidence|companions1|B4_passes": true,
+  "false_positive|null_balance_no_evidence|companions1|any_evidence_verdict": true,
+  "false_positive|null_balance_no_evidence|companions1|B_significant": true,
+  "false_positive|all_null_family|companions0|E_star_passes": true,
+  "false_positive|all_null_family|companions0|B4_passes": true,
+  "false_positive|all_null_family|companions0|any_evidence_verdict": true,
+  "false_positive|all_null_family|companions0|B_significant": true,
+  "false_positive|all_null_family|companions1|E_star_passes": true,
+  "false_positive|all_null_family|companions1|B4_passes": true,
+  "false_positive|all_null_family|companions1|any_evidence_verdict": true,
+  "false_positive|all_null_family|companions1|B_significant": true,
+  "false_positive|mixed_phi0.5_signal0.25|companions0|B_significant": true,
+  "false_positive|mixed_phi0.5_signal0.25|companions1|B_significant": true,
+  "false_positive|mixed_phi0.5_signal0.5|companions0|B_significant": true,
+  "false_positive|mixed_phi0.5_signal0.5|companions1|B_significant": true,
+  "false_positive|mixed_phi0.5_signal1.0|companions0|B_significant": true,
+  "false_positive|mixed_phi0.5_signal1.0|companions1|B_significant": true,
+  "false_positive|mixed_phi0.5_signal2.0|companions0|B_significant": false,
+  "false_positive|mixed_phi0.5_signal2.0|companions1|B_significant": true,
+  "false_positive|gain0.0_phi0.5|companions0|B_significant": true,
+  "false_positive|gain0.0_phi0.5|companions1|B_significant": true,
+  "false_positive|gain0.5_phi0.5|companions0|B_significant": false,
+  "false_positive|gain0.5_phi0.5|companions1|B_significant": false,
+  "false_positive|all_null_family|any_B_column": true,
+  "false_positive|all_null_family|any_E_star_column": true,
+  "word_share|prior_only_word": true,
+  "word_share|prior_only_face_default": true,
+  "word_share|prior_only_word|companions0": true,
+  "word_share|prior_only_word|companions1": true,
+  "word_share|prior_only_face_default|companions0": true,
+  "word_share|prior_only_face_default|companions1": true
+ },
+ "failed": [
+  "false_positive|gain0.5_phi0.5|companions0|B_significant",
+  "false_positive|gain0.5_phi0.5|companions1|B_significant",
+  "false_positive|mixed_phi0.5_signal2.0|companions0|B_significant",
+  "observer|mixed_phi0.5_signal2.0",
+  "observer|mixed_phi0.7_signal2.0"
+ ],
+ "pass": false,
+ "code_sha256": {
+  "scripts/a5_design.py": "10bb5449fff3ef8123587b31f585dfaf9a2bfc34a61db763eb482d0d75f6c52a",
+  "scripts/a5_analyse.py": "3e599fb9caa5f4ebe92980ac5f17d2b607cfe85ee34795f4c4465b02ae53d37b",
+  "scripts/a5_recovery.py": "cbe54c1a9ccae6b2d4ae27e97eeb148d82c7c6ccd6a6c941a72cb124f51e70c6",
+  "scripts/a5_family_diagnostic.py": "06c0a372a3876f749b5baddacdb6f06bed19fcb3d1f9b46e3eeb5e5103989da3",
+  "scripts/a5_checks.py": "b38e05fdb26ddc171623eda7f999463e0856938cfe37cd8827fc89cb02fb6b5e",
+  "research/scripts/analyse_rotation.py": "98890c5bff65f13abeb0549b61fe414dc9fa30082b84bcb564671683ec12e24f",
+  "src/paper_v2/option_score.py": "ae949e4c1c3abc6a775a535c4e0a5042bce59ba14f7ac1afeefd476f032a5a2b"
+ }
+}

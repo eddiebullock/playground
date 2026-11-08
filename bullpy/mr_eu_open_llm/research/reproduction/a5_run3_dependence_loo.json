@@ -1,0 +1,26 @@
+{
+ "gain0.5_phi0.5|companions0": {
+  "b_sig": 0.085,
+  "b_over_t": -0.011123086383496218
+ },
+ "gain0.5_phi0.5|companions1": {
+  "b_sig": 0.0825,
+  "b_over_t": -0.012341203794844309
+ },
+ "mixed_phi0.5_signal2.0|companions0": {
+  "b_sig": 0.0475,
+  "b_over_t": 0.01049002320239158
+ },
+ "mixed_phi0.5_signal2.0|companions1": {
+  "b_sig": 0.04,
+  "b_over_t": 0.0006039169158728345
+ },
+ "gain0.0_phi0.5|companions0": {
+  "b_sig": 0.055,
+  "b_over_t": 0.00563987616194203
+ },
+ "gain0.0_phi0.5|companions1": {
+  "b_sig": 0.0125,
+  "b_over_t": 0.003149335819616036
+ }
+}

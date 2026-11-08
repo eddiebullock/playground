@@ -20,7 +20,9 @@ same numbers, which tests/test_a5.py checks, and companion cells use `companion_
 except in `all_null_family`, which uses the real analysis's count.
 
 The false-Even, boundary, inside-Even and all-null observers and the wider calibration were
-added after run 1 failed (research/reproduction/a5_recovery_run1.json). The draft says why.
+added after run 1 failed (research/reproduction/a5_recovery_run1.json). Observers whose truth
+is a balance of zero are calibrated on B itself since run 3 failed (a5_recovery_run3.json).
+The draft says why.
 
 Usage:
     python -m scripts.a5_recovery --workers 3 --output research/reproduction/a5_recovery.json
@@ -55,7 +57,8 @@ R = D["recovery"]
 F = len(a5.FAMILIES)
 ROUTE = "single_face"
 GATES_PASSED = {"rq0": True, "g2_g4": True, "delivery": True}
-EVIDENCE_VERDICTS = ("Evidence-led", "Default-led with evidence", "Even")
+EVIDENCE_VERDICTS = ("Evidence-led", "Default-led with evidence", "Evidence, neither part dominant")
+UNMAPPED_VERDICTS = ("Face-led, unmapped", "Default-led, unmapped", "Unmapped, neither part dominant")
 NAMED = tuple(dict.fromkeys(a5.VERDICTS.values()))
 
 
@@ -159,6 +162,45 @@ def prior_for_phi(world: World, target: float, spec: Mapping[str, Any]) -> Dict[
     return {**spec, "prior": (low + high) / 2}
 
 
+def balance_over_total(world: World, spec: Mapping[str, Any]) -> float:
+    """Population B / T, mean B over mean T across `balance_zero_calibration_draws` fixed draws.
+
+    B is the analysis's own estimand, the mean over actors of D - P, and T = P + D, so B = 0
+    is Phi = .5 in expectation. These draws are separate from the replicates and from the
+    `calibration_draws` used for the other observers.
+    """
+    totals = np.zeros(2)
+    for k in range(R["balance_zero_calibration_draws"]):
+        s, _, _ = world.scores(spec, np.random.default_rng([R["seed"], 8, k]))
+        parts = a5.decompose(world.judgement(s))
+        rows = {x: np.nanmean(a5.actor_means(parts[x], world.actor, len(world.actors))) for x in ("P", "D", "T")}
+        totals += [rows["D"] - rows["P"], rows["T"]]
+    return float(totals[0] / totals[1])
+
+
+def prior_for_balance_zero(world: World, spec: Mapping[str, Any]) -> Dict[str, Any]:
+    """The prior scale that puts population B at zero, for observers whose truth is no balance.
+
+    Run 3 calibrated these on mean Phi over `calibration_draws` (200), which left B / T at
+    -.017 with portrayal gain .5 and -.009 at signal 2 (research/reproduction/a5_recovery_run3.json),
+    so their B false positives partly detected a real B. B falls as the prior grows. The
+    search starts from the 200-draw value, and widens to [0, 16] if that bracket misses.
+    """
+    start = prior_for_phi(world, 0.5, spec)["prior"]
+    low, high = 0.5 * start, 1.5 * start + 0.05
+    if not (balance_over_total(world, {**spec, "prior": low}) > 0 > balance_over_total(world, {**spec, "prior": high})):
+        low, high = 0.0, 16.0
+        if balance_over_total(world, {**spec, "prior": low}) <= 0:
+            return {**spec, "prior": low}
+    for _ in range(16):
+        middle = (low + high) / 2
+        if balance_over_total(world, {**spec, "prior": middle}) > 0:
+            low = middle
+        else:
+            high = middle
+    return {**spec, "prior": (low + high) / 2}
+
+
 def boundary_spec(world: World, phi: float) -> Dict[str, Any]:
     """Phi at phi with E near the margin, by bisection on the signal."""
     low, high = 0.05, 8.0
@@ -174,7 +216,13 @@ def boundary_spec(world: World, phi: float) -> Dict[str, Any]:
 
 
 def expected_for(phi: float) -> str:
-    return "Evidence-led" if phi > 0.5 else "Default-led with evidence" if phi < 0.5 else "Even"
+    return "Evidence-led" if phi > 0.5 else "Default-led with evidence" if phi < 0.5 else "Evidence, neither part dominant"
+
+
+def even_range() -> Tuple[float, float]:
+    """True Phi range in which neither part is `dominance_ratio` times the other."""
+    ratio = D["dominance_ratio"]
+    return 1 / (1 + ratio), ratio / (1 + ratio)
 
 
 def observers(world: World) -> List[Dict[str, Any]]:
@@ -191,14 +239,15 @@ def observers(world: World) -> List[Dict[str, Any]]:
     add("evidence_only", base_spec(signal=R["pass_signal"], w="flat"), "Evidence-led", True)
     add("identity", base_spec(prior=free, identity=R["identity_shift"]), "Face-dependent, no expression", True, label_free=True)
     add("noise", base_spec(prior=free, item_sd=R["noise_item_sd"]), "Face-dependent, no expression", True, label_free=True)
-    null = prior_for_phi(world, 0.5, base_spec())
+    null = prior_for_balance_zero(world, base_spec())
     add("null_balance_no_evidence", null, None, False, label_free=True, true_balance_zero=True)
     add("all_null_family", null, None, False, label_free=True, true_balance_zero=True, share_of_replicates=R["all_null_replicates"] / R["replicates"],
         companion_shuffles=R["all_null_shuffles"])
     for phi in R["phi_grid"]:
         for signal in R["signal_grid"]:
             judged = signal == R["pass_signal"]
-            add(f"mixed_phi{phi}_signal{signal}", prior_for_phi(world, phi, base_spec(signal=signal)), expected_for(phi), judged,
+            spec = prior_for_balance_zero(world, base_spec(signal=signal)) if phi == 0.5 else prior_for_phi(world, phi, base_spec(signal=signal))
+            add(f"mixed_phi{phi}_signal{signal}", spec, expected_for(phi), judged,
                 phi=phi, signal=signal, true_balance_zero=phi == 0.5, grid=True)
     for signal in R["unmapped_signals"]:
         judged = signal == R["pass_signal"]
@@ -214,8 +263,15 @@ def observers(world: World) -> List[Dict[str, Any]]:
         add(f"inside_even_phi{phi}", prior_for_phi(world, phi, base_spec(signal=R["pass_signal"])), None, False, phi=phi)
     for gain in R["gain_sweep"]:
         for phi in R["gain_sweep_phi"]:
-            spec = prior_for_phi(world, phi, base_spec(signal=R["pass_signal"], gain=gain))
-            add(f"gain{gain}_phi{phi}", spec, expected_for(phi), False, phi=phi, gain=gain)
+            base = base_spec(signal=R["pass_signal"], gain=gain)
+            spec = prior_for_balance_zero(world, base) if phi == 0.5 else prior_for_phi(world, phi, base)
+            add(f"gain{gain}_phi{phi}", spec, expected_for(phi), False, phi=phi, gain=gain, true_balance_zero=phi == 0.5)
+    # Every observer whose truth is null on a test also runs in smaller families, down to one
+    # cell, the smallest A5 can have, since a small family is where a liberal test shows.
+    for observer in list(out):
+        if observer.get("label_free") or observer.get("true_balance_zero"):
+            for k in R["companion_sweep"]:
+                out.append({**observer, "name": f"{observer['name']}|companions{k}", "companions": k, "judged": False})
     return out
 
 
@@ -231,7 +287,7 @@ def replicate(world: World, observer: Mapping[str, Any], companion: Mapping[str,
     cell = a5.build_cell("synthetic", ROUTE, an.Cells(world.rows(s)), world.actors, world.partners,
                          a5.baselines([world.report(w, g)], ROUTE), dict(GATES_PASSED), 0.0, shuffles)
     others = [a5.estimate(world.judgement(world.scores(companion, rng)[0]), shuffles=min(shuffles, observer.get("companion_shuffles", R["companion_shuffles"])))
-              for _ in range(R["companion_cells"])]
+              for _ in range(observer.get("companions", R["companion_cells"]))]
     tests = a5.family_tests([cell.est, *others])
     row = a5.finish_cell(cell, tests[0])
     alpha = D["alpha"]
@@ -252,6 +308,8 @@ def replicate(world: World, observer: Mapping[str, Any], companion: Mapping[str,
         "any_e_sig": any(t["p_E"] < alpha for t in tests),
         "evidence": row["evidence"],
         "balance": row["balance"],
+        "b_named": row["balance"] in ("Face", "Default"),
+        "balance_withheld": row.get("balance_withheld"),
         "phi": row["Phi"],
         "T": row["T"],
         "b_over_t": row["B"]["mean"] / row["T"],
@@ -276,7 +334,8 @@ def summarise(observer: Mapping[str, Any], rows: Sequence[Mapping[str, Any]]) ->
         "verdicts": verdicts, "reason_rates": {k: v / n for k, v in sorted(reasons.items())},
         "measured": {k: round(float(np.mean([r[k] for r in rows])), 4)
                      for k in ("phi", "T", "b_over_t", "e_over_t", "b_half_over_t", "e_half_over_t")},
-        "rates": {k: rate(rows, k) for k in ("b4", "b5", "e_sig", "e_raw_sig", "e_passes", "b_sig", "b_raw_sig", "any_b_sig", "any_e_sig", "conflict", "b3_failed")},
+        "rates": {k: rate(rows, k) for k in ("b4", "b5", "e_sig", "e_raw_sig", "e_passes", "b_sig", "b_raw_sig", "b_named", "any_b_sig", "any_e_sig", "conflict", "b3_failed")},
+        "balance_withheld": {k: v / n for k, v in sorted(Counter(str(r["balance_withheld"]) for r in rows).items())},
         "evidence_classes": {k: v / n for k, v in sorted(Counter(str(r["evidence"]) for r in rows).items())},
         "balance_classes": {k: v / n for k, v in sorted(Counter(str(r["balance"]) for r in rows).items())},
         "word_share": {k: v / n for k, v in sorted(Counter(str(r["share"]) for r in rows).items())},
@@ -295,36 +354,45 @@ def summarise(observer: Mapping[str, Any], rows: Sequence[Mapping[str, Any]]) ->
 def false_positive_checks(table: Mapping[str, Mapping[str, Any]], spec_of: Mapping[str, Mapping[str, Any]]) -> Dict[str, Any]:
     """Error rates on observers where the truth is known to be null, against a fixed limit."""
     limit = R["false_positive_max"]
-    low_even, high_even = (1 - D["balance_margin_fraction"]) / 2, (1 + D["balance_margin_fraction"]) / 2
+    low_even, high_even = even_range()
     out: Dict[str, Any] = {}
+    reported: Dict[str, Any] = {}
     for name, row in table.items():
         meta = spec_of[name]
         if meta.get("label_free"):
             out[f"{name}|E_star_passes"] = {"rate": row["rates"]["e_passes"], "limit": limit}
             out[f"{name}|B4_passes"] = {"rate": row["rates"]["b4"], "limit": limit}
-            shown = sum(row["verdicts"].get(v, 0.0) for v in (*EVIDENCE_VERDICTS, "Face-led, unmapped", "Default-led, unmapped"))
+            shown = sum(row["verdicts"].get(v, 0.0) for v in (*EVIDENCE_VERDICTS, *UNMAPPED_VERDICTS))
             out[f"{name}|any_evidence_verdict"] = {"rate": shown, "limit": limit}
         if meta.get("true_balance_zero"):
-            out[f"{name}|B_significant"] = {"rate": row["rates"]["b_sig"], "limit": limit}
+            # Since run 3: the claim is judged at every family size, and the raw test only where
+            # a family is large enough for a named balance class (min_balance_cells).
+            out[f"{name}|B_dominance_named"] = {"rate": row["rates"]["b_named"], "limit": limit}
+            cells = meta.get("companions", R["companion_cells"]) + 1
+            if cells >= D["min_balance_cells"]:
+                out[f"{name}|B_significant"] = {"rate": row["rates"]["b_sig"], "limit": limit}
+            else:
+                reported[f"{name}|B_significant"] = {"rate": row["rates"]["b_sig"], "limit": limit, "family_cells": cells,
+                                                     "judged": False, "pass": bool(row["rates"]["b_sig"] <= limit)}
         if "phi" in meta and not low_even <= meta["phi"] <= high_even:
-            out[f"{name}|false_even"] = {"rate": row["verdicts"].get("Even", 0.0), "limit": limit}
+            out[f"{name}|false_even"] = {"rate": row["balance_classes"].get("Even", 0.0), "limit": limit}
     null = table.get("all_null_family")
     if null:
         out["all_null_family|any_B_column"] = {"rate": null["rates"]["any_b_sig"], "limit": limit}
         out["all_null_family|any_E_star_column"] = {"rate": null["rates"]["any_e_sig"], "limit": limit}
     for value in out.values():
         value["pass"] = bool(value["rate"] <= value["limit"])
-    return out
+    return out, reported
 
 
 def build_report(table: Mapping[str, Mapping[str, Any]], meta: Mapping[str, Mapping[str, Any]], replicates: int) -> Dict[str, Any]:
     reached = {v: max((row["verdicts"].get(v, 0.0) for row in table.values()), default=0.0) for v in NAMED}
     judged = {k: v["pass"] for k, v in table.items() if v["judged"]}
-    false_positive = false_positive_checks(table, meta)
+    false_positive, below_scope = false_positive_checks(table, meta)
     word = {k: table[k]["word_share"].get(meta[k]["share"], 0.0) for k in table if meta[k].get("share")}
     power: Dict[str, Dict[str, Any]] = {}
     for key, row in table.items():
-        if meta[key].get("grid"):
+        if meta[key].get("grid") and "companions" not in meta[key]:  # sweep copies have their own rows
             power.setdefault(str(meta[key]["phi"]), {})[str(meta[key]["signal"])] = row["power"]
     checks = {
         **{f"observer|{k}": v for k, v in judged.items()},
@@ -342,6 +410,7 @@ def build_report(table: Mapping[str, Mapping[str, Any]], meta: Mapping[str, Mapp
         "power_by_phi_and_signal": power,
         "word_share_expected_reading_rate": word,
         "false_positives": false_positive,
+        "b_significant_below_min_balance_cells": below_scope,
         "checks": checks,
         "failed": sorted(k for k, v in checks.items() if not v),
         "pass": all(checks.values()),
@@ -439,7 +508,9 @@ def main() -> None:
     parser.add_argument("--only", nargs="*", default=None)
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
+    a5_design.check_code_pins()
     out = run_all(real_items(args.manifest, args.lookup), args.replicates, args.workers, args.only)
+    out["code_sha256"] = a5_design.code_pins()
     args.output.write_text(json.dumps(out, indent=1) + "\n", encoding="utf-8")
     print(json.dumps({"pass": out["pass"], "failed": out["failed"]}, indent=1))
 

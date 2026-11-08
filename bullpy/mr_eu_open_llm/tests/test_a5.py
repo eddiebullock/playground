@@ -195,19 +195,58 @@ def test_e_star_is_centred_without_label_signal(world):
     assert abs(np.mean(values)) < 0.02 * T
 
 
-def test_balance_margin_means_neither_part_is_twice_the_other():
-    T, margin = 2.0, 2.0 * D["balance_margin_fraction"]
-    for phi, within in ((0.34, True), (0.66, True), (0.33, False), (0.67, False)):
-        B = T * (2 * phi - 1)
-        assert (abs(B) < margin) is within
-    assert (1 + D["balance_margin_fraction"]) / (1 - D["balance_margin_fraction"]) == pytest.approx(2.0, abs=1e-3)
+def test_even_is_the_direct_test_that_neither_part_is_twice_the_other():
+    rng = np.random.default_rng(0)
+
+    def est(ratio):  # D / P per actor near ratio, with small actor noise
+        P = 1.0 + 0.05 * rng.normal(size=17)
+        Dv = ratio * P + 0.05 * rng.normal(size=17)
+        rows = {"P": P, "D": Dv, "T": P + Dv}
+        return a5.Estimates({}, rows, Dv - P, np.zeros(17), float((P + Dv).mean()), 0.1)
+
+    assert min(a5.balance_stats(est(1.5))["neither_dominant_lower_bounds"]) > 0
+    assert min(a5.balance_stats(est(0.7))["neither_dominant_lower_bounds"]) > 0
+    assert min(a5.balance_stats(est(2.3))["neither_dominant_lower_bounds"]) < 0
+    assert min(a5.balance_stats(est(0.4))["neither_dominant_lower_bounds"]) < 0
+    assert D["dominance_ratio"] == 2.0
 
 
-def test_e_star_margin_stays_narrow_when_the_balance_margin_is_wide():
-    mid = {"mean": 0.0, "ci95": [-0.5, 0.5], "ci90": [-0.4, 0.4]}
+def test_even_needs_b_not_told_from_zero_by_its_interval():
+    excluded = {**ZERO, "ci95": [0.01, 0.05]}
+    assert decide(ZERO, excluded, failing("B4"), p_b=0.2)["reasons"] == ["balance_unresolved"]
+
+
+def test_e_star_margin_is_not_widened_by_the_balance_rule():
+    mid = {"mean": 0.0, "ci95": [-0.5, 0.5], "ci90": [-0.4, 0.4], "neither_dominant_lower_bounds": [0.1, 0.1]}
     assert decide(ZERO, mid, failing("B4"))["balance"] == "Even"
     row = decide(mid, ZERO, failing("B4"))
     assert row["evidence"] == "Unresolved" and row["reasons"] == ["evidence_unresolved"]
+
+
+def test_bootstrap_t_detects_a_shift_and_step_down_is_not_below_raw():
+    rng = np.random.default_rng(3)
+    x = np.column_stack([rng.normal(2.0, 1, 17), rng.normal(0, 1, 17), rng.normal(0, 1, 17)])
+    out = a5.bootstrap_t_maxt(x, [0, 0, 1], draws=4000)
+    assert out["p_maxt"][0] < 0.01
+    assert all(m >= r - 1e-12 for m, r in zip(out["p_maxt"], out["p_raw"]))
+
+
+def test_bootstrap_t_is_close_to_nominal_on_symmetric_null_rows():
+    rng = np.random.default_rng(4)
+    hits = [a5.bootstrap_t_maxt(rng.normal(0, 1, (17, 1)), [0], draws=999, seed=k)["p_raw"][0] < 0.05 for k in range(300)]
+    assert 0.01 < np.mean(hits) < 0.10
+
+
+def test_bootstrap_t_interval_brackets_the_mean():
+    x = np.random.default_rng(5).lognormal(0, 1, 17)
+    bounds = a5.bootstrap_t_bounds(x, [0.95, 0.90], draws=2000)
+    assert bounds[0.95][0] < bounds[0.90][0] < x.mean() < bounds[0.90][1] < bounds[0.95][1]
+
+
+def test_phi_interval_brackets_phi(world):
+    est = a5.estimate(judged(world, rec.base_spec(prior=0.7, signal=1.0))[0], shuffles=5)
+    low, high = a5.phi_interval(est, draws=2000)
+    assert low < np.nanmean(est.rows["D"]) / est.T < high
 
 
 def test_phi_above_one_comes_from_leaving_the_actor_out(world):
@@ -315,17 +354,18 @@ def test_b_and_e_star_need_no_baseline(world):
 # Classes and verdicts
 # ---------------------------------------------------------------------------
 
-HIGH = {"mean": 1.0, "ci95": [0.5, 1.5], "ci90": [0.6, 1.4]}
-LOW = {"mean": -1.0, "ci95": [-1.5, -0.5], "ci90": [-1.4, -0.6]}
-ZERO = {"mean": 0.0, "ci95": [-0.05, 0.05], "ci90": [-0.04, 0.04]}
-WIDE = {"mean": 0.0, "ci95": [-1.0, 1.0], "ci90": [-0.9, 0.9]}
-T, MARGIN, BALANCE_MARGIN = 2.0, 0.2, 2.0 * D["balance_margin_fraction"]
+# neither_dominant_lower_bounds: the two one-sided bounds for 2P - D and 2D - P. Used for B only.
+HIGH = {"mean": 1.0, "ci95": [0.5, 1.5], "ci90": [0.6, 1.4], "neither_dominant_lower_bounds": [-1.0, 0.5]}
+LOW = {"mean": -1.0, "ci95": [-1.5, -0.5], "ci90": [-1.4, -0.6], "neither_dominant_lower_bounds": [0.5, -1.0]}
+ZERO = {"mean": 0.0, "ci95": [-0.05, 0.05], "ci90": [-0.04, 0.04], "neither_dominant_lower_bounds": [0.3, 0.3]}
+WIDE = {"mean": 0.0, "ci95": [-1.0, 1.0], "ci90": [-0.9, 0.9], "neither_dominant_lower_bounds": [-0.2, -0.2]}
+T, MARGIN = 2.0, 0.2
 
 
 def decide(e, b, gate=FULL_GATE, gates=PASSED, p_e=None, p_b=None, base=True, t=T):
     p_e = (0.001 if e is HIGH else 0.5) if p_e is None else p_e
     p_b = (0.001 if b in (HIGH, LOW) else 0.5) if p_b is None else p_b
-    return a5.decide(gates, gate, t, MARGIN, BALANCE_MARGIN, b, e, p_b, p_e, base)
+    return a5.decide(gates, gate, t, MARGIN, b, e, p_b, p_e, base)
 
 
 def failing(*names):
@@ -337,12 +377,12 @@ def failing(*names):
 @pytest.mark.parametrize("e,b,gate,expected", [
     (HIGH, HIGH, FULL_GATE, "Evidence-led"),
     (HIGH, LOW, FULL_GATE, "Default-led with evidence"),
-    (HIGH, ZERO, FULL_GATE, "Even"),
+    (HIGH, ZERO, FULL_GATE, "Evidence, neither part dominant"),
     (HIGH, HIGH, failing("B4"), "Face-led, unmapped"),
     (HIGH, LOW, failing("B5"), "Default-led, unmapped"),
-    (HIGH, ZERO, failing("B4", "B5"), "Default-led, unmapped"),
+    (HIGH, ZERO, failing("B4", "B5"), "Unmapped, neither part dominant"),
     (ZERO, LOW, failing("B4"), "No face evidence"),
-    (ZERO, ZERO, failing("B4"), "No face evidence"),
+    (ZERO, ZERO, failing("B4"), "No face evidence, neither part dominant"),
     (ZERO, HIGH, failing("B4"), "Face-dependent, no expression"),
 ])
 def test_decision_table(e, b, gate, expected):
@@ -352,7 +392,7 @@ def test_decision_table(e, b, gate, expected):
 def test_failed_gate_b_cannot_give_a_shown_verdict():
     for name in ("B3", "B4", "B5"):
         for balance in (HIGH, LOW, ZERO):
-            assert decide(HIGH, balance, failing(name))["verdict"] not in ("Evidence-led", "Default-led with evidence", "Even")
+            assert decide(HIGH, balance, failing(name))["verdict"] not in rec.EVIDENCE_VERDICTS
 
 
 def test_b3_alone_failing_is_not_inconclusive_when_e_star_passes():
@@ -373,7 +413,7 @@ def test_wide_intervals_give_their_reason_codes():
 
 
 def test_significant_with_an_interval_across_zero_is_unresolved():
-    leaning = {"mean": 0.5, "ci95": [-0.1, 1.1], "ci90": [0.0, 1.0]}
+    leaning = {"mean": 0.5, "ci95": [-0.1, 1.1], "ci90": [0.0, 1.0], "neither_dominant_lower_bounds": [-0.1, 0.2]}
     assert decide(HIGH, leaning, p_b=0.01)["reasons"] == ["balance_unresolved"]
     assert decide(leaning, HIGH, failing("B4"), p_e=0.01)["reasons"] == ["evidence_unresolved"]
 
@@ -418,12 +458,16 @@ def test_row_without_verdict_or_code_stops_the_analysis():
         a5.check_row({"verdict": a5.INCONCLUSIVE, "reasons": ["other"]})
 
 
-def test_family_has_two_columns_per_cell_and_two_sided_b(world):
-    cell = built(world, rec.base_spec(prior=4.0, signal=2.0))
-    negative = a5.family_tests([cell.est])[0]
-    assert cell.est.B_row.mean() < 0 and negative["p_B"] < D["alpha"]  # two-sided finds a negative B
-    rows = np.column_stack([cell.est.B_row, cell.est.E_star_row] * 4)
-    assert si.signflip_maxt(rows, alternative=[0, 1] * 4)["n_flips"] == 2 ** D["n_actors"]
+def test_b_and_e_star_are_separate_families(world):
+    cells = [built(world, rec.base_spec(prior=4.0, signal=2.0), seed=s).est for s in range(2)]
+    tests = a5.family_tests(cells)
+    assert cells[0].B_row.mean() < 0 and tests[0]["p_B"] < D["alpha"]  # two-sided finds a negative B
+    e_only = si.signflip_maxt(np.column_stack([c.E_star_row for c in cells]), alternative=[1, 1])
+    assert [t["p_E"] for t in tests] == e_only["p_maxt"]
+    rows = np.column_stack([c.B_row for c in cells])
+    boot = a5.bootstrap_t_maxt(rows, [0, 0])["p_maxt"]
+    flip = si.signflip_maxt(rows, alternative=[0, 0])["p_maxt"]
+    assert [t["p_B"] for t in tests] == [max(a, b) for a, b in zip(boot, flip)]
 
 
 def test_step_down_covers_only_eligible_cells(world):
@@ -434,7 +478,8 @@ def test_step_down_covers_only_eligible_cells(world):
     assert rows[0]["verdict"] != a5.NOT_TESTED
 
 
-def test_survival_conflict_is_flagged_only_beside_evidence_led(world):
+def test_survival_conflict_is_flagged_only_beside_evidence_led(world, monkeypatch):
+    monkeypatch.setitem(a5.D, "min_balance_cells", 1)  # this test is about the flag, not the family size
     cell = built(world, rec.base_spec(signal=2.0, w="flat"))
     rows = a5.analyse_family([cell])
     assert rows[0]["verdict"] == "Evidence-led"
@@ -462,7 +507,8 @@ def test_observer_passes_b4_and_b5_with_b_below_zero(world):
     cell = built(world, rec.base_spec(prior=4.0, signal=2.0))
     row = a5.analyse_family([cell])[0]
     assert row["gate_b"]["B4"] is True and row["gate_b"]["B5"] is True
-    assert row["B"]["ci95"][1] < 0 and row["balance"] == "Default"
+    # One cell is below min_balance_cells, so the class is withheld and printed beside it.
+    assert row["B"]["ci95"][1] < 0 and row["balance"] == "Unresolved" and row["balance_withheld"] == "Default"
 
 
 # ---------------------------------------------------------------------------
@@ -539,14 +585,49 @@ def test_gate_loader_returns_true_on_the_pinned_paths(tmp_path, monkeypatch):
         assert gates["rq0"] is True and gates["g2_g4"] is True and gates["delivery"] is True
 
 
-def test_missing_gate_files_give_not_tested_never_inconclusive(tmp_path, world):
+def test_a_failed_gate_gives_not_tested_never_inconclusive(tmp_path, world):
     delivered = [{"delivery": [{r: dict(DELIVERED) for r in a5.ROUTES}]}]
     gates = a5.route_gates(delivered, tmp_path, "gemma4", "single_face", tmp_path)
     cell = built(world, rec.base_spec(signal=2.0, w="flat"), gates=gates)
     assert a5.analyse_family([cell])[0]["verdict"] == a5.NOT_TESTED
 
 
-def test_end_to_end_from_shards_to_a_named_verdict(tmp_path, world, human, monkeypatch):
+def test_missing_gate_files_stop_the_analysis(tmp_path, world, human):
+    a2_hash = D["a2_design_sha256"]
+    folder = tmp_path / "cells"
+    write_shards(folder, world, a2_hash)
+    runs = {"gemma4": a5.load_model("gemma4", folder, a2_hash), "qwen3vl": None}
+    with pytest.raises(SystemExit, match="Gate files missing"):
+        a5.analyse_runs(runs, tmp_path, human, None, tmp_path, shuffles=5)
+
+
+def test_default_paths_resolve_against_the_repo():
+    assert a5.A3_DIR.is_absolute() and a5.A3_DIR == ROOT / an.A3_OUTPUT_DIR
+
+
+def test_first_shard_baseline_row_is_used_whatever_its_status():
+    free = {f: -1.0 for f in a5.FAMILIES}
+    failed = {"baselines": [{"input_name": "single_face", "condition": "image_free", "status": "failed"},
+                            {"input_name": "single_face", "condition": "grey", "status": "ok", "family_logprob": free, "lexicon_mass": 0.1}]}
+    out = a5.baselines([failed, report(free)], "single_face")
+    assert out["image_free_family_logprob"] is None and out["ok"] is False
+    assert a5.baselines([report(free), failed], "single_face")["image_free_family_logprob"] == free
+
+
+def test_code_pins_hold_and_a_change_is_refused(tmp_path):
+    design.check_code_pins()
+    pins = design.code_pins()
+    assert {"scripts/a5_analyse.py", "scripts/a5_design.py", "research/scripts/analyse_rotation.py",
+            "src/paper_v2/option_score.py"} <= set(pins)
+    for name in pins:
+        (tmp_path / name).parent.mkdir(parents=True, exist_ok=True)
+        (tmp_path / name).write_bytes((ROOT / name).read_bytes())
+    (tmp_path / "scripts/a5_analyse.py").write_bytes(b"# changed\n")
+    with pytest.raises(SystemExit, match="not the pinned"):
+        design.check_code_pins(tmp_path)
+
+
+def test_end_to_end_from_shards_to_a_withheld_verdict(tmp_path, world, human, monkeypatch):
     a2_hash = D["a2_design_sha256"]
     pinned_paths(tmp_path, monkeypatch)
     folder = tmp_path / "cells"
@@ -560,7 +641,9 @@ def test_end_to_end_from_shards_to_a_named_verdict(tmp_path, world, human, monke
     assert rows[("qwen3vl", "single_face")]["verdict"] == a5.NOT_TESTED
     for route in a5.ROUTES:
         row = rows[("gemma4", route)]
-        assert row["verdict"] == "Evidence-led", row["reasons"]
+        # Two eligible cells is below min_balance_cells: evidence is named, balance is withheld.
+        assert row["verdict"] == a5.INCONCLUSIVE and row["reasons"] == ["balance_small_family"], row["reasons"]
+        assert row["evidence"] == "Shown" and row["balance_withheld"] == "Face"
         assert row["baseline_ok"] is True and row["n_clips"] == 243
     assert len(out["h1"]) == 2 and out["h3"]["status"] == "not tested"
 
@@ -749,12 +832,22 @@ def test_prior_calibration_hits_phi(world):
     assert rec.shares(world, spec)[0] == pytest.approx(0.5, abs=0.005)
 
 
-def test_every_observer_in_the_draft_exists(world):
+def test_balance_zero_calibration_puts_b_at_zero(world, monkeypatch):
+    monkeypatch.setitem(rec.R, "balance_zero_calibration_draws", 300)
+    spec = rec.prior_for_balance_zero(world, rec.base_spec(signal=2.0, gain=0.5))
+    assert rec.balance_over_total(world, spec) == pytest.approx(0.0, abs=0.002)
+    assert rec.balance_over_total(world, {**spec, "prior": spec["prior"] * 0.9}) > 0
+
+
+def test_every_observer_in_the_draft_exists(world, monkeypatch):
+    # The recovery uses the full balance_zero_calibration_draws; names do not depend on it.
+    monkeypatch.setitem(rec.R, "balance_zero_calibration_draws", 100)
     names = {o["name"] for o in rec.observers(world)}
     assert {"prior_only_word", "prior_only_face_default", "evidence_only", "identity", "noise", "spread"} <= names
     assert any(n.startswith("unmapped_face") for n in names) and any(n.startswith("unmapped_default") for n in names)
     assert any(n.startswith("boundary") for n in names)
     assert "all_null_family" in names and any(n.startswith("false_even") for n in names)
+    assert {"all_null_family|companions0", "gain0.5_phi0.5|companions0", "identity|companions1"} <= names
     assert any(n.startswith("inside_even") for n in names)
     assert {f"mixed_phi{p}_signal{s}" for p in D["recovery"]["phi_grid"] for s in D["recovery"]["signal_grid"]} <= names
 
@@ -763,7 +856,8 @@ def test_pass_rule_reads_the_block():
     observer = {"expected": "Even", "judged": True, "spec": {"prior": 0.0, "signal": 1.0}}
     row = dict(verdict="Even", reasons=[], share="mixed", evidence="Shown", balance="Even", phi=0.5, T=1.0, b_over_t=0.0,
                e_over_t=0.1, b_half_over_t=0.05, e_half_over_t=0.05, b4=True, b5=True, e_sig=True, e_raw_sig=True, e_passes=True,
-               b_sig=False, b_raw_sig=False, any_b_sig=False, any_e_sig=True, conflict=False, b3_failed=False)
+               b_sig=False, b_raw_sig=False, b_named=False, balance_withheld=None, any_b_sig=False, any_e_sig=True,
+               conflict=False, b3_failed=False)
     good = rec.summarise(observer, [row] * 8 + [{**row, "verdict": a5.INCONCLUSIVE, "reasons": ["balance_unresolved"]}] * 2)
     assert good["pass"] is True
     bad = rec.summarise(observer, [row] * 7 + [{**row, "verdict": a5.INCONCLUSIVE, "reasons": ["balance_unresolved"]}] * 3)
@@ -778,11 +872,31 @@ def test_design_block_constants_are_the_only_ones_in_a5_analysis():
 
 
 def test_false_even_check_covers_every_phi_outside_the_range():
-    row = {"rates": {"e_passes": 0.0, "b4": 0.0, "b_sig": 0.0, "any_b_sig": 0.0, "any_e_sig": 0.0}, "verdicts": {"Even": 0.2}}
+    row = {"rates": {"e_passes": 0.0, "b4": 0.0, "b_sig": 0.0, "any_b_sig": 0.0, "any_e_sig": 0.0}, "verdicts": {},
+           "balance_classes": {"Even": 0.2}}
     table = {"outside": row, "inside": row, "edge": row}
     meta = {"outside": {"phi": 0.32}, "inside": {"phi": 0.4}, "edge": {"phi": 0.3334}}
-    out = rec.false_positive_checks(table, meta)
-    assert set(out) == {"outside|false_even"} and out["outside|false_even"]["pass"] is False
+    out, below = rec.false_positive_checks(table, meta)
+    assert set(out) == {"outside|false_even"} and out["outside|false_even"]["pass"] is False and not below
+
+
+def test_balance_is_withheld_below_min_balance_cells():
+    b = {"mean": 0.5, "ci95": [0.2, 0.8], "ci90": [0.3, 0.7], "neither_dominant_lower_bounds": [-1.0, 1.0]}
+    e = {"mean": 0.5, "ci95": [0.2, 0.8], "ci90": [0.3, 0.7]}
+    small = a5.decide(PASSED, FULL_GATE, T, MARGIN, b, e, 0.001, 0.001, True, family_cells=D["min_balance_cells"] - 1)
+    assert small["verdict"] == a5.INCONCLUSIVE and small["reasons"] == ["balance_small_family"]
+    assert small["balance"] == "Unresolved" and small["balance_withheld"] == "Face"
+    full = a5.decide(PASSED, FULL_GATE, T, MARGIN, b, e, 0.001, 0.001, True, family_cells=D["min_balance_cells"])
+    assert full["balance"] == "Face" and full["balance_withheld"] is None
+
+
+def test_small_family_judges_the_named_claim_not_the_raw_test():
+    row = {"rates": {"e_passes": 0.0, "b4": 0.0, "b_sig": 0.12, "b_named": 0.0, "any_b_sig": 0.0, "any_e_sig": 0.0},
+           "verdicts": {}, "balance_classes": {}}
+    out, below = rec.false_positive_checks({"one": row, "four": row}, {"one": {"true_balance_zero": True, "companions": 0},
+                                                                        "four": {"true_balance_zero": True}})
+    assert out["one|B_dominance_named"]["pass"] and "one|B_significant" not in out and below["one|B_significant"]["judged"] is False
+    assert out["four|B_significant"]["pass"] is False
 
 
 def test_family_diagnostic_interval():
@@ -790,3 +904,11 @@ def test_family_diagnostic_interval():
 
     low, high = diag.wilson(152, 2000)
     assert low < 0.076 < high and high - low < 0.03
+
+
+def test_power_table_ignores_companion_sweep_copies():
+    row = {"power": 0.9, "verdicts": {}, "rates": {"e_passes": 0.0, "b4": 0.0, "b_sig": 0.0, "b_named": 0.0,
+           "any_b_sig": 0.0, "any_e_sig": 0.0}, "balance_classes": {}, "judged": False, "word_share": {}}
+    table = {"m": row, "m|companions0": {**row, "power": 0.0}}
+    meta = {"m": {"grid": True, "phi": 0.5, "signal": 2.0}, "m|companions0": {"grid": True, "phi": 0.5, "signal": 2.0, "companions": 0}}
+    assert rec.build_report(table, meta, 10)["power_by_phi_and_signal"] == {"0.5": {"2.0": 0.9}}

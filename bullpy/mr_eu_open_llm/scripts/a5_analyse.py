@@ -38,15 +38,18 @@ NOT_TESTED, INCONCLUSIVE = "Not tested", "Inconclusive"
 VERDICTS = {
     ("Shown", "Face"): "Evidence-led",
     ("Shown", "Default"): "Default-led with evidence",
-    ("Shown", "Even"): "Even",
+    ("Shown", "Even"): "Evidence, neither part dominant",
     ("Unmapped", "Face"): "Face-led, unmapped",
     ("Unmapped", "Default"): "Default-led, unmapped",
-    ("Unmapped", "Even"): "Default-led, unmapped",
-    ("Absent", "Default"): "No face evidence",
-    ("Absent", "Even"): "No face evidence",
+    ("Unmapped", "Even"): "Unmapped, neither part dominant",
+    ("Absent", "Default"): "No face evidence",  # the only row that can carry the word-knowledge reading
+    ("Absent", "Even"): "No face evidence, neither part dominant",
     ("Absent", "Face"): "Face-dependent, no expression",
 }
-REASONS = ("evidence_unresolved", "balance_unresolved", "no_structure")
+REASONS = ("evidence_unresolved", "balance_unresolved", "balance_small_family", "no_structure")
+# A named balance class needs a B family of at least `min_balance_cells` cells, the smallest
+# size at which recovery held the B error rate (added after recovery run 3; see the draft).
+BALANCE_NAMED = ("Face", "Default", "Even")
 PRECONDITION_GATES = ("rq0", "g2_g4", "delivery")
 
 
@@ -134,12 +137,14 @@ def baselines(reports: Sequence[Mapping[str, Any]], route: str, tolerance: float
             spread = max(spread, float((matrix.max(0) - matrix.min(0)).max()))
     ok = complete and spread is not None and spread <= tolerance
     first = {c: (rows[0] if rows else None) for c, rows in found.items()}
+    head = {r["condition"]: r for r in (reports[0].get("baselines") or []) if r.get("input_name") == route} if reports else {}
     return {
         "ok": ok,
         "spread_nats": spread,
         "w": distribution(first["image_free"]["family_logprob"]) if ok else None,
         "g": distribution(first["grey"]["family_logprob"]) if ok else None,
-        "image_free_family_logprob": first["image_free"]["family_logprob"] if first["image_free"] else None,
+        # As A2: the first shard's row, whatever its status. A failed row has no scores, so B3 has no input.
+        "image_free_family_logprob": (head.get("image_free") or {}).get("family_logprob"),
         "mass_image_free": first["image_free"].get("lexicon_mass") if ok else None,
         "mass_grey": first["grey"].get("lexicon_mass") if ok else None,
     }
@@ -301,8 +306,7 @@ class Estimates:
     B_row: np.ndarray
     E_star_row: np.ndarray
     T: float
-    margin: float  # for E*
-    balance_margin: float = float("nan")  # for B
+    margin: float  # for E* only. B has no plug-in margin: see balance_stats.
 
 
 def estimate(
@@ -325,7 +329,6 @@ def estimate(
         E_star_row=rows["E"] - shuffled_e_rows(j, shuffles, seed, leave_out),
         T=T,
         margin=D["margin_fraction"] * T,
-        balance_margin=D["balance_margin_fraction"] * T,
     )
 
 
@@ -334,20 +337,112 @@ def estimate(
 # ---------------------------------------------------------------------------
 
 
-def family_tests(cells: Sequence[Estimates], flip_args: Optional[Mapping[str, Any]] = None) -> List[Dict[str, Any]]:
-    """One matrix: B two-sided and E* one-sided above zero, per eligible cell.
+def bootstrap_t_maxt(matrix: np.ndarray, alternative: Sequence[int], draws: int = D["bootstrap_draws"],
+                     seed: int = D["seed"]) -> Dict[str, Any]:
+    """Actor bootstrap-t with Westfall-Young step-down maxT, for B.
 
-    Whole rows flip, and step-down maxT runs across every column of every eligible cell.
+    Whole actor rows are resampled, so dependence across columns is kept. Each draw's t is
+    centred on the observed mean, so the null distribution of t is estimated from the data
+    and does not assume that actor rows are symmetric, which the sign-flip does. Actor rows of
+    B are skewed when actors differ in how strongly they portray (recovery run 2).
+    alternative is +1, -1, or 0 for two-sided, per column. NaN marks an absent actor.
+    """
+    x = np.asarray(matrix, dtype=np.float64)
+    keep = ~np.isnan(x).all(1)
+    x = x[keep]
+    n_actors, n_tests = x.shape
+    signs = np.asarray(alternative, dtype=np.float64)
+    observed_mean = np.nanmean(x, 0)
+    present = (~np.isnan(x)).sum(0)
+    observed_t = observed_mean / (np.nanstd(x, 0, ddof=1) / np.sqrt(present))
+    index = np.random.default_rng(seed).integers(0, n_actors, size=(draws, n_actors))
+    sample = x[index]  # draws, actors, tests
+    with np.errstate(invalid="ignore", divide="ignore"):
+        count = (~np.isnan(sample)).sum(1)
+        mean = np.nanmean(sample, 1)
+        sd = np.nanstd(sample, 1, ddof=1)
+        null = (mean - observed_mean) / (sd / np.sqrt(count))
+    null = np.nan_to_num(null, nan=0.0, posinf=0.0, neginf=0.0)
+
+    def signed(t: np.ndarray) -> np.ndarray:
+        return np.where(signs == 0, np.abs(t), t * signs)
+
+    obs, nul = signed(observed_t), signed(null)
+    order = np.argsort(-obs, kind="stable")
+    running = np.full(draws, -np.inf)
+    adjusted = np.empty(n_tests)
+    for test in order[::-1]:
+        running = np.maximum(running, nul[:, test])
+        adjusted[test] = (int((running >= obs[test] - 1e-12).sum()) + 1) / (draws + 1)
+    previous = 0.0
+    for test in order:
+        previous = max(previous, adjusted[test])
+        adjusted[test] = previous
+    raw = ((nul >= obs - 1e-12).sum(0) + 1) / (draws + 1)
+    return {"t": observed_t.tolist(), "p_raw": raw.tolist(), "p_maxt": adjusted.tolist()}
+
+
+def bootstrap_t_bounds(values: np.ndarray, levels: Sequence[float], draws: int = D["bootstrap_draws"],
+                       seed: int = D["seed"]) -> Dict[float, Tuple[float, float]]:
+    """Bootstrap-t interval of an actor mean, at each two-sided level."""
+    x = values[~np.isnan(values)]
+    n = x.size
+    m, se = x.mean(), x.std(ddof=1) / np.sqrt(n)
+    sample = x[np.random.default_rng(seed).integers(0, n, size=(draws, n))]
+    with np.errstate(invalid="ignore", divide="ignore"):
+        t = (sample.mean(1) - m) / (sample.std(1, ddof=1) / np.sqrt(n))
+    t = t[np.isfinite(t)]
+    out = {}
+    for level in levels:
+        low_q, high_q = np.quantile(t, [(1 - level) / 2, (1 + level) / 2])
+        out[level] = (float(m - high_q * se), float(m - low_q * se))
+    return out
+
+
+def family_tests(cells: Sequence[Estimates], flip_args: Optional[Mapping[str, Any]] = None) -> List[Dict[str, Any]]:
+    """Two step-down families across the eligible cells: B and E*.
+
+    They answer different questions and play different parts in the decision table, so each
+    is corrected only within itself. E* is one-sided above zero by A2's exact sign-flip maxT,
+    whose false-positive rate held in recovery. B is two-sided and must pass two step-down
+    tests: the sign-flip, exact if actor rows are symmetric, and the actor bootstrap-t, which
+    does not need symmetry. Its p-value is the larger of the two, so it is valid wherever
+    either test is.
     """
     if not cells:
         return []
-    matrix = np.column_stack([c for e in cells for c in (e.B_row, e.E_star_row)])
-    result = si.signflip_maxt(matrix, alternative=[0, 1] * len(cells), **(flip_args or {}))
-    return [
-        {"p_B": result["p_maxt"][2 * i], "p_E": result["p_maxt"][2 * i + 1],
-         "p_B_raw": result["p_raw"][2 * i], "p_E_raw": result["p_raw"][2 * i + 1]}
-        for i in range(len(cells))
-    ]
+    rows = np.column_stack([e.B_row for e in cells])
+    boot = bootstrap_t_maxt(rows, [0] * len(cells))
+    flip = si.signflip_maxt(rows, alternative=[0] * len(cells), **(flip_args or {}))
+    e = si.signflip_maxt(np.column_stack([c.E_star_row for c in cells]), alternative=[1] * len(cells), **(flip_args or {}))
+    return [{"p_B": max(boot["p_maxt"][i], flip["p_maxt"][i]), "p_E": e["p_maxt"][i],
+             "p_B_raw": max(boot["p_raw"][i], flip["p_raw"][i]), "p_E_raw": e["p_raw"][i],
+             "p_B_bootstrap_t": boot["p_maxt"][i], "p_B_sign_flip": flip["p_maxt"][i], "family_cells": len(cells)}
+            for i in range(len(cells))]
+
+
+def balance_stats(est: Estimates) -> Dict[str, Any]:
+    """B with its bootstrap-t interval, and the direct test that neither part dominates.
+
+    Even needs both ratio * P - D > 0 and ratio * D - P > 0, each with its one-sided 95%
+    bootstrap-t lower bound above zero (two one-sided tests). This tests D / P between
+    1 / ratio and ratio on the rows themselves, with no margin taken from an estimated T.
+    """
+    ratio = D["dominance_ratio"]
+    P, Dv = est.rows["P"], est.rows["D"]
+    b = bootstrap_t_bounds(est.B_row, [D["ci_decision"], D["ci_equivalence"]])
+    lower = [bootstrap_t_bounds(ratio * P - Dv, [D["ci_equivalence"]])[D["ci_equivalence"]][0],
+             bootstrap_t_bounds(ratio * Dv - P, [D["ci_equivalence"]])[D["ci_equivalence"]][0]]
+    present = est.B_row[~np.isnan(est.B_row)]
+    return {"mean": float(present.mean()), "ci95": list(b[D["ci_decision"]]), "ci90": list(b[D["ci_equivalence"]]),
+            "neither_dominant_lower_bounds": lower}
+
+
+def phi_interval(est: Estimates, draws: int = D["bootstrap_draws"], seed: int = D["seed"]) -> Optional[List[float]]:
+    """90% actor-bootstrap percentile interval of Phi, a ratio of means. Descriptive."""
+    top, bottom = _ratio_draws(est.rows["D"], est.rows["T"], draws, seed)
+    tail = (1 - D["ci_equivalence"]) / 2
+    return np.quantile(top / bottom, [tail, 1 - tail]).tolist()
 
 
 def intervals(values: np.ndarray, draws: int = D["bootstrap_draws"], seed: int = D["seed"]) -> Dict[str, Any]:
@@ -371,13 +466,16 @@ def evidence_class(e: Mapping[str, Any], p: float, margin: float, gate: Mapping[
     return "Unresolved"
 
 
-def balance_class(b: Mapping[str, Any], p: float, margin: float) -> str:
+def balance_class(b: Mapping[str, Any], p: float) -> str:
+    """Face and Default need the test and the 95% interval. Even needs B not told from zero,
+    by test and by interval, and the direct two one-sided tests of neither part dominating."""
     ci = b["ci95"]
     if p < D["alpha"] and b["mean"] > 0 and ci is not None and ci[0] > 0:
         return "Face"
     if p < D["alpha"] and b["mean"] < 0 and ci is not None and ci[1] < 0:
         return "Default"
-    if p >= D["alpha"] and inside(b["ci90"], margin):
+    bounds = b.get("neither_dominant_lower_bounds") or []
+    if p >= D["alpha"] and ci is not None and ci[0] <= 0 <= ci[1] and len(bounds) == 2 and min(bounds) > 0:
         return "Even"
     return "Unresolved"
 
@@ -392,14 +490,19 @@ def decide(
     gate: Mapping[str, Any],
     T: float,
     margin: float,
-    balance_margin: float,
     b: Mapping[str, Any],
     e: Mapping[str, Any],
     p_B: float,
     p_E: float,
     baseline_ok: bool,
+    family_cells: Optional[int] = None,
 ) -> Dict[str, Any]:
-    """The decision table. Every output has a verdict, and Inconclusive has a reason code."""
+    """The decision table. Every output has a verdict, and Inconclusive has a reason code.
+
+    family_cells is the size of the B step-down family. finish_cell always passes it. Below
+    `min_balance_cells`, a named balance class is withheld: balance reads Unresolved with
+    reason `balance_small_family`, and the class it would have had is kept for the record.
+    """
     flags: List[str] = []
     if not baseline_ok:
         flags.append("no_baseline")
@@ -413,14 +516,20 @@ def decide(
         return check_row({"verdict": INCONCLUSIVE, "reasons": ["no_structure"], "flags": flags, "evidence": None, "balance": None})
     positive_control = gates.get("rq0") is True and gates.get("g2_g4") is True
     evidence = evidence_class(e, p_E, margin, gate, positive_control)
-    balance = balance_class(b, p_B, balance_margin)
+    balance = balance_class(b, p_B)
+    withheld = None
+    if family_cells is not None and family_cells < D["min_balance_cells"] and balance in BALANCE_NAMED:
+        withheld, balance = balance, "Unresolved"
     reasons = []
     if evidence == "Unresolved":
         reasons.append("evidence_unresolved")
-    if balance == "Unresolved":
+    if withheld is not None:
+        reasons.append("balance_small_family")
+    elif balance == "Unresolved":
         reasons.append("balance_unresolved")
     verdict = INCONCLUSIVE if reasons else VERDICTS[(evidence, balance)]
-    return check_row({"verdict": verdict, "reasons": reasons, "flags": flags, "evidence": evidence, "balance": balance})
+    return check_row({"verdict": verdict, "reasons": reasons, "flags": flags, "evidence": evidence, "balance": balance,
+                      "balance_withheld": withheld})
 
 
 def check_row(row: Dict[str, Any]) -> Dict[str, Any]:
@@ -543,12 +652,13 @@ def build_cell(
 def finish_cell(cell: Cell, p: Optional[Mapping[str, float]]) -> Dict[str, Any]:
     """The cell's output row. p is its step-down result, or None for a Not tested cell."""
     est = cell.est
-    b, e = intervals(est.B_row), intervals(est.E_star_row)
+    b, e = balance_stats(est), intervals(est.E_star_row)
     share = word_share(est) if cell.base["ok"] else None
     alive = survival(cell.j, cell.partners)
     p_B = p["p_B"] if p else float("nan")
     p_E = p["p_E"] if p else float("nan")
-    row = decide(cell.gates, cell.gate, est.T, est.margin, est.balance_margin, b, e, p_B, p_E, cell.base["ok"])
+    row = decide(cell.gates, cell.gate, est.T, est.margin, b, e, p_B, p_E, cell.base["ok"],
+                 family_cells=p.get("family_cells", 0) if p else None)
     if alive["S"] is not None and alive["S"] >= D["survival_cut"] and row["verdict"] == "Evidence-led":
         row["flags"].append("survival_conflict")
     return {
@@ -558,8 +668,9 @@ def finish_cell(cell: Cell, p: Optional[Mapping[str, float]]) -> Dict[str, Any]:
         "n_clips": len(cell.j.trials),
         "T": est.T,
         "margin": est.margin,
-        "balance_margin": est.balance_margin,
         "Phi": float(np.nanmean(est.rows["D"])) / est.T if est.T else None,
+        "Phi_ci90": phi_interval(est),
+        "E_star_over_D": float(np.nanmean(est.E_star_row)) / float(np.nanmean(est.rows["D"])),
         "P": float(np.nanmean(est.rows["P"])),
         "D": float(np.nanmean(est.rows["D"])),
         "B": b,
@@ -722,14 +833,16 @@ def h3_difference(human_q: np.ndarray, model_q: np.ndarray, actor: np.ndarray, l
 
 
 def quick_row(est: Estimates) -> Dict[str, Any]:
-    tests = si.signflip_maxt(np.column_stack([est.B_row, est.E_star_row]), alternative=[0, 1])
+    """One sensitivity: each test alone, with no family correction, as the primary tests run."""
+    b = family_tests([est])[0]
     return {
         "T": est.T,
         "Phi": float(np.nanmean(est.rows["D"])) / est.T if est.T else None,
-        "B": intervals(est.B_row),
+        "B": balance_stats(est),
         "E_star": intervals(est.E_star_row),
-        "p_B_within_row": tests["p_maxt"][0],
-        "p_E_within_row": tests["p_maxt"][1],
+        "p_B_alone": b["p_B"],
+        "p_E_alone": b["p_E"],
+        "note": "each test alone, not corrected for a family",
     }
 
 
@@ -844,7 +957,20 @@ def shard_paths(folder: Path, model: str) -> Tuple[List[Path], List[Path]]:
     return cells, reports
 
 
-def route_gates(reports: Sequence[Dict[str, Any]], reproduction: Path, model: str, route: str, a3_dir: Path = an.A3_OUTPUT_DIR) -> Dict[str, Any]:
+ROOT = a5_design.ROOT
+A3_DIR = ROOT / an.A3_OUTPUT_DIR
+
+
+def require_gate_files(reproduction: Path, model: str) -> None:
+    """A missing gate file is an error to fix, not a failed gate, so the run stops."""
+    needed = [reproduction / "rotation_summary.json", reproduction / f"vision_gates_{model}.json",
+              reproduction / f"input_delivery_{model}.json"]
+    missing = [str(p) for p in needed if not p.exists()]
+    if missing:
+        raise SystemExit(f"Gate files missing for {model}: {missing}")
+
+
+def route_gates(reports: Sequence[Dict[str, Any]], reproduction: Path, model: str, route: str, a3_dir: Path = A3_DIR) -> Dict[str, Any]:
     outside = an.outside_gates(reproduction, model, route, a3_dir)
     return {"rq0": outside["rq0"], "g2_g4": outside["g2_g4"],
             "delivery": outside["delivery_file"] and an.delivery_passed(reports, route),
@@ -869,7 +995,7 @@ def analyse_runs(
     reproduction: Path,
     human: Mapping[str, Mapping[str, float]],
     geometry: Optional[Mapping[str, Any]],
-    a3_dir: Path = an.A3_OUTPUT_DIR,
+    a3_dir: Path = A3_DIR,
     shuffles: int = D["label_shuffles"],
 ) -> Dict[str, Any]:
     """Every cell of every model and route: a model with no A2 cells is Not tested."""
@@ -882,6 +1008,7 @@ def analyse_runs(
             out_rows += [{"model": model, "route": r, "verdict": NOT_TESTED, "reasons": [], "flags": ["no_a2_cells"]} for r in ROUTES]
             continue
         cells, reports = loaded
+        require_gate_files(reproduction, model)
         rows_by_model[model] = cells
         actors = sorted({r["actor"] for r in cells.items.values()})
         partners = partners_for(cells.items)
@@ -911,10 +1038,10 @@ def analyse_runs(
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
-    parser.add_argument("--cells_dir", type=Path, default=Path("results/stimulus_interventions"))
-    parser.add_argument("--lookup", type=Path, default=Path("data/eu_emotions_human_entropy.json"))
-    parser.add_argument("--geometry", type=Path, default=Path("results/stimulus_interventions/geometry.json"))
-    parser.add_argument("--reproduction", type=Path, default=Path("research/reproduction"))
+    parser.add_argument("--cells_dir", type=Path, default=ROOT / "results/stimulus_interventions")
+    parser.add_argument("--lookup", type=Path, default=ROOT / "data/eu_emotions_human_entropy.json")
+    parser.add_argument("--geometry", type=Path, default=ROOT / "results/stimulus_interventions/geometry.json")
+    parser.add_argument("--reproduction", type=Path, default=ROOT / "research/reproduction")
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--a5_frozen", action="store_true")
     parser.add_argument("--a2_frozen", action="store_true")
@@ -922,6 +1049,7 @@ def main() -> None:
     if not (args.a5_frozen and args.a2_frozen):
         raise SystemExit("A5 is not frozen. No A2 cell is read for A5 before that.")
     a5_design.check_a2_code(D)
+    a5_design.check_code_pins()
     if run.design_hash() != D["a2_design_sha256"]:
         raise SystemExit("A2's design hash is not the one this amendment pins.")
     run.check_geometry(args.geometry)
