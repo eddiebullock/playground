@@ -62,7 +62,7 @@ Status keys: DONE, NOW (unblocked, in progress or next), WAIT (dependency named)
 | 0.10 | Literature: full reads where open access exists for the snippet-level references, and a novelty recheck before submission | G10 | `references.md` levels updated | DONE 2026-11-08 (5 rows upgraded, 12 have no free copy; [50] wording fixed; CFA name clash in NEEDS_INPUT 9) |
 | 0.11 | A6 local items: everything in its freeze list that needs no cluster | G8 | Draft lists only cluster items as open | DONE 2026-11-08 (157 tests; recovery run 5 matches run 4; freeze prepared, not tagged) |
 | 0.12 | A7 audit and recovery text, local only | G7 | Draft audited; Stage 0 is the next step | DONE 2026-11-08 (audit section in the draft; DECISIONS entry) |
-| 0.13 | A7 code (`a7_*`), tests, Level 1 and 2 CPU recovery, toy Gemma hold test, independent audit, tag `a7-freeze`. Must finish before any full A2 cell is read | G7 | Tag `a7-freeze` | NOW |
+| 0.13 | A7 code (`a7_*`), tests, Level 1 and 2 CPU recovery, toy Gemma hold test, independent audit, tag `a7-freeze`. Must finish before any full A2 cell is read | G7 | Tag `a7-freeze` | NOW: code, 66 tests and recovery done 2026-11-08; Level 2 failures ruled (riders descriptive); independent audit and code-hash pins next |
 
 ### Phase 1. Qwen arrays finish (G1)
 

@@ -1,0 +1,972 @@
+{
+ "level1": {
+  "level": 1,
+  "rows": [
+   {
+    "toy": "third_route_0.0",
+    "style": "gemma4",
+    "settings": {
+     "leak_nats": 0.0
+    },
+    "expected": "C1 to C4 pass",
+    "pass": true,
+    "seconds": 0.3,
+    "result": {
+     "status": "complete",
+     "complete_cuts": [
+      "exit"
+     ],
+     "blocks_exhaust_exit": true,
+     "arms": {
+      "route": true,
+      "token": false
+     },
+     "dead_blocks": [],
+     "C1": {
+      "worst_abs_nats": 0.0,
+      "pass": true
+     },
+     "C2": {
+      "worst_abs_nats": 0.0,
+      "pass": true
+     },
+     "C3": {
+      "worst_abs_nats": 0.0,
+      "pass": true
+     },
+     "C4": {
+      "worst_abs_nats": 0.0,
+      "pass": true
+     },
+     "C5": {
+      "A": {
+       "ratio": 1.0316490710845638,
+       "live": true
+      },
+      "B": {
+       "ratio": 0.33097158880168964,
+       "live": true
+      }
+     }
+    }
+   },
+   {
+    "toy": "third_route_0.0005",
+    "style": "gemma4",
+    "settings": {
+     "leak_nats": 0.0005
+    },
+    "expected": "C1 to C4 pass (what the tolerance allows)",
+    "pass": true,
+    "seconds": 0.3,
+    "result": {
+     "status": "complete",
+     "complete_cuts": [
+      "exit"
+     ],
+     "blocks_exhaust_exit": true,
+     "arms": {
+      "route": true,
+      "token": false
+     },
+     "dead_blocks": [],
+     "C1": {
+      "worst_abs_nats": 0.0,
+      "pass": true
+     },
+     "C2": {
+      "worst_abs_nats": 0.0004999328298467276,
+      "pass": true
+     },
+     "C3": {
+      "worst_abs_nats": 0.0004999328298467276,
+      "pass": true
+     },
+     "C4": {
+      "worst_abs_nats": 0.0005000301866449064,
+      "pass": true
+     },
+     "C5": {
+      "A": {
+       "ratio": 1.0316491641518677,
+       "live": true
+      },
+      "B": {
+       "ratio": 0.3309716342105191,
+       "live": true
+      }
+     }
+    }
+   },
+   {
+    "toy": "third_route_0.002",
+    "style": "gemma4",
+    "settings": {
+     "leak_nats": 0.002
+    },
+    "expected": "C2 to C4 fail; not testable",
+    "pass": true,
+    "seconds": 0.3,
+    "result": {
+     "status": "complete",
+     "complete_cuts": [],
+     "blocks_exhaust_exit": false,
+     "arms": {
+      "route": false,
+      "token": false
+     },
+     "dead_blocks": [],
+     "C1": {
+      "worst_abs_nats": 0.0,
+      "pass": true
+     },
+     "C2": {
+      "worst_abs_nats": 0.0019990156410401028,
+      "pass": false
+     },
+     "C3": {
+      "worst_abs_nats": 0.0019990156410401028,
+      "pass": false
+     },
+     "C4": {
+      "worst_abs_nats": 0.0019994050616496395,
+      "pass": false
+     },
+     "C5": {
+      "A": {
+       "ratio": 1.0316489849454784,
+       "live": true
+      },
+      "B": {
+       "ratio": 0.3309715612933226,
+       "live": true
+      }
+     }
+    }
+   },
+   {
+    "toy": "third_route_0.05",
+    "style": "gemma4",
+    "settings": {
+     "leak_nats": 0.05
+    },
+    "expected": "C2 to C4 fail; not testable",
+    "pass": true,
+    "seconds": 0.3,
+    "result": {
+     "status": "complete",
+     "complete_cuts": [],
+     "blocks_exhaust_exit": false,
+     "arms": {
+      "route": false,
+      "token": false
+     },
+     "dead_blocks": [],
+     "C1": {
+      "worst_abs_nats": 0.0,
+      "pass": true
+     },
+     "C2": {
+      "worst_abs_nats": 0.0499725868025962,
+      "pass": false
+     },
+     "C3": {
+      "worst_abs_nats": 0.0499725868025962,
+      "pass": false
+     },
+     "C4": {
+      "worst_abs_nats": 0.0499825610266349,
+      "pass": false
+     },
+     "C5": {
+      "A": {
+       "ratio": 1.0316489594835596,
+       "live": true
+      },
+      "B": {
+       "ratio": 0.33097173948990294,
+       "live": true
+      }
+     }
+    }
+   },
+   {
+    "toy": "third_route_0.0",
+    "style": "qwen3vl",
+    "settings": {
+     "leak_nats": 0.0
+    },
+    "expected": "C1 to C4 pass",
+    "pass": true,
+    "seconds": 0.3,
+    "result": {
+     "status": "complete",
+     "complete_cuts": [
+      "exit"
+     ],
+     "blocks_exhaust_exit": true,
+     "arms": {
+      "route": true,
+      "token": false
+     },
+     "dead_blocks": [],
+     "C1": {
+      "worst_abs_nats": 0.0,
+      "pass": true
+     },
+     "C2": {
+      "worst_abs_nats": 0.0,
+      "pass": true
+     },
+     "C3": {
+      "worst_abs_nats": 0.0,
+      "pass": true
+     },
+     "C4": {
+      "worst_abs_nats": 0.0,
+      "pass": true
+     },
+     "C5": {
+      "A": {
+       "ratio": 0.6474950126427076,
+       "live": true
+      },
+      "B": {
+       "ratio": 1.0882317088603335,
+       "live": true
+      }
+     }
+    }
+   },
+   {
+    "toy": "third_route_0.0005",
+    "style": "qwen3vl",
+    "settings": {
+     "leak_nats": 0.0005
+    },
+    "expected": "C1 to C4 pass (what the tolerance allows)",
+    "pass": true,
+    "seconds": 0.3,
+    "result": {
+     "status": "complete",
+     "complete_cuts": [
+      "exit"
+     ],
+     "blocks_exhaust_exit": true,
+     "arms": {
+      "route": true,
+      "token": false
+     },
+     "dead_blocks": [],
+     "C1": {
+      "worst_abs_nats": 0.0,
+      "pass": true
+     },
+     "C2": {
+      "worst_abs_nats": 0.0004999885313381469,
+      "pass": true
+     },
+     "C3": {
+      "worst_abs_nats": 0.0004999885313381469,
+      "pass": true
+     },
+     "C4": {
+      "worst_abs_nats": 0.0004999167704511365,
+      "pass": true
+     },
+     "C5": {
+      "A": {
+       "ratio": 0.6474950122827621,
+       "live": true
+      },
+      "B": {
+       "ratio": 1.0882317093723444,
+       "live": true
+      }
+     }
+    }
+   },
+   {
+    "toy": "third_route_0.002",
+    "style": "qwen3vl",
+    "settings": {
+     "leak_nats": 0.002
+    },
+    "expected": "C2 to C4 fail; not testable",
+    "pass": true,
+    "seconds": 0.3,
+    "result": {
+     "status": "complete",
+     "complete_cuts": [],
+     "blocks_exhaust_exit": false,
+     "arms": {
+      "route": false,
+      "token": false
+     },
+     "dead_blocks": [],
+     "C1": {
+      "worst_abs_nats": 0.0,
+      "pass": true
+     },
+     "C2": {
+      "worst_abs_nats": 0.001999000214429003,
+      "pass": false
+     },
+     "C3": {
+      "worst_abs_nats": 0.001999000214429003,
+      "pass": false
+     },
+     "C4": {
+      "worst_abs_nats": 0.001998713094943483,
+      "pass": false
+     },
+     "C5": {
+      "A": {
+       "ratio": 0.6474950112024187,
+       "live": true
+      },
+      "B": {
+       "ratio": 1.0882317109087882,
+       "live": true
+      }
+     }
+    }
+   },
+   {
+    "toy": "third_route_0.05",
+    "style": "qwen3vl",
+    "settings": {
+     "leak_nats": 0.05
+    },
+    "expected": "C2 to C4 fail; not testable",
+    "pass": true,
+    "seconds": 0.3,
+    "result": {
+     "status": "complete",
+     "complete_cuts": [],
+     "blocks_exhaust_exit": false,
+     "arms": {
+      "route": false,
+      "token": false
+     },
+     "dead_blocks": [],
+     "C1": {
+      "worst_abs_nats": 0.0,
+      "pass": true
+     },
+     "C2": {
+      "worst_abs_nats": 0.049978297237078806,
+      "pass": false
+     },
+     "C3": {
+      "worst_abs_nats": 0.049978297237078806,
+      "pass": false
+     },
+     "C4": {
+      "worst_abs_nats": 0.04997094374817124,
+      "pass": false
+     },
+     "C5": {
+      "A": {
+       "ratio": 0.647494975738895,
+       "live": true
+      },
+      "B": {
+       "ratio": 1.0882317612923167,
+       "live": true
+      }
+     }
+    }
+   },
+   {
+    "toy": "per_layer_by_keyword",
+    "style": "gemma4",
+    "settings": {
+     "per_layer_positional": false
+    },
+    "expected": "C1 to C4 pass with the per-layer input passed by keyword",
+    "pass": true,
+    "seconds": 0.3,
+    "result": {
+     "status": "complete",
+     "complete_cuts": [
+      "exit"
+     ],
+     "blocks_exhaust_exit": true,
+     "arms": {
+      "route": true,
+      "token": false
+     },
+     "dead_blocks": [],
+     "C1": {
+      "worst_abs_nats": 0.0,
+      "pass": true
+     },
+     "C2": {
+      "worst_abs_nats": 0.0,
+      "pass": true
+     },
+     "C3": {
+      "worst_abs_nats": 0.0,
+      "pass": true
+     },
+     "C4": {
+      "worst_abs_nats": 0.0,
+      "pass": true
+     },
+     "C5": {
+      "A": {
+       "ratio": 1.0316490710845638,
+       "live": true
+      },
+      "B": {
+       "ratio": 0.33097158880168964,
+       "live": true
+      }
+     }
+    }
+   },
+   {
+    "toy": "region_leak_0.0",
+    "style": "gemma4",
+    "settings": {
+     "mix": 0.0
+    },
+    "expected": "region test passes",
+    "pass": true,
+    "seconds": 0.7,
+    "result": {
+     "status": "complete",
+     "complete_cuts": [
+      "exit"
+     ],
+     "blocks_exhaust_exit": true,
+     "arms": {
+      "route": true,
+      "token": true
+     },
+     "dead_blocks": [],
+     "C1": {
+      "worst_abs_nats": 0.0,
+      "pass": true
+     },
+     "C2": {
+      "worst_abs_nats": 0.0,
+      "pass": true
+     },
+     "C3": {
+      "worst_abs_nats": 0.0,
+      "pass": true
+     },
+     "C4": {
+      "worst_abs_nats": 0.0,
+      "pass": true
+     },
+     "C5": {
+      "A": {
+       "ratio": 1.0316490710845638,
+       "live": true
+      },
+      "B": {
+       "ratio": 0.33097158880168964,
+       "live": true
+      }
+     },
+     "region_test": {
+      "pass": true,
+      "b": 0,
+      "reason": null,
+      "leaks": {
+       "0": {
+        "point": 0.0,
+        "upper": 0.0
+       }
+      },
+      "token_map_hit_rate": 1.0,
+      "edit_mean_rms": 0.09238153728572791,
+      "edit_floor": 0.044460184512536444,
+      "admissible_buffers": [
+       0,
+       1,
+       2
+      ]
+     }
+    }
+   },
+   {
+    "toy": "region_leak_0.03",
+    "style": "gemma4",
+    "settings": {
+     "mix": 0.13195876288659794
+    },
+    "expected": "region test passes",
+    "pass": true,
+    "seconds": 0.7,
+    "result": {
+     "status": "complete",
+     "complete_cuts": [
+      "exit"
+     ],
+     "blocks_exhaust_exit": true,
+     "arms": {
+      "route": true,
+      "token": true
+     },
+     "dead_blocks": [],
+     "C1": {
+      "worst_abs_nats": 0.0,
+      "pass": true
+     },
+     "C2": {
+      "worst_abs_nats": 0.0,
+      "pass": true
+     },
+     "C3": {
+      "worst_abs_nats": 0.0,
+      "pass": true
+     },
+     "C4": {
+      "worst_abs_nats": 0.0,
+      "pass": true
+     },
+     "C5": {
+      "A": {
+       "ratio": 1.033372496378233,
+       "live": true
+      },
+      "B": {
+       "ratio": 0.33838471652238555,
+       "live": true
+      }
+     },
+     "region_test": {
+      "pass": true,
+      "b": 0,
+      "reason": null,
+      "leaks": {
+       "0": {
+        "point": 0.021484834229724897,
+        "upper": 0.022566911529307836
+       }
+      },
+      "token_map_hit_rate": 1.0,
+      "edit_mean_rms": 0.09401171180261647,
+      "edit_floor": 0.04576468435505538,
+      "admissible_buffers": [
+       0,
+       1,
+       2
+      ]
+     }
+    }
+   },
+   {
+    "toy": "region_leak_0.08",
+    "style": "gemma4",
+    "settings": {
+     "mix": 0.3710144927536232
+    },
+    "expected": "region test fails",
+    "pass": true,
+    "seconds": 0.7,
+    "result": {
+     "status": "complete",
+     "complete_cuts": [
+      "exit"
+     ],
+     "blocks_exhaust_exit": true,
+     "arms": {
+      "route": true,
+      "token": false
+     },
+     "dead_blocks": [],
+     "C1": {
+      "worst_abs_nats": 0.0,
+      "pass": true
+     },
+     "C2": {
+      "worst_abs_nats": 0.0,
+      "pass": true
+     },
+     "C3": {
+      "worst_abs_nats": 0.0,
+      "pass": true
+     },
+     "C4": {
+      "worst_abs_nats": 0.0,
+      "pass": true
+     },
+     "C5": {
+      "A": {
+       "ratio": 1.0370695281673565,
+       "live": true
+      },
+      "B": {
+       "ratio": 0.3550634661919927,
+       "live": true
+      }
+     },
+     "region_test": {
+      "pass": false,
+      "b": null,
+      "reason": "leak_over_limit",
+      "leaks": {
+       "0": {
+        "point": 0.06094421978660275,
+        "upper": 0.06461316949338183
+       },
+       "1": {
+        "point": 0.06094421978660275,
+        "upper": 0.06461316949338183
+       },
+       "2": {
+        "point": 0.06094421978660275,
+        "upper": 0.06461316949338183
+       }
+      },
+      "token_map_hit_rate": 1.0,
+      "edit_mean_rms": 0.09691288434218619,
+      "edit_floor": 0.048083655882975446,
+      "admissible_buffers": [
+       0,
+       1,
+       2
+      ]
+     }
+    }
+   },
+   {
+    "toy": "region_leak_0.3",
+    "style": "gemma4",
+    "settings": {
+     "mix": 1.8285714285714287
+    },
+    "expected": "region test fails",
+    "pass": true,
+    "seconds": 0.6,
+    "result": {
+     "status": "complete",
+     "complete_cuts": [
+      "exit"
+     ],
+     "blocks_exhaust_exit": true,
+     "arms": {
+      "route": true,
+      "token": false
+     },
+     "dead_blocks": [],
+     "C1": {
+      "worst_abs_nats": 0.0,
+      "pass": true
+     },
+     "C2": {
+      "worst_abs_nats": 0.0,
+      "pass": true
+     },
+     "C3": {
+      "worst_abs_nats": 0.0,
+      "pass": true
+     },
+     "C4": {
+      "worst_abs_nats": 0.0,
+      "pass": true
+     },
+     "C5": {
+      "A": {
+       "ratio": 1.0695971467428713,
+       "live": true
+      },
+      "B": {
+       "ratio": 0.503228991200891,
+       "live": true
+      }
+     },
+     "region_test": {
+      "pass": false,
+      "b": null,
+      "reason": "leak_over_limit",
+      "leaks": {
+       "0": {
+        "point": 0.3337594358070575,
+        "upper": 0.3456954978805826
+       },
+       "1": {
+        "point": 0.3337594358070575,
+        "upper": 0.3456954978805826
+       },
+       "2": {
+        "point": 0.3337594358070575,
+        "upper": 0.3456954978805826
+       }
+      },
+      "token_map_hit_rate": 1.0,
+      "edit_mean_rms": 0.11462478707794672,
+      "edit_floor": 0.06067503302764683,
+      "admissible_buffers": [
+       0,
+       1,
+       2
+      ]
+     }
+    }
+   },
+   {
+    "toy": "dead_block",
+    "style": "gemma4",
+    "settings": {
+     "dead": true
+    },
+    "expected": "C5 fails for B; block_dead",
+    "pass": true,
+    "seconds": 0.3,
+    "result": {
+     "status": "complete",
+     "complete_cuts": [
+      "exit"
+     ],
+     "blocks_exhaust_exit": true,
+     "arms": {
+      "route": true,
+      "token": false
+     },
+     "dead_blocks": [
+      "B"
+     ],
+     "C1": {
+      "worst_abs_nats": 0.0,
+      "pass": true
+     },
+     "C2": {
+      "worst_abs_nats": 0.0,
+      "pass": true
+     },
+     "C3": {
+      "worst_abs_nats": 0.0,
+      "pass": true
+     },
+     "C4": {
+      "worst_abs_nats": 0.0,
+      "pass": true
+     },
+     "C5": {
+      "A": {
+       "ratio": 1.0,
+       "live": true
+      },
+      "B": {
+       "ratio": 0.0,
+       "live": false
+      }
+     }
+    }
+   },
+   {
+    "toy": "dead_block",
+    "style": "qwen3vl",
+    "settings": {
+     "dead": true
+    },
+    "expected": "C5 fails for B; block_dead",
+    "pass": true,
+    "seconds": 0.3,
+    "result": {
+     "status": "complete",
+     "complete_cuts": [
+      "exit"
+     ],
+     "blocks_exhaust_exit": true,
+     "arms": {
+      "route": true,
+      "token": false
+     },
+     "dead_blocks": [
+      "B"
+     ],
+     "C1": {
+      "worst_abs_nats": 0.0,
+      "pass": true
+     },
+     "C2": {
+      "worst_abs_nats": 0.0,
+      "pass": true
+     },
+     "C3": {
+      "worst_abs_nats": 0.0,
+      "pass": true
+     },
+     "C4": {
+      "worst_abs_nats": 0.0,
+      "pass": true
+     },
+     "C5": {
+      "A": {
+       "ratio": 1.0,
+       "live": true
+      },
+      "B": {
+       "ratio": 0.0,
+       "live": false
+      }
+     }
+    }
+   },
+   {
+    "toy": "non_deterministic",
+    "style": "gemma4",
+    "settings": {
+     "noise": 0.01
+    },
+    "expected": "C1 fails and the run stops",
+    "pass": true,
+    "seconds": 0.3,
+    "result": {
+     "status": "stopped_c1",
+     "complete_cuts": [],
+     "blocks_exhaust_exit": false,
+     "arms": {
+      "route": false,
+      "token": false
+     },
+     "dead_blocks": null,
+     "C1": {
+      "worst_abs_nats": 0.057453243271442744,
+      "pass": false
+     }
+    }
+   }
+  ],
+  "pass": true,
+  "failed": []
+ },
+ "gemma_hold": {
+  "transformers": "5.9.0",
+  "models": {
+   "gemma4": {
+    "stage0": {
+     "status": "complete",
+     "complete_cuts": [
+      "exit"
+     ],
+     "blocks_exhaust_exit": true,
+     "arms": {
+      "route": true,
+      "token": false
+     },
+     "dead_blocks": [],
+     "C1": {
+      "worst_abs_nats": 0.0,
+      "pass": true
+     },
+     "C2": {
+      "worst_abs_nats": 0.0,
+      "pass": true
+     },
+     "C3": {
+      "worst_abs_nats": 0.0,
+      "pass": true
+     },
+     "C4": {
+      "worst_abs_nats": 0.0,
+      "pass": true
+     },
+     "C5": {
+      "A": {
+       "ratio": 0.8658875010855613,
+       "live": true
+      },
+      "B": {
+       "ratio": 0.6174663632898502,
+       "live": true
+      }
+     }
+    },
+    "pixels_from_j_hold_worst_abs_nats": {
+     "A": 0.034472198253194364,
+     "B": 0.06237359363778161,
+     "A+B": 0.0
+    },
+    "lm_layers": 6,
+    "kv_shared_layers": [
+     4,
+     5
+    ],
+    "sites_refused": {
+     "hidden_L1": true,
+     "hidden_L24": true,
+     "image_positions_from_L3": true
+    },
+    "pass": true,
+    "seconds": 1.8,
+    "dtype": "torch.float32"
+   },
+   "qwen3vl": {
+    "stage0": {
+     "status": "complete",
+     "complete_cuts": [
+      "exit"
+     ],
+     "blocks_exhaust_exit": true,
+     "arms": {
+      "route": true,
+      "token": false
+     },
+     "dead_blocks": [],
+     "C1": {
+      "worst_abs_nats": 0.0,
+      "pass": true
+     },
+     "C2": {
+      "worst_abs_nats": 0.0,
+      "pass": true
+     },
+     "C3": {
+      "worst_abs_nats": 0.0,
+      "pass": true
+     },
+     "C4": {
+      "worst_abs_nats": 0.0,
+      "pass": true
+     },
+     "C5": {
+      "A": {
+       "ratio": 0.7759671868777253,
+       "live": true
+      },
+      "B": {
+       "ratio": 0.6987318778987783,
+       "live": true
+      }
+     }
+    },
+    "pixels_from_j_hold_worst_abs_nats": {
+     "A": 0.09999455829110016,
+     "B": 0.1231201699827631,
+     "A+B": 0.0
+    },
+    "lm_layers": 4,
+    "kv_shared_layers": [],
+    "sites_refused": {
+     "image_positions_from_L3": true,
+     "hidden_L1": true
+    },
+    "pass": true,
+    "seconds": 1.1,
+    "dtype": "torch.float32"
+   }
+  },
+  "pass": true,
+  "what_this_shows": "On the real transformers module code at 5.9.0 with random weights, holding Gemma's layer 0 hidden state and every per-layer input at image positions makes the output with another image's pixels bit-identical to the native output, while either stream alone does not; the same holds for Qwen's main and deepstack routes. It does not show this at bfloat16, on the real weights, at transformers 5.10.1, or on single_face and the blind prompt: that is Stage 0."
+ },
+ "pass": true,
+ "design_sha256": "9e40cfcfbe8761703da22cf2400c3af6cc7f05019df8b186f91e421dce50bb09",
+ "code_sha256": {
+  "scripts/a7_design.py": "d25c0cb78f6771450eac9c6127690029cd72e6034079cbc51062be324a74ddba",
+  "scripts/a7_cuts.py": "15837f87e46a433fdb97b50e362fdbaefab937f10a147aa1d68fd355f9889db2",
+  "scripts/a7_stage0.py": "a956b14a4712cc3919d9df2b6f68d04f58be419062c20b6b607f4758127663d6",
+  "scripts/a7_run.py": "82ea4aa8be69f205a412bb01ad48c1136efa49f3790319697583fb538640e6b5",
+  "scripts/a7_analyse.py": "b3a1af738abe9dbd23f55c9f8c4ebbf94d6815a700913264be8101ceae47e845",
+  "scripts/a7_recovery.py": "485832ac1678e2379f442d000a1139abd30ae053e4f48dd51d6e6d9a2727fe79",
+  "scripts/a7_toy.py": "b2d39459024046df848d8ca0bb8079cfb13ba08cde1da7a5214547aa1fa10d8c"
+ },
+ "seconds": 13.8
+}
