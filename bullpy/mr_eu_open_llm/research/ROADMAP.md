@@ -77,7 +77,7 @@ Status keys: DONE, NOW (unblocked, in progress or next), WAIT (dependency named)
 
 | # | Step | Depends on | Done when |
 |---|---|---|---|
-| 2.1 | Sync code to the cluster. Confirm the A2, A4 and A5 frozen hashes there. Update `frame_sampling.py` if A6 needs it. | 1.3 | Hash check logged |
+| 2.1 | Sync code to the cluster. Confirm the A2, A4, A5 and A7 frozen hashes there. Update `frame_sampling.py` if A6 needs it. Script ready: `research/scripts/phase2_sync_check.sh --apply`. Read-only precheck 2026-11-08: the three unsynced data pins match on the cluster; 50 frozen code files are missing or old there, as expected before the sync. | 1.3 | Hash check logged |
 | 2.2 | G2: family pattern score per model with the clip rule | 1.3 | Recorded |
 | 2.3 | Gate B, then the A2 full run, on eligible models (Gemma, Qwen, subject to RQ0 routes) | 2.1 | Cells complete |
 | 2.4 | A4: timing smoke, then scoring of renders per eligible model | 2.1 | Model effect matrices |
