@@ -1,0 +1,20 @@
+{
+  "title": "mr_eu_open_llm: analysis code for vision-language models against human face-reading data",
+  "upload_type": "software",
+  "description": "Analysis code, preregistered design files with frozen hashes, and derived outputs for a study comparing vision-language models with human face-reading data. Stimuli, frames and rendered faces are not included.",
+  "creators": [
+    {
+      "name": "USER_FAMILY_NAME, USER_GIVEN_NAME",
+      "affiliation": "USER_AFFILIATION"
+    }
+  ],
+  "license": "MIT",
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/eddiebullock/playground",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    }
+  ],
+  "keywords": ["vision-language models", "facial expression", "action units", "preregistration"]
+}

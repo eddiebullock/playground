@@ -407,3 +407,11 @@ Run 6 (design `fd20495b...`) tested a per-actor gain-heterogeneity guard. The es
 - **Why not freeze with an exception:** the draft says a false-positive failure blocks the freeze, so freezing anyway would make the rule mean nothing. Calling the failed observer unjudged now, after it failed, would be post hoc.
 - **Why not more units:** A2's data has 17 actors.
 - **Order:** decided before any A2 cell exists.
+
+## 2026-11-08: A1 errored trials, settled before any A1 file is read
+
+A dry run of the post-A1 runbook on synthetic files found that the frozen `research/scripts/analyse_rotation.py` raises `KeyError` when a trial errored, because `scripts/evaluate.py` writes such trials with `prediction` and `correct` set to None and no `response_distribution`. Whether any real trial errored is not known, and nobody has looked.
+
+- **Primary estimand:** unchanged. `bool(None)` is False, so an errored trial already scores as wrong, as A3's text says A1 does.
+- **Secondary p_target:** an errored trial counts as 0 mass on the target, which is the same no-vote treatment. This is done by a wrapper, `research/scripts/analyse_rotation_run.py`, which checks the frozen script's hash, supplies an empty distribution, and counts the errored trials per model, condition and rotation in `rotation_errored_trials.json`. With no errored trials, its output is byte-identical to the frozen script's.
+- **A trial missing between files** stays a hard stop. It means a job problem, to be fixed by a rerun, not by analysis.

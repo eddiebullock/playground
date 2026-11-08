@@ -1,0 +1,15 @@
+# Draft citation metadata, 2026-11-08. Authors are placeholders for the user to fill in.
+# Repository URL and licence taken from the repository: git remote eddiebullock/playground; LICENSE (MIT) in this folder.
+# The DOI is left out until the user creates the Zenodo record.
+cff-version: 1.2.0
+message: "If you use this software, please cite it using the metadata from this file."
+title: "mr_eu_open_llm: analysis code for vision-language models against human face-reading data"
+type: software
+authors:
+  - family-names: "USER_FAMILY_NAME"
+    given-names: "USER_GIVEN_NAME"
+    affiliation: "USER_AFFILIATION"
+repository-code: "https://github.com/eddiebullock/playground/tree/main/bullpy/mr_eu_open_llm"
+license: MIT
+version: "USER_VERSION_OR_RELEASE_TAG"
+date-released: "USER_YYYY-MM-DD"

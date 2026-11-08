@@ -1,0 +1,218 @@
+<!--
+Draft v2 scaffold, 2026-11-08 (ROADMAP step 0.8). No A1 rotation file, A2 cell or A4 model output was read to write this.
+Sections follow research/paper/v2/outline.md, "Results structure", in order. Subheadings are provisional.
+Every stated number is copied from research/RESULTS_REGISTRY.md, and the row is named beside it as [REG: section, claim].
+Anything not in the registry is a slot: [PENDING: output file, key]. A slot is filled only when its analysis is locked and its row is in the registry.
+Decision rules are quoted or closely paraphrased from the frozen amendment named, with file:line.
+Results carry topical subheadings, as the journal asks for Articles.
+-->
+
+# Results
+
+## 1. Several published designs, and our earlier one, cannot rule out option order or prompt text
+
+**Question.** Can the task we and others used tell face reading apart from option position and prompt text?
+
+**Rule.** None. The audit is descriptive. The delivery rule is in methods.md, "Delivery audit", and the vision gate tolerances were fixed before any model ran (DECISIONS 2026-11-04, "Vision gates G2 to G4").
+
+**Locked text.**
+
+In the v1 prompt the acted label was the first option on 243 of 243 items [REG: "Target position in 6AFC prompt"]. So accuracy equals the share of first-option choices. There were 21 option sets for 21 labels, one per label [REG: "Option sets per target label"]. The options therefore identify the category without the image. Category alone gave a grouped correlation of .503 with human response entropy, using no activations [REG: "Category-only grouped T1 rho"].
+
+The face did not always reach the model. On Gemma 4 the composite grid left a median of 1.08 tokens across the face, against 9.01 on a single face crop [REG: Input delivery, "Gemma 4 tokens across the face, median"]. The gate is 8. On Qwen3-VL the values were 11.54 and 13.52, and all four routes passed [REG: Input delivery, "Qwen3-VL"]. On Molmo2 the single face crop passed at 12.96, and the native video route (5.07) and the grid (2.01) failed [REG: Input delivery, "Molmo2"]. The grid keeps the first 8 frames, so 68 of 243 clips lost frames at 1 frame per second [REG: Input delivery, "Clips losing frames to the 8-cell grid"].
+
+Weak labels. [PENDING: share of face-only human observers choosing the acted label on Kind, Unfriendly and Jealous, and the item count. The values are in DECISIONS 2026-11-04, "Keep acted labels, add human-referenced scoring", and in Figure 1d, but have no registry row. Source: `data/eu_emotions_human_entropy.json`, mean `p_target` by label.]
+
+Vision gates. Gemma 4 passed the option-independence, replay-and-cut and token-swap gates, with a token-swap change of 4.87 nats and a flip rate of .675 at 100% [REG: Vision gates, "Gemma 4"]. Qwen3-VL passed all three at bfloat16 only, at 9.30 nats and .55 [REG: Vision gates, "Qwen3-VL"]. Molmo2 failed option independence at bfloat16 (worst relative L2 .0406 against .01) and failed token swap (2.28 nats, flip rate 0 against .25) [REG: Vision gates, "Molmo2"]. Gemma 4 and Qwen3-VL are therefore eligible for A2 and A4, and Molmo2 is not [REG: Vision gates, "Eligibility"].
+
+**Literature check.** [PENDING: `research/reproduction/literature_table.csv`, one row per paper, fields for option handling, image-free or mismatch control, and verification level (ROADMAP step 0.5).] The prose in the Introduction stands until then.
+
+**Figure.** Figure 1, panels a to d (`research/paper/v2/figures/fig1.pdf`). Panel e, the eight-paper table: [PENDING: ROADMAP 0.5].
+
+## 2. Dependence on the face (RQ0)
+
+**Question.** With option position rotated, how much accuracy disappears when the prompt stays the same and the face is swapped?
+
+**Rule (A1).** "A model is *vision-dependent* if the one-sided actor-level sign-flip p (100,000 draws) has Holm p < 0.05 across the three models and the actor-bootstrap 95% CI (10,000 draws) of delta excludes 0 from above. No new mental-state claim is made for a model that fails, whatever its accuracy versus 1/6." (`research/PREREGISTRATION.md:137`; estimand at `:135`.)
+
+**Rule (A3).** The same test on `single_face`, its own Holm family (`research/PREREG_A3_DRAFT.md:40`). Reading against A1 (`research/PREREG_A3_DRAFT.md:44-49`):
+
+| A1 | A3 | Reading |
+|---|---|---|
+| Pass | Pass | Face use on both inputs |
+| Fail | Pass | The grid limited A1; use `single_face` from here |
+| Pass | Fail | Evidence from A1 needs inspection |
+| Fail | Fail | No demonstrated face use on either route; no RQ1 to RQ5 claims for that model |
+
+**Locked text (A3).** On a single face crop, all three models passed A3, on 243 of 243 items each [REG: A3 face input validity]. For Gemma 4, accuracy was .371 on the item's own face and .156 on a mismatched face, a delta of .216 (95% CI .139 to .292, Holm *P* = .00014). For Qwen3-VL the values were .282 and .038, delta .244 (.212 to .276, Holm *P* = .00009). For Molmo2 they were .072 and .010, delta .063 (.040 to .087, Holm *P* = .00010) [REG: A3 table, rows Gemma 4, Qwen3-VL, Molmo2]. A pass tests dependence on the image, not competence. Molmo2 chose "None of the above" on .863 of real cells and .886 of mismatch cells [REG: A3, "Trace (2026-11-08)"]. Its accuracy was .140 with the target in the first position and .025 in the second [REG: A3, "Trace (2026-11-08)", accuracy by target position], so its delta rests on a small share of cells. For Gemma 4 the "None of the above" shares were .206 and .305, and for Qwen3-VL .534 and .688 [REG: A3, "Trace (2026-11-08)"]. Spearman correlations of model with human target probability were .376, .392 and .342 [REG: A3 table, column "Spearman with human p_target"]. These are secondary.
+
+**A1 slots.** Per model (Gemma 4, Qwen3-VL, Molmo2), from `research/reproduction/rotation_summary.json` (written by `research/scripts/analyse_rotation.py`):
+- accuracy, real: [PENDING: `<model>.accuracy_real`]
+- accuracy, mismatch: [PENDING: `<model>.accuracy_mismatch`]
+- delta: [PENDING: `<model>.delta_real_minus_mismatch`]
+- 95% CI: [PENDING: `<model>.delta_ci_actor_bootstrap`]
+- Holm *P*: [PENDING: `<model>.p_delta_holm`]
+- decision: [PENDING: `<model>.vision_dependent`]
+- accuracy by target position: [PENDING: `<model>.secondary_accuracy_by_target_position`]
+- Spearman and within-category *r* with human target probability: [PENDING: `<model>.secondary_rho_ptarget_human`, `<model>.secondary_within_category_r_ptarget_human`]
+- accuracy against 1/6, descriptive only: [PENDING: `<model>.secondary_real_vs_chance_pooled_p`]
+- reading per model from the table above: [PENDING: A1 by A3 cell per model]
+- date A1 was read: [PENDING: date, from DECISIONS or STATE]
+
+**Writing rule.** A Pass is never written as "reads faces" (outline.md, RQ0). If A1 is incomplete, nothing is stated, because Holm covers all three models (outline.md, R0-d).
+
+**Figure.** Figure 2: delta per model and input, with accuracy against 1/6 and by target position. [PENDING: Figure 2 function in `research/scripts/make_figures.py`, gated until A1 is locked (ROADMAP 0.7).]
+
+## 3. Behaviour cannot settle cue use
+
+**Question.** Can agreement on natural items identify which cues a system uses?
+
+**Rule.** None. These are mathematical results and design facts, with proofs in Supplementary Note 1 and in `research/theory/causal_feature_alignment.md`. They use no model output.
+
+**Locked text.** If two systems give the same responses on every natural item, every behavioural metric on those items is equal, yet their cue effects can take any pattern (Theorem 1, Methods). For linear observers, how far behaviour constrains cue effects depends on the smallest eigenvalue of the natural cue correlation (Proposition 3, Methods).
+
+The natural clips are poorly conditioned. On the 243 EU-Emotion clips, the smallest eigenvalue of the correlation of 15 LibreFace cues was .054, with a condition number of 76.1 and 1 / lambda_min of 18.4 [REG: Cue spectra, "EU-Emotion LibreFace"]. For 10 OpenFace 3.0 cues the values were .125, 22.4 and 8.0 [REG: Cue spectra, "EU-Emotion OpenFace 3.0"]. The randomised Snoek designs, with 33 cues as coded, had smallest eigenvalues of .178 to .209 and condition numbers of 11.0 to 13.7 [REG: Cue spectra, "Snoek as coded, 33 cues"]. With left and right merged into 25 cues, the smallest eigenvalue was .44 to .47 and the condition number 3.4 to 3.5 [REG: Cue spectra, "Snoek left and right merged, 25 cues"]. So most of the Snoek correlation comes from bilateral pairs. Cue counts differ between rows.
+
+On synthetic stimuli with paired cues correlated at a constructed .9, pair-swapped observers' outputs correlated .83 to .95 with the human-weighted observer, while their raw CFA on the randomised design was .42 to .56 [REG: A4 recovery, "Pair-swapped, run 2"]. The .9 is ours, not a measurement.
+
+**Figure.** Figure 3, panels a to e (`research/paper/v2/figures/fig3.pdf`). Panel b plots computed values that have no registry row: [PENDING: registry row for the Proposition 2 panel values, or describe panel b without numbers.]
+
+## 4. Pattern alignment on natural clips (RQ1)
+
+**Question.** Does each model's response pattern on natural clips align with the human pattern, over the same measured cues?
+
+**Rule.** The confirmatory unit is the family pattern score on the model-frames route, at human ridge 10, with the attempt 1 null of record (DECISIONS 2026-11-04, "RQ1 inference after two failed calibration attempts", `research/DECISIONS.md:232`). It is confirmatory only if size and power pass at both 0.75 and 1 times the human effect (`research/DECISIONS.md:260`), which they did (`research/DECISIONS.md:270`). If more than 5% of clips are lost, the result is descriptive (`research/DECISIONS.md:264`). A clip counts only with a usable response on all 5 rotations (`research/DECISIONS.md:282`). The reading depends on RQ0 (`research/DECISIONS.md:327-332`):
+
+| A1 | A3 | Natural-clip RQ1 |
+|---|---|---|
+| Pass | Pass | Confirmatory, subject to the 5 percent clip rule |
+| Fail | Pass | Computed and reported as descriptive |
+| Pass | Fail | Computed and reported as descriptive, pending inspection |
+| Fail | Fail | Computed for the record, with no claim |
+
+A positive score supports "aligned with the human pattern", not "uses the same cues" (`research/DECISIONS.md:234`).
+
+**Locked text (recovery).** On this route, power was .995 at 0.75 times and 1.0 at 1 times the human effect, against a limit of .80. Size was .035 for the prior-only observer and .06 for the actor-prior observer at 0.75 times, against .081 [REG: "Pattern score, model-frames route (2026-11-04)"]. Power was .775 at 0.5 times. For an observer sharing half the human weights, power was .60 at 0.75 times [REG: same section]. The different-cues observer had size .055 at 0.75 times [REG: same section]. The half-shared power of .83 at 1 times is in DECISIONS (`research/DECISIONS.md:274`) and methods.md: [PENDING: registry row for half-shared power at 1 times on the model-frames route.]
+
+**Slots.** Per model, from `research/reproduction/same_clip_family_model_<model>.json` (written by `research/scripts/same_clip_family_analysis.py --model-route`):
+- family pattern score: [PENDING: pattern `score` per input, key as written by the route summary]
+- permutation *P*: [PENDING: pattern `p` per input]
+- clips lost and status: [PENDING: `coverage`, `rq1_status`]
+- reading by the RQ0 table: [PENDING: from Section 2]
+
+**Figure.** Figure 4 or a table: pattern score per model. [PENDING: Figure 4 function (ROADMAP 0.7).]
+
+## 5. Cue effects under randomisation (RQ1, A4)
+
+**Question.** Do a model's effects of randomised facial action units, on rendered faces, align with randomised human effects?
+
+**Rule (A4, residual CFA, per model and dataset).** (`research/PREREG_A4_DRAFT.md:121-125`.)
+
+| Outcome | Requires |
+|---|---|
+| Aligned | All gates; signal p < .05; alignment Holm p < .05; CFA at least .30; CI lower bound above 0 |
+| Not aligned | All gates; signal p < .05; CI upper bound divided by the square root of R_S below .30 |
+| Inconclusive | Anything else, including any failed or missing gate |
+
+Not aligned is always written "not aligned on these renders" (`:127`). A model with no signal cannot be Not aligned (`:129`). Headline per model per task: Aligned or Not aligned only if WC and EA agree, Mixed if one of each, Inconclusive otherwise; basic and conversational are never pooled (`:137`). Human-level only if the interval reaches the WC to EA reference, which is descriptive (`:135`). Validity gates V1 to V4 run before any human comparison, and missing means not passed (`:141-148`). Eligibility runs through the A1 and A3 table, as in A2 (methods.md, "Eligibility").
+
+**Locked text (design and recovery).** The human ceilings, raw, were .990, .989, .978 and .974 on basic WC, basic EA, conversational WC and conversational EA, and residual .970, .983, .974 and .960 [REG: A4 human ceiling, "Ceiling, raw" and "Ceiling, residual"]. The WC to EA reference on residual CFA was .780 for basic and .732 for conversational, and on raw CFA .877 and .767 [REG: "WC to EA reference, residual", "WC to EA reference, raw"]. The common profile held .26 to .35 of human squared effects [REG: "Common-profile share"].
+
+Residual CFA passed recovery on 66 of 66 checks and raw CFA on 62 of 66, so residual CFA is confirmatory [REG: A4 recovery, "Run 4 (frozen)"]. In run 3, a system with no cue-specific agreement reached Aligned in up to .40 of replicates on raw CFA, against .03 on residual CFA [REG: "Run 3 rates, raw / residual"]. Two accuracy cells at conversational 0.25 times are exempt, at .85 and .62, so A4 makes no accuracy claim there [REG: "Exempt cells, residual pair-swapped within-limit share"].
+
+The detector check passed thinly: 113 of 144 covered pairs rose, .785 against .70 [REG: A4 V1 pilot, "V1 share rising"]. Only 22 of 96 intensity pairs gained at least .5, all in AU01, 05, 25 and 26 [REG: "Intensity pairs with reading at amplitude 1 minus .25 of at least .5"]. Those four families hold .14, .13, .09 and .20 of residual human energy [REG: "Detector-confirmed share of residual energy"].
+
+**Slots.** From `results/a4/summary.json` (written by `scripts/a4_analyse.py`), per model and dataset (`datasets.<dataset>.<model>`):
+- residual CFA, CI, R_S: [PENDING: `residual.cfa`, `residual.ci`, `residual.r_s`]
+- alignment Holm *P*: [PENDING: `p_holm`]
+- signal *P*: [PENDING: `p_signal`]
+- gates V1 to V4 and RQ0: [PENDING: `gates`]
+- decision: [PENDING: `decision`]
+- ratio to ceiling, descriptive: [PENDING: `residual.over_ceiling`, `residual.lower_bound_only`]
+- raw CFA, secondary: [PENDING: `raw.cfa`, `raw.ci`]
+- sensitivities (without AU22 and AU27, without abstain row, flagged against confirmed families, amplitude sets, direct contrast): [PENDING: sensitivity blocks and `models.<model>.scale`, `direct_cfa_residual`]
+- headline per model per task: [PENDING: `models.<model>.headline`]
+- blind readout, secondary, only if its gate passes: [PENDING: `models.<model>.blind`]
+- Molmo2, descriptive if run at all: [PENDING]
+
+**Figure.** Figure 5: residual CFA per model and dataset with its between-group reference, raw CFA as secondary. [PENDING: Figure 5 function (ROADMAP 0.7).]
+
+## 6. Do behaviour and cue effects disagree?
+
+**Question.** On the same rendered stimuli, does behavioural similarity say something different from CFA?
+
+**Rule.** Descriptive, no decision (`research/PREREG_A4_DRAFT.md:162-169`). Output similarity is Pearson *r* between model and mean human response, option means removed. Modal agreement is reported with chance-corrected kappa. "Whether these disagree with CFA is an empirical result" (`:169`).
+
+**Slots.** From `results/a4/summary.json`, `datasets.<dataset>.<model>.behaviour`:
+- output similarity: [PENDING: `behaviour.output_r`]
+- modal agreement and kappa: [PENDING: keys as written by `behaviour_metrics`]
+
+**Writing rule.** Agreement is not a failure of the theory, nor proof of use (outline.md, section 6).
+
+**Figure.** Part of Figure 5.
+
+## 7. Interventions on the stimulus (RQ2, A2)
+
+**Question.** Do region masks, spatial-frequency filters and changes of frame order move a model's judgement in the direction of a stated human prediction?
+
+**Rule (A2, per prediction).** (`research/PREREG_A2_DRAFT.md:188-193`.)
+
+| Outcome | Requires |
+|---|---|
+| Matches prediction | RQ0, G2 to G4, Gate B, route delivery and the sham all passed; step-down p < .05 in the predicted direction on the blind readout; fill rule met |
+| Opposes prediction | The same gates passed; step-down p < .05 two-sided in the opposite direction |
+| Null | The same gates passed; neither test significant; all null conditions met |
+| Inconclusive | Anything else, including a sham or delivery failure |
+
+Gate B is B1 to B5 (`research/PREREG_A2_DRAFT.md:109-117`). A model and route that fail it go no further on the blind readout. Null needs all conditions at `:201-206`. P5, P6, P9, P10, P14 and P15 cannot reach Null, and on Qwen3-VL P12 and P13 cannot either (`:199`). Every result carries the BASIC ONLY scope (`:195`). After the freeze, two dated additions govern how results are read: source support for P1 to P15 was corrected before any data (`:332-353`), and each Matches or Opposes verdict is also reported against step-down *P* < .01, fixed before any cell (DECISIONS 2026-11-08, `research/DECISIONS.md:398`).
+
+**Locked text (recovery).** All five synthetic observers passed recovery, 100 replicates each, with expected contrasts recovered at 1.0 [REG: A2 recovery]. Recovery used large effects and independent noise, so it shows that the pipeline works, not its power. Under a skewed zero-mean null with its tail opposite the prediction, the frozen test is liberal, and the .01 reading holds familywise error under .05 (DECISIONS 2026-11-08). [PENDING: per-route familywise error at .05 and at .01, from `research/reproduction/a2_gain_skew_sim.json`. The values are in DECISIONS and methods.md but have no registry row, so none is stated here.]
+
+**Slots.** Per eligible model and route, from the A2 analysis output (`scripts/analyse_stimulus_interventions.py --output <path>`; path set at run time: [PENDING: path]):
+- Gate B, B1 to B5: [PENDING: gate block, `pass`]
+- per prediction P1 to P15 (16 contrasts): effect, actor-bootstrap CI, step-down *P*, verdict: [PENDING: rows, `verdict`]
+- the .01 reading for each Matches or Opposes verdict: [PENDING]
+- equivalence intervals for capped contrasts: [PENDING]
+- shuffle against `static_apex`, descriptive: [PENDING]
+- sensitivities (without smoke items, canonical words, clips at 8 tokens or more, human modal label): [PENDING]
+
+**Figure.** Figure 6: effect and decision class per prediction, by model and route. [PENDING: Figure 6 function (ROADMAP 0.7).]
+
+## 8. What each model has shown
+
+**Question.** Across RQ0, RQ1 and RQ2, which degree of similarity does each model reach?
+
+**Rule.** None of its own. Each cell copies the class from Sections 2, 4, 5 and 7. Models are never pooled (methods.md, "Models").
+
+**Slots.** Table 1, one row per model: [PENDING: A1 class], A3 Pass (locked, Section 2), [PENDING: natural-clip reading], [PENDING: A4 headline per task], [PENDING: A2 classes per route].
+
+**Figure.** Table 1.
+
+## 9. The route through the model (RQ3), a scoped limit
+
+**Question.** Is a cue's effect carried from image tokens through the language model?
+
+**Rule.** Not a test (DECISIONS 2026-11-07, "G7 becomes a scoped limit", `research/DECISIONS.md:355-363`). A7 is a draft, not frozen, not preregistered (`research/PREREG_A7_DRAFT.md:3`). Its reporting table is `research/PREREG_A7_DRAFT.md:391-398`. No site is called a cut unless Stage 0 shows it complete.
+
+**Slots.** [PENDING: A7 freeze; Stage 0 table for Gemma 4 and Qwen3-VL (ROADMAP 2.6).] If Stage 0 has not run at submission, the paragraph states that no site was shown complete on `single_face` or on the blind readout (outline.md, R3-e).
+
+**Figure.** None in the main text. Stage 0 table in the Supplement, once it exists.
+
+## 10. Provisional: RQ4 and RQ5
+
+**RQ4 (A5).** A5 is frozen, tag `a5-freeze`, on 2026-11-08, before any A2 cell existed (`research/PREREG_A5_DRAFT.md:3`). Only the evidence classes are confirmatory (`:246`, `:576`):
+
+| Class | Requires |
+|---|---|
+| Shown | E* passes (step-down p < .05, 95% CI lies above 0), and Gate B passed |
+| Unmapped | E* passes, and any of B3, B4 or B5 failed |
+| Absent | E* not significant, its 90% CI inside the margin, B4 failed, and the positive control holds |
+| Unresolved | Anything else |
+
+(`research/PREREG_A5_DRAFT.md:226-231`.) Balance classes and verdict names are descriptive, not error-controlled under skewed portrayal gain (`:574`).
+
+Slots, per model and route, from the A5 output (`scripts/a5_analyse.py --output <path>`): [PENDING: `confirmatory` block, evidence class], [PENDING: `descriptive` block, balance, Phi with 90% CI, word share, `family_gain_log_sd`].
+
+**RQ5 (A6).** A6 is a draft, not frozen, not preregistered (`research/PREREG_A6_DRAFT.md:3`). No Results text is drafted from it. A section is added only if it freezes before its data are read and its analysis finishes (outline.md, "RQ4 and RQ5, provisional"). Its decision table is at `research/PREREG_A6_DRAFT.md:418-429`. The human target sample is 819 clips and 91 actors [REG: A6 human target, "Sample"]; this is a design fact and is not a result.
+
+**Figure.** The free display slot (outline.md, "Display items"), only if A5 or A6 appears.

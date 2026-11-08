@@ -2,7 +2,7 @@
 Draft v2, 2026-11-07, updated the same day to the frozen A4. Citation numbers continue from introduction.md; see references.md.
 Sources: PREREGISTRATION.md, PREREG_A2_DRAFT.md (frozen), PREREG_A3_DRAFT.md (frozen), PREREG_A4_DRAFT.md (frozen, tag a4-freeze, despite the filename),
 PREREG_A7_DRAFT.md (draft, used only for the scoped limit), DECISIONS.md, theory/causal_feature_alignment.md and the scripts they name.
-A5 and A6 are unfrozen and changing: they appear at outline level only, and none of their thresholds is copied.
+A5 was frozen on 2026-11-08; A6 and A7 are unfrozen and appear at outline level only, with none of their thresholds copied.
 Numbers here are design facts only. No A1 result, A2 result or A4 model result is stated. A3 and gate outcomes are [PENDING] and belong in Results.
 Reused text from research/paper/*_v1.md: none.
 -->
@@ -21,7 +21,8 @@ Each confirmatory analysis was fixed in a dated amendment before its data were r
 | RQ1 natural-clip rules | Unit, null, strength rule, clip rule; reading under each RQ0 outcome | 2026-11-04 (DECISIONS log), before any model matrix existed; RQ0 reading added 2026-11-07, before any A1 result was read | Human matrices and recovery results |
 | A2 | Blind readout gate and stimulus interventions | 2026-11-07, tag `a2-freeze` (commit ca38d89), `design_sha256` 0ae22118, before any A1 result was read and before any full intervention run | A3 result, vision gate results, CFA spectra. The draft predates the A3 result; two audits' corrections do not |
 | A4 | Randomised cue test on rendered faces | 2026-11-07, tag `a4-freeze` (commit 568b6f5), `design_sha256` 12c454da, pinned manifest 2ef1161e, before any A1 result was read and before any model saw a render | A3 result, vision gate results, human Snoek effects and ceilings, the detector-only V1 pilot, and four recovery runs on synthetic observers, which shaped the choice of statistic |
-| A5, A6, A7 | RQ4, RQ5 and RQ3 | Not frozen. Provisional, and not preregistered unless a freeze is added here | See Scoped and provisional questions |
+| A5 | RQ4: prior and evidence on the blind readout | 2026-11-08, tag `a5-freeze`, `design_sha256` fd20495b, before any A2 cell existed. Evidence classes confirmatory; balance verdicts descriptive after recovery run 6 | A2 design and recovery, A5 recoveries 1 to 6 and their diagnostics |
+| A6, A7 | RQ5 and RQ3 | Not frozen. Provisional, and not preregistered unless a freeze is added here | See Scoped and provisional questions |
 
 A1 and A3 have no tag, so their freezes are identified by the commits above. [PENDING: dated public links for each amendment, and whether to tag A1 and A3.] [PENDING: date A1 was read.]
 
@@ -279,7 +280,7 @@ P11, on eye aperture [43], is outside the family until its dose is verified. The
 
 A draft amendment, A7, specifies a Stage 0 table on the 24 calibration clips, on `single_face`, with the blind readout. It would establish whether the whole-path cut and its two named blocks are complete on that input, and whether the tokens at a cue's location can act as a cut for that cue. **Stage 0 has not run.** A7 is not frozen, its code does not exist, and its recovery is specified but not run. Stage 0 is costed at about .71 GPU-hours, an upper bound. [PENDING: A7 freeze; Stage 0 table for Gemma 4 and Qwen3-VL.] Whether a block of a complete cut meets our rule that only complete cuts count is open to A7's audit. If it does not, the report is the Stage 0 table plus "not testable". A comparison of the two blocks would be an optional supplement, and it has no human reading. A pass on the region test would give a non-vacuous cue-level answer, and the question would be reopened by a dated entry. This paper makes no claim about the route a cue takes through a model, and no site is described as a cut unless Stage 0 shows it complete.
 
-**RQ4 and RQ5, provisional.** Two further questions have draft amendments that are not frozen and are still changing, so nothing here binds and no threshold is given. [PENDING: A5 freeze.] A5 addresses RQ4, how much of a judgement comes from face evidence and how much from label priors, by separating prior from evidence with image-free, grey and mismatch baselines on the blind readout. [PENDING: A6 freeze.] A6 addresses RQ5, whether a shared error has the same cause in humans and models, on CREMA-D, across its fixed option set, with a cue-targeted test of one human confusion. Either is reported as confirmatory only if frozen before its data are read.
+**RQ4, frozen, and RQ5, provisional.** A5 (RQ4) was frozen on 2026-11-08 with tag `a5-freeze`, before any A2 cell existed; its evidence classes are confirmatory and its balance verdicts descriptive, because one false-positive recovery check failed under skewed portrayal gain (.094 against .07). A6 is a draft that is still changing, so nothing of it binds and no threshold is given. A5 addresses RQ4, how much of a judgement comes from face evidence and how much from label priors, by separating prior from evidence with image-free, grey and mismatch baselines on the blind readout. [PENDING: A6 freeze.] A6 addresses RQ5, whether a shared error has the same cause in humans and models, on CREMA-D, across its fixed option set, with a cue-targeted test of one human confusion. Either is reported as confirmatory only if frozen before its data are read.
 
 ### Identifiability results
 
