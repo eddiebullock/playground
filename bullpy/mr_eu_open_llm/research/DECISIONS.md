@@ -442,3 +442,7 @@ A7 recovery Level 1 passed; Level 2 failed 5 of 18 judged observers (numbers in 
 - **Riders (Additive, Synergic, Opposed) become descriptive.** The carrying verdicts recovered at 1.0 and stay confirmatory. The rider failures come partly from recovery drawing independent noise for TE, PE_A and PE_B; that construction is not changed to make them pass.
 - **No effect to carry stays confirmatory with the TE margin unchanged.** It fails safe (Inconclusive, never a wrong named verdict), so its recovery reach is reported beside it. Widening the equivalence margin would make a null claim easier and was rejected.
 - Freeze still needs: an independent code-against-text audit, a `## Code hashes` section, the design hash restated, then tag `a7-freeze`, all before any full A2 cell is read. Ladder field names used by the region test are cluster items.
+
+## 2026-11-08: A7 frozen (tag `a7-freeze`)
+
+A7 is frozen before any full A2 cell is read. Recovery was rerun on the pinned code: Level 2 equals the earlier run in every value, Level 1 differs only in timing. The Level 2 rulings above apply unchanged. Code hashes are in the draft's "Code hashes" section and are checked by `a7_design.check_code_pins` before any A7 analysis runs. The recovery outputs are pinned in `scripts/reproduce.py`. Open items are cluster only: Stage 0, ladder field names, image-token counts, code sync.
