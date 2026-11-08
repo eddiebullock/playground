@@ -144,7 +144,7 @@ A blind readout on basic labels is secondary, and it never replaces or rescues t
 | Conversational WC | 20 | 1.0 | .978 | .974 | .767 | .732 |
 | Conversational EA | 20 | 1.0 | .974 | .960 | .767 | .732 |
 
-Ceilings use 200 splits across subjects and stimuli, on do effects, because models see other stimuli (`research/reproduction/a4_human_ceiling.json`). One human group against the other is the yardstick: a model cannot be asked to agree with Western observers better than East Asian observers do. The ceiling only says how far noise limits the score. The two groups saw faces of their own ethnicity, so the yardstick mixes observer culture with stimulus faces [19].
+Ceilings use 200 splits across subjects and stimuli, on do effects, because models see other stimuli (`research/reproduction/a4_human_ceiling.json`). One human group against the other is the yardstick: a model cannot be asked to agree with Western observers better than East Asian observers do. The ceiling only says how far noise limits the score. It is computed from pooled fits at ridge 1.0 for every dataset, while the human target averages per-subject fits at the selected ridge (0.1 for basic), so it is the reliability of a closely related estimator, not of the target itself, and corrected values are approximate (Supplementary Note 1). The two groups saw faces of their own ethnicity, so the yardstick mixes observer culture with stimulus faces [19].
 
 **Estimand.** The model counts as one subject with fractional responses, through the same fit at the human ridge strength for that dataset, fixed in advance. Two statistics are computed for each model and dataset, each with its own null, interval and reliability:
 
