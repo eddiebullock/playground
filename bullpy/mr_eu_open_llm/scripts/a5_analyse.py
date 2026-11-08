@@ -399,6 +399,52 @@ def bootstrap_t_bounds(values: np.ndarray, levels: Sequence[float], draws: int =
     return out
 
 
+def gain_heterogeneity(j: Judgement) -> Dict[str, Any]:
+    """Estimated log-SD across actors of portrayal gain, from the acted family only, not from B.
+
+    Per clip, d is the log-odds of the acted family under the judgement minus under the
+    leave-one-out default. A gain that multiplies an additive push on the acted family's logit
+    moves d by exactly that push, whatever the other families do. Per actor, m is the mean d
+    and v its sampling variance (within-actor variance over clips / clips). Across actors, the
+    variance of m less the mean v (method of moments, floored at 0) is the between-actor
+    variance; for a lognormal gain, CV^2 = exp(s^2) - 1, so s = sqrt(log(1 + var / mean^2)).
+    Estimable only where the mean push is clearly positive (mean m above
+    `gain_heterogeneity_min_z` standard errors), since with no push there is no gain to vary,
+    and skew from gain needs a push. Added after recovery run 5, as a descriptive report: a
+    guard on it was tried and dropped, because at the validated gain it fired too often
+    (see the draft, Changes after recovery run 5). It changes no verdict.
+    """
+    tiny = D["gain_heterogeneity_floor"]
+    rows = np.arange(len(j.trials))
+    q = np.clip(j.q[rows, j.target], tiny, 1 - tiny)
+    default = default_for_clips(j.q, j.actor, len(j.actors), True)
+    r = np.clip(default[rows, j.target], tiny, 1 - tiny)
+    d = np.log(q / (1 - q)) - np.log(r / (1 - r))
+    means, variances = [], []
+    for a in range(len(j.actors)):
+        x = d[(j.actor == a) & np.isfinite(d)]
+        if x.size >= 2:
+            means.append(x.mean())
+            variances.append(x.var(ddof=1) / x.size)
+    m, v = np.array(means), np.array(variances)
+    if m.size < 3:
+        return {"log_sd": None, "estimable": False, "mean_push": None, "actors": int(m.size)}
+    centre, spread = float(m.mean()), float(m.var(ddof=1))
+    estimable = centre > D["gain_heterogeneity_min_z"] * np.sqrt(spread / m.size)
+    between = max(0.0, spread - float(v.mean()))
+    log_sd = float(np.sqrt(np.log1p(between / centre ** 2))) if estimable else None
+    return {"log_sd": log_sd, "estimable": bool(estimable), "mean_push": centre, "actors": int(m.size)}
+
+
+def family_gain_log_sd(judgements: Sequence[Judgement]) -> Optional[float]:
+    """The family's pooled estimate, reported beside its cells: the mean where it exists.
+
+    Gain is a property of the actors, which every cell of a model and route shares, so the
+    cells' estimates are pooled. None if no cell gives one."""
+    values = [h["log_sd"] for h in (gain_heterogeneity(j) for j in judgements) if h["estimable"]]
+    return float(np.mean(values)) if values else None
+
+
 def family_tests(cells: Sequence[Estimates], flip_args: Optional[Mapping[str, Any]] = None) -> List[Dict[str, Any]]:
     """Two step-down families across the eligible cells: B and E*.
 
@@ -650,8 +696,9 @@ def build_cell(
     return Cell(model, route, j, estimate(j, base["w"], base["g"], shuffles=shuffles), gates, gate, base, partners)
 
 
-def finish_cell(cell: Cell, p: Optional[Mapping[str, float]]) -> Dict[str, Any]:
-    """The cell's output row. p is its step-down result, or None for a Not tested cell."""
+def finish_cell(cell: Cell, p: Optional[Mapping[str, float]], gain_log_sd: Optional[float]) -> Dict[str, Any]:
+    """The cell's output row. p is its step-down result, or None for a Not tested cell.
+    gain_log_sd is the family's pooled gain estimate (family_gain_log_sd), reported only."""
     est = cell.est
     b, e = balance_stats(est), intervals(est.E_star_row)
     share = word_share(est) if cell.base["ok"] else None
@@ -685,6 +732,8 @@ def finish_cell(cell: Cell, p: Optional[Mapping[str, float]]) -> Dict[str, Any]:
         "chain": chain(est, cell.j, cell.base),
         "survival": alive,
         "clips_without_template": int(np.isnan(est.parts["E"]).sum()),
+        "gain_heterogeneity": gain_heterogeneity(cell.j),
+        "family_gain_log_sd": gain_log_sd,
     }
 
 
@@ -692,7 +741,8 @@ def analyse_family(cells: Sequence[Cell], flip_args: Optional[Mapping[str, Any]]
     """Step-down over eligible cells only, which gates settle before any contrast is read."""
     eligible = [c for c in cells if c.eligible]
     tests = dict(zip((id(c) for c in eligible), family_tests([c.est for c in eligible], flip_args)))
-    return [finish_cell(c, tests.get(id(c))) for c in cells]
+    spread = family_gain_log_sd([c.j for c in eligible])
+    return [finish_cell(c, tests.get(id(c)), spread) for c in cells]
 
 
 # ---------------------------------------------------------------------------
