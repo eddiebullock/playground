@@ -29,7 +29,7 @@ import csv
 import json
 import sys
 import time
-from collections import Counter, defaultdict
+from collections import Counter
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Mapping, Optional, Sequence, Tuple
 
@@ -48,11 +48,12 @@ OPTIONS: Tuple[str, ...] = tuple(D["options"])
 CODE_TO_OPTION = {"A": "Anger", "D": "Disgust", "F": "Fear", "H": "Happy", "N": "No Emotion", "S": "Sad"}
 PRIMARY, BRIDGE = D["primary_route"], D["bridge_route"]
 EDIT_ROWS = tuple(D["edit_order_rows"])
-SHORT_DECODE_CLIPS = ("1039_WSI_SAD_XX", "1061_TIE_ANG_XX", "1072_WSI_ANG_XX")  # CREMA_D_PLAN.md
+SHORT_DECODE_CLIPS = tuple(D["runtime"]["short_decode_clips"])  # CREMA_D_PLAN.md
 NAMED_RINGS = {"A2 eyes rings": si.REGIONS["eyes"], "A2 brows rings": si.REGIONS["brows"], "A2 mouth ring": si.REGIONS["mouth"]}
 OUTCOME_DIR = d.OUTPUT_DIR
 MECHANICS_DIR = Path("results/a6_mechanics")
-REQUIRED_CV2 = "4.11."
+REQUIRED_CV2 = D["runtime"]["cv2_prefix"]
+DTYPE = D["runtime"]["dtype"]
 
 
 # ---------------------------------------------------------------------------
@@ -210,7 +211,7 @@ def stage_plan(item: Mapping[str, Any], stage: int) -> List[Dict[str, Any]]:
     if stage == 3:
         if item["label"] not in D["stage3_emotions"]:
             return []
-        return [mcq(PRIMARY, row, c) for c in D["conditions"] for row in EDIT_ROWS] + [blind(c) for c in D["blind_conditions"]]
+        return [mcq(PRIMARY, row, c) for c in D["conditions"] for row in EDIT_ROWS]
     raise ValueError(f"Stage {stage} has no cells.")
 
 
@@ -325,6 +326,8 @@ def step_landmarks(args: argparse.Namespace) -> None:
         raise SystemExit(f"{args.geometry} is fixed for all models and is not overwritten.")
     items = load_items(args.selection, args.data_root)
     detect = run.FaceMesh()
+    if detect.version != D["runtime"]["mediapipe_version"]:
+        raise SystemExit(f"MediaPipe {detect.version}; the block pins {D['runtime']['mediapipe_version']}.")
     records: Dict[str, Any] = {}
     failures: List[Dict[str, Any]] = []
     started = time.time()
@@ -341,6 +344,13 @@ def step_landmarks(args: argparse.Namespace) -> None:
               "k": si.N_SENT_FRAMES, "n_clips": len(records), "n_clips_with_failures": len(failures),
               "seconds": round(time.time() - started, 1), "failures": failures, "items": records}
     args.geometry.parent.mkdir(parents=True, exist_ok=True)
+    unusable = [f for f in failures if f["clip_failure"] or f["box_failure"]
+                or (records[f["trial_id"]].get("apex") is None)
+                or (records[f["trial_id"]].get("landmarks") or {}).get(str(records[f["trial_id"]].get("apex"))) is None]
+    if len(unusable) / len(items) > D["lost_item_limit"]:
+        failed = args.geometry.with_name("geometry_failed.json")
+        failed.write_text(json.dumps({k: output[k] for k in ("detector", "n_clips", "n_clips_with_failures", "failures")}) + "\n", encoding="utf-8")
+        raise SystemExit(f"{len(unusable)} clips have no usable apex, over lost_item_limit. Nothing to pin; see {failed}.")
     args.geometry.write_text(json.dumps(output) + "\n", encoding="utf-8")
     print(json.dumps({k: output[k] for k in ("n_clips", "n_clips_with_failures", "seconds", "failures")}, indent=1))
 
@@ -374,6 +384,34 @@ def step_au_manifest(args: argparse.Namespace) -> None:
     (args.output_dir / "au_manifest.json").write_text(json.dumps({"trials": trials}, indent=0) + "\n", encoding="utf-8")
 
 
+def weights_manifest(model: str) -> str:
+    """sha256 over each weight and config file of the model, by relative path, in sorted order."""
+    import hashlib
+
+    from scripts.evaluate import resolve_model_path
+
+    root = Path(resolve_model_path(model))
+    digest = hashlib.sha256()
+    for path in sorted(p for p in root.rglob("*") if p.is_file()):
+        file_digest = hashlib.sha256()
+        with path.open("rb") as handle:
+            for block in iter(lambda: handle.read(1 << 24), b""):
+                file_digest.update(block)
+        digest.update(f"{path.relative_to(root)}\t{file_digest.hexdigest()}\n".encode("utf-8"))
+    return digest.hexdigest()
+
+
+def step_weights(args: argparse.Namespace) -> None:
+    print(json.dumps({"model": args.model, "weights_sha256": weights_manifest(args.model)}))
+
+
+def check_weights(model: str) -> str:
+    found = weights_manifest(model)
+    if found != D["weights_sha256"][model]:
+        raise SystemExit(f"{model} weights are {found}, not the pinned {D['weights_sha256'][model]}.")
+    return found
+
+
 def check_run_allowed(args: argparse.Namespace) -> None:
     if not args.a6_frozen:
         raise SystemExit("A6 is not frozen. This step will not run until the amendment is frozen.")
@@ -383,9 +421,12 @@ def check_run_allowed(args: argparse.Namespace) -> None:
     d.check_pins(D)
     d.check_human_target(D)
     d.check_geometry(D, args.geometry)
+    if args.dtype != DTYPE:
+        raise SystemExit(f"Runs use {DTYPE}, the block's dtype.")
+    check_weights(args.model)
 
 
-def stage3_allowed(args: argparse.Namespace) -> None:
+def stage3_allowed(args: argparse.Namespace) -> str:
     """Stage 3 needs this model's locked Stage 2, on this design, reaching it."""
     if args.stage2_output is None or not args.stage2_output.exists():
         raise SystemExit("Stage 3 needs --stage2_output, this model's locked Stage 2.")
@@ -394,6 +435,9 @@ def stage3_allowed(args: argparse.Namespace) -> None:
         raise SystemExit("That Stage 2 output is for another model or design.")
     if locked.get("stage2", {}).get("reaches_stage3") is not True:
         raise SystemExit(f"{args.model} does not reach Stage 3.")
+    import hashlib
+
+    return hashlib.sha256(args.stage2_output.read_bytes()).hexdigest()
 
 
 def resume_keys(path: Path, design_sha256: str) -> set:
@@ -414,7 +458,9 @@ def step_baselines(args: argparse.Namespace) -> None:
     ordered = run.select_items(items, None)
     handle = run.load_handle(args.model, args.dtype)
     clip = run.load_clip(ordered[0], records, donors)
-    report: Dict[str, Any] = {"model": args.model, "design_sha256": d.block_hash(), "baselines": baseline_rows(handle, clip), "delivery": []}
+    report: Dict[str, Any] = {"model": args.model, "design_sha256": d.block_hash(), "dtype": args.dtype,
+                              "weights_sha256": D["weights_sha256"][args.model], "versions": versions(),
+                              "baselines": baseline_rows(handle, clip), "delivery": []}
     for item in ordered[: args.n_delivery_items]:
         report["delivery"].append(run.delivery_for_item(handle, run.load_clip(item, records, donors), [PRIMARY, BRIDGE]))
     args.output_dir.mkdir(parents=True, exist_ok=True)
@@ -422,14 +468,10 @@ def step_baselines(args: argparse.Namespace) -> None:
 
 
 def step_run(args: argparse.Namespace) -> None:
-    import platform
-
     import torch
-    import transformers
 
     check_run_allowed(args)
-    if args.stage == 3:
-        stage3_allowed(args)
+    stage2_sha256 = stage3_allowed(args) if args.stage == 3 else None
     args.n_shards = run.resolve_shards(args.shard, args.n_shards, True)
     design_sha256 = d.block_hash()
     items = load_items(args.selection, args.data_root)
@@ -445,8 +487,8 @@ def step_run(args: argparse.Namespace) -> None:
     handle = run.load_handle(args.model, args.dtype)
     report: Dict[str, Any] = {
         "model": args.model, "stage": args.stage, "mechanics": False, "design_sha256": design_sha256,
-        "shard": args.shard, "n_shards": args.n_shards, "failures": [],
-        "versions": {"transformers": transformers.__version__, "torch": torch.__version__, "python": platform.python_version(), "cv2": cv2.__version__},
+        "shard": args.shard, "n_shards": args.n_shards, "failures": [], "stage2_sha256": stage2_sha256,
+        "dtype": args.dtype, "weights_sha256": D["weights_sha256"][args.model], "versions": versions(),
         "gpu": torch.cuda.get_device_name(0) if torch.cuda.is_available() else None,
     }
 
@@ -474,6 +516,16 @@ def step_run(args: argparse.Namespace) -> None:
                           failure_reasons=dict(Counter(f["reason"] for f in report["failures"])))
             save()
     print(f"Done: {cells_path}")
+
+
+def versions() -> Dict[str, str]:
+    import platform
+
+    import torch
+    import transformers
+
+    return {"transformers": transformers.__version__, "torch": torch.__version__,
+            "python": platform.python_version(), "cv2": cv2.__version__, "numpy": np.__version__}
 
 
 def mechanics_output_dir(path: Path) -> Path:
@@ -508,7 +560,7 @@ def step_mechanics(args: argparse.Namespace) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
-    parser.add_argument("--step", required=True, choices=("landmarks", "decoder", "au_manifest", "baselines", "run"))
+    parser.add_argument("--step", required=True, choices=("landmarks", "decoder", "au_manifest", "weights", "baselines", "run"))
     parser.add_argument("--model", choices=tuple(D["models"]))
     parser.add_argument("--stage", type=int, choices=(1, 3))
     parser.add_argument("--selection", type=Path, default=d.SELECTION)
@@ -516,7 +568,7 @@ def main() -> None:
     parser.add_argument("--geometry", type=Path, default=d.GEOMETRY)
     parser.add_argument("--output_dir", type=Path, default=OUTCOME_DIR)
     parser.add_argument("--stage2_output", type=Path, default=None)
-    parser.add_argument("--dtype", default="bfloat16", choices=("bfloat16", "float32"))
+    parser.add_argument("--dtype", default=DTYPE, choices=("bfloat16", "float32"))
     parser.add_argument("--shard", type=int, default=0)
     parser.add_argument("--n_shards", type=int, default=None, help="Required for a run.")
     parser.add_argument("--n_delivery_items", type=int, default=2)
@@ -530,6 +582,9 @@ def main() -> None:
         return
     if args.model is None:
         raise SystemExit("--model is required")
+    if args.step == "weights":
+        step_weights(args)
+        return
     if args.step == "baselines":
         check_run_allowed(args)
         step_baselines(args)

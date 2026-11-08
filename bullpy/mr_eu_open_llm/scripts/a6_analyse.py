@@ -12,6 +12,7 @@ main refuses until every PENDING pin is filled and --a6_frozen is passed.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 from itertools import permutations
 from pathlib import Path
@@ -75,7 +76,6 @@ class Cells:
         self.mcq1 = np.full((n, k, k), np.nan)
         self.mcq3 = np.full((n, len(CONDITIONS), len(EDIT_ROWS), k), np.nan)
         self.blind1 = np.full((n, k), np.nan)
-        self.blind3 = np.full((n, len(D["blind_conditions"]), k), np.nan)
         self.bridge = np.full((n, len(EDIT_ROWS), k), np.nan)
         self.span = np.full((n, len(CONDITIONS)), np.nan)
         self.flagged = np.zeros((n, len(CONDITIONS), len(EDIT_ROWS)), dtype=bool)
@@ -85,7 +85,6 @@ class Cells:
 
     def ingest(self, rows: Sequence[Mapping[str, Any]]) -> None:
         condition_index = {c: i for i, c in enumerate(CONDITIONS)}
-        blind_index = {c: i for i, c in enumerate(D["blind_conditions"])}
         edit_index = {r: i for i, r in enumerate(EDIT_ROWS)}
         orders = [list(o) for o in D["orders"]]
         positions = [[INDEX[o] for o in order] for order in orders]
@@ -98,10 +97,9 @@ class Cells:
             if readout == "blind":
                 scores = row["blind"]["family_logprob"]
                 values = [scores[f] for f in FAMILIES]
-                if stage == 1:
-                    self.blind1[i] = values
-                else:
-                    self.blind3[i, blind_index[condition]] = values
+                if stage != 1:
+                    raise SystemExit("Stage 3 has no blind cells in this design.")
+                self.blind1[i] = values
                 continue
             order = row["order"]
             if row["options"] != orders[order]:
@@ -126,7 +124,7 @@ class Cells:
         """The same clips with others blanked, so a sensitivity sees those clips as absent."""
         out = object.__new__(Cells)
         out.__dict__.update(self.__dict__)
-        for name in ("mcq1", "mcq3", "blind1", "blind3", "bridge"):
+        for name in ("mcq1", "mcq3", "blind1", "bridge"):
             array = getattr(self, name).copy()
             array[~keep] = np.nan
             setattr(out, name, array)
@@ -168,11 +166,23 @@ def error_share(p: np.ndarray, emo: np.ndarray, partner: int) -> np.ndarray:
 
 
 def share_without(p: np.ndarray, first: int, second: int, b: int) -> np.ndarray:
-    """r_i(B without A, C): B's share of the probability outside A and C. NaN if none is left."""
+    """r_i(B without A, C): B's standardised share of the four options outside A and C.
+
+    The four log probabilities are centred and divided by their SD within the clip, then
+    put through a softmax. So the share does not change when a clip's scores are multiplied
+    by a constant, as a sharper or flatter model on one emotion would do, nor when an option
+    gets a constant prior. If the four are equal, each share is a quarter. NaN if absent.
+    """
     kept = [k for k in range(p.shape[-1]) if k not in (first, second)]
-    total = p[..., kept].sum(-1)
-    with np.errstate(invalid="ignore", divide="ignore"):
-        return np.where(total > 0, p[..., b] / total, np.nan)
+    with np.errstate(divide="ignore", invalid="ignore"):
+        logs = np.log(np.maximum(p[..., kept], 1e-300))
+    centred = logs - logs.mean(-1, keepdims=True)
+    spread = np.sqrt((centred**2).mean(-1, keepdims=True))
+    with np.errstate(divide="ignore", invalid="ignore"):
+        z = np.where(spread > 0, centred / np.where(spread > 0, spread, 1.0), 0.0)
+    z = np.where(np.isnan(p[..., kept]), np.nan, z)
+    weights = np.exp(z)
+    return weights[..., kept.index(b)] / weights.sum(-1)
 
 
 def directed_excess(cells: Any, p: np.ndarray, a: int, b: int) -> np.ndarray:
@@ -180,7 +190,8 @@ def directed_excess(cells: Any, p: np.ndarray, a: int, b: int) -> np.ndarray:
 
     For each C, the same two options leave the denominator on clips of A and on clips of C,
     so the two means are shares of the same four options. A clip's own label is then out on
-    both sides, and a softmax over additive option priors gives exactly zero at any accuracy.
+    both sides. Scores made of additive option priors, acted evidence and a scale per emotion
+    give exactly zero at any accuracy, since the standardised share ignores all three.
     p has clips first and options last. With an order axis between, r is taken on each order
     and then averaged, so that a position effect stays additive inside each order. A clip
     missing an order is NaN.
@@ -351,11 +362,32 @@ def contrast_clips(cells: Any, contrast: Mapping[str, Any], controls: Sequence[s
     return acted, control
 
 
+def mismatch_cells(cells: Cells, partners: Mapping[str, str], values_own: np.ndarray, values_other: np.ndarray,
+                   clips: np.ndarray) -> float:
+    """Mean over cells of |mean signed change|, a cell being a clip emotion and a partner emotion.
+
+    Signed changes are averaged inside each cell first, so noise cancels there and does not
+    raise the margin, while a real change of either sign counts. Cells are weighted by clips.
+    """
+    partner = partner_index(cells, partners)
+    change = (values_other - values_own).mean(1) if values_own.ndim == 2 else values_other - values_own
+    total, weight = 0.0, 0
+    for own in np.unique(cells.emo[clips]):
+        for other in np.unique(cells.emo[partner[clips]]):
+            members = clips & (cells.emo == own) & (cells.emo[partner] == other) & ~np.isnan(change)
+            if members.any():
+                total += abs(float(change[members].mean())) * int(members.sum())
+                weight += int(members.sum())
+    return total / weight if weight else float("nan")
+
+
 def cue_margin(cells: Cells, partners: Mapping[str, str], contrast: Mapping[str, Any]) -> Optional[float]:
-    """10% of the mean absolute change in y under full mismatch, on the contrast's clips.
+    """10% of the change in y under full mismatch, on the contrast's clips, signed within cells.
 
     The face is the clip's partner, the prompt is unchanged, and the orders are the edit
-    orders, so this is the same outcome on the same clips and orders as the contrast.
+    orders, so this is the same outcome on the same clips and orders as the contrast. The
+    first draft took the mean absolute change per clip, which grows with noise, so a noisier
+    model had a wider margin and an easier null.
     """
     controls = D["control_emotions"]
     keep = outcome_keep(cells, contrast, D["outcome_reference"], controls)
@@ -364,23 +396,80 @@ def cue_margin(cells: Cells, partners: Mapping[str, str], contrast: Mapping[str,
     rows = list(EDIT_ROWS)
     own = outcome(cells.mcq1[:, rows], b, keep)
     other = outcome(cells.mcq1[partner_index(cells, partners)][:, rows], b, keep)
-    change = np.abs(other - own).mean(1)
-    means = cells.actor_mean(change, acted | control)
-    if np.isnan(means).all():
-        return None
-    return float(D["cue_margin_fraction"]) * float(np.nanmean(means))
+    value = mismatch_cells(cells, partners, own, other, acted | control)
+    return None if not np.isfinite(value) else float(D["cue_margin_fraction"]) * value
+
+
+def dose_margin(cells: Cells, partners: Mapping[str, str], contrast: Mapping[str, Any]) -> Optional[float]:
+    """The dose's margin, on the dose's own outcome: the acted label's CLR over six options.
+
+    10% of its signed change under full mismatch on the contrast's clips of A. The first draft
+    compared the dose with the cue margin, which is on another outcome, A2's disclosed fault.
+    """
+    acted = INDEX[contrast["acted"]]
+    rows = list(EDIT_ROWS)
+    logs = cells.mcq1[:, rows]
+    other = cells.mcq1[partner_index(cells, partners)][:, rows]
+    own_clr = logs[..., acted] - logs.mean(-1)
+    other_clr = other[..., acted] - other.mean(-1)
+    value = mismatch_cells(cells, partners, own_clr, other_clr, cells.emo == acted)
+    return None if not np.isfinite(value) else float(D["cue_margin_fraction"]) * value
+
+
+def null_reach(cells: Cells, partners: Mapping[str, str], contrast: Mapping[str, Any], margin: Optional[float]) -> Dict[str, Any]:
+    """Whether a null could be reached, from Stage 1 alone. Reported; it gates nothing.
+
+    The double difference of y under full mismatch stands in for a Stage 3 edit. Its actor SD
+    gives the 90% half-width a null would need inside the margin. sd_limit is the actor SD of
+    the double difference above which the half-width exceeds the margin with all 91 actors.
+    """
+    controls = D["control_emotions"]
+    keep = outcome_keep(cells, contrast, D["outcome_reference"], controls)
+    acted, control = contrast_clips(cells, contrast, controls)
+    b = INDEX[contrast["partner"]]
+    rows = list(EDIT_ROWS)
+    change = (outcome(cells.mcq1[partner_index(cells, partners)][:, rows], b, keep) - outcome(cells.mcq1[:, rows], b, keep)).mean(1)
+    values = cells.actor_mean(change, acted) - cells.actor_mean(change, control)
+    present = values[~np.isnan(values)]
+    z = 1.6448536269514722
+    sd = float(np.std(present, ddof=1)) if present.size > 1 else float("nan")
+    half = z * sd / np.sqrt(present.size) if present.size > 1 else float("nan")
+    limit = float(margin) * np.sqrt(present.size) / z if margin else float("nan")
+    return {"proxy_actor_sd": sd, "implied_half_width": half, "margin": margin, "sd_limit": limit,
+            "null_reachable_on_proxy": bool(margin is not None and np.isfinite(half) and half < margin)}
+
+
+def focus_excess(cells: Any, p: np.ndarray, focus: Sequence[str]) -> np.ndarray:
+    """X of the target pair on the directions that carry an excess, or both if one or none does."""
+    a, b = (INDEX[x] for x in D["target_pair"])
+    if len(focus) == 1:
+        x, y = (INDEX[v] for v in focus[0].split(">"))
+        return directed_excess(cells, p, x, y)
+    return pair_excess(cells, p, a, b)
 
 
 def stage2(cells: Cells, partners: Mapping[str, str], settings: Mapping[str, Any]) -> Dict[str, Any]:
-    """Model X on the family, O, X on non-adjacent orders, blind X, and the locked margins."""
+    """Model X on the family, the direction states, O, X_far, blind X, and the locked margins."""
     directions = [1] * len(PAIRS)
     all_orders = range(len(D["orders"]))
+    states_all = direction_states(cells, settings, all_orders)
+    states_edit = direction_states(cells, settings, EDIT_ROWS)
+    carrying = [k for k, v in states_all.items() if v["state"] == "carries"]
+    focus = carrying if len(carrying) == 1 else list(DIRECTIONS)
+
+    def matrix(p: np.ndarray, orders: Optional[Sequence[int]] = None) -> np.ndarray:
+        out = pair_matrix(cells, p)
+        out[:, 0] = focus_excess(cells, p, focus)
+        return out
+
     x = pair_matrix(cells, order_probs(cells, all_orders))
     test = flip_test(x, directions, settings)
-    blind = pair_matrix(cells, softmax(cells.blind1))
+    blind = matrix(softmax(cells.blind1))
     blind_test = flip_test(blind, directions, settings)
     near = np.column_stack([pair_excess(cells, order_probs(cells, d.adjacent_rows(D, p)), INDEX[p[0]], INDEX[p[1]]) for p in PAIRS])
     far = np.column_stack([pair_excess(cells, order_probs(cells, d.far_rows(D, p)), INDEX[p[0]], INDEX[p[1]]) for p in PAIRS])
+    near[:, 0] = focus_excess(cells, order_probs(cells, d.adjacent_rows(D, D["target_pair"])), focus)
+    far[:, 0] = focus_excess(cells, order_probs(cells, d.far_rows(D, D["target_pair"])), focus)
     option = near - far
     option_test = flip_test(option, directions, settings)
     far_test = flip_test(far, directions, settings)
@@ -407,29 +496,37 @@ def stage2(cells: Cells, partners: Mapping[str, str], settings: Mapping[str, Any
     upper_below = bool(target["ci90"] is not None and target["ci90"][1] < margin)
     out: Dict[str, Any] = {
         "pairs": pairs,
+        "focus": focus,
         "x_passes": x_passes,
         "x_null": bool(not x_passes and upper_below),
+        "any_direction_carries": bool(carrying),
+        "all_directions_absent": all(v["state"] == "absent" for v in states_all.values()),
         "o_significant": bool(target["O_p_maxt"] < ALPHA and target["O"] > 0),
         "far_inside_margin": bool(target["X_far_ci90"] is not None and target["X_far_ci90"][1] < margin),
         "far_passes": bool(target["X_far_p_maxt"] < ALPHA and target["X_far"] > 0),
         "blind_significant": bool(target["blind_p_maxt"] < ALPHA and target["blind_X"] > 0),
+        "directions_all_orders": states_all,
+        "directions": states_edit,
     }
-    out["directions"] = direction_states(cells, settings)
     out["state"] = stage2_state(out)
     out["reaches_stage3"] = out["state"] == "stage3"
     out["cue_margin"] = {c["id"]: cue_margin(cells, partners, c) for c in CONTRASTS}
+    out["dose_margin"] = {c["id"]: dose_margin(cells, partners, c) for c in CONTRASTS}
+    out["null_reach"] = {c["id"]: null_reach(cells, partners, c, out["cue_margin"][c["id"]]) for c in CONTRASTS}
     return out
 
 
-def direction_states(cells: Cells, settings: Mapping[str, Any]) -> Dict[str, Dict[str, Any]]:
-    """Which directions of the target pair carry an excess, locked before Stage 3.
+def direction_states(cells: Cells, settings: Mapping[str, Any], orders: Sequence[int]) -> Dict[str, Dict[str, Any]]:
+    """Which directions of the target pair carry an excess on the given orders, before Stage 3.
 
     carries     step-down p under alpha over the two directed cells, mean above zero.
     absent      not that, and the upper 90% limit is below shared_margin.
     unresolved  neither. It is kept, so doubt about a direction never lightens the null.
+    Taken on all six orders to route Stage 2, and on the edit orders to decide Stage 3,
+    since those are the orders the edits are scored on.
     """
     a, b = (INDEX[x] for x in D["target_pair"])
-    p = order_probs(cells, range(len(D["orders"])))
+    p = order_probs(cells, orders)
     values = np.column_stack([directed_excess(cells, p, a, b), directed_excess(cells, p, b, a)])
     test = flip_test(values, [1, 1], settings)
     out: Dict[str, Dict[str, Any]] = {}
@@ -444,9 +541,15 @@ def direction_states(cells: Cells, settings: Mapping[str, Any]) -> Dict[str, Dic
 
 
 def stage2_state(s: Mapping[str, Any]) -> str:
-    """Where Stage 2 leaves a model. Exhaustive, so every model gets one of these."""
-    if not s["x_passes"]:
-        return "not_shared" if s["x_null"] else "shared_unresolved"
+    """Where Stage 2 leaves a model. Exhaustive, so every model gets one of these.
+
+    A shared error is X passing, or any direction carrying an excess, since X averages the
+    two directions and a negative one can hide a positive one. Not shared needs X's null and
+    every direction absent. O, X_far and blind X are taken on the carrying direction if one
+    alone carries, and on the pair otherwise.
+    """
+    if not (s["x_passes"] or s["any_direction_carries"]):
+        return "not_shared" if s["x_null"] and s["all_directions_absent"] else "shared_unresolved"
     if not s["o_significant"] or s["far_passes"]:
         return "stage3"
     if s["far_inside_margin"] and not s["blind_significant"]:
@@ -498,6 +601,57 @@ def acted_change(cells: Cells, contrast: Mapping[str, Any], condition: str) -> f
     return float(np.nanmean(means)) if not np.isnan(means).all() else float("nan")
 
 
+def against_others(cells: Cells, contrast: Mapping[str, Any], condition: str, label: int, controls: Sequence[str],
+                   rows: Optional[Sequence[int]]) -> np.ndarray:
+    """Double difference of one option's log probability against a reference with neither the
+    partner, nor Happy, nor No Emotion, nor the clip's own label in it."""
+    happy, b, none = INDEX["Happy"], INDEX[contrast["partner"]], INDEX[NO_EMOTION]
+    n, k = len(cells.emo), len(OPTIONS)
+    keep = np.ones((n, k), dtype=bool)
+    keep[:, [happy, b, none]] = False
+    keep[np.arange(n), cells.emo] = False
+    weights = keep.astype(np.float64)[:, None, :]
+    c = CONDITIONS.index(condition)
+    picked = list(range(len(EDIT_ROWS))) if rows is None else list(rows)
+
+    def level(logs: np.ndarray) -> np.ndarray:
+        return logs[..., label] - (logs * weights).sum(-1) / weights.sum(-1)
+
+    delta = (level(cells.mcq3[:, c][:, picked]) - level(cells.mcq3[:, ORIGINAL][:, picked])).mean(1)
+    acted, control = contrast_clips(cells, contrast, list(controls))
+    return cells.actor_mean(delta, acted) - cells.actor_mean(delta, control)
+
+
+def partner_change(cells: Cells, contrast: Mapping[str, Any], condition: str, *, controls: Optional[Sequence[str]] = None,
+                   rows: Optional[Sequence[int]] = None) -> np.ndarray:
+    """The partner's own double difference, with Happy out of the reference, halved to y's units."""
+    chosen = list(D["control_emotions"]) if controls is None else list(controls)
+    return against_others(cells, contrast, condition, INDEX[contrast["partner"]], chosen, rows) / 2.0
+
+
+def reference_change(cells: Cells, contrast: Mapping[str, Any], condition: str, *, controls: Optional[Sequence[str]] = None,
+                     rows: Optional[Sequence[int]] = None) -> np.ndarray:
+    """The part of the double difference in y that Happy alone could make, in y's units.
+
+    y leaves only the partner and Happy, so Happy moving by itself moves y. Happy is set
+    against the options that are neither the partner, nor Happy, nor No Emotion, nor the
+    clip's own label, and the same double difference is taken. y holds minus half of log
+    p(Happy), so the value is minus half that double difference.
+    """
+    chosen = list(D["control_emotions"]) if controls is None else list(controls)
+    return -against_others(cells, contrast, condition, INDEX["Happy"], chosen, rows) / 2.0
+
+
+def excess_in_y(cells: Cells, contrast: Mapping[str, Any], rows: Optional[Sequence[int]] = None) -> np.ndarray:
+    """The pair excess on the original, in y's units: y on clips of A minus on control clips."""
+    controls = list(D["control_emotions"])
+    keep = outcome_keep(cells, contrast, D["outcome_reference"], controls)
+    picked = list(range(len(EDIT_ROWS))) if rows is None else list(rows)
+    y = outcome(cells.mcq3[:, ORIGINAL][:, picked], INDEX[contrast["partner"]], keep).mean(1)
+    acted, control = contrast_clips(cells, contrast, controls)
+    return cells.actor_mean(y, acted) - cells.actor_mean(y, control)
+
+
 def span_tokens(cells: Cells, contrast: Mapping[str, Any], tokens_across: Optional[float]) -> Optional[float]:
     """Median over the contrast's clips of the region's narrowest side, in tokens."""
     if tokens_across is None:
@@ -519,9 +673,10 @@ def condition_family(region: str) -> Dict[str, str]:
 
 
 def stage3(cells: Cells, margins: Mapping[str, Optional[float]], tokens_across: Optional[float],
-           settings: Mapping[str, Any], *, reference: Optional[str] = None, controls: Optional[Sequence[str]] = None,
+           settings: Mapping[str, Any], *, dose_margins: Optional[Mapping[str, Optional[float]]] = None,
+           reference: Optional[str] = None, controls: Optional[Sequence[str]] = None,
            rows: Optional[Sequence[int]] = None) -> Dict[str, Any]:
-    """C1 to C4, neutral fill, step-down maxT, the fill rule, and each null condition."""
+    """C1 to C4, neutral fill, step-down maxT, the fill rule, the Happy check and each null condition."""
     kwargs = {"reference": reference, "controls": controls, "rows": rows}
     effects = np.column_stack([double_difference(cells, c, condition_family(c["region"])["neutral"], **kwargs) for c in CONTRASTS])
     directions = [c["direction"] for c in CONTRASTS]
@@ -545,7 +700,20 @@ def stage3(cells: Cells, margins: Mapping[str, Optional[float]], tokens_across: 
         whole_ci = interval(whole, D["ci_equivalence"], settings)
         keep_mid = double_difference(cells, contrast, "mask_uplow_neutral", **kwargs)
         dose = acted_change(cells, contrast, fills["blur"])
+        dose_limit = (dose_margins or {}).get(contrast["id"])
         span = span_tokens(cells, contrast, tokens_across)
+        happy = reference_change(cells, contrast, fills["neutral"], controls=controls, rows=rows)
+        happy_ci = interval(happy, D["ci_equivalence"], settings)
+        reference_stable = inside(happy_ci, margin)
+        partner = partner_change(cells, contrast, fills["neutral"], controls=controls, rows=rows)
+        partner_ci = interval(partner, D["ci_decision"], settings)
+        if D["reference_check"] == "happy_inside_margin":
+            named_check = {1: reference_stable, -1: reference_stable}
+        else:
+            # The partner must have moved itself, with Happy out of the reference.
+            named_check = {1: beyond_zero(partner_ci, direction), -1: beyond_zero(partner_ci, -direction)}
+        excess = excess_in_y(cells, contrast, rows)
+        excess_mean = float(np.nanmean(excess)) if not np.isnan(excess).all() else float("nan")
         ci90, ci95 = interval(values, D["ci_equivalence"], settings), interval(values, D["ci_decision"], settings)
         significant_one = one_sided["p_maxt"][j] < ALPHA and mean * direction > 0
         significant_opposite = two_sided["p_maxt"][j] < ALPHA and mean * direction < 0
@@ -554,26 +722,34 @@ def stage3(cells: Cells, margins: Mapping[str, Optional[float]], tokens_across: 
         usable = margin is not None and np.isfinite(margin) and margin > 0
         conditions = {
             "c2_delivery": bool(span is not None and span >= D["min_span_tokens"]),
-            "c3_dose": bool(usable and abs(dose) > margin),
+            "c3_dose": bool(dose_limit is not None and np.isfinite(dose_limit) and dose_limit > 0 and abs(dose) > dose_limit),
             "c4_pair_can_move": bool(usable and abs(whole_mean) > margin),
             "c5_equivalence": bool(inside(ci90, margin) and two_sided["p_maxt"][j] >= ALPHA and one_sided["p_maxt"][j] >= ALPHA),
+            "c7_reference_stable": bool(reference_stable),
             "c6_reported": bool(ci95 is not None and np.isfinite(mean)),
         }
         row = {
             "mean": mean, "ci90": ci90, "ci95": ci95, "direction": direction, "margin": margin,
             "p_raw": one_sided["p_raw"][j], "p_maxt": one_sided["p_maxt"][j], "p_maxt_two_sided": two_sided["p_maxt"][j],
             "other_fills": other_fills, "plain_change": plain, "fill_rule": bool(fill_rule),
-            "dose": dose, "span_tokens": span, "mask_all_mean": whole_mean, "mask_all_ci90": whole_ci,
+            "dose": dose, "dose_margin": dose_limit, "span_tokens": span,
+            "happy_part": float(np.nanmean(happy)) if not np.isnan(happy).all() else float("nan"), "happy_part_ci90": happy_ci,
+            "reference_stable": bool(reference_stable), "excess_in_y": excess_mean,
+            "partner_part": float(np.nanmean(partner)) if not np.isnan(partner).all() else float("nan"), "partner_part_ci95": partner_ci,
+            "share_of_excess_removed": float(-mean / excess_mean) if excess_mean and np.isfinite(excess_mean) else None, "mask_all_mean": whole_mean, "mask_all_ci90": whole_ci,
             "mask_uplow_ci90": interval(keep_mid, D["ci_equivalence"], settings),
             "null_conditions": conditions,
-            "match": bool(significant_one and fill_rule),
-            "opposes": bool(significant_opposite and fill_rule_opposite),
+            "match": bool(significant_one and fill_rule and named_check[1]),
+            "opposes": bool(significant_opposite and fill_rule_opposite and named_check[-1]),
             "significant": bool(two_sided["p_maxt"][j] < ALPHA or one_sided["p_maxt"][j] < ALPHA),
         }
         row["null"] = bool(all(conditions.values()) and out["sham_equal"] and not row["significant"])
         row["pair_inside_margin"] = inside(whole_ci, margin)
         row["status"] = "match" if row["match"] else "opposes" if row["opposes"] else "null" if row["null"] else "unresolved"
         out["contrasts"][contrast["id"]] = row
+    lower = double_difference(cells, CONTRASTS[2], "mask_lower_neutral", **kwargs)
+    out["descriptive"] = {"mask_lower_neutral_on_C3": {"mean": float(np.nanmean(lower)), "ci95": interval(lower, D["ci_decision"], settings),
+                                                        "note": "A2's mouth, as a bridge to P8. Reported, tests nothing."}}
     return out
 
 
@@ -664,10 +840,12 @@ def verdict(gates: Mapping[str, Any], first: Optional[Mapping[str, Any]], second
         return result(NOT_TESTED)
     if third["sham_equal"] is not True:
         return result(INCONCLUSIVE, "sham_failed")
+    # States on the edit orders, the orders the edits are scored on.
     states = {cid: second["directions"][name]["state"] for cid, name in DIRECTION_OF.items()}
     active = [third["contrasts"][cid] for cid in ("C1", "C2") if states[cid] != "absent"]
     dropped = [third["contrasts"][cid] for cid in ("C1", "C2") if states[cid] == "absent"]
-    used = {"directions_used": [DIRECTION_OF[cid] for cid in ("C1", "C2") if states[cid] != "absent"]}
+    used = {"directions_used": [DIRECTION_OF[cid] for cid in ("C1", "C2") if states[cid] != "absent"],
+            "share_of_excess_removed": {cid: third["contrasts"][cid].get("share_of_excess_removed") for cid in ("C1", "C2") if states[cid] != "absent"}}
     if not active:
         return result(INCONCLUSIVE, "cue_unresolved", **used)
     if len(active) == 2 and all(c["match"] for c in active):
@@ -690,9 +868,13 @@ def verdict(gates: Mapping[str, Any], first: Optional[Mapping[str, Any]], second
     # It cannot count for a cue, and it stops a null too, so a null is never read past it.
     if any(c["significant"] for c in dropped):
         return result(INCONCLUSIVE, "cue_unresolved", **used)
+    # A null needs an excess to remove, on the orders the edits use, in every direction in play.
+    if not all(states[cid] == "carries" for cid in ("C1", "C2") if states[cid] != "absent"):
+        return result(INCONCLUSIVE, "cue_unresolved", **used)
     if all(c["null"] for c in active):
         return result(NOT_THIS_CUE, **riders)
-    if not any(c["significant"] for c in active) and all(c["pair_inside_margin"] for c in active):
+    if (not any(c["significant"] for c in active) and all(c["pair_inside_margin"] for c in active)
+            and all(c["reference_stable"] for c in active)):
         return result(NO_TESTED_FEATURE, **riders)
     return result(INCONCLUSIVE, "cue_unresolved", **used)
 
@@ -759,11 +941,11 @@ def stage2_sensitivity(cells: Cells, settings: Mapping[str, Any]) -> Dict[str, A
 
 
 def stage3_sensitivities(cells: Cells, margins: Mapping[str, Optional[float]], tokens_across: Optional[float],
-                         settings: Mapping[str, Any]) -> Dict[str, Any]:
+                         settings: Mapping[str, Any], dose_margins: Optional[Mapping[str, Optional[float]]] = None) -> Dict[str, Any]:
     """Outcome, control, order and clip variants of Stage 3, each with its own maxT."""
 
     def run(variant: Cells = cells, **kwargs: Any) -> Dict[str, Any]:
-        result = stage3(variant, margins, tokens_across, settings, **kwargs)
+        result = stage3(variant, margins, tokens_across, settings, dose_margins=dose_margins, **kwargs)
         return {k: {f: v[f] for f in ("mean", "ci95", "p_maxt", "p_maxt_two_sided", "status")} for k, v in result["contrasts"].items()}
 
     out: Dict[str, Any] = {
@@ -795,12 +977,13 @@ def stage3_sensitivities(cells: Cells, margins: Mapping[str, Optional[float]], t
 
 
 def clip_sensitivities(cells: Cells, partners: Mapping[str, str], margins: Optional[Mapping[str, Optional[float]]],
-                       tokens_across: Optional[float], small: Sequence[str], settings: Mapping[str, Any]) -> Dict[str, Any]:
+                       tokens_across: Optional[float], small: Sequence[str], settings: Mapping[str, Any],
+                       dose_margins: Optional[Mapping[str, Optional[float]]] = None) -> Dict[str, Any]:
     """Primary rows repeated on subsets of clips: human mode, the token floor, short decodes."""
     subsets = {
         "human_mode_is_intended": np.array([bool(i["human_modal_correct"]) for i in cells.items]),
         "at_or_above_token_floor": ~np.isin(cells.ids, list(small)),
-        "without_short_decode_h264": ~np.isin(cells.ids, list(ar.SHORT_DECODE_CLIPS)),
+        "without_short_decode_h264": ~np.isin(cells.ids, list(D["runtime"]["short_decode_clips"])),
     }
     sexes = sorted({i.get("sex") for i in cells.items})
     for sex in sexes:
@@ -815,7 +998,7 @@ def clip_sensitivities(cells: Cells, partners: Mapping[str, str], margins: Optio
         for j, pair in enumerate(PAIR_NAMES):
             row["pairs"][pair] = {"X": float(np.nanmean(x[:, j])), "ci95": interval(x[:, j], 0.95, settings), "p_maxt": test["p_maxt"][j]}
         if margins is not None and not np.isnan(variant.mcq3).all():
-            result = stage3(variant, margins, tokens_across, settings)
+            result = stage3(variant, margins, tokens_across, settings, dose_margins=dose_margins)
             row["stage3"] = {k: {f: v[f] for f in ("mean", "ci95", "p_maxt", "status")} for k, v in result["contrasts"].items()}
         out[name] = row
     return out
@@ -830,16 +1013,30 @@ def expected_keys(items: Sequence[Mapping[str, Any]], stage: int) -> set:
     return {ar.cell_key(c) for item in items for c in ar.stage_plan(item, stage)}
 
 
+RUN_FIELDS = ("versions", "dtype", "weights_sha256")
+
+
 def load_shards(cell_paths: Sequence[Path], report_paths: Sequence[Path], model: str, stage: int, expected: str,
                 items: Sequence[Mapping[str, Any]]) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
-    """All shards of one full stage, or nothing. A bad final line is dropped by A3's rule."""
+    """All shards of one full stage, or nothing. A bad final line is dropped by A3's rule.
+
+    Every shard must name the same library versions, dtype and weights, and the dtype must
+    be the block's, so a resubmitted task on another environment cannot join a stage.
+    """
     reports = [json.loads(p.read_text(encoding="utf-8")) for p in sorted(report_paths)]
     rows = [r for p in sorted(cell_paths) for r in fiv.read_cells(p)["rows"]]
+    if not reports:
+        raise SystemExit("No run reports.")
     if any(r.get("model") != model or r.get("mechanics") for r in reports):
         raise SystemExit("Every report must be a full run of this model.")
     hashes = {r.get("design_sha256") for r in reports} | {r.get("design_sha256") for r in rows}
     if hashes != {expected}:
         raise SystemExit(f"Design hashes {sorted(map(str, hashes))} are not this design, {expected}.")
+    for field in RUN_FIELDS:
+        if len({json.dumps(r.get(field), sort_keys=True) for r in reports}) != 1:
+            raise SystemExit(f"Shards differ in {field}.")
+    if reports[0].get("dtype") != D["runtime"]["dtype"]:
+        raise SystemExit(f"Shards ran in {reports[0].get('dtype')}, not {D['runtime']['dtype']}.")
     shards = sorted(r.get("shard") for r in reports)
     counts = {r.get("n_shards") for r in reports}
     if len(counts) != 1 or shards != list(range(reports[0]["n_shards"])):
@@ -851,6 +1048,13 @@ def load_shards(cell_paths: Sequence[Path], report_paths: Sequence[Path], model:
     if gaps:
         raise SystemExit(f"{len(gaps)} cells are missing. Failed cells must still be present.")
     return rows, reports
+
+
+def check_baselines(baselines: Mapping[str, Any], model: str, expected: str) -> None:
+    if baselines.get("model") != model or baselines.get("design_sha256") != expected:
+        raise SystemExit("The baselines file is for another model or design.")
+    if baselines.get("dtype") != D["runtime"]["dtype"]:
+        raise SystemExit("The baselines file ran in another dtype.")
 
 
 def load_gates(reproduction: Path, model: str, baselines: Mapping[str, Any], geometry_ok: bool,
@@ -869,7 +1073,10 @@ def load_gates(reproduction: Path, model: str, baselines: Mapping[str, Any], geo
 
 
 def geometry_passed(records: Mapping[str, Any], items: Sequence[Mapping[str, Any]]) -> bool:
-    """Pinned already by check_geometry; here, too few clips lack a box or apex landmarks."""
+    """Geometry passes if at most lost_item_limit of clips lack a face box or landmarks at the apex.
+
+    Its bytes are checked against geometry_sha256 separately, by check_geometry.
+    """
     bad = 0
     for item in items:
         record = records.get(item["trial_id"]) or {}
@@ -919,10 +1126,29 @@ def gate_b_on_six(rows: Sequence[Mapping[str, Any]], partners: Mapping[str, str]
     return an.gate_b(an.Cells(pseudo), route, dict(partners), narrow(free) if free else None, repeat)
 
 
+def option_priors(baselines: Mapping[str, Any]) -> Dict[str, Any]:
+    """MCQ with no image and with a grey image: mean probability by option and by position."""
+    out: Dict[str, Any] = {}
+    for condition in ("image_free", "grey"):
+        rows = [r for r in baselines.get("baselines", []) if r.get("readout") == "mcq" and r["condition"] == condition and r["status"] == "ok"]
+        if not rows:
+            continue
+        by_option = {o: [] for o in OPTIONS}
+        by_position: Dict[int, List[float]] = {}
+        for row in rows:
+            p = softmax(np.asarray(row["joint_logprob"], dtype=np.float64))
+            for position, label in enumerate(row["options"]):
+                by_option[label].append(float(p[position]))
+                by_position.setdefault(position, []).append(float(p[position]))
+        out[condition] = {"by_option": {k: float(np.mean(v)) for k, v in by_option.items()},
+                          "by_position": {str(k): float(np.mean(v)) for k, v in sorted(by_position.items())}}
+    return out
+
+
 def failure_table(cells: Cells) -> Dict[str, int]:
     counts: Dict[str, int] = {}
     for row in cells.failed:
-        key = "|".join(str(row.get(k)) for k in ("route", "readout", "condition", "label", "reason"))
+        key = "|".join(str(row.get(k)) for k in ("route", "readout", "condition", "label", "actor", "reason"))
         counts[key] = counts.get(key, 0) + 1
     return dict(sorted(counts.items()))
 
@@ -965,11 +1191,13 @@ def main() -> None:
     geometry = json.loads(args.geometry.read_text(encoding="utf-8"))
     geometry_ok = geometry_passed(geometry["items"], items)
 
-    def read(model: str, stage: int) -> Tuple[List[Dict[str, Any]], Dict[str, Any]]:
+    def read(model: str, stage: int) -> Tuple[List[Dict[str, Any]], Dict[str, Any], List[Dict[str, Any]]]:
         args.model = model
         cell_paths, report_paths = stem(args, stage)
-        rows, _reports = load_shards(cell_paths, report_paths, model, stage, design, items)
-        return rows, json.loads((args.results / f"baselines_{model}.json").read_text(encoding="utf-8"))
+        rows, reports = load_shards(cell_paths, report_paths, model, stage, design, items)
+        baselines = json.loads((args.results / f"baselines_{model}.json").read_text(encoding="utf-8"))
+        check_baselines(baselines, model, design)
+        return rows, baselines, reports
 
     def write(name: str, out: Dict[str, Any]) -> None:
         out["design_sha256"] = design
@@ -983,14 +1211,23 @@ def main() -> None:
         summaries: Dict[str, Dict[str, Any]] = {}
         all_gates: Dict[str, Any] = {}
         extra: Dict[str, Any] = {}
+        results: Dict[str, Any] = {}
         for model in args.models:
-            rows, baselines = read(model, 1)
+            args.model = model
+            if not stem(args, 1)[1]:
+                # Not run, which is what a failed outside gate means. Not tested, written down.
+                all_gates[model] = {**{k: False for k in GATE_KEYS}, "reason": "no Stage 1 cells"}
+                results[model] = None
+                continue
+            rows, baselines, _ = read(model, 1)
             cells = Cells(items, rows)
             gates = load_gates(args.reproduction, model, baselines, geometry_ok)
             all_gates[model] = gates
             result = stage1(cells, partners, FULL_SETTINGS)
+            results[model] = result
             extra[model] = {"gate_b_descriptive": gate_b_on_six(rows, partners, baselines),
                             "all_partner_faces": all_partners_b(cells),
+                            "option_priors": option_priors(baselines),
                             "failures": failure_table(cells),
                             "human_ceiling_p_target_within_emotion": json.loads(
                                 (args.reproduction / "crema_d_reliability.json").read_text(encoding="utf-8")
@@ -1000,8 +1237,13 @@ def main() -> None:
             else:
                 extra[model]["summary_not_eligible"] = result
         decided = decide_stage1(summaries)
+        verdicts = {}
+        for model in args.models:
+            first = decided.get(model, results[model])
+            outcome_row = verdict(all_gates[model], first, None, None) if first is None or first.get("vision_dependent") is not True or model not in decided else None
+            verdicts[model] = outcome_row or {"verdict": None, "continues_to": "Stage 2"}
         write("a6_stage1.json", {"gates": all_gates, "decided": decided, "descriptive": extra,
-                                 "eligible": sorted(summaries)})
+                                 "eligible": sorted(summaries), "verdicts": verdicts})
         return
 
     if args.model is None:
@@ -1011,10 +1253,10 @@ def main() -> None:
     if first_doc["design_sha256"] != design:
         raise SystemExit("Stage 1 output is from another design.")
     first = first_doc["decided"].get(model)
-    rows, baselines = read(model, 1)
+    rows, baselines, first_reports = read(model, 1)
     if args.stage == 2:
         if first is None or first.get("vision_dependent") is not True:
-            raise SystemExit(f"{model} did not pass Stage 1, so it has no Stage 2.")
+            raise SystemExit(f"{model} did not pass Stage 1, so it has no Stage 2. Its verdict is in a6_stage1.json.")
         cells = Cells(items, rows)
         second = stage2(cells, partners, FULL_SETTINGS)
         small = an.below_token_floor({i["trial_id"]: i for i in items}, tokens_across_view(baselines), geometry["items"])
@@ -1025,22 +1267,27 @@ def main() -> None:
             "verdict_if_stopped_here": None if second["reaches_stage3"] else verdict(first_doc["gates"][model], first, second, None),
         })
         return
-    second_doc = json.loads((args.results / f"a6_stage2_{model}.json").read_text(encoding="utf-8"))
+    second_path = args.results / f"a6_stage2_{model}.json"
+    second_doc = json.loads(second_path.read_text(encoding="utf-8"))
     if second_doc["design_sha256"] != design or second_doc["stage2"]["reaches_stage3"] is not True:
         raise SystemExit(f"{model} has no locked Stage 2 that reaches Stage 3.")
     second = second_doc["stage2"]
-    third_rows, _ = read(model, 3)
+    third_rows, _, third_reports = read(model, 3)
+    for field in RUN_FIELDS:
+        if json.dumps(first_reports[0].get(field), sort_keys=True) != json.dumps(third_reports[0].get(field), sort_keys=True):
+            raise SystemExit(f"Stage 3 differs from Stage 1 in {field}.")
     cells = Cells(items, rows + third_rows)
     across = tokens_across_view(baselines)
-    third = stage3(cells, second["cue_margin"], across, FULL_SETTINGS)
+    third = stage3(cells, second["cue_margin"], across, FULL_SETTINGS, dose_margins=second["dose_margin"])
     small = an.below_token_floor({i["trial_id"]: i for i in items}, across, geometry["items"])
     primes = text_ranks(prime_table(baselines))
     write(f"a6_stage3_{model}.json", {
-        "model": model, "stage3": third, "reading": reading(third),
+        "model": model, "stage2_sha256": hashlib.sha256(second_path.read_bytes()).hexdigest(),
+        "stage3": third, "reading": reading(third),
         "verdict": verdict(first_doc["gates"][model], first, second, third, primes),
         "repeat_check_max_abs": float(np.nanmax(np.abs(cells.mcq3[:, ORIGINAL] - cells.mcq1[:, list(EDIT_ROWS)]))),
-        "sensitivities": stage3_sensitivities(cells, second["cue_margin"], across, FULL_SETTINGS),
-        "clip_sensitivities": clip_sensitivities(cells, partners, second["cue_margin"], across, small, FULL_SETTINGS),
+        "sensitivities": stage3_sensitivities(cells, second["cue_margin"], across, FULL_SETTINGS, second["dose_margin"]),
+        "clip_sensitivities": clip_sensitivities(cells, partners, second["cue_margin"], across, small, FULL_SETTINGS, second["dose_margin"]),
     })
 
 

@@ -17,7 +17,17 @@ from pathlib import Path
 from typing import Any, Dict, List, Mapping, Sequence, Tuple
 
 ROOT = Path(__file__).resolve().parents[1]
-DRAFT = ROOT / "research" / "PREREG_A6_DRAFT.md"
+
+
+def _draft() -> Path:
+    """The amendment's text, under its draft name or a frozen name, which must be unique."""
+    found = sorted((ROOT / "research").glob("PREREG_A6*.md"))
+    if len(found) != 1:
+        raise SystemExit(f"Expected one research/PREREG_A6*.md, found {[f.name for f in found]}.")
+    return found[0]
+
+
+DRAFT = _draft()
 SELECTION = ROOT / "research" / "reproduction" / "crema_d_selection.csv"
 HUMAN_TARGET = ROOT / "research" / "reproduction" / "a6_human_target.json"
 RECOVERY_OUT = ROOT / "research" / "reproduction" / "a6_recovery.json"
@@ -25,7 +35,7 @@ OUTPUT_DIR = Path("results/a6")
 GEOMETRY = OUTPUT_DIR / "geometry.json"
 
 # The design block this code was written against. A change to the block needs a change here.
-DESIGN_SHA256 = "afb5eaefd639359342ec813d74802a67364c204e1446a97d543e6b7cf80c0e56"
+DESIGN_SHA256 = "c1961048eaaf4ed9ff12d6c78ae46322975cc15dc9820d36e53094396adc04c8"
 
 _BLOCK = re.compile(r"^```json\n(.*?)^```$", re.DOTALL | re.MULTILINE)
 _STATED = re.compile(r"design_sha256` of the block below: `([0-9a-f]{64})`")
@@ -67,9 +77,25 @@ def file_digest(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def binding_hash(path: Path = DRAFT) -> str:
+    """The block's hash with the cluster-only pins blanked.
+
+    Recovery binds to this, since it reads neither the geometry nor the weights, so pinning
+    them at the freeze does not call for a rerun. Every run and analysis binds to the full hash.
+    """
+    design = json.loads(block_bytes(path))
+    for key in design["unbound_keys"]:
+        design[key] = "UNBOUND"
+    return hashlib.sha256(json.dumps(design, sort_keys=True).encode("utf-8")).hexdigest()
+
+
 def pins(design: Mapping[str, Any]) -> Dict[str, str]:
-    """Every file whose bytes the block pins, by path from the repository root."""
-    out = {**design["a2_code_sha256"], **design["other_code_sha256"]}
+    """Every file whose bytes the block pins, by path from the repository root.
+
+    Not pinned, by design: scripts/a6_design.py, which holds the block's own hash, so it
+    cannot be named in the block; tests/test_a6.py, which no result reads.
+    """
+    out = {**design["a2_code_sha256"], **design["other_code_sha256"], **design["a6_code_sha256"]}
     out["scripts/face_input_validity.py"] = design["a3_code_sha256"]
     out["research/reproduction/crema_d_selection.csv"] = design["selection_sha256"]
     return out
@@ -84,7 +110,11 @@ def check_pins(design: Mapping[str, Any], root: Path = ROOT) -> None:
 
 
 def pending_items(design: Mapping[str, Any]) -> List[str]:
-    return [key for key, value in design.items() if value == PENDING]
+    out = []
+    for key, value in design.items():
+        if value == PENDING or (isinstance(value, Mapping) and PENDING in value.values()):
+            out.append(key)
+    return out
 
 
 def check_frozen(design: Mapping[str, Any]) -> None:
@@ -165,8 +195,8 @@ def validate(design: Mapping[str, Any]) -> None:
         spec = condition_spec(name)
         if spec["kind"] == "mask" and spec["region"] not in regions | {"SHAM"}:
             raise SystemExit(f"{name} has no region in the block.")
-    if not set(design["blind_conditions"]) <= set(design["conditions"]):
-        raise SystemExit("blind_conditions must be conditions.")
+    if not set(design["unbound_keys"]) <= set(design):
+        raise SystemExit("unbound_keys must be keys of the block.")
     if design["sham_region"] not in regions:
         raise SystemExit("sham_region must be a region.")
 

@@ -1,0 +1,337 @@
+{
+ "variant": "happy_equivalence",
+ "binding_sha256": "f22c22530a3faf9b015f2611f2da7357475627db7fcb50b0322be173e38ec3ba",
+ "design_sha256": "c1961048eaaf4ed9ff12d6c78ae46322975cc15dc9820d36e53094396adc04c8",
+ "replicates": 100,
+ "note": "Audit trail only, on the seeds of a6_recovery.json, under an earlier rule. Not a result of the amended design.",
+ "tables": {
+  "happy_down": {
+   "1.0": {
+    "n": 100,
+    "verdicts": {
+     "Inconclusive": 0.92,
+     "Opposes the stated cue": 0.08
+    },
+    "reason_codes": {
+     "cue_unresolved": 0.92
+    },
+    "mean_delta": 0.5501,
+    "mean_X": 0.163,
+    "mean_O": 0.0003,
+    "mean_X_far": 0.1629,
+    "mean_cue_margin_C1": 0.0932,
+    "mean_sd_limit_C1": 0.5404,
+    "mean_actor_sd_C1": 0.3178,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.0,
+    "direction_states": {
+     "Anger>Disgust": {
+      "carries": 1.0,
+      "absent": 0.0,
+      "unresolved": 0.0
+     },
+     "Disgust>Anger": {
+      "carries": 1.0,
+      "absent": 0.0,
+      "unresolved": 0.0
+     }
+    },
+    "share_reaching_stage3": 1.0,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": 0.1502,
+      "match": 0.0,
+      "opposes": 0.08,
+      "reference_stable": 0.08,
+      "share_of_excess_removed": -0.1678
+     },
+     "C2": {
+      "mean": 0.15,
+      "match": 0.0,
+      "opposes": 0.0,
+      "reference_stable": 0.0,
+      "share_of_excess_removed": -0.5708
+     },
+     "C3": {
+      "mean": 0.0003,
+      "match": 0.0,
+      "opposes": 0.0,
+      "reference_stable": 0.2,
+      "share_of_excess_removed": 0.005
+     },
+     "C4": {
+      "mean": -0.0028,
+      "match": 0.0,
+      "opposes": 0.01,
+      "reference_stable": 0.61,
+      "share_of_excess_removed": 0.0052
+     }
+    },
+    "any_match": 0.0
+   }
+  },
+  "happy_up": {
+   "1.0": {
+    "n": 100,
+    "verdicts": {
+     "Inconclusive": 0.92,
+     "Same cue, one direction": 0.08
+    },
+    "reason_codes": {
+     "cue_unresolved": 0.92
+    },
+    "mean_delta": 0.5935,
+    "mean_X": 0.1634,
+    "mean_O": -0.0002,
+    "mean_X_far": 0.1635,
+    "mean_cue_margin_C1": 0.0864,
+    "mean_sd_limit_C1": 0.501,
+    "mean_actor_sd_C1": 0.3184,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.0,
+    "direction_states": {
+     "Anger>Disgust": {
+      "carries": 1.0,
+      "absent": 0.0,
+      "unresolved": 0.0
+     },
+     "Disgust>Anger": {
+      "carries": 1.0,
+      "absent": 0.0,
+      "unresolved": 0.0
+     }
+    },
+    "share_reaching_stage3": 1.0,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": -0.1472,
+      "match": 0.08,
+      "opposes": 0.0,
+      "reference_stable": 0.08,
+      "share_of_excess_removed": 0.1907
+     },
+     "C2": {
+      "mean": -0.1488,
+      "match": 0.0,
+      "opposes": 0.0,
+      "reference_stable": 0.0,
+      "share_of_excess_removed": 0.6291
+     },
+     "C3": {
+      "mean": 0.0008,
+      "match": 0.0,
+      "opposes": 0.0,
+      "reference_stable": 0.2,
+      "share_of_excess_removed": -0.0098
+     },
+     "C4": {
+      "mean": -0.0009,
+      "match": 0.0,
+      "opposes": 0.0,
+      "reference_stable": 0.57,
+      "share_of_excess_removed": 0.0007
+     }
+    },
+    "any_match": 0.08
+   }
+  },
+  "human_like": {
+   "1.0": {
+    "n": 100,
+    "verdicts": {
+     "Inconclusive": 0.33,
+     "Same cue": 0.13,
+     "Same cue, one direction": 0.54
+    },
+    "reason_codes": {
+     "cue_unresolved": 0.33
+    },
+    "mean_delta": 0.5817,
+    "mean_X": 0.1602,
+    "mean_O": -0.0002,
+    "mean_X_far": 0.1602,
+    "mean_cue_margin_C1": 0.0918,
+    "mean_sd_limit_C1": 0.5322,
+    "mean_actor_sd_C1": 0.319,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.0,
+    "direction_states": {
+     "Anger>Disgust": {
+      "carries": 1.0,
+      "absent": 0.0,
+      "unresolved": 0.0
+     },
+     "Disgust>Anger": {
+      "carries": 1.0,
+      "absent": 0.0,
+      "unresolved": 0.0
+     }
+    },
+    "share_reaching_stage3": 1.0,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": -1.2737,
+      "match": 0.61,
+      "opposes": 0.0,
+      "reference_stable": 0.61,
+      "share_of_excess_removed": 0.994
+     },
+     "C2": {
+      "mean": -0.2938,
+      "match": 0.19,
+      "opposes": 0.0,
+      "reference_stable": 0.19,
+      "share_of_excess_removed": 1.0328
+     },
+     "C3": {
+      "mean": 0.5894,
+      "match": 0.23,
+      "opposes": 0.0,
+      "reference_stable": 0.23,
+      "share_of_excess_removed": -2.0667
+     },
+     "C4": {
+      "mean": 0.6377,
+      "match": 0.58,
+      "opposes": 0.0,
+      "reference_stable": 0.58,
+      "share_of_excess_removed": -0.4985
+     }
+    },
+    "any_match": 0.84
+   }
+  },
+  "one_way_cue": {
+   "1.0": {
+    "n": 100,
+    "verdicts": {
+     "Inconclusive": 0.38,
+     "Same cue, one direction": 0.62
+    },
+    "reason_codes": {
+     "cue_unresolved": 0.38
+    },
+    "mean_delta": 0.5767,
+    "mean_X": 0.1256,
+    "mean_O": 0.0004,
+    "mean_X_far": 0.2463,
+    "mean_cue_margin_C1": 0.0946,
+    "mean_sd_limit_C1": 0.5484,
+    "mean_actor_sd_C1": 0.3158,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.0,
+    "direction_states": {
+     "Anger>Disgust": {
+      "carries": 1.0,
+      "absent": 0.0,
+      "unresolved": 0.0
+     },
+     "Disgust>Anger": {
+      "carries": 0.03,
+      "absent": 0.96,
+      "unresolved": 0.01
+     }
+    },
+    "share_reaching_stage3": 1.0,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": -1.3531,
+      "match": 0.62,
+      "opposes": 0.0,
+      "reference_stable": 0.62,
+      "share_of_excess_removed": 0.9907
+     },
+     "C2": {
+      "mean": -0.0037,
+      "match": 0.0,
+      "opposes": 0.0,
+      "reference_stable": 0.03,
+      "share_of_excess_removed": 0.1497
+     },
+     "C3": {
+      "mean": -0.0003,
+      "match": 0.0,
+      "opposes": 0.0,
+      "reference_stable": 0.04,
+      "share_of_excess_removed": -1.0315
+     },
+     "C4": {
+      "mean": -0.0013,
+      "match": 0.0,
+      "opposes": 0.0,
+      "reference_stable": 0.58,
+      "share_of_excess_removed": 0.0005
+     }
+    },
+    "any_match": 0.62
+   }
+  },
+  "same_cue": {
+   "1.0": {
+    "n": 100,
+    "verdicts": {
+     "Inconclusive": 0.36,
+     "Same cue": 0.09,
+     "Same cue, one direction": 0.55
+    },
+    "reason_codes": {
+     "cue_unresolved": 0.36
+    },
+    "mean_delta": 0.5847,
+    "mean_X": 0.1647,
+    "mean_O": 0.0003,
+    "mean_X_far": 0.1646,
+    "mean_cue_margin_C1": 0.0939,
+    "mean_sd_limit_C1": 0.5445,
+    "mean_actor_sd_C1": 0.315,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.0,
+    "direction_states": {
+     "Anger>Disgust": {
+      "carries": 1.0,
+      "absent": 0.0,
+      "unresolved": 0.0
+     },
+     "Disgust>Anger": {
+      "carries": 1.0,
+      "absent": 0.0,
+      "unresolved": 0.0
+     }
+    },
+    "share_reaching_stage3": 1.0,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": -1.3501,
+      "match": 0.57,
+      "opposes": 0.0,
+      "reference_stable": 0.57,
+      "share_of_excess_removed": 1.0077
+     },
+     "C2": {
+      "mean": -0.3041,
+      "match": 0.16,
+      "opposes": 0.0,
+      "reference_stable": 0.16,
+      "share_of_excess_removed": 1.0147
+     },
+     "C3": {
+      "mean": -0.3126,
+      "match": 0.0,
+      "opposes": 0.29,
+      "reference_stable": 0.29,
+      "share_of_excess_removed": 1.0329
+     },
+     "C4": {
+      "mean": 0.0021,
+      "match": 0.0,
+      "opposes": 0.0,
+      "reference_stable": 0.54,
+      "share_of_excess_removed": -0.005
+     }
+    },
+    "any_match": 0.64
+   }
+  }
+ },
+ "seconds": 125.7
+}

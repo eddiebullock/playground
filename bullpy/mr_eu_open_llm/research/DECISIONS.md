@@ -361,3 +361,12 @@ Draft A7 found that RQ3's literal test cannot fail: under a complete cut the out
 - **What would change this:** a pass on Stage 0's region test would give a non-vacuous cue-level answer, and G7 would be reopened by a dated entry.
 - **Open:** whether a block of a complete cut meets G7's wording goes to A7's audit. If it does not, A7 is Stage 0 plus "not testable". A7 is not frozen, and its recovery is specified, not run.
 - **Note on an earlier reading:** the stored `fraction_of_image_effect_left` is not a share, so ".93 remains" is wrong on Gemma, and reading routes as redundant fits Qwen but is not proved by the stored rows.
+
+## 2026-11-08: A6 keeps its named results and gives up its cue-absent nulls
+
+A6 recovery run 4 (design `c1961048...`) fails only on the Stage 3 nulls and on adjacency over all pairs. The named results recover at .91 or more with no false positive over .05.
+
+- **Decision:** the nulls Not this cue and No tested feature stay in the table, but a model that reaches one is reported as Inconclusive on the cue question. Adjacency on all pairs is descriptive. The partner check stays, with the audit's Happy rule reported as a sensitivity.
+- **Why not loosen the margin:** that would move a threshold after seeing a failure. The nulls fail even at no actor-by-region noise (.62 and .70), so the shortfall is in the design's power, not the noise setting.
+- **Why run A6 at all:** a shared error that carries or opposes a named cue is recovered at .99, which is the cue-targeted test G8 asks for.
+- **Still before freeze:** the cluster items (geometry and weight pins, first-frame AU check, decoder preflight, a mechanics run) and the proposed values in the block.

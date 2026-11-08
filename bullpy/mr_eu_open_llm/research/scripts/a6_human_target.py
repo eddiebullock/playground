@@ -44,7 +44,7 @@ OPTIONS = an.OPTIONS
 SEED = int(D["seed"])
 DRAWS = int(D["bootstrap_draws"])
 NONE = "No Emotion"
-N_SPLITS = 200
+N_SPLITS = int(D["human_split_halves"])
 CUE_COLUMNS = {"AU09": ("lf_AU09", "of_AU09"), "AU10": ("lfocc_AU10", "ge_AU10")}
 
 
@@ -153,7 +153,10 @@ def build(data_dir: Path) -> Dict[str, Any]:
     p = shares(votes, pseudo)
     rows = pair_rows(cells, p)
     rule = pair_rule(rows)
-    no_pseudo = pair_rows(cells, shares(votes, 0.0))
+    # The standardised share takes logs, so a pseudo-count is needed; stability is checked at
+    # a tenth and at twice the pinned one instead of at none.
+    low_pseudo = pair_rows(cells, shares(votes, 0.1))
+    high_pseudo = pair_rows(cells, shares(votes, 1.0))
 
     table = pd.read_csv(data_dir / "tabulatedVotes.csv", index_col=0)
     table = table[table.index.astype(str).str[0] == "2"].sort_values("fileName")
@@ -178,7 +181,8 @@ def build(data_dir: Path) -> Dict[str, Any]:
         "directed": directed_table(cells, p),
         "rule": rule,
         "stability": {
-            "no_pseudo_count": {"rule": pair_rule(no_pseudo), "top_rows": no_pseudo[:5]},
+            "pseudo_count_0.1": {"rule": pair_rule(low_pseudo), "top_rows": low_pseudo[:5]},
+            "pseudo_count_1.0": {"rule": pair_rule(high_pseudo), "top_rows": high_pseudo[:5]},
             "all_7442_clips": {"rule": pair_rule(all_rows), "top_rows": all_rows[:5]},
         },
         "read_as_other": {f"{OPTIONS[x]}>{OPTIONS[y]}": read_as_other(votes, emo, x, y) for x, y in ((a, b), (b, a))},
@@ -193,16 +197,35 @@ def cue_check(frames: Sequence[Path], geometry: Path, output: Path) -> None:
     import pandas as pd
 
     records = json.loads(geometry.read_text(encoding="utf-8"))["items"]
-    table = pd.concat([pd.read_csv(p) for p in frames], ignore_index=True)
+    frames_table = pd.concat([pd.read_csv(p) for p in frames], ignore_index=True)
     apex = {t: r.get("apex") for t, r in records.items()}
-    table = table[table.frame_index == table.trial_id.map(apex)].groupby("trial_id").first()
+    first = {t: (r.get("base_indices") or [0])[0] for t, r in records.items()}
+    table = frames_table[frames_table.frame_index == frames_table.trial_id.map(apex)].groupby("trial_id").first()
+    opening = frames_table[frames_table.frame_index == frames_table.trial_id.map(first)].groupby("trial_id").first()
     items = ar.load_items(d.SELECTION, Path("."))
     cells = holder([i["trial_id"] for i in items], [i["actor"] for i in items], [i["label"] for i in items])
     selection = {i["trial_id"]: i for i in items}
     votes = np.array([[selection[t]["human_votes"][o] for o in OPTIONS] for t in cells.ids], dtype=np.float64)
     p = shares(votes, float(D["pseudo_count_human"]))
     x, y = D["target_pair"]
-    out: Dict[str, Any] = {"apex_rows": int(len(table)), "gates_nothing": True, "cells": {}}
+    out: Dict[str, Any] = {"apex_rows": int(len(table)), "gates_nothing": True, "cells": {}, "first_frame": {}}
+    # The first fill is only a fill if the first frame is not already expressive. This check
+    # blocks the freeze, not a verdict: the mean first-frame unit over the mean apex unit, on
+    # clips of the pair, must stay at or under first_frame_au_ratio_max for every detector.
+    limit = float(D["first_frame_au_ratio_max"])
+    pair_ids = [i["trial_id"] for i in items if i["label"] in D["target_pair"]]
+    blocked = False
+    for column in [c for unit in CUE_COLUMNS.values() for c in unit]:
+        if column not in table.columns or column not in opening.columns:
+            out["first_frame"][column] = {"missing_detector": True}
+            continue
+        at_apex = float(table.reindex(pair_ids)[column].mean())
+        at_first = float(opening.reindex(pair_ids)[column].mean())
+        ratio = at_first / at_apex if at_apex else None
+        over = ratio is None or ratio > limit
+        blocked = blocked or over
+        out["first_frame"][column] = {"mean_apex": at_apex, "mean_first": at_first, "ratio": ratio, "over_limit": over}
+    out["first_frame_blocks_freeze"] = blocked
     for acted, partner in ((x, y), (y, x)):
         mask = cells.emo == an.INDEX[acted]
         share = an.error_share(p, cells.emo, an.INDEX[partner])[mask]

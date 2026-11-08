@@ -22,6 +22,8 @@
 #   AU list:   STEP=au_manifest sbatch --time=00:10:00 -A BARON-COHEN-SL3-CPU -p icelake --gres=gpu:0 slurm_jobs/study3_a6.sh
 #              Then research/scripts/extract_au_measures.py, unchanged, with
 #              --manifest results/a6/au_manifest.json --data-root data/crema_d.
+#   Weights:   STEP=weights MODEL=... sbatch --time=00:30:00 slurm_jobs/study3_a6.sh
+#              Pin the printed weights_sha256 in the design block. Runs refuse other weights.
 #   Mechanics: STEP=mechanics MODEL=gemma4 MECHANICS_ITEMS=2 sbatch --time=01:00:00 slurm_jobs/study3_a6.sh
 #   Baselines: A6_FROZEN=1 CONFIRM_GATES_PASSED=1 STEP=baselines MODEL=... sbatch --time=01:00:00 slurm_jobs/study3_a6.sh
 #   Stage 1:   A6_FROZEN=1 CONFIRM_GATES_PASSED=1 STEP=run STAGE=1 N_SHARDS=2 MODEL=... sbatch --array=0-1 slurm_jobs/study3_a6.sh
@@ -46,9 +48,9 @@ SHARD="${SLURM_ARRAY_TASK_ID:-0}"
 N_SHARDS="${N_SHARDS:-}"
 
 case "${STEP}" in
-  decoder|landmarks|au_manifest|mechanics|baselines|run|analyse) ;;
+  decoder|landmarks|au_manifest|weights|mechanics|baselines|run|analyse) ;;
   *)
-    echo "STEP must be decoder, landmarks, au_manifest, mechanics, baselines, run or analyse, got '${STEP}'." >&2
+    echo "STEP must be decoder, landmarks, au_manifest, weights, mechanics, baselines, run or analyse, got '${STEP}'." >&2
     exit 1
     ;;
 esac
@@ -71,7 +73,7 @@ if { [ "${STEP}" = "run" ] || [ "${STEP}" = "analyse" ]; } && [ -z "${STAGE}" ];
   echo "STEP=${STEP} needs STAGE." >&2
   exit 1
 fi
-if { [ "${STEP}" = "run" ] || [ "${STEP}" = "baselines" ] || [ "${STEP}" = "mechanics" ]; } && [ -z "${MODEL}" ]; then
+if { [ "${STEP}" = "run" ] || [ "${STEP}" = "baselines" ] || [ "${STEP}" = "mechanics" ] || [ "${STEP}" = "weights" ]; } && [ -z "${MODEL}" ]; then
   echo "STEP=${STEP} needs MODEL." >&2
   exit 1
 fi
@@ -109,6 +111,9 @@ fi
 case "${STEP}" in
   decoder|landmarks|au_manifest)
     python -m scripts.a6_run --step "${STEP}"
+    ;;
+  weights)
+    python -m scripts.a6_run --step weights --model "${MODEL}"
     ;;
   mechanics)
     python -m scripts.a6_run --step decoder

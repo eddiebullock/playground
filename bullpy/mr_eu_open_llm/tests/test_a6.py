@@ -127,7 +127,7 @@ def test_a_changed_pinned_file_is_refused(tmp_path):
 
 
 def test_pending_items_block_a_real_run():
-    assert d.pending_items(D) == ["geometry_sha256"]
+    assert d.pending_items(D) == ["geometry_sha256", "weights_sha256"]
     with pytest.raises(SystemExit):
         d.check_frozen(D)
 
@@ -138,6 +138,23 @@ def test_orders_are_a_williams_square():
         assert len(d.adjacent_rows(D, (a, b))) == 2
     assert d.adjacent_rows(D, D["target_pair"]) == [0, 3]
     assert d.edit_rows_by_rule(D) == D["edit_order_rows"] == [2, 5]
+
+
+def test_binding_hash_ignores_only_the_cluster_pins(tmp_path):
+    copy = tmp_path / "PREREG_A6_DRAFT.md"
+    text = d.DRAFT.read_text(encoding="utf-8")
+    copy.write_text(text.replace('"geometry_sha256": "PENDING"', '"geometry_sha256": "' + "a" * 64 + '"'), encoding="utf-8")
+    assert d.binding_hash(copy) == d.binding_hash() and d.block_hash(copy) != d.block_hash()
+    copy.write_text(text.replace('"seed": 42', '"seed": 43'), encoding="utf-8")
+    assert d.binding_hash(copy) != d.binding_hash()
+
+
+def test_a6_code_is_pinned_and_the_pinned_set_covers_the_imports():
+    pinned = set(d.pins(D))
+    for name in ("scripts/a6_analyse.py", "scripts/a6_run.py", "scripts/a6_recovery.py", "research/scripts/a6_human_target.py",
+                 "slurm_jobs/study3_a6.sh", "scripts/prompts.py", "scripts/evaluate.py", "scripts/frame_sampling.py", "config.py"):
+        assert name in pinned
+    assert "scripts/a6_design.py" not in pinned  # it holds the block's own hash
 
 
 def test_cyclic_orders_are_refused():
@@ -280,7 +297,7 @@ def test_stage_plans_match_the_cost_table(items):
     assert sum(c["readout"] == "blind" for c in first) == 819
     assert sum(c["route"] == "video_face" for c in first) == 1638
     assert sum(c["readout"] == "mcq" for c in third) == 15316
-    assert sum(c["readout"] == "blind" for c in third) == 2188
+    assert sum(c["readout"] == "blind" for c in third) == 0  # dropped: no rule read them
     keys = [ar.cell_key(c) for c in first + third]
     assert len(keys) == len(set(keys))
 
@@ -577,6 +594,7 @@ def second_ok(state="stage3", forward="carries", back="carries"):
 
 def row(**kwargs):
     base = {"match": False, "opposes": False, "null": False, "significant": False, "pair_inside_margin": False,
+            "reference_stable": True, "share_of_excess_removed": None,
             "margin": 0.1, "mask_uplow_ci90": [0.5, 0.6],
             "null_conditions": {"c2_delivery": True, "c3_dose": True, "c4_pair_can_move": True, "c5_equivalence": False, "c6_reported": True}}
     return {**base, **kwargs}
@@ -635,7 +653,10 @@ def test_decision_table(gates, one, two, three, expected, reason):
     # Doubt about a direction keeps it: both must then be null, as before.
     ("carries", "unresolved", row(null=True), row(), an.INCONCLUSIVE, "cue_unresolved"),
     ("carries", "carries", row(null=True), row(), an.INCONCLUSIVE, "cue_unresolved"),
-    ("unresolved", "unresolved", row(null=True), row(null=True), an.NOT_THIS_CUE, None),
+    # A null needs an excess on the edit orders in every direction in play.
+    ("unresolved", "unresolved", row(null=True), row(null=True), an.INCONCLUSIVE, "cue_unresolved"),
+    ("carries", "unresolved", row(null=True), row(null=True), an.INCONCLUSIVE, "cue_unresolved"),
+    ("carries", "carries", row(null=True), row(null=True), an.NOT_THIS_CUE, None),
     # One way with nothing moving the pair is the other null.
     ("carries", "absent", row(pair_inside_margin=True), row(), an.NO_TESTED_FEATURE, None),
     # No direction left: nothing can test the cue.
@@ -685,21 +706,16 @@ def test_a_missing_stage_or_unknown_state_is_a_fault():
 
 
 def test_stage2_state_is_exhaustive():
-    states = set()
-    for x_passes in (True, False):
-        for x_null in (True, False):
-            for o in (True, False):
-                for far_passes in (True, False):
-                    for far_inside in (True, False):
-                        for blind in (True, False):
-                            states.add(an.stage2_state({"x_passes": x_passes, "x_null": x_null, "o_significant": o,
-                                                        "far_passes": far_passes, "far_inside_margin": far_inside,
-                                                        "blind_significant": blind}))
+    import itertools
+    keys = ("x_passes", "x_null", "any_direction_carries", "all_directions_absent", "o_significant", "far_passes",
+            "far_inside_margin", "blind_significant")
+    states = {an.stage2_state(dict(zip(keys, values))) for values in itertools.product((True, False), repeat=len(keys))}
     assert states == {"not_shared", "shared_unresolved", "stage3", "option_dependent", "option_unresolved"}
 
 
 def test_stage2_state_rules():
-    base = {"x_passes": True, "x_null": False, "o_significant": True, "far_passes": False, "far_inside_margin": True, "blind_significant": False}
+    base = {"x_passes": True, "x_null": False, "any_direction_carries": False, "all_directions_absent": True,
+            "o_significant": True, "far_passes": False, "far_inside_margin": True, "blind_significant": False}
     assert an.stage2_state(base) == "option_dependent"
     assert an.stage2_state({**base, "blind_significant": True}) == "option_unresolved"
     assert an.stage2_state({**base, "far_inside_margin": False}) == "option_unresolved"
@@ -707,6 +723,10 @@ def test_stage2_state_rules():
     assert an.stage2_state({**base, "o_significant": False}) == "stage3"
     assert an.stage2_state({**base, "x_passes": False}) == "shared_unresolved"
     assert an.stage2_state({**base, "x_passes": False, "x_null": True}) == "not_shared"
+    # X can average a carrying direction away, so a carrying direction is a shared error.
+    assert an.stage2_state({**base, "x_passes": False, "x_null": True, "any_direction_carries": True, "o_significant": False}) == "stage3"
+    # And Not shared needs every direction absent, not merely none carrying.
+    assert an.stage2_state({**base, "x_passes": False, "x_null": True, "all_directions_absent": False}) == "shared_unresolved"
 
 
 def test_a_strongly_negative_x_is_not_shared_and_not_inconclusive(items, partners):
@@ -801,8 +821,8 @@ def test_end_to_end_from_real_gate_files_to_a_verdict(tmp_path):
     assert decided["vision_dependent"] is True
     second = an.stage2(cells, w.partners, FAST)
     assert second["reaches_stage3"] is True
-    cells.ingest(rec.rows_stage3(obs, *obs.stage3_scores(mcq), sham_differs=False, span=0.2))
-    stage = an.stage3(cells, second["cue_margin"], an.tokens_across_view(DELIVERY), FAST)
+    cells.ingest(rec.rows_stage3(obs, obs.stage3_scores(mcq), sham_differs=False, span=0.2))
+    stage = an.stage3(cells, second["cue_margin"], an.tokens_across_view(DELIVERY), FAST, dose_margins=second["dose_margin"])
     assert an.verdict(gates, decided, second, stage)["verdict"] == an.SAME_CUE
 
 
@@ -827,7 +847,7 @@ def write_shard(tmp_path, rows, report):
 
 def test_load_shards_accepts_a_complete_set_and_refuses_gaps(tmp_path, items):
     few = items[:5]
-    report = {"model": "m", "design_sha256": "h", "shard": 0, "n_shards": 1, "mechanics": False}
+    report = {"model": "m", "design_sha256": "h", "shard": 0, "n_shards": 1, "mechanics": False, "dtype": "bfloat16"}
     cells, report_path = write_shard(tmp_path, stage1_rows(few), report)
     rows, _ = an.load_shards([cells], [report_path], "m", 1, "h", few)
     assert len(rows) == 5 * 9
@@ -838,7 +858,7 @@ def test_load_shards_accepts_a_complete_set_and_refuses_gaps(tmp_path, items):
 
 def test_load_shards_refuses_other_designs_duplicates_and_partial_shards(tmp_path, items):
     few = items[:3]
-    report = {"model": "m", "design_sha256": "h", "shard": 0, "n_shards": 2, "mechanics": False}
+    report = {"model": "m", "design_sha256": "h", "shard": 0, "n_shards": 2, "mechanics": False, "dtype": "bfloat16"}
     cells, report_path = write_shard(tmp_path, stage1_rows(few), report)
     with pytest.raises(SystemExit):
         an.load_shards([cells], [report_path], "m", 1, "h", few)
@@ -871,14 +891,33 @@ def test_main_refuses_without_the_freeze(monkeypatch):
     ("global_face", 2.0, an.NO_TESTED_FEATURE),
 ])
 def test_observers_reach_their_rows(name, strength, expected, monkeypatch):
+    """Mechanics, with the actor-by-region term off. Its effect on power is in the recovery file."""
     monkeypatch.setattr(rec, "SETTINGS", FAST)
-    assert rec.one_replicate((name, strength, 0, 1.0))["verdict"] == expected
+    assert rec.one_replicate((name, strength, 0, 1.0, False, {"actor_region_sd": 0.0}))["verdict"] == expected
+
+
+def test_a_variant_is_applied_once_per_worker(monkeypatch):
+    """Applied per task, a variant must not wrap itself again, or a long run overflows."""
+    monkeypatch.setattr(rec, "APPLIED", None)
+    original = an.direction_states
+    try:
+        for _ in range(3000):
+            rec.apply_variant("both_directions")
+        assert an.direction_states is not original
+        cells = an.Cells(rec.world().items, [])
+        cells.mcq1[:] = np.random.default_rng(0).normal(0, 1, cells.mcq1.shape)
+        states = an.direction_states(cells, FAST, range(6))
+        assert all(v["state"] == "carries" for v in states.values())
+        with pytest.raises(SystemExit):
+            rec.apply_variant("first_draft")
+    finally:
+        an.direction_states = original
 
 
 def test_the_sham_is_the_original_in_synthetic_cells():
     obs = rec.Observer("same_cue", 1.0, [1])
     mcq = obs.stage1_scores()[0]
-    scores, _ = obs.stage3_scores(mcq)
+    scores = obs.stage3_scores(mcq)
     assert np.array_equal(scores[:, an.CONDITIONS.index("sham_self_fill")], scores[:, an.ORIGINAL])
 
 
@@ -903,31 +942,161 @@ def test_descriptive_rows_and_sensitivities_run_on_a_synthetic_replicate():
                                             "family_logprob": dict(zip(an.FAMILIES, [-3.0] * 6))}]}
     gate = an.gate_b_on_six(rows, w.partners, baselines)
     assert "B4" in gate and "pass" in gate
-    scores, blind3 = obs.stage3_scores(mcq)
-    cells.ingest(rec.rows_stage3(obs, scores, blind3, sham_differs=False, span=0.2))
-    third = an.stage3(cells, second["cue_margin"], 16.0, FAST)
+    cells.ingest(rec.rows_stage3(obs, obs.stage3_scores(mcq), sham_differs=False, span=0.2))
+    third = an.stage3(cells, second["cue_margin"], 16.0, FAST, dose_margins=second["dose_margin"])
     assert isinstance(an.reading(third), str)
-    out = an.stage3_sensitivities(cells, second["cue_margin"], 16.0, FAST)
+    out = an.stage3_sensitivities(cells, second["cue_margin"], 16.0, FAST, second["dose_margin"])
     assert {"reference_with_no_emotion", "reference_two_out_as_first_drafted", "control_Fear_only", "control_Sad_only",
             "edit_order_2_only", "edit_order_5_only", "plain_change_on_acted_clips", "equal_weight_clips"} <= set(out)
-    subsets = an.clip_sensitivities(cells, w.partners, second["cue_margin"], 16.0, [], FAST)
+    subsets = an.clip_sensitivities(cells, w.partners, second["cue_margin"], 16.0, [], FAST, second["dose_margin"])
     assert {"human_mode_is_intended", "at_or_above_token_floor", "without_short_decode_h264"} <= set(subsets)
     assert subsets["without_short_decode_h264"]["n_clips"] == 819 - len(ar.SHORT_DECODE_CLIPS)
 
 
 def test_recovery_output_is_on_this_design():
     out = json.loads(d.RECOVERY_OUT.read_text(encoding="utf-8"))
-    assert out["design_sha256"] == d.block_hash()
+    assert out["binding_sha256"] == d.binding_hash()
     assert out["replicates"] == D["recovery"]["replicates"]
-    assert out["rows_not_reached"] == []
+    assert out["rows_not_reached"] == [] and out["reason_codes_not_reached"] == []
+    assert out["pass"] == (out["observers_pass"] and out["scenarios_pass"])
+
+
+def test_shards_on_mixed_versions_or_another_dtype_are_refused(tmp_path, items):
+    few = items[:3]
+    first = {"model": "m", "design_sha256": "h", "shard": 0, "n_shards": 2, "mechanics": False, "dtype": "bfloat16", "versions": {"torch": "1"}}
+    second = {**first, "shard": 1, "versions": {"torch": "2"}}
+    rows = stage1_rows(few)
+    cells = tmp_path / "cells.jsonl"
+    cells.write_text("".join(json.dumps(r) + "\n" for r in rows))
+    paths = []
+    for n, report in enumerate((first, second)):
+        paths.append(tmp_path / f"run{n}.json")
+        paths[-1].write_text(json.dumps(report))
+    with pytest.raises(SystemExit, match="versions"):
+        an.load_shards([cells], paths, "m", 1, "h", few)
+    single = {**first, "n_shards": 1, "dtype": "float32"}
+    paths[0].write_text(json.dumps(single))
+    with pytest.raises(SystemExit, match="float32"):
+        an.load_shards([cells], paths[:1], "m", 1, "h", few)
+
+
+def test_x_is_exactly_zero_under_a_scale_per_emotion(holder):
+    rng = np.random.default_rng(4)
+    for _ in range(10):
+        prior = rng.normal(0, 1.0, 6)
+        scale = np.exp(rng.normal(0, 0.5, 6))
+        scores = (prior + 2.0 * np.eye(6)[holder.emo]) * scale[holder.emo][:, None]
+        p = an.softmax(scores)
+        assert np.nanmean(an.pair_excess(holder, p, A, B)) == pytest.approx(0.0, abs=1e-12)
+
+
+def test_happy_alone_is_seen_as_happy_and_not_as_the_partner(holder):
+    def shift(scores):
+        scores[np.isin(holder.emo, [A, B]), an.INDEX["Happy"]] += 0.3
+        return scores
+
+    cells = staged(holder, shift)
+    c1 = contrast("C1")
+    assert np.nanmean(an.double_difference(cells, c1, "mask_mid_neutral")) == pytest.approx(-0.15)
+    assert np.nanmean(an.reference_change(cells, c1, "mask_mid_neutral")) == pytest.approx(-0.15)
+    assert np.nanmean(an.partner_change(cells, c1, "mask_mid_neutral")) == pytest.approx(0.0, abs=1e-9)
+
+
+def test_the_cue_margin_does_not_grow_with_noise(items, partners):
+    """Signed changes are averaged inside cells, so pure noise leaves a small margin."""
+    cells = an.Cells(items, [])
+    rng = np.random.default_rng(0)
+    margins = []
+    for sd in (0.5, 2.0):
+        cells.mcq1[:] = rng.normal(0, sd, cells.mcq1.shape)
+        margins.append(an.cue_margin(cells, partners, contrast("C1")))
+    old = []
+    for sd in (0.5, 2.0):
+        cells.mcq1[:] = rng.normal(0, sd, cells.mcq1.shape)
+        keep = an.outcome_keep(cells, contrast("C1"), "fixed", D["control_emotions"])
+        own = an.outcome(cells.mcq1[:, [2, 5]], B, keep)
+        other = an.outcome(cells.mcq1[an.partner_index(cells, partners)][:, [2, 5]], B, keep)
+        old.append(0.1 * float(np.nanmean(np.abs(other - own).mean(1))))
+    assert old[1] / old[0] > 3.5  # the first draft's margin grew with the noise
+    assert margins[1] < old[1] / 2
 
 
 def write_stage(folder, model, stage, rows, design):
     for row in rows:
         row.update(model=model, design_sha256=design)
     (folder / f"cells_{model}_stage{stage}.jsonl").write_text("".join(json.dumps(r) + "\n" for r in rows), encoding="utf-8")
-    report = {"model": model, "stage": stage, "mechanics": False, "design_sha256": design, "shard": 0, "n_shards": 1}
+    report = {"model": model, "stage": stage, "mechanics": False, "design_sha256": design, "shard": 0, "n_shards": 1,
+              "dtype": "bfloat16", "versions": {"torch": "x"}, "weights_sha256": "w"}
     (folder / f"run_{model}_stage{stage}.json").write_text(json.dumps(report), encoding="utf-8")
+
+
+CLI_ROWS = [
+    ("missing", None, an.NOT_TESTED, 1),
+    ("prior_only", 1.0, an.NO_FACE_USE, 1),
+    ("no_sharing", 1.0, an.NOT_SHARED, 2),
+    ("adjacency", 2.0, an.OPTION_DEPENDENT, 2),
+    ("same_cue", 2.0, an.SAME_CUE, 3),
+    ("one_way_cue", 2.0, an.ONE_DIRECTION, 3),
+    ("reverse", 2.0, an.OPPOSES, 3),
+    ("other_cue", 2.0, an.NOT_THIS_CUE, 3),
+    ("global_face", 2.0, an.NO_TESTED_FEATURE, 3),
+    ("region_small", 1.0, an.INCONCLUSIVE, 3),
+]
+
+
+@pytest.mark.parametrize("name, strength, expected, stage_of_verdict", CLI_ROWS)
+def test_every_row_reaches_an_output_file(tmp_path, monkeypatch, name, strength, expected, stage_of_verdict):
+    """Each named row is written by main, at the stage where the model stops."""
+    monkeypatch.setattr(an, "check_ready", lambda args: None)
+    monkeypatch.setattr(an, "FULL_SETTINGS", FAST)
+    design = d.block_hash()
+    model = "gemma4"
+    results = tmp_path / "results"
+    results.mkdir()
+    reproduction = gate_fixture(tmp_path)
+    shutil.copy(ROOT / "research/reproduction/crema_d_reliability.json", reproduction)
+    geometry = tmp_path / "geometry.json"
+    items_now = rec.world().items
+    records = {i["trial_id"]: {"apex": 0, "landmarks": {"0": [[0, 0]]}, "face_box": [0, 0, 100, 100], "face_width_px": 80.0} for i in items_now}
+    geometry.write_text(json.dumps({"items": records}), encoding="utf-8")
+    if name != "missing":
+        obs = rec.Observer(name, strength, [4], 1.0, {"actor_region_sd": 0.0})
+        mcq, blind, bridge = obs.stage1_scores()
+        write_stage(results, model, 1, rec.rows_stage1(obs, mcq, blind, bridge), design)
+        span = float(D["recovery"]["too_small_fraction"]) if name == "region_small" else 0.2
+        write_stage(results, model, 3, rec.rows_stage3(obs, obs.stage3_scores(mcq), sham_differs=False, span=span), design)
+        baselines = {**DELIVERY, "model": model, "design_sha256": design, "dtype": "bfloat16",
+                     "baselines": [{"readout": "blind", "condition": "image_free", "order": None, "status": "ok",
+                                    "family_logprob": dict(zip(an.FAMILIES, [-3.0] * 6))}]}
+        (results / f"baselines_{model}.json").write_text(json.dumps(baselines), encoding="utf-8")
+
+    def stage(number, *extra):
+        monkeypatch.setattr(sys, "argv", ["a6_analyse", "--stage", str(number), "--results", str(results), "--geometry", str(geometry),
+                                          "--reproduction", str(reproduction), "--a6_frozen", *extra])
+        an.main()
+
+    stage(1, "--models", model)
+    first = json.loads((results / "a6_stage1.json").read_text(encoding="utf-8"))
+    if stage_of_verdict == 1:
+        assert first["verdicts"][model]["verdict"] == expected
+        return
+    assert first["verdicts"][model]["verdict"] is None
+    stage(2, "--model", model)
+    second = json.loads((results / f"a6_stage2_{model}.json").read_text(encoding="utf-8"))
+    if stage_of_verdict == 2:
+        assert second["verdict_if_stopped_here"]["verdict"] == expected
+        return
+    stage(3, "--model", model)
+    third = json.loads((results / f"a6_stage3_{model}.json").read_text(encoding="utf-8"))
+    assert third["verdict"]["verdict"] == expected
+    assert third["stage2_sha256"] == __import__("hashlib").sha256((results / f"a6_stage2_{model}.json").read_bytes()).hexdigest()
+
+
+def test_a_baselines_file_for_another_model_is_refused():
+    with pytest.raises(SystemExit):
+        an.check_baselines({"model": "qwen3vl", "design_sha256": d.block_hash(), "dtype": "bfloat16"}, "gemma4", d.block_hash())
+    with pytest.raises(SystemExit):
+        an.check_baselines({"model": "gemma4", "design_sha256": d.block_hash(), "dtype": "float32"}, "gemma4", d.block_hash())
 
 
 def test_the_command_line_runs_stage_by_stage_on_synthetic_cells(tmp_path, monkeypatch):
@@ -940,18 +1109,18 @@ def test_the_command_line_runs_stage_by_stage_on_synthetic_cells(tmp_path, monke
     results.mkdir()
     reproduction = gate_fixture(tmp_path)
     shutil.copy(ROOT / "research/reproduction/crema_d_reliability.json", reproduction)
-    obs = rec.Observer("same_cue", 2.0, [7])
+    obs = rec.Observer("same_cue", 2.0, [7], 1.0, {"actor_region_sd": 0.0})
     mcq, blind, bridge = obs.stage1_scores()
     write_stage(results, model, 1, rec.rows_stage1(obs, mcq, blind, bridge), design)
-    scores, blind3 = obs.stage3_scores(mcq)
-    write_stage(results, model, 3, rec.rows_stage3(obs, scores, blind3, sham_differs=False, span=0.2), design)
+    write_stage(results, model, 3, rec.rows_stage3(obs, obs.stage3_scores(mcq), sham_differs=False, span=0.2), design)
     primes = obs.primes()
     baselines = [{"readout": "mcq", "condition": f"prime_{label}", "order": row, "options": list(D["orders"][row]), "status": "ok",
                   "joint_logprob": primes[an.INDEX[label], row][[an.INDEX[o] for o in D["orders"][row]]].tolist()}
                  for label in an.OPTIONS for row in range(6)]
     baselines.append({"readout": "blind", "condition": "image_free", "order": None, "status": "ok",
                       "family_logprob": dict(zip(an.FAMILIES, [-3.0] * 6))})
-    (results / f"baselines_{model}.json").write_text(json.dumps({**DELIVERY, "baselines": baselines}), encoding="utf-8")
+    (results / f"baselines_{model}.json").write_text(json.dumps({**DELIVERY, "baselines": baselines, "model": model,
+                                                                "design_sha256": design, "dtype": "bfloat16"}), encoding="utf-8")
     geometry = tmp_path / "geometry.json"
     records = {i["trial_id"]: {"apex": 0, "landmarks": {"0": [[0, 0]]}, "face_box": [0, 0, 100, 100], "face_width_px": 80.0} for i in obs.w.items}
     geometry.write_text(json.dumps({"items": records}), encoding="utf-8")
