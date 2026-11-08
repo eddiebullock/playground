@@ -354,7 +354,10 @@ def stage0_table(cells: Mapping[str, Any], n_clips: int = N_CLIPS, region: Optio
 
 
 def _passed(table: Mapping[str, Any], key: str) -> bool:
-    return ((table.get("checks") or {}).get(key) or {}).get("pass") is True
+    """A stored pass counts only if its stored worst difference is at most the tolerance too."""
+    check = (table.get("checks") or {}).get(key) or {}
+    worst = check.get("worst_abs_nats")
+    return check.get("pass") is True and isinstance(worst, (int, float)) and math.isfinite(worst) and worst <= TOL
 
 
 def exit_complete(table: Optional[Mapping[str, Any]]) -> bool:
@@ -496,7 +499,7 @@ def run_region(session: Any, clips: Sequence[Any], inputs: Sequence[Dict[str, An
 def _real_session(model_key: str):  # pragma: no cover - needs a GPU and model weights
     from scripts import run_stimulus_interventions as run
     from scripts.a7_cuts import Session
-    from scripts.vision_gates import adapter_for
+    from scripts.vision_gates import adapter_for, last_logits
 
     handle = run.load_handle(model_key, D["dtype"])
     adapter = adapter_for(model_key, handle.model)
@@ -508,7 +511,13 @@ def _real_session(model_key: str):  # pragma: no cover - needs a GPU and model w
     def encode(image: np.ndarray) -> Dict[str, Any]:
         return run.encode_media(handle, run.Media("image", [image], [], {}), run.BLIND_PROMPT)
 
-    return handle, Session(adapter, model_key, lambda clip, _c: encode(clip["original"]), readout, D["route_blocks"][model_key]), encode
+    def vision_pass(inputs: Dict[str, Any]) -> Any:
+        # The token map needs only the exit routes: one forward, not a full blind readout
+        # (independent audit 2026-11-08; the draft costs these as vision-only passes).
+        return last_logits(handle.model, inputs)
+
+    return handle, Session(adapter, model_key, lambda clip, _c: encode(clip["original"]), readout, D["route_blocks"][model_key],
+                           vision_only=vision_pass), encode
 
 
 def main() -> None:  # pragma: no cover - needs a GPU and model weights

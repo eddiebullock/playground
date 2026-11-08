@@ -156,24 +156,32 @@ def main() -> None:  # pragma: no cover - needs a GPU, model weights and the cli
                     mask = [r * side + c for r in range(side) for c in range(side) if hit[r * step:(r + 1) * step, c * step:(c + 1) * step].any()]
                     s_tokens = s0.dilate(mask, int(buffer), side)
                     rest = sorted(set(range(n_tokens)) - set(s_tokens))
-                    q_tokens = placebo_set(s_tokens, n_tokens, item["trial_id"])
-                    tx, te = state_x.routes, state_e.routes
-                    idx = lambda ts: torch.as_tensor(ts, dtype=torch.long)
-                    change["token"] = {
-                        "S": relative_change({k: v[idx(s_tokens).to(v.device)] for k, v in tx.items()}, {k: v[idx(s_tokens).to(v.device)] for k, v in te.items()}),
-                        "rest": relative_change({k: v[idx(rest).to(v.device)] for k, v in tx.items()}, {k: v[idx(rest).to(v.device)] for k, v in te.items()}),
-                    }
-                    rows.append(row_for(item, CELLS["token"]["S_edit"], session.token_hold(x, s_tokens, state_e), token_set={"b": buffer, "n": len(s_tokens)}))
-                    rows.append(row_for(item, CELLS["token"]["rest_edit"], session.token_hold(xe, s_tokens, state_x)))
-                    rows.append(row_for(item, CELLS["token"]["Q_edit"], session.token_hold(x, q_tokens, state_e)))
-                    rows.append(row_for(item, CELLS["token"]["Qrest_edit"], session.token_hold(xe, q_tokens, state_x)))
-                    if item["trial_id"] in sentinels:
-                        rows.append(row_for(item, SENTINEL["token"], session.token_hold(xe, list(range(n_tokens)), state_x)))
+                    if len(s_tokens) > len(rest):
+                        # The share cap was checked on calibration clips only, so on an analysis item S
+                        # can outgrow its complement and no same-size Q exists. The item leaves the token
+                        # arm with a reason, instead of stopping the job (independent audit 2026-11-08).
+                        change["token"] = None
+                        change["token_failed"] = {"reason": "token_set_larger_than_complement", "n": len(s_tokens)}
+                    else:
+                        q_tokens = placebo_set(s_tokens, n_tokens, item["trial_id"])
+                        tx, te = state_x.routes, state_e.routes
+                        idx = lambda ts: torch.as_tensor(ts, dtype=torch.long)
+                        change["token"] = {
+                            "S": relative_change({k: v[idx(s_tokens).to(v.device)] for k, v in tx.items()}, {k: v[idx(s_tokens).to(v.device)] for k, v in te.items()}),
+                            "rest": relative_change({k: v[idx(rest).to(v.device)] for k, v in tx.items()}, {k: v[idx(rest).to(v.device)] for k, v in te.items()}),
+                        }
+                        rows.append(row_for(item, CELLS["token"]["S_edit"], session.token_hold(x, s_tokens, state_e), token_set={"b": buffer, "n": len(s_tokens)}))
+                        rows.append(row_for(item, CELLS["token"]["rest_edit"], session.token_hold(xe, s_tokens, state_x)))
+                        rows.append(row_for(item, CELLS["token"]["Q_edit"], session.token_hold(x, q_tokens, state_e)))
+                        rows.append(row_for(item, CELLS["token"]["Qrest_edit"], session.token_hold(xe, q_tokens, state_x)))
+                        if item["trial_id"] in sentinels:
+                            rows.append(row_for(item, SENTINEL["token"], session.token_hold(xe, list(range(n_tokens)), state_x)))
                 rows.insert(0, row_for(item, ORIGINAL, y00))
                 rows.insert(1, row_for(item, EDIT, y11, block_change=change, edit=media_e.log))
             except si.EditFailure as exc:
                 rows = [{"trial_id": item["trial_id"], "actor": item["actor"], "label": item["label"], "input_name": ROUTE,
-                         "condition": ORIGINAL, "status": "failed", "reason": exc.reason}]
+                         "condition": ORIGINAL, "status": "failed", "reason": exc.reason,
+                         "a7_design_sha256": a7_design.DESIGN_SHA256}]
             for row in rows:
                 row["seconds_item"] = round(time.time() - started, 2)
                 row["a7_code_sha256"] = pins
