@@ -39,3 +39,13 @@ Form done, per STATE. No remaining question.
 ## 6. A2 sign-off — RESOLVED 2026-11-07
 
 The user accepted all four choices, and A2 was frozen before A1 was read (tag `a2-freeze`). No remaining question.
+
+## 7. EU-Emotion licence for public norms and edited clips
+
+Item 2 already disclosed that `data/eu_emotions_human_entropy.json` (item-level human response distributions) is committed to the public repo, as aggregated percentages and not videos, and that default was accepted. It is on `main` since commit `2e2af35` (2026-10-30). This is not a breach of the no-stimuli rule.
+
+**Still open, and needed before submission:** whether the EU-Emotion licence allows item-level norms to be public, and whether in-memory edits of clips are allowed. It needs the user or the stimulus authors. Asking the authors is an email, so it is the user's.
+
+**If the answer is no:** the file would have to come out of history as well as the latest commit, which means rewriting a public branch, and that is the user's call. Reproduction would then read it from a private location.
+
+**Meanwhile:** the paper files give counts, not the seven unmatched item IDs, so that nothing further depends on the answer.

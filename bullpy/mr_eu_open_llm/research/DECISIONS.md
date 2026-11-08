@@ -343,3 +343,43 @@ A full read of the manuscript's references found that P7, P12 and P13 cited sour
 - **Decision:** Predictions, family and code stay frozen. Changing a prediction after the freeze would be a worse fault than a weak one, and the evidence grades are corrected openly instead.
 - **Why not drop P12 and P13:** They stay in the family, and removal would change the multiplicity correction after the freeze. Their reading is limited by the deviation.
 - **Also:** The audit claim is softened to "several", since 3 of 8 is not most. A no-image control in Hallmen et al. was missed in earlier notes. Nature Human Behaviour cannot take this as a Registered Report, so it would be an Article with a reporting summary.
+
+## 2026-11-07: Freeze A4 before A1 is read
+
+The queue allowed it, so A4 was frozen ahead of A1, which keeps the choice of statistic and thresholds independent of RQ0.
+
+- **Decision:** Residual CFA stays confirmatory and the V1 pilot's thin pass is disclosed as a family flag. Six dependent scripts are pinned by per-file hash in the amendment, not added to `DESIGN_FILES`, because that would change the design hash and need a further recovery run for no gain.
+- **Why not count recovery as clean:** Two accuracy cells at conversational 0.25x are exempt, at .85 and .62, so the amendment makes no accuracy claim there.
+- **Error caught at the freeze:** a commit gave run 3's file the hash of run 4's. It was corrected before the tag.
+
+## 2026-11-07: G7 becomes a scoped limit, resting on Stage 0
+
+Draft A7 found that RQ3's literal test cannot fail: under a complete cut the output is the same for every image, so a cue effect there is zero by construction. Depth inside the language model is not testable on either eligible model, and no site has yet been shown complete on `single_face` or on the blind readout, since G2 to G4 ran on the legacy input.
+
+- **Decision:** RQ3 is reported in the main paper as a scoped limit, resting on A7's Stage 0 table (about .71 GPU-hours, upper bound). The route arm is an optional supplement. This uses the allowance in `GOALS.md`.
+- **Why not on cost:** compute is not the reason. The reason is that the literal test is vacuous and a route split has no human reading.
+- **What would change this:** a pass on Stage 0's region test would give a non-vacuous cue-level answer, and G7 would be reopened by a dated entry.
+- **Open:** whether a block of a complete cut meets G7's wording goes to A7's audit. If it does not, A7 is Stage 0 plus "not testable". A7 is not frozen, and its recovery is specified, not run.
+- **Note on an earlier reading:** the stored `fraction_of_image_effect_left` is not a share, so ".93 remains" is wrong on Gemma, and reading routes as redundant fits Qwen but is not proved by the stored rows.
+
+## 2026-11-08: A6 keeps its named results and gives up its cue-absent nulls
+
+A6 recovery run 4 (design `c1961048...`) fails only on the Stage 3 nulls and on adjacency over all pairs. The named results recover at .91 or more with no false positive over .05.
+
+- **Decision:** the nulls Not this cue and No tested feature stay in the table, but a model that reaches one is reported as Inconclusive on the cue question. Adjacency on all pairs is descriptive. The partner check stays, with the audit's Happy rule reported as a sensitivity.
+- **Why not loosen the margin:** that would move a threshold after seeing a failure. The nulls fail even at no actor-by-region noise (.62 and .70), so the shortfall is in the design's power, not the noise setting.
+- **Why run A6 at all:** a shared error that carries or opposes a named cue is recovered at .99, which is the cue-targeted test G8 asks for.
+- **Still before freeze:** the cluster items (geometry and weight pins, first-frame AU check, decoder preflight, a mechanics run) and the proposed values in the block.
+
+## 2026-11-08: A5 withholds balance verdicts in small families and keeps its power failures
+
+A5 recovery run 3 (design `228bdf48...`) failed five checks. Recalibrating the balance-zero observers on B itself, rather than on mean Phi, removed a small real offset but left the B false positives in one- and two-cell families at .08 to .12 under portrayal-gain SD .5. An oracle default changed nothing, so the cause is skew from gain heterogeneity in small families, not dependence between actor rows.
+
+- **Decision:** `min_balance_cells` = 4. Below it, Face, Default and Even are withheld and the verdict is Inconclusive (`balance_small_family`). Four is the only size tested at which every true-null rate was at or under .054; three was not tested, so it is not allowed.
+- **Run 4** (design `df4583f0...`): every false-positive check passes. Two power checks fail at signal 2, where Inconclusive reaches .226 at Phi .5 and .398 at Phi .7, against .20. Both fail only into Inconclusive (`balance_unresolved`), with no wrong named verdict over .10. They stay recorded as failures, with the power table.
+- **Why not move a limit:** .07 and .20 are unchanged. The scope rule changes what A5 may claim, not any threshold, and it was set from evidence written down before any A2 cell was read.
+- **Cost:** if RQ0 or a gate removes a cell from a family, that model gets no balance verdict from A5.
+
+## 2026-11-08: A4 human ceiling uses a related estimator, disclosed not changed
+
+Writing Supplementary Note 1 found that A4's human noise ceiling uses pooled fits at ridge 1.0 for every dataset (`a4_analyse.py:360`), while the human target is the mean of per-subject fits at the selected ridge (0.1 for basic). So R_H is the reliability of a related estimator, not of the target itself. A4 is frozen, so the code stays. The corrected values are reported as approximate, with this stated in the methods and in Supplementary Note 1, beside the uncorrected values that the decision rule uses.

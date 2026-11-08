@@ -1,0 +1,3686 @@
+{
+ "design_sha256": "d48b928e909f914601a195029c28966df8ae9626f84f3d64fded92192ebc102f",
+ "replicates": 500,
+ "scenario_replicates": 50,
+ "settings": {
+  "replicates": 500,
+  "expected_verdict_min": 0.8,
+  "other_named_verdict_max": 0.1,
+  "inconclusive_max": 0.2,
+  "seed": 6042,
+  "strengths": [
+   0.5,
+   1.0,
+   2.0
+  ],
+  "judged_strengths": [
+   1.0,
+   2.0
+  ],
+  "signflip_draws": 4999,
+  "bootstrap_draws": 1000,
+  "evidence": 2.0,
+  "prior_sd": 1.0,
+  "actor_sd": 0.3,
+  "clip_sd": 0.5,
+  "condition_sd": 0.2,
+  "order_sd": 0.2,
+  "evidence_share": {
+   "upper": 0.3,
+   "mid": 0.2,
+   "lower": 0.3,
+   "rest": 0.2
+  },
+  "mask_area": {
+   "upper": 0.35,
+   "mid": 0.15,
+   "lower": 0.2,
+   "midlower": 0.35,
+   "uplow": 0.55,
+   "all": 0.7
+  },
+  "generic_nats": 1.0,
+  "noise_scales": [
+   1.5,
+   2.0
+  ],
+  "flips_used": 4999,
+  "boots_used": 1000
+ },
+ "human_rates": {
+  "Anger>Disgust": 0.20558171986743412,
+  "Disgust>Anger": 0.056028346653346654
+ },
+ "tables": {
+  "adjacency": {
+   "0.5": {
+    "n": 500,
+    "verdicts": {
+     "Inconclusive": 0.008,
+     "No face use on CREMA-D": 0.002,
+     "No tested feature": 0.016,
+     "Option-dependent": 0.974
+    },
+    "reason_codes": {
+     "cue_unresolved": 0.002,
+     "option_unresolved": 0.006
+    },
+    "mean_delta": 0.5918,
+    "mean_X": 0.061,
+    "mean_O": 0.1833,
+    "mean_X_far": -0.0001,
+    "mean_cue_margin_C1": 0.0715,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.014,
+    "share_reaching_stage3": 0.018,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": 0.0037,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": 0.0011,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": 0.0082,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C4": {
+      "mean": 0.013,
+      "match": 0.0,
+      "opposes": 0.0
+     }
+    },
+    "any_match": 0.0
+   },
+   "1.0": {
+    "n": 500,
+    "verdicts": {
+     "Inconclusive": 0.006,
+     "No tested feature": 0.008,
+     "Option-dependent": 0.986
+    },
+    "reason_codes": {
+     "cue_unresolved": 0.002,
+     "option_unresolved": 0.004
+    },
+    "mean_delta": 0.5695,
+    "mean_X": 0.119,
+    "mean_O": 0.3584,
+    "mean_X_far": -0.0005,
+    "mean_cue_margin_C1": 0.0712,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.006,
+    "share_reaching_stage3": 0.01,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": 0.0027,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": 0.0078,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": -0.0065,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C4": {
+      "mean": -0.0052,
+      "match": 0.0,
+      "opposes": 0.0
+     }
+    },
+    "any_match": 0.0
+   },
+   "2.0": {
+    "n": 500,
+    "verdicts": {
+     "Inconclusive": 0.006,
+     "No tested feature": 0.012,
+     "Option-dependent": 0.982
+    },
+    "reason_codes": {
+     "cue_unresolved": 0.002,
+     "option_unresolved": 0.004
+    },
+    "mean_delta": 0.5534,
+    "mean_X": 0.1566,
+    "mean_O": 0.469,
+    "mean_X_far": 0.0003,
+    "mean_cue_margin_C1": 0.0714,
+    "label_neighbours_live": 0.002,
+    "sufficient_not_necessary": 0.012,
+    "share_reaching_stage3": 0.014,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": 0.013,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": 0.0118,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": 0.002,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C4": {
+      "mean": 0.0139,
+      "match": 0.0,
+      "opposes": 0.0
+     }
+    },
+    "any_match": 0.0
+   }
+  },
+  "adjacency_all": {
+   "0.5": {
+    "n": 500,
+    "verdicts": {
+     "Inconclusive": 0.006,
+     "Not shared": 0.978,
+     "Option-dependent": 0.016
+    },
+    "reason_codes": {
+     "option_unresolved": 0.006
+    },
+    "mean_delta": 0.4584,
+    "mean_X": 0.0,
+    "mean_O": 0.2877,
+    "mean_X_far": -0.0959,
+    "mean_cue_margin_C1": 0.0657,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.0
+   },
+   "1.0": {
+    "n": 500,
+    "verdicts": {
+     "Inconclusive": 0.008,
+     "Not shared": 0.976,
+     "Option-dependent": 0.016
+    },
+    "reason_codes": {
+     "option_unresolved": 0.008
+    },
+    "mean_delta": 0.4591,
+    "mean_X": 0.0002,
+    "mean_O": 0.2851,
+    "mean_X_far": -0.0948,
+    "mean_cue_margin_C1": 0.0653,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.0
+   },
+   "2.0": {
+    "n": 500,
+    "verdicts": {
+     "Inconclusive": 0.008,
+     "Not shared": 0.99,
+     "Option-dependent": 0.002
+    },
+    "reason_codes": {
+     "option_unresolved": 0.008
+    },
+    "mean_delta": 0.4529,
+    "mean_X": -0.0004,
+    "mean_O": 0.2851,
+    "mean_X_far": -0.0954,
+    "mean_cue_margin_C1": 0.0654,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.0
+   }
+  },
+  "boundary_cue": {
+   "0.5": {
+    "n": 500,
+    "verdicts": {
+     "Inconclusive": 0.004,
+     "Same cue": 0.862,
+     "Same cue, one direction": 0.134
+    },
+    "reason_codes": {
+     "cue_unresolved": 0.004
+    },
+    "mean_delta": 0.6145,
+    "mean_X": 0.0624,
+    "mean_O": 0.0001,
+    "mean_X_far": 0.0624,
+    "mean_cue_margin_C1": 0.074,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.0,
+    "share_reaching_stage3": 1.0,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": -0.0745,
+      "match": 0.93,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": -0.0747,
+      "match": 0.928,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": -0.0753,
+      "match": 0.0,
+      "opposes": 0.924
+     },
+     "C4": {
+      "mean": -0.0004,
+      "match": 0.0,
+      "opposes": 0.0
+     }
+    },
+    "any_match": 0.996
+   },
+   "1.0": {
+    "n": 500,
+    "verdicts": {
+     "Inconclusive": 0.006,
+     "Same cue": 0.844,
+     "Same cue, one direction": 0.15
+    },
+    "reason_codes": {
+     "cue_unresolved": 0.006
+    },
+    "mean_delta": 0.585,
+    "mean_X": 0.1233,
+    "mean_O": -0.0002,
+    "mean_X_far": 0.1234,
+    "mean_cue_margin_C1": 0.0818,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.0,
+    "share_reaching_stage3": 1.0,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": -0.0744,
+      "match": 0.92,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": -0.075,
+      "match": 0.918,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": -0.075,
+      "match": 0.0,
+      "opposes": 0.928
+     },
+     "C4": {
+      "mean": 0.0004,
+      "match": 0.0,
+      "opposes": 0.0
+     }
+    },
+    "any_match": 0.994
+   },
+   "2.0": {
+    "n": 500,
+    "verdicts": {
+     "Inconclusive": 0.016,
+     "Same cue": 0.866,
+     "Same cue, one direction": 0.118
+    },
+    "reason_codes": {
+     "cue_unresolved": 0.016
+    },
+    "mean_delta": 0.5497,
+    "mean_X": 0.2429,
+    "mean_O": -0.0,
+    "mean_X_far": 0.2429,
+    "mean_cue_margin_C1": 0.1082,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.0,
+    "share_reaching_stage3": 1.0,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": -0.0753,
+      "match": 0.922,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": -0.0752,
+      "match": 0.928,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": -0.0748,
+      "match": 0.0,
+      "opposes": 0.904
+     },
+     "C4": {
+      "mean": 0.0001,
+      "match": 0.0,
+      "opposes": 0.0
+     }
+    },
+    "any_match": 0.984
+   }
+  },
+  "boundary_shared": {
+   "0.5": {
+    "n": 500,
+    "verdicts": {
+     "Inconclusive": 0.078,
+     "No tested feature": 0.92,
+     "Not shared": 0.002
+    },
+    "reason_codes": {
+     "cue_unresolved": 0.078
+    },
+    "mean_delta": 0.604,
+    "mean_X": 0.0472,
+    "mean_O": 0.0001,
+    "mean_X_far": 0.0471,
+    "mean_cue_margin_C1": 0.0726,
+    "label_neighbours_live": 0.018,
+    "sufficient_not_necessary": 0.848,
+    "share_reaching_stage3": 0.998,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": 0.0013,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": 0.0007,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": -0.001,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C4": {
+      "mean": -0.0006,
+      "match": 0.0,
+      "opposes": 0.0
+     }
+    },
+    "any_match": 0.0
+   },
+   "1.0": {
+    "n": 500,
+    "verdicts": {
+     "Inconclusive": 0.096,
+     "No tested feature": 0.902,
+     "Not shared": 0.002
+    },
+    "reason_codes": {
+     "cue_unresolved": 0.096
+    },
+    "mean_delta": 0.6015,
+    "mean_X": 0.0476,
+    "mean_O": -0.0001,
+    "mean_X_far": 0.0477,
+    "mean_cue_margin_C1": 0.0731,
+    "label_neighbours_live": 0.034,
+    "sufficient_not_necessary": 0.86,
+    "share_reaching_stage3": 0.998,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": -0.0004,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": -0.0008,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": -0.0004,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C4": {
+      "mean": -0.0005,
+      "match": 0.0,
+      "opposes": 0.0
+     }
+    },
+    "any_match": 0.0
+   },
+   "2.0": {
+    "n": 500,
+    "verdicts": {
+     "Inconclusive": 0.098,
+     "No tested feature": 0.902
+    },
+    "reason_codes": {
+     "cue_unresolved": 0.098
+    },
+    "mean_delta": 0.6144,
+    "mean_X": 0.0474,
+    "mean_O": 0.0001,
+    "mean_X_far": 0.0474,
+    "mean_cue_margin_C1": 0.0736,
+    "label_neighbours_live": 0.04,
+    "sufficient_not_necessary": 0.842,
+    "share_reaching_stage3": 1.0,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": -0.0001,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": 0.0013,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": -0.0006,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C4": {
+      "mean": 0.0,
+      "match": 0.0,
+      "opposes": 0.0
+     }
+    },
+    "any_match": 0.0
+   }
+  },
+  "fill_artefact": {
+   "0.5": {
+    "n": 500,
+    "verdicts": {
+     "Inconclusive": 0.998,
+     "Same cue, one direction": 0.002
+    },
+    "reason_codes": {
+     "cue_unresolved": 0.998
+    },
+    "mean_delta": 0.5842,
+    "mean_X": 0.0627,
+    "mean_O": -0.0002,
+    "mean_X_far": 0.0627,
+    "mean_cue_margin_C1": 0.0747,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.0,
+    "share_reaching_stage3": 1.0,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": -0.2981,
+      "match": 0.002,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": -0.2997,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": -0.0003,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C4": {
+      "mean": -0.0004,
+      "match": 0.0,
+      "opposes": 0.0
+     }
+    },
+    "any_match": 0.002
+   },
+   "1.0": {
+    "n": 500,
+    "verdicts": {
+     "Inconclusive": 0.998,
+     "Same cue, one direction": 0.002
+    },
+    "reason_codes": {
+     "cue_unresolved": 0.998
+    },
+    "mean_delta": 0.5937,
+    "mean_X": 0.1232,
+    "mean_O": 0.0001,
+    "mean_X_far": 0.1231,
+    "mean_cue_margin_C1": 0.0799,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.0,
+    "share_reaching_stage3": 1.0,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": -0.2993,
+      "match": 0.002,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": -0.2998,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": 0.0007,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C4": {
+      "mean": -0.0003,
+      "match": 0.0,
+      "opposes": 0.0
+     }
+    },
+    "any_match": 0.002
+   },
+   "2.0": {
+    "n": 500,
+    "verdicts": {
+     "Inconclusive": 0.996,
+     "No face use on CREMA-D": 0.002,
+     "Same cue, one direction": 0.002
+    },
+    "reason_codes": {
+     "cue_unresolved": 0.996
+    },
+    "mean_delta": 0.5497,
+    "mean_X": 0.2433,
+    "mean_O": 0.0001,
+    "mean_X_far": 0.2433,
+    "mean_cue_margin_C1": 0.1084,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.0,
+    "share_reaching_stage3": 0.998,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": -0.2998,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": -0.3003,
+      "match": 0.002,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": 0.0014,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C4": {
+      "mean": 0.0005,
+      "match": 0.0,
+      "opposes": 0.0
+     }
+    },
+    "any_match": 0.002
+   }
+  },
+  "fill_artefact_up": {
+   "0.5": {
+    "n": 500,
+    "verdicts": {
+     "Inconclusive": 1.0
+    },
+    "reason_codes": {
+     "cue_unresolved": 1.0
+    },
+    "mean_delta": 0.6066,
+    "mean_X": 0.062,
+    "mean_O": 0.0003,
+    "mean_X_far": 0.0619,
+    "mean_cue_margin_C1": 0.0742,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.0,
+    "share_reaching_stage3": 1.0,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": 0.2983,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": 0.3005,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": -0.0007,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C4": {
+      "mean": 0.0,
+      "match": 0.0,
+      "opposes": 0.002
+     }
+    },
+    "any_match": 0.0
+   },
+   "1.0": {
+    "n": 500,
+    "verdicts": {
+     "Inconclusive": 1.0
+    },
+    "reason_codes": {
+     "cue_unresolved": 1.0
+    },
+    "mean_delta": 0.5833,
+    "mean_X": 0.1226,
+    "mean_O": -0.0,
+    "mean_X_far": 0.1226,
+    "mean_cue_margin_C1": 0.0803,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.0,
+    "share_reaching_stage3": 1.0,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": 0.2998,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": 0.2992,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": -0.0005,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C4": {
+      "mean": 0.0002,
+      "match": 0.0,
+      "opposes": 0.0
+     }
+    },
+    "any_match": 0.0
+   },
+   "2.0": {
+    "n": 500,
+    "verdicts": {
+     "Inconclusive": 0.998,
+     "Opposes the stated cue": 0.002
+    },
+    "reason_codes": {
+     "cue_unresolved": 0.998
+    },
+    "mean_delta": 0.549,
+    "mean_X": 0.2431,
+    "mean_O": -0.0003,
+    "mean_X_far": 0.2432,
+    "mean_cue_margin_C1": 0.1101,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.0,
+    "share_reaching_stage3": 1.0,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": 0.3005,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": 0.2995,
+      "match": 0.0,
+      "opposes": 0.002
+     },
+     "C3": {
+      "mean": -0.0002,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C4": {
+      "mean": -0.0006,
+      "match": 0.0,
+      "opposes": 0.0
+     }
+    },
+    "any_match": 0.0
+   }
+  },
+  "generic_mask": {
+   "0.5": {
+    "n": 500,
+    "verdicts": {
+     "Inconclusive": 0.086,
+     "No tested feature": 0.914
+    },
+    "reason_codes": {
+     "cue_unresolved": 0.086
+    },
+    "mean_delta": 0.5955,
+    "mean_X": 0.0619,
+    "mean_O": 0.0,
+    "mean_X_far": 0.0619,
+    "mean_cue_margin_C1": 0.074,
+    "label_neighbours_live": 0.016,
+    "sufficient_not_necessary": 0.876,
+    "share_reaching_stage3": 1.0,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": 0.0004,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": 0.0011,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": 0.0004,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C4": {
+      "mean": 0.0002,
+      "match": 0.0,
+      "opposes": 0.0
+     }
+    },
+    "any_match": 0.0
+   },
+   "1.0": {
+    "n": 500,
+    "verdicts": {
+     "Inconclusive": 0.106,
+     "No tested feature": 0.894
+    },
+    "reason_codes": {
+     "cue_unresolved": 0.086,
+     "dose_failed": 0.02
+    },
+    "mean_delta": 0.5876,
+    "mean_X": 0.1232,
+    "mean_O": 0.0001,
+    "mean_X_far": 0.1232,
+    "mean_cue_margin_C1": 0.084,
+    "label_neighbours_live": 0.022,
+    "sufficient_not_necessary": 0.85,
+    "share_reaching_stage3": 1.0,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": 0.0003,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": 0.0014,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": 0.0006,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C4": {
+      "mean": 0.0006,
+      "match": 0.0,
+      "opposes": 0.0
+     }
+    },
+    "any_match": 0.0
+   },
+   "2.0": {
+    "n": 500,
+    "verdicts": {
+     "Inconclusive": 0.11,
+     "No face use on CREMA-D": 0.002,
+     "No tested feature": 0.888
+    },
+    "reason_codes": {
+     "cue_unresolved": 0.058,
+     "dose_failed": 0.052
+    },
+    "mean_delta": 0.5555,
+    "mean_X": 0.2421,
+    "mean_O": -0.0,
+    "mean_X_far": 0.2421,
+    "mean_cue_margin_C1": 0.1067,
+    "label_neighbours_live": 0.02,
+    "sufficient_not_necessary": 0.874,
+    "share_reaching_stage3": 0.998,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": -0.0001,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": 0.0004,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": 0.0012,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C4": {
+      "mean": -0.001,
+      "match": 0.0,
+      "opposes": 0.0
+     }
+    },
+    "any_match": 0.0
+   }
+  },
+  "generic_pull": {
+   "0.5": {
+    "n": 500,
+    "verdicts": {
+     "Inconclusive": 0.922,
+     "No tested feature": 0.078
+    },
+    "reason_codes": {
+     "cue_unresolved": 0.036,
+     "dose_failed": 0.886
+    },
+    "mean_delta": 0.6075,
+    "mean_X": 0.0625,
+    "mean_O": -0.0001,
+    "mean_X_far": 0.0626,
+    "mean_cue_margin_C1": 0.074,
+    "label_neighbours_live": 0.004,
+    "sufficient_not_necessary": 0.074,
+    "share_reaching_stage3": 1.0,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": 0.0014,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": 0.0002,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": 0.0025,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C4": {
+      "mean": 0.0002,
+      "match": 0.0,
+      "opposes": 0.0
+     }
+    },
+    "any_match": 0.0
+   },
+   "1.0": {
+    "n": 500,
+    "verdicts": {
+     "Inconclusive": 0.948,
+     "No tested feature": 0.052
+    },
+    "reason_codes": {
+     "cue_unresolved": 0.048,
+     "dose_failed": 0.9
+    },
+    "mean_delta": 0.6026,
+    "mean_X": 0.1233,
+    "mean_O": 0.0,
+    "mean_X_far": 0.1233,
+    "mean_cue_margin_C1": 0.0798,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.052,
+    "share_reaching_stage3": 1.0,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": -0.0021,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": -0.0014,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": -0.0004,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C4": {
+      "mean": 0.001,
+      "match": 0.0,
+      "opposes": 0.0
+     }
+    },
+    "any_match": 0.0
+   },
+   "2.0": {
+    "n": 500,
+    "verdicts": {
+     "Inconclusive": 0.944,
+     "No tested feature": 0.056
+    },
+    "reason_codes": {
+     "cue_unresolved": 0.046,
+     "dose_failed": 0.898
+    },
+    "mean_delta": 0.547,
+    "mean_X": 0.2426,
+    "mean_O": 0.0,
+    "mean_X_far": 0.2426,
+    "mean_cue_margin_C1": 0.1096,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.056,
+    "share_reaching_stage3": 1.0,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": 0.001,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": 0.0012,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": 0.001,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C4": {
+      "mean": 0.0006,
+      "match": 0.0,
+      "opposes": 0.0
+     }
+    },
+    "any_match": 0.0
+   }
+  },
+  "global_face": {
+   "0.5": {
+    "n": 500,
+    "verdicts": {
+     "Inconclusive": 0.084,
+     "No tested feature": 0.916
+    },
+    "reason_codes": {
+     "cue_unresolved": 0.084
+    },
+    "mean_delta": 0.611,
+    "mean_X": 0.0626,
+    "mean_O": 0.0001,
+    "mean_X_far": 0.0626,
+    "mean_cue_margin_C1": 0.0747,
+    "label_neighbours_live": 0.02,
+    "sufficient_not_necessary": 0.88,
+    "share_reaching_stage3": 1.0,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": -0.0001,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": 0.0007,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": -0.0009,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C4": {
+      "mean": 0.0003,
+      "match": 0.0,
+      "opposes": 0.0
+     }
+    },
+    "any_match": 0.0
+   },
+   "1.0": {
+    "n": 500,
+    "verdicts": {
+     "Inconclusive": 0.062,
+     "No tested feature": 0.938
+    },
+    "reason_codes": {
+     "cue_unresolved": 0.06,
+     "dose_failed": 0.002
+    },
+    "mean_delta": 0.59,
+    "mean_X": 0.1229,
+    "mean_O": 0.0001,
+    "mean_X_far": 0.1228,
+    "mean_cue_margin_C1": 0.0812,
+    "label_neighbours_live": 0.018,
+    "sufficient_not_necessary": 0.89,
+    "share_reaching_stage3": 1.0,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": 0.0005,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": -0.0006,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": -0.0002,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C4": {
+      "mean": 0.001,
+      "match": 0.0,
+      "opposes": 0.0
+     }
+    },
+    "any_match": 0.0
+   },
+   "2.0": {
+    "n": 500,
+    "verdicts": {
+     "Inconclusive": 0.058,
+     "No face use on CREMA-D": 0.002,
+     "No tested feature": 0.94
+    },
+    "reason_codes": {
+     "cue_unresolved": 0.048,
+     "dose_failed": 0.01
+    },
+    "mean_delta": 0.5529,
+    "mean_X": 0.2422,
+    "mean_O": 0.0,
+    "mean_X_far": 0.2422,
+    "mean_cue_margin_C1": 0.1087,
+    "label_neighbours_live": 0.03,
+    "sufficient_not_necessary": 0.92,
+    "share_reaching_stage3": 0.998,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": 0.0003,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": 0.0004,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": 0.0011,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C4": {
+      "mean": 0.0011,
+      "match": 0.0,
+      "opposes": 0.0
+     }
+    },
+    "any_match": 0.0
+   }
+  },
+  "human_like": {
+   "0.5": {
+    "n": 500,
+    "verdicts": {
+     "Same cue": 0.92,
+     "Same cue, one direction": 0.08
+    },
+    "reason_codes": {},
+    "mean_delta": 0.5933,
+    "mean_X": 0.0625,
+    "mean_O": -0.0,
+    "mean_X_far": 0.0625,
+    "mean_cue_margin_C1": 0.0743,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.0,
+    "share_reaching_stage3": 1.0,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": -0.3561,
+      "match": 1.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": -0.1241,
+      "match": 0.92,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": 0.2467,
+      "match": 1.0,
+      "opposes": 0.0
+     },
+     "C4": {
+      "mean": 0.1772,
+      "match": 1.0,
+      "opposes": 0.0
+     }
+    },
+    "any_match": 1.0
+   },
+   "1.0": {
+    "n": 500,
+    "verdicts": {
+     "Same cue": 1.0
+    },
+    "reason_codes": {},
+    "mean_delta": 0.601,
+    "mean_X": 0.1231,
+    "mean_O": 0.0001,
+    "mean_X_far": 0.123,
+    "mean_cue_margin_C1": 0.0812,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.0,
+    "share_reaching_stage3": 1.0,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": -0.6581,
+      "match": 1.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": -0.2077,
+      "match": 1.0,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": 0.4176,
+      "match": 1.0,
+      "opposes": 0.0
+     },
+     "C4": {
+      "mean": 0.3296,
+      "match": 1.0,
+      "opposes": 0.0
+     }
+    },
+    "any_match": 1.0
+   },
+   "2.0": {
+    "n": 500,
+    "verdicts": {
+     "No face use on CREMA-D": 0.004,
+     "Same cue": 0.996
+    },
+    "reason_codes": {},
+    "mean_delta": 0.5491,
+    "mean_X": 0.2431,
+    "mean_O": 0.0001,
+    "mean_X_far": 0.243,
+    "mean_cue_margin_C1": 0.1112,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.0,
+    "share_reaching_stage3": 0.996,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": -1.4821,
+      "match": 1.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": -0.3756,
+      "match": 1.0,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": 0.7525,
+      "match": 1.0,
+      "opposes": 0.0
+     },
+     "C4": {
+      "mean": 0.7419,
+      "match": 1.0,
+      "opposes": 0.0
+     }
+    },
+    "any_match": 0.996
+   }
+  },
+  "no_sharing": {
+   "0.5": {
+    "n": 500,
+    "verdicts": {
+     "No tested feature": 0.004,
+     "Not shared": 0.996
+    },
+    "reason_codes": {},
+    "mean_delta": 0.6232,
+    "mean_X": 0.0001,
+    "mean_O": -0.0002,
+    "mean_X_far": 0.0001,
+    "mean_cue_margin_C1": 0.0713,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.004,
+    "share_reaching_stage3": 0.004,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": 0.0093,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": 0.0046,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": 0.0067,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C4": {
+      "mean": -0.0133,
+      "match": 0.0,
+      "opposes": 0.0
+     }
+    },
+    "any_match": 0.0
+   },
+   "1.0": {
+    "n": 500,
+    "verdicts": {
+     "No tested feature": 0.008,
+     "Not shared": 0.992
+    },
+    "reason_codes": {},
+    "mean_delta": 0.606,
+    "mean_X": -0.0002,
+    "mean_O": -0.0,
+    "mean_X_far": -0.0002,
+    "mean_cue_margin_C1": 0.0714,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.008,
+    "share_reaching_stage3": 0.008,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": 0.0003,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": -0.0144,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": 0.0112,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C4": {
+      "mean": 0.0109,
+      "match": 0.0,
+      "opposes": 0.0
+     }
+    },
+    "any_match": 0.0
+   },
+   "2.0": {
+    "n": 500,
+    "verdicts": {
+     "No tested feature": 0.016,
+     "Not shared": 0.984
+    },
+    "reason_codes": {},
+    "mean_delta": 0.6275,
+    "mean_X": -0.0,
+    "mean_O": 0.0001,
+    "mean_X_far": -0.0001,
+    "mean_cue_margin_C1": 0.0713,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.014,
+    "share_reaching_stage3": 0.016,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": 0.0107,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": 0.0007,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": 0.0019,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C4": {
+      "mean": 0.0015,
+      "match": 0.0,
+      "opposes": 0.0
+     }
+    },
+    "any_match": 0.0
+   }
+  },
+  "one_way_cue": {
+   "0.5": {
+    "n": 500,
+    "verdicts": {
+     "Same cue, one direction": 1.0
+    },
+    "reason_codes": {},
+    "mean_delta": 0.6134,
+    "mean_X": 0.0492,
+    "mean_O": 0.0,
+    "mean_X_far": 0.0492,
+    "mean_cue_margin_C1": 0.0741,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.0,
+    "share_reaching_stage3": 1.0,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": -0.3505,
+      "match": 1.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": 0.0006,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": -0.0001,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C4": {
+      "mean": -0.0006,
+      "match": 0.0,
+      "opposes": 0.0
+     }
+    },
+    "any_match": 1.0
+   },
+   "1.0": {
+    "n": 500,
+    "verdicts": {
+     "Same cue, one direction": 1.0
+    },
+    "reason_codes": {},
+    "mean_delta": 0.6106,
+    "mean_X": 0.0968,
+    "mean_O": 0.0001,
+    "mean_X_far": 0.0968,
+    "mean_cue_margin_C1": 0.0823,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.0,
+    "share_reaching_stage3": 1.0,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": -0.6781,
+      "match": 1.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": 0.0002,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": -0.001,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C4": {
+      "mean": -0.0005,
+      "match": 0.0,
+      "opposes": 0.0
+     }
+    },
+    "any_match": 1.0
+   },
+   "2.0": {
+    "n": 500,
+    "verdicts": {
+     "Same cue, one direction": 1.0
+    },
+    "reason_codes": {},
+    "mean_delta": 0.546,
+    "mean_X": 0.1885,
+    "mean_O": 0.0001,
+    "mean_X_far": 0.1885,
+    "mean_cue_margin_C1": 0.1114,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.0,
+    "share_reaching_stage3": 1.0,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": -1.4877,
+      "match": 1.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": 0.0004,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": -0.0005,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C4": {
+      "mean": -0.0019,
+      "match": 0.0,
+      "opposes": 0.0
+     }
+    },
+    "any_match": 1.0
+   }
+  },
+  "one_way_other_cue": {
+   "0.5": {
+    "n": 500,
+    "verdicts": {
+     "Inconclusive": 1.0
+    },
+    "reason_codes": {
+     "cue_unresolved": 0.998,
+     "dose_failed": 0.002
+    },
+    "mean_delta": 0.601,
+    "mean_X": 0.0489,
+    "mean_O": 0.0002,
+    "mean_X_far": 0.0488,
+    "mean_cue_margin_C1": 0.0744,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.0,
+    "share_reaching_stage3": 1.0,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": 0.0011,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": 0.0009,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": 0.0004,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C4": {
+      "mean": -0.3662,
+      "match": 0.0,
+      "opposes": 1.0
+     }
+    },
+    "any_match": 0.0
+   },
+   "1.0": {
+    "n": 500,
+    "verdicts": {
+     "Inconclusive": 1.0
+    },
+    "reason_codes": {
+     "cue_unresolved": 1.0
+    },
+    "mean_delta": 0.6037,
+    "mean_X": 0.096,
+    "mean_O": 0.0003,
+    "mean_X_far": 0.0959,
+    "mean_cue_margin_C1": 0.0805,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.0,
+    "share_reaching_stage3": 1.0,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": 0.0013,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": 0.0009,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": 0.0006,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C4": {
+      "mean": -0.6437,
+      "match": 0.0,
+      "opposes": 1.0
+     }
+    },
+    "any_match": 0.0
+   },
+   "2.0": {
+    "n": 500,
+    "verdicts": {
+     "Inconclusive": 0.998,
+     "No face use on CREMA-D": 0.002
+    },
+    "reason_codes": {
+     "cue_unresolved": 0.982,
+     "dose_failed": 0.016
+    },
+    "mean_delta": 0.5673,
+    "mean_X": 0.1905,
+    "mean_O": -0.0001,
+    "mean_X_far": 0.1905,
+    "mean_cue_margin_C1": 0.106,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.0,
+    "share_reaching_stage3": 0.998,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": 0.0003,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": -0.0008,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": -0.001,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C4": {
+      "mean": -1.3639,
+      "match": 0.0,
+      "opposes": 1.0
+     }
+    },
+    "any_match": 0.0
+   }
+  },
+  "option_prior": {
+   "0.5": {
+    "n": 500,
+    "verdicts": {
+     "No tested feature": 0.018,
+     "Not shared": 0.982
+    },
+    "reason_codes": {},
+    "mean_delta": 0.474,
+    "mean_X": 0.0,
+    "mean_O": 0.0,
+    "mean_X_far": 0.0,
+    "mean_cue_margin_C1": 0.0713,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.018,
+    "share_reaching_stage3": 0.018,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": -0.0057,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": 0.0082,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": -0.0025,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C4": {
+      "mean": 0.0002,
+      "match": 0.0,
+      "opposes": 0.0
+     }
+    },
+    "any_match": 0.0
+   },
+   "1.0": {
+    "n": 500,
+    "verdicts": {
+     "No tested feature": 0.01,
+     "Not shared": 0.99
+    },
+    "reason_codes": {},
+    "mean_delta": 0.4782,
+    "mean_X": 0.0,
+    "mean_O": 0.0001,
+    "mean_X_far": 0.0,
+    "mean_cue_margin_C1": 0.0714,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.01,
+    "share_reaching_stage3": 0.01,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": 0.0108,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": 0.0079,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": -0.0158,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C4": {
+      "mean": -0.0087,
+      "match": 0.0,
+      "opposes": 0.0
+     }
+    },
+    "any_match": 0.0
+   },
+   "2.0": {
+    "n": 500,
+    "verdicts": {
+     "Inconclusive": 0.002,
+     "No tested feature": 0.008,
+     "Not shared": 0.99
+    },
+    "reason_codes": {
+     "cue_unresolved": 0.002
+    },
+    "mean_delta": 0.4784,
+    "mean_X": -0.0004,
+    "mean_O": -0.0,
+    "mean_X_far": -0.0004,
+    "mean_cue_margin_C1": 0.0713,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.008,
+    "share_reaching_stage3": 0.01,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": 0.0062,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": -0.0056,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": -0.0096,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C4": {
+      "mean": -0.0014,
+      "match": 0.0,
+      "opposes": 0.0
+     }
+    },
+    "any_match": 0.0
+   }
+  },
+  "other_cue": {
+   "0.5": {
+    "n": 500,
+    "verdicts": {
+     "Inconclusive": 0.378,
+     "Not this cue": 0.622
+    },
+    "reason_codes": {
+     "cue_unresolved": 0.378
+    },
+    "mean_delta": 0.6013,
+    "mean_X": 0.0621,
+    "mean_O": -0.0,
+    "mean_X_far": 0.0621,
+    "mean_cue_margin_C1": 0.074,
+    "label_neighbours_live": 0.014,
+    "sufficient_not_necessary": 0.0,
+    "share_reaching_stage3": 1.0,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": -0.0003,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": 0.0014,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": 0.0009,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C4": {
+      "mean": -0.3475,
+      "match": 0.0,
+      "opposes": 1.0
+     }
+    },
+    "any_match": 0.0
+   },
+   "1.0": {
+    "n": 500,
+    "verdicts": {
+     "Inconclusive": 0.074,
+     "Not this cue": 0.926
+    },
+    "reason_codes": {
+     "cue_unresolved": 0.072,
+     "dose_failed": 0.002
+    },
+    "mean_delta": 0.5972,
+    "mean_X": 0.1232,
+    "mean_O": 0.0,
+    "mean_X_far": 0.1232,
+    "mean_cue_margin_C1": 0.0831,
+    "label_neighbours_live": 0.026,
+    "sufficient_not_necessary": 0.0,
+    "share_reaching_stage3": 1.0,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": -0.0011,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": -0.0011,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": -0.0004,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C4": {
+      "mean": -0.7103,
+      "match": 0.0,
+      "opposes": 1.0
+     }
+    },
+    "any_match": 0.0
+   },
+   "2.0": {
+    "n": 500,
+    "verdicts": {
+     "Inconclusive": 0.068,
+     "No face use on CREMA-D": 0.004,
+     "Not this cue": 0.928
+    },
+    "reason_codes": {
+     "cue_unresolved": 0.054,
+     "dose_failed": 0.014
+    },
+    "mean_delta": 0.5498,
+    "mean_X": 0.2427,
+    "mean_O": -0.0,
+    "mean_X_far": 0.2427,
+    "mean_cue_margin_C1": 0.1067,
+    "label_neighbours_live": 0.026,
+    "sufficient_not_necessary": 0.0,
+    "share_reaching_stage3": 0.996,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": -0.0,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": -0.0008,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": 0.0014,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C4": {
+      "mean": -1.379,
+      "match": 0.0,
+      "opposes": 1.0
+     }
+    },
+    "any_match": 0.0
+   }
+  },
+  "partner_pull": {
+   "0.5": {
+    "n": 500,
+    "verdicts": {
+     "Inconclusive": 0.93,
+     "No tested feature": 0.07
+    },
+    "reason_codes": {
+     "cue_unresolved": 0.048,
+     "dose_failed": 0.882
+    },
+    "mean_delta": 0.609,
+    "mean_X": 0.063,
+    "mean_O": -0.0001,
+    "mean_X_far": 0.063,
+    "mean_cue_margin_C1": 0.0741,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.068,
+    "share_reaching_stage3": 1.0,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": 0.0005,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": -0.0006,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": 0.0024,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C4": {
+      "mean": 0.0004,
+      "match": 0.0,
+      "opposes": 0.0
+     }
+    },
+    "any_match": 0.0
+   },
+   "1.0": {
+    "n": 500,
+    "verdicts": {
+     "Inconclusive": 0.974,
+     "No tested feature": 0.026
+    },
+    "reason_codes": {
+     "cue_unresolved": 0.03,
+     "dose_failed": 0.944
+    },
+    "mean_delta": 0.5884,
+    "mean_X": 0.1232,
+    "mean_O": 0.0001,
+    "mean_X_far": 0.1231,
+    "mean_cue_margin_C1": 0.0812,
+    "label_neighbours_live": 0.002,
+    "sufficient_not_necessary": 0.026,
+    "share_reaching_stage3": 1.0,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": 0.0007,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": -0.0007,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": 0.0001,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C4": {
+      "mean": -0.0003,
+      "match": 0.0,
+      "opposes": 0.0
+     }
+    },
+    "any_match": 0.0
+   },
+   "2.0": {
+    "n": 500,
+    "verdicts": {
+     "Inconclusive": 0.988,
+     "No tested feature": 0.012
+    },
+    "reason_codes": {
+     "cue_unresolved": 0.042,
+     "dose_failed": 0.946
+    },
+    "mean_delta": 0.5554,
+    "mean_X": 0.2428,
+    "mean_O": 0.0001,
+    "mean_X_far": 0.2428,
+    "mean_cue_margin_C1": 0.1069,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.012,
+    "share_reaching_stage3": 1.0,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": 0.0004,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": -0.0005,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": 0.0006,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C4": {
+      "mean": 0.0009,
+      "match": 0.0,
+      "opposes": 0.0
+     }
+    },
+    "any_match": 0.0
+   }
+  },
+  "position_bias": {
+   "0.5": {
+    "n": 500,
+    "verdicts": {
+     "Inconclusive": 0.002,
+     "No tested feature": 0.016,
+     "Not shared": 0.982
+    },
+    "reason_codes": {
+     "cue_unresolved": 0.002
+    },
+    "mean_delta": 0.4275,
+    "mean_X": 0.0,
+    "mean_O": -0.0001,
+    "mean_X_far": 0.0001,
+    "mean_cue_margin_C1": 0.0714,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.016,
+    "share_reaching_stage3": 0.018,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": 0.0008,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": 0.0021,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": 0.0043,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C4": {
+      "mean": 0.0009,
+      "match": 0.0,
+      "opposes": 0.0
+     }
+    },
+    "any_match": 0.0
+   },
+   "1.0": {
+    "n": 500,
+    "verdicts": {
+     "No tested feature": 0.01,
+     "Not shared": 0.99
+    },
+    "reason_codes": {},
+    "mean_delta": 0.4278,
+    "mean_X": -0.0,
+    "mean_O": 0.0001,
+    "mean_X_far": -0.0001,
+    "mean_cue_margin_C1": 0.0714,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.01,
+    "share_reaching_stage3": 0.01,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": 0.0012,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": 0.0103,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": -0.0096,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C4": {
+      "mean": 0.0081,
+      "match": 0.0,
+      "opposes": 0.0
+     }
+    },
+    "any_match": 0.0
+   },
+   "2.0": {
+    "n": 500,
+    "verdicts": {
+     "No tested feature": 0.002,
+     "Not shared": 0.994,
+     "Option-dependent": 0.004
+    },
+    "reason_codes": {},
+    "mean_delta": 0.427,
+    "mean_X": -0.0003,
+    "mean_O": -0.0002,
+    "mean_X_far": -0.0002,
+    "mean_cue_margin_C1": 0.0714,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.002,
+    "share_reaching_stage3": 0.002,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": 0.027,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": 0.0376,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": -0.0328,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C4": {
+      "mean": -0.0363,
+      "match": 0.0,
+      "opposes": 0.0
+     }
+    },
+    "any_match": 0.0
+   }
+  },
+  "prior_only": {
+   "0.5": {
+    "n": 500,
+    "verdicts": {
+     "No face use on CREMA-D": 0.966,
+     "Not shared": 0.034
+    },
+    "reason_codes": {},
+    "mean_delta": -0.0003,
+    "mean_X": -0.0006,
+    "mean_O": -0.0004,
+    "mean_X_far": -0.0005,
+    "mean_cue_margin_C1": 0.049,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.0
+   },
+   "1.0": {
+    "n": 500,
+    "verdicts": {
+     "Inconclusive": 0.002,
+     "No face use on CREMA-D": 0.97,
+     "Not shared": 0.028
+    },
+    "reason_codes": {
+     "dose_failed": 0.002
+    },
+    "mean_delta": 0.0001,
+    "mean_X": 0.0009,
+    "mean_O": 0.0008,
+    "mean_X_far": 0.0006,
+    "mean_cue_margin_C1": 0.0486,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.0,
+    "share_reaching_stage3": 0.002,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": 0.0123,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": 0.0361,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": 0.0121,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C4": {
+      "mean": 0.0249,
+      "match": 0.0,
+      "opposes": 0.0
+     }
+    },
+    "any_match": 0.0
+   },
+   "2.0": {
+    "n": 500,
+    "verdicts": {
+     "No face use on CREMA-D": 0.95,
+     "Not shared": 0.05
+    },
+    "reason_codes": {},
+    "mean_delta": 0.0,
+    "mean_X": -0.0003,
+    "mean_O": 0.0003,
+    "mean_X_far": -0.0004,
+    "mean_cue_margin_C1": 0.0488,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.0
+   }
+  },
+  "reverse": {
+   "0.5": {
+    "n": 500,
+    "verdicts": {
+     "Opposes the stated cue": 1.0
+    },
+    "reason_codes": {},
+    "mean_delta": 0.6022,
+    "mean_X": 0.0624,
+    "mean_O": 0.0001,
+    "mean_X_far": 0.0624,
+    "mean_cue_margin_C1": 0.0741,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.0,
+    "share_reaching_stage3": 1.0,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": 0.3502,
+      "match": 0.0,
+      "opposes": 1.0
+     },
+     "C2": {
+      "mean": 0.1253,
+      "match": 0.0,
+      "opposes": 0.886
+     },
+     "C3": {
+      "mean": 0.1263,
+      "match": 0.902,
+      "opposes": 0.0
+     },
+     "C4": {
+      "mean": -0.0003,
+      "match": 0.0,
+      "opposes": 0.0
+     }
+    },
+    "any_match": 0.902
+   },
+   "1.0": {
+    "n": 500,
+    "verdicts": {
+     "No face use on CREMA-D": 0.002,
+     "Opposes the stated cue": 0.998
+    },
+    "reason_codes": {},
+    "mean_delta": 0.5817,
+    "mean_X": 0.1229,
+    "mean_O": -0.0001,
+    "mean_X_far": 0.1229,
+    "mean_cue_margin_C1": 0.081,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.0,
+    "share_reaching_stage3": 0.998,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": 0.6582,
+      "match": 0.0,
+      "opposes": 1.0
+     },
+     "C2": {
+      "mean": 0.2123,
+      "match": 0.0,
+      "opposes": 1.0
+     },
+     "C3": {
+      "mean": 0.2136,
+      "match": 1.0,
+      "opposes": 0.0
+     },
+     "C4": {
+      "mean": 0.0001,
+      "match": 0.0,
+      "opposes": 0.0
+     }
+    },
+    "any_match": 0.998
+   },
+   "2.0": {
+    "n": 500,
+    "verdicts": {
+     "Opposes the stated cue": 1.0
+    },
+    "reason_codes": {},
+    "mean_delta": 0.5549,
+    "mean_X": 0.2416,
+    "mean_O": -0.0002,
+    "mean_X_far": 0.2416,
+    "mean_cue_margin_C1": 0.1075,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.0,
+    "share_reaching_stage3": 1.0,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": 1.3933,
+      "match": 0.0,
+      "opposes": 1.0
+     },
+     "C2": {
+      "mean": 0.3677,
+      "match": 0.0,
+      "opposes": 1.0
+     },
+     "C3": {
+      "mean": 0.3661,
+      "match": 1.0,
+      "opposes": 0.0
+     },
+     "C4": {
+      "mean": -0.003,
+      "match": 0.0,
+      "opposes": 0.0
+     }
+    },
+    "any_match": 1.0
+   }
+  },
+  "same_cue": {
+   "0.5": {
+    "n": 500,
+    "verdicts": {
+     "Same cue": 0.904,
+     "Same cue, one direction": 0.096
+    },
+    "reason_codes": {},
+    "mean_delta": 0.6005,
+    "mean_X": 0.062,
+    "mean_O": 0.0001,
+    "mean_X_far": 0.062,
+    "mean_cue_margin_C1": 0.0746,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.0,
+    "share_reaching_stage3": 1.0,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": -0.3698,
+      "match": 1.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": -0.1142,
+      "match": 0.904,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": -0.113,
+      "match": 0.0,
+      "opposes": 0.876
+     },
+     "C4": {
+      "mean": 0.0,
+      "match": 0.0,
+      "opposes": 0.0
+     }
+    },
+    "any_match": 1.0
+   },
+   "1.0": {
+    "n": 500,
+    "verdicts": {
+     "Same cue": 1.0
+    },
+    "reason_codes": {},
+    "mean_delta": 0.5823,
+    "mean_X": 0.123,
+    "mean_O": -0.0002,
+    "mean_X_far": 0.123,
+    "mean_cue_margin_C1": 0.0824,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.0,
+    "share_reaching_stage3": 1.0,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": -0.6849,
+      "match": 1.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": -0.2059,
+      "match": 1.0,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": -0.2066,
+      "match": 0.0,
+      "opposes": 1.0
+     },
+     "C4": {
+      "mean": -0.0001,
+      "match": 0.0,
+      "opposes": 0.0
+     }
+    },
+    "any_match": 1.0
+   },
+   "2.0": {
+    "n": 500,
+    "verdicts": {
+     "No face use on CREMA-D": 0.002,
+     "Same cue": 0.998
+    },
+    "reason_codes": {},
+    "mean_delta": 0.5535,
+    "mean_X": 0.2422,
+    "mean_O": -0.0,
+    "mean_X_far": 0.2422,
+    "mean_cue_margin_C1": 0.1106,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.0,
+    "share_reaching_stage3": 0.998,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": -1.4667,
+      "match": 1.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": -0.3821,
+      "match": 1.0,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": -0.3818,
+      "match": 0.0,
+      "opposes": 1.0
+     },
+     "C4": {
+      "mean": -0.0007,
+      "match": 0.0,
+      "opposes": 0.0
+     }
+    },
+    "any_match": 0.998
+   }
+  },
+  "signal_loss": {
+   "0.5": {
+    "n": 500,
+    "verdicts": {
+     "Inconclusive": 0.11,
+     "No tested feature": 0.89
+    },
+    "reason_codes": {
+     "cue_unresolved": 0.11
+    },
+    "mean_delta": 0.5917,
+    "mean_X": 0.0617,
+    "mean_O": -0.0003,
+    "mean_X_far": 0.0618,
+    "mean_cue_margin_C1": 0.0742,
+    "label_neighbours_live": 0.026,
+    "sufficient_not_necessary": 0.802,
+    "share_reaching_stage3": 1.0,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": 0.0005,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": 0.0001,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": -0.0007,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C4": {
+      "mean": 0.0003,
+      "match": 0.0,
+      "opposes": 0.0
+     }
+    },
+    "any_match": 0.0
+   },
+   "1.0": {
+    "n": 500,
+    "verdicts": {
+     "Inconclusive": 0.09,
+     "No tested feature": 0.91
+    },
+    "reason_codes": {
+     "cue_unresolved": 0.09
+    },
+    "mean_delta": 0.5802,
+    "mean_X": 0.1232,
+    "mean_O": -0.0002,
+    "mean_X_far": 0.1232,
+    "mean_cue_margin_C1": 0.0808,
+    "label_neighbours_live": 0.036,
+    "sufficient_not_necessary": 0.866,
+    "share_reaching_stage3": 1.0,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": -0.0006,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": -0.0005,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": -0.0,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C4": {
+      "mean": -0.0017,
+      "match": 0.0,
+      "opposes": 0.0
+     }
+    },
+    "any_match": 0.0
+   },
+   "2.0": {
+    "n": 500,
+    "verdicts": {
+     "Inconclusive": 0.022,
+     "No tested feature": 0.978
+    },
+    "reason_codes": {
+     "cue_unresolved": 0.022
+    },
+    "mean_delta": 0.5558,
+    "mean_X": 0.2425,
+    "mean_O": -0.0,
+    "mean_X_far": 0.2425,
+    "mean_cue_margin_C1": 0.1077,
+    "label_neighbours_live": 0.032,
+    "sufficient_not_necessary": 0.942,
+    "share_reaching_stage3": 1.0,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": 0.0002,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": 0.0004,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": -0.0001,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C4": {
+      "mean": 0.0004,
+      "match": 0.0,
+      "opposes": 0.0
+     }
+    },
+    "any_match": 0.0
+   }
+  },
+  "spread": {
+   "0.5": {
+    "n": 500,
+    "verdicts": {
+     "Inconclusive": 0.36,
+     "Not this cue": 0.64
+    },
+    "reason_codes": {
+     "cue_unresolved": 0.36
+    },
+    "mean_delta": 0.6174,
+    "mean_X": 0.0618,
+    "mean_O": -0.0001,
+    "mean_X_far": 0.0618,
+    "mean_cue_margin_C1": 0.0738,
+    "label_neighbours_live": 0.612,
+    "sufficient_not_necessary": 0.602,
+    "share_reaching_stage3": 1.0,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": -0.0011,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": -0.0006,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": -0.0003,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C4": {
+      "mean": 0.0009,
+      "match": 0.0,
+      "opposes": 0.0
+     }
+    },
+    "any_match": 0.0
+   },
+   "1.0": {
+    "n": 500,
+    "verdicts": {
+     "Inconclusive": 0.06,
+     "Not this cue": 0.94
+    },
+    "reason_codes": {
+     "cue_unresolved": 0.056,
+     "dose_failed": 0.004
+    },
+    "mean_delta": 0.5827,
+    "mean_X": 0.1233,
+    "mean_O": -0.0001,
+    "mean_X_far": 0.1233,
+    "mean_cue_margin_C1": 0.081,
+    "label_neighbours_live": 0.91,
+    "sufficient_not_necessary": 0.91,
+    "share_reaching_stage3": 1.0,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": -0.0,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": 0.0002,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": -0.0003,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C4": {
+      "mean": 0.0013,
+      "match": 0.0,
+      "opposes": 0.0
+     }
+    },
+    "any_match": 0.0
+   },
+   "2.0": {
+    "n": 500,
+    "verdicts": {
+     "Inconclusive": 0.07,
+     "No face use on CREMA-D": 0.006,
+     "Not this cue": 0.924
+    },
+    "reason_codes": {
+     "cue_unresolved": 0.062,
+     "dose_failed": 0.008
+    },
+    "mean_delta": 0.5616,
+    "mean_X": 0.2434,
+    "mean_O": -0.0001,
+    "mean_X_far": 0.2434,
+    "mean_cue_margin_C1": 0.1022,
+    "label_neighbours_live": 0.898,
+    "sufficient_not_necessary": 0.912,
+    "share_reaching_stage3": 0.994,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": -0.0,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": -0.0,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": 0.0003,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C4": {
+      "mean": 0.0023,
+      "match": 0.0,
+      "opposes": 0.0
+     }
+    },
+    "any_match": 0.0
+   }
+  }
+ },
+ "checks": {
+  "prior_only": {
+   "1.0": {
+    "pass": true,
+    "checks": {
+     "expected_verdict": true,
+     "other_named": true,
+     "inconclusive": true
+    }
+   },
+   "2.0": {
+    "pass": true,
+    "checks": {
+     "expected_verdict": true,
+     "other_named": true,
+     "inconclusive": true
+    }
+   }
+  },
+  "no_sharing": {
+   "1.0": {
+    "pass": true,
+    "checks": {
+     "expected_verdict": true,
+     "other_named": true,
+     "inconclusive": true
+    }
+   },
+   "2.0": {
+    "pass": true,
+    "checks": {
+     "expected_verdict": true,
+     "other_named": true,
+     "inconclusive": true
+    }
+   }
+  },
+  "adjacency": {
+   "1.0": {
+    "pass": true,
+    "checks": {
+     "expected_verdict": true,
+     "other_named": true,
+     "inconclusive": true
+    }
+   },
+   "2.0": {
+    "pass": true,
+    "checks": {
+     "expected_verdict": true,
+     "other_named": true,
+     "inconclusive": true
+    }
+   }
+  },
+  "same_cue": {
+   "1.0": {
+    "pass": true,
+    "checks": {
+     "expected_verdict": true,
+     "other_named": true,
+     "inconclusive": true
+    }
+   },
+   "2.0": {
+    "pass": true,
+    "checks": {
+     "expected_verdict": true,
+     "other_named": true,
+     "inconclusive": true
+    }
+   }
+  },
+  "one_way_cue": {
+   "1.0": {
+    "pass": true,
+    "checks": {
+     "expected_verdict": true,
+     "other_named": true,
+     "inconclusive": true
+    }
+   },
+   "2.0": {
+    "pass": true,
+    "checks": {
+     "expected_verdict": true,
+     "other_named": true,
+     "inconclusive": true
+    }
+   }
+  },
+  "reverse": {
+   "1.0": {
+    "pass": true,
+    "checks": {
+     "expected_verdict": true,
+     "other_named": true,
+     "inconclusive": true
+    }
+   },
+   "2.0": {
+    "pass": true,
+    "checks": {
+     "expected_verdict": true,
+     "other_named": true,
+     "inconclusive": true
+    }
+   }
+  },
+  "other_cue": {
+   "1.0": {
+    "pass": true,
+    "checks": {
+     "expected_verdict": true,
+     "other_named": true,
+     "inconclusive": true
+    }
+   },
+   "2.0": {
+    "pass": true,
+    "checks": {
+     "expected_verdict": true,
+     "other_named": true,
+     "inconclusive": true
+    }
+   }
+  },
+  "spread": {
+   "1.0": {
+    "pass": true,
+    "checks": {
+     "expected_verdict": true,
+     "other_named": true,
+     "inconclusive": true,
+     "rider": true
+    }
+   },
+   "2.0": {
+    "pass": true,
+    "checks": {
+     "expected_verdict": true,
+     "other_named": true,
+     "inconclusive": true,
+     "rider": true
+    }
+   }
+  },
+  "global_face": {
+   "1.0": {
+    "pass": true,
+    "checks": {
+     "expected_verdict": true,
+     "other_named": true,
+     "inconclusive": true
+    }
+   },
+   "2.0": {
+    "pass": true,
+    "checks": {
+     "expected_verdict": true,
+     "other_named": true,
+     "inconclusive": true
+    }
+   }
+  },
+  "human_like": {
+   "1.0": {
+    "pass": true,
+    "checks": {
+     "expected_verdict": true,
+     "other_named": true,
+     "inconclusive": true
+    }
+   },
+   "2.0": {
+    "pass": true,
+    "checks": {
+     "expected_verdict": true,
+     "other_named": true,
+     "inconclusive": true
+    }
+   }
+  },
+  "generic_mask": {
+   "1.0": {
+    "pass": true,
+    "checks": {
+     "forbidden_verdict": true
+    }
+   },
+   "2.0": {
+    "pass": true,
+    "checks": {
+     "forbidden_verdict": true
+    }
+   }
+  },
+  "generic_pull": {
+   "1.0": {
+    "pass": true,
+    "checks": {
+     "no_match": true
+    }
+   },
+   "2.0": {
+    "pass": true,
+    "checks": {
+     "no_match": true
+    }
+   }
+  },
+  "signal_loss": {
+   "1.0": {
+    "pass": true,
+    "checks": {
+     "forbidden_verdict": true
+    }
+   },
+   "2.0": {
+    "pass": true,
+    "checks": {
+     "forbidden_verdict": true
+    }
+   }
+  },
+  "partner_pull": {
+   "1.0": {
+    "pass": true,
+    "checks": {
+     "forbidden_verdict": true
+    }
+   },
+   "2.0": {
+    "pass": true,
+    "checks": {
+     "forbidden_verdict": true
+    }
+   }
+  },
+  "fill_artefact": {
+   "1.0": {
+    "pass": true,
+    "checks": {
+     "forbidden_verdict": true
+    }
+   },
+   "2.0": {
+    "pass": true,
+    "checks": {
+     "forbidden_verdict": true
+    }
+   }
+  },
+  "fill_artefact_up": {
+   "1.0": {
+    "pass": true,
+    "checks": {
+     "forbidden_verdict": true
+    }
+   },
+   "2.0": {
+    "pass": true,
+    "checks": {
+     "forbidden_verdict": true
+    }
+   }
+  },
+  "option_prior": {
+   "1.0": {
+    "pass": true,
+    "checks": {
+     "expected_verdict": true,
+     "other_named": true,
+     "inconclusive": true
+    }
+   },
+   "2.0": {
+    "pass": true,
+    "checks": {
+     "expected_verdict": true,
+     "other_named": true,
+     "inconclusive": true
+    }
+   }
+  },
+  "position_bias": {
+   "1.0": {
+    "pass": true,
+    "checks": {
+     "expected_verdict": true,
+     "other_named": true,
+     "inconclusive": true
+    }
+   },
+   "2.0": {
+    "pass": true,
+    "checks": {
+     "expected_verdict": true,
+     "other_named": true,
+     "inconclusive": true
+    }
+   }
+  },
+  "adjacency_all": {
+   "1.0": {
+    "pass": true,
+    "checks": {
+     "expected_verdict": true,
+     "other_named": true,
+     "inconclusive": true
+    }
+   },
+   "2.0": {
+    "pass": true,
+    "checks": {
+     "expected_verdict": true,
+     "other_named": true,
+     "inconclusive": true
+    }
+   }
+  }
+ },
+ "scenarios": {
+  "actors_split": {
+   "1.0": {
+    "n": 50,
+    "verdicts": {
+     "Inconclusive": 0.46,
+     "No tested feature": 0.34,
+     "Not shared": 0.2
+    },
+    "reason_codes": {
+     "shared_unresolved": 0.46
+    },
+    "mean_delta": 0.5624,
+    "mean_X": 0.0404,
+    "mean_O": 0.0002,
+    "mean_X_far": 0.0403,
+    "mean_cue_margin_C1": 0.1133,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.34,
+    "share_reaching_stage3": 0.34,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": -0.0006,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": 0.0027,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": 0.0002,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C4": {
+      "mean": 0.0106,
+      "match": 0.0,
+      "opposes": 0.0
+     }
+    },
+    "any_match": 0.0,
+    "reached": true
+   }
+  },
+  "clips_lost": {
+   "1.0": {
+    "n": 50,
+    "verdicts": {
+     "Not tested": 1.0
+    },
+    "reason_codes": {},
+    "mean_delta": 0.601,
+    "mean_X": null,
+    "mean_O": null,
+    "mean_X_far": null,
+    "mean_cue_margin_C1": null,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.0,
+    "reached": true
+   }
+  },
+  "gate_failed": {
+   "1.0": {
+    "n": 50,
+    "verdicts": {
+     "Not tested": 1.0
+    },
+    "reason_codes": {},
+    "mean_delta": 0.5558,
+    "mean_X": null,
+    "mean_O": null,
+    "mean_X_far": null,
+    "mean_cue_margin_C1": null,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.0,
+    "reached": true
+   }
+  },
+  "no_dose": {
+   "1.0": {
+    "n": 50,
+    "verdicts": {
+     "Inconclusive": 1.0
+    },
+    "reason_codes": {
+     "cue_unresolved": 0.06,
+     "dose_failed": 0.94
+    },
+    "mean_delta": 0.599,
+    "mean_X": 0.1229,
+    "mean_O": -0.0003,
+    "mean_X_far": 0.1231,
+    "mean_cue_margin_C1": 0.0787,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.0,
+    "share_reaching_stage3": 1.0,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": 0.0011,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": 0.0015,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": 0.0068,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C4": {
+      "mean": -0.0033,
+      "match": 0.0,
+      "opposes": 0.0
+     }
+    },
+    "any_match": 0.0,
+    "reached": true
+   }
+  },
+  "part_adjacent": {
+   "1.0": {
+    "n": 50,
+    "verdicts": {
+     "Inconclusive": 0.98,
+     "No tested feature": 0.02
+    },
+    "reason_codes": {
+     "option_unresolved": 0.98
+    },
+    "mean_delta": 0.5882,
+    "mean_X": 0.1329,
+    "mean_O": 0.4003,
+    "mean_X_far": -0.0005,
+    "mean_cue_margin_C1": 0.0714,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.02,
+    "share_reaching_stage3": 0.02,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": 0.004,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": -0.0195,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": 0.0236,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C4": {
+      "mean": 0.0012,
+      "match": 0.0,
+      "opposes": 0.0
+     }
+    },
+    "any_match": 0.0,
+    "reached": true
+   }
+  },
+  "region_small": {
+   "1.0": {
+    "n": 50,
+    "verdicts": {
+     "Inconclusive": 1.0
+    },
+    "reason_codes": {
+     "region_too_small": 1.0
+    },
+    "mean_delta": 0.5527,
+    "mean_X": 0.1256,
+    "mean_O": 0.0,
+    "mean_X_far": 0.1256,
+    "mean_cue_margin_C1": 0.0807,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.0,
+    "share_reaching_stage3": 1.0,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": -0.0014,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": -0.0022,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": 0.0004,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C4": {
+      "mean": 0.0065,
+      "match": 0.0,
+      "opposes": 0.0
+     }
+    },
+    "any_match": 0.0,
+    "reached": true
+   }
+  },
+  "sham_differs": {
+   "1.0": {
+    "n": 50,
+    "verdicts": {
+     "Inconclusive": 1.0
+    },
+    "reason_codes": {
+     "sham_failed": 1.0
+    },
+    "mean_delta": 0.6066,
+    "mean_X": 0.1207,
+    "mean_O": -0.0002,
+    "mean_X_far": 0.1207,
+    "mean_cue_margin_C1": 0.0796,
+    "label_neighbours_live": 0.0,
+    "sufficient_not_necessary": 0.0,
+    "share_reaching_stage3": 1.0,
+    "contrasts_given_stage3": {
+     "C1": {
+      "mean": -0.0036,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C2": {
+      "mean": -0.0024,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C3": {
+      "mean": -0.0013,
+      "match": 0.0,
+      "opposes": 0.0
+     },
+     "C4": {
+      "mean": 0.0022,
+      "match": 0.0,
+      "opposes": 0.0
+     }
+    },
+    "any_match": 0.0,
+    "reached": true
+   }
+  }
+ },
+ "noise_sensitivity_not_judged": {
+  "1.5": {
+   "global_face": {
+    "1.0": {
+     "n": 100,
+     "verdicts": {
+      "Inconclusive": 0.2,
+      "No tested feature": 0.8
+     },
+     "reason_codes": {
+      "cue_unresolved": 0.2
+     },
+     "mean_delta": 0.5152,
+     "mean_X": 0.1155,
+     "mean_O": -0.0005,
+     "mean_X_far": 0.1156,
+     "mean_cue_margin_C1": 0.0988,
+     "label_neighbours_live": 0.04,
+     "sufficient_not_necessary": 0.69,
+     "share_reaching_stage3": 1.0,
+     "contrasts_given_stage3": {
+      "C1": {
+       "mean": -0.0023,
+       "match": 0.0,
+       "opposes": 0.0
+      },
+      "C2": {
+       "mean": 0.0027,
+       "match": 0.0,
+       "opposes": 0.0
+      },
+      "C3": {
+       "mean": 0.0013,
+       "match": 0.0,
+       "opposes": 0.0
+      },
+      "C4": {
+       "mean": 0.0034,
+       "match": 0.0,
+       "opposes": 0.0
+      }
+     },
+     "any_match": 0.0
+    }
+   },
+   "human_like": {
+    "1.0": {
+     "n": 100,
+     "verdicts": {
+      "Same cue": 1.0
+     },
+     "reason_codes": {},
+     "mean_delta": 0.478,
+     "mean_X": 0.1175,
+     "mean_O": -0.0006,
+     "mean_X_far": 0.1177,
+     "mean_cue_margin_C1": 0.1011,
+     "label_neighbours_live": 0.0,
+     "sufficient_not_necessary": 0.0,
+     "share_reaching_stage3": 1.0,
+     "contrasts_given_stage3": {
+      "C1": {
+       "mean": -0.7436,
+       "match": 1.0,
+       "opposes": 0.0
+      },
+      "C2": {
+       "mean": -0.214,
+       "match": 1.0,
+       "opposes": 0.0
+      },
+      "C3": {
+       "mean": 0.4289,
+       "match": 1.0,
+       "opposes": 0.0
+      },
+      "C4": {
+       "mean": 0.3748,
+       "match": 1.0,
+       "opposes": 0.0
+      }
+     },
+     "any_match": 1.0
+    }
+   },
+   "no_sharing": {
+    "1.0": {
+     "n": 100,
+     "verdicts": {
+      "No tested feature": 0.01,
+      "Not shared": 0.99
+     },
+     "reason_codes": {},
+     "mean_delta": 0.5251,
+     "mean_X": -0.0003,
+     "mean_O": 0.0001,
+     "mean_X_far": -0.0004,
+     "mean_cue_margin_C1": 0.0901,
+     "label_neighbours_live": 0.0,
+     "sufficient_not_necessary": 0.01,
+     "share_reaching_stage3": 0.01,
+     "contrasts_given_stage3": {
+      "C1": {
+       "mean": -0.0422,
+       "match": 0.0,
+       "opposes": 0.0
+      },
+      "C2": {
+       "mean": -0.003,
+       "match": 0.0,
+       "opposes": 0.0
+      },
+      "C3": {
+       "mean": 0.0204,
+       "match": 0.0,
+       "opposes": 0.0
+      },
+      "C4": {
+       "mean": -0.0261,
+       "match": 0.0,
+       "opposes": 0.0
+      }
+     },
+     "any_match": 0.0
+    }
+   },
+   "other_cue": {
+    "1.0": {
+     "n": 100,
+     "verdicts": {
+      "Inconclusive": 0.17,
+      "Not this cue": 0.83
+     },
+     "reason_codes": {
+      "cue_unresolved": 0.17
+     },
+     "mean_delta": 0.4768,
+     "mean_X": 0.1162,
+     "mean_O": 0.0001,
+     "mean_X_far": 0.1162,
+     "mean_cue_margin_C1": 0.0971,
+     "label_neighbours_live": 0.0,
+     "sufficient_not_necessary": 0.0,
+     "share_reaching_stage3": 1.0,
+     "contrasts_given_stage3": {
+      "C1": {
+       "mean": 0.0023,
+       "match": 0.0,
+       "opposes": 0.0
+      },
+      "C2": {
+       "mean": 0.0011,
+       "match": 0.0,
+       "opposes": 0.0
+      },
+      "C3": {
+       "mean": 0.0015,
+       "match": 0.0,
+       "opposes": 0.0
+      },
+      "C4": {
+       "mean": -0.6402,
+       "match": 0.0,
+       "opposes": 1.0
+      }
+     },
+     "any_match": 0.0
+    }
+   },
+   "same_cue": {
+    "1.0": {
+     "n": 100,
+     "verdicts": {
+      "Same cue": 1.0
+     },
+     "reason_codes": {},
+     "mean_delta": 0.5006,
+     "mean_X": 0.1147,
+     "mean_O": -0.0005,
+     "mean_X_far": 0.1149,
+     "mean_cue_margin_C1": 0.0968,
+     "label_neighbours_live": 0.0,
+     "sufficient_not_necessary": 0.0,
+     "share_reaching_stage3": 1.0,
+     "contrasts_given_stage3": {
+      "C1": {
+       "mean": -0.639,
+       "match": 1.0,
+       "opposes": 0.0
+      },
+      "C2": {
+       "mean": -0.2309,
+       "match": 1.0,
+       "opposes": 0.0
+      },
+      "C3": {
+       "mean": -0.2259,
+       "match": 0.0,
+       "opposes": 1.0
+      },
+      "C4": {
+       "mean": 0.0031,
+       "match": 0.0,
+       "opposes": 0.0
+      }
+     },
+     "any_match": 1.0
+    }
+   }
+  },
+  "2.0": {
+   "global_face": {
+    "1.0": {
+     "n": 100,
+     "verdicts": {
+      "Inconclusive": 0.36,
+      "No tested feature": 0.64
+     },
+     "reason_codes": {
+      "cue_unresolved": 0.36
+     },
+     "mean_delta": 0.4324,
+     "mean_X": 0.1052,
+     "mean_O": 0.0007,
+     "mean_X_far": 0.1049,
+     "mean_cue_margin_C1": 0.1164,
+     "label_neighbours_live": 0.02,
+     "sufficient_not_necessary": 0.39,
+     "share_reaching_stage3": 1.0,
+     "contrasts_given_stage3": {
+      "C1": {
+       "mean": 0.0052,
+       "match": 0.0,
+       "opposes": 0.0
+      },
+      "C2": {
+       "mean": 0.0056,
+       "match": 0.0,
+       "opposes": 0.0
+      },
+      "C3": {
+       "mean": -0.0058,
+       "match": 0.0,
+       "opposes": 0.0
+      },
+      "C4": {
+       "mean": 0.0048,
+       "match": 0.0,
+       "opposes": 0.0
+      }
+     },
+     "any_match": 0.0
+    }
+   },
+   "human_like": {
+    "1.0": {
+     "n": 100,
+     "verdicts": {
+      "Same cue": 0.85,
+      "Same cue, one direction": 0.15
+     },
+     "reason_codes": {},
+     "mean_delta": 0.4277,
+     "mean_X": 0.1072,
+     "mean_O": -0.0001,
+     "mean_X_far": 0.1072,
+     "mean_cue_margin_C1": 0.1196,
+     "label_neighbours_live": 0.0,
+     "sufficient_not_necessary": 0.0,
+     "share_reaching_stage3": 1.0,
+     "contrasts_given_stage3": {
+      "C1": {
+       "mean": -0.7159,
+       "match": 1.0,
+       "opposes": 0.0
+      },
+      "C2": {
+       "mean": -0.1893,
+       "match": 0.85,
+       "opposes": 0.0
+      },
+      "C3": {
+       "mean": 0.3759,
+       "match": 1.0,
+       "opposes": 0.0
+      },
+      "C4": {
+       "mean": 0.3588,
+       "match": 1.0,
+       "opposes": 0.0
+      }
+     },
+     "any_match": 1.0
+    }
+   },
+   "no_sharing": {
+    "1.0": {
+     "n": 100,
+     "verdicts": {
+      "Inconclusive": 0.01,
+      "No tested feature": 0.01,
+      "Not shared": 0.98
+     },
+     "reason_codes": {
+      "shared_unresolved": 0.01
+     },
+     "mean_delta": 0.4392,
+     "mean_X": 0.0005,
+     "mean_O": -0.0004,
+     "mean_X_far": 0.0006,
+     "mean_cue_margin_C1": 0.111,
+     "label_neighbours_live": 0.0,
+     "sufficient_not_necessary": 0.01,
+     "share_reaching_stage3": 0.01,
+     "contrasts_given_stage3": {
+      "C1": {
+       "mean": 0.0031,
+       "match": 0.0,
+       "opposes": 0.0
+      },
+      "C2": {
+       "mean": -0.0091,
+       "match": 0.0,
+       "opposes": 0.0
+      },
+      "C3": {
+       "mean": 0.0107,
+       "match": 0.0,
+       "opposes": 0.0
+      },
+      "C4": {
+       "mean": 0.0566,
+       "match": 0.0,
+       "opposes": 0.0
+      }
+     },
+     "any_match": 0.0
+    }
+   },
+   "other_cue": {
+    "1.0": {
+     "n": 100,
+     "verdicts": {
+      "Inconclusive": 0.47,
+      "Not this cue": 0.53
+     },
+     "reason_codes": {
+      "cue_unresolved": 0.47
+     },
+     "mean_delta": 0.4235,
+     "mean_X": 0.1044,
+     "mean_O": -0.0002,
+     "mean_X_far": 0.1045,
+     "mean_cue_margin_C1": 0.1164,
+     "label_neighbours_live": 0.0,
+     "sufficient_not_necessary": 0.0,
+     "share_reaching_stage3": 1.0,
+     "contrasts_given_stage3": {
+      "C1": {
+       "mean": -0.003,
+       "match": 0.0,
+       "opposes": 0.0
+      },
+      "C2": {
+       "mean": 0.0036,
+       "match": 0.0,
+       "opposes": 0.0
+      },
+      "C3": {
+       "mean": -0.0001,
+       "match": 0.0,
+       "opposes": 0.0
+      },
+      "C4": {
+       "mean": -0.6286,
+       "match": 0.0,
+       "opposes": 1.0
+      }
+     },
+     "any_match": 0.0
+    }
+   },
+   "same_cue": {
+    "1.0": {
+     "n": 100,
+     "verdicts": {
+      "Same cue": 0.83,
+      "Same cue, one direction": 0.17
+     },
+     "reason_codes": {},
+     "mean_delta": 0.4215,
+     "mean_X": 0.1037,
+     "mean_O": 0.001,
+     "mean_X_far": 0.1034,
+     "mean_cue_margin_C1": 0.1152,
+     "label_neighbours_live": 0.0,
+     "sufficient_not_necessary": 0.0,
+     "share_reaching_stage3": 1.0,
+     "contrasts_given_stage3": {
+      "C1": {
+       "mean": -0.592,
+       "match": 1.0,
+       "opposes": 0.0
+      },
+      "C2": {
+       "mean": -0.1936,
+       "match": 0.83,
+       "opposes": 0.0
+      },
+      "C3": {
+       "mean": -0.201,
+       "match": 0.0,
+       "opposes": 0.85
+      },
+      "C4": {
+       "mean": -0.003,
+       "match": 0.0,
+       "opposes": 0.0
+      }
+     },
+     "any_match": 1.0
+    }
+   }
+  }
+ },
+ "draw_check": {
+  "n": 60,
+  "verdicts_equal": 60,
+  "signflip_draws": 100000,
+  "bootstrap_draws": 10000
+ },
+ "every_named_row_reached": true,
+ "rows_not_reached": [],
+ "reason_codes_not_reached": [],
+ "pass": true,
+ "seconds": 5102.3
+}
