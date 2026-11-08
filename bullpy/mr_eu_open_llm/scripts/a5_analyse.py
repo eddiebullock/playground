@@ -50,6 +50,30 @@ REASONS = ("evidence_unresolved", "balance_unresolved", "balance_small_family", 
 # A named balance class needs a B family of at least `min_balance_cells` cells, the smallest
 # size at which recovery held the B error rate (added after recovery run 3; see the draft).
 BALANCE_NAMED = ("Face", "Default", "Even")
+# Decision after recovery run 6 (2026-11-08): the evidence class is A5's confirmatory claim.
+# The balance class, the balance_* reasons and the verdict name, which carries the balance,
+# are reported as description only. Labels only: nothing below is computed differently.
+DESCRIPTIVE_NOTE = ("Balance (Face, Default, Even), the balance_* reasons and the verdict name that carries them are "
+                    "descriptive: not error-controlled under skewed portrayal gain (recovery shared_family_gain0.5, .094 "
+                    "against .07). The evidence class is the confirmatory claim.")
+
+
+def label_claims(row: Dict[str, Any]) -> Dict[str, Any]:
+    """Adds which parts of an output row are confirmatory. Changes no value already in the row."""
+    reasons = row.get("reasons") or []
+    row["evidence_confirmatory"] = True
+    row["balance_confirmatory"] = False
+    row["verdict_confirmatory"] = False
+    row["confirmatory"] = {"evidence": row.get("evidence"),
+                           "evidence_unresolved": "evidence_unresolved" in reasons,
+                           "not_tested": row.get("verdict") == NOT_TESTED}
+    row["descriptive"] = {"verdict": row.get("verdict"), "balance": row.get("balance"),
+                          "balance_withheld": row.get("balance_withheld"),
+                          "balance_reasons": [r for r in reasons if r.startswith("balance_")],
+                          "B": row.get("B"), "Phi": row.get("Phi"), "Phi_ci90": row.get("Phi_ci90"),
+                          "family_gain_log_sd": row.get("family_gain_log_sd"), "confirmatory": False,
+                          "note": DESCRIPTIVE_NOTE}
+    return row
 PRECONDITION_GATES = ("rq0", "g2_g4", "delivery")
 
 
@@ -709,7 +733,7 @@ def finish_cell(cell: Cell, p: Optional[Mapping[str, float]], gain_log_sd: Optio
                  family_cells=p.get("family_cells", 0) if p else 0)
     if alive["S"] is not None and alive["S"] >= D["survival_cut"] and row["verdict"] == "Evidence-led":
         row["flags"].append("survival_conflict")
-    return {
+    return label_claims({
         **row,
         "model": cell.model,
         "route": cell.route,
@@ -734,7 +758,7 @@ def finish_cell(cell: Cell, p: Optional[Mapping[str, float]], gain_log_sd: Optio
         "clips_without_template": int(np.isnan(est.parts["E"]).sum()),
         "gain_heterogeneity": gain_heterogeneity(cell.j),
         "family_gain_log_sd": gain_log_sd,
-    }
+    })
 
 
 def analyse_family(cells: Sequence[Cell], flip_args: Optional[Mapping[str, Any]] = None) -> List[Dict[str, Any]]:
@@ -1063,7 +1087,8 @@ def analyse_runs(
     for model in MODELS:
         loaded = runs.get(model)
         if loaded is None:
-            out_rows += [{"model": model, "route": r, "verdict": NOT_TESTED, "reasons": [], "flags": ["no_a2_cells"]} for r in ROUTES]
+            out_rows += [label_claims({"model": model, "route": r, "verdict": NOT_TESTED, "reasons": [], "flags": ["no_a2_cells"]})
+                         for r in ROUTES]
             continue
         cells, reports = loaded
         require_gate_files(reproduction, model)
@@ -1091,7 +1116,10 @@ def analyse_runs(
                                            modal_of, small, weak, shuffles=shuffles)
         row["human"] = {"h2": h2(cell.j, human, acted_of), "repeats": human_repeats(cell, human, modal_of, acted_of, weak),
                         "flagged_item_accuracy": leakage_table(cell.j, human, acted_of, weak)}
-    return {"cells": out_rows + finished, **extra}
+    return {"cells": out_rows + finished, "claim_scope": {"confirmatory": ["evidence"],
+                                                          "descriptive": ["verdict", "balance", "balance_withheld", "balance_reasons",
+                                                                          "B", "Phi", "family_gain_log_sd"],
+                                                          "note": DESCRIPTIVE_NOTE}, **extra}
 
 
 def main() -> None:

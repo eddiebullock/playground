@@ -984,3 +984,47 @@ def test_no_push_is_not_estimable(world):
 def test_gain_estimate_changes_no_verdict():
     assert "balance_gain_heterogeneity" not in a5.REASONS
     assert "gain_log_sd" not in a5.decide.__code__.co_varnames
+
+
+# ---------------------------------------------------------------------------
+# Decision after run 6: the evidence class is confirmatory, balance is descriptive
+# ---------------------------------------------------------------------------
+
+
+def test_finished_rows_label_balance_and_verdict_as_descriptive(world):
+    cell = built(world, rec.base_spec(signal=2.0, w="flat"))
+    row = a5.analyse_family([cell])[0]
+    assert row["evidence_confirmatory"] is True
+    assert row["balance_confirmatory"] is False and row["verdict_confirmatory"] is False
+    assert row["confirmatory"]["evidence"] == row["evidence"]
+    d = row["descriptive"]
+    assert d["confirmatory"] is False and "not error-controlled" in d["note"] and ".094" in d["note"]
+    assert d["verdict"] == row["verdict"] and d["balance"] == row["balance"] and d["Phi"] == row["Phi"]
+    assert d["family_gain_log_sd"] == row["family_gain_log_sd"] and d["balance_withheld"] == row["balance_withheld"]
+    assert d["balance_reasons"] == [r for r in row["reasons"] if r.startswith("balance_")]
+
+
+def test_labels_change_no_value(world):
+    cell = built(world, rec.base_spec(signal=2.0, w="flat"))
+    row = a5.analyse_family([cell])[0]
+    bare = {k: v for k, v in row.items() if k not in ("evidence_confirmatory", "balance_confirmatory", "verdict_confirmatory",
+                                                     "confirmatory", "descriptive")}
+    tests = a5.family_tests([cell.est])
+    again = a5.finish_cell(cell, tests[0], a5.family_gain_log_sd([cell.j]))
+    assert {k: again[k] for k in bare} == bare
+    relabelled = a5.label_claims(dict(bare))
+    assert {k: relabelled[k] for k in bare} == bare
+
+
+def test_not_tested_rows_are_labelled_and_scope_is_stated(tmp_path, world, human, monkeypatch):
+    a2_hash = D["a2_design_sha256"]
+    pinned_paths(tmp_path, monkeypatch)
+    folder = tmp_path / "cells"
+    write_shards(folder, world, a2_hash)
+    runs = {"gemma4": a5.load_model("gemma4", folder, a2_hash), "qwen3vl": a5.load_model("qwen3vl", folder, a2_hash)}
+    out = a5.analyse_runs(runs, tmp_path, human, None, tmp_path / "nowhere", shuffles=SHUFFLES)
+    assert out["claim_scope"]["confirmatory"] == ["evidence"] and "balance" in out["claim_scope"]["descriptive"]
+    for row in out["cells"]:
+        assert row["balance_confirmatory"] is False and row["verdict_confirmatory"] is False
+    missing = [r for r in out["cells"] if r["model"] == "qwen3vl"]
+    assert missing and all(r["confirmatory"]["not_tested"] for r in missing)
