@@ -398,3 +398,12 @@ After A5's small-family finding, the frozen A2 test (actor sign-flip, Westfall-Y
 - **Decision:** A2 stays frozen and its verdicts stay primary, as written. This is disclosed as a limit in the methods. The sensitivity below is fixed now, before any A2 cell exists: for every Supports verdict, the paper also says whether the contrast's step-down p is under .01. In the worst simulated case (k = 2, gain SD .5), per-route family-wise error at .01 is .046 and .044, while .025 and .02 do not hold (.095 and .080). A verdict that holds only at .05 is reported as not robust to this null. The two-sided Opposes test was not simulated; it takes absolute t, so it always sees the liberal tail, and the same .01 reading is applied to it.
 - **Not adopted:** a studentized bootstrap-t brought the single-contrast rate from .106 to .074 at 8 actors, which is still over .07. It is not used.
 - **Unknown:** whether real portrayal gain is skewed this way, or this large, is not known. The simulation sets bounds; it does not estimate the size.
+
+## 2026-11-08: A5 balance verdicts become descriptive; evidence classes carry the confirmatory claims
+
+Run 6 (design `fd20495b...`) tested a per-actor gain-heterogeneity guard. The estimator tracks the true spread (mean .34 at gain SD .3, .55 at .5), and a guard at .4 would have brought the gain .5 shared-family false-positive rate to .022. But it fired on 12% to 66% of cells at the validated gain .3, mostly because 17 actors give a noisy SD even for a perfect estimator. So it was dropped, as the stated rule required, and the estimate is reported only. Run 6 otherwise matches run 5: `shared_family_gain0.5` fails (.094 any column, .072 own column), and three power checks fail into Inconclusive.
+
+- **Decision:** option (b) of the draft. Face, Default and Even leave A5's confirmatory claims and are reported descriptively, beside B, Phi and the gain estimate, labelled as not error-controlled under skewed portrayal gain. The evidence classes carry the confirmatory claims. Every failure stays on record.
+- **Why not freeze with an exception:** the draft says a false-positive failure blocks the freeze, so freezing anyway would make the rule mean nothing. Calling the failed observer unjudged now, after it failed, would be post hoc.
+- **Why not more units:** A2's data has 17 actors.
+- **Order:** decided before any A2 cell exists.
