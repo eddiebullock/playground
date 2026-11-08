@@ -435,3 +435,10 @@ The A7 audit (ROADMAP 0.12) took the stricter reading of the question left open 
 - **[proposed] values** confirmed as written, no number changed: `shared_margin`, `cue_margin_fraction`, `outcome_reference`, `reference_check`, `text_neighbour_rank`, `first_frame_au_ratio_max`. Confirmed by the coordinator before any A6 model output exists. The mid-face landmark list stays proposed until the cluster check.
 - **Mechanics run** goes before the freeze, the conservative order.
 - Design hash `1554afc0...60847`. Open items are cluster only, listed in the draft's Freeze section.
+
+## 2026-11-08: A7 Level 2 recovery failures ruled (pre-data, before freeze)
+
+A7 recovery Level 1 passed; Level 2 failed 5 of 18 judged observers (numbers in `PREREG_A7_DRAFT.md`, Recovery). Ruling, following the A5 precedent of narrowing a claim rather than moving a threshold:
+- **Riders (Additive, Synergic, Opposed) become descriptive.** The carrying verdicts recovered at 1.0 and stay confirmatory. The rider failures come partly from recovery drawing independent noise for TE, PE_A and PE_B; that construction is not changed to make them pass.
+- **No effect to carry stays confirmatory with the TE margin unchanged.** It fails safe (Inconclusive, never a wrong named verdict), so its recovery reach is reported beside it. Widening the equivalence margin would make a null claim easier and was rejected.
+- Freeze still needs: an independent code-against-text audit, a `## Code hashes` section, the design hash restated, then tag `a7-freeze`, all before any full A2 cell is read. Ladder field names used by the region test are cluster items.

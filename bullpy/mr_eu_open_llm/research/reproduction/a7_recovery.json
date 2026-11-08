@@ -1,0 +1,1728 @@
+{
+ "level": 2,
+ "replicates": 500,
+ "pass_effect": 2.0,
+ "observers": {
+  "a_only": {
+   "arm": "route",
+   "added_by_code": false,
+   "by_effect": {
+    "0.25": {
+     "n": 500,
+     "verdicts": {
+      "Inconclusive/carrying_unresolved": 214,
+      "Inconclusive/te_unresolved": 279,
+      "No effect to carry": 7
+     },
+     "riders": {
+      "none": 286,
+      "Interaction unresolved": 212,
+      "Synergic": 2
+     },
+     "expected": [
+      "Carried by A",
+      null,
+      "Additive"
+     ],
+     "expected_rate": 0.0,
+     "expected_verdict_rate": 0.0,
+     "other_named_rate": 0.014,
+     "inconclusive_rate": 0.986
+    },
+    "0.5": {
+     "n": 500,
+     "verdicts": {
+      "Both blocks": 1,
+      "Carried by A": 29,
+      "Inconclusive/carrying_unresolved": 467,
+      "Inconclusive/te_unresolved": 3
+     },
+     "riders": {
+      "Interaction unresolved": 493,
+      "none": 3,
+      "Redundant": 2,
+      "Synergic": 2
+     },
+     "expected": [
+      "Carried by A",
+      null,
+      "Additive"
+     ],
+     "expected_rate": 0.0,
+     "expected_verdict_rate": 0.058,
+     "other_named_rate": 0.002,
+     "inconclusive_rate": 0.94
+    },
+    "1.0": {
+     "n": 500,
+     "verdicts": {
+      "Both blocks": 1,
+      "Carried by A": 393,
+      "Inconclusive/carrying_unresolved": 106
+     },
+     "riders": {
+      "Interaction unresolved": 476,
+      "Additive": 23,
+      "Synergic": 1
+     },
+     "expected": [
+      "Carried by A",
+      null,
+      "Additive"
+     ],
+     "expected_rate": 0.038,
+     "expected_verdict_rate": 0.786,
+     "other_named_rate": 0.002,
+     "inconclusive_rate": 0.212
+    },
+    "2.0": {
+     "n": 500,
+     "verdicts": {
+      "Carried by A": 500
+     },
+     "riders": {
+      "Additive": 379,
+      "Interaction unresolved": 120,
+      "Redundant": 1
+     },
+     "expected": [
+      "Carried by A",
+      null,
+      "Additive"
+     ],
+     "expected_rate": 0.758,
+     "expected_verdict_rate": 1.0,
+     "other_named_rate": 0.0,
+     "inconclusive_rate": 0.0,
+     "judged": {
+      "pass": false,
+      "checks": {
+       "expected_rate": {
+        "value": 0.758,
+        "pass": false
+       },
+       "other_named_rate": {
+        "value": 0.0,
+        "pass": true
+       },
+       "inconclusive_rate": {
+        "value": 0.0,
+        "pass": true
+       }
+      }
+     }
+    }
+   }
+  },
+  "b_only": {
+   "arm": "route",
+   "added_by_code": false,
+   "by_effect": {
+    "0.25": {
+     "n": 500,
+     "verdicts": {
+      "Inconclusive/carrying_unresolved": 198,
+      "Inconclusive/te_unresolved": 289,
+      "No effect to carry": 13
+     },
+     "riders": {
+      "Interaction unresolved": 196,
+      "none": 302,
+      "Synergic": 2
+     },
+     "expected": [
+      "Carried by B",
+      null,
+      "Additive"
+     ],
+     "expected_rate": 0.0,
+     "expected_verdict_rate": 0.0,
+     "other_named_rate": 0.026,
+     "inconclusive_rate": 0.974
+    },
+    "0.5": {
+     "n": 500,
+     "verdicts": {
+      "Both blocks": 3,
+      "Carried by B": 30,
+      "Inconclusive/carrying_unresolved": 464,
+      "Inconclusive/te_unresolved": 3
+     },
+     "riders": {
+      "Interaction unresolved": 496,
+      "none": 3,
+      "Redundant": 1
+     },
+     "expected": [
+      "Carried by B",
+      null,
+      "Additive"
+     ],
+     "expected_rate": 0.0,
+     "expected_verdict_rate": 0.06,
+     "other_named_rate": 0.006,
+     "inconclusive_rate": 0.934
+    },
+    "1.0": {
+     "n": 500,
+     "verdicts": {
+      "Carried by B": 402,
+      "Inconclusive/carrying_unresolved": 98
+     },
+     "riders": {
+      "Additive": 21,
+      "Interaction unresolved": 477,
+      "Synergic": 1,
+      "Redundant": 1
+     },
+     "expected": [
+      "Carried by B",
+      null,
+      "Additive"
+     ],
+     "expected_rate": 0.042,
+     "expected_verdict_rate": 0.804,
+     "other_named_rate": 0.0,
+     "inconclusive_rate": 0.196
+    },
+    "2.0": {
+     "n": 500,
+     "verdicts": {
+      "Carried by B": 500
+     },
+     "riders": {
+      "Additive": 396,
+      "Interaction unresolved": 102,
+      "Synergic": 2
+     },
+     "expected": [
+      "Carried by B",
+      null,
+      "Additive"
+     ],
+     "expected_rate": 0.792,
+     "expected_verdict_rate": 1.0,
+     "other_named_rate": 0.0,
+     "inconclusive_rate": 0.0,
+     "judged": {
+      "pass": false,
+      "checks": {
+       "expected_rate": {
+        "value": 0.792,
+        "pass": false
+       },
+       "other_named_rate": {
+        "value": 0.0,
+        "pass": true
+       },
+       "inconclusive_rate": {
+        "value": 0.0,
+        "pass": true
+       }
+      }
+     }
+    }
+   }
+  },
+  "additive": {
+   "arm": "route",
+   "added_by_code": false,
+   "by_effect": {
+    "0.25": {
+     "n": 500,
+     "verdicts": {
+      "Both blocks": 2,
+      "Inconclusive/carrying_unresolved": 214,
+      "Inconclusive/te_unresolved": 274,
+      "No effect to carry": 10
+     },
+     "riders": {
+      "none": 284,
+      "Interaction unresolved": 215,
+      "Synergic": 1
+     },
+     "expected": [
+      "Both blocks",
+      null,
+      "Additive"
+     ],
+     "expected_rate": 0.0,
+     "expected_verdict_rate": 0.004,
+     "other_named_rate": 0.02,
+     "inconclusive_rate": 0.976
+    },
+    "0.5": {
+     "n": 500,
+     "verdicts": {
+      "Both blocks": 171,
+      "Inconclusive/carrying_unresolved": 325,
+      "Inconclusive/te_unresolved": 4
+     },
+     "riders": {
+      "Interaction unresolved": 493,
+      "none": 4,
+      "Redundant": 1,
+      "Synergic": 2
+     },
+     "expected": [
+      "Both blocks",
+      null,
+      "Additive"
+     ],
+     "expected_rate": 0.0,
+     "expected_verdict_rate": 0.342,
+     "other_named_rate": 0.0,
+     "inconclusive_rate": 0.658
+    },
+    "1.0": {
+     "n": 500,
+     "verdicts": {
+      "Both blocks": 500
+     },
+     "riders": {
+      "Interaction unresolved": 474,
+      "Additive": 26
+     },
+     "expected": [
+      "Both blocks",
+      null,
+      "Additive"
+     ],
+     "expected_rate": 0.052,
+     "expected_verdict_rate": 1.0,
+     "other_named_rate": 0.0,
+     "inconclusive_rate": 0.0
+    },
+    "2.0": {
+     "n": 500,
+     "verdicts": {
+      "Both blocks": 500
+     },
+     "riders": {
+      "Additive": 380,
+      "Interaction unresolved": 120
+     },
+     "expected": [
+      "Both blocks",
+      null,
+      "Additive"
+     ],
+     "expected_rate": 0.76,
+     "expected_verdict_rate": 1.0,
+     "other_named_rate": 0.0,
+     "inconclusive_rate": 0.0,
+     "judged": {
+      "pass": false,
+      "checks": {
+       "expected_rate": {
+        "value": 0.76,
+        "pass": false
+       },
+       "other_named_rate": {
+        "value": 0.0,
+        "pass": true
+       },
+       "inconclusive_rate": {
+        "value": 0.0,
+        "pass": true
+       }
+      }
+     }
+    }
+   }
+  },
+  "redundant": {
+   "arm": "route",
+   "added_by_code": false,
+   "by_effect": {
+    "0.25": {
+     "n": 500,
+     "verdicts": {
+      "Both blocks": 2,
+      "Inconclusive/carrying_unresolved": 218,
+      "Inconclusive/te_unresolved": 273,
+      "No effect to carry": 7
+     },
+     "riders": {
+      "none": 280,
+      "Interaction unresolved": 213,
+      "Redundant": 7
+     },
+     "expected": [
+      "Both blocks",
+      null,
+      "Redundant"
+     ],
+     "expected_rate": 0.0,
+     "expected_verdict_rate": 0.004,
+     "other_named_rate": 0.014,
+     "inconclusive_rate": 0.982
+    },
+    "0.5": {
+     "n": 500,
+     "verdicts": {
+      "Both blocks": 170,
+      "Inconclusive/carrying_unresolved": 328,
+      "Inconclusive/te_unresolved": 2
+     },
+     "riders": {
+      "Redundant": 320,
+      "Interaction unresolved": 178,
+      "none": 2
+     },
+     "expected": [
+      "Both blocks",
+      null,
+      "Redundant"
+     ],
+     "expected_rate": 0.194,
+     "expected_verdict_rate": 0.34,
+     "other_named_rate": 0.0,
+     "inconclusive_rate": 0.66
+    },
+    "1.0": {
+     "n": 500,
+     "verdicts": {
+      "Both blocks": 500
+     },
+     "riders": {
+      "Redundant": 500
+     },
+     "expected": [
+      "Both blocks",
+      null,
+      "Redundant"
+     ],
+     "expected_rate": 1.0,
+     "expected_verdict_rate": 1.0,
+     "other_named_rate": 0.0,
+     "inconclusive_rate": 0.0
+    },
+    "2.0": {
+     "n": 500,
+     "verdicts": {
+      "Both blocks": 500
+     },
+     "riders": {
+      "Redundant": 500
+     },
+     "expected": [
+      "Both blocks",
+      null,
+      "Redundant"
+     ],
+     "expected_rate": 1.0,
+     "expected_verdict_rate": 1.0,
+     "other_named_rate": 0.0,
+     "inconclusive_rate": 0.0,
+     "judged": {
+      "pass": true,
+      "checks": {
+       "expected_rate": {
+        "value": 1.0,
+        "pass": true
+       },
+       "other_named_rate": {
+        "value": 0.0,
+        "pass": true
+       },
+       "inconclusive_rate": {
+        "value": 0.0,
+        "pass": true
+       }
+      }
+     }
+    }
+   }
+  },
+  "synergic": {
+   "arm": "route",
+   "added_by_code": false,
+   "by_effect": {
+    "0.25": {
+     "n": 500,
+     "verdicts": {
+      "Both blocks": 1,
+      "Inconclusive/carrying_unresolved": 203,
+      "Inconclusive/te_unresolved": 286,
+      "No effect to carry": 10
+     },
+     "riders": {
+      "none": 296,
+      "Synergic": 36,
+      "Interaction unresolved": 168
+     },
+     "expected": [
+      "Both blocks",
+      null,
+      "Synergic"
+     ],
+     "expected_rate": 0.0,
+     "expected_verdict_rate": 0.002,
+     "other_named_rate": 0.02,
+     "inconclusive_rate": 0.978
+    },
+    "0.5": {
+     "n": 500,
+     "verdicts": {
+      "Both blocks": 183,
+      "Inconclusive/carrying_unresolved": 314,
+      "Inconclusive/te_unresolved": 3
+     },
+     "riders": {
+      "Interaction unresolved": 194,
+      "Synergic": 303,
+      "none": 3
+     },
+     "expected": [
+      "Both blocks",
+      null,
+      "Synergic"
+     ],
+     "expected_rate": 0.28,
+     "expected_verdict_rate": 0.366,
+     "other_named_rate": 0.0,
+     "inconclusive_rate": 0.634
+    },
+    "1.0": {
+     "n": 500,
+     "verdicts": {
+      "Both blocks": 500
+     },
+     "riders": {
+      "Synergic": 500
+     },
+     "expected": [
+      "Both blocks",
+      null,
+      "Synergic"
+     ],
+     "expected_rate": 1.0,
+     "expected_verdict_rate": 1.0,
+     "other_named_rate": 0.0,
+     "inconclusive_rate": 0.0
+    },
+    "2.0": {
+     "n": 500,
+     "verdicts": {
+      "Both blocks": 500
+     },
+     "riders": {
+      "Synergic": 500
+     },
+     "expected": [
+      "Both blocks",
+      null,
+      "Synergic"
+     ],
+     "expected_rate": 1.0,
+     "expected_verdict_rate": 1.0,
+     "other_named_rate": 0.0,
+     "inconclusive_rate": 0.0,
+     "judged": {
+      "pass": true,
+      "checks": {
+       "expected_rate": {
+        "value": 1.0,
+        "pass": true
+       },
+       "other_named_rate": {
+        "value": 0.0,
+        "pass": true
+       },
+       "inconclusive_rate": {
+        "value": 0.0,
+        "pass": true
+       }
+      }
+     }
+    }
+   }
+  },
+  "opposed": {
+   "arm": "route",
+   "added_by_code": false,
+   "by_effect": {
+    "0.25": {
+     "n": 500,
+     "verdicts": {
+      "Inconclusive/carrying_unresolved": 180,
+      "Inconclusive/te_unresolved": 298,
+      "No effect to carry": 9,
+      "Opposed blocks": 13
+     },
+     "riders": {
+      "none": 307,
+      "Interaction unresolved": 191,
+      "Synergic": 2
+     },
+     "expected": [
+      "Opposed blocks",
+      null,
+      null
+     ],
+     "expected_rate": 0.026,
+     "expected_verdict_rate": 0.026,
+     "other_named_rate": 0.018,
+     "inconclusive_rate": 0.956
+    },
+    "0.5": {
+     "n": 500,
+     "verdicts": {
+      "Inconclusive/carrying_unresolved": 195,
+      "Inconclusive/te_unresolved": 4,
+      "Opposed blocks": 301
+     },
+     "riders": {
+      "Interaction unresolved": 494,
+      "Synergic": 2,
+      "none": 4
+     },
+     "expected": [
+      "Opposed blocks",
+      null,
+      null
+     ],
+     "expected_rate": 0.602,
+     "expected_verdict_rate": 0.602,
+     "other_named_rate": 0.0,
+     "inconclusive_rate": 0.398
+    },
+    "1.0": {
+     "n": 500,
+     "verdicts": {
+      "Opposed blocks": 500
+     },
+     "riders": {
+      "Interaction unresolved": 478,
+      "Additive": 21,
+      "Synergic": 1
+     },
+     "expected": [
+      "Opposed blocks",
+      null,
+      null
+     ],
+     "expected_rate": 1.0,
+     "expected_verdict_rate": 1.0,
+     "other_named_rate": 0.0,
+     "inconclusive_rate": 0.0
+    },
+    "2.0": {
+     "n": 500,
+     "verdicts": {
+      "Opposed blocks": 500
+     },
+     "riders": {
+      "Additive": 391,
+      "Interaction unresolved": 108,
+      "Redundant": 1
+     },
+     "expected": [
+      "Opposed blocks",
+      null,
+      null
+     ],
+     "expected_rate": 1.0,
+     "expected_verdict_rate": 1.0,
+     "other_named_rate": 0.0,
+     "inconclusive_rate": 0.0,
+     "judged": {
+      "pass": true,
+      "checks": {
+       "expected_rate": {
+        "value": 1.0,
+        "pass": true
+       },
+       "other_named_rate": {
+        "value": 0.0,
+        "pass": true
+       },
+       "inconclusive_rate": {
+        "value": 0.0,
+        "pass": true
+       }
+      }
+     }
+    }
+   }
+  },
+  "prior_only": {
+   "arm": "route",
+   "added_by_code": false,
+   "by_effect": {
+    "2.0": {
+     "n": 500,
+     "verdicts": {
+      "No effect to carry": 500
+     },
+     "riders": {
+      "none": 500
+     },
+     "expected": [
+      "No effect to carry",
+      null,
+      null
+     ],
+     "expected_rate": 1.0,
+     "expected_verdict_rate": 1.0,
+     "other_named_rate": 0.0,
+     "inconclusive_rate": 0.0,
+     "judged": {
+      "pass": true,
+      "checks": {
+       "expected_rate": {
+        "value": 1.0,
+        "pass": true
+       },
+       "other_named_rate": {
+        "value": 0.0,
+        "pass": true
+       },
+       "inconclusive_rate": {
+        "value": 0.0,
+        "pass": true
+       }
+      }
+     }
+    }
+   }
+  },
+  "edit_does_nothing": {
+   "arm": "route",
+   "added_by_code": false,
+   "by_effect": {
+    "2.0": {
+     "n": 500,
+     "verdicts": {
+      "Inconclusive/carrying_unresolved": 1,
+      "Inconclusive/te_unresolved": 188,
+      "No effect to carry": 311
+     },
+     "riders": {
+      "none": 499,
+      "Interaction unresolved": 1
+     },
+     "expected": [
+      "No effect to carry",
+      null,
+      null
+     ],
+     "expected_rate": 0.622,
+     "expected_verdict_rate": 0.622,
+     "other_named_rate": 0.0,
+     "inconclusive_rate": 0.378,
+     "judged": {
+      "pass": false,
+      "checks": {
+       "expected_rate": {
+        "value": 0.622,
+        "pass": false
+       },
+       "other_named_rate": {
+        "value": 0.0,
+        "pass": true
+       },
+       "inconclusive_rate": {
+        "value": 0.378,
+        "pass": false
+       }
+      }
+     }
+    }
+   }
+  },
+  "dead_block": {
+   "arm": "route",
+   "added_by_code": false,
+   "by_effect": {
+    "0.25": {
+     "n": 500,
+     "verdicts": {
+      "Inconclusive/block_dead": 202,
+      "Inconclusive/te_unresolved": 288,
+      "No effect to carry": 10
+     },
+     "riders": {
+      "none": 298,
+      "Interaction unresolved": 200,
+      "Synergic": 2
+     },
+     "expected": [
+      "Inconclusive",
+      "block_dead",
+      null
+     ],
+     "expected_rate": 0.404,
+     "expected_verdict_rate": 0.98,
+     "other_named_rate": 0.02,
+     "inconclusive_rate": 0.98,
+     "inconclusive_rate_other_reason": 0.576
+    },
+    "0.5": {
+     "n": 500,
+     "verdicts": {
+      "Inconclusive/block_dead": 499,
+      "Inconclusive/te_unresolved": 1
+     },
+     "riders": {
+      "Interaction unresolved": 499,
+      "none": 1
+     },
+     "expected": [
+      "Inconclusive",
+      "block_dead",
+      null
+     ],
+     "expected_rate": 0.998,
+     "expected_verdict_rate": 1.0,
+     "other_named_rate": 0.0,
+     "inconclusive_rate": 1.0,
+     "inconclusive_rate_other_reason": 0.002
+    },
+    "1.0": {
+     "n": 500,
+     "verdicts": {
+      "Inconclusive/block_dead": 500
+     },
+     "riders": {
+      "Interaction unresolved": 468,
+      "Additive": 26,
+      "Synergic": 2,
+      "Redundant": 4
+     },
+     "expected": [
+      "Inconclusive",
+      "block_dead",
+      null
+     ],
+     "expected_rate": 1.0,
+     "expected_verdict_rate": 1.0,
+     "other_named_rate": 0.0,
+     "inconclusive_rate": 1.0,
+     "inconclusive_rate_other_reason": 0.0
+    },
+    "2.0": {
+     "n": 500,
+     "verdicts": {
+      "Inconclusive/block_dead": 500
+     },
+     "riders": {
+      "Additive": 380,
+      "Interaction unresolved": 117,
+      "Redundant": 1,
+      "Synergic": 2
+     },
+     "expected": [
+      "Inconclusive",
+      "block_dead",
+      null
+     ],
+     "expected_rate": 1.0,
+     "expected_verdict_rate": 1.0,
+     "other_named_rate": 0.0,
+     "inconclusive_rate": 1.0,
+     "inconclusive_rate_other_reason": 0.0,
+     "judged": {
+      "pass": true,
+      "checks": {
+       "expected_rate": {
+        "value": 1.0,
+        "pass": true
+       },
+       "other_named_rate": {
+        "value": 0.0,
+        "pass": true
+       },
+       "inconclusive_rate": {
+        "value": 0.0,
+        "pass": true
+       }
+      }
+     }
+    }
+   }
+  },
+  "dead_block_effect_via_both": {
+   "arm": "route",
+   "added_by_code": false,
+   "by_effect": {
+    "0.25": {
+     "n": 500,
+     "verdicts": {
+      "Inconclusive/block_dead": 193,
+      "Inconclusive/te_unresolved": 303,
+      "No effect to carry": 4
+     },
+     "riders": {
+      "none": 307,
+      "Interaction unresolved": 191,
+      "Synergic": 2
+     },
+     "expected": [
+      "Inconclusive",
+      "block_dead",
+      null
+     ],
+     "expected_rate": 0.386,
+     "expected_verdict_rate": 0.992,
+     "other_named_rate": 0.008,
+     "inconclusive_rate": 0.992,
+     "inconclusive_rate_other_reason": 0.606
+    },
+    "0.5": {
+     "n": 500,
+     "verdicts": {
+      "Inconclusive/block_dead": 495,
+      "Inconclusive/te_unresolved": 5
+     },
+     "riders": {
+      "Interaction unresolved": 493,
+      "none": 5,
+      "Synergic": 2
+     },
+     "expected": [
+      "Inconclusive",
+      "block_dead",
+      null
+     ],
+     "expected_rate": 0.99,
+     "expected_verdict_rate": 1.0,
+     "other_named_rate": 0.0,
+     "inconclusive_rate": 1.0,
+     "inconclusive_rate_other_reason": 0.01
+    },
+    "1.0": {
+     "n": 500,
+     "verdicts": {
+      "Inconclusive/block_dead": 500
+     },
+     "riders": {
+      "Interaction unresolved": 470,
+      "Synergic": 3,
+      "Additive": 22,
+      "Redundant": 5
+     },
+     "expected": [
+      "Inconclusive",
+      "block_dead",
+      null
+     ],
+     "expected_rate": 1.0,
+     "expected_verdict_rate": 1.0,
+     "other_named_rate": 0.0,
+     "inconclusive_rate": 1.0,
+     "inconclusive_rate_other_reason": 0.0
+    },
+    "2.0": {
+     "n": 500,
+     "verdicts": {
+      "Inconclusive/block_dead": 500
+     },
+     "riders": {
+      "Additive": 378,
+      "Interaction unresolved": 119,
+      "Redundant": 2,
+      "Synergic": 1
+     },
+     "expected": [
+      "Inconclusive",
+      "block_dead",
+      null
+     ],
+     "expected_rate": 1.0,
+     "expected_verdict_rate": 1.0,
+     "other_named_rate": 0.0,
+     "inconclusive_rate": 1.0,
+     "inconclusive_rate_other_reason": 0.0,
+     "judged": {
+      "pass": true,
+      "checks": {
+       "expected_rate": {
+        "value": 1.0,
+        "pass": true
+       },
+       "other_named_rate": {
+        "value": 0.0,
+        "pass": true
+       },
+       "inconclusive_rate": {
+        "value": 0.0,
+        "pass": true
+       }
+      }
+     }
+    }
+   }
+  },
+  "edit_null_dead_block": {
+   "arm": "route",
+   "added_by_code": false,
+   "by_effect": {
+    "2.0": {
+     "n": 500,
+     "verdicts": {
+      "Inconclusive/te_unresolved": 174,
+      "No effect to carry": 326
+     },
+     "riders": {
+      "none": 500
+     },
+     "expected": [
+      "No effect to carry",
+      null,
+      null
+     ],
+     "expected_rate": 0.652,
+     "expected_verdict_rate": 0.652,
+     "other_named_rate": 0.0,
+     "inconclusive_rate": 0.348,
+     "judged": {
+      "pass": false,
+      "checks": {
+       "expected_rate": {
+        "value": 0.652,
+        "pass": false
+       },
+       "other_named_rate": {
+        "value": 0.0,
+        "pass": true
+       },
+       "inconclusive_rate": {
+        "value": 0.348,
+        "pass": false
+       }
+      }
+     }
+    }
+   }
+  },
+  "false_carry_0.25": {
+   "arm": "route",
+   "added_by_code": false,
+   "by_effect": {
+    "0.25": {
+     "n": 500,
+     "verdicts": {
+      "Both blocks": 3,
+      "Inconclusive/carrying_unresolved": 214,
+      "Inconclusive/te_unresolved": 269,
+      "No effect to carry": 14
+     },
+     "riders": {
+      "Interaction unresolved": 214,
+      "none": 283,
+      "Synergic": 3
+     },
+     "carried_by_a_rate": 0.0
+    },
+    "0.5": {
+     "n": 500,
+     "verdicts": {
+      "Both blocks": 46,
+      "Carried by A": 4,
+      "Inconclusive/carrying_unresolved": 445,
+      "Inconclusive/te_unresolved": 5
+     },
+     "riders": {
+      "Interaction unresolved": 492,
+      "Synergic": 3,
+      "none": 5
+     },
+     "carried_by_a_rate": 0.008
+    },
+    "1.0": {
+     "n": 500,
+     "verdicts": {
+      "Both blocks": 315,
+      "Carried by A": 6,
+      "Inconclusive/carrying_unresolved": 179
+     },
+     "riders": {
+      "Interaction unresolved": 475,
+      "Redundant": 3,
+      "Additive": 21,
+      "Synergic": 1
+     },
+     "carried_by_a_rate": 0.012
+    },
+    "2.0": {
+     "n": 500,
+     "verdicts": {
+      "Both blocks": 500
+     },
+     "riders": {
+      "Additive": 390,
+      "Interaction unresolved": 110
+     },
+     "carried_by_a_rate": 0.0,
+     "judged": {
+      "pass": true,
+      "rule": "Carried by A <= 0.07",
+      "value": 0.0
+     }
+    }
+   }
+  },
+  "false_carry_0.3": {
+   "arm": "route",
+   "added_by_code": false,
+   "by_effect": {
+    "0.25": {
+     "n": 500,
+     "verdicts": {
+      "Both blocks": 1,
+      "Inconclusive/carrying_unresolved": 182,
+      "Inconclusive/te_unresolved": 313,
+      "No effect to carry": 4
+     },
+     "riders": {
+      "Interaction unresolved": 182,
+      "none": 317,
+      "Synergic": 1
+     },
+     "carried_by_a_rate": 0.0
+    },
+    "0.5": {
+     "n": 500,
+     "verdicts": {
+      "Both blocks": 65,
+      "Carried by A": 1,
+      "Inconclusive/carrying_unresolved": 426,
+      "Inconclusive/te_unresolved": 8
+     },
+     "riders": {
+      "Interaction unresolved": 490,
+      "none": 8,
+      "Synergic": 1,
+      "Redundant": 1
+     },
+     "carried_by_a_rate": 0.002
+    },
+    "1.0": {
+     "n": 500,
+     "verdicts": {
+      "Both blocks": 405,
+      "Inconclusive/carrying_unresolved": 95
+     },
+     "riders": {
+      "Interaction unresolved": 476,
+      "Additive": 19,
+      "Synergic": 4,
+      "Redundant": 1
+     },
+     "carried_by_a_rate": 0.0
+    },
+    "2.0": {
+     "n": 500,
+     "verdicts": {
+      "Both blocks": 500
+     },
+     "riders": {
+      "Additive": 381,
+      "Interaction unresolved": 115,
+      "Synergic": 3,
+      "Redundant": 1
+     },
+     "carried_by_a_rate": 0.0,
+     "judged": {
+      "pass": true,
+      "rule": "Carried by A <= 0.07",
+      "value": 0.0
+     }
+    }
+   }
+  },
+  "token_local": {
+   "arm": "token",
+   "added_by_code": false,
+   "by_effect": {
+    "0.25": {
+     "n": 500,
+     "verdicts": {
+      "Inconclusive/carrying_unresolved": 211,
+      "Inconclusive/te_unresolved": 279,
+      "No effect to carry": 10
+     },
+     "riders": {
+      "Interaction unresolved": 211,
+      "none": 289
+     },
+     "expected": [
+      "Carried by A",
+      "carried by cue tokens",
+      null
+     ],
+     "expected_rate": 0.0,
+     "expected_verdict_rate": 0.0,
+     "other_named_rate": 0.02,
+     "inconclusive_rate": 0.98
+    },
+    "0.5": {
+     "n": 500,
+     "verdicts": {
+      "Both blocks": 2,
+      "Carried by A": 29,
+      "Inconclusive/carrying_unresolved": 464,
+      "Inconclusive/te_unresolved": 3,
+      "Opposed blocks": 2
+     },
+     "riders": {
+      "Interaction unresolved": 493,
+      "Synergic": 3,
+      "none": 3,
+      "Interaction unresolved+not_local": 1
+     },
+     "expected": [
+      "Carried by A",
+      "carried by cue tokens",
+      null
+     ],
+     "expected_rate": 0.058,
+     "expected_verdict_rate": 0.058,
+     "other_named_rate": 0.008,
+     "inconclusive_rate": 0.934
+    },
+    "1.0": {
+     "n": 500,
+     "verdicts": {
+      "Carried by A": 382,
+      "Inconclusive/carrying_unresolved": 117,
+      "Opposed blocks": 1
+     },
+     "riders": {
+      "Interaction unresolved": 471,
+      "Additive": 26,
+      "Redundant": 2,
+      "Synergic": 1
+     },
+     "expected": [
+      "Carried by A",
+      "carried by cue tokens",
+      null
+     ],
+     "expected_rate": 0.764,
+     "expected_verdict_rate": 0.764,
+     "other_named_rate": 0.002,
+     "inconclusive_rate": 0.234
+    },
+    "2.0": {
+     "n": 500,
+     "verdicts": {
+      "Carried by A": 500
+     },
+     "riders": {
+      "Additive": 379,
+      "Interaction unresolved": 118,
+      "Synergic": 1,
+      "Redundant": 2
+     },
+     "expected": [
+      "Carried by A",
+      "carried by cue tokens",
+      null
+     ],
+     "expected_rate": 1.0,
+     "expected_verdict_rate": 1.0,
+     "other_named_rate": 0.0,
+     "inconclusive_rate": 0.0,
+     "judged": {
+      "pass": true,
+      "checks": {
+       "expected_rate": {
+        "value": 1.0,
+        "pass": true
+       },
+       "other_named_rate": {
+        "value": 0.0,
+        "pass": true
+       },
+       "inconclusive_rate": {
+        "value": 0.0,
+        "pass": true
+       }
+      }
+     }
+    }
+   }
+  },
+  "token_not_local": {
+   "arm": "token",
+   "added_by_code": false,
+   "by_effect": {
+    "0.25": {
+     "n": 500,
+     "verdicts": {
+      "Carried by A": 1,
+      "Inconclusive/carrying_unresolved": 231,
+      "Inconclusive/te_unresolved": 258,
+      "No effect to carry": 10
+     },
+     "riders": {
+      "Interaction unresolved": 230,
+      "none": 268,
+      "Synergic": 1,
+      "Interaction unresolved+not_local": 1
+     },
+     "expected": [
+      "Carried by A",
+      "not_local",
+      null
+     ],
+     "expected_rate": 0.002,
+     "expected_verdict_rate": 0.002,
+     "other_named_rate": 0.02,
+     "inconclusive_rate": 0.978
+    },
+    "0.5": {
+     "n": 500,
+     "verdicts": {
+      "Carried by A": 36,
+      "Inconclusive/carrying_unresolved": 454,
+      "Inconclusive/te_unresolved": 9,
+      "Opposed blocks": 1
+     },
+     "riders": {
+      "Interaction unresolved": 452,
+      "Interaction unresolved+not_local": 37,
+      "Redundant": 2,
+      "none": 9
+     },
+     "expected": [
+      "Carried by A",
+      "not_local",
+      null
+     ],
+     "expected_rate": 0.072,
+     "expected_verdict_rate": 0.072,
+     "other_named_rate": 0.002,
+     "inconclusive_rate": 0.926
+    },
+    "1.0": {
+     "n": 500,
+     "verdicts": {
+      "Both blocks": 1,
+      "Carried by A": 382,
+      "Inconclusive/carrying_unresolved": 117
+     },
+     "riders": {
+      "Interaction unresolved+not_local": 355,
+      "Additive+not_local": 26,
+      "Interaction unresolved": 112,
+      "Synergic+not_local": 1,
+      "Additive": 4,
+      "Redundant+not_local": 1,
+      "Redundant": 1
+     },
+     "expected": [
+      "Carried by A",
+      "not_local",
+      null
+     ],
+     "expected_rate": 0.764,
+     "expected_verdict_rate": 0.764,
+     "other_named_rate": 0.002,
+     "inconclusive_rate": 0.234
+    },
+    "2.0": {
+     "n": 500,
+     "verdicts": {
+      "Carried by A": 500
+     },
+     "riders": {
+      "Additive+not_local": 376,
+      "Interaction unresolved+not_local": 121,
+      "Synergic+not_local": 3
+     },
+     "expected": [
+      "Carried by A",
+      "not_local",
+      null
+     ],
+     "expected_rate": 1.0,
+     "expected_verdict_rate": 1.0,
+     "other_named_rate": 0.0,
+     "inconclusive_rate": 0.0,
+     "judged": {
+      "pass": true,
+      "checks": {
+       "expected_rate": {
+        "value": 1.0,
+        "pass": true
+       },
+       "other_named_rate": {
+        "value": 0.0,
+        "pass": true
+       },
+       "inconclusive_rate": {
+        "value": 0.0,
+        "pass": true
+       }
+      }
+     }
+    }
+   }
+  },
+  "all_null_family": {
+   "arm": "route",
+   "added_by_code": false,
+   "by_effect": {
+    "2.0": {
+     "n": 2000,
+     "verdicts": {
+      "Inconclusive/carrying_unresolved": 3,
+      "Inconclusive/te_unresolved": 756,
+      "No effect to carry": 1241
+     },
+     "riders": {
+      "none": 1997,
+      "Interaction unresolved": 3
+     },
+     "any_column_significant_rate": 0.045,
+     "n_columns": [
+      16
+     ],
+     "judged": {
+      "pass": true,
+      "rule": "any column significant <= 0.07",
+      "value": 0.045
+     }
+    }
+   }
+  },
+  "stage0_exit_fails": {
+   "arm": "route",
+   "added_by_code": true,
+   "by_effect": {
+    "2.0": {
+     "n": 50,
+     "verdicts": {
+      "Not testable": 50
+     },
+     "riders": {
+      "none": 50
+     },
+     "expected": [
+      "Not testable",
+      "stage0_not_shown",
+      null
+     ],
+     "expected_rate": 1.0,
+     "expected_verdict_rate": 1.0,
+     "other_named_rate": 0.0,
+     "inconclusive_rate": 0.0,
+     "judged": {
+      "pass": true,
+      "checks": {
+       "expected_rate": {
+        "value": 1.0,
+        "pass": true
+       },
+       "other_named_rate": {
+        "value": 0.0,
+        "pass": true
+       },
+       "inconclusive_rate": {
+        "value": 0.0,
+        "pass": true
+       }
+      }
+     }
+    }
+   }
+  },
+  "sentinel_fails": {
+   "arm": "route",
+   "added_by_code": true,
+   "by_effect": {
+    "2.0": {
+     "n": 50,
+     "verdicts": {
+      "Not testable": 50
+     },
+     "riders": {
+      "none": 50
+     },
+     "expected": [
+      "Not testable",
+      "sentinel_failed",
+      null
+     ],
+     "expected_rate": 1.0,
+     "expected_verdict_rate": 1.0,
+     "other_named_rate": 0.0,
+     "inconclusive_rate": 0.0,
+     "judged": {
+      "pass": true,
+      "checks": {
+       "expected_rate": {
+        "value": 1.0,
+        "pass": true
+       },
+       "other_named_rate": {
+        "value": 0.0,
+        "pass": true
+       },
+       "inconclusive_rate": {
+        "value": 0.0,
+        "pass": true
+       }
+      }
+     }
+    }
+   }
+  },
+  "no_decision": {
+   "arm": "route",
+   "added_by_code": true,
+   "by_effect": {
+    "2.0": {
+     "n": 50,
+     "verdicts": {
+      "Not run": 50
+     },
+     "riders": {
+      "none": 50
+     },
+     "expected": [
+      "Not run",
+      "no_recorded_decision",
+      null
+     ],
+     "expected_rate": 1.0,
+     "expected_verdict_rate": 1.0,
+     "other_named_rate": 0.0,
+     "inconclusive_rate": 0.0,
+     "judged": {
+      "pass": true,
+      "checks": {
+       "expected_rate": {
+        "value": 1.0,
+        "pass": true
+       },
+       "other_named_rate": {
+        "value": 0.0,
+        "pass": true
+       },
+       "inconclusive_rate": {
+        "value": 0.0,
+        "pass": true
+       }
+      }
+     }
+    }
+   }
+  },
+  "gate_b_fails": {
+   "arm": "route",
+   "added_by_code": true,
+   "by_effect": {
+    "2.0": {
+     "n": 50,
+     "verdicts": {
+      "Not tested": 50
+     },
+     "riders": {
+      "none": 50
+     },
+     "expected": [
+      "Not tested",
+      "precondition_failed",
+      null
+     ],
+     "expected_rate": 1.0,
+     "expected_verdict_rate": 1.0,
+     "other_named_rate": 0.0,
+     "inconclusive_rate": 0.0,
+     "judged": {
+      "pass": true,
+      "checks": {
+       "expected_rate": {
+        "value": 1.0,
+        "pass": true
+       },
+       "other_named_rate": {
+        "value": 0.0,
+        "pass": true
+       },
+       "inconclusive_rate": {
+        "value": 0.0,
+        "pass": true
+       }
+      }
+     }
+    }
+   }
+  },
+  "items_missing": {
+   "arm": "route",
+   "added_by_code": true,
+   "by_effect": {
+    "2.0": {
+     "n": 50,
+     "verdicts": {
+      "Inconclusive/items_missing": 50
+     },
+     "riders": {
+      "none": 50
+     },
+     "expected": [
+      "Inconclusive",
+      "items_missing",
+      null
+     ],
+     "expected_rate": 1.0,
+     "expected_verdict_rate": 1.0,
+     "other_named_rate": 0.0,
+     "inconclusive_rate": 1.0,
+     "inconclusive_rate_other_reason": 0.0,
+     "judged": {
+      "pass": true,
+      "checks": {
+       "expected_rate": {
+        "value": 1.0,
+        "pass": true
+       },
+       "other_named_rate": {
+        "value": 0.0,
+        "pass": true
+       },
+       "inconclusive_rate": {
+        "value": 0.0,
+        "pass": true
+       }
+      }
+     }
+    }
+   }
+  },
+  "fill_missing": {
+   "arm": "route",
+   "added_by_code": true,
+   "by_effect": {
+    "2.0": {
+     "n": 50,
+     "verdicts": {
+      "Inconclusive/te_unresolved": 50
+     },
+     "riders": {
+      "none": 50
+     },
+     "expected": [
+      "Inconclusive",
+      "te_unresolved",
+      null
+     ],
+     "expected_rate": 1.0,
+     "expected_verdict_rate": 1.0,
+     "other_named_rate": 0.0,
+     "inconclusive_rate": 1.0,
+     "inconclusive_rate_other_reason": 0.0,
+     "judged": {
+      "pass": true,
+      "checks": {
+       "expected_rate": {
+        "value": 1.0,
+        "pass": true
+       },
+       "other_named_rate": {
+        "value": 0.0,
+        "pass": true
+       },
+       "inconclusive_rate": {
+        "value": 0.0,
+        "pass": true
+       }
+      }
+     }
+    }
+   }
+  },
+  "a2_margin_missing": {
+   "arm": "route",
+   "added_by_code": true,
+   "by_effect": {
+    "2.0": {
+     "n": 50,
+     "verdicts": {
+      "Inconclusive/te_unresolved": 50
+     },
+     "riders": {
+      "none": 50
+     },
+     "expected": [
+      "Inconclusive",
+      "te_unresolved",
+      null
+     ],
+     "expected_rate": 1.0,
+     "expected_verdict_rate": 1.0,
+     "other_named_rate": 0.0,
+     "inconclusive_rate": 1.0,
+     "inconclusive_rate_other_reason": 0.0,
+     "judged": {
+      "pass": true,
+      "checks": {
+       "expected_rate": {
+        "value": 1.0,
+        "pass": true
+       },
+       "other_named_rate": {
+        "value": 0.0,
+        "pass": true
+       },
+       "inconclusive_rate": {
+        "value": 0.0,
+        "pass": true
+       }
+      }
+     }
+    }
+   }
+  }
+ },
+ "verdicts_reached": {
+  "Both blocks": 5372,
+  "Carried by A": 2763,
+  "Carried by B": 932,
+  "Inconclusive/block_dead": 3389,
+  "Inconclusive/carrying_unresolved": 6663,
+  "Inconclusive/items_missing": 50,
+  "Inconclusive/te_unresolved": 4677,
+  "No effect to carry": 2486,
+  "Not run": 50,
+  "Not testable": 100,
+  "Not tested": 50,
+  "Opposed blocks": 1318
+ },
+ "verdicts_never_reached": [],
+ "failed": [
+  "a_only",
+  "b_only",
+  "additive",
+  "edit_does_nothing",
+  "edit_null_dead_block"
+ ],
+ "pass": false,
+ "code_sha256_at_start": {
+  "scripts/a7_design.py": "d25c0cb78f6771450eac9c6127690029cd72e6034079cbc51062be324a74ddba",
+  "scripts/a7_cuts.py": "15837f87e46a433fdb97b50e362fdbaefab937f10a147aa1d68fd355f9889db2",
+  "scripts/a7_stage0.py": "a956b14a4712cc3919d9df2b6f68d04f58be419062c20b6b607f4758127663d6",
+  "scripts/a7_run.py": "82ea4aa8be69f205a412bb01ad48c1136efa49f3790319697583fb538640e6b5",
+  "scripts/a7_analyse.py": "b3a1af738abe9dbd23f55c9f8c4ebbf94d6815a700913264be8101ceae47e845",
+  "scripts/a7_recovery.py": "485832ac1678e2379f442d000a1139abd30ae053e4f48dd51d6e6d9a2727fe79",
+  "scripts/a7_toy.py": "b2d39459024046df848d8ca0bb8079cfb13ba08cde1da7a5214547aa1fa10d8c"
+ },
+ "code_changed_during_run": false,
+ "design_sha256": "9e40cfcfbe8761703da22cf2400c3af6cc7f05019df8b186f91e421dce50bb09",
+ "code_sha256": {
+  "scripts/a7_design.py": "d25c0cb78f6771450eac9c6127690029cd72e6034079cbc51062be324a74ddba",
+  "scripts/a7_cuts.py": "15837f87e46a433fdb97b50e362fdbaefab937f10a147aa1d68fd355f9889db2",
+  "scripts/a7_stage0.py": "a956b14a4712cc3919d9df2b6f68d04f58be419062c20b6b607f4758127663d6",
+  "scripts/a7_run.py": "82ea4aa8be69f205a412bb01ad48c1136efa49f3790319697583fb538640e6b5",
+  "scripts/a7_analyse.py": "b3a1af738abe9dbd23f55c9f8c4ebbf94d6815a700913264be8101ceae47e845",
+  "scripts/a7_recovery.py": "485832ac1678e2379f442d000a1139abd30ae053e4f48dd51d6e6d9a2727fe79",
+  "scripts/a7_toy.py": "b2d39459024046df848d8ca0bb8079cfb13ba08cde1da7a5214547aa1fa10d8c"
+ },
+ "seconds": 2191.9
+}
