@@ -2,13 +2,13 @@
 
 **Status: DRAFT. Not frozen, not tagged, not preregistered.** Nothing here binds until it is audited, committed and tagged. It must freeze before any full A2 cell is read.
 
-Draft `design_sha256` of the block below: `df4583f0f00097136990e9ab7ffacb4eea35b2c7dbe385c82b7f16404b6046e2`. It changes with any edit to the block and is restated at the freeze.
+Draft `design_sha256` of the block below: `a916f08d0c1b6d97d0d488bd0748f1eb28f53b2d5a80cc3608e4b52e9bf42b2b`. It changes with any edit to the block and is restated at the freeze.
 
 **Written:** 2026-11-07, before any A1 result was read, before any full A2 cell exists, and before any A5 quantity was computed on model output.
 **Goal:** G6 in `research/GOALS.md`.
 **Depends on:** A2's run (G4). RQ0 is read through the frozen A1 and A3 table by A2's `rq0_status`, per model and route. Gates G2 to G4 as in A2.
 **Models.** Gemma 4 and Qwen3-VL, each on `single_face` and `video_face`. Molmo2 is out under A2, so it has no cells here.
-**Code:** `scripts/a5_design.py`, `scripts/a5_analyse.py`, `scripts/a5_recovery.py`, `scripts/a5_family_diagnostic.py`, `scripts/a5_checks.py`, `tests/test_a5.py`. `a5_design.py` parses the design block from this file and refuses a block whose hash differs from the value pinned in the code or stated above. The analysis imports A2's frozen `load_shards`, `gate_b`, `rq0_status`, `human_comparable`, `js_divergence`, `signflip_maxt` and bootstrap functions, and edits none of them.
+**Code:** `scripts/a5_design.py`, `scripts/a5_analyse.py`, `scripts/a5_recovery.py`, `scripts/a5_family_diagnostic.py`, `scripts/a5_checks.py`, `scripts/a5_dependence_diagnostic.py`, `scripts/a5_skew_diagnostic.py`, `tests/test_a5.py`. `a5_design.py` parses the design block from this file and refuses a block whose hash differs from the value pinned in the code or stated above. The analysis imports A2's frozen `load_shards`, `gate_b`, `rq0_status`, `human_comparable`, `js_divergence`, `signflip_maxt` and bootstrap functions, and edits none of them.
 
 **What was known when this was written.**
 
@@ -118,7 +118,8 @@ All fixed constants are here and nowhere else. The hash is sha256 of the bytes b
     "boundary_e_share": 0.10,
     "baseline_noise": 0.05,
     "calibration_draws": 200,
-    "balance_zero_calibration_draws": 10000
+    "balance_zero_calibration_draws": 10000,
+    "shared_family_gains": [0.3, 0.5]
   }
 }
 ```
@@ -130,13 +131,17 @@ All fixed constants are here and nowhere else. The hash is sha256 of the bytes b
 A5's own code and the helpers it imports, sha256, checked by `a5_analyse.py` and `a5_recovery.py` before they run. They are pinned here, outside the block, because `a5_design.py` holds the block's hash.
 
 ```text
-scripts/a5_design.py 079c0ad2aa4e981668d5b3093c8c8669f6719d094f6f372b5d823decf163b970
-scripts/a5_analyse.py e21de0efd3519f36b85e49508f641805d1077f67ea48eb015a7c621ceb3141ea
-scripts/a5_recovery.py 6833655dadfd6dd77aefc0fb930780f59c60ffb395dc76885fd662054dfa9254
+scripts/a5_design.py 9cd0f9d9e9749313dcc9b1fda0d76887a1921d02fad5b4c0e5eba9726fc3873f
+scripts/a5_analyse.py 3322f83bd1c60b2bcf9feedc34185ce666443f1e526f642313657b6bc2ccb535
+scripts/a5_recovery.py 7f7d419ea639a23bde0ee21b730399493b8694dad472cc2b580eb97cef6895f5
 scripts/a5_family_diagnostic.py 06c0a372a3876f749b5baddacdb6f06bed19fcb3d1f9b46e3eeb5e5103989da3
 scripts/a5_checks.py b38e05fdb26ddc171623eda7f999463e0856938cfe37cd8827fc89cb02fb6b5e
 research/scripts/analyse_rotation.py 98890c5bff65f13abeb0549b61fe414dc9fa30082b84bcb564671683ec12e24f
 src/paper_v2/option_score.py ae949e4c1c3abc6a775a535c4e0a5042bce59ba14f7ac1afeefd476f032a5a2b
+src/paper_v2/schema.py 4acc626669439384115ae0efcb52cec4edee02c07662a242212d5f7b9c359b47
+src/paper_v2/metrics.py 1fc15676cae999e5185cfd016e3dd9db616c71ec0bb4c5d38cd49a4e7b886568
+scripts/a5_dependence_diagnostic.py 6f8ea78a57c46e0604c567cc1aadba805a0a1a52d79170e7c73c9c2496ba8d41
+scripts/a5_skew_diagnostic.py f7493fd4acb978fa988babd64ba066b16d0fa6de9ca8c2b47b53dad095b9ed90
 ```
 
 ## Prior and evidence, defined
@@ -277,13 +282,13 @@ There are two distinct nulls, and neither is a default.
 
 **Null on evidence (No face evidence, or Face-dependent no expression).** All of: preconditions met, E* not significant, its 90% CI inside the margin, B4 failed, the positive control holds, and the same floor on T.
 
-**Inconclusive.** Exactly these reason codes: `evidence_unresolved` (E* not significant with its CI outside the margin, E* significant with a 95% CI that does not lie above 0, or B4 and E* disagreeing in a way no row covers, which means B4 passed and E* did not), `balance_unresolved` (B not significant and dominance not excluded by the one-sided tests, or significant with a 95% CI that includes 0, or not significant with a 95% CI that excludes 0), `no_structure` (mean T under the floor). `no_structure` applies to every row, and is checked after the Not tested conditions and before the classes.
+**Inconclusive.** Exactly these reason codes: `evidence_unresolved` (E* not significant with its CI outside the margin, E* significant with a 95% CI that does not lie above 0, or B4 and E* disagreeing in a way no row covers, which means B4 passed and E* did not), `balance_unresolved` (B not significant and dominance not excluded by the one-sided tests, or significant with a 95% CI that includes 0, or not significant with a 95% CI that excludes 0), `balance_small_family` (a balance class would be named, but B's family has fewer than `min_balance_cells` cells; added after run 3), `no_structure` (mean T under the floor). `no_structure` applies to every row, and is checked after the Not tested conditions and before the classes.
 
 **Inconclusive is not a default by construction, but it is common in some regions.** Every verdict row is reachable, and no quantity is capped in the way 8 of A2's 16 contrasts are. Whether a row is reached depends on the data, though. Recovery run 2 showed that at true Phi between the tested points, Inconclusive can be the most likely outcome: at Phi .6 and signal 2 it was .492. So the earlier claim that Inconclusive cannot be the default outcome was too strong, and it is withdrawn. What holds is the following.
 
 1. Every verdict row is reachable with a model's real inputs, as recovery shows (`best_rate_of_each_named_verdict`).
 2. A verdict needs only A2 outputs, which exist for every eligible cell, plus RQ0 and the gates. The gate loader must return True on a fixture built from the real pinned paths, with a test that runs the verdict function end to end. This guards against A2's second audit finding, in which the A3 path made every verdict Inconclusive.
-3. Recovery must reach every named verdict and hold Inconclusive under `inconclusive_max` for each observer not placed on a boundary. If this fails, the margin or the rule is revised before freezing and dated, not after.
+3. Recovery must reach every named verdict, each by an observer whose truth is that row. It is also judged on holding Inconclusive under `inconclusive_max` for each observer not placed on a boundary. **Changed 2026-11-08, after run 4:** this point first said that a failure on `inconclusive_max` meant the margin or the rule would be revised before freezing. Run 4 failed it at Phi .5 and .7 with signal 2, and the rule was kept, so the text now says what was done. A failure on power is reported as a failure and accepted, not revised away, provided the observer fails only into Inconclusive, with any other named verdict at most `other_named_verdict_max`. Inconclusive is the safe failure: it withholds a claim and makes no wrong one. A failure into a wrong named verdict, or on any false-positive check, still blocks the freeze.
 4. A failed gate is never by itself a cause of Inconclusive. It gives Not tested or leads to a row above. An output row with no verdict or reason code is a code fault and stops the analysis.
 
 ## Comparison with humans
@@ -330,19 +335,21 @@ Before any confirmatory read, synthetic observers go through the same code, incl
 | Noise | Default plus large item noise | Face-dependent, no expression |
 | Unmapped, face | Consistent label shift to the wrong families, Phi near .8 | Face-led, unmapped |
 | Unmapped, default | The same at Phi near .2 | Default-led, unmapped |
+| Unmapped, even | The same with B calibrated to zero (added after the run 4 audit) | Unmapped, neither part dominant |
 | Spread | Label signal with fixed spill to neighbouring families | Evidence-led, showing spill is not separated from evidence (a limit) |
 | Boundary | Phi at the edges of the Even range, .3334 and .6666, E* near its margin | Reported, not judged |
 | False Even | True Phi just outside the Even range, .32 and .68, at `false_even_signals` | Balance class Even at most `false_positive_max` |
 | Inside Even | True Phi .4 and .6, inside the range but not at .5 | Reported, not judged. Shows how often Even is reached away from .5 |
+| Shared-gain families | 4 null columns at signal 2, B calibrated to zero, one draw of actor gains shared by all 4, at gain .3 and .5 (added after the run 4 audit) | Any B column at most `false_positive_max` |
 | All-null family | No label signal and a true balance of zero in all 4 cells, `all_null_replicates` replicates, `all_null_shuffles` in every cell | Any B column, and any E* column, at most `false_positive_max` |
 
 An observer on `phi_grid` is scaled by Phi, and the signal strength is varied, so the report gives power at realistic sizes as well as at large ones. Pass rule: for each non-boundary observer, the expected verdict in at least `expected_verdict_min` of replicates, any other named verdict in at most `other_named_verdict_max`, and Inconclusive in at most `inconclusive_max`. Every named verdict must be reached at least once.
 
-**How each replicate runs.** A replicate is a full family, not one cell. It holds the observer's cell and `companion_cells` (3) cells with no truth on either test: no label signal, and Phi calibrated to .5, so a true balance of approximately zero. Each of A5's two step-down families therefore runs over 4 columns, the most it can have, against columns that give it nothing. Real columns from one model share clips, so they will correlate, and these do not, so this is the worst case for power. Every observer whose truth is null on a test (no label signal, or a true balance of approximately zero) also runs with 0 and 1 companions (`companion_sweep`). With 0 companions the family is one cell, the smallest A5 can have, as when A1 fails and `rq0_status` admits only `single_face` on one model. A liberal test shows most there. The prior scale that gives a stated Phi is found by bisection on `calibration_draws` fixed draws, which are separate from the replicates. Observers whose truth is a balance of zero (the null, Phi .5 on the grid, and the gain sweep at .5) are instead calibrated on B itself, mean B over mean T across `balance_zero_calibration_draws` (10,000) separate fixed draws, so that their B is zero to about .002 of T. True Phi is defined by A5's own estimator, the ratio of mean D to mean T over actors, averaged over those draws. The measured Phi in the recovery table is a mean over replicates of that ratio, so it can differ slightly from the true value.
+**How each replicate runs.** A replicate is a full family, not one cell. It holds the observer's cell and `companion_cells` (3) cells with no truth on either test: no label signal, and Phi calibrated to .5, so a true balance of approximately zero. Each of A5's two step-down families therefore runs over 4 columns, the most it can have, against columns that give it nothing. Real columns from one model share clips, so they will correlate, and these do not, so this is the worst case for power. Every observer whose truth is null on a test (no label signal, or a true balance of approximately zero) also runs with 0 and 1 companions (`companion_sweep`). With 0 companions the family is one cell, the smallest A5 can have, as when A1 fails and `rq0_status` admits only `single_face` on one model. A liberal test shows most there. The prior scale that gives a stated Phi is found by bisection on `calibration_draws` fixed draws, which are separate from the replicates. Observers whose truth is a balance of zero (the null, Phi .5 on the grid, and the gain sweep at .5) are instead calibrated on B itself, mean B over mean T across `balance_zero_calibration_draws` (10,000) separate fixed draws, so that B is zero to about .002 of T on those draws. The mean over replicates of each replicate's B / T is a different quantity, a mean of ratios, and can be further from zero: in run 4 it was -.0103 at `mixed_phi0.5_signal2.0`. True Phi is defined by A5's own estimator, the ratio of mean D to mean T over actors, averaged over those draws. The measured Phi in the recovery table is a mean over replicates of that ratio, so it can differ slightly from the true value.
 
 **What is judged.** The pass rule binds at `pass_signal` (2.0 nats, the size in A2's recovery) for each non-boundary observer. Smaller signals in `signal_grid` and `unmapped_signals`, and the `gain_sweep` observers, report power and are not judged. Each named verdict must be reached at least once. The two prior-only observers must also give their stated word-share reading in at least `expected_verdict_min` of replicates.
 
-**False positives.** On observers with no label signal, the rates at which E* passes, B4 passes and any evidence verdict appears must each be at most `false_positive_max`. So must the rate of a named Face or Default balance class on observers with a true balance of approximately zero (`B_dominance_named`), at every family size; the rate of a significant B on those observers, in families of at least `min_balance_cells` cells (smaller families report it, unjudged, under `b_significant_below_min_balance_cells`); the rate of any B column or any E* column being significant in the all-null family, and the rate of the Even balance class on every observer whose true Phi is outside the Even range. Every family size in the sweep is judged, including one cell. The limit is .05 plus about two standard errors at 500 replicates, and it was not raised after runs 1 or 2.
+**False positives.** On observers with no label signal, the rates at which E* passes, B4 passes and any evidence verdict appears must each be at most `false_positive_max`. So must the rate of a named Face or Default balance class (`B_dominance_named`) and the rate of a significant B, on observers with a true balance of approximately zero, in families of at least `min_balance_cells` cells; the rate of any B column being significant in each shared-gain family (`shared_family_gains`), where all 4 columns are null and share the actors' portrayal gains; the rate of any B column or any E* column being significant in the all-null family; and the rate of the Even balance class on every observer whose true Phi is outside the Even range, where true Phi is the stated value or, for an observer placed otherwise, A5's estimator over `calibration_draws` draws. In families of 1 and 2 cells, E* and B4 are judged as above. Checks that are 0 there by construction, any evidence verdict and a named balance class, are printed as vacuous and not counted, and the raw B rate is printed and not judged (`unjudged_below_min_balance_cells`). The limit is .05 plus about two standard errors at 500 replicates, and it was not raised after runs 1 or 2.
 
 **Two departures from plain A2 code, in recovery only.** Neither touches `a5_analyse.py`'s real path. Recovery workers replace A1's `actor_sign_flip_p` and `actor_bootstrap_ci` in memory with versions that cache their seeded draws, and `tests/test_a5.py` checks that they return the same values. Companion cells use `companion_shuffles` (100) label shuffles, not `label_shuffles`, since a companion's only role is a null column. The observer's own cell uses the full count, and the all-null family uses the full count in every cell.
 
@@ -429,11 +436,13 @@ Decided after reading recovery rates, on 2026-11-08, on synthetic observers only
 
 So dependence is not the cause. Rates are near nominal with no gain heterogeneity and stay near .08 with strong heterogeneity, whatever the default. Across the three samples, gain .5 gave .12, .12 and .085 in a one-cell family, and .092, .075 and .0825 in a two-cell family. With 17 actors and skewed rows, neither the sign-flip nor the bootstrap-t holds its level in a family that small. Resampling the whole pipeline inside each draw would remove the dependence, which is not the cause, so it was not adopted.
 
-**Change: a minimum family size for a balance class (`min_balance_cells`, 4).** Set from the rates above. At 4 cells every true-null B rate seen was at or under .054. At 1 and 2 cells, rates at gain .5 exceeded .07 in every sample. Families of 3 cells were not tested, so 3 is not allowed. Below 4, the balance class is withheld and the verdict is Inconclusive with `balance_small_family` (Classes and verdict). The B false-positive check now judges the claim, a named Face or Default class (`B_dominance_named`), at every family size, and judges the raw test only at 4 cells. The raw rates in smaller families are still printed, unjudged. This narrows what A5 can say, and Limits says so.
+**Change: a minimum family size for a balance class (`min_balance_cells`, 4).** Set from the rates above. At 4 cells every true-null B rate seen was at or under .054. At 1 and 2 cells, rates at gain .5 exceeded .07 in every sample. Families of 3 cells were not tested, so 3 is not allowed. Below 4, the balance class is withheld and the verdict is Inconclusive with `balance_small_family` (Classes and verdict). The B false-positive checks, a named Face or Default class (`B_dominance_named`) and the raw test, are judged only at 4 cells. In smaller families the named rate is 0 by construction and is printed as vacuous after the run 4 audit, and the raw rates are printed, unjudged. This narrows what A5 can say, and Limits says so.
+
+**How a reviewer could read this rule.** It was set after run 3 failed, from the same rates. It takes the failing checks, B at 1 and 2 cells, out of what is judged, by making the claim they tested impossible there. A reviewer could fairly read that as making failing checks unjudgeable rather than passing them. The defence is that the rule withholds the claim, and does not keep the claim while dropping the test. Its cost is that A5 names no balance unless all 4 cells are eligible. The run 4 audit then found that the 4-cell result rested on companion columns with no portrayal gain, so the shared-gain families below were added to test 4 cells as the real study would have them.
 
 **Tests.** `observers()` now runs the 10,000-draw calibration, so the test that lists observer names uses 100 draws. The recovery uses the full value.
 
-**Run 4** is `research/reproduction/a5_recovery.json`: block hash `df4583f0...`, 500 replicates, overall fail, with two failed checks, both Inconclusive above `inconclusive_max` (.20). No other named verdict exceeded .10 in either.
+**Run 4** is kept as `research/reproduction/a5_recovery_run4.json`: block hash `df4583f0...`, 500 replicates, overall fail, with two failed checks, both Inconclusive above `inconclusive_max` (.20). No other named verdict exceeded .10 in either.
 - `observer|mixed_phi0.5_signal2.0`: "Evidence, neither part dominant" .744, Inconclusive .226, all `balance_unresolved`, Default-led with evidence .03.
 - `observer|mixed_phi0.7_signal2.0`: Evidence-led .598, Inconclusive .398, all `balance_unresolved`.
 
@@ -447,14 +456,64 @@ These are a power limit at the largest signal, and Inconclusive is the safe fail
 | .7 | .082 | .852 | .986 | .598 |
 | .9 | .076 | .874 | 1.0 | .966 |
 
-Every false-positive check passed. A named Face or Default class at a true balance of zero: at most .042 in families of 4 (`gain0.5_phi0.5`), and 0 in every family of 1 or 2 cells, where the class is withheld. The raw B test in families of 4: at most .048. Any B column in the all-null family: .031. The raw rates in smaller families, printed and not judged, reproduce the problem: `gain0.5_phi0.5` .108 (1 cell) and .08 (2 cells), `mixed_phi0.5_signal2.0` .074 (1 cell). Every named verdict was reached; the rarest was "Unmapped, neither part dominant", at .0045.
+Every judged false-positive check passed, but 24 of them, the named balance class and any evidence verdict on the 1- and 2-cell copies, were 0 by construction, so they showed nothing (corrected after the audit below). A named Face or Default class at a true balance of zero: at most .042 in families of 4 (`gain0.5_phi0.5`). The raw B test in families of 4: at most .048. Any B column in the all-null family: .031. The raw rates in smaller families, printed and not judged, reproduce the problem: `gain0.5_phi0.5` .108 (1 cell) and .08 (2 cells), `mixed_phi0.5_signal2.0` .074 (1 cell). Every named verdict was reached, but "Unmapped, neither part dominant" only as a false positive, at .0045 in the all-null family, since no observer had that row as its truth (corrected after the audit below).
 
-**Report rebuilt once, no replicate re-run.** Run 4's report built its power table by observer phi and signal, and the companion-sweep copies, which share both, overwrote each grid row. The Phi .5 row read 0 because the copies' balance is withheld. The key now skips sweep copies, and the report was rebuilt from run 4's stored per-observer table (`scripts/a5_recovery.py` build_report). Every other field is identical. The report as first written is kept as `a5_recovery_run4_as_written.json`.
+**Report rebuilt once, no replicate re-run.** Run 4's report built its power table by observer phi and signal, and the companion-sweep copies, which share both, overwrote each grid row. The Phi .5 row read 0 because the copies' balance is withheld. The key now skips sweep copies, and the report was rebuilt from run 4's stored per-observer table (`scripts/a5_recovery.py` build_report). Every other field is identical. The report as first written is kept as `a5_recovery_run4_as_written.json`. Run 4's replicates came from `scripts/a5_recovery.py` `a68903cd...`, and the rebuild used `6833655d...`. Both are recorded in the file's `rebuilt_from`.
+
+## Changes after the run 4 audit
+
+Decided on 2026-11-08, after an independent audit of run 4 and the code at `b0f16d9`, on synthetic observers only, before any A2 cell was read. No limit was changed.
+
+**Four cells had not been shown valid for a realistic family (audit blocker).** Every companion column and every all-null column had no label signal, so it carried no portrayal-gain skew. Run 4's 4-cell rate (.048 at gain .5) was one skewed column among three calm ones. In the study, the 4 columns are 2 models x 2 routes on the same 17 actors, so the gain is shared and skewed in all 4. The recovery now has `shared_family_gain0.3` and `shared_family_gain0.5`: 4 null columns at signal 2, calibrated to B = 0, with one draw of actor gains shared by all 4. Any B column significant is judged against `false_positive_max`. Gain .3 is the default (`portrayal_gain_log_sd`), and .5 is the stress level. These are judged checks, so a failure at .5 fails the recovery.
+
+**A skew-targeted test was tried and not adopted.** `scripts/a5_skew_diagnostic.py`, output `a5_run4_skew_diagnostic.json`, 1000 replicates per null arm and 400 per power arm, compared tests on the same data. The table gives familywise rates (any of the columns significant) in the null arms, and the rate for the observer's column in the power arms:
+
+| Arm | Sign-flip | Bootstrap-t | Hall bootstrap-t | A5 now (sign-flip and bootstrap-t) | Sign-flip and Hall |
+|---|---|---|---|---|---|
+| 4 shared null columns, gain .3, signal 2 | .083 | .056 | .053 | .056 | .043 |
+| 4 shared null columns, gain .5 | .132 | .086 | .08 | .086 | .071 |
+| 1 null column, gain .3, signal 2 | .069 | .057 | .062 | .057 | .054 |
+| 1 null column, gain .5 | .147 | .114 | .102 | .114 | .091 |
+| Phi .3, signal 2 (power) | .915 | .853 | .61 | .853 | .61 |
+| Phi .7, signal 2 (power) | .855 | .615 | .945 | .615 | .853 |
+| Phi .3, signal 1 (power) | .998 | .998 | .975 | .998 | .975 |
+| Phi .7, signal 1 (power) | 1.0 | .998 | .998 | .998 | .998 |
+
+The Hall version is a bootstrap-t on Hall's (1992) monotone cubic transformation of t, the successor to Johnson's (1978) skewness-corrected t, so the estimand is still the actor mean of B. It brings gain .5 only to .071 and still fails there. It moves power from one tail to the other: Phi .3 at signal 2 falls from .853 to .61, which would lose the Default-led recovery (run 4: .846). So it fails the condition for adoption, and A5 keeps its test. At the default gain, A5's test holds the familywise rate, .056 with shared gains. At gain .5 it does not, .086, and that is stated as a limit and judged in the recovery.
+
+**Other changes from the audit.**
+- Checks that are 0 by construction, a named balance class and any evidence verdict in 1- and 2-cell families, are printed as vacuous and not counted (Recovery, False positives).
+- "Unmapped, neither part dominant" now has its own observer, `unmapped_even_signal2.0` (and at signal 1, not judged): wrong-family signal, calibrated to B = 0. A named row counts as reached only through an observer whose truth is that row. The no-evidence null now states its truth, "No face evidence, neither part dominant", and is still not judged.
+- The false-Even check covers every observer whose true Phi lies outside the Even range. For observers placed by something other than a stated Phi, true Phi is A5's estimator over `calibration_draws` draws.
+- `decide` now requires the family size, and a test runs all 9 named rows at family sizes 1 to 5.
+- `src/paper_v2/schema.py`, `src/paper_v2/metrics.py` and both diagnostics are pinned. A5 reads A3 only through A2's `a3_summary`, which accepts only the bytes A2 pins, and `a5_analyse.py` now stops if A2's pin differs from `a3_summary_sha256` in this block.
+- Point 3 of the list under Null and Inconclusive is rewritten as a dated change, and the reason code `balance_small_family` is added to the list of codes there.
+- The descriptions of the family size and of calibration precision are corrected.
+
+**Run 5** is `research/reproduction/a5_recovery.json`: block hash `a916f08d...`, 500 replicates, overall fail, with five failed checks. Unchanged observers kept their seeds, so their numbers equal run 4's.
+
+Failed, false positives at gain .5 with shared gains, as stated beforehand:
+- `shared_family_gain0.5|any_B_column`: .094 against .07.
+- `shared_family_gain0.5|B_significant` (the observer's own column): .072 against .07. A named Face or Default class there was .062.
+
+Failed, power, all into Inconclusive with reason `balance_unresolved`, other named verdicts at most .03:
+- `observer|mixed_phi0.5_signal2.0`: "Evidence, neither part dominant" .744, Inconclusive .226.
+- `observer|mixed_phi0.7_signal2.0`: Evidence-led .598, Inconclusive .398.
+- `observer|unmapped_even_signal2.0` (new): "Unmapped, neither part dominant" .756, Inconclusive .222, Default-led unmapped .022. At signal 1, not judged, it was .934.
+
+Passed:
+- `shared_family_gain0.3|any_B_column`, at the default gain: .054. Its own column: .022.
+- All 112 judged false-positive checks except the two above. 52 checks in 1- and 2-cell families are printed and not counted: the vacuous ones, and the raw B rates, which reach .098 (`gain0.5_phi0.5`, 2 cells) and .086 (`unmapped_even_signal2.0`, 1 cell).
+- Every named row was reached by an observer whose truth is that row. The lowest best rate was .934, for "Unmapped, neither part dominant" and for "No face evidence, neither part dominant".
+- The power table is as in run 4.
+
+**Status for freezing.** Under point 3 as rewritten above, the three power failures are accepted, because they fail only into Inconclusive. The gain .5 shared-family failure is a false-positive failure, so it is not accepted as power. It is recorded as a failure and stated as a limit: when all 4 columns share strong portrayal-gain skew (log-SD .5), the B family's error rate is about .09 rather than .05. Whether the actors in the real data are that heterogeneous is not known before the data are read. Freezing with this failure on record is a decision for the coordinator and is not made here.
 
 ## Limits
 
 - Even is a coarse claim. With 17 actors it can only say neither part is twice the other, true Phi in .333 to .667, not that Phi is near .5. It weakens as actors differ in how strongly they portray (see the sections on changes after recovery). Away from .5 inside that range, Inconclusive is common.
 - A balance class needs all 4 cells (`min_balance_cells`). B's test rejects too often at a true balance of zero in a family of 1 or 2 cells when actors differ strongly in how they portray (Changes after recovery run 3), so in a smaller family A5 says nothing about balance. Validity at 4 cells rests on recovery with 3 null companion columns. Real companions share clips and may carry a real B, and their effect on the step-down at that size is not tested.
+- When all 4 columns share strong portrayal-gain skew, B's family is liberal. With shared gains at gain .5, the familywise rate was .086 in the skew diagnostic and .094 in recovery run 5 (limit .07), which is a recorded failure. At the default gain .3 it was .056. A skew-corrected bootstrap was tried and not adopted, because it lost power at Phi .3 (Changes after the run 4 audit).
 - Face and Default are tests, not sizes. A significant B with D / P near 1 is still Face or Default, and Phi with its interval beside the verdict gives the size.
 - Lexicon conditioning hides out-of-lexicon answers. Grey mass was .02 and .08 on the 3 smoke items, so g can rest on little. B and E* do not need it, but the chain does.
 - `image_free` keeps placeholders, and what a model does with them differs by model. W is the best no-pixels estimate available, not a pure word prior.
@@ -501,7 +560,7 @@ RQ4's text proposes inversion as an extension. It is left out of A5, for three r
 | Dose passed on noise | The positive control is RQ0 and G4, not a magnitude |
 | Most sensitivities not run | Listed, all coded |
 | Constants outside the hash | One hashed block, parsed by the code |
-| Recovery showed mechanics only | Graded effects, actor noise, a full 8-column family, 500 replicates |
+| Recovery showed mechanics only | Graded effects, actor noise, full 4-column families for B and for E*, shared-gain null families, 500 replicates |
 | Margin from another outcome | Margin from T, the outcome's own scale |
 
 ## Read status of sources

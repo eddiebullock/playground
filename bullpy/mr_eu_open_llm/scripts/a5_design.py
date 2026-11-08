@@ -17,7 +17,7 @@ from typing import Any, Dict, Mapping
 ROOT = Path(__file__).resolve().parents[1]
 DRAFT = ROOT / "research" / "PREREG_A5_DRAFT.md"
 # Restated in the draft. Any edit to the block must change both, on purpose.
-DESIGN_SHA256 = "df4583f0f00097136990e9ab7ffacb4eea35b2c7dbe385c82b7f16404b6046e2"
+DESIGN_SHA256 = "a916f08d0c1b6d97d0d488bd0748f1eb28f53b2d5a80cc3608e4b52e9bf42b2b"
 
 _BLOCK = re.compile(r"^## Design block$.*?^```json\n(.*?)^```$", re.M | re.S)
 _CODE = re.compile(r"^## Code hashes$.*?^```text\n(.*?)^```$", re.M | re.S)

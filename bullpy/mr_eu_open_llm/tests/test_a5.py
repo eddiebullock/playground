@@ -362,10 +362,11 @@ WIDE = {"mean": 0.0, "ci95": [-1.0, 1.0], "ci90": [-0.9, 0.9], "neither_dominant
 T, MARGIN = 2.0, 0.2
 
 
-def decide(e, b, gate=FULL_GATE, gates=PASSED, p_e=None, p_b=None, base=True, t=T):
+def decide(e, b, gate=FULL_GATE, gates=PASSED, p_e=None, p_b=None, base=True, t=T, cells=None):
     p_e = (0.001 if e is HIGH else 0.5) if p_e is None else p_e
     p_b = (0.001 if b in (HIGH, LOW) else 0.5) if p_b is None else p_b
-    return a5.decide(gates, gate, t, MARGIN, b, e, p_b, p_e, base)
+    cells = D["min_balance_cells"] if cells is None else cells
+    return a5.decide(gates, gate, t, MARGIN, b, e, p_b, p_e, base, family_cells=cells)
 
 
 def failing(*names):
@@ -374,7 +375,7 @@ def failing(*names):
     return gate
 
 
-@pytest.mark.parametrize("e,b,gate,expected", [
+NAMED_ROWS = [
     (HIGH, HIGH, FULL_GATE, "Evidence-led"),
     (HIGH, LOW, FULL_GATE, "Default-led with evidence"),
     (HIGH, ZERO, FULL_GATE, "Evidence, neither part dominant"),
@@ -384,9 +385,29 @@ def failing(*names):
     (ZERO, LOW, failing("B4"), "No face evidence"),
     (ZERO, ZERO, failing("B4"), "No face evidence, neither part dominant"),
     (ZERO, HIGH, failing("B4"), "Face-dependent, no expression"),
-])
+]
+
+
+@pytest.mark.parametrize("e,b,gate,expected", NAMED_ROWS)
 def test_decision_table(e, b, gate, expected):
     assert decide(e, b, gate)["verdict"] == expected
+
+
+@pytest.mark.parametrize("cells", [1, 2, 3, 4, 5])
+def test_every_named_row_obeys_the_family_size_rule(cells):
+    assert len({row[3] for row in NAMED_ROWS}) == 9
+    for e, b, gate, expected in NAMED_ROWS:
+        row = decide(e, b, gate, cells=cells)
+        if cells >= D["min_balance_cells"]:
+            assert row["verdict"] == expected and row["balance_withheld"] is None
+        else:
+            assert row["verdict"] == a5.INCONCLUSIVE and "balance_small_family" in row["reasons"]
+            assert row["balance"] == "Unresolved" and row["balance_withheld"] in ("Face", "Default", "Even")
+
+
+def test_decide_requires_family_cells():
+    with pytest.raises(TypeError):
+        a5.decide(PASSED, FULL_GATE, T, MARGIN, HIGH, HIGH, 0.001, 0.001, True)
 
 
 def test_failed_gate_b_cannot_give_a_shown_verdict():
@@ -895,8 +916,31 @@ def test_small_family_judges_the_named_claim_not_the_raw_test():
            "verdicts": {}, "balance_classes": {}}
     out, below = rec.false_positive_checks({"one": row, "four": row}, {"one": {"true_balance_zero": True, "companions": 0},
                                                                         "four": {"true_balance_zero": True}})
-    assert out["one|B_dominance_named"]["pass"] and "one|B_significant" not in out and below["one|B_significant"]["judged"] is False
-    assert out["four|B_significant"]["pass"] is False
+    assert "one|B_dominance_named" not in out and "one|B_significant" not in out
+    assert below["one|B_significant"]["judged"] is False and below["one|B_dominance_named"]["why"].startswith("vacuous")
+    assert out["four|B_significant"]["pass"] is False and out["four|B_dominance_named"]["pass"] is True
+
+
+def test_false_even_covers_observers_placed_without_a_stated_phi():
+    row = {"rates": {"e_passes": 0.0, "b4": 0.0, "b_sig": 0.0, "b_named": 0.0, "any_b_sig": 0.0, "any_e_sig": 0.0},
+           "verdicts": {}, "balance_classes": {"Even": 0.2}}
+    out, _ = rec.false_positive_checks({"evidence_only": row, "null": row}, {"evidence_only": {"true_phi": 0.97}, "null": {"true_phi": 0.5}})
+    assert set(out) == {"evidence_only|false_even"}
+
+
+def test_shared_family_is_judged_familywise():
+    row = {"rates": {"e_passes": 0.0, "b4": 0.0, "b_sig": 0.02, "b_named": 0.02, "any_b_sig": 0.09, "any_e_sig": 0.0},
+           "verdicts": {}, "balance_classes": {}}
+    out, _ = rec.false_positive_checks({"s": row}, {"s": {"true_balance_zero": True, "shared_family": True, "companions": 3}})
+    assert out["s|any_B_column"]["pass"] is False and out["s|B_significant"]["pass"] is True
+
+
+def test_shared_family_columns_share_gains(world):
+    spec = rec.base_spec(signal=2.0, gain=0.5, item_sd=0.0, actor_sd=0.0)
+    gain = np.random.default_rng(1).normal(0, 0.5, len(world.actors))
+    a = world.scores(spec, np.random.default_rng(2), gain)[0]
+    b = world.scores(spec, np.random.default_rng(3), gain)[0]
+    assert np.allclose(a, b)
 
 
 def test_family_diagnostic_interval():
