@@ -53,12 +53,12 @@ Status keys: DONE, NOW (unblocked, in progress or next), WAIT (dependency named)
 | 0.1 | A2, A4 and A5 frozen, with A2's skew limit and the .01 sensitivity | G3, G5, G6 | Tags `a2-freeze`, `a4-freeze`, `a5-freeze` | DONE |
 | 0.2 | A4 renders | G5 | 11,761 images on the cluster | DONE |
 | 0.3 | Theory: CFA, residual CFA, SN1 | G9 | `supplementary_note1.md` merged | DONE |
-| 0.4 | Figures 1 and 3 | G11 | `make_figures.py` merged | DONE, except the eight-paper panel |
-| 0.5 | Eight-paper table as a committed file, plus Figure 1 panel e | G10, G11 | `research/reproduction/literature_table.csv`, with each row's source and verification level, plotted | NOW |
-| 0.6 | Post-A1 runbook: one script that pulls, checks counts and hashes, runs `analyse_rotation.py` and the per-model routes, and writes the registry stub, dry-run tested on synthetic files | G1 | `research/scripts/post_a1.sh` plus its test | NOW |
-| 0.7 | Figure 2, 4, 5 and 6 scripts written against the frozen output schemas, tested on synthetic or recovery outputs, and never run on real results until each is locked | G11 | Functions in `make_figures.py` with tests; real-data runs gated by a flag | NOW |
-| 0.8 | Paper scaffolding: results sections with the frozen decision rule and PENDING slots for every number, the discussion outline written for each outcome branch, and an abstract skeleton | G11 | Files in `research/paper/v2/`, with no result stated | NOW |
-| 0.9 | Submission pack drafts: data and code availability, ethics and preregistration links, reporting summary, `CITATION.cff` and `.zenodo.json` metadata | G11, G12 | Files committed; the DOI is USER (the Zenodo login) | NOW |
+| 0.4 | Figures 1 and 3 | G11 | `make_figures.py` merged | DONE |
+| 0.5 | Eight-paper table as a committed file, plus Figure 1 panel e | G10, G11 | `research/reproduction/literature_table.csv`, with each row's source and verification level, plotted | DONE 2026-11-08 |
+| 0.6 | Post-A1 runbook: one script that pulls, checks counts and hashes, runs `analyse_rotation.py` and the per-model routes, and writes the registry stub, dry-run tested on synthetic files | G1 | `research/scripts/post_a1.sh` plus its test | DONE 2026-11-08 (with errored-trial wrapper) |
+| 0.7 | Figure 2, 4, 5 and 6 scripts written against the frozen output schemas, tested on synthetic or recovery outputs, and never run on real results until each is locked | G11 | Functions in `make_figures.py` with tests; real-data runs gated by a flag | DONE 2026-11-08 (A2 and A4 output paths to confirm at run time) |
+| 0.8 | Paper scaffolding: results sections with the frozen decision rule and PENDING slots for every number, the discussion outline written for each outcome branch, and an abstract skeleton | G11 | Files in `research/paper/v2/`, with no result stated | DONE 2026-11-08 |
+| 0.9 | Submission pack drafts: data and code availability, ethics and preregistration links, reporting summary, `CITATION.cff` and `.zenodo.json` metadata | G11, G12 | Files committed; the DOI is USER (the Zenodo login) | DONE 2026-11-08, USER items in NEEDS_INPUT 9 |
 | 0.10 | Literature: full reads where open access exists for the snippet-level references, and a novelty recheck before submission | G10 | `references.md` levels updated | NOW, low priority |
 | 0.11 | A6 local items: everything in its freeze list that needs no cluster | G8 | Draft lists only cluster items as open | NOW |
 | 0.12 | A7 audit and recovery text, local only | G7 | Draft audited; Stage 0 is the next step | NOW, low priority |
