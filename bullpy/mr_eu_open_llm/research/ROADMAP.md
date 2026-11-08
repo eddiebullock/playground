@@ -59,7 +59,7 @@ Status keys: DONE, NOW (unblocked, in progress or next), WAIT (dependency named)
 | 0.7 | Figure 2, 4, 5 and 6 scripts written against the frozen output schemas, tested on synthetic or recovery outputs, and never run on real results until each is locked | G11 | Functions in `make_figures.py` with tests; real-data runs gated by a flag | DONE 2026-11-08 (A2 and A4 output paths to confirm at run time) |
 | 0.8 | Paper scaffolding: results sections with the frozen decision rule and PENDING slots for every number, the discussion outline written for each outcome branch, and an abstract skeleton | G11 | Files in `research/paper/v2/`, with no result stated | DONE 2026-11-08 |
 | 0.9 | Submission pack drafts: data and code availability, ethics and preregistration links, reporting summary, `CITATION.cff` and `.zenodo.json` metadata | G11, G12 | Files committed; the DOI is USER (the Zenodo login) | DONE 2026-11-08, USER items in NEEDS_INPUT 9 |
-| 0.10 | Literature: full reads where open access exists for the snippet-level references, and a novelty recheck before submission | G10 | `references.md` levels updated | NOW, low priority |
+| 0.10 | Literature: full reads where open access exists for the snippet-level references, and a novelty recheck before submission | G10 | `references.md` levels updated | DONE 2026-11-08 (5 rows upgraded, 12 have no free copy; [50] wording fixed; CFA name clash in NEEDS_INPUT 9) |
 | 0.11 | A6 local items: everything in its freeze list that needs no cluster | G8 | Draft lists only cluster items as open | NOW |
 | 0.12 | A7 audit and recovery text, local only | G7 | Draft audited; Stage 0 is the next step | NOW, low priority |
 
