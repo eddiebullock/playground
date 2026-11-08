@@ -141,7 +141,7 @@ The shared cue 3 sets the 1/2. The two systems' use of the correlated pair contr
 
 Proposition 5 shows that for independent, zero-mean noise the observed cosine approximates CFA times sqrt(R_S R_H), as a ratio of expectations. As implemented:
 
-- **Human side.** Subjects and stimuli are both split in half, 200 times. Each half is fitted by a pooled ridge logistic, converted to family do effects, and the halves are compared by cosine. The mean is stepped up by Spearman-Brown, and the stored "ceiling" is its square root, sqrt(R_H) (`scripts/a4_analyse.py:331-368`; `scripts/a4_design.py:50`). The residual ceiling repeats this with R applied to each half (`:362, 367`).
+- **Human side.** Subjects and stimuli are both split in half, 200 times. Each half is fitted by a pooled ridge logistic, converted to family do effects, and the halves are compared by cosine. The mean is stepped up by Spearman-Brown [58, 59], and the stored "ceiling" is its square root, sqrt(R_H) (`scripts/a4_analyse.py:331-368`; `scripts/a4_design.py:50`). The residual ceiling repeats this with R applied to each half (`:362, 367`).
 - **Model side.** The stimuli are split in half, 20 times, the matrix is refitted on each half, and R_S is the Spearman-Brown corrected mean cosine, separately for raw and residual (`scripts/a4_analyse.py:140-150`; `scripts/a4_design.py:48`).
 - **Corrected value, descriptive.** `cfa / (ceiling * sqrt(r_s))`, for each statistic with its own ceiling and R_S (`scripts/a4_analyse.py:430-432`).
 - **Decision.** Not aligned uses the interval's upper bound over sqrt(R_S), the model's reliability only (`scripts/a4_analyse.py:167`; `research/PREREG_A4_DRAFT.md:124`). Below R_S of .85 the uncorrected value is read as a lower bound (`scripts/a4_design.py:51`; `scripts/a4_analyse.py:433`).
@@ -160,7 +160,7 @@ Source: `research/reproduction/a4_human_ceiling.json` (fields `ceiling`, `ceilin
 - If the projectors were fixed and known, R(tau-hat) = P tau + P e with P e zero mean and independent across systems. Proposition 5 then applies to the residual matrices unchanged, with s replaced by E||P e||^2, which is at most s.
 - In A4 each projector is estimated from the noisy matrix. Then R(tau-hat) is not linear in the noise and Proposition 5 does not hold exactly. The split-half residual reliability measures the combined effect empirically, but no identity links it to the attenuation of residual CFA. The disattenuated residual value is therefore an approximation without a proof here.
 
-**Spearman's correction.** Proposition 5 is Spearman's correction for attenuation [51] (`references.md` #51), written for matrices. Spearman's form is r_pq = r_p'q' / sqrt(r_p'p' r_q'q'), where r_p'p' and r_q'q' are correlations between independent repeated series of observations of the same quantity (Part 2, Section 2, "'Attenuation' by Errors", read in the 2010 International Journal of Epidemiology reprint). The split-half reliabilities here play that role, after the Spearman-Brown step-up, which is used without a citation.
+**Spearman's correction.** Proposition 5 is Spearman's correction for attenuation [51] (`references.md` #51), written for matrices. Spearman's form is r_pq = r_p'q' / sqrt(r_p'p' r_q'q'), where r_p'p' and r_q'q' are correlations between independent repeated series of observations of the same quantity (Part 2, Section 2, "'Attenuation' by Errors", read in the 2010 International Journal of Epidemiology reprint). The split-half reliabilities here play that role, after the Spearman-Brown step-up [58, 59].
 
 ## 5. What the study claims and does not claim
 
@@ -231,5 +231,5 @@ Each null is tested sequentially by betting, with kernel MMD payoffs (SKIT, c-SK
 4. **Proposition S2 with non-parallel profiles.** The cross terms are not bounded here.
 5. **Set-to form of Theorem 1.** Unchanged from the theory note: the case where an intervened point is a natural item is not covered.
 6. **Finite-sample bound on CFA**, raw or residual, remains open (theory note, Open).
-7. **Citations.** Spearman is now `references.md` #51. The Spearman-Brown step-up (Section 4) has no citation. The Introduction's sentence on breaking natural correlations needs the qualifier set out in Section 6.3.
+7. **Citations.** Spearman is now `references.md` #51. The Spearman-Brown step-up (Section 4) is now `references.md` #58 and #59. The Introduction's sentence on breaking natural correlations needs the qualifier set out in Section 6.3.
 8. **Literature beyond #16 and #17.** Positivity and extrapolation in causal inference, and identifiability of learned representations, were not searched (Section 6.3).
