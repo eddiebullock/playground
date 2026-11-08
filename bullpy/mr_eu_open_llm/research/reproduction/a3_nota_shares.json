@@ -1,0 +1,77 @@
+{
+  "description": "Share of A3 single_face cells whose unique argmax of joint logprob is 'None of the above', per model and condition. Descriptive, outside the frozen A3 summary.",
+  "inputs": {
+    "gemma4": {
+      "file": "results/face_input_validity/cells_gemma4.jsonl",
+      "n_not_ok": 0,
+      "n_partial_lines_dropped": 0,
+      "n_rows": 2430,
+      "sha256": "05eec2d4f822eb3357f5333efcb10fb289a5686ed848c0b4c60f3e402b9af685"
+    },
+    "molmo2": {
+      "file": "results/face_input_validity/cells_molmo2.jsonl",
+      "n_not_ok": 0,
+      "n_partial_lines_dropped": 0,
+      "n_rows": 2430,
+      "sha256": "cd80b5c528bdb04acd8a7d256b9199b8cb7d2a1f809513aae9d9e585dd3ea6be"
+    },
+    "qwen3vl": {
+      "file": "results/face_input_validity/cells_qwen3vl.jsonl",
+      "n_not_ok": 0,
+      "n_partial_lines_dropped": 0,
+      "n_rows": 2430,
+      "sha256": "a3f302b3b150180facff87348f710f12e4927e7b04f2349e3b95b834434bc7e6"
+    }
+  },
+  "models": {
+    "gemma4": {
+      "mismatch": {
+        "count": 370,
+        "count_first_index_argmax": 370,
+        "n": 1215,
+        "n_ties_at_max": 19,
+        "share": 0.3045267489711934
+      },
+      "real": {
+        "count": 250,
+        "count_first_index_argmax": 250,
+        "n": 1215,
+        "n_ties_at_max": 13,
+        "share": 0.205761316872428
+      }
+    },
+    "molmo2": {
+      "mismatch": {
+        "count": 1077,
+        "count_first_index_argmax": 1077,
+        "n": 1215,
+        "n_ties_at_max": 0,
+        "share": 0.8864197530864197
+      },
+      "real": {
+        "count": 1049,
+        "count_first_index_argmax": 1049,
+        "n": 1215,
+        "n_ties_at_max": 0,
+        "share": 0.8633744855967078
+      }
+    },
+    "qwen3vl": {
+      "mismatch": {
+        "count": 836,
+        "count_first_index_argmax": 836,
+        "n": 1215,
+        "n_ties_at_max": 11,
+        "share": 0.6880658436213992
+      },
+      "real": {
+        "count": 649,
+        "count_first_index_argmax": 649,
+        "n": 1215,
+        "n_ties_at_max": 10,
+        "share": 0.5341563786008231
+      }
+    }
+  },
+  "script": "research/scripts/a3_nota_shares.py"
+}
