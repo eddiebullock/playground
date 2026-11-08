@@ -8,6 +8,8 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
 
 **Rebuilding on a clean task.** Prompt confound found 2026-11-04 (DECISIONS). Branch B stays as a record, but accuracy and last-token probes are confounded. Amendment A1 is the active confirmatory step. Literature-led redesign under way in `research_notes/`.
 
+**2026-11-08 evening:** ROADMAP Phase 0 is closed except 0.13. A6 local items closed (PR 87): recovery run 5 matches run 4, freeze prepared, cluster items only. A7 audited (PR 86): numeric complete-cut rule, blocks are not cuts, RQ3 "not testable" where no complete cut is shown; A7 code and freeze (0.13) under way and must precede any read of A2 cells. Literature (PR 85): Gold et al. wording fixed; CFA name clash with a WACV 2024 method is NEEDS_INPUT 9. Qwen A1 arrays still PENDING, estimate 2026-11-09 06:56 to 08:40; 20 of 30 rotation files.
+
 ## Next actions
 
 **A4 frozen 2026-11-07:** tag `a4-freeze`, design hash `12c454da`, PR 73 merged as `fc4a327`, before any A1 result was read and before any model saw a render. Residual CFA is confirmatory, recovery 66 of 66 (66 of 68 counting the two withdrawn cells). Render finished 2026-11-07: arrays 40268765 and 40270481 (tasks 0 and 1 failed in 7 s on cpu-q-168 and were rerun on another node), 40 tars, 11,761 images as planned, 2.2 GB, in `results/a4/renders` on the cluster, no model. Scoring waits for RQ0, then a timing smoke per eligible model.
