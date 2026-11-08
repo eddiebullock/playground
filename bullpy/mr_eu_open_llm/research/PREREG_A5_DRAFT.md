@@ -1,14 +1,14 @@
 # DRAFT amendment A5: prior and evidence on the blind readout (RQ4)
 
-**Status: DRAFT. Not frozen, not tagged, not preregistered.** Nothing here binds until it is audited, committed and tagged. It must freeze before any full A2 cell is read.
+**Status: FROZEN 2026-11-08, tag `a5-freeze`, before any A2 cell was run or read and before any A1 Qwen rotation result was read. Balance verdicts are descriptive only (Decision after run 6). Later changes are dated deviations, appended below. The filename keeps "DRAFT" so that references in the code stay valid.**
 
-Draft `design_sha256` of the block below: `a916f08d0c1b6d97d0d488bd0748f1eb28f53b2d5a80cc3608e4b52e9bf42b2b`. It changes with any edit to the block and is restated at the freeze.
+Draft `design_sha256` of the block below: `fd20495bf411b97bb876a32b0d93994b98bcc73a05aa104c6976f3fe2988efd4`. It changes with any edit to the block and is restated at the freeze.
 
 **Written:** 2026-11-07, before any A1 result was read, before any full A2 cell exists, and before any A5 quantity was computed on model output.
 **Goal:** G6 in `research/GOALS.md`.
 **Depends on:** A2's run (G4). RQ0 is read through the frozen A1 and A3 table by A2's `rq0_status`, per model and route. Gates G2 to G4 as in A2.
 **Models.** Gemma 4 and Qwen3-VL, each on `single_face` and `video_face`. Molmo2 is out under A2, so it has no cells here.
-**Code:** `scripts/a5_design.py`, `scripts/a5_analyse.py`, `scripts/a5_recovery.py`, `scripts/a5_family_diagnostic.py`, `scripts/a5_checks.py`, `scripts/a5_dependence_diagnostic.py`, `scripts/a5_skew_diagnostic.py`, `tests/test_a5.py`. `a5_design.py` parses the design block from this file and refuses a block whose hash differs from the value pinned in the code or stated above. The analysis imports A2's frozen `load_shards`, `gate_b`, `rq0_status`, `human_comparable`, `js_divergence`, `signflip_maxt` and bootstrap functions, and edits none of them.
+**Code:** `scripts/a5_design.py`, `scripts/a5_analyse.py`, `scripts/a5_recovery.py`, `scripts/a5_family_diagnostic.py`, `scripts/a5_checks.py`, `scripts/a5_dependence_diagnostic.py`, `scripts/a5_skew_diagnostic.py`, `scripts/a5_gain_guard_diagnostic.py`, `tests/test_a5.py`. `a5_design.py` parses the design block from this file and refuses a block whose hash differs from the value pinned in the code or stated above. The analysis imports A2's frozen `load_shards`, `gate_b`, `rq0_status`, `human_comparable`, `js_divergence`, `signflip_maxt` and bootstrap functions, and edits none of them.
 
 **What was known when this was written.**
 
@@ -69,6 +69,8 @@ All fixed constants are here and nowhere else. The hash is sha256 of the bytes b
   "margin_fraction": 0.10,
   "dominance_ratio": 2.0,
   "min_balance_cells": 4,
+  "gain_heterogeneity_min_z": 2.0,
+  "gain_heterogeneity_floor": 1e-9,
   "lambda_margin": 0.10,
   "lexicon_words": 106,
   "token_floor": 8.0,
@@ -131,9 +133,9 @@ All fixed constants are here and nowhere else. The hash is sha256 of the bytes b
 A5's own code and the helpers it imports, sha256, checked by `a5_analyse.py` and `a5_recovery.py` before they run. They are pinned here, outside the block, because `a5_design.py` holds the block's hash.
 
 ```text
-scripts/a5_design.py 9cd0f9d9e9749313dcc9b1fda0d76887a1921d02fad5b4c0e5eba9726fc3873f
-scripts/a5_analyse.py 3322f83bd1c60b2bcf9feedc34185ce666443f1e526f642313657b6bc2ccb535
-scripts/a5_recovery.py 7f7d419ea639a23bde0ee21b730399493b8694dad472cc2b580eb97cef6895f5
+scripts/a5_design.py 44ebd027a8dcf41cbe553896564d35d3eee82ffa7605ec1fc64667829b015b58
+scripts/a5_analyse.py 17e3731e8b7f30fbb0604aceeff2790042104fe00e5fc12794227008a8212c40
+scripts/a5_recovery.py 56d9d195238d50195b9f3ed5919ad6c7e904bde39633e74c34f93f5e34c3f7e8
 scripts/a5_family_diagnostic.py 06c0a372a3876f749b5baddacdb6f06bed19fcb3d1f9b46e3eeb5e5103989da3
 scripts/a5_checks.py b38e05fdb26ddc171623eda7f999463e0856938cfe37cd8827fc89cb02fb6b5e
 research/scripts/analyse_rotation.py 98890c5bff65f13abeb0549b61fe414dc9fa30082b84bcb564671683ec12e24f
@@ -142,6 +144,7 @@ src/paper_v2/schema.py 4acc626669439384115ae0efcb52cec4edee02c07662a242212d5f7b9
 src/paper_v2/metrics.py 1fc15676cae999e5185cfd016e3dd9db616c71ec0bb4c5d38cd49a4e7b886568
 scripts/a5_dependence_diagnostic.py 6f8ea78a57c46e0604c567cc1aadba805a0a1a52d79170e7c73c9c2496ba8d41
 scripts/a5_skew_diagnostic.py f7493fd4acb978fa988babd64ba066b16d0fa6de9ca8c2b47b53dad095b9ed90
+scripts/a5_gain_guard_diagnostic.py 7b6393a4f404ec7afdbe3c98d4813aeeb27e4184cfc9fb1c40f00fa6d59ae31f
 ```
 
 ## Prior and evidence, defined
@@ -240,7 +243,7 @@ The positive control for Absent is that face information can reach this model's 
 
 **Minimum family size for a balance class (`min_balance_cells`, 4).** Face, Default and Even are named only when B's step-down family has at least 4 eligible cells, which is every model and route A5 can have. In a smaller family the balance class is withheld: it reads Unresolved with reason `balance_small_family`, the verdict is Inconclusive, and the class it would have had is printed beside it as `balance_withheld`, which is not a result. The evidence class is still reported. This rule was added after recovery run 3 failed (see Changes after recovery run 3). In practice, if RQ0 or a gate removes any cell, no model gets a balance verdict from A5.
 
-**Decision table.** Applied per model and route. All verdicts require the preconditions in the next section.
+**Decision table.** Applied per model and route. All verdicts require the preconditions in the next section. **Since the decision after run 6, only the evidence column is confirmatory. The balance column and the verdict names are descriptive (Decision after run 6).**
 
 | Evidence | Balance | Verdict | Reading |
 |---|---|---|---|
@@ -509,11 +512,87 @@ Passed:
 
 **Status for freezing.** Under point 3 as rewritten above, the three power failures are accepted, because they fail only into Inconclusive. The gain .5 shared-family failure is a false-positive failure, so it is not accepted as power. It is recorded as a failure and stated as a limit: when all 4 columns share strong portrayal-gain skew (log-SD .5), the B family's error rate is about .09 rather than .05. Whether the actors in the real data are that heterogeneous is not known before the data are read. Freezing with this failure on record is a decision for the coordinator and is not made here.
 
+## Changes after recovery run 5
+
+Decided on 2026-11-08, after run 5, on synthetic observers only, before any A2 cell was read. No limit was changed.
+
+**The question.** Run 5 failed the shared-gain family at gain .5 (.094). The coordinator asked for a guard written before data: estimate actors' portrayal-gain heterogeneity from quantities A5 already has, other than B. If the estimate exceeded .4, halfway between the validated .3 and the failing .5, balance verdicts would be withheld. The guard was to be dropped if its estimator was too noisy to hold the gain .5 family without firing often at gain .3.
+
+**The estimator** (`gain_heterogeneity` in `a5_analyse.py`; block settings `gain_heterogeneity_min_z` and `gain_heterogeneity_floor`).
+- Per clip, d is the log-odds of the acted family under the judgement minus under the leave-one-out default. A gain that multiplies an additive push on the acted family's logit moves d by exactly that push.
+- Per actor, m is the mean of d, and v is its sampling variance.
+- Across actors, the between-actor variance is the variance of m less the mean of v (method of moments, floored at 0). The log-SD is sqrt(log(1 + variance / mean^2)), from a lognormal gain's coefficient of variation.
+- It is estimable only where the mean push is above 2 standard errors.
+- A family's value is the mean over its eligible cells, since the actors are shared.
+
+**Diagnostic.** `scripts/a5_gain_guard_diagnostic.py`, output `a5_run5_gain_guard_diagnostic.json`, 400 replicates per arm. The estimator was estimable in every replicate of every arm with a push.
+
+| True gain log-SD | Signal .5 | Signal 1 | Signal 2 |
+|---|---|---|---|
+| 0 | .12 (SD .15) | .05 (.06) | .03 (.03) |
+| .3 | .40 (.17) | .34 (.08) | .33 (.07) |
+| .5 | .64 (.16) | .55 (.11) | .56 (.11) |
+
+Mean estimate, with its SD across replicates, at Phi .5. It tracks the true spread, with a small upward bias that grows as the signal falls.
+
+How often a guard at .4 would fire, and what it would do:
+- 4 shared null columns at gain .5: familywise rate .077 without the guard and .022 with it. It fired in 93% of replicates.
+- 4 shared null columns at gain .3: .07 without and .07 with. It fired in 17%.
+- Gain .3 single columns: it fired in 12% (signal 2), 19% (signal 1) and 53% (signal .5).
+- Grid points at gain .3: 14% to 28% at signal 1 and 2, and 53% to 66% at signal .5. At Phi .3 and signal 2 it fired in 28%, which would take the Default-led recovery from .846 to about .61.
+
+**Decision: the guard is dropped.** It holds the gain .5 family (.022), but it fails the other condition. At the validated gain it fires in a fifth to a quarter of replicates at realistic signals, and in over half at weak ones. It would turn passing named-verdict recoveries into failures. The noise is not only estimator error. With 17 actors drawn at log-SD .3, the sample SD itself varies by about .05, so even a perfect estimator would cross .4 regularly, and 17 actors cannot reliably tell .3 from .4. The gain .5 shared-family failure stays recorded, and is stated as a limit. The estimate is now reported beside every cell (`gain_heterogeneity`) and family (`family_gain_log_sd`) at analysis, as a description that changes no verdict. A family estimate near or above .5 then says the balance tests ran in the region where recovery showed them liberal, about .09 familywise rather than .05. The recovery reports the estimate for each observer with a push (`gain_heterogeneity`), with the rate at which a guard at .4 would have fired.
+
+**Run 6** is `research/reproduction/a5_recovery.json`: block hash `fd20495b...`, 500 replicates, overall fail. Run 5 is kept as `a5_recovery_run5.json`. With the guard dropped, run 6 differs from run 5 only in the descriptive gain report. Every verdict rate and every check is identical, with the same five failures:
+- `shared_family_gain0.5|any_B_column` .094, and its own column .072, against .07.
+- `observer|mixed_phi0.5_signal2.0`, `observer|mixed_phi0.7_signal2.0` and `observer|unmapped_even_signal2.0`, each into Inconclusive.
+
+The recovery's gain report (`gain_heterogeneity`) gives the estimator's mean (SD) and the rate at which a guard at .4 would have fired:
+
+| Observer | True gain | Signal | Estimate | Would fire |
+|---|---|---|---|---|
+| `gain0.0_phi0.5` | 0 | 2 | .03 (.03) | 0 |
+| `mixed_phi0.5_signal0.5` | .3 | .5 | .38 (.18) | .49 |
+| `mixed_phi0.5_signal1.0` | .3 | 1 | .35 (.09) | .24 |
+| `mixed_phi0.5_signal2.0` | .3 | 2 | .34 (.07) | .18 |
+| `mixed_phi0.3_signal2.0` | .3 | 2 | .35 (.07) | .22 |
+| `shared_family_gain0.3` | .3 | 2 | .34 (.07) | .16 |
+| `gain0.5_phi0.5` | .5 | 2 | .55 (.11) | .94 |
+| `shared_family_gain0.5` | .5 | 2 | .55 (.11) | .93 |
+
+**Freezing on the rules as written.** Point 3 accepts the three power failures. It does not accept the shared-family failure at gain .5, because that is a false-positive check, and point 3 says a false-positive failure still blocks the freeze. So on the rules as written, A5 is not freezable. Reclassifying that observer as unjudged now, after it failed, would be the kind of change this draft has refused elsewhere.
+
+The choices left are for the coordinator, and each must be dated:
+- (a) Freeze with the failure on record, under a written exception to point 3, with the limit stated.
+- (b) Remove balance verdicts from A5's confirmatory claims, and report B, Phi and the gain estimate descriptively. The evidence classes, whose checks all pass, then carry the confirmatory claims.
+- (c) Change the design so that the test holds under shared skew, for example by testing on more units than 17 actors. That is not available in A2's data.
+
+## Decision after run 6 (2026-11-08)
+
+Taken by the coordinator on 2026-11-08 (option (b) above), after run 6, on synthetic observers only, before any A2 cell exists. No threshold moved: `false_positive_max` stays .07, and `inconclusive_max` stays .20.
+
+**Balance leaves the confirmatory claims.** The balance classes (Face, Default, Even), the reasons `balance_unresolved` and `balance_small_family`, and the verdict names, which carry the balance, are no longer confirmatory. They are reported as description beside B, Phi with its interval, and `family_gain_log_sd`. The output labels them `balance_confirmatory: false` and `verdict_confirmatory: false`, puts them in a `descriptive` block, and states that they are not error-controlled under skewed portrayal gain. The reason is recovery: with 4 null columns sharing portrayal gain at log-SD .5, B's family rejected in .094 of replicates (`shared_family_gain0.5|any_B_column`, run 6), against .07, and no remedy held it without losing power at the validated gain (Changes after the run 4 audit, Changes after recovery run 5).
+
+**The evidence classes carry the confirmatory claims.** Shown, Unmapped, Absent and Unresolved (with `evidence_unresolved`), per model and route, under E*'s step-down family and Gate B. These are labelled `evidence_confirmatory: true` and given in the `confirmatory` block. Where the word-knowledge reading needs Absent with Default (Decision table), the Default part is descriptive, so the word-knowledge result is stated as Absent evidence, with the balance and word share beside it as description.
+
+**Every failure stays on record.** Run 5 (`a5_recovery_run5.json`) and run 6 (`a5_recovery.json`) failed the same five checks with the same numbers:
+- `shared_family_gain0.5|any_B_column` .094 and `shared_family_gain0.5|B_significant` .072, against .07.
+- `observer|mixed_phi0.5_signal2.0`: expected .744, Inconclusive .226.
+- `observer|mixed_phi0.7_signal2.0`: expected .598, Inconclusive .398.
+- `observer|unmapped_even_signal2.0`: expected .756, Inconclusive .222.
+
+**The three power failures stay accepted under point 3, and they now concern descriptive output only.** Each fails because balance went unresolved (all `balance_unresolved`). The evidence class in those replicates was correct: Shown or Unmapped in every replicate. So these failures are about the part of the verdict that is no longer a confirmatory claim. The two shared-family failures are false positives in the B test. They are not accepted as passes. They are the reason balance is descriptive, and they stay recorded as failures.
+
+**No evidence-class check fails in run 6.** All 43 judged false-positive checks on evidence pass. That covers E* passing, B4 passing and any evidence verdict on the label-free observers, and any E* column in the all-null family. For the 14 judged observers, the expected evidence class was reached in at least .966 of replicates. The lowest were the noise observer, Absent at .966, and identity, Absent at .974. Every Shown and Unmapped observer reached its class in all replicates. This table was computed after the decision from the stored run 6 output (`evidence_classes` per observer) and is not a new judged check.
+
+**No recovery rerun.** The change is labels only: `label_claims` in `a5_analyse.py` adds fields and changes no value, which `tests/test_a5.py` checks. The design block, and so `design_sha256` (`fd20495b...`), is unchanged. Run 6's replicates were produced with `a5_analyse.py` `e726c03a...`, and the freeze pins the labelled version, which differs from it only by the labels.
+
 ## Limits
 
 - Even is a coarse claim. With 17 actors it can only say neither part is twice the other, true Phi in .333 to .667, not that Phi is near .5. It weakens as actors differ in how strongly they portray (see the sections on changes after recovery). Away from .5 inside that range, Inconclusive is common.
+- Balance is descriptive only, not error-controlled under skewed portrayal gain (Decision after run 6). A5's confirmatory claims are the evidence classes.
 - A balance class needs all 4 cells (`min_balance_cells`). B's test rejects too often at a true balance of zero in a family of 1 or 2 cells when actors differ strongly in how they portray (Changes after recovery run 3), so in a smaller family A5 says nothing about balance. Validity at 4 cells rests on recovery with 3 null companion columns. Real companions share clips and may carry a real B, and their effect on the step-down at that size is not tested.
-- When all 4 columns share strong portrayal-gain skew, B's family is liberal. With shared gains at gain .5, the familywise rate was .086 in the skew diagnostic and .094 in recovery run 5 (limit .07), which is a recorded failure. At the default gain .3 it was .056. A skew-corrected bootstrap was tried and not adopted, because it lost power at Phi .3 (Changes after the run 4 audit).
+- When all 4 columns share strong portrayal-gain skew, B's family is liberal. With shared gains at gain .5, the familywise rate was .086 in the skew diagnostic and .094 in recovery run 5 (limit .07), which is a recorded failure. At the default gain .3 it was .056. The estimated gain log-SD (`family_gain_log_sd`) is reported at analysis so a reader can see which region the data are in; it changes no verdict, since a guard on it fired too often at the validated gain (Changes after recovery run 5). A skew-corrected bootstrap was tried and not adopted, because it lost power at Phi .3 (Changes after the run 4 audit).
 - Face and Default are tests, not sizes. A significant B with D / P near 1 is still Face or Default, and Phi with its interval beside the verdict gives the size.
 - Lexicon conditioning hides out-of-lexicon answers. Grey mass was .02 and .08 on the 3 smoke items, so g can rest on little. B and E* do not need it, but the chain does.
 - `image_free` keeps placeholders, and what a model does with them differs by model. W is the best no-pixels estimate available, not a pure word prior.
@@ -542,6 +621,30 @@ RQ4's text proposes inversion as an extension. It is left out of A5, for three r
 | A5 analysis, all models and routes | 0 |
 | Recovery | 0, CPU only |
 | H3 | 0 beyond A6's Stage 1 |
+
+## Freeze (2026-11-08, tag `a5-freeze`)
+
+Prepared after the decision after run 6 and committed by the coordinator with tag `a5-freeze` on 2026-11-08, before any A2 cell existed. The coordinator reran tests/test_a5.py (108 passed) and checked the listed hashes against the committed files.
+
+To be frozen `design_sha256`: `fd20495bf411b97bb876a32b0d93994b98bcc73a05aa104c6976f3fe2988efd4`.
+
+To be frozen code, sha256: `scripts/a5_design.py` `44ebd027a8dcf41cbe553896564d35d3eee82ffa7605ec1fc64667829b015b58`; `scripts/a5_analyse.py` `17e3731e8b7f30fbb0604aceeff2790042104fe00e5fc12794227008a8212c40`; `scripts/a5_recovery.py` `56d9d195238d50195b9f3ed5919ad6c7e904bde39633e74c34f93f5e34c3f7e8`; `scripts/a5_family_diagnostic.py` `06c0a372a3876f749b5baddacdb6f06bed19fcb3d1f9b46e3eeb5e5103989da3`; `scripts/a5_checks.py` `b38e05fdb26ddc171623eda7f999463e0856938cfe37cd8827fc89cb02fb6b5e`; `scripts/a5_dependence_diagnostic.py` `6f8ea78a57c46e0604c567cc1aadba805a0a1a52d79170e7c73c9c2496ba8d41`; `scripts/a5_skew_diagnostic.py` `f7493fd4acb978fa988babd64ba066b16d0fa6de9ca8c2b47b53dad095b9ed90`; `scripts/a5_gain_guard_diagnostic.py` `7b6393a4f404ec7afdbe3c98d4813aeeb27e4184cfc9fb1c40f00fa6d59ae31f`; `tests/test_a5.py` `1540afbef3d1891e89c374e72b803c739545095a438886b5abfaeba293410521`; `research/scripts/analyse_rotation.py` `98890c5bff65f13abeb0549b61fe414dc9fa30082b84bcb564671683ec12e24f`; `src/paper_v2/option_score.py` `ae949e4c1c3abc6a775a535c4e0a5042bce59ba14f7ac1afeefd476f032a5a2b`; `src/paper_v2/schema.py` `4acc626669439384115ae0efcb52cec4edee02c07662a242212d5f7b9c359b47`; `src/paper_v2/metrics.py` `1fc15676cae999e5185cfd016e3dd9db616c71ec0bb4c5d38cd49a4e7b886568`; `scripts/stimulus_design.py` `89d256c1072e0768fc747294553c5710adaf42184a175866d7bd75bcc6104978`; `scripts/stimulus_interventions.py` `93c601eb42d6700d4f0fc8ba72317ed5c2e354105d57fcac611c59660125deb3`; `scripts/run_stimulus_interventions.py` `f7880c94e9671cc294cd4eaeece2108d7cd1d7a4c7e6f9e30a1c495964e6cd82`; `scripts/analyse_stimulus_interventions.py` `aba4f533daad6210e87f7bb4e68fc4627805cb4dfd9d9308df734fada4edc8b1`.
+
+To be frozen inputs and outputs, sha256: `data/eu_emotions_full_manifest.json` `54e9976f1a05557b487a3965ba254656bc3b62ce34ba4449eb4e387518b5df7d`; `data/eu_emotions_human_entropy.json` `f9d91b4e47816fd01b773f0a63f8fff39c7e0cfa2c56a2136b1f52ba5cc33744`; `research/reproduction/face_input_validity_summary.json` `c1c64e6975b32356a3314268c054f0dee483ddf74b11cd66d03b2faf972e64a4`; `research/reproduction/a5_recovery.json` `baa960ca1dd524f696f2a0a075ec8a746fe63df1e243cc4c62f8dbd4825ebe20`; `research/reproduction/a5_checks.json` `2c500a885db9d3a356ecb3fcd6c7586647d42ae35d10e9b179609ff9fb1de23a`; `research/reproduction/a5_family_diagnostic.json` `67ac4c90a82811cb3ebc8576204693877308f9ad1785fe67282b4070431183cb`; `research/reproduction/a5_recovery_run1.json` `92ee63d07cdc4d8a4820bfa5709fcbda84f473211e8672a3fc4d0c1ec5fdb587`; `research/reproduction/a5_recovery_run2.json` `3460cf006fa97961fecec310b806a85100dcb2a056d72d535a4e68f2c20c7456`; `research/reproduction/a5_recovery_run3.json` `0733a4af590b1338782b4bbb86438d238814e807b078573d9ddb688975dd63e9`; `research/reproduction/a5_recovery_run4.json` `fb8bab4ae9f894b294fcb6aca46ba2a43df1e12414e7be85f4c35c02ff152cb9`; `research/reproduction/a5_recovery_run4_as_written.json` `3cd87b83f4959964d79baabe4e1009548f89075b8601ccd94c5a490c36aa9aba`; `research/reproduction/a5_recovery_run5.json` `8719d90fc305b1a117b1c0280670e52633e6e973e5e56dde68adda432cecbf51`; `research/reproduction/a5_run3_calibration_check.json` `7c0345949715e3877d4fe4ca2b39562ab0cce4035045cc482e3199e429b2e2c1`; `research/reproduction/a5_run3_dependence_loo.json` `91e9f011e9e5955599e7011de5e06218cb0c2f1230ef78f7d04e72ff714383c2`; `research/reproduction/a5_run3_dependence_oracle.json` `3c6df0df26965914c8089bb5efb8c3b40f2a0adca1be9981009b31c3b0930256`; `research/reproduction/a5_run3_recalibrated_diagnostic.json` `43489fd4b310a7626ae73f16f4953be60d9d15f312196b1c8a200c3178a69f96`; `research/reproduction/a5_run4_skew_diagnostic.json` `47689ef3dcfb777a7cdd73d04d5ec66e0748f6bf69a95c4e5004a237de77d489`; `research/reproduction/a5_run5_gain_guard_diagnostic.json` `b2b6af7b0da52bb82c1ab5acfb65f5bbe1dafc82dd29ef2f22605e5ccdc0c5b6`.
+
+`design_sha256` covers the design block above, including A2's frozen design hash, A2's four frozen code files and the A3 summary hash. The code hashes in "Code hashes" are checked by `a5_analyse.py` and `a5_recovery.py` before they run. The lists here add the tests, the inputs and every recovery and diagnostic output, as A4's freeze did. `a5_recovery.json` is run 6. Its replicates came from `a5_analyse.py` `e726c03a...`, which differs from the version above only by the labels added in the decision after run 6.
+
+**What is known at the freeze.**
+- No A2 cell, full or partial, exists in this repository. `results/stimulus_interventions/` is absent, and no `cells_*.jsonl` or `run_<model>*.json` file is present.
+- Nothing in A5's code or recovery reads A2 cells. `a5_analyse.py` refuses to run without `--a5_frozen` and `--a2_frozen`, and recovery uses synthetic observers only (`uses_model_output: false`).
+- The A2 smoke run of 3 items on Gemma 4, described in A2, was read for mechanics only, before A5 was written.
+- No A1 rotation result had been read when the recovery runs were made.
+- Known: A3's result, the gates, A2's frozen code and text, and six recovery runs on synthetic observers, which shaped this design as recorded in the sections on changes after each run.
+
+**Status of the items fixed before freezing.**
+1. Audit of text, code and recovery: done, with two independent audits (run 2 and run 4). Recovery runs 1 to 6 are kept under `research/reproduction/`.
+2. The **[proposed]** values (`margin_fraction`, `dominance_ratio`, `lambda_margin`, `min_total_nats`, `word_share_cut`, `survival_cut`) stand as written in the block, and the `design_sha256` above records them.
+3. Freeze before any full A2 cell is read: holds as of this preparation.
 
 ## Fixed before freezing
 

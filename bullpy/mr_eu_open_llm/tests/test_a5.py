@@ -878,6 +878,7 @@ def test_pass_rule_reads_the_block():
     row = dict(verdict="Even", reasons=[], share="mixed", evidence="Shown", balance="Even", phi=0.5, T=1.0, b_over_t=0.0,
                e_over_t=0.1, b_half_over_t=0.05, e_half_over_t=0.05, b4=True, b5=True, e_sig=True, e_raw_sig=True, e_passes=True,
                b_sig=False, b_raw_sig=False, b_named=False, balance_withheld=None, any_b_sig=False, any_e_sig=True,
+               gain_log_sd=None, family_gain_log_sd=None, **{"would_fire_at_0.4": False},
                conflict=False, b3_failed=False)
     good = rec.summarise(observer, [row] * 8 + [{**row, "verdict": a5.INCONCLUSIVE, "reasons": ["balance_unresolved"]}] * 2)
     assert good["pass"] is True
@@ -912,7 +913,8 @@ def test_balance_is_withheld_below_min_balance_cells():
 
 
 def test_small_family_judges_the_named_claim_not_the_raw_test():
-    row = {"rates": {"e_passes": 0.0, "b4": 0.0, "b_sig": 0.12, "b_named": 0.0, "any_b_sig": 0.0, "any_e_sig": 0.0},
+    row = {"rates": {"e_passes": 0.0, "b4": 0.0, "b_sig": 0.12, "b_named": 0.0, "any_b_sig": 0.0, "any_e_sig": 0.0,
+                     "any_b_claim": 0.0, "b_sig_open": 0.12, "guard_fires": 0.0},
            "verdicts": {}, "balance_classes": {}}
     out, below = rec.false_positive_checks({"one": row, "four": row}, {"one": {"true_balance_zero": True, "companions": 0},
                                                                         "four": {"true_balance_zero": True}})
@@ -922,7 +924,8 @@ def test_small_family_judges_the_named_claim_not_the_raw_test():
 
 
 def test_false_even_covers_observers_placed_without_a_stated_phi():
-    row = {"rates": {"e_passes": 0.0, "b4": 0.0, "b_sig": 0.0, "b_named": 0.0, "any_b_sig": 0.0, "any_e_sig": 0.0},
+    row = {"rates": {"e_passes": 0.0, "b4": 0.0, "b_sig": 0.0, "b_named": 0.0, "any_b_sig": 0.0, "any_e_sig": 0.0,
+                     "any_b_claim": 0.0, "b_sig_open": 0.0, "guard_fires": 0.0},
            "verdicts": {}, "balance_classes": {"Even": 0.2}}
     out, _ = rec.false_positive_checks({"evidence_only": row, "null": row}, {"evidence_only": {"true_phi": 0.97}, "null": {"true_phi": 0.5}})
     assert set(out) == {"evidence_only|false_even"}
@@ -952,7 +955,76 @@ def test_family_diagnostic_interval():
 
 def test_power_table_ignores_companion_sweep_copies():
     row = {"power": 0.9, "verdicts": {}, "rates": {"e_passes": 0.0, "b4": 0.0, "b_sig": 0.0, "b_named": 0.0,
-           "any_b_sig": 0.0, "any_e_sig": 0.0}, "balance_classes": {}, "judged": False, "word_share": {}}
+           "any_b_sig": 0.0, "any_e_sig": 0.0, "would_fire_at_0.4": 0.0},
+           "balance_classes": {}, "judged": False, "word_share": {}, "gain_log_sd": {}, "family_gain_log_sd": {}}
     table = {"m": row, "m|companions0": {**row, "power": 0.0}}
-    meta = {"m": {"grid": True, "phi": 0.5, "signal": 2.0}, "m|companions0": {"grid": True, "phi": 0.5, "signal": 2.0, "companions": 0}}
+    spec = {"gain": 0.3, "signal": 2.0}
+    meta = {"m": {"grid": True, "phi": 0.5, "signal": 2.0, "spec": spec},
+            "m|companions0": {"grid": True, "phi": 0.5, "signal": 2.0, "companions": 0, "spec": spec}}
     assert rec.build_report(table, meta, 10)["power_by_phi_and_signal"] == {"0.5": {"2.0": 0.9}}
+
+
+def test_gain_heterogeneity_tracks_the_true_spread(world):
+    spec = rec.base_spec(signal=2.0, item_sd=0.2, actor_sd=0.0)
+    estimates = {}
+    for sd in (0.0, 0.5):
+        values = [a5.gain_heterogeneity(world.judgement(world.scores({**spec, "gain": sd}, np.random.default_rng(k))[0]))
+                  for k in range(20)]
+        assert all(v["estimable"] for v in values)
+        estimates[sd] = np.mean([v["log_sd"] for v in values])
+    assert estimates[0.0] < 0.2 and 0.3 < estimates[0.5] < 0.7
+
+
+def test_no_push_is_not_estimable(world):
+    j = world.judgement(world.scores(rec.base_spec(prior=0.5), np.random.default_rng(0))[0])
+    h = a5.gain_heterogeneity(j)
+    assert h["estimable"] is False and h["log_sd"] is None
+
+
+def test_gain_estimate_changes_no_verdict():
+    assert "balance_gain_heterogeneity" not in a5.REASONS
+    assert "gain_log_sd" not in a5.decide.__code__.co_varnames
+
+
+# ---------------------------------------------------------------------------
+# Decision after run 6: the evidence class is confirmatory, balance is descriptive
+# ---------------------------------------------------------------------------
+
+
+def test_finished_rows_label_balance_and_verdict_as_descriptive(world):
+    cell = built(world, rec.base_spec(signal=2.0, w="flat"))
+    row = a5.analyse_family([cell])[0]
+    assert row["evidence_confirmatory"] is True
+    assert row["balance_confirmatory"] is False and row["verdict_confirmatory"] is False
+    assert row["confirmatory"]["evidence"] == row["evidence"]
+    d = row["descriptive"]
+    assert d["confirmatory"] is False and "not error-controlled" in d["note"] and ".094" in d["note"]
+    assert d["verdict"] == row["verdict"] and d["balance"] == row["balance"] and d["Phi"] == row["Phi"]
+    assert d["family_gain_log_sd"] == row["family_gain_log_sd"] and d["balance_withheld"] == row["balance_withheld"]
+    assert d["balance_reasons"] == [r for r in row["reasons"] if r.startswith("balance_")]
+
+
+def test_labels_change_no_value(world):
+    cell = built(world, rec.base_spec(signal=2.0, w="flat"))
+    row = a5.analyse_family([cell])[0]
+    bare = {k: v for k, v in row.items() if k not in ("evidence_confirmatory", "balance_confirmatory", "verdict_confirmatory",
+                                                     "confirmatory", "descriptive")}
+    tests = a5.family_tests([cell.est])
+    again = a5.finish_cell(cell, tests[0], a5.family_gain_log_sd([cell.j]))
+    assert {k: again[k] for k in bare} == bare
+    relabelled = a5.label_claims(dict(bare))
+    assert {k: relabelled[k] for k in bare} == bare
+
+
+def test_not_tested_rows_are_labelled_and_scope_is_stated(tmp_path, world, human, monkeypatch):
+    a2_hash = D["a2_design_sha256"]
+    pinned_paths(tmp_path, monkeypatch)
+    folder = tmp_path / "cells"
+    write_shards(folder, world, a2_hash)
+    runs = {"gemma4": a5.load_model("gemma4", folder, a2_hash), "qwen3vl": a5.load_model("qwen3vl", folder, a2_hash)}
+    out = a5.analyse_runs(runs, tmp_path, human, None, tmp_path / "nowhere", shuffles=SHUFFLES)
+    assert out["claim_scope"]["confirmatory"] == ["evidence"] and "balance" in out["claim_scope"]["descriptive"]
+    for row in out["cells"]:
+        assert row["balance_confirmatory"] is False and row["verdict_confirmatory"] is False
+    missing = [r for r in out["cells"] if r["model"] == "qwen3vl"]
+    assert missing and all(r["confirmatory"]["not_tested"] for r in missing)

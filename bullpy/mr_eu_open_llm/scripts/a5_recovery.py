@@ -310,12 +310,17 @@ def replicate(world: World, observer: Mapping[str, Any], companion: Mapping[str,
     cell = a5.build_cell("synthetic", ROUTE, an.Cells(world.rows(s)), world.actors, world.partners,
                          a5.baselines([world.report(w, g)], ROUTE), dict(GATES_PASSED), 0.0, shuffles)
     column = observer["spec"] if shared is not None else companion
-    others = [a5.estimate(world.judgement(world.scores(column, rng, shared)[0]), shuffles=min(shuffles, observer.get("companion_shuffles", R["companion_shuffles"])))
-              for _ in range(observer.get("companions", R["companion_cells"]))]
+    judgements = [world.judgement(world.scores(column, rng, shared)[0]) for _ in range(observer.get("companions", R["companion_cells"]))]
+    others = [a5.estimate(j, shuffles=min(shuffles, observer.get("companion_shuffles", R["companion_shuffles"]))) for j in judgements]
     tests = a5.family_tests([cell.est, *others])
-    row = a5.finish_cell(cell, tests[0])
+    spread = a5.family_gain_log_sd([cell.j, *judgements])  # pooled as analyse_family pools it; reported only
+    row = a5.finish_cell(cell, tests[0], spread)
     alpha = D["alpha"]
     return {
+        "gain_log_sd": row["gain_heterogeneity"]["log_sd"],
+        "family_gain_log_sd": spread,
+        # What a guard at log-SD .4 would have done, for the record of the dropped guard.
+        "would_fire_at_0.4": spread is not None and spread > 0.4,
         "verdict": row["verdict"],
         "reasons": row["reasons"],
         "share": (row["word_share"] or {}).get("reading"),
@@ -347,6 +352,14 @@ def rate(rows: Sequence[Mapping[str, Any]], key: str) -> float:
     return float(np.mean([bool(r[key]) for r in rows]))
 
 
+def gain_summary(values: Sequence[Optional[float]]) -> Dict[str, Any]:
+    """Mean and SD of the gain log-SD estimate where it exists, and how often it does."""
+    present = np.array([v for v in values if v is not None], dtype=np.float64)
+    return {"estimable": float(present.size / len(values)) if len(values) else 0.0,
+            "mean": float(present.mean()) if present.size else None,
+            "sd": float(present.std(ddof=1)) if present.size > 1 else None}
+
+
 def summarise(observer: Mapping[str, Any], rows: Sequence[Mapping[str, Any]]) -> Dict[str, Any]:
     counts = Counter(r["verdict"] for r in rows)
     n = len(rows)
@@ -358,7 +371,10 @@ def summarise(observer: Mapping[str, Any], rows: Sequence[Mapping[str, Any]]) ->
         "verdicts": verdicts, "reason_rates": {k: v / n for k, v in sorted(reasons.items())},
         "measured": {k: round(float(np.mean([r[k] for r in rows])), 4)
                      for k in ("phi", "T", "b_over_t", "e_over_t", "b_half_over_t", "e_half_over_t")},
-        "rates": {k: rate(rows, k) for k in ("b4", "b5", "e_sig", "e_raw_sig", "e_passes", "b_sig", "b_raw_sig", "b_named", "any_b_sig", "any_e_sig", "conflict", "b3_failed")},
+        "rates": {k: rate(rows, k) for k in ("b4", "b5", "e_sig", "e_raw_sig", "e_passes", "b_sig", "b_raw_sig", "b_named", "any_b_sig",
+                                               "would_fire_at_0.4", "any_e_sig", "conflict", "b3_failed")},
+        "gain_log_sd": gain_summary([r["gain_log_sd"] for r in rows]),
+        "family_gain_log_sd": gain_summary([r["family_gain_log_sd"] for r in rows]),
         "balance_withheld": {k: v / n for k, v in sorted(Counter(str(r["balance_withheld"]) for r in rows).items())},
         "evidence_classes": {k: v / n for k, v in sorted(Counter(str(r["evidence"]) for r in rows).items())},
         "balance_classes": {k: v / n for k, v in sorted(Counter(str(r["balance"]) for r in rows).items())},
@@ -447,6 +463,10 @@ def build_report(table: Mapping[str, Mapping[str, Any]], meta: Mapping[str, Mapp
         "word_share_expected_reading_rate": word,
         "false_positives": false_positive,
         "unjudged_below_min_balance_cells": below_scope,
+        "gain_heterogeneity": {k: {"true_log_sd": meta[k]["spec"]["gain"], "signal": meta[k]["spec"]["signal"],
+                                   "own_cell": row["gain_log_sd"], "family": row["family_gain_log_sd"],
+                                   "would_fire_at_0.4": row["rates"]["would_fire_at_0.4"]}
+                               for k, row in table.items() if meta[k]["spec"]["signal"] and "|companions" not in k},
         "checks": checks,
         "failed": sorted(k for k, v in checks.items() if not v),
         "pass": all(checks.values()),
