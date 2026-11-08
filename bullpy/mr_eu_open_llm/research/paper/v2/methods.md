@@ -235,7 +235,7 @@ On synthetic stimuli with paired cues at a constructed correlation of .9, pair-s
 
 **Estimand.** For item *i* and condition *c*, delta(*i*, *c*) is *y*(*i*, *c*) minus *y*(*i*, original), within item and route. The primary outcome *y* is the CLR of the acted family. Predictions that another label rises use that family's CLR with the acted label left out of the reference mean, since otherwise a plain fall in the target would read as a predicted rise. Effects are averaged per actor. A bridge readout using rotated options never replaces a blind result.
 
-**Inference.** The actor is the unit. We used an exact sign-flip test of actor effects with Westfall-Young step-down maxT [CITE NEEDED: Westfall and Young] within one model and route, at familywise alpha .05, and actor-bootstrap 95% intervals (10,000 draws). With 8 actors a one-sided *P* value cannot go below .0039.
+**Inference.** The actor is the unit. We used an exact sign-flip test of actor effects with Westfall-Young step-down maxT [52] within one model and route, at familywise alpha .05, and actor-bootstrap 95% intervals (10,000 draws). With 8 actors a one-sided *P* value cannot go below .0039.
 
 **Predictions.** The contrasts below are the only confirmatory ones. Almost none of the human baselines were measured on EU-Emotion, and none on these edits. All carry a BASIC ONLY scope tag, so they make no claim about complex labels. Most sources were read at abstract level (references.md). Human-source agreement is recorded per prediction in A2.
 
@@ -303,7 +303,7 @@ Both bounds are attained. So 1 / lambda_min measures how far behavioural agreeme
 
 **Proposition 4.** If a system responds to an unmeasured cue *U* that is correlated with measured cues, a regression on measured cues gives non-zero slopes, while intervening on the measured cues alone has no effect. Regression on natural clips therefore cannot reach a claim about cue use.
 
-**Proposition 5.** With independent zero-mean errors in both matrices, the observed cosine approximates CFA times the square root of the product of their reliabilities, which is Spearman's attenuation correction applied to a matrix [CITE NEEDED: Spearman]. A4 estimates human reliability by split-half across subjects and stimuli, and model reliability by split-half across stimuli, because a model has no response noise. When models see other stimuli than humans did, the subjects-and-stimuli ceiling applies. Corrected values above 1 can occur from sampling and are reported uncorrected beside them.
+**Proposition 5.** With independent zero-mean errors in both matrices, the observed cosine approximates CFA times the square root of the product of their reliabilities, which is Spearman's attenuation correction applied to a matrix [51]. A4 estimates human reliability by split-half across subjects and stimuli, and model reliability by split-half across stimuli, because a model has no response noise. When models see other stimuli than humans did, the subjects-and-stimuli ceiling applies. Corrected values above 1 can occur from sampling and are reported uncorrected beside them.
 
 **Cue spectra.** These describe the designs and use no model output. Correlation matrices of each cue table gave the values below (`research/reproduction/cfa_identifiability.json`). Snoek rows count unique rows of the 33 amplitudes, whereas A4's manifest counts configuration strings, so basic EA, conversational WC and conversational EA have 2,322, 2,314 and 2,322 rows here against 2,323, 2,318 and 2,325 there:
 
