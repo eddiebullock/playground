@@ -75,10 +75,18 @@ def test_pins_match_files_on_disk_and_missing_files_refuse(tmp_path):
         a7_design.check_pins(D, root=tmp_path)
 
 
-def test_code_pins_required_means_not_frozen_before_the_freeze():
+def test_code_pins_required_means_not_frozen_before_the_freeze(tmp_path):
+    # Before the freeze a draft with no Code hashes section is refused.
+    unpinned = tmp_path / "draft.md"
+    unpinned.write_text(a7_design.DRAFT.read_text(encoding="utf-8").split("## Code hashes")[0], encoding="utf-8")
     with pytest.raises(SystemExit):
-        a7_design.check_code_pins(require=True)
-    assert a7_design.check_code_pins(require=False) == {}
+        a7_design.check_code_pins(path=unpinned, require=True)
+    assert a7_design.check_code_pins(path=unpinned, require=False) == {}
+
+
+def test_frozen_code_matches_its_pins():
+    pins = a7_design.check_code_pins(require=True)
+    assert set(pins) == set(a7_design.A7_FILES)
 
 
 # ---------------------------------------------------------------------------

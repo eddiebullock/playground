@@ -1,6 +1,6 @@
 # DRAFT amendment A7: vision-path cuts (RQ3)
 
-**Status: DRAFT. Not frozen, not tagged, not preregistered.** Nothing here binds until it is audited, committed and tagged. It must freeze before any full A2 cell is read. No code for it exists, no recovery has run, and no A7 forward has run. Audited locally 2026-11-08 (section "Audit 2026-11-08" at the end); the audit's rulings are in the text, marked "[audit 2026-11-08]".
+**Status: FROZEN 2026-11-08, tag `a7-freeze`, before any full A2 cell is read.** Design hash `9e40cfcfbe8761703da22cf2400c3af6cc7f05019df8b186f91e421dce50bb09`; code pinned in "Code hashes" below. Audited locally and independently on 2026-11-08 (sections at the end). Recovery rerun on the pinned code; Level 1 passes, Level 2 failures ruled before the freeze (Recovery). No A7 forward has run; Stage 0 is the next step and needs the cluster.
 
 **Next step.** The next step that produces evidence is **Stage 0**: mechanics on the 24 CREMA-D calibration clips, which are outside the analysis set, showing for each candidate site whether it is a complete cut on `single_face` and the blind readout. **Stage 0 needs the cluster** (GPU, about .45 GPU-hours for the exit and route checks, .71 with the region test, upper bounds). Before it can run, three local items must be done: the code, the CPU-only toy recovery of Level 1, and the freeze (see Order of work). Stage 0 runs only after the freeze, so that no Stage 0 number can move a threshold.
 
@@ -749,3 +749,28 @@ Independent audit of the A7 code against this text (`scripts/a7_design.py`, `a7_
 - **Finding 13:** sentinel order is A2's `select_items` applied to the 200 analysis items, as the code does.
 - **Findings 15 to 17:** accepted as stated by the audit. Stage 0 writes to `results/a7/` on the cluster, and its table is copied to `research/reproduction/` when pulled.
 - **Recovery provenance:** Levels 1 and 2 are rerun on the code as pinned below, and the committed outputs are replaced by those runs.
+
+## Freeze (2026-11-08, tag `a7-freeze`)
+
+Recovery was rerun on the code below. Level 2 equals the committed run in every value; Level 1 differs only in timing fields. The rerun outputs replace the committed ones. The design hash is restated: `9e40cfcfbe8761703da22cf2400c3af6cc7f05019df8b186f91e421dce50bb09`.
+
+Tests at the freeze: 72 passed, 1 skipped (the pre-freeze pin test now runs on an unpinned copy, and a new test checks the frozen code against its pins).
+
+Other frozen files (sha256), not read by the code-pin check:
+
+- `slurm_jobs/study3_a7.sh`: `fcebaaa69f9a488acbf5c7c69d83488ea834f3361aecb7be3bf66931208b4015`
+- `tests/test_a7.py`: `1d28bbf666804d000afd0128f9473240b80a588879212b9bdb37f2d546bca239`
+- `research/reproduction/a7_recovery.json`: `bf5abf634973c825dbfadefb2449e253e7c81422cd17e526773e446a1e493295`
+- `research/reproduction/a7_recovery_level1.json`: `ac0dff06b30b5c1ecd366f3ba8b17c73b9c3e32ed67c1b440fe10ec53ca97a91`
+
+## Code hashes
+
+```text
+scripts/a7_design.py d25c0cb78f6771450eac9c6127690029cd72e6034079cbc51062be324a74ddba
+scripts/a7_cuts.py 15837f87e46a433fdb97b50e362fdbaefab937f10a147aa1d68fd355f9889db2
+scripts/a7_stage0.py a4c46d7111b4f93b9c2d35c706636befa9756ac7cad89259512490b57cd48d5a
+scripts/a7_run.py 5bfb1a74e21596c944df2b946aea835e00a33244a50fd5917c2c52136bcbb665
+scripts/a7_analyse.py 00350c9a182090943294efb602f46a31e2c4263240cbb8bb764de26476daaae9
+scripts/a7_recovery.py 485832ac1678e2379f442d000a1139abd30ae053e4f48dd51d6e6d9a2727fe79
+scripts/a7_toy.py b2d39459024046df848d8ca0bb8079cfb13ba08cde1da7a5214547aa1fa10d8c
+```

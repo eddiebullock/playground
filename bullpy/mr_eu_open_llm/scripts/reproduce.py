@@ -380,6 +380,10 @@ STEPS: List[Step] = [
 # --quick mode). Pinned from the committed tree at d6e190a (= origin/main ee92354 for these files),
 # 2026-11-08. A relock that changes one of these files must update its pin in the same commit.
 PINS: Dict[str, str] = {
+    "research/reproduction/a7_recovery.json":
+        "bf5abf634973c825dbfadefb2449e253e7c81422cd17e526773e446a1e493295",
+    "research/reproduction/a7_recovery_level1.json":
+        "ac0dff06b30b5c1ecd366f3ba8b17c73b9c3e32ed67c1b440fe10ec53ca97a91",
     "research/reproduction/a2_gain_skew_sim.json":
         "e1706b804cb6197f13a48fae33888f1a1ca8e56ed09cfea49396b3b4522179ce",
     "research/reproduction/a3_nota_shares.json":
@@ -605,6 +609,10 @@ HASH_STEPS: List[Step] = [
          _hash_outs([R + "a2_gain_skew_sim.json"],
                     "A2 skew simulation: 1000 replicates per cell with exact 2^17 flips, hours on many workers "
                     "and no quick mode; verified by hash, not rerun (full mode reruns its single-column part)")),
+    Step("hash_a7_recovery", None, minutes=0.0, outputs=
+         _hash_outs([R + "a7_recovery.json", R + "a7_recovery_level1.json"],
+                    "A7 recovery on the frozen code (tag a7-freeze); Level 2 takes about an hour, so verified "
+                    "by hash; rerun with python -m scripts.a7_recovery --level 1|2")),
     Step("hash_cluster_records", None, minutes=0.0, outputs=
          _hash_outs(CLUSTER_RECORDS, "made on the cluster from non-public inputs (videos, weights, caches); "
                                      "verified by hash, cannot be rerun from public inputs")),
@@ -618,11 +626,7 @@ STEPS = STEPS + HASH_STEPS
 
 # Committed outputs deliberately not yet covered (neither rebuilt nor pinned), with the reason.
 # Printed as gaps on every run; tests/test_reproduce.py accepts only what is listed here.
-UNCOVERED: Dict[str, str] = {
-    R + "a7_recovery.json": "A7 draft recovery (commit 80b389e), owned by the A7 work and still changing; "
-                            "add a step or pin when A7 freezes",
-    R + "a7_recovery_level1.json": "A7 draft recovery, level 1; as above",
-}
+UNCOVERED: Dict[str, str] = {}
 
 # Outputs of analyses that have not run. Listed by path only: nothing here is run, opened or
 # stat-ed, so a pending result cannot be read early. Each moves into STEPS when it is locked.
