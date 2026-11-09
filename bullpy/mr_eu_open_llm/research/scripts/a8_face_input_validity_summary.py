@@ -3,16 +3,17 @@
 
 The frozen `scripts/face_input_validity.py --summarise` reads the three frozen models'
 cell files and applies Holm over them. This runs the same functions, `read_cells`,
-`summarise_model` and `decide`, on a given list of (name, cells file) pairs, and writes the
-output exactly as the frozen `summarise` does. Holm is then over the given models only.
+`summarise_model` and `decide`, over the A8 A3 family, and writes the output exactly as the
+frozen `summarise` does. The family is computed by `a8_family.a3_family` from the A8 files
+(active models whose single_face delivery passed); every cell file must be complete.
 
-Equivalence: given the three frozen cell files in the frozen order (qwen3vl, gemma4,
-molmo2), `summary_bytes` reproduces the frozen summary byte for byte (sha256
-c1c64e69..., `frozen_a3_summary_sha256` in the A8 design).
+Equivalence: `summary_bytes` on the three frozen cell files, in the frozen order (qwen3vl,
+gemma4, molmo2), reproduces the frozen summary byte for byte (sha256 c1c64e69...,
+`frozen_a3_summary_sha256`); on synthetic cells it equals the frozen `summarise` output.
 
-    python research/scripts/a8_face_input_validity_summary.py \
-        --cells qwen3vl_32b=results/a8/qwen3vl_32b/face_input_validity/cells_qwen3vl.jsonl \
-        --output research/reproduction/a8/face_input_validity_summary_a8.json
+    python research/scripts/a8_face_input_validity_summary.py
+
+Writes research/reproduction/a8/face_input_validity_summary_a8.json and its provenance.
 """
 
 from __future__ import annotations
@@ -20,6 +21,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import sys
 from pathlib import Path
 from typing import Optional, Sequence, Tuple
@@ -27,6 +29,7 @@ from typing import Optional, Sequence, Tuple
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import a8_design  # noqa: E402
+import a8_family  # noqa: E402
 
 ROOT = a8_design.ROOT
 FROZEN = ROOT / "scripts" / "face_input_validity.py"
@@ -57,39 +60,34 @@ def summary_bytes(pairs: Sequence[Tuple[str, Path]], lookup: Path = LOOKUP) -> b
     return (json.dumps(out, indent=2, sort_keys=True) + "\n").encode("utf-8")
 
 
-def parse_pair(text: str) -> Tuple[str, Path]:
-    name, _, path = text.partition("=")
-    if not name or not path:
-        raise argparse.ArgumentTypeError("use NAME=PATH")
-    return name, Path(path)
-
-
-def main(argv: Optional[Sequence[str]] = None) -> bytes:
-    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--cells", type=parse_pair, nargs="+", required=True)
-    ap.add_argument("--output", type=Path, required=True)
-    ap.add_argument("--lookup", type=Path, default=LOOKUP)
-    ap.add_argument("--allow_any_names", action="store_true", help="Equivalence runs on the frozen files only.")
-    args = ap.parse_args(argv)
-    if not args.allow_any_names:
-        design = a8_design.load_design()
-        active = a8_design.active_models(design)
-        names = [n for n, _ in args.cells]
-        if names != active:
-            raise SystemExit(f"The A8 family is {active}, in that order; got {names}.")
-        for name, path in args.cells:
-            if not any(r in Path(path).parts for r in ("a8",)):
-                raise SystemExit(f"{path} is not an A8 cells file.")
-    for _, path in args.cells:
-        if not Path(path).exists():
-            raise SystemExit(f"{path} does not exist; a missing model is not an empty one.")
-    if args.output.exists():
-        raise SystemExit(f"{args.output} exists.")
-    data = summary_bytes(args.cells, args.lookup)
-    args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_bytes(data)
+def produce(base: Path = ROOT) -> Path:
+    """Family by rule, completeness checked, summary and provenance written once."""
+    design = a8_design.load_design()
+    a8_design.check_frozen_code(design)
+    a8_design.check_data(design, ["data/eu_emotions_human_entropy.json"], root=ROOT)
+    family, excluded = a8_family.a3_family(design, base)
+    if not family:
+        raise SystemExit(f"No A8 model is in the A3 family: {excluded}")
+    output = base / a8_family.A3_SUMMARY
+    if output.exists():
+        raise SystemExit(f"{output} exists; the A8 A3 summary is written once.")
+    data = summary_bytes(family)
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_bytes(data)
+    a8_family.write_provenance(output, [p for _, p in family] + [LOOKUP], {
+        "family": [n for n, _ in family], "excluded": excluded,
+        "wrapper_sha256": a8_design.file_sha256(Path(__file__).resolve()),
+        "design_sha256": a8_design.block_hash(),
+    })
     print(hashlib.sha256(data).hexdigest())
-    return data
+    return output
+
+
+def main(argv: Optional[Sequence[str]] = None) -> Path:
+    os.chdir(ROOT)
+    argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter).parse_args(argv)
+    a8_design.check_own_code(require=True)
+    return produce(ROOT)
 
 
 if __name__ == "__main__":
