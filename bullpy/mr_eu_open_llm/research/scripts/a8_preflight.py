@@ -5,9 +5,11 @@ Outputs of the frozen scripts carry the small sibling's key (`qwen3vl`, `gemma4`
 that loaded the wrong weights, or wrote to a default path, would mix models silently. This
 check stops that before any forward.
 
-    python research/scripts/a8_preflight.py --a8_id qwen3vl_32b --models_dir DIR \
+    python research/scripts/a8_preflight.py --a8_id qwen3vl_32b \
         --output PATH [--output PATH ...] [--full_hash] [--quota_file FILE] \
         [--provenance PATH]
+
+MR_EU_HPC_MODELS_DIR must be set to the design's models directory for the model.
 
 Checks, each a hard stop:
 - the key resolves under --models_dir exactly as scripts/evaluate.resolve_model_path does
@@ -129,43 +131,44 @@ def check_storage(usage: Mapping[str, float], stop: Mapping[str, float]) -> None
         raise SystemExit(f"RDS at {usage['gb']} GB and {usage['files']} files is over the stop rule {dict(stop)}.")
 
 
+def env_models_dir(entry: Mapping[str, Any]) -> Path:
+    """MR_EU_HPC_MODELS_DIR must be set and be the design's models directory for this model."""
+    have = os.environ.get("MR_EU_HPC_MODELS_DIR")
+    want = Path(os.path.expanduser(entry["models_dir"])).resolve()
+    if have is None:
+        raise SystemExit("MR_EU_HPC_MODELS_DIR is not set; the frozen loader would use its default.")
+    if Path(os.path.expanduser(have)).resolve() != want:
+        raise SystemExit(f"MR_EU_HPC_MODELS_DIR is {have}, not the design's {want}.")
+    return want
+
+
 def main(argv: Optional[Sequence[str]] = None) -> Dict[str, Any]:
+    """Standalone check (the launcher calls the same functions in-process)."""
+    os.chdir(ROOT)
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--a8_id", required=True)
-    ap.add_argument("--models_dir", type=Path, help="Defaults to the design's models_dir.")
     ap.add_argument("--output", type=Path, action="append", default=[])
-    ap.add_argument("--allow_existing", action="store_true", help="Merge and analysis steps that read earlier A8 files.")
+    ap.add_argument("--allow_existing", action="store_true", help="Resumable steps only.")
     ap.add_argument("--full_hash", action="store_true")
     ap.add_argument("--quota_file", type=Path, help="Saved `quota` output; default runs `quota`.")
-    ap.add_argument("--skip_storage", action="store_true", help="Local tests only.")
     ap.add_argument("--provenance", type=Path)
     args = ap.parse_args(argv)
 
     design = a8_design.load_design()
     a8_design.check_frozen_code(design)
     entry = a8_design.model(design, args.a8_id)
-    weights = check_weights_dir(args.models_dir or Path(entry["models_dir"]), entry)
+    weights = check_weights_dir(env_models_dir(entry), entry)
     config = check_config(weights, entry["expected_config"])
     files = check_files(weights, entry["weight_files"], full_hash=args.full_hash)
     outputs = check_outputs(args.output, design["output_roots"], allow_existing=args.allow_existing)
-    usage = None
-    if not args.skip_storage:
-        text = args.quota_file.read_text() if args.quota_file else subprocess.run(
-            ["quota"], capture_output=True, text=True, check=False).stdout
-        usage = parse_quota(text)
-        check_storage(usage, design["storage_stop"])
+    text = args.quota_file.read_text() if args.quota_file else subprocess.run(
+        ["quota"], capture_output=True, text=True, check=False).stdout
+    usage = parse_quota(text)
+    check_storage(usage, design["storage_stop"])
     report = {
-        "a8_id": args.a8_id,
-        "code_key": entry["code_key"],
-        "repo": entry["repo"],
-        "revision": entry["revision"],
-        "weights_dir": str(weights),
-        "config": config,
-        "weight_files": files,
-        "full_hash": bool(args.full_hash),
-        "outputs": outputs,
-        "rds_usage": usage,
-        "design_sha256": a8_design.block_hash(),
+        "a8_id": args.a8_id, "code_key": entry["code_key"], "repo": entry["repo"], "revision": entry["revision"],
+        "weights_dir": str(weights), "config": config, "weight_files": files, "full_hash": bool(args.full_hash),
+        "outputs": outputs, "rds_usage": usage, "design_sha256": a8_design.block_hash(),
         "preflight_sha256": a8_design.file_sha256(Path(__file__).resolve()),
         "checked_at_utc": datetime.now(timezone.utc).isoformat(),
     }

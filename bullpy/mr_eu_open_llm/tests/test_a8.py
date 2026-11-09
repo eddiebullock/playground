@@ -1,9 +1,10 @@
-"""Amendment A8: design block, preflight, A1 sharding, and the three equivalence tests.
+"""Amendment A8: design block, preflight, launcher, A1 sharding, families, wrappers, and the
+three equivalence tests.
 
-No model and no clip are used locally. The A1 sharding test runs the real frozen
-`scripts.evaluate.run_evaluation` with model, media and generation stubbed, so it tests the
-shard mechanism on the frozen code path. Tests that need a GPU and the real model, or the
-frozen A3 cell files, skip when those are absent.
+No model and no clip are used locally. The A1 sharding tests run the real frozen
+`scripts.evaluate.run_evaluation` with model loading, media and generation stubbed, so they
+test the shard mechanism on the frozen code path. Tests that need a GPU and the real model,
+or the frozen A3 cell files, skip when those are absent.
 """
 
 import hashlib
@@ -25,10 +26,13 @@ sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "research" / "scripts"))
 
 import a8_design  # noqa: E402
+import a8_family  # noqa: E402
+import a8_launch  # noqa: E402
 import a8_preflight as pre  # noqa: E402
 import a8_rotation_shard as shard  # noqa: E402
 
 DRAFT_TEXT = a8_design.DRAFT.read_text(encoding="utf-8")
+LOOKUP = ROOT / "data/eu_emotions_human_entropy.json"
 
 
 # Design block ---------------------------------------------------------------
@@ -36,26 +40,45 @@ DRAFT_TEXT = a8_design.DRAFT.read_text(encoding="utf-8")
 
 def test_block_hash_is_pinned_and_stated():
     assert a8_design.block_hash() == a8_design.DESIGN_SHA256 == a8_design.stated_hash()
-    design = a8_design.load_design()
-    assert design["amendment"] == "A8"
+    assert a8_design.load_design()["amendment"] == "A8"
 
 
-def test_every_frozen_file_matches_its_pin_and_the_earlier_amendments_pins():
+def test_frozen_files_match_their_pins_and_the_earlier_amendments():
     design = a8_design.load_design()
     a8_design.check_frozen_code(design)
     pins = design["frozen_code_sha256"]
-    # Values pinned by A2, A3 and A4 themselves.
     assert pins["research/scripts/analyse_rotation.py"].startswith("98890c5b")
     assert pins["scripts/face_input_validity.py"].startswith("8a681a65")
     assert pins["scripts/vision_gates.py"].startswith("6327b6f8")
     assert pins["scripts/analyse_stimulus_interventions.py"].startswith("aba4f533")
     assert pins["scripts/a4_analyse.py"].startswith("30f8f529")
-    from scripts import stimulus_design
+    from scripts import a4_design, run_stimulus_interventions as run, stimulus_design
 
     assert design["frozen_a3_summary_sha256"] == stimulus_design.A3_SUMMARY_SHA256
-    from scripts import run_stimulus_interventions as run
-
     assert design["frozen_design_sha256"]["A2"] == run.design_hash()
+    assert design["frozen_design_sha256"]["A4"] == a4_design.design_hash()
+
+
+def test_every_module_reached_by_import_is_pinned():
+    """Finding 7: the transitive import closure of the frozen entry points is pinned."""
+    closure = a8_design.import_closure()
+    pins = a8_design.load_design()["frozen_code_sha256"]
+    assert "scripts/activation_forward.py" in closure and "research/scripts/same_clip_cue_analysis.py" in closure
+    assert [f for f in closure if f not in pins] == []
+
+
+def test_data_inputs_are_pinned_and_the_lookups_are_reproducible(tmp_path):
+    design = a8_design.load_design()
+    a8_design.check_data(design, ["data/eu_emotions_full_manifest.json", "data/eu_emotions_human_entropy.json",
+                                  "research/reproduction/eu_au_measures.csv", "research/reproduction/a4_v1_pilot.csv"])
+    from paper_v2.option_score import write_rotated_human_lookup
+
+    for r in range(5):
+        dest = tmp_path / f"eu_emotions_human_entropy_rot{r}.json"
+        write_rotated_human_lookup(LOOKUP, dest, rotation=r)
+        assert hashlib.sha256(dest.read_bytes()).hexdigest() == design["data_sha256"][f"data/eu_emotions_human_entropy_rot{r}.json"]
+    with pytest.raises(SystemExit, match="missing"):
+        a8_design.check_data(design, ["data/eu_emotions_human_entropy_rot0.json"], root=tmp_path / "none")
 
 
 def test_an_edited_block_is_refused(tmp_path):
@@ -65,19 +88,14 @@ def test_an_edited_block_is_refused(tmp_path):
         a8_design.load_design(edited)
 
 
-def test_gemma_is_conditional_until_a_dated_note_admits_it(tmp_path):
+def test_both_models_are_active_by_the_block_alone():
+    """Finding 6: membership is inside the hash; no note outside it can change a family."""
     design = a8_design.load_design()
-    # The live draft admits Gemma 4 31B by the dated note of 2026-11-09.
     assert a8_design.active_models(design) == ["qwen3vl_32b", "gemma4_31b"]
-    bare = tmp_path / "bare.md"
-    bare.write_text(re.sub(r"(?m)^- \d{4}-\d{2}-\d{2}: admit `gemma4_31b`.*$", "", DRAFT_TEXT), encoding="utf-8")
-    assert a8_design.active_models(design, bare) == ["qwen3vl_32b"]
-    with pytest.raises(SystemExit, match="dated note"):
-        a8_design.model(design, "gemma4_31b", bare)
-    noted = tmp_path / "draft.md"
-    noted.write_text(bare.read_text(encoding="utf-8").rstrip("\n") + "\n\n- 2026-11-10: admit `gemma4_31b`, storage approved; no output exists.\n", encoding="utf-8")
-    assert a8_design.active_models(design, noted) == ["qwen3vl_32b", "gemma4_31b"]
-    assert a8_design.model(design, "gemma4_31b", noted)["code_key"] == "gemma4"
+    assert design["models"]["gemma4_31b"]["status"].startswith("admitted_2026-11-09")
+    assert not hasattr(a8_design, "admitted")
+    entry = dict(design["models"]["gemma4_31b"], status="conditional")
+    assert not a8_design.is_active(entry)
 
 
 def test_code_pins_are_pending_and_scored_runs_wait_on_them():
@@ -86,16 +104,10 @@ def test_code_pins_are_pending_and_scored_runs_wait_on_them():
         a8_design.check_own_code(require=True)
 
 
-def test_run_settings_are_not_in_the_block():
-    """Shard and GPU counts are run settings, so no model entry fixes one."""
-    for entry in a8_design.load_design()["models"].values():
-        assert not any("shard" in k or "gpu" in k for k in entry)
-
-
 # Preflight ------------------------------------------------------------------
 
 
-def fake_model(tmp_path, entry_overrides=None):
+def fake_model(tmp_path):
     weights = tmp_path / "store" / "Qwen3-VL-32B-Instruct"
     weights.mkdir(parents=True)
     files = {}
@@ -109,8 +121,8 @@ def fake_model(tmp_path, entry_overrides=None):
     models_dir = tmp_path / "a8_models"
     models_dir.mkdir()
     (models_dir / "qwen3vl").symlink_to(weights)
-    entry = dict(a8_design.load_design()["models"]["qwen3vl_32b"], weights_dir=str(weights), weight_files=files)
-    entry.update(entry_overrides or {})
+    entry = dict(a8_design.load_design()["models"]["qwen3vl_32b"], weights_dir=str(weights), weight_files=files,
+                 models_dir=str(models_dir))
     return models_dir, weights, entry
 
 
@@ -118,8 +130,20 @@ def test_preflight_accepts_the_right_weights(tmp_path):
     models_dir, weights, entry = fake_model(tmp_path)
     assert pre.check_weights_dir(models_dir, entry) == weights.resolve()
     assert pre.check_config(weights, entry["expected_config"])["text_hidden_size"] == 5120
-    rows = pre.check_files(weights, entry["weight_files"], full_hash=True)
-    assert set(rows) == set(entry["weight_files"])
+    assert set(pre.check_files(weights, entry["weight_files"], full_hash=True)) == set(entry["weight_files"])
+
+
+def test_preflight_requires_the_environment_variable_to_match(tmp_path, monkeypatch):
+    """Finding 2: the variable the frozen loader reads must be the design's directory."""
+    models_dir, weights, entry = fake_model(tmp_path)
+    monkeypatch.delenv("MR_EU_HPC_MODELS_DIR", raising=False)
+    with pytest.raises(SystemExit, match="not set"):
+        pre.env_models_dir(entry)
+    monkeypatch.setenv("MR_EU_HPC_MODELS_DIR", str(tmp_path / "study2_models"))
+    with pytest.raises(SystemExit, match="not the design"):
+        pre.env_models_dir(entry)
+    monkeypatch.setenv("MR_EU_HPC_MODELS_DIR", str(models_dir))
+    assert pre.env_models_dir(entry) == models_dir.resolve()
 
 
 def test_preflight_refuses_the_small_sibling_and_a_missing_link(tmp_path):
@@ -141,7 +165,7 @@ def test_preflight_refuses_the_small_sibling_and_a_missing_link(tmp_path):
 def test_preflight_refuses_changed_missing_or_extra_weight_files(tmp_path):
     models_dir, weights, entry = fake_model(tmp_path)
     (weights / "model-00002-of-00002.safetensors").write_bytes(b"defh")
-    pre.check_files(weights, entry["weight_files"])  # same size passes the quick check
+    pre.check_files(weights, entry["weight_files"])
     with pytest.raises(SystemExit, match="sha256"):
         pre.check_files(weights, entry["weight_files"], full_hash=True)
     (weights / "model-00002-of-00002.safetensors").write_bytes(b"de")
@@ -182,6 +206,107 @@ def test_storage_rule_reads_the_rds_user_row():
         pre.check_storage({"gb": 1.0, "files": 1040001}, stop)
 
 
+# Launcher -------------------------------------------------------------------
+
+
+def test_every_step_writes_only_under_the_a8_roots_with_explicit_paths():
+    """Finding 3: every command names its outputs, and they sit under the A8 roots."""
+    design = a8_design.load_design()
+    ctx = {"a8_id": "qwen3vl_32b", "key": "qwen3vl", "rotation": 0, "condition": "real", "shard": 0, "n_shards": 4}
+    roots = [ROOT / r for r in design["output_roots"]]
+    for step in design["commands"]:
+        spec = a8_launch.command(design, step, ctx)
+        for out in spec["outputs"]:
+            assert any(r in (ROOT / out).parents for r in roots), (step, out)
+        if ("module" in spec or "path" in spec) and "declared_output_outside_roots" not in spec:
+            argv = " ".join(spec["argv"])
+            assert any(f in argv for f in ("--output", "--output_dir", "--reproduction")), step
+            assert "results/stimulus_interventions/cells" not in argv and "results/a4/summary" not in argv
+    a2 = a8_launch.command(design, "a2_run", ctx)["argv"]
+    assert a2[a2.index("--output_dir") + 1] == "results/a8/qwen3vl_32b/stimulus_interventions"
+    assert a2[a2.index("--reproduction") + 1] == "research/reproduction/a8/qwen3vl_32b"
+    a4 = a8_launch.command(design, "a4_analyse", ctx)["argv"]
+    assert a4[a4.index("--output") + 1] == "results/a8/a4/summary.json" and "--detector" in a4
+    rq1 = a8_launch.command(design, "natural_rq1", ctx)
+    assert rq1["argv"][rq1["argv"].index("--model") + 1] == "qwen3vl_32b"
+    assert rq1["declared_output_outside_roots"] == "research/reproduction/same_clip_family_model_qwen3vl_32b.json"
+
+
+def test_frozen_output_guard_detects_any_change(tmp_path):
+    (tmp_path / "results/baseline/eu_emotions/qwen3vl").mkdir(parents=True)
+    f = tmp_path / "results/baseline/eu_emotions/qwen3vl/eval.json"
+    f.write_text("{}")
+    patterns = a8_design.load_design()["frozen_outputs_guard"]
+    files = a8_launch.frozen_output_files(patterns, ["qwen3vl"], root=tmp_path)
+    before = a8_launch.snapshot(files)
+    assert a8_launch.changed(before, a8_launch.frozen_output_files(patterns, ["qwen3vl"], root=tmp_path)) == []
+    f.write_text('{"x": 1}')
+    assert a8_launch.changed(before, a8_launch.frozen_output_files(patterns, ["qwen3vl"], root=tmp_path)) == [str(f)]
+    new = tmp_path / "results/baseline/eu_emotions/qwen3vl/other.json"
+    new.write_text("{}")
+    assert str(new) in a8_launch.changed(before, a8_launch.frozen_output_files(patterns, ["qwen3vl"], root=tmp_path))
+
+
+def test_out_of_memory_in_a_cell_error_field_fails_the_job(tmp_path):
+    (tmp_path / "cells.jsonl").write_text(json.dumps({"status": "failed", "reason": "CUDA out of memory. Tried"}) + "\n")
+    (tmp_path / "ok.jsonl").write_text(json.dumps({"status": "ok", "raw_model_output": "I am out of memory today"}) + "\n")
+    assert a8_launch.oom_in_outputs([tmp_path], "a3") == [str(tmp_path / "cells.jsonl")]
+    assert a8_launch.oom_in_outputs([tmp_path], "ladder") == []
+
+
+def test_the_frozen_8b_gate_file_is_not_flagged():
+    """Re-check R1: the expected float32 out-of-memory error in float32_failed is not a job failure."""
+    gate = ROOT / "research/reproduction/vision_gates_qwen3vl.json"
+    assert "out of memory" in gate.read_text().lower()
+    assert a8_launch.oom_in_outputs([gate], "gates") == []
+    for step in a8_launch.SCANNED_STEPS:
+        assert not any(shard.is_oom(x) for x in a8_launch.error_texts(gate, step)), step
+
+
+def test_gates_command_mirrors_the_frozen_job_for_each_key():
+    """Re-check R1: --float32_max_frames 6 for qwen3vl only, after --output, as the frozen job."""
+    design = a8_design.load_design()
+    q = a8_launch.command(design, "gates", {"a8_id": "qwen3vl_32b", "key": "qwen3vl"})["argv"]
+    g = a8_launch.command(design, "gates", {"a8_id": "gemma4_31b", "key": "gemma4"})["argv"]
+    assert q[-2:] == ["--float32_max_frames", "6"] and q.index("--output") < q.index("--float32_max_frames")
+    assert "--float32_max_frames" not in g
+    frozen = (ROOT / "slurm_jobs/study3_vision_gates.sh").read_text()
+    assert 'if [ "${MODEL}" = "qwen3vl" ]; then\n  FLOAT32_MAX_FRAMES="${FLOAT32_MAX_FRAMES:-6}"' in frozen
+    for flag, value in (("--gates", "g2,g3,g4"), ("--dtypes", "bfloat16,float32"), ("--n_g3", "12")):
+        assert q[q.index(flag) + 1] == value
+
+
+def test_every_model_step_checks_its_data_inputs():
+    """Re-check R6: gates and a4_run included."""
+    design = a8_design.load_design()
+    for step, spec in design["commands"].items():
+        if spec["uses_model"]:
+            assert design["data_by_step"].get(step), step
+    assert "results/a4/manifest.csv" in design["data_by_step"]["a4_run"]
+
+
+def test_models_dir_variable_is_set_from_the_design_and_a_different_value_refused(monkeypatch, tmp_path):
+    monkeypatch.setenv("MR_EU_HPC_MODELS_DIR", str(tmp_path / "study2_models"))
+    with pytest.raises(SystemExit, match="not the design"):
+        shard.set_models_dir(tmp_path / "a8_models")
+
+
+def test_launcher_refuses_before_phase2_and_before_code_pins(monkeypatch):
+    with pytest.raises(SystemExit, match="Phase 2"):
+        a8_launch.main(["--a8_id", "qwen3vl_32b", "--step", "gates"])
+    with pytest.raises(SystemExit, match="not pinned"):
+        a8_launch.main(["--a8_id", "qwen3vl_32b", "--step", "gates", "--confirm_phase2_completed"])
+
+
+def test_slurm_file_never_sets_the_models_dir_and_mirrors_the_frozen_environments():
+    text = (ROOT / "slurm_jobs/a8_job.sh").read_text()
+    assert "unset MR_EU_HPC_MODELS_DIR" in text and "export MR_EU_HPC_MODELS_DIR" not in text
+    assert "venvs/molmo2_cv411" in text and "venvs/au_tools/env/bin/activate" in text
+    assert "research/scripts/a8_launch.py" in text
+    au = text.index('source "${PROJECT_ROOT}/venvs/au_tools/env/bin/activate"')
+    assert text.rfind("else", 0, au) > text.rfind("conda activate", 0, au)  # au_tools alone, as frozen
+
+
 # A1 sharding ----------------------------------------------------------------
 
 
@@ -197,7 +322,7 @@ def test_shard_enumerate_restricts_only_the_trial_list():
 
 
 def test_argv_matches_the_frozen_rotation_script():
-    a1 = json.loads(a8_design.block_bytes())["a1"]
+    a1 = a8_design.load_design()["a1"]
     argv = shard.evaluate_argv("qwen3vl", "sequential", 3, "mismatch", Path("o.json"), a1)
     text = (ROOT / "slurm_jobs/study3_rotation_eval.sh").read_text()
     for flag in ("--dataset eu_emotions", "--condition video_only", "--stage stage2", "--fps 1",
@@ -207,9 +332,23 @@ def test_argv_matches_the_frozen_rotation_script():
         assert f'{name}="${{{name}:-{value}}}"' in text
     assert argv[argv.index("--human_options") + 1] == "data/eu_emotions_human_entropy_rot3.json"
     assert "--fc_sequential" in argv and argv[argv.index("--vision_mismatch_seed") + 1] == "42"
-    assert '[ "${MODEL}" = "qwen3vl" ]' in text  # sequential for qwen3vl, batched otherwise
-    real = shard.evaluate_argv("gemma4", "batched", 0, "real", Path("o.json"), a1)
-    assert "--fc_sequential" not in real and "--vision_mismatch_seed" not in real
+    assert '[ "${MODEL}" = "qwen3vl" ]' in text
+    assert "python research/scripts/decoder_preflight.py" in text and "molmo2_cv411" in text
+    assert "--write_rotation_lookups" in text
+
+
+def test_the_runner_is_bound_to_the_design_per_model():
+    """Finding 9: key, sampling, models and weights directories and output come from the block."""
+    d = a8_design.load_design()
+    ns = Namespace(cmd="run", a8_id="gemma4_31b", rotation=1, condition="real", shard=0, n_shards=4)
+    run = shard.resolve_run(ns, d)
+    assert (run["key"], run["sampling"]) == ("gemma4", "batched")
+    assert str(run["weights_dir"]).endswith("gemma-4-31B-it")
+    assert str(run["expected_output"]).endswith("results/a8/gemma4_31b/rotation/shards/rot1_real/shard0of4/eval.json")
+    with pytest.raises(SystemExit, match="Output must be"):
+        shard.check_output_place(ROOT / "results/a8/gemma4_31b/elsewhere/eval.json", run, test_mode=False)
+    with pytest.raises(SystemExit, match="not an A8 model"):
+        shard.resolve_run(Namespace(cmd="run", a8_id="qwen3vl", rotation=0, condition="real", shard=0, n_shards=1), d)
 
 
 LABEL_LINE = re.compile(r"^\d+\) (.+)$", re.M)
@@ -223,22 +362,30 @@ class _Model:
         return self
 
 
+FAIL_ON = {}
+
+
 def _stub_generate(**kw):
     """Depends on the prompt, the frames (so the partner's video matters) and torch's RNG."""
     import torch
 
+    clip = "|".join(map(str, kw["images"]))
+    for marker, message in FAIL_ON.items():
+        if marker in clip:
+            raise RuntimeError(message)
     options = LABEL_LINE.findall(kw["prompt"])
-    base = int(hashlib.sha256((kw["prompt"] + "|".join(map(str, kw["images"]))).encode()).hexdigest()[:8], 16)
+    base = int(hashlib.sha256((kw["prompt"] + clip).encode()).hexdigest()[:8], 16)
     pick = (base + int(torch.randint(0, 7, (1,)).item())) % (len(options) + 1)
     return "EMOTION: unsure" if pick == len(options) else f"EMOTION: {options[pick]}\nREASONING: stub"
 
 
 @pytest.fixture()
-def stub_evaluate(monkeypatch):
-    ev = shard.import_evaluate(None)
+def stub_evaluate(monkeypatch, tmp_path):
+    ev = shard.import_evaluate()
+    weights = tmp_path / "equiv_models" / "qwen3vl"
     monkeypatch.setattr(ev, "AutoProcessor", types.SimpleNamespace(from_pretrained=lambda *a, **k: None))
     monkeypatch.setattr(ev, "load_hf_model_for_key", lambda **k: _Model())
-    monkeypatch.setattr(ev, "resolve_model_path", lambda key: Path("/nonexistent/model"))
+    monkeypatch.setattr(ev, "resolve_model_path", lambda key: weights)
     monkeypatch.setattr(ev, "resolve_trial_media", lambda trial, **k: (Path(trial["stimulus_path"]), None, None))
     monkeypatch.setattr(ev, "load_stimulus_as_images", lambda path, fps, max_frames: ([Path(path).name], [0]))
     monkeypatch.setattr(ev, "prepare_images_for_model", lambda key, images, enforce_multi_frame: (images, {"n_frames_used": len(images), "multi_frame_strategy": "stub"}))
@@ -246,63 +393,103 @@ def stub_evaluate(monkeypatch):
     monkeypatch.setattr(ev, "generate_model_response_batch", lambda num_return_sequences, **kw: [_stub_generate(**kw) for _ in range(num_return_sequences)])
     monkeypatch.setattr(ev, "collect_run_metadata", lambda: {})
     monkeypatch.chdir(ROOT)
-    return ev
+    FAIL_ON.clear()
+    yield ev
+    FAIL_ON.clear()
 
 
-def _args(cmd, out, condition, sampling="sequential", **extra):
-    base = dict(cmd=cmd, key="qwen3vl", sampling=sampling, rotation=0, condition=condition, models_dir=None,
-                max_trials=extra.pop("max_trials", 6), human_options="data/eu_emotions_human_entropy.json",
-                output=out, no_design_gate=False)
+def _args(cmd, out, condition, tmp_path, max_trials=6, **extra):
+    base = dict(cmd=cmd, a8_id=None, equivalence_label="test", equivalence_models_dir=tmp_path / "equiv_models",
+                rotation=0, condition=condition, max_trials=max_trials, human_options=str(LOOKUP),
+                output=out, test_mode=True)
     base.update(extra)
     return Namespace(**base)
 
 
-def _sharded(ev, tmp_path, condition, n_shards, max_trials, sampling="sequential"):
+def _sharded(ev, tmp_path, condition, n_shards, max_trials, tag=""):
     files = []
     for k in range(n_shards):
-        out = tmp_path / f"{condition}_{sampling}" / f"shard{k}of{n_shards}" / "eval.json"
-        shard.cmd_run(_args("run", out, condition, sampling, max_trials=max_trials, shard=k, n_shards=n_shards, label="test"), ev)
+        out = tmp_path / f"{condition}{tag}" / f"shard{k}of{n_shards}" / "eval.json"
+        shard.cmd_run(_args("run", out, condition, tmp_path, max_trials=max_trials, shard=k, n_shards=n_shards), ev)
         files.append(out)
-    merged = tmp_path / f"merged_{condition}_{sampling}_{n_shards}.json"
+    merged = tmp_path / f"merged_{condition}{tag}_{n_shards}.json"
     shard.merge(files, merged)
     return files, merged
 
 
-@pytest.mark.parametrize("condition,sampling,n_shards,max_trials", [
-    ("mismatch", "sequential", 2, 6),
-    ("real", "sequential", 2, 6),
-    ("mismatch", "batched", 3, 7),
-])
-def test_a1_equivalence_on_the_frozen_code_path(tmp_path, stub_evaluate, condition, sampling, n_shards, max_trials):
-    """Equivalence test 1, locally: sharded and merged records equal the unsharded frozen run."""
-    ev = stub_evaluate
-    frozen = tmp_path / "frozen" / "eval.json"
-    frozen.parent.mkdir()
-    shard.cmd_frozen(_args("frozen", frozen, condition, sampling, max_trials=max_trials), ev)
-    files, merged = _sharded(ev, tmp_path, condition, n_shards, max_trials, sampling)
+def _frozen(ev, tmp_path, condition, max_trials, tag=""):
+    out = tmp_path / f"frozen_{condition}{tag}" / "eval.json"
+    shard.cmd_frozen(_args("frozen", out, condition, tmp_path, max_trials=max_trials), ev)
+    return out
+
+
+@pytest.mark.parametrize("condition,n_shards,max_trials", [("mismatch", 2, 6), ("real", 2, 6), ("mismatch", 3, 7)])
+def test_a1_equivalence_on_the_frozen_code_path(tmp_path, stub_evaluate, condition, n_shards, max_trials):
+    """Equivalence test 1, small: sharded and merged records equal the unsharded frozen run."""
+    frozen = _frozen(stub_evaluate, tmp_path, condition, max_trials)
+    _, merged = _sharded(stub_evaluate, tmp_path, condition, n_shards, max_trials)
     report = shard.compare(frozen, merged)
     assert report["identical"], report
     trials = json.loads(merged.read_text())["trials"]
-    assert len(trials) == max_trials
-    if condition == "mismatch":
-        loaded = shard.loaded_trials(ev, json.loads(a8_design.block_bytes())["a1"], max_trials)
-        partners = shard.partner_map(loaded, ROOT / "data/eu_emotions_human_entropy.json", 42)
-        assert all(t["vision_source_trial_id"] == partners[t["trial_id"]] for t in trials)
-        assert any(t["vision_source_trial_id"] != t["trial_id"] for t in trials)
-    # The test can fail: a different seed changes the records.
-    assert any(t["stage2"]["fc_predictions"] for t in trials)
+    assert len(trials) == max_trials and any(t["stage2"]["fc_predictions"] for t in trials)
 
 
-def test_naive_manifest_split_would_change_partners(stub_evaluate):
-    a1 = json.loads(a8_design.block_bytes())["a1"]
-    loaded = shard.loaded_trials(stub_evaluate, a1, None)
-    lookup = ROOT / "data/eu_emotions_human_entropy.json"
-    full = shard.partner_map(loaded, lookup, 42)
-    half = shard.partner_map(loaded[::2], lookup, 42)
+def test_a1_equivalence_on_all_243_items_with_the_full_partner_map(tmp_path, stub_evaluate):
+    """Finding 8: the full-243 partner map with a restricted loop equals the unsharded run."""
+    frozen = _frozen(stub_evaluate, tmp_path, "mismatch", None)
+    _, merged = _sharded(stub_evaluate, tmp_path, "mismatch", 4, None)
+    report = shard.compare(frozen, merged)
+    assert report["identical"] and report["n_merged"] == 243, report
+    loaded = shard.loaded_trials(stub_evaluate, a8_design.load_design()["a1"], None)
+    partners = shard.partner_map(loaded, LOOKUP, 42)
+    trials = json.loads(merged.read_text())["trials"]
+    assert all(t["vision_source_trial_id"] == partners[t["trial_id"]] for t in trials)
+
+
+@pytest.mark.parametrize("condition", ["real", "mismatch"])
+def test_an_errored_trial_is_kept_scored_wrong_and_merged(tmp_path, stub_evaluate, condition):
+    """Finding 1: an errored record stays, as the frozen pipeline keeps it, and the shard merges."""
+    FAIL_ON["NF25_cut"] = "ValueError: decode failed"
+    frozen = _frozen(stub_evaluate, tmp_path, condition, 6)
+    files, merged = _sharded(stub_evaluate, tmp_path, condition, 2, 6)
+    assert shard.compare(frozen, merged)["identical"]
+    trials = json.loads(merged.read_text())["trials"]
+    errored = [t for t in trials if t.get("error")]
+    assert errored and all(t.get("vision_source_trial_id") is None for t in errored)
+    side = json.loads(shard.sidecar_path(files[0]).read_text()) | json.loads(shard.sidecar_path(files[1]).read_text())
+    assert json.loads(merged.read_text())["a8_merged"]["n_errored"] == len(errored)
+
+
+def test_an_out_of_memory_trial_fails_the_shard_and_blocks_the_merge(tmp_path, stub_evaluate):
+    """Finding 12: an OOM error is not scored as wrong; the shard fails and is rerun."""
+    FAIL_ON["RF25_cut"] = "torch.OutOfMemoryError: CUDA out of memory. Tried to allocate"
+    out1 = tmp_path / "oom" / "shard0of2" / "eval.json"
+    shard.cmd_run(_args("run", out1, "real", tmp_path, shard=0, n_shards=2), stub_evaluate)
+    out2 = tmp_path / "oom" / "shard1of2" / "eval.json"
+    with pytest.raises(SystemExit, match="out of memory"):
+        shard.cmd_run(_args("run", out2, "real", tmp_path, shard=1, n_shards=2), stub_evaluate)
+    assert json.loads(shard.sidecar_path(out2).read_text())["n_oom"] == 1
+    with pytest.raises(SystemExit, match="out of memory"):
+        shard.merge([out1, out2], tmp_path / "oom_merged.json")
+
+
+def test_a_naive_manifest_split_would_change_partners(stub_evaluate):
+    loaded = shard.loaded_trials(stub_evaluate, a8_design.load_design()["a1"], None)
+    full = shard.partner_map(loaded, LOOKUP, 42)
+    half = shard.partner_map(loaded[::2], LOOKUP, 42)
     assert any(full[k] != v for k, v in half.items())
 
 
-def test_merge_refuses_gaps_duplicates_mixed_runs_and_edits(tmp_path, stub_evaluate):
+def test_a_missing_lookup_is_refused_not_replaced(tmp_path, stub_evaluate):
+    """Finding 4: no fallback to sampled foils or manifest labels."""
+    with pytest.raises(SystemExit, match="missing"):
+        shard.partner_map([], tmp_path / "eu_emotions_human_entropy_rot0.json", 42)
+    out = tmp_path / "nolookup" / "eval.json"
+    with pytest.raises(SystemExit, match="missing"):
+        shard.cmd_run(_args("run", out, "real", tmp_path, shard=0, n_shards=1, human_options=str(tmp_path / "none.json")), stub_evaluate)
+
+
+def test_merge_refuses_gaps_duplicates_mixed_runs_edits_and_test_mode_into_production(tmp_path, stub_evaluate):
     files, merged = _sharded(stub_evaluate, tmp_path, "real", 2, 4)
     with pytest.raises(SystemExit, match="exists"):
         shard.merge(files, merged)
@@ -310,11 +497,16 @@ def test_merge_refuses_gaps_duplicates_mixed_runs_and_edits(tmp_path, stub_evalu
         shard.merge(files[:1], tmp_path / "gap.json")
     with pytest.raises(SystemExit, match="complete set|two shards"):
         shard.merge([files[0], files[0]], tmp_path / "twice.json")
-    side_path = files[1].parent / shard.SIDECAR_NAME
+    with pytest.raises(SystemExit, match="Test-mode"):
+        shard.merge(files, ROOT / "results/a8/qwen3vl_32b/rotation/never_written.json")
+    assert not (ROOT / "results/a8/qwen3vl_32b/rotation/never_written.json").exists()
+    side_path = shard.sidecar_path(files[1])
     side = json.loads(side_path.read_text())
-    side_path.write_text(json.dumps({**side, "sampling": "batched"}))
-    with pytest.raises(SystemExit, match="different runs"):
-        shard.merge(files, tmp_path / "mixed.json")
+    for key, value in (("sampling", "batched"), ("visible_gpus", 9), ("resolved_model_path", "/elsewhere"),
+                       ("evaluate_argv_without_output", ["--other"])):
+        side_path.write_text(json.dumps({**side, key: value}))
+        with pytest.raises(SystemExit, match="different runs"):
+            shard.merge(files, tmp_path / f"mixed_{key}.json")
     side_path.write_text(json.dumps(side))
     obj = json.loads(files[1].read_text())
     obj["trials"][0]["stage2"]["prediction"] = "edited"
@@ -323,27 +515,35 @@ def test_merge_refuses_gaps_duplicates_mixed_runs_and_edits(tmp_path, stub_evalu
         shard.merge(files, tmp_path / "edited.json")
 
 
-def test_a_shard_is_never_overwritten(tmp_path, stub_evaluate):
+def test_each_shard_needs_a_fresh_directory(tmp_path, stub_evaluate):
     out = tmp_path / "s" / "eval.json"
     out.parent.mkdir()
-    out.write_text("{}")
-    with pytest.raises(SystemExit, match="never overwritten"):
-        shard.cmd_run(_args("run", out, "real", max_trials=4, shard=0, n_shards=2, label="t"), stub_evaluate)
+    (out.parent / "other.csv").write_text("x")
+    with pytest.raises(SystemExit, match="not empty"):
+        shard.cmd_run(_args("run", out, "real", tmp_path, max_trials=4, shard=0, n_shards=2), stub_evaluate)
 
 
-def test_evaluate_is_hash_checked(tmp_path, monkeypatch):
+def test_evaluate_is_hash_checked(tmp_path):
     copy = tmp_path / "evaluate.py"
     copy.write_bytes((ROOT / "scripts/evaluate.py").read_bytes() + b"\n")
     with pytest.raises(SystemExit, match="not the frozen"):
         shard.check_evaluate(copy)
 
 
+def test_sidecar_records_mode_paths_versions_and_gpus(tmp_path, stub_evaluate):
+    out = tmp_path / "rec" / "eval.json"
+    report = shard.cmd_run(_args("run", out, "mismatch", tmp_path, shard=0, n_shards=1), stub_evaluate)
+    for key in ("test_mode", "versions", "visible_gpus", "resolved_model_path", "evaluate_argv_without_output", "partner_map_sha256"):
+        assert key in report
+    assert report["test_mode"] is True and report["resolved_model_path"].endswith("equiv_models/qwen3vl")
+
+
 @pytest.mark.skipif(
     os.environ.get("A8_A1_EQUIV_GPU") != "1",
     reason="GPU equivalence on Qwen3-VL-8B: set A8_A1_EQUIV_GPU=1 and A8_EQUIV_MODELS_DIR on a GPU node",
 )
-def test_a1_equivalence_on_qwen3vl_8b_gpu(tmp_path):
-    """Equivalence test 1 on the cluster: the real 8B model, 6 items, both conditions."""
+def test_a1_equivalence_on_qwen3vl_8b_gpu():
+    """Equivalence test 1 on the cluster: the real 8B, 6 items, both conditions; frozen run twice."""
     import subprocess
 
     import torch
@@ -351,26 +551,235 @@ def test_a1_equivalence_on_qwen3vl_8b_gpu(tmp_path):
     if not torch.cuda.is_available():
         pytest.skip("no GPU")
     models_dir = os.environ["A8_EQUIV_MODELS_DIR"]
-    out_root = Path(os.environ.get("A8_EQUIV_OUT", ROOT / "results/a8/equivalence"))
+    out_root = ROOT / "results/a8/equivalence"
     script = str(ROOT / "research/scripts/a8_rotation_shard.py")
-    gate = ["--no_design_gate"] if os.environ.get("A8_EQUIV_NO_GATE") == "1" else []
     for condition in ("real", "mismatch"):
-        base = ["--key", "qwen3vl", "--sampling", "sequential", "--rotation", "0", "--condition", condition,
-                "--models_dir", models_dir, "--max_trials", "6", *gate]
-        frozen = out_root / condition / "frozen" / "eval.json"
-        frozen.parent.mkdir(parents=True, exist_ok=True)
-        subprocess.run([sys.executable, script, "frozen", *base, "--output", str(frozen)], check=True, cwd=ROOT)
+        base = ["--equivalence_label", "equivalence_qwen3vl_8b", "--equivalence_models_dir", models_dir,
+                "--rotation", "0", "--condition", condition, "--max_trials", "6"]
+        frozen = []
+        for run in ("a", "b"):
+            out = out_root / condition / f"frozen_{run}" / "eval.json"
+            subprocess.run([sys.executable, script, "frozen", *base, "--output", str(out)], check=True, cwd=ROOT)
+            frozen.append(out)
         shards = []
         for k in range(2):
             out = out_root / condition / f"shard{k}of2" / "eval.json"
-            subprocess.run([sys.executable, script, "run", *base, "--shard", str(k), "--n_shards", "2",
-                            "--label", "equivalence_qwen3vl_8b", "--output", str(out)], check=True, cwd=ROOT)
+            subprocess.run([sys.executable, script, "run", *base, "--shard", str(k), "--n_shards", "2", "--output", str(out)], check=True, cwd=ROOT)
             shards.append(str(out))
         merged = out_root / condition / "merged.json"
         subprocess.run([sys.executable, script, "merge", "--shards", *shards, "--output", str(merged)], check=True, cwd=ROOT)
-        report = shard.compare(frozen, merged)
+        determinism = shard.compare(frozen[0], frozen[1])
+        report = {"frozen_vs_frozen": determinism, "frozen_vs_merged": shard.compare(frozen[0], merged)}
         (out_root / condition / "equivalence_report.json").write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
-        assert report["identical"], report
+        assert determinism["identical"], "frozen runs differ: A1 sharding not shown; a dated ruling is needed (design a1_gpu_rule)"
+        assert report["frozen_vs_merged"]["identical"], report
+
+
+# Families -------------------------------------------------------------------
+
+
+def _delivery(base, a8_id, key, passed):
+    folder = a8_family.repro(base, a8_id)
+    folder.mkdir(parents=True, exist_ok=True)
+    (folder / f"input_delivery_{key}.json").write_text(json.dumps({"verdicts": {"single_face": {"pass": passed}}}))
+
+
+def _gates(base, a8_id, key, passed):
+    folder = a8_family.repro(base, a8_id)
+    folder.mkdir(parents=True, exist_ok=True)
+    verdict = {g: {"pass": passed} for g in ("G2", "G3", "G4")}
+    (folder / f"vision_gates_{key}.json").write_text(json.dumps({"smoke": False, "verdict": verdict}))
+
+
+def _launch(base, a8_id, step, status="ok", context=None, weights=None, stamp="0"):
+    folder = base / "research/reproduction/a8" / a8_id / "launch"
+    folder.mkdir(parents=True, exist_ok=True)
+    weights = weights or a8_design.load_design()["models"][a8_id]["weights_dir"]
+    tag = "_".join(str(v) for v in (context or {}).values())
+    record = {"step": step, "status": status, "context": context or {}, "started_at_utc": stamp,
+              "loader": {"resolve_model_path": str(Path(weights).resolve())}}
+    (folder / f"{step}{'_' + tag if tag else ''}_{stamp}.json").write_text(json.dumps(record))
+
+
+def test_a_step_that_fails_twice_counts_as_not_tested_and_others_go_on(tmp_path, a3_cells):
+    """Re-check R4: a delivery job that never writes its file excludes only that model."""
+    fiv, folder = a3_cells
+    design = a8_design.load_design()
+    _delivery(tmp_path, "qwen3vl_32b", "qwen3vl", True)
+    path = a8_family.a3_cells_path(tmp_path, "qwen3vl_32b", "qwen3vl")
+    path.parent.mkdir(parents=True)
+    shutil.copy(folder / "cells_qwen3vl.jsonl", path)
+    _launch(tmp_path, "qwen3vl_32b", "a3")
+    _launch(tmp_path, "gemma4_31b", "delivery", status="started", stamp="1")
+    with pytest.raises(SystemExit, match="no delivery file"):
+        a8_family.a3_family(design, tmp_path)
+    _launch(tmp_path, "gemma4_31b", "delivery", status="failed", stamp="2")
+    family, excluded = a8_family.a3_family(design, tmp_path)
+    assert [n for n, _ in family] == ["qwen3vl_32b"] and "retry" in excluded["gemma4_31b"]
+
+
+def test_a3_inputs_need_a_launcher_record_with_the_design_weights(tmp_path, a3_cells):
+    """Re-check R3: which weights produced the cells is checked, not only completeness."""
+    fiv, folder = a3_cells
+    design = a8_design.load_design()
+    _delivery(tmp_path, "qwen3vl_32b", "qwen3vl", True)
+    _delivery(tmp_path, "gemma4_31b", "gemma4", False)
+    path = a8_family.a3_cells_path(tmp_path, "qwen3vl_32b", "qwen3vl")
+    path.parent.mkdir(parents=True)
+    shutil.copy(folder / "cells_qwen3vl.jsonl", path)
+    with pytest.raises(SystemExit, match="no launcher record"):
+        a8_family.a3_family(design, tmp_path)
+    _launch(tmp_path, "qwen3vl_32b", "a3", weights="/home/eb2007/rds/hpc-work/study2/models/qwen3vl")
+    with pytest.raises(SystemExit, match="loaded"):
+        a8_family.a3_family(design, tmp_path)
+
+
+def test_the_launcher_eligibility_follows_the_frozen_rules(tmp_path):
+    """Re-check R2: A1 needs gates and A3 Pass; A2 and A4 need rq0_status at single_face and gates."""
+    design = a8_design.load_design()
+    a3 = tmp_path / a8_family.A3_SUMMARY
+    a3.parent.mkdir(parents=True)
+    a3.write_text(json.dumps({"qwen3vl_32b": {"vision_dependent": True}, "gemma4_31b": {"vision_dependent": False}}))
+    a8_family.write_provenance(a3, [], {})
+    _gates(tmp_path, "qwen3vl_32b", "qwen3vl", True)
+    _gates(tmp_path, "gemma4_31b", "gemma4", True)
+    assert a8_family.eligibility(design, tmp_path, "qwen3vl_32b", "a1_shard")["eligible"]
+    with pytest.raises(SystemExit, match="not eligible"):
+        a8_family.eligibility(design, tmp_path, "gemma4_31b", "a1_shard")
+    a1 = tmp_path / a8_family.A1_SUMMARY
+    a1.write_text(json.dumps({"qwen3vl_32b": {"vision_dependent": False}}))
+    a8_family.write_provenance(a1, [], {})
+    assert a8_family.eligibility(design, tmp_path, "qwen3vl_32b", "a4_run")["rq0_single_face"] is True
+    with pytest.raises(SystemExit, match="not eligible"):
+        a8_family.eligibility(design, tmp_path, "qwen3vl_32b", "a2_run")  # no delivery file
+    _delivery(tmp_path, "qwen3vl_32b", "qwen3vl", True)
+    assert a8_family.eligibility(design, tmp_path, "qwen3vl_32b", "a2_run")["eligible"]
+    with pytest.raises(SystemExit, match="not eligible"):
+        a8_family.eligibility(design, tmp_path, "gemma4_31b", "a4_run")
+
+
+def test_a3_family_is_computed_from_delivery_files(tmp_path, a3_cells):
+    """Finding 5: no hand-picked list; a failed delivery means not tested; a missing file stops."""
+    fiv, folder = a3_cells
+    design = a8_design.load_design()
+    with pytest.raises(SystemExit, match="no delivery file"):
+        a8_family.a3_family(design, tmp_path)
+    _delivery(tmp_path, "qwen3vl_32b", "qwen3vl", True)
+    _delivery(tmp_path, "gemma4_31b", "gemma4", False)
+    with pytest.raises(SystemExit, match="does not exist"):
+        a8_family.a3_family(design, tmp_path)
+    path = a8_family.a3_cells_path(tmp_path, "qwen3vl_32b", "qwen3vl")
+    path.parent.mkdir(parents=True)
+    shutil.copy(folder / "cells_qwen3vl.jsonl", path)
+    _launch(tmp_path, "qwen3vl_32b", "a3")
+    family, excluded = a8_family.a3_family(design, tmp_path)
+    assert [n for n, _ in family] == ["qwen3vl_32b"] and "gemma4_31b" in excluded
+
+
+def test_an_incomplete_a3_cell_file_is_refused(tmp_path, a3_cells):
+    """Finding 11: a partial run cannot be summarised as 0% lost."""
+    fiv, folder = a3_cells
+    lines = (folder / "cells_qwen3vl.jsonl").read_text().splitlines(keepends=True)
+    short = tmp_path / "short.jsonl"
+    short.write_text("".join(lines[:-10]))
+    with pytest.raises(SystemExit, match="not 243"):
+        a8_family.check_a3_cells_complete(short)
+    partial = tmp_path / "partial.jsonl"
+    partial.write_text("".join(lines) + '{"trial_id": "x"')
+    with pytest.raises(SystemExit, match="partial"):
+        a8_family.check_a3_cells_complete(partial)
+    twice = tmp_path / "twice.jsonl"
+    twice.write_text("".join(lines) + lines[0])
+    with pytest.raises(SystemExit, match="duplicate"):
+        a8_family.check_a3_cells_complete(twice)
+    a8_family.check_a3_cells_complete(folder / "cells_qwen3vl.jsonl")
+
+
+def _a1_files(base, a8_id, gpus=1, test_mode=False):
+    for r in a8_family.ROTATIONS:
+        for c in a8_family.CONDITIONS:
+            path = a8_family.merged_path(base, a8_id, r, c)
+            path.parent.mkdir(parents=True, exist_ok=True)
+            weights = str(Path(a8_design.load_design()["models"][a8_id]["weights_dir"]).resolve())
+            side = {"visible_gpus": gpus, "test_mode": test_mode, "resolved_model_path": weights, "mode": "production"}
+            path.write_text(json.dumps({"a8_merged": {"shard_sidecars": [side]}, "trials": []}))
+
+
+def test_a1_family_follows_the_stop_rule_and_requires_every_file(tmp_path):
+    design = a8_design.load_design()
+    summary = tmp_path / a8_family.A3_SUMMARY
+    summary.parent.mkdir(parents=True)
+    summary.write_text(json.dumps({"qwen3vl_32b": {"vision_dependent": True}, "gemma4_31b": {"vision_dependent": True}}))
+    _gates(tmp_path, "qwen3vl_32b", "qwen3vl", True)
+    _gates(tmp_path, "gemma4_31b", "gemma4", False)
+    with pytest.raises(SystemExit, match="0 of 10"):
+        a8_family.a1_family(design, tmp_path)
+    _a1_files(tmp_path, "qwen3vl_32b")
+    family, excluded = a8_family.a1_family(design, tmp_path)
+    assert family == ["qwen3vl_32b"] and "stop rule" in excluded["gemma4_31b"]
+    _a1_files(tmp_path, "gemma4_31b")
+    with pytest.raises(SystemExit, match="outside the A1 family"):
+        a8_family.a1_family(design, tmp_path)
+    assert a8_family.check_a1_run_settings(tmp_path, ["qwen3vl_32b"], design) == {"qwen3vl_32b": 1}
+    path = a8_family.merged_path(tmp_path, "qwen3vl_32b", 0, "real")
+    path.write_text(json.dumps({"a8_merged": {"shard_sidecars": [{"visible_gpus": 1, "test_mode": False, "resolved_model_path": "/8b", "mode": "production"}]}}))
+    with pytest.raises(SystemExit, match="not a production run"):
+        a8_family.check_a1_run_settings(tmp_path, ["qwen3vl_32b"], design)
+    path = a8_family.merged_path(tmp_path, "qwen3vl_32b", 3, "mismatch")
+    path.write_text(json.dumps({"a8_merged": {"shard_sidecars": [{"visible_gpus": 2, "test_mode": False}]}}))
+    with pytest.raises(SystemExit, match="different GPU counts"):
+        a8_family.check_a1_run_settings(tmp_path, ["qwen3vl_32b"])
+
+
+def test_provenance_refuses_a_changed_output_or_input(tmp_path):
+    out, inp = tmp_path / "out.json", tmp_path / "in.json"
+    inp.write_text("1")
+    out.write_text("2")
+    a8_family.write_provenance(out, [inp], {})
+    a8_family.check_provenance(out)
+    inp.write_text("3")
+    with pytest.raises(SystemExit, match="changed"):
+        a8_family.check_provenance(out)
+    inp.write_text("1")
+    out.write_text("4")
+    with pytest.raises(SystemExit, match="differs"):
+        a8_family.check_provenance(out)
+
+
+# A1 analysis ----------------------------------------------------------------
+
+
+import a8_analyse_rotation as a1w  # noqa: E402
+
+
+def test_a1_analysis_runs_the_frozen_main_over_the_a8_family(tmp_path):
+    """The frozen statistics over synthetic merged files; Holm over one model is the identity."""
+    human = json.loads(LOOKUP.read_text())["trials"]
+    (tmp_path / "data").mkdir()
+    shutil.copy(LOOKUP, tmp_path / "data" / LOOKUP.name)
+    rng = np.random.default_rng(0)
+    for r in a8_family.ROTATIONS:
+        for c in a8_family.CONDITIONS:
+            trials = []
+            for tid, h in human.items():
+                options = h["human_options"]
+                target = h["human_target_label"]
+                ok = rng.random() < (0.5 if c == "real" else 0.15)
+                pred = target if ok else options[(options.index(target) + 1) % len(options)]
+                trials.append({"trial_id": tid, "stage2": {"correct": ok, "prediction": pred, "options": options,
+                                                           "scoring_label": target, "response_distribution": {pred: 1.0}}})
+            path = a8_family.merged_path(tmp_path, "qwen3vl_32b", r, c)
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(json.dumps({"trials": trials}))
+    out, err = tmp_path / "summary.json", tmp_path / "errored.json"
+    a1w.analyse(["qwen3vl_32b"], out, err, base=tmp_path)
+    result = json.loads(out.read_text())
+    assert list(result) == ["qwen3vl_32b"]
+    assert result["qwen3vl_32b"]["p_delta_holm"] == result["qwen3vl_32b"]["p_delta_actor_sign_flip"]
+    assert result["qwen3vl_32b"]["vision_dependent"] is True
+    a8_family.check_provenance(out)
+    with pytest.raises(SystemExit, match="runs once"):
+        a1w.analyse(["qwen3vl_32b"], out, tmp_path / "e2.json", base=tmp_path)
 
 
 # A3 summary -----------------------------------------------------------------
@@ -380,8 +789,7 @@ import a8_face_input_validity_summary as a3w  # noqa: E402
 
 
 def synthetic_a3_cells(fiv, path, seed, effect):
-    """Cells in the frozen schema for all 243 items, scored by the frozen correct_from_scores."""
-    human = json.loads((ROOT / "data/eu_emotions_human_entropy.json").read_text())["trials"]
+    human = json.loads(LOOKUP.read_text())["trials"]
     items = [{"trial_id": k, "label": v["human_target_label"], "actor": k.split("/")[-1][0].upper(), "options": v["human_options"]}
              for k, v in human.items()]
     partners = fiv.partners_for(items)
@@ -411,37 +819,71 @@ def a3_cells(tmp_path_factory):
 def test_a3_wrapper_equals_the_frozen_summarise_on_synthetic_cells(a3_cells):
     """Equivalence test 2, on synthetic cells: identical bytes to the frozen --summarise."""
     fiv, folder = a3_cells
-    fiv.summarise(Namespace(lookup=ROOT / "data/eu_emotions_human_entropy.json", output_dir=folder))
+    fiv.summarise(Namespace(lookup=LOOKUP, output_dir=folder))
     frozen = (folder / "face_input_validity_summary.json").read_bytes()
-    wrapped = a3w.summary_bytes([(m, folder / f"cells_{m}.jsonl") for m in fiv.MODELS])
-    assert wrapped == frozen
+    assert a3w.summary_bytes([(m, folder / f"cells_{m}.jsonl") for m in fiv.MODELS]) == frozen
 
 
-def test_a3_wrapper_holm_is_over_the_a8_family_only(a3_cells):
+def test_a3_production_path_uses_the_computed_family_and_writes_provenance(tmp_path, a3_cells):
     fiv, folder = a3_cells
-    one = json.loads(a3w.summary_bytes([("qwen3vl_32b", folder / "cells_qwen3vl.jsonl")]))
-    entry = one["qwen3vl_32b"]
-    assert entry["p_delta_holm"] == entry["p_delta_actor_sign_flip"]
-    three = json.loads(a3w.summary_bytes([(m, folder / f"cells_{m}.jsonl") for m in fiv.MODELS]))
-    assert three["qwen3vl"]["p_delta_holm"] >= entry["p_delta_holm"]
-
-
-def test_a3_wrapper_refuses_names_outside_the_family_and_missing_files(tmp_path, a3_cells):
-    fiv, folder = a3_cells
-    with pytest.raises(SystemExit, match="A8 family"):
-        a3w.main(["--cells", f"qwen3vl={folder / 'cells_qwen3vl.jsonl'}", "--output", str(tmp_path / "o.json")])
-    with pytest.raises(SystemExit, match="does not exist"):
-        a3w.main(["--allow_any_names", "--cells", f"x={tmp_path / 'none.jsonl'}", "--output", str(tmp_path / "o.json")])
+    _delivery(tmp_path, "qwen3vl_32b", "qwen3vl", True)
+    _delivery(tmp_path, "gemma4_31b", "gemma4", True)
+    for a8_id, key in (("qwen3vl_32b", "qwen3vl"), ("gemma4_31b", "gemma4")):
+        path = a8_family.a3_cells_path(tmp_path, a8_id, key)
+        path.parent.mkdir(parents=True)
+        shutil.copy(folder / f"cells_{key}.jsonl", path)
+        _launch(tmp_path, a8_id, "a3")
+    out = a3w.produce(tmp_path)
+    data = json.loads(out.read_text())
+    assert list(data) == ["gemma4_31b", "qwen3vl_32b"]
+    record = a8_family.check_provenance(out)
+    assert record["family"] == ["qwen3vl_32b", "gemma4_31b"]
+    expected = a3w.summary_bytes([("qwen3vl_32b", folder / "cells_qwen3vl.jsonl"), ("gemma4_31b", folder / "cells_gemma4.jsonl")])
+    assert out.read_bytes() == expected
+    with pytest.raises(SystemExit, match="written once"):
+        a3w.produce(tmp_path)
 
 
 FROZEN_A3 = [ROOT / "results/face_input_validity" / f"cells_{m}.jsonl" for m in ("qwen3vl", "gemma4", "molmo2")]
 
 
-@pytest.mark.skipif(not all(p.exists() for p in FROZEN_A3), reason="frozen A3 cell files are on the cluster only")
-def test_a3_wrapper_reproduces_the_frozen_summary_hash():
-    """Equivalence test 2, on the frozen files: the pinned summary, byte for byte."""
+def _close(a, b, path=""):
+    """Equal, except floats may differ in the last digits (library version)."""
+    if isinstance(a, dict) and isinstance(b, dict):
+        assert set(a) == set(b), path
+        return [d for k in a for d in _close(a[k], b[k], f"{path}/{k}")]
+    if isinstance(a, list) and isinstance(b, list):
+        assert len(a) == len(b), path
+        return [d for i, (x, y) in enumerate(zip(a, b)) for d in _close(x, y, f"{path}[{i}]")]
+    if isinstance(a, float) and isinstance(b, float) and a != b:
+        assert abs(a - b) <= 1e-12 * max(abs(a), abs(b)), (path, a, b)
+        return [path]
+    assert a == b, (path, a, b)
+    return []
+
+
+@pytest.mark.skipif(not all(p.exists() for p in FROZEN_A3), reason="frozen A3 cell files are not present")
+def test_a3_wrapper_on_the_frozen_cell_files(tmp_path):
+    """Equivalence test 2, on the frozen files.
+
+    (a) The wrapper equals the frozen --summarise run here, byte for byte.
+    (b) Against the pinned summary (made on the cluster): every field equal; floats may differ
+        in the last digits, which comes from the library build, not the wrapper. The exact
+        hash is required where the frozen environment runs (A8_FROZEN_ENV=1, cluster).
+    """
+    for path, digest in zip(FROZEN_A3, ("a3f302b3", "05eec2d4", "cd80b5c5")):
+        assert hashlib.sha256(path.read_bytes()).hexdigest().startswith(digest)
+    fiv = a3w.load_frozen()
+    for path in FROZEN_A3:
+        shutil.copy(path, tmp_path / path.name)
+    fiv.summarise(Namespace(lookup=LOOKUP, output_dir=tmp_path))
     data = a3w.summary_bytes(list(zip(("qwen3vl", "gemma4", "molmo2"), FROZEN_A3)))
-    assert hashlib.sha256(data).hexdigest() == a8_design.load_design()["frozen_a3_summary_sha256"]
+    assert data == (tmp_path / "face_input_validity_summary.json").read_bytes()
+    pinned = ROOT / "research/reproduction/face_input_validity_summary.json"
+    differing = _close(json.loads(data), json.loads(pinned.read_text()))
+    assert all(d.endswith("accuracy_real_vs_chance_pooled_p") for d in differing), differing
+    if os.environ.get("A8_FROZEN_ENV") == "1":
+        assert hashlib.sha256(data).hexdigest() == a8_design.load_design()["frozen_a3_summary_sha256"]
 
 
 # A2 loader ------------------------------------------------------------------
@@ -463,7 +905,7 @@ def a2_inputs(tmp_path):
     from scripts import recovery_stimulus_interventions as rec
     from scripts import run_stimulus_interventions as run
 
-    human = json.loads((ROOT / "data/eu_emotions_human_entropy.json").read_text())["trials"]
+    human = json.loads(LOOKUP.read_text())["trials"]
     data = []
     for key, value in human.items():
         named = {k: v for k, v in value["human_response_distribution"].items() if k != run.ABSTAIN}
@@ -481,51 +923,81 @@ def a2_inputs(tmp_path):
     free = dict(zip(rec.FAMILIES, np.zeros(21).tolist()))
     baselines = [{"input_name": r, "condition": "image_free", "family_logprob": free} for r in delivery]
     cells, reports = [], []
+    out_dir = tmp_path / "results/a8/gemma4_31b/stimulus_interventions"
+    out_dir.mkdir(parents=True)
     for k in range(3):
-        cell = tmp_path / f"cells_{k}.jsonl"
+        cell = out_dir / f"cells_gemma4_shard{k}.jsonl"
         cell.write_text("".join(json.dumps(r) + "\n" for r in rows if trials.index(r["trial_id"]) % 3 == k))
-        report = tmp_path / f"run_{k}.json"
+        report = out_dir / f"run_gemma4_shard{k}.json"
         report.write_text(json.dumps({"model": "gemma4", "smoke": False, "design_sha256": design, "shard": k, "n_shards": 3, "delivery": [delivery], "baselines": baselines}))
         cells.append(str(cell))
         reports.append(str(report))
     geometry = tmp_path / "geometry.json"
     geometry.write_text(json.dumps({"items": {t: {"face_box": [0, 0, 400, 400], "face_width_px": 200.0, "width": 800, "height": 400} for t in trials}}))
-    repro = tmp_path / "repro"
-    repro.mkdir()
-    for name in ("vision_gates_gemma4.json", "input_delivery_gemma4.json"):
-        shutil.copy(ROOT / "research/reproduction" / name, repro / name)
-    (repro / "rotation_summary.json").write_text(json.dumps({"gemma4": {"vision_dependent": True}}))
-    return cells, reports, geometry, repro, run
+    return cells, reports, geometry, run
 
 
-def test_a2_loader_swap_gives_the_frozen_output_byte_for_byte(tmp_path, monkeypatch):
-    """Equivalence test 3: the frozen A3 file through the A8 loader, against the frozen loader."""
+def test_a2_production_path_gives_the_frozen_output_byte_for_byte(tmp_path, monkeypatch):
+    """Equivalence test 3, through run(): frozen A3 summary with gemma4 renamed to gemma4_31b,
+    A8 A1 summary, provenance checked, A1 view written; output equals the frozen analysis."""
     an = a2w.load_frozen()
-    cells, reports, geometry, repro, run = a2_inputs(tmp_path)
+    cells, reports, geometry, run = a2_inputs(tmp_path)
     monkeypatch.setattr(run, "check_geometry", lambda path: None)
+    folder = tmp_path / "research/reproduction/a8/gemma4_31b"
+    folder.mkdir(parents=True)
+    for name in ("vision_gates_gemma4.json", "input_delivery_gemma4.json"):
+        shutil.copy(ROOT / "research/reproduction" / name, folder / name)
     frozen_a3 = ROOT / "research/reproduction/face_input_validity_summary.json"
-    shutil.copy(frozen_a3, repro / frozen_a3.name)
+    a8_a3 = json.loads(frozen_a3.read_text())
+    a8_a3["gemma4_31b"] = a8_a3.pop("gemma4")
+    a3_path = tmp_path / a8_family.A3_SUMMARY
+    a3_path.write_text(json.dumps(a8_a3, indent=2, sort_keys=True) + "\n")
+    a1_path = tmp_path / a8_family.A1_SUMMARY
+    a1_path.write_text(json.dumps({"gemma4_31b": {"vision_dependent": True}}))
+    a8_family.write_provenance(a3_path, [], {})
+    a8_family.write_provenance(a1_path, [], {})
+    common = ["--geometry", str(geometry), "--a2_frozen"]
+    wrapped = tmp_path / "results/a8/gemma4_31b/a2_summary.json"
+    with pytest.raises(SystemExit, match="no a2_run job finished ok"):
+        a2w.run("gemma4_31b", [*common, "--output", str(wrapped)], base=tmp_path)
+    for k in range(3):
+        _launch(tmp_path, "gemma4_31b", "a2_run", context={"shard": k, "n_shards": 3})
+    _launch(tmp_path, "gemma4_31b", "gates")
+    _launch(tmp_path, "gemma4_31b", "delivery")
+    a2w.run("gemma4_31b", [*common, "--output", str(wrapped)], base=tmp_path)
+    assert json.loads((folder / "rotation_summary.json").read_text()) == {"gemma4": {"vision_dependent": True}}
 
-    def argv(out):
-        return ["--model", "gemma4", "--cells", *cells, "--run_report", *reports, "--geometry", str(geometry),
-                "--reproduction", str(repro), "--output", str(out), "--a2_frozen"]
+    # The frozen analysis, frozen loader, on the same folder with the pinned A3 file in it.
+    shutil.copy(frozen_a3, folder / frozen_a3.name)
+    frozen = tmp_path / "frozen.json"
+    a2w.run_frozen_main(an, ["--model", "gemma4", "--reproduction", str(folder), "--cells", *cells,
+                             "--run_report", *reports, *common, "--output", str(frozen)], None)
+    assert wrapped.read_bytes() == frozen.read_bytes()
+    assert json.loads(frozen.read_text())["single_face"]["gates"]["rq0"] is True
+    assert an.a3_summary.__module__ == an.__name__
 
-    a2w.run_frozen_main(an, argv(tmp_path / "frozen.json"), None)
-    sha = a8_design.load_design()["frozen_a3_summary_sha256"]
-    loader = a2w.a3_loader(frozen_a3, sha, lambda s: s)
-    a2w.run_frozen_main(an, argv(tmp_path / "wrapped.json"), loader)
-    frozen, wrapped = (tmp_path / "frozen.json").read_bytes(), (tmp_path / "wrapped.json").read_bytes()
-    assert frozen == wrapped
-    result = json.loads(frozen)
-    assert result["single_face"]["gates"]["rq0"] is True  # the gates path is exercised, not short-circuited
-    assert an.a3_summary.__module__ == an.__name__  # restored after the call
+
+def test_a2_wrapper_refuses_hand_set_paths_abbreviations_and_unrecorded_inputs(tmp_path):
+    """Re-check R3: no pass-through of the wrapper's own options, in full or abbreviated."""
+    for bad in (["--model", "gemma4"], ["--repro", "research/reproduction"], ["--reproduction=x"],
+                ["--cells", "results/stimulus_interventions/cells_qwen3vl_shard0.jsonl"], ["--run", "r.json"],
+                ["--c", "x"]):
+        with pytest.raises(SystemExit, match="set by the wrapper"):
+            a2w.run("gemma4_31b", [*bad, "--output", "results/a8/x.json"], base=tmp_path)
+    with pytest.raises(SystemExit, match="abbreviation"):
+        a2w.run("gemma4_31b", ["--out", "results/a8/x.json"], base=tmp_path)
+    with pytest.raises(SystemExit, match="exactly once"):
+        a2w.run("gemma4_31b", ["--output", "results/a8/x.json", "--output", "results/a8/y.json"], base=tmp_path)
+    with pytest.raises(SystemExit, match="outside the A8 output roots"):
+        a2w.run("gemma4_31b", ["--output", "results/stimulus_interventions/x.json"], base=tmp_path)
+    with pytest.raises(SystemExit, match="provenance is missing"):
+        a2w.run("gemma4_31b", ["--output", "results/a8/x.json"], base=tmp_path)
 
 
 def test_the_frozen_loader_cannot_see_an_a8_summary_and_the_a8_loader_can(tmp_path):
     an = a2w.load_frozen()
-    summary = {"qwen3vl_32b": {"vision_dependent": True}}
     path = tmp_path / "face_input_validity_summary.json"
-    path.write_text(json.dumps(summary))
+    path.write_text(json.dumps({"qwen3vl_32b": {"vision_dependent": True}}))
     assert an.a3_summary(tmp_path, tmp_path) == {}
     sha = hashlib.sha256(path.read_bytes()).hexdigest()
     loader = a2w.a3_loader(path, sha, lambda s: {"qwen3vl": s["qwen3vl_32b"]})
@@ -534,27 +1006,29 @@ def test_the_frozen_loader_cannot_see_an_a8_summary_and_the_a8_loader_can(tmp_pa
         a2w.a3_loader(path, "0" * 64, lambda s: s)
 
 
-def test_a1_view_is_written_once_under_the_code_key(tmp_path):
+def test_a1_view_is_empty_for_a_model_outside_the_a1_family(tmp_path):
     a1 = tmp_path / "rotation_summary_a8.json"
     a1.write_text(json.dumps({"qwen3vl_32b": {"vision_dependent": False}}))
-    folder = tmp_path / "a8" / "qwen3vl_32b"
-    path = a2w.write_a1_view(a1, "qwen3vl_32b", "qwen3vl", folder)
+    path = a2w.write_a1_view(a1, "gemma4_31b", "gemma4", tmp_path / "g")
+    assert json.loads(path.read_text()) == {}
+    path = a2w.write_a1_view(a1, "qwen3vl_32b", "qwen3vl", tmp_path / "q")
     assert json.loads(path.read_text()) == {"qwen3vl": {"vision_dependent": False}}
-    a2w.write_a1_view(a1, "qwen3vl_32b", "qwen3vl", folder)  # same content: allowed
     a1.write_text(json.dumps({"qwen3vl_32b": {"vision_dependent": True}}))
     with pytest.raises(SystemExit, match="other content"):
-        a2w.write_a1_view(a1, "qwen3vl_32b", "qwen3vl", folder)
+        a2w.write_a1_view(a1, "qwen3vl_32b", "qwen3vl", tmp_path / "q")
 
 
-# A1 analysis ----------------------------------------------------------------
+# A4 gates -------------------------------------------------------------------
 
 
-import a8_analyse_rotation as a1w  # noqa: E402
+def test_a4_gates_file_is_built_from_a8_outputs(tmp_path):
+    import a8_a4_gates
 
-
-def test_a1_analysis_points_the_frozen_module_at_a8_files_and_family():
-    runner, mod, _ = a1w.configure(["qwen3vl_32b"])
-    assert mod.MODELS == ("qwen3vl_32b",)
-    assert mod.EVAL.format(m="qwen3vl_32b", r=2, c="real") == (
-        "results/a8/qwen3vl_32b/rotation/eval_v2_eu_emotions_qwen3vl_32b_video_only_seed42_rot2_real.json")
-    assert runner.sha256(runner.TARGET) == a8_design.load_design()["frozen_code_sha256"]["research/scripts/analyse_rotation.py"]
+    (tmp_path / "research/reproduction/a8").mkdir(parents=True)
+    (tmp_path / a8_family.A3_SUMMARY).write_text(json.dumps({"qwen3vl_32b": {"vision_dependent": True}, "gemma4_31b": {"vision_dependent": True}}))
+    (tmp_path / a8_family.A1_SUMMARY).write_text(json.dumps({"qwen3vl_32b": {"vision_dependent": False}}))
+    _gates(tmp_path, "qwen3vl_32b", "qwen3vl", True)
+    _gates(tmp_path, "gemma4_31b", "gemma4", False)
+    out = a8_a4_gates.gates(tmp_path)
+    assert out["qwen3vl"] == {"a8_id": "qwen3vl_32b", "a1_passed": False, "a3_passed": True, "g2_g4": True}
+    assert out["gemma4"]["a1_passed"] is None and out["gemma4"]["g2_g4"] is False

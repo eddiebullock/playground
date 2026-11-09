@@ -199,3 +199,144 @@ DECISIONS 2026-11-05 let the bfloat16 pass stand partly because Qwen's bfloat16 
 ## Freeze readiness
 
 Not freeze-ready as drafted. Findings 1 to 4 must be fixed before the freeze: 1 blocks A1 outright on any error; 2 and 3 can silently mix models or overwrite frozen outputs; 4 can silently change the A1 estimand. Findings 5 and 6, and the data and module pins in 4 and 7, touch the hashed block or the family definition, so they must be settled **before** the design hash is tagged. The other medium findings (8 to 12) are code and test changes that fit the dated pre-data code-pin step. The low findings can go into that step too. With these fixed, the design keeps every frozen rule, threshold and family unchanged and cannot rescue a frozen verdict, and it would be freeze-ready.
+
+---
+
+## Re-check 2026-11-09
+
+**Scope.** The author's fixes for findings 1 to 21, checked against design hash `f14fdcb7c0d24ca9d5443e362d68947cf52e43610b90f06c970088492e6b764c`. I read the "Audit rulings" section, `a8_launch.py`, `a8_family.py`, `a8_a4_gates.py`, `slurm_jobs/a8_job.sh` and the revised scripts and tests. I diffed `a8_job.sh` and the block's `commands` against the frozen slurm files: `study3_rotation_eval.sh`, `study3_vision_gates.sh`, `study3_stimulus_interventions.sh`, `study3_readout_ladder.sh`, `study3_face_input_validity.sh` and `study3_a4.sh`.
+
+**Hash and pins.** The block recomputes to `f14fdcb7...`, equal to the stated and pinned values. All 48 entries in `frozen_code_sha256` match. The import closure has no unpinned module. `data_sha256` holds the manifest, the human lookup, the five rotation lookups, the AU measures and the A4 detector CSV. The test regenerates the rotation lookups and they match the pins. The block holds nothing that should wait: shard and GPU counts are absent, the code pins sit outside the block as before, and Gemma's admission is now inside it.
+
+**Tests.** `pytest tests/test_a8.py`: 47 passed, 2 skipped (the GPU A1 equivalence test and the frozen-A3-file test), 1 warning, 4 min 26 s.
+
+### (a) Findings 1 to 12, fixed in code?
+
+| # | In code? | Where |
+|---|---|---|
+| 1 | Yes | `a8_rotation_shard.py:247-255`: errored records are skipped in the partner check, must carry no partner field, are kept, and are counted. |
+| 2 | Yes, for every launcher step | `a8_launch.py:188-193` and `111-126`: the launcher sets `MR_EU_HPC_MODELS_DIR` from the block and refuses a different preset (`a8_rotation_shard.py:78-87`, which also refuses an earlier `config` import). It asserts that both `config.MODELS[key]["hpc_path"]` and `resolve_model_path` resolve to `weights_dir`, and records them. The shard runner repeats the check (`check_resolved_model`, line 316). `a8_job.sh:73` unsets the variable. Remaining gap: the analysis wrappers do not check launcher provenance (R3). |
+| 3 | Mostly | Every command, with explicit outputs, is in the block's `commands`, and the launcher builds argv only from there. The frozen-output guard (`a8_launch.py:210-235`) hashes before and after and fails the job on any change or new file. The natural-RQ1 exception is refused if its file exists, then moved. Queue: the `--confirm_phase2_completed` flag is required. The guard makes overlap detectable; it does not prevent it. |
+| 4 | Yes | Missing lookup refused (`a8_rotation_shard.py:331-333`). Manifest, human lookup and rotation lookup checked against pins (`prepare`, 300-302). Versions enforced and `decoder_preflight` run (303-304, and `a8_launch.py:200-203`). The cv2 4.11 overlay is set in `a8_job.sh:62-63`. |
+| 5 | Yes | `a8_family.py:77-113`. Families come from the delivery, gate and A3 files, and there is no `--models` option. New gap: R4. |
+| 6 | Yes | Gemma's status is inside the block; `admitted()` and the note-reading path are gone. |
+| 7 | Yes | 48 pins. `test_every_module_reached_by_import_is_pinned` checks the closure. torch, transformers and cv2 are enforced for gates, a1_shard, a3 and a4_run. |
+| 8 | Yes | The full-243 stubbed test was added. The block states the rule for a frozen-versus-frozen GPU difference (stop, dated ruling). |
+| 9 | Yes | `--a8_id` sets key, sampling, directories and output path (`resolve_run`, 263-280; `check_output_place`, 283-292). Pins are required in production (299). `test_mode` is recorded, and merge refuses it under `results/a8` (414-416). |
+| 10 | Partly | The test now goes through `run()` with a renamed summary, and the A3 and A1 summaries must match their provenance (`a8_analyse_a2.py:118-120`). New gap: R3, `--cells` and `--run_report` are unchecked. |
+| 11 | Yes | `a8_family.check_a3_cells_complete`, lines 61-74. |
+| 12 | Yes for A1; contradicts step 1 for gates | Shards with an out-of-memory trial fail (361), and merge refuses them (410-411). The launcher scans every output for OOM text (`a8_launch.py:97-108, 233-237`). This produces R1. |
+
+Findings 13 to 17, 20 and 21 are fixed as the table in the draft states. I spot-checked the sidecar suffix, the fresh directory, the merge keys, the `chdir`, the removal of `--skip_storage` and the removal of `--models`.
+
+### (b) New defects introduced by the fixes
+
+**R1 (high, blocker: needs a block edit). The gates step will always end "out_of_memory" for Qwen3-VL-32B, and its command differs from the frozen one for key `qwen3vl`.**
+
+- *Cause.* When the float32 stage runs out of memory, `scripts/vision_gates.py:1450-1455` catches it and stores the message in `result["float32_failed"]` ("CUDA out of memory. Tried to allocate ..."). `a8_launch.oom_in_outputs` searches the whole output text for "out of memory".
+- *Check.* `oom_in_outputs(['research/reproduction/vision_gates_qwen3vl.json'])` flags the frozen 8B gate file.
+- *Effect.* The draft's own step 1 and its Limits expect this out-of-memory error. Yet the launcher raises, and block rule `oom` then requires the gates job to be "rerun with more GPUs before any analysis".
+- *Deviation if followed.* On 2+ GPUs the float32 stage of a 32B might complete, so the 32B would be gated by a procedure the 8B never had. The non-resumable output also already exists, so it would have to be deleted by hand.
+- *Contradiction in the meantime.* `a8_family.gates_passed` and the frozen A2 and A4 readers read the gate file whatever the launcher status. So the "not analysed" half of the rule is not enforced for gates either.
+- *Command difference.* The frozen job passes `--float32_max_frames 6` for `MODEL=qwen3vl` (`study3_vision_gates.sh`, `FLOAT32_MAX_FRAMES` default 6 for qwen3vl). The block's `commands.gates` argv omits it, so the A8 gate run on key `qwen3vl` is not the frozen command.
+
+*Fix (block).*
+1. Add `--float32_max_frames 6` for `qwen3vl` to `commands.gates`, to match the frozen job. For `gemma4`, add nothing, as frozen.
+2. Narrow `rules.oom` to trial, cell and delivery-row errors.
+3. In the launcher, exclude `float32_failed` from the scan; for gates, scan only stage records.
+4. Add a test that runs the frozen 8B gate file through `oom_in_outputs`.
+
+**R2 (medium). Nothing checks eligibility before an A1, A2 or A4 run.**
+
+- The launcher does not check the stop rule or eligibility before `a1_shard`, `a2_run` or `a4_run` (no gate, A3 or RQ0 check in `a8_launch.py`).
+- A4: `a4_analyse` takes the Holm family from whichever models have cells in `results/a8/a4` (`apply_rule`). An A4 run submitted by mistake for an ineligible model therefore silently enlarges the A8 A4 family, which is a family change made by a human action.
+- A1: an out-of-family run makes `a8_family.a1_family` refuse the whole A1 analysis until files are deleted.
+
+*Fix.* In the launcher, refuse `a1_shard` unless `a8_family.gates_passed` holds and the A8 A3 summary (provenance-checked) shows Pass. Refuse `a2_run` and `a4_run` unless the frozen `outside_gates` or `rq0_gate` logic, applied to the A8 files, admits the model. Record the decision.
+
+**R3 (medium). The A2 wrapper accepts any `--cells` and `--run_report`.**
+
+`a8_analyse_a2.run` forbids `--model` and `--reproduction`, but not the cell and report paths. The 8B's frozen A2 shards in `results/stimulus_interventions/cells_qwen3vl_shard*.jsonl` carry the same key and the same A2 design hash, so `load_shards` accepts them, and the result would be labelled `qwen3vl_32b`.
+
+The frozen parser also allows prefix abbreviations. A trailing `--repro research/reproduction` in `rest` comes after the wrapper's own `--reproduction` and overrides it, because argparse keeps the last value.
+
+*Fix.*
+- Build `--cells`/`--run_report` from `results/a8/<a8_id>/stimulus_interventions/` and refuse user-given ones.
+- Require each shard's launcher provenance with `status == ok` and `resolve_model_path == weights_dir`.
+- Put the wrapper's own arguments after `rest`, or reject any argument that is an abbreviation of a frozen option.
+- Apply the same provenance requirement where the A1 and A3 producers read their inputs. Today they check completeness, not which weights produced the files.
+
+**R4 (medium). A missing delivery file blocks the A3 summary for every model.**
+
+`a8_family.a3_family` raises when an active model has no delivery file (line 83-84). If Gemma 4 31B's delivery job crashes in the frozen code, which is plausible given the adapter differences the notes record, no file is ever written. Qwen3-VL-32B's A3 summary can then never be produced without a post-data ruling.
+
+*Fix (block text).* State in advance that a delivery job that ends without its file, with launcher provenance `status != ok` after one retry, counts as "single_face delivery failed: not tested". Have `a3_family` read that provenance.
+
+**R5 (low). The environment for delivery, ladder and A2 differs from the frozen jobs.**
+
+`a8_job.sh` activates the conda env and then the `au_tools` venv. The frozen non-Molmo A2 and ladder jobs source `au_tools` alone, with no module load and no conda. Versions for these steps are recorded but not enforced. Also: `HF_HOME` moves to the project store; `HF_HUB_OFFLINE=1` and `PYTHONWARNINGS` are added to the gate and A1 jobs; `PYTHONPATH` adds the project root for cv411 steps. None of this should change outputs.
+
+*Fix.* Mirror the frozen activation exactly (no conda for `au_tools`), or list these differences in the "How every A8 job runs" section.
+
+**R6 (low). Small gaps.**
+
+- `DATA_BY_STEP` (`a8_launch.py:48-55`) has no entry for `gates` or `a4_run`, so those steps read the manifest and lookup without checking the pins. `a1_shard` is covered by `prepare`.
+- The OOM scan is a plain text search over raw model output too. A false positive is unlikely but possible.
+
+*Fix.* Add the data entries, and scan only `error`/`reason`/`failed` fields.
+
+### (c) Block contents
+
+The hash recomputes. Two block items need editing because of R1: `commands.gates` and `rules.oom`. R4 also needs a rule in the block. Otherwise the block holds what must be fixed before data and nothing that should wait.
+
+### (d) Rulings 18 and 19
+
+- **18: acceptable.** The A3 frozen-file equivalence is now freeze checklist item 3, a cluster item to run and record before the freeze. Keep it as a precondition of the `a8-freeze` tag, not of the later code-pin step: the block claims the result.
+- **19: acceptable.** Limits now says that DECISIONS 2026-11-05 rested on Qwen-8B's exactly-zero bfloat16 G2/G3, and that a non-zero A8 value will be reported as unresolved. That is the right disclosure. R1 must still be fixed so that the expected float32 out-of-memory error does not fail the gates job.
+
+### Verdict
+
+**Not freeze-ready yet. One blocker: R1.** It needs edits to the block (`commands.gates`, adding `--float32_max_frames 6` for qwen3vl, and `rules.oom`) and to `a8_launch.oom_in_outputs`, then a re-hash.
+
+R4 also needs a sentence in the block, so it should go in the same re-hash. R2 and R3 are code fixes that belong before the code-pin step; they are not freeze blockers if the block says eligibility is checked by the launcher. R5 and R6 are low.
+
+Once R1 and R4 are in the block, re-hashed and pinned, and checklist items 3 and 6 are recorded, A8 is freeze-ready. All high and medium findings from the first audit are fixed in code, except for the residual gaps in R3.
+
+---
+
+## Final check 2026-11-09
+
+**Hash and pins.** The block recomputes to `95dd41b5d3c33b79ee9e54a20d34ea1e18b6c9156fcabd719ebfb084709b7b50`, equal to the stated value (draft line 5) and to the value pinned in `a8_design.py:22`. All 48 frozen-code pins match, and no module in the import closure is unpinned.
+
+**Tests.** My local run was stopped before it finished so the report could be delivered. At that point 49 tests had passed, 1 had been skipped, and none had failed. The author reports 54 passed and 1 skipped for the full suite. Before tagging, someone should rerun `pytest tests/test_a8.py` to completion and record the result.
+
+**R1 to R6, checked in code**
+
+| # | Fixed? | Where |
+|---|---|---|
+| R1 | Yes | `commands.gates.argv_extra_by_key` adds `--float32_max_frames 6` for `qwen3vl` after `--output`, as `study3_vision_gates.sh` does; `command()` applies it (`a8_launch.py:63-70`). `rules.oom` is narrowed to trial, cell and delivery-row fields. `oom_in_outputs(paths, step)` scans only `SCANNED_STEPS`, which leaves out gates, and reads structured fields only, skipping `float32_failed` (`a8_launch.py:96-161`). Test: `test_the_frozen_8b_gate_file_is_not_flagged`. |
+| R2 | Yes | `a8_family.eligibility` (lines 210-235), called by the launcher before `a1_shard`, `a2_run` and `a4_run` (`a8_launch.py:248-249`). It reads the A8 gate file and the provenance-checked A3 and A1 summaries, applies the frozen `rq0_status`, and refuses and records an ineligible model. |
+| R3 | Yes | `a8_analyse_a2.check_pass_through` refuses `--model`, `--reproduction`, `--cells` and `--run_report` and any abbreviation of them, and requires `--output` written in full, exactly once. `shard_inputs` builds the cell and report paths from `results/a8/<id>/stimulus_interventions/` and requires an ok launcher record with the design's weights for every shard, and for gates and delivery. The A3 family also requires an ok A3 launch record (`a8_family.py:126-127`). |
+| R4 | Yes | Block rule `not_tested_after_retry`. Launch records are written with status `started` before the job runs (`a8_launch.py:274-276`), so a killed job leaves a record. `a8_family.not_tested` then excludes the model, and `a3_family` goes on with the others (lines 105-128). |
+| R5 | Yes | `a8_job.sh` sources `au_tools` alone for delivery, ladder and A2, and conda alone for the rest. Per-step `PYTHONPATH`, `HF_HOME`, `HF_HUB_OFFLINE` and `PYTORCH_CUDA_ALLOC_CONF` now mirror the frozen jobs; I diffed them against `study3_rotation_eval.sh`, `study3_vision_gates.sh`, `study3_face_input_validity.sh` and `study3_stimulus_interventions.sh`. |
+| R6 | Yes | `data_by_step` is in the block and covers every model step, including gates and `a4_run`. The OOM scan no longer reads raw model text. |
+
+**New defects.** None that block the freeze. One edge case, low, can be ruled at the code-pin step:
+
+- **Scenario.** A resumable A3 job keeps crashing with an out-of-memory error after writing part of its cell file.
+- **What happens.** `not_tested_after_retry` applies only "with no output file". Here the file exists, so `check_a3_cells_complete` raises and the A3 family waits.
+- **Why this is acceptable.** That is the intended behaviour (rerun with more GPUs), but a model that never fits would need a dated ruling.
+- **Suggested ruling.** A partial A3 file after two out-of-memory attempts at the maximum GPU count counts as "no A3 result".
+
+**A3 frozen-file equivalence.** The coordinator ran the A3 wrapper on the three frozen cell files on the cluster, in the frozen environment (numpy 2.2.6, scipy 1.15.3). The output sha256, `c1c64e69...`, equals `frozen_a3_summary_sha256` exactly. This meets the precondition of freeze checklist item 1. It must be recorded, with job and date, in the draft or DECISIONS at tagging.
+
+**Block.** Nothing in the block remains a freeze blocker:
+
+- Every run setting (shard and GPU counts) stays out of the block.
+- The code pins stay outside it, pending, by design.
+- The rules, families, commands, data pins and version pins are fixed now, as they should be.
+
+**Verdict: freeze-ready.** The remaining steps are procedural:
+
+1. Record the cluster A3 result and tag `a8-freeze`, with its DECISIONS entry, before the Qwen3-VL-8B A1 result is read.
+2. Then complete the dated pre-data checklist items 2 to 7, which are code pins, the GPU A1 equivalence test, the full weight hashes, the lookup comparison, the cluster code sync and the storage check, before any A8 job.

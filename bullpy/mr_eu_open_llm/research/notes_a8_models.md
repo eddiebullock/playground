@@ -70,3 +70,11 @@ ROADMAP Part 3 stops new writes on RDS above 1,080 GB or 1,040,000 files, which 
 | A2 cell time, 243 items | Gemma 4 / Qwen3-VL | 11.6 / 16.5 GPU-h; peak 18.3 / 23.5 GB | `PREREG_A2_DRAFT.md`, Cost |
 | A4 per model (upper bound) | Gemma 4 / Qwen3-VL | about 60 / 61 GPU-h | `PREREG_A4_DRAFT.md`, Cost |
 | A1 rotation task | Gemma 4 E4B | not found in the repo | read from Slurm accounting before the freeze |
+
+## Updates after the lead decisions and the audit (2026-11-09)
+
+- Gemma 4 31B: the user approved storage on the lab project store; it is admitted inside the design block. Not yet downloaded.
+- `ampere-long` (read-only, `scontrol show partition ampere-long`): `AllowQos=gpul`, one node (`gpu-q-1`), no time limit. `sacctmgr show assoc user=eb2007`: `baron-cohen-sl3-gpu` on `ampere` with QOS `gpu2,intr` only; `gpu2` MaxWall 12:00:00. So `ampere-long` is not available to this account.
+- Cluster code (read-only `sha256sum` in `~/rds/hpc-work/study3`): every file the A1 job loads matches the local copy and the block; `scripts/run_stimulus_interventions.py` differs (`19b1fdae...`), pre-sync, as ROADMAP 2.1 expects.
+- Software versions recorded by the siblings' gate runs (`research/reproduction/vision_gates_{qwen3vl,gemma4}.json`, `versions`): cv2 4.11.0, transformers 5.10.1, torch 2.10.0+cu128, python 3.10.4. numpy was not recorded. Delivery and ladder outputs record no versions.
+- Rotation lookups: regenerated off-repo with the frozen `write_rotated_human_lookup` to obtain the pinned hashes (rot0 `07ab51da...`, rot1 `21b55baa...`, rot2 `ab6f6743...`, rot3 `84cad8f1...`, rot4 `c8c019b3...`). The cluster copies were not hashed.
