@@ -1,0 +1,50 @@
+{
+ "datasets": {
+  "liu_WC": {
+   "split_half_r": 0.9053,
+   "spearman_brown": 0.9503,
+   "ceiling": 0.9748,
+   "split_half_r_residual": 0.862,
+   "ceiling_residual": 0.9622,
+   "split_half_r_sd": 0.0152,
+   "split_half_r_residual_sd": 0.0338,
+   "splits": 200,
+   "ridge": 1.0
+  }
+ },
+ "splits": 200,
+ "seed": 20261109,
+ "note": "Do effects, family_25 basis, subjects and stimuli split, pooled fits at ridge 1.0 as a4_analyse.human_do_ceiling. Human data only.",
+ "at_selected_ridge": {
+  "split_half_r": 0.9053,
+  "spearman_brown": 0.9503,
+  "ceiling": 0.9748,
+  "split_half_r_residual": 0.862,
+  "ceiling_residual": 0.9622,
+  "split_half_r_sd": 0.0152,
+  "split_half_r_residual_sd": 0.0338,
+  "splits": 200,
+  "ridge": 1.0
+ },
+ "subjects_only_same_stimuli": {
+  "split_half_r": 0.9511,
+  "ceiling": 0.9874,
+  "split_half_r_residual": 0.9339,
+  "ceiling_residual": 0.9828,
+  "splits": 200
+ },
+ "human_reference_cfa": {
+  "basic_WC": {
+   "raw": 0.8611,
+   "residual": 0.6901
+  },
+  "basic_EA": {
+   "raw": 0.8154,
+   "residual": 0.7094
+  },
+  "snoek_basic_WC_to_EA": {
+   "raw": 0.8769,
+   "residual": 0.7796
+  }
+ }
+}

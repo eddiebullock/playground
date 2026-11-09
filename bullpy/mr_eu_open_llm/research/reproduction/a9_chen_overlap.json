@@ -1,0 +1,103 @@
+{
+ "chen_file": "WE_resp_data.mat",
+ "chen_shape_aus_trials_participants": [
+  41,
+  2400,
+  60
+ ],
+ "chen_label_responses": [
+  "happy",
+  "surprise",
+  "fear",
+  "disgust",
+  "anger",
+  "sad",
+  "other"
+ ],
+ "chen_au_labels": [
+  "AU1",
+  "AU1-2",
+  "AU2",
+  "AU2L",
+  "AU4",
+  "AU5",
+  "AU6",
+  "AU6L",
+  "AU6R",
+  "AU12-6",
+  "AU7L",
+  "AU7R",
+  "AU9",
+  "AU10",
+  "AU10L",
+  "AU10R",
+  "AU11L",
+  "AU11R",
+  "AU12",
+  "AU25-12",
+  "AU13",
+  "AU14",
+  "AU14L",
+  "AU14R",
+  "AU15",
+  "AU16",
+  "AU17",
+  "AU20",
+  "AU20L",
+  "AU20R",
+  "AU22",
+  "AU23",
+  "AU24",
+  "AU25",
+  "AU26",
+  "AU27",
+  "AU38",
+  "AU39",
+  "AU41",
+  "AU42",
+  "AU43"
+ ],
+ "chen_stimulus_groups": {
+  "0": 15,
+  "1": 45
+ },
+ "cohorts": {
+  "A_sub01_15": {
+   "pairing": "Chen participant j with Snoek subject j + 1",
+   "snoek_rows_per_subject": 2368,
+   "chen_trials": 2400,
+   "snoek_row_order_shared_across_subjects": true,
+   "rows_with_exact_response_vector_in_chen": 2211,
+   "rows_with_unique_exact_match": 2123,
+   "median_hamming_to_best_trial": 0.0,
+   "median_margin_to_second_best": 4.0,
+   "distinct_chen_trials_matched": 2295,
+   "per_subject_response_agreement_min_median_max": [
+    0.9645,
+    0.9983,
+    0.9996
+   ],
+   "aligned_rows_identical_au_family_set_with_AU41_AU42_as_AU43": 2295,
+   "snoek_subjects_not_in_cohort": 45
+  },
+  "B_sub16_60": {
+   "pairing": "Chen participant j with Snoek subject j + 1",
+   "snoek_rows_per_subject": 2342,
+   "chen_trials": 2400,
+   "snoek_row_order_shared_across_subjects": true,
+   "rows_with_exact_response_vector_in_chen": 2342,
+   "rows_with_unique_exact_match": 2342,
+   "median_hamming_to_best_trial": 0.0,
+   "median_margin_to_second_best": 19.0,
+   "distinct_chen_trials_matched": 2342,
+   "per_subject_response_agreement_min_median_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "aligned_rows_identical_au_family_set_with_AU41_AU42_as_AU43": 1912,
+   "snoek_subjects_not_in_cohort": 15
+  }
+ },
+ "verdict": "same data"
+}
