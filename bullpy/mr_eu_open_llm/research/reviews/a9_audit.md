@@ -324,3 +324,94 @@ This finding is a note, not a should-fix. It is numbered here only to keep the o
 2. Rerun recovery only if the block's recovery fields changed.
 3. Commit all A9 files.
 4. Tag `a9-freeze`.
+
+---
+
+## Re-check 2026-11-09
+
+This is a re-check of commit `af64e56` on branch p1-pipeline. As before, the only file edited is this one. Nothing was committed, the cluster was not touched, and no job is left running.
+
+### Hashes and pins (point 2)
+
+- The block hashes to `21341eb47a4d5da81e7d672e21c56c83029cbf9ba2b928f98f10fcba35220192`. That equals `DESIGN_SHA256` (`scripts/a9_design.py:27`) and the hash stated in the draft (line 5).
+- `check_code_pins(require=True)`, `check_pins()` (A4 pins and input pins) and `check_liu_files()` all pass. Each of the six pinned code files matches its sha256 as committed.
+- The other files listed under "Other A9 files" match too: both Slurm scripts, the four recovery JSONs, the human target, the ceiling and the Chen overlap. So does `tests/test_a9.py` (`645de6e0...`).
+- pytest gives 53 passed.
+- Run 4 (`a9_recovery.json`, sha256 `0ca7bd24...`) carries the design hash `21341eb4...`. Its `code_sha256` equals the pinned lines exactly. Its `runs` are identical to run 3's (`a9_recovery_run3.json`) in every table and check: choice B/residual, r_star 0, and the same single failing cell.
+- `a9_run.py` and both Slurm scripts are now tracked.
+
+### Findings 1 to 9 (point 1)
+
+| # | Status | Evidence |
+|---|---|---|
+| 1 Replication undefined | Fixed | Block `replication` (comparator, wording for each A4/A9 pair, a catch-all, rules); table at `PREREG_A9_DRAFT.md:451-462`; `a9_analyse.py:202-223`; tests `tests/test_a9.py:407-437`. See point 3 for two gaps. |
+| 2 Timing claim and spin | Fixed | Header line 7; decision 2 (line 469); decision 8 (line 475); block `correlation_use`; recovery disclosures (line 646); Disclosures (line 658); DECISIONS.md (new A9 entry); `methods.md` item 10 and "The narrowing"; `results.md` 6b "Withdrawn claim". See point 4. |
+| 3 Correlation above .5 | Fixed (argued, not tested) | "Beyond the tested correlations" (draft line 632; supplementary S7). It states that design A approximates rho = 1, that A's decision rates hold, that the bias runs low, and that this is "an approximation ..., not a tested condition". |
+| 4 "Stricter than A4" | Fixed | Draft Recovery opening paragraph; block `withdrawn_under_independent_face_noise: []`; S7 "Recovery (continued)". |
+| 5 (note) | No action needed | |
+| 6 Run labels | Fixed | Draft lines 617-626: every run-2 row is labelled "pre-decision-8 code (design `b548bc82`)", and runs 3 and 4 are added. The output list (line 12) names runs 2 and 3. The seed explanation (note 10) is corrected. |
+| 7 Path overrides | Fixed | `pinned_input` refuses an unpinned human target, ceiling or detector file. Manifest, recovery, gates, A4 summary and every shard are hashed into `input_sha256` (`a9_analyse.py:245-271`). |
+| 8 Untracked files | Fixed | All three are tracked. `__pycache__` is still not ignored: `research/scripts/__pycache__/x.pyc` is un-ignored by `.gitignore:70` (`!research/**`). This is cosmetic. |
+| 9 DECISIONS and paper | Fixed | DECISIONS.md has the A9 decisions 1 to 8 with decision 8's timing. `methods.md` line 9 now cites run 4 (`0ca7bd24`, `21341eb4`), and the PENDING note is gone. |
+
+The notes are handled as well:
+- Note 11: behaviour metrics now return "unavailable: reason" with a warning.
+- Note 12: Holm family size is stated (Relation to A4, item 2).
+- Notes 14 and 15: `*.partial` is ignored, and the face-by-AU limit is disclosed.
+- Note 16: the cross-dataset and Chen corroboration is added to DECISIONS and S7.
+- Note 17: pair-swapped Aligned is disclosed.
+
+### Replication table and its implementation (point 3)
+
+**Fully specified.** I ran `replication_reading` on all nine pairs of A4 basic_WC and A9 decisions. Each returns the block's exact wording:
+- Aligned/Aligned gives "replicated on a second human sample (same lab and generator)".
+- Not aligned/Not aligned gives "the Not aligned result replicated".
+- Each crossed pair gives "did not replicate".
+- Any Inconclusive gives "replication not testable", with the failed gate or the signal test named.
+
+So A9 Inconclusive is never read as a failure to replicate. No Mixed case can arise, because the comparator is the per-dataset decision (`a4_analyse.decide`). The headline is only reported beside it.
+
+**Two gaps in the code. Both are should-fix and both are small.**
+
+- **R1. A missing A4 summary is misreported.** When `--a4_summary` is absent, which is the default path and does not exist today, the run does not stop (`a9_analyse.py:253-256`). Every model then reads "replication not testable" with the reason "A4 basic_WC was not run for this model" (`:208-209`). That is false when A4 was run but the file was not supplied. **Fix:** either refuse to run without the A4 summary, or use the reason "A4 summary not supplied" and set a top-level flag.
+- **R2. "Frozen summary" is checked only by design hash.** The check is `a4_summary["design_sha256"] == a4_design.design_hash()` (`:259`). That proves the summary came from A4's frozen design and code. It does not prove it is *the* A4 summary: any re-run of `a4_analyse` with a different hand-written `gates.json` would pass. The A4 summary does not exist yet, so its hash cannot be pinned before the freeze. The file's sha256 is written into `input_sha256.a4_summary`. **Fix, with no code change needed:** add one sentence to the draft (Relation to A4) saying that the A4 summary used must be the one whose sha256 was recorded when A4 was analysed (RESULTS_REGISTRY or DECISIONS), and that the A9 summary's `input_sha256.a4_summary` is compared with it in the paper. Optionally, add a `--a4_summary_sha256` argument that must match.
+
+**Note R3.** For Molmo2 (descriptive), the reason reads "Descriptive: neither the Aligned nor the Not aligned criteria met", which is misleading. Relation to A4, item 2, says an unscored model "is reported as not run", but the code simply omits it from `models`. Both are cosmetic.
+
+**Earlier-rule reading.** It uses r_star from the recovery file, 0.0, as written: "outside the validated conditions" if rho-hat is greater than 0, "within" if rho-hat is at most 0, and "not estimable" if rho-hat is None (`a9_analyse.py:182-188`). That matches the operationalisation recorded in `notes_a9.md:34` and in the block's `earlier_rule_reading`.
+
+### Timing disclosure (point 4)
+
+The disclosure is now accurate, and I found no spin anywhere it appears:
+- the draft header (line 7);
+- decisions 2 and 8 (lines 469 and 475);
+- `correlation_use`;
+- the recovery disclosures (line 646);
+- the Disclosures list (line 658);
+- DECISIONS.md;
+- `methods.md` (item 10 and "The narrowing, and when it was decided");
+- S7 ("Recovery (continued)": "lead decision 8, taken after recovery run 2 was seen");
+- `results.md` 6b ("Withdrawn claim").
+
+Each place says four things:
+1. The general rule and its first operationalisation were written before run 2.
+2. The operationalisation was replaced after run 2 was seen.
+3. The replacement is more favourable to confirmatory decisions.
+4. Under the earlier rule, with r_star = 0, every model would have been placed outside the validated conditions.
+
+Each place also says the replaced text was never committed and survives only as run 2's design hash. The remaining claim that the rhos and the rule were set before run 2 rests on the lead's word plus that hash, and the text says so.
+
+### New problems introduced (point 5)
+
+- **N1 (note).** S7 "Beyond the tested correlations" says "In every run A passed every decision check: ... prior-only signal at most .05". In run 1 (draft code) A's prior-only signal rate was .07 at 0.5x. That still passes the .10 rule, but ".05" holds for runs 2 to 4 only. **Fix:** say "runs 2 to 4", or ".07".
+- **N2 (note).** Draft line 646 lacks a full stop after "(A4 draft, \"Reading Aligned\")".
+- **N3 (note).** Freeze checklist "Remaining" item 2 still says to commit the files, though they are committed in `af64e56`; it now only needs the tag. Item 1 can be ticked after this re-check.
+- I found no new issue in the hashing code. `pinned_input` reads the same pins as `check_pins()`. Recovery code is unchanged across runs 2 to 4.
+
+### Verdict
+
+R1 and R2 are the only open items, and neither touches the decision rule, the statistic or the human target.
+- R2 needs only a sentence of text. That sentence sits outside the block, but it does change the draft.
+- R1 is a small fix to a code path that is cosmetic for decisions. If `a9_analyse.py` is edited, re-pin it, and either rerun recovery (run 5) or state that the recovery code was unchanged.
+
+**Verdict: freeze-ready.** Making R1 and R2 before the tag is recommended, not required.
