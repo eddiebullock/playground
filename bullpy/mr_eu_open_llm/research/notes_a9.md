@@ -26,3 +26,14 @@ Method: within a Snoek cohort all subjects share stimuli and row order; within a
 - One raw amplitude (2.45e-5) rounds to zero at 4 decimals and is dropped; that stimulus keeps its other AUs.
 - Anger's top families in the Liu fit are AU09 and AU10, not AU04; Snoek showed a related AU4 pattern (`anger_au4_diagnostic` in A4's human file). Not investigated.
 - Recovery thread oversubscription: run with `OMP_NUM_THREADS=1` and friends set before numpy loads (as `-m scripts.a9_recovery` does); in a shell that has already imported numpy, a replicate took 51 s instead of 1.1 s.
+
+## Run 2, final code (2026-11-09)
+
+- Design block hash `b548bc82821eb65976da5d669a260af6189c289c3a8ca2d30ea459138058e56c`; A9 code pinned in the draft.
+- Recovery: A 16/17 (pair-swapped at 0.25x, 64%); B 17/17; B at rho .25 16/17 residual (89%); B at rho .5 16/17 residual (87%). Raw passes 17/17 in all B runs. r_star = 0.
+- Under decision 2, any model with face-shared residual correlation above 0 is reported as outside the recovery-validated conditions; in practice that is expected for every model. Flagged to the coordinator; nothing changed.
+
+## Decision 8 and run 3 (2026-11-09)
+
+- Lead narrowed by check after run 2: decisions stay confirmatory; 0.25x estimation-accuracy claim withdrawn under correlated face noise; face-shared correlation descriptive only. Scope label removed from `a9_analyse.py`.
+- Block hash now `41c95dae865b0ee0e3c61051ac6caeb1516dfea1633bd013bf4fe16ab1a9ec29`. Run 3 on re-pinned code: tables and checks identical to run 2.

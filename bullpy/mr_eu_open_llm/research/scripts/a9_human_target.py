@@ -484,8 +484,10 @@ def main(argv=None) -> int:
     started = time.time()
     data = load_liu()
     block, ceiling = analyse(data, a9.SEED, args.n_boot, args.n_splits, args.ceiling_splits, args.human)
+    if block["ridge_lambda_selected"] != a9.HUMAN_RIDGE:
+        raise SystemExit(f"Selected ridge {block['ridge_lambda_selected']} differs from the block's {a9.HUMAN_RIDGE}.")
     out = {
-        "amendment": "A9", "status": "DRAFT",
+        "amendment": "A9",
         "source": {**a9.LIU_SOURCE, "files_sha256": a9.LIU_FILES,
                    "read_from": "scipy.io.loadmat in place; nothing copied"},
         "method": {
@@ -502,11 +504,11 @@ def main(argv=None) -> int:
         "au_map_check_against_snoek": snoek_token_check(),
         "datasets": {a9.DATASET: block},
     }
-    out["runtime_seconds"] = round(time.time() - started)
+    # No runtime field: the file is pinned by sha256 in the design block, so it must be reproducible.
     args.out.write_text(json.dumps(out, indent=1) + "\n", encoding="utf-8")
     args.ceiling_out.write_text(json.dumps(ceiling, indent=1) + "\n", encoding="utf-8")
     print(json.dumps({"lambda": block["ridge_lambda_selected"], "ceiling": ceiling["datasets"][a9.DATASET],
-                      "reference": ceiling["human_reference_cfa"], "runtime": out["runtime_seconds"]}, indent=1))
+                      "reference": ceiling["human_reference_cfa"], "runtime": round(time.time() - started)}, indent=1))
     return 0
 
 

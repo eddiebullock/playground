@@ -18,8 +18,10 @@ import render_au_faces as raf  # noqa: E402
 
 from scripts import a4_analyse as an  # noqa: E402
 from scripts import a4_design as a4  # noqa: E402
+from scripts import a9_analyse as ana9  # noqa: E402
 from scripts import a9_design as a9  # noqa: E402
 from scripts import a9_recovery as rec9  # noqa: E402
+from scripts import a9_run as run9  # noqa: E402
 
 LIU = ROOT / a9.LIU_DIR
 HAVE_LIU = all((LIU / n).exists() for n in a9.LIU_FILES)
@@ -103,11 +105,49 @@ def test_liu_to_columns_max_rule_and_rounding():
     raf.check_config(out)
 
 
-def test_design_hash_tracks_constants(monkeypatch):
-    first = a9.design_hash()
-    assert first == a9.design_hash()
-    monkeypatch.setattr(a9, "SEED", a9.SEED + 1)
-    assert a9.design_hash() != first
+def test_block_hash_is_pinned_and_stated():
+    assert a9.block_hash() == a9.DESIGN_SHA256 == a9.stated_hash() == a9.design_hash()
+
+
+def test_tampered_block_is_refused(tmp_path):
+    text = a9.DRAFT.read_text(encoding="utf-8")
+    bad = tmp_path / "draft.md"
+    bad.write_text(text.replace('"replicate_configs": 200', '"replicate_configs": 201'), encoding="utf-8")
+    with pytest.raises(SystemExit):
+        a9.load_design(bad)
+    stated = tmp_path / "stated.md"
+    stated.write_text(text.replace(f"block below: `{a9.DESIGN_SHA256}`", "block below: `" + "0" * 64 + "`"),
+                      encoding="utf-8")
+    with pytest.raises(SystemExit):
+        a9.load_design(stated)
+
+
+def test_block_pins_hold():
+    a9.check_pins()
+    for name, digest in A4_FROZEN.items():
+        if name in a9.DESIGN["a4_pins"]:
+            assert a9.DESIGN["a4_pins"][name] == digest
+
+
+def test_code_pins_required_means_not_frozen_before_the_freeze(tmp_path):
+    unpinned = tmp_path / "draft.md"
+    unpinned.write_text(a9.DRAFT.read_text(encoding="utf-8").split("## Code hashes")[0], encoding="utf-8")
+    with pytest.raises(SystemExit):
+        a9.check_code_pins(path=unpinned, require=True)
+    assert a9.check_code_pins(path=unpinned, require=False) == {}
+
+
+def test_code_matches_pins_when_pinned():
+    pins = a9.code_pins()
+    if not pins:
+        pytest.skip("A9 code not pinned yet")
+    assert set(pins) == set(a9.A9_FILES)
+    assert a9.check_code_pins(require=True) == pins
+
+
+def test_runner_refuses_before_freeze(tmp_path):
+    with pytest.raises(SystemExit):
+        run9.preflight(tmp_path / "manifest.csv", frozen=False)
 
 
 # ---------------------------------------------------------------- estimation on synthetic data
@@ -217,7 +257,7 @@ def small_store(X, Y, labels):
                                       "ridge_lambda_selected": lam}}}
 
 
-@pytest.mark.parametrize("design", a9.DESIGNS)
+@pytest.mark.parametrize("design", a9.RECOVERY_RUNS)
 def test_recovery_replicate_runs(design):
     X, Y, labels = synthetic(n=300, subjects=4)
     store = small_store(X, Y, labels)
@@ -226,9 +266,41 @@ def test_recovery_replicate_runs(design):
     human, lam = an.human_matrix(store, a9.DATASET)
     task = ("human_like", a9.DATASET, 1.0, 0, X, gender, W, base, human, lam, 3, 19, 9, 2, design)
     out = rec9.one_replicate(task)
-    assert out["design"] == design
+    assert out["run"] == design
     assert out["residual"]["decision"] in an.OUTCOMES
     assert -1 <= out["residual"]["truth"] <= 1
+
+
+def test_correlated_noise_is_correlated():
+    rng = np.random.default_rng(0)
+    target, base, X = np.zeros((7, 33)), np.zeros(7), np.zeros((4000, 33))
+    assert rec9.run_parts("B_rho0.25") == ("B", 0.25) and rec9.run_parts("A") == ("A", 0.0)
+    spread = {rho: rec9.respond_b(target, base, X, rng, 1.0, rho).std() for rho in (0.0, 0.5)}
+    assert spread[0.5] > spread[0.0] * 1.2  # shared noise survives averaging over faces
+
+
+def test_r_star():
+    ok, bad = {"residual": True}, {"residual": False}
+    assert rec9.r_star({"B": ok, "B_rho0.25": ok, "B_rho0.5": ok}) == 0.5
+    assert rec9.r_star({"B": ok, "B_rho0.25": ok, "B_rho0.5": bad}) == 0.25
+    assert rec9.r_star({"B": ok, "B_rho0.25": bad, "B_rho0.5": ok}) == 0.0
+    assert rec9.r_star({"B": bad}) is None
+    assert not hasattr(ana9, "scope")  # lead decision 2026-11-09: no label on decisions
+
+
+def test_face_correlation_never_reaches_the_decision():
+    """The decision depends on the gates and the statistic only, whatever rho_hat is."""
+    base = {"p_signal": 0.001, "residual": {"cfa": 0.6, "ci": (0.4, 0.8), "r_s": 0.95, "p_cue": 0.001},
+            "lost_ok": True}
+    decisions = []
+    for rho_hat in (0.0, 0.3, 0.9, None):
+        entry = {**base, "residual": dict(base["residual"]), "face_shared_residual_correlation": rho_hat}
+        results = {"gemma4": entry}
+        an.apply_rule(results, {"gemma4": {"all": True}}, a9.STATISTIC)
+        decisions.append(results["gemma4"]["decision"])
+        assert set(results["gemma4"]) >= {"face_shared_residual_correlation", "decision"}
+    assert decisions == ["Aligned"] * 4
+    assert a9.DESIGN["recovery"]["withdrawn_under_correlated_face_noise"] == ["liu_WC|0.25|pair_error"]
 
 
 def test_choice_rule():
@@ -256,3 +328,74 @@ def test_liu_files_structure():
 def test_map_reproduces_snoek_recoding():
     out = ht.snoek_token_check()
     assert out["checked"] and out["mismatched"] == 0 and out["token_sets_equal"]
+
+
+# ---------------------------------------------------------------- runner and analysis on synthetic cells
+
+
+def test_planned_cells_cover_every_image_once(monkeypatch):
+    monkeypatch.setattr(a9, "REPLICATE_CONFIGS", 5)
+    p, pseq = fake_p(n=12)
+    rows = man.build(p, pseq, "B")
+    cells = [c for s in range(3) for c in run9.planned_cells(rows, s, 3)]
+    images = {r["stim_id"] for r in rows}
+    mcq = [c for c in cells if c["readout"] == "mcq"]
+    assert len(mcq) == len(images) * a9.ROTATIONS
+    assert len({run9.cell_key(c) for c in cells}) == len(cells)
+    assert {c["stim_id"] for c in cells if c["readout"] == "image_free"} <= images
+
+
+def synthetic_cells(rows, X_by_stim, store, rng):
+    """Fake model cells: a human-like observer answering each image, every rotation."""
+    W, base = rec9.rec.human_weights(store, a9.DATASET)
+    out = []
+    for stim, x in X_by_stim.items():
+        eta = base + x @ W.T + rng.normal(0, 0.3, len(base))
+        p = np.exp(eta - eta.max())
+        p /= p.sum()
+        for rot in range(a9.ROTATIONS):
+            options = a9.rotated_options(rot)
+            lp = [float(np.log(p[list(a9.OPTIONS).index(o)])) for o in options]
+            out.append({"stim_id": stim, "task": "basic", "rotation": rot, "readout": "mcq", "options": options,
+                        "joint_logprob": lp, "status": "ok"})
+    return out
+
+
+@pytest.mark.parametrize("design", a9.DESIGNS)
+def test_analyse_model_end_to_end(monkeypatch, design):
+    monkeypatch.setattr(a9, "REPLICATE_CONFIGS", 20)
+    rng = np.random.default_rng(3)
+    X, Y, labels = synthetic(n=300, subjects=4)
+    store = small_store(X, Y, labels)
+    store["datasets"][a9.DATASET]["presence_sensitivity"] = {
+        "ridge_lambda_selected": 1.0, "do_family_25": np.array(store["datasets"][a9.DATASET][
+            "do_effect_probability_au_full_vs_none"])[:, an.FAM].tolist()}
+    p, pseq = fake_p(n=150, seed=4)
+    rows = man.build(p, pseq, design)
+    X_by_stim = {}
+    for r in rows:
+        x = np.zeros(33)
+        for c, v in json.loads(r["au_json"]).items():
+            x[hae.AU_COLS.index(c)] = v
+        X_by_stim[r["stim_id"]] = x
+    cells = synthetic_cells(rows, X_by_stim, store, rng)
+    ceiling = {a9.DATASET: {"ceiling": 0.97, "ceiling_residual": 0.96}}
+    out, P = ana9.analyse_model(cells, rows, store, ceiling, None, design, draws=5, cue_n=19, signal_n=9, splits=2)
+    assert out["share_lost"] == 0 and out["n_configurations"] == 150 and P.shape == (150, 7)
+    assert out["residual"]["cfa"] > 0.3
+    assert set(out["sensitivities"]) >= {"presence", "frame_max", "without_AU22_AU27"}
+    if design == "B":
+        assert out["face_shared_residual_correlation"] is not None
+    results = {"gemma4": dict(out)}
+    an.apply_rule(results, {"gemma4": {"all": True}}, a9.STATISTIC)
+    assert results["gemma4"]["decision"] in an.OUTCOMES
+
+
+def test_face_shared_correlation_reads_shared_noise():
+    rng = np.random.default_rng(0)
+    X = rng.random((400, 33)) * (rng.random((400, 33)) < 0.1)
+    shared = rng.normal(size=(400, 7))
+    faces = [0.7 * shared + 0.7 * rng.normal(size=(400, 7)) for _ in range(4)]
+    alone = [rng.normal(size=(400, 7)) for _ in range(4)]
+    assert ana9.face_shared_correlation(faces, X) > 0.35
+    assert abs(ana9.face_shared_correlation(alone, X)) < 0.1
