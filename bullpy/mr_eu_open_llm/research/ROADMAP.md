@@ -73,6 +73,8 @@ Status keys: DONE, NOW (unblocked, in progress or next), WAIT (dependency named)
 | 1.3 | Read against the A1/A3 table in `PREREG_A3_DRAFT.md`. Record per model in RESULTS_REGISTRY and STATE. | G1 done |
 | 1.4 | Commit, push, PR with a true merge commit. | Merged |
 
+Status 2026-11-09 08:37: 1.1 IN PROGRESS. Both arrays running; 39982137_0 COMPLETED (7 h 44 m), 21 of 30 files, no failures. Last tasks expected about 01:00 on 10 Nov.
+
 ### Phase 2. Runs that follow G1 (G2, G4, G5, G8)
 
 | # | Step | Depends on | Done when |
