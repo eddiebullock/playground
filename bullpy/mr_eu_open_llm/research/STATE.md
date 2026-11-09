@@ -10,7 +10,7 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
 
 **2026-11-09:** Qwen A1 arrays running since 00:48; 21 of 30 rotation files at 08:37, none failed, last expected about 01:00 on 10 Nov. Nothing read.
 
-**2026-11-08 evening:** ROADMAP Phase 0 is closed except 0.13. A6 local items closed (PR 87): recovery run 5 matches run 4, freeze prepared, cluster items only. A7 audited (PR 86): numeric complete-cut rule, blocks are not cuts, RQ3 "not testable" where no complete cut is shown; A7 FROZEN 2026-11-08 (tag `a7-freeze`, design 9e40cfcf), before any A2 cell is read; riders descriptive, Stage 0 on the cluster is next. Literature (PR 85): Gold et al. wording fixed; CFA name clash with a WACV 2024 method is NEEDS_INPUT 9. Qwen A1 arrays still PENDING, estimate 2026-11-09 06:56 to 08:40; 20 of 30 rotation files.
+**2026-11-08 evening:** ROADMAP Phase 0 is closed except 0.13. A6 local items closed (PR 87): recovery run 5 matches run 4, freeze prepared, cluster items only. A7 audited (PR 86): numeric complete-cut rule, blocks are not cuts, RQ3 "not testable" where no complete cut is shown; A7 FROZEN 2026-11-08 (tag `a7-freeze`, design 9e40cfcf), before any A2 cell is read; riders descriptive, Stage 0 on the cluster is next. Literature (PR 85): Gold et al. wording fixed; CFA name clash with a WACV 2024 method was NEEDS_INPUT 9; renamed to Cue Effect Alignment (CEA) on 2026-11-09. Qwen A1 arrays still PENDING, estimate 2026-11-09 06:56 to 08:40; 20 of 30 rotation files.
 
 ## Next actions
 

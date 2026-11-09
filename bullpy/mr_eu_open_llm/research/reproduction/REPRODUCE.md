@@ -85,13 +85,13 @@ python scripts/reproduce.py --fetch           # full mode: adds the long recover
 | EU-Emotion videos | CSD3 `data/eu_emotions` | not in the public repo (collaborator dataset, kept out for size); the team controls EU-Emotion (confirmed by the user 2026-11-08) | every model run, AU extraction, stimulus features |
 | CREMA-D rating tables (`finishedResponses.csv`, `finishedEmoResponses.csv`, `VideoDemographics.csv`, `processedResults/tabulatedVotes.csv`, `processedResults/summaryTable.csv`) | GitHub `CheyneyComputerScience/CREMA-D` at `1658cd34`, ODbL / DbCL; gitignored locally in `data/external/crema_d` | public; sha256 pinned in `scripts/reproduce.py` and checked | CREMA-D selection, reliability, A6 human target |
 | CREMA-D videos | CSD3 | licence-restricted (access form) | readout ladder, A6 model runs, video check |
-| Snoek AU and emotion data, `au_emotion_data.zip` | DOI 10.21942/uva.21261885.v1, figshare file 37888164, CC BY 4.0; gitignored locally in `data/external/snoek_au` | public; sha256 pinned and checked | human AU effects, A4 manifest and ceiling, predictor, CFA |
+| Snoek AU and emotion data, `au_emotion_data.zip` | DOI 10.21942/uva.21261885.v1, figshare file 37888164, CC BY 4.0; gitignored locally in `data/external/snoek_au` | public; sha256 pinned and checked | human AU effects, A4 manifest and ceiling, predictor, CEA |
 | FACSHuman targets and MakeHuman meshes | CSD3 | licence-restricted (LGPL targets, no image is published) | A4 renders, V1 pilot |
 | RMET items | not used by any output listed here | licence-restricted | Phase 6 only |
 | Model weights (Gemma 4 E4B, Qwen3-VL 8B, Molmo2 O-7B) | Hugging Face, pinned commits | public weights, need a GPU | all model runs |
 | AU detector weights (LibreFace, OpenFace 3, ME-GraphAU) | CSD3 venv `au_tools` | research or non-commercial licences | AU extraction |
 | Activation caches (`results/activations/`) and rotation, A3 and A4 cells | CSD3 | cluster-only derived data (from videos not in the repo) | Phase 2, Phase 5, A3 summary, prompt audit activations |
-| Derived AU tables `research/reproduction/eu_au_measures*.csv` | in repo | public derived numbers (per-clip AU aggregates); remaking them needs the videos | CFA, same-clip analyses |
+| Derived AU tables `research/reproduction/eu_au_measures*.csv` | in repo | public derived numbers (per-clip AU aggregates); remaking them needs the videos | CEA, same-clip analyses |
 
 ## Appendix B. Output provenance (audit of 2026-11-08)
 

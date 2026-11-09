@@ -73,7 +73,7 @@ Vision gates. Gemma 4 passed the option-independence, replay-and-cut and token-s
 
 The natural clips are poorly conditioned. On the 243 EU-Emotion clips, the smallest eigenvalue of the correlation of 15 LibreFace cues was .054, with a condition number of 76.1 and 1 / lambda_min of 18.4 [REG: Cue spectra, "EU-Emotion LibreFace"]. For 10 OpenFace 3.0 cues the values were .125, 22.4 and 8.0 [REG: Cue spectra, "EU-Emotion OpenFace 3.0"]. The randomised Snoek designs, with 33 cues as coded, had smallest eigenvalues of .178 to .209 and condition numbers of 11.0 to 13.7 [REG: Cue spectra, "Snoek as coded, 33 cues"]. With left and right merged into 25 cues, the smallest eigenvalue was .44 to .47 and the condition number 3.4 to 3.5 [REG: Cue spectra, "Snoek left and right merged, 25 cues"]. So most of the Snoek correlation comes from bilateral pairs. Cue counts differ between rows.
 
-On synthetic stimuli with paired cues correlated at a constructed .9, pair-swapped observers' outputs correlated .83 to .95 with the human-weighted observer, while their raw CFA on the randomised design was .42 to .56 [REG: A4 recovery, "Pair-swapped, run 2"]. The .9 is ours, not a measurement.
+On synthetic stimuli with paired cues correlated at a constructed .9, pair-swapped observers' outputs correlated .83 to .95 with the human-weighted observer, while their raw CEA on the randomised design was .42 to .56 [REG: A4 recovery, "Pair-swapped, run 2"]. The .9 is ours, not a measurement.
 
 **Figure.** Figure 3, panels a to e (`research/paper/v2/figures/fig3.pdf`). Panel b plots computed values that have no registry row: [PENDING: registry row for the Proposition 2 panel values, or describe panel b without numbers.]
 
@@ -106,42 +106,42 @@ A positive score supports "aligned with the human pattern", not "uses the same c
 
 **Question.** Do a model's effects of randomised facial action units, on rendered faces, align with randomised human effects?
 
-**Rule (A4, residual CFA, per model and dataset).** (`research/PREREG_A4_DRAFT.md:121-125`.)
+**Rule (A4, residual CEA, per model and dataset).** (`research/PREREG_A4_DRAFT.md:121-125`.)
 
 | Outcome | Requires |
 |---|---|
-| Aligned | All gates; signal p < .05; alignment Holm p < .05; CFA at least .30; CI lower bound above 0 |
+| Aligned | All gates; signal p < .05; alignment Holm p < .05; CEA at least .30; CI lower bound above 0 |
 | Not aligned | All gates; signal p < .05; CI upper bound divided by the square root of R_S below .30 |
 | Inconclusive | Anything else, including any failed or missing gate |
 
 Not aligned is always written "not aligned on these renders" (`:127`). A model with no signal cannot be Not aligned (`:129`). Headline per model per task: Aligned or Not aligned only if WC and EA agree, Mixed if one of each, Inconclusive otherwise; basic and conversational are never pooled (`:137`). Human-level only if the interval reaches the WC to EA reference, which is descriptive (`:135`). Validity gates V1 to V4 run before any human comparison, and missing means not passed (`:141-148`). Eligibility runs through the A1 and A3 table, as in A2 (methods.md, "Eligibility").
 
-**Locked text (design and recovery).** The human ceilings, raw, were .990, .989, .978 and .974 on basic WC, basic EA, conversational WC and conversational EA, and residual .970, .983, .974 and .960 [REG: A4 human ceiling, "Ceiling, raw" and "Ceiling, residual"]. The WC to EA reference on residual CFA was .780 for basic and .732 for conversational, and on raw CFA .877 and .767 [REG: "WC to EA reference, residual", "WC to EA reference, raw"]. The common profile held .26 to .35 of human squared effects [REG: "Common-profile share"].
+**Locked text (design and recovery).** The human ceilings, raw, were .990, .989, .978 and .974 on basic WC, basic EA, conversational WC and conversational EA, and residual .970, .983, .974 and .960 [REG: A4 human ceiling, "Ceiling, raw" and "Ceiling, residual"]. The WC to EA reference on residual CEA was .780 for basic and .732 for conversational, and on raw CEA .877 and .767 [REG: "WC to EA reference, residual", "WC to EA reference, raw"]. The common profile held .26 to .35 of human squared effects [REG: "Common-profile share"].
 
-Residual CFA passed recovery on 66 of 66 checks and raw CFA on 62 of 66, so residual CFA is confirmatory [REG: A4 recovery, "Run 4 (frozen)"]. In run 3, a system with no cue-specific agreement reached Aligned in up to .40 of replicates on raw CFA, against .03 on residual CFA [REG: "Run 3 rates, raw / residual"]. Two accuracy cells at conversational 0.25 times are exempt, at .85 and .62, so A4 makes no accuracy claim there [REG: "Exempt cells, residual pair-swapped within-limit share"].
+Residual CEA passed recovery on 66 of 66 checks and raw CEA on 62 of 66, so residual CEA is confirmatory [REG: A4 recovery, "Run 4 (frozen)"]. In run 3, a system with no cue-specific agreement reached Aligned in up to .40 of replicates on raw CEA, against .03 on residual CEA [REG: "Run 3 rates, raw / residual"]. Two accuracy cells at conversational 0.25 times are exempt, at .85 and .62, so A4 makes no accuracy claim there [REG: "Exempt cells, residual pair-swapped within-limit share"].
 
 The detector check passed thinly: 113 of 144 covered pairs rose, .785 against .70 [REG: A4 V1 pilot, "V1 share rising"]. Only 22 of 96 intensity pairs gained at least .5, all in AU01, 05, 25 and 26 [REG: "Intensity pairs with reading at amplitude 1 minus .25 of at least .5"]. Those four families hold .14, .13, .09 and .20 of residual human energy [REG: "Detector-confirmed share of residual energy"].
 
 **Slots.** From `results/a4/summary.json` (written by `scripts/a4_analyse.py`), per model and dataset (`datasets.<dataset>.<model>`):
-- residual CFA, CI, R_S: [PENDING: `residual.cfa`, `residual.ci`, `residual.r_s`]
+- residual CEA, CI, R_S: [PENDING: `residual.cfa`, `residual.ci`, `residual.r_s`]
 - alignment Holm *P*: [PENDING: `p_holm`]
 - signal *P*: [PENDING: `p_signal`]
 - gates V1 to V4 and RQ0: [PENDING: `gates`]
 - decision: [PENDING: `decision`]
 - ratio to ceiling, descriptive: [PENDING: `residual.over_ceiling`, `residual.lower_bound_only`]
-- raw CFA, secondary: [PENDING: `raw.cfa`, `raw.ci`]
+- raw CEA, secondary: [PENDING: `raw.cfa`, `raw.ci`]
 - sensitivities (without AU22 and AU27, without abstain row, flagged against confirmed families, amplitude sets, direct contrast): [PENDING: sensitivity blocks and `models.<model>.scale`, `direct_cfa_residual`]
 - headline per model per task: [PENDING: `models.<model>.headline`]
 - blind readout, secondary, only if its gate passes: [PENDING: `models.<model>.blind`]
 - Molmo2, descriptive if run at all: [PENDING]
 
-**Figure.** Figure 5: residual CFA per model and dataset with its between-group reference, raw CFA as secondary. [PENDING: Figure 5 function (ROADMAP 0.7).]
+**Figure.** Figure 5: residual CEA per model and dataset with its between-group reference, raw CEA as secondary. [PENDING: Figure 5 function (ROADMAP 0.7).]
 
 ## 6. Do behaviour and cue effects disagree?
 
-**Question.** On the same rendered stimuli, does behavioural similarity say something different from CFA?
+**Question.** On the same rendered stimuli, does behavioural similarity say something different from CEA?
 
-**Rule.** Descriptive, no decision (`research/PREREG_A4_DRAFT.md:162-169`). Output similarity is Pearson *r* between model and mean human response, option means removed. Modal agreement is reported with chance-corrected kappa. "Whether these disagree with CFA is an empirical result" (`:169`).
+**Rule.** Descriptive, no decision (`research/PREREG_A4_DRAFT.md:162-169`). Output similarity is Pearson *r* between model and mean human response, option means removed. Modal agreement is reported with chance-corrected kappa. "Whether these disagree with CEA is an empirical result" (`:169`).
 
 **Slots.** From `results/a4/summary.json`, `datasets.<dataset>.<model>.behaviour`:
 - output similarity: [PENDING: `behaviour.output_r`]

@@ -406,7 +406,7 @@ def fig3_schematic(ax):
     _arrow(ax, (0.23, 0.285), (0.49, 0.285), ORANGE)
     ax.text(0.5, 0.95, r"Behaviour on natural clips: corr($f_S$, $f_T$) = $\rho$",
             ha="center", va="center", fontsize=6, color=INK)
-    ax.text(0.5, 0.05, "Cue effects: S on $z_1$ only, T on $z_2$ only, so CFA(S, T) = 0",
+    ax.text(0.5, 0.05, "Cue effects: S on $z_1$ only, T on $z_2$ only, so CEA(S, T) = 0",
             ha="center", va="center", fontsize=6, color=INK)
     ax.set_title("Two observers, one behaviour, different cues")
 
@@ -423,7 +423,7 @@ def fig3_prop2(ax):
             markeredgecolor=SURFACE, markeredgewidth=1)
     ax.text(xs[1] + 0.1, beh[1] - 0.1, "Behaviour:\ncorr($f_S$, $f_T$)", ha="left", va="top",
             fontsize=6, color=INK)
-    ax.text(xs[1], cos[1] + 0.06, "Cue effects: CFA(S, T)", ha="center", va="bottom",
+    ax.text(xs[1], cos[1] + 0.06, "Cue effects: CEA(S, T)", ha="center", va="bottom",
             fontsize=6, color=INK)
     ax.set_xticks(xs)
     ax.set_xticklabels([f"{r['rho']:g}" for r in rows])
@@ -450,8 +450,8 @@ def fig3_theorem1(ax):
     ax.set_ylim(-1.15, 1.15)
     ax.set_xticks([-1, 0, 1])
     ax.set_yticks([-1, 0, 1])
-    ax.set_xlabel("CFA requested")
-    ax.set_ylabel("CFA of the constructed system")
+    ax.set_xlabel("CEA requested")
+    ax.set_ylabel("CEA of the constructed system")
     hgrid(ax, "both")
     ax.set_title("Theorem 1, computed")
 
@@ -1003,7 +1003,7 @@ def fig5_from(summary, synthetic=False):
                           top=0.82 if synthetic else 0.88, bottom=0.25, wspace=0.12)
     axa, axb, axc = (fig.add_subplot(gs[0, i]) for i in range(3))
     _fig5_axis(axa, rows, lambda e: (e["residual"]["cfa"], e["residual"]["ci"]),
-               _tag("Residual CFA (confirmatory)", synthetic),
+               _tag("Residual CEA (confirmatory)", synthetic),
                ref=lambda ds: href[f"{ds.split('_')[0]}_residual"])
     axa.axvline(SESOI_CFA, color=INK2, linewidth=0.8, linestyle=(0, (3, 2)))
     axa.text(SESOI_CFA + 0.02, -0.85, f"SESOI {SESOI_CFA:.2f}", fontsize=5.8, color=INK2,
@@ -1012,10 +1012,10 @@ def fig5_from(summary, synthetic=False):
     axa.spines["bottom"].set_bounds(-0.5, 1)
     for i, (_, _, e) in enumerate(rows):
         axa.text(1.1, i, e["decision"], ha="left", va="center", fontsize=5.6, color=INK)
-    axa.set_xlabel("CFA with the human do-effects (95% CI)")
-    _fig5_axis(axb, rows, lambda e: (e["raw"]["cfa"], e["raw"]["ci"]), _tag("Raw CFA", synthetic),
+    axa.set_xlabel("CEA with the human do-effects (95% CI)")
+    _fig5_axis(axb, rows, lambda e: (e["raw"]["cfa"], e["raw"]["ci"]), _tag("Raw CEA", synthetic),
                ref=lambda ds: href[ds.split("_")[0]], labels=False)
-    axb.set_xlabel("CFA, raw (95% CI)")
+    axb.set_xlabel("CEA, raw (95% CI)")
     _fig5_axis(axc, rows, lambda e: (e["behaviour"]["output_r"], None),
                _tag("Behaviour", synthetic), labels=False)
     axc.set_xlabel("Output correlation with humans")
@@ -1041,7 +1041,7 @@ def make_fig5_real():
 def synthetic_fig5(seed=20261108):
     """An A4 summary for synthetic observers.
 
-    CFA values are drawn at random; the decision per model and dataset comes from the
+    CEA values are drawn at random; the decision per model and dataset comes from the
     frozen apply_rule, the headline from headline, and the human reference from
     human_reference on the committed human effects. No model output is read.
     """

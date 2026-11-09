@@ -30,8 +30,8 @@ Subheadings are provisional. Sections 1 and 3 hold whatever the outcomes are.
 2. **Dependence on the face (RQ0).** A1, then A3, per model, read through the frozen table. Figure 2.
 3. **Behaviour cannot settle cue use.** The identifiability results, and the cue spectra as the empirical measure of the gap. Figure 3.
 4. **Pattern alignment on natural clips (RQ1).** Family pattern score per model. Table or Figure 4.
-5. **Cue effects under randomisation (RQ1).** A4: validity gate, with the thin V1 pass and the family flag stated, then residual CFA per model and dataset against its own between-group reference, with raw CFA as secondary. Figure 5.
-6. **Do behaviour and cue effects disagree?** CFA beside output similarity and modal agreement. Part of Figure 5.
+5. **Cue effects under randomisation (RQ1).** A4: validity gate, with the thin V1 pass and the family flag stated, then residual CEA per model and dataset against its own between-group reference, with raw CEA as secondary. Figure 5.
+6. **Do behaviour and cue effects disagree?** CEA beside output similarity and modal agreement. Part of Figure 5.
 7. **Interventions on the stimulus (RQ2).** Gate B, then each prediction by decision class. Figure 6.
 8. **What each model has shown.** One profile per model across the three degrees. Table 1.
 9. **The route through the model (RQ3), a scoped limit.** Why the literal test cannot fail, and why depth is not testable. Rests on A7's Stage 0 table, which has not run. A paragraph, with the table in the Supplement.
@@ -67,11 +67,11 @@ Each model has one natural-clip outcome and one A4 outcome per dataset, then one
 
 | A4 outcome | Meaning | Must not say |
 |---|---|---|
-| Aligned | Reliable shared cue pattern on these avatars, on a peak frame: all gates, signal, alignment Holm *P* < .05, residual CFA of at least .30, lower bound above 0 | "Same strategy", or "human-level" unless the interval reaches the residual between-group reference |
+| Aligned | Reliable shared cue pattern on these avatars, on a peak frame: all gates, signal, alignment Holm *P* < .05, residual CEA of at least .30, lower bound above 0 | "Same strategy", or "human-level" unless the interval reaches the residual between-group reference |
 | Not aligned on these renders | Always in these words. The model responds to AUs (signal, gates), and the upper bound divided by the square root of *R_S* is below .30 | "Not aligned" alone. "Does not use human cues on real faces". Domain, static route and amplitude remain open, and most families are unconfirmed by a detector |
 | Inconclusive | A gate failed, no signal, or anything else | Any statement on alignment. Report which gate failed |
 
-Datasets may disagree: for instance basic and conversational, or WC and EA. Report each alone, then the frozen headline per model per task: Aligned or Not aligned on these renders only if WC and EA agree, Mixed if one of each, Inconclusive otherwise. Basic and conversational are never pooled. At conversational 0.25 times, recovery gives no accuracy claim for residual CFA, so state that beside any weak conversational result. Raw CFA is secondary and never decides.
+Datasets may disagree: for instance basic and conversational, or WC and EA. Report each alone, then the frozen headline per model per task: Aligned or Not aligned on these renders only if WC and EA agree, Mixed if one of each, Inconclusive otherwise. Basic and conversational are never pooled. At conversational 0.25 times, recovery gives no accuracy claim for residual CEA, so state that beside any weak conversational result. Raw CEA is secondary and never decides.
 
 | Natural clips | A4 | How sections 4 to 6 read |
 |---|---|---|
@@ -81,7 +81,7 @@ Datasets may disagree: for instance basic and conversational, or WC and EA. Repo
 | Null | Not aligned on these renders | No evidence of human-like cue use on either arm, with the limits of each |
 | Any | Inconclusive | The paper rests on the audit, the theory and RQ2. Say what would be needed: a validated render, or the original stimuli |
 
-Section 6 has two outcomes. If behaviour and CFA disagree on the same stimuli, that is the empirical demonstration the theory needs. If they agree, say so: the theorem stands as a logical limit, and these models on these stimuli do not show the gap. Do not describe agreement as a failure of the theory, or as proof of use.
+Section 6 has two outcomes. If behaviour and CEA disagree on the same stimuli, that is the empirical demonstration the theory needs. If they agree, say so: the theorem stands as a logical limit, and these models on these stimuli do not show the gap. Do not describe agreement as a failure of the theory, or as proof of use.
 
 ### RQ2
 
@@ -147,7 +147,7 @@ The audit, the theorem and the estimand stand in every scenario. A Mixed headlin
 | Figure 2 | RQ0: delta per model and input, with accuracy against 1/6 and by target position |
 | Figure 3 | Identifiability: two observers with the same behaviour and different effects; the cue spectra |
 | Figure 4 | Natural-clip pattern score per model |
-| Figure 5 | Residual CFA per model and dataset, with its between-group reference; raw CFA as secondary; behaviour beside CFA |
+| Figure 5 | Residual CEA per model and dataset, with its between-group reference; raw CEA as secondary; behaviour beside CEA |
 | Figure 6 | RQ2: effect and decision class per prediction, by model and route |
 | Table 1 | Profile per model across RQ0, RQ1 and RQ2 |
 
@@ -155,7 +155,7 @@ Stage 0 table for RQ3: Supplement, once it exists.
 
 ## Pending items blocking a first full draft
 
-From the queue: A1 read; gate and A3 tables in Results; A4 scoring and analysis; A2 run. A7 freeze and Stage 0; A5 and A6 freezes, if they are to appear. For the user or others: the licence for edits; ethics statement; dated preregistration links, and whether a tagged commit counts; the two EU-Emotion facts in item 16. To write: Supplementary Note 1 from `theory/causal_feature_alignment.md`, including residual CFA.
+From the queue: A1 read; gate and A3 tables in Results; A4 scoring and analysis; A2 run. A7 freeze and Stage 0; A5 and A6 freezes, if they are to appear. For the user or others: the licence for edits; ethics statement; dated preregistration links, and whether a tagged commit counts; the two EU-Emotion facts in item 16. To write: Supplementary Note 1 from `theory/causal_feature_alignment.md`, including residual CEA.
 
 ## Inconsistencies found across the repo's documents
 
@@ -179,10 +179,10 @@ Source documents outside `research/paper/v2/` were not edited. Where the paper n
 | 14 | A4 against theory note | Condition number 76 against about 3.5 | Resolved | Frozen A4 gives 76.1 on 15 cues, 22.4 on 10 cues, 3.4 to 3.5 on 25 cues, and says cue counts differ. Full table in Methods |
 | 15 | Naming | G labels shared by goals, vision gates and rungs | Resolved | Methods now names the vision gates by function. Goal labels appear only here. V1 to V4, B1 to B5 and C1 to C5 stay, each inside its amendment |
 | 16 | EU-Emotion counts | "Local norms hold 243 of 249", from the report, is wrong | Resolved in part, **two facts open** | The norms hold all 249 (`n_human_items_available`). The clip list holds 243, from a folder scan with no exclusion (`build_eu_full_manifest.py`). Rerunning the match against `eu_emotions_oreilly_item_level.xlsx` shows 243 clips on 242 norm rows: seven items have no clip (six High, one Low; IDs kept out of the public repo until the licence is settled), and one item is matched twice, by `emotions_23/.../that item_cut.mp4` exactly and `emotions_13/.../that item_cut(1).mp4` by the loose rule. `n_matched` 243 counts clips, so it hid this. This also settles 48 Low against 49 (one Sad item), and shows that Kind, Unfriendly and Jealous lose nothing. **Missing:** (a) whether the seven are absent from the distributed set or only from our copy, which needs a listing of the cluster's copy or the authors; (b) whether the two that item files are one video, which needs a checksum of both on the cluster, since the local folder has only one. The frozen designs stay at 243 either way. If (b) is yes, disclose that one video counts twice |
-| 17 | A4, within its own text | Disclosures say "Aligned is raw". The Asymmetric rule says "uncorrected" does not mean raw CFA | Resolved | The rule governs, and `apply_rule` takes the statistic named by the recovery file. Methods says uncorrected values of the confirmatory statistic |
+| 17 | A4, within its own text | Disclosures say "Aligned is raw". The Asymmetric rule says "uncorrected" does not mean raw CEA | Resolved | The rule governs, and `apply_rule` takes the statistic named by the recovery file. Methods says uncorrected values of the confirmatory statistic |
 | 18 | A4, within its own text | "Corrected values are not used for decisions" against the *R_S* correction in Not aligned | Resolved | The sentence concerns the ratio to the ceiling (`over_ceiling`, descriptive). `decide` uses `ci[1] / sqrt(r_s)`. Methods says each thing in its place |
 | 19 | A4 and [19] against the public files | "Eight base faces per group", against 967, 8, 4 and 4 face codes | Resolved in text, one point open | Methods gives both, from `human_au_effects.json` `structure` and `data_caveats`. **Open:** what the 4 codes on conversational data mean. A4's "identity coverage is narrower" is kept as frozen, but check it for conversational sets |
-| 20 | Theory note against A4 | A4's confirmatory statistic, residual CFA, appears nowhere in the note, and G9 says the estimand is defined | **Open** | Methods flags this. **Missing:** a statement in Supplementary Note 1 on whether Theorem 1 and Propositions 2, 3 and 5 carry to residual CFA. Nothing here assumes they do |
+| 20 | Theory note against A4 | A4's confirmatory statistic, residual CEA, appears nowhere in the note, and G9 says the estimand is defined | **Open** | Methods flags this. **Missing:** a statement in Supplementary Note 1 on whether Theorem 1 and Propositions 2, 3 and 5 carry to residual CEA. Nothing here assumes they do |
 | 21 | Abstract template against DECISIONS | "Most claims" against "several", softened on 2026-11-07 | Resolved | Abstract and subheading now say "several" and "some", per `citation_check.md` corrections 2 and 3 |
 | 22 | `RESEARCH_QUESTIONS.md` rule 8 against [27,28] | Rule 8 asks for two detectors of different lineage. The two share AU training data | Resolved in text | Methods states the shared data. Natural-clip claims do not rest on detector independence. Rule 8 should be corrected |
 | 23 | Disclosure 5 against journal policy | The natural-clip strength rule was added after power was known. The journal requires originally planned analyses to be reported for deviations other than flaw or feasibility | **Open** | Disclosure reworded to what DECISIONS records: the earlier rule named no strength, and the new one only downgrades. **Missing:** a decision on whether this counts as a deviation. Reporting the 1 times reading beside the rule would satisfy either view |

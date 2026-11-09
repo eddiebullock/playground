@@ -14,7 +14,7 @@ Any agent session that resumes this project reads this section first and follows
 >
 > **The question.** How similar are vision-language models to humans in how they read mental states from faces, not only in the answers they give?
 >
-> **The deliverable.** One integrated paper, submission-ready for Nature Human Behaviour (fallback TMLR), plus a public reproduction package. The paper must stand whatever the results are. Its citeable core is a cue-level test of VLMs against randomised human cue effects (A4, residual Causal Feature Alignment), built on a validity audit (target position, option sets, delivery, weak labels, face dependence) and on identifiability results showing why behaviour alone cannot settle cue use.
+> **The deliverable.** One integrated paper, submission-ready for Nature Human Behaviour (fallback TMLR), plus a public reproduction package. The paper must stand whatever the results are. Its citeable core is a cue-level test of VLMs against randomised human cue effects (A4, residual Cue Effect Alignment), built on a validity audit (target position, option sets, delivery, weak labels, face dependence) and on identifiability results showing why behaviour alone cannot settle cue use.
 >
 > **Full success** means all of the following:
 > 1. Every goal G1 to G12 in `GOALS.md` meets its "done when", or is closed as a dated, disclosed scoped limit where GOALS allows it (G7, G8).
@@ -52,14 +52,14 @@ Status keys: DONE, NOW (unblocked, in progress or next), WAIT (dependency named)
 |---|---|---|---|---|
 | 0.1 | A2, A4 and A5 frozen, with A2's skew limit and the .01 sensitivity | G3, G5, G6 | Tags `a2-freeze`, `a4-freeze`, `a5-freeze` | DONE |
 | 0.2 | A4 renders | G5 | 11,761 images on the cluster | DONE |
-| 0.3 | Theory: CFA, residual CFA, SN1 | G9 | `supplementary_note1.md` merged | DONE |
+| 0.3 | Theory: CEA, residual CEA, SN1 | G9 | `supplementary_note1.md` merged | DONE |
 | 0.4 | Figures 1 and 3 | G11 | `make_figures.py` merged | DONE |
 | 0.5 | Eight-paper table as a committed file, plus Figure 1 panel e | G10, G11 | `research/reproduction/literature_table.csv`, with each row's source and verification level, plotted | DONE 2026-11-08 |
 | 0.6 | Post-A1 runbook: one script that pulls, checks counts and hashes, runs `analyse_rotation.py` and the per-model routes, and writes the registry stub, dry-run tested on synthetic files | G1 | `research/scripts/post_a1.sh` plus its test | DONE 2026-11-08 (with errored-trial wrapper) |
 | 0.7 | Figure 2, 4, 5 and 6 scripts written against the frozen output schemas, tested on synthetic or recovery outputs, and never run on real results until each is locked | G11 | Functions in `make_figures.py` with tests; real-data runs gated by a flag | DONE 2026-11-08 (A2 and A4 output paths to confirm at run time) |
 | 0.8 | Paper scaffolding: results sections with the frozen decision rule and PENDING slots for every number, the discussion outline written for each outcome branch, and an abstract skeleton | G11 | Files in `research/paper/v2/`, with no result stated | DONE 2026-11-08 |
 | 0.9 | Submission pack drafts: data and code availability, ethics and preregistration links, reporting summary, `CITATION.cff` and `.zenodo.json` metadata | G11, G12 | Files committed; the DOI is USER (the Zenodo login) | DONE 2026-11-08, USER items in NEEDS_INPUT 9 |
-| 0.10 | Literature: full reads where open access exists for the snippet-level references, and a novelty recheck before submission | G10 | `references.md` levels updated | DONE 2026-11-08 (5 rows upgraded, 12 have no free copy; [50] wording fixed; CFA name clash in NEEDS_INPUT 9) |
+| 0.10 | Literature: full reads where open access exists for the snippet-level references, and a novelty recheck before submission | G10 | `references.md` levels updated | DONE 2026-11-08 (5 rows upgraded, 12 have no free copy; [50] wording fixed; CEA name clash in NEEDS_INPUT 9) |
 | 0.11 | A6 local items: everything in its freeze list that needs no cluster | G8 | Draft lists only cluster items as open | DONE 2026-11-08 (157 tests; recovery run 5 matches run 4; freeze prepared, not tagged) |
 | 0.12 | A7 audit and recovery text, local only | G7 | Draft audited; Stage 0 is the next step | DONE 2026-11-08 (audit section in the draft; DECISIONS entry) |
 | 0.13 | A7 code (`a7_*`), tests, Level 1 and 2 CPU recovery, toy Gemma hold test, independent audit, tag `a7-freeze`. Must finish before any full A2 cell is read | G7 | Tag `a7-freeze` | DONE 2026-11-08 (tag `a7-freeze`; recovery rerun on pinned code; 72 tests) |
@@ -93,7 +93,7 @@ Watch storage at each step. The file count runs at about 996k of 1,048,576. Cell
 | # | Step | Goal |
 |---|---|---|
 | 3.1 | A2 analysis: classify each prediction by the decision rule, plus the dated .01 sensitivity | G4 |
-| 3.2 | A4 analysis: residual CFA per model and dataset against the noise ceiling and the between-group reference; raw CFA secondary; behaviour beside CFA | G5 |
+| 3.2 | A4 analysis: residual CEA per model and dataset against the noise ceiling and the between-group reference; raw CEA secondary; behaviour beside CEA | G5 |
 | 3.3 | A5 analysis on A2 cells: evidence classes confirmatory; balance descriptive | G6 |
 | 3.4 | A6 run and analysis, if frozen | G8 |
 | 3.5 | A7 contrast stage where a complete cut exists; otherwise "not testable" | G7 |

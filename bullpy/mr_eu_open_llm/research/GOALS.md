@@ -27,7 +27,7 @@
 | G6 | RQ4: perception or word knowledge | Prior and evidence separated with image-free, grey and mismatch baselines on the blind readout, in a frozen amendment | G4 |
 | G7 | RQ3: causal route | Vision-path cuts, only at sites shown to be complete cuts, in a frozen amendment. Reported as not testable where no complete cut exists | G1, G4 |
 | G8 | RQ5: shared errors | CREMA-D run across its fixed option set, a cue-targeted test of one human confusion, in a frozen amendment | G1 |
-| G9 | Causal Feature Alignment theory | Estimand defined, non-identifiability result proved in full, or the claim dropped | None |
+| G9 | Cue Effect Alignment theory | Estimand defined, non-identifiability result proved in full, or the claim dropped | None |
 | G10 | Literature current | Novelty rechecked, every cited paper read at the level the text claims, venues and deadlines verified | None |
 | G11 | Paper | Full draft replacing `research/paper/*_v1.md`, figures from scripts, all numbers traced, supplement, submission-ready for the chosen venue | All above that completed |
 | G12 | Reproduction package | One documented path from public inputs to every table and figure; clean checkout test passes | G11 |
