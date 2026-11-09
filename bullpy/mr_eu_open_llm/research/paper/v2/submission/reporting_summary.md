@@ -37,7 +37,7 @@ For all statistical analyses, confirm the following are given in the figure lege
 | Null hypothesis tests: test statistic, confidence intervals, effect sizes, degrees of freedom and P values, with exact P values where suitable | [PENDING: per result. A3 values are locked in RESULTS_REGISTRY] |
 | Bayesian analysis: priors and MCMC settings | Not applicable. No Bayesian analysis |
 | Hierarchical and complex designs | Partly applicable. Actor is the unit for EU-Emotion tests; the A4 human target averages per-subject fits (Methods) |
-| Effect size estimates, such as Cohen's d or Pearson's r, with how they were calculated | Yes. Delta in accuracy (A1, A3); CFA and residual CFA as cosines (A4); pattern score as Pearson r (natural clips); CLR change (A2) |
+| Effect size estimates, such as Cohen's d or Pearson's r, with how they were calculated | Yes. Delta in accuracy (A1, A3); CEA and residual CEA as cosines (A4); pattern score as Pearson r (natural clips); CLR change (A2) |
 
 ## Software and code
 

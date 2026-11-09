@@ -1,4 +1,6 @@
-# Causal Feature Alignment: estimand and identifiability
+# Cue Effect Alignment: estimand and identifiability
+
+**Name:** renamed from Causal Feature Alignment (CFA) on 2026-11-09, because a WACV 2024 training method (Venkataramani et al.) already uses that name. Frozen amendments, code identifiers (`cfa_*`, `SESOI_CFA`) and output keys keep the old abbreviation. The file name is kept so that frozen references stay valid.
 
 **Status:** working note, 2026-11-07. Proofs are complete for the statements as written. Numbers come from `research/scripts/cfa_identifiability.py` (output `research/reproduction/cfa_identifiability.json`, tests in `tests/test_cfa_identifiability.py`). No model output was used.
 
@@ -16,9 +18,9 @@ Each row sums to zero, because f_S lies on the simplex.
 
 **Set-to form.** Amendment A4 and the human matrix use do(z_j = 1) minus do(z_j = 0), other cues as observed, averaged over Q. For a linear observer this equals the dose form at delta_j = 1, and Propositions 2 and 3 hold unchanged. Theorem 1 is proved for the dose form. Its construction carries to the set-to form when neither intervened point is a natural item, and that case is not covered here.
 
-**Causal Feature Alignment.** For systems S and T,
+**Cue Effect Alignment.** For systems S and T,
 
-    CFA(S, T) = cos(tau_S, tau_T) = <tau_S, tau_T> / (||tau_S||_F ||tau_T||_F)
+    CEA(S, T) = cos(tau_S, tau_T) = <tau_S, tau_T> / (||tau_S||_F ||tau_T||_F)
 
 Row sums of zero make the mean of the entries zero, so this equals the Pearson correlation over entries. It is undefined if either matrix is zero.
 
@@ -34,7 +36,7 @@ Let P have finite support Z, take Q = P, and suppose the map (z, j) -> z + delta
 
     tau_S(j, k) = E_P[fbar^k + tau*(j, k) - f_T^k(z)] = fbar^k + tau*(j, k) - fbar^k = tau*(j, k). QED
 
-**Corollary 1.1.** Let H be a reference system with tau_H non-zero, let fbar be in the interior of the simplex, and let p(K - 1) >= 2. For any r in [-1, 1], there is an S matching T on every natural item with CFA(S, H) = r. In particular, take T = H. Then S is behaviourally indistinguishable from H on Z, on every behavioural metric, however many trials are collected, and yet CFA(S, H) can be any value, including -1.
+**Corollary 1.1.** Let H be a reference system with tau_H non-zero, let fbar be in the interior of the simplex, and let p(K - 1) >= 2. For any r in [-1, 1], there is an S matching T on every natural item with CEA(S, H) = r. In particular, take T = H. Then S is behaviourally indistinguishable from H on Z, on every behavioural metric, however many trials are collected, and yet CEA(S, H) can be any value, including -1.
 
 **Proof.** Let U be the unit vector tau_H / ||tau_H||_F. The space of zero-row-sum matrices has dimension p(K - 1) >= 2, so there is a unit vector V in it orthogonal to U. Put M = r U + sqrt(1 - r^2) V, which has cosine r with tau_H. Interior fbar gives a > 0 small enough that fbar + a M(j, .) is on the simplex for all j. Apply theorem 1 with tau* = a M. Cosine is scale free. QED
 
@@ -46,7 +48,7 @@ Let z have two standardised cues with correlation rho, and let S and T be linear
 
     corr(f_S, f_T) = rho
     E[(f_S - f_T)^2] = 2 b^2 (1 - rho)
-    CFA(S, T) = 0, for equal doses
+    CEA(S, T) = 0, for equal doses
 
 The first two lines are direct computation. For the third, take tau_S = delta (b, 0) and tau_T = delta (0, b) on that output. They are orthogonal.
 
@@ -94,20 +96,20 @@ Let tau-hat_S = tau_S + e_S and tau-hat_H = tau_H + e_H, with e_S and e_H zero m
     E<tau-hat_S, tau-hat_H> = <tau_S, tau_H>
     E||tau-hat_S||^2 = ||tau_S||^2 + s_S, and likewise for H
 
-So the observed cosine approximates CFA times sqrt(R_S R_H), where R_S = ||tau_S||^2 / (||tau_S||^2 + s_S), as a ratio of expectations. This is Spearman's attenuation correction, on a matrix. The study estimates R_H by split-half across subjects and stimuli (`a4_human_ceiling.json`), and R_S by split-half across stimuli, because a model has no response noise and stimulus sampling is its source of error. When the model sees other stimuli than humans did, stimulus sampling enters s_H and s_S, so the `subjects_and_stimuli` ceiling applies, not the same-stimuli one. Corrected values above 1 can occur from sampling and are reported uncorrected beside them.
+So the observed cosine approximates CEA times sqrt(R_S R_H), where R_S = ||tau_S||^2 / (||tau_S||^2 + s_S), as a ratio of expectations. This is Spearman's attenuation correction, on a matrix. The study estimates R_H by split-half across subjects and stimuli (`a4_human_ceiling.json`), and R_S by split-half across stimuli, because a model has no response noise and stimulus sampling is its source of error. When the model sees other stimuli than humans did, stimulus sampling enters s_H and s_S, so the `subjects_and_stimuli` ceiling applies, not the same-stimuli one. Corrected values above 1 can occur from sampling and are reported uncorrected beside them.
 
-## Residual CFA (added 2026-11-08)
+## Residual CEA (added 2026-11-08)
 
-A4's confirmatory statistic. With tau held as options by cues (the transpose of the form above), let m be the mean of tau's cue columns and u = m / ||m||. Then R(tau) = (I - u u') tau, with R(tau) = tau if m = 0, and residual CFA(S, T) = cos(R(tau_S), R(tau_T)). Each matrix uses its own u. This is `remove_common` in `scripts/a4_analyse.py:86-97`. Definition, proofs and whether each result above carries to it are in `research/paper/v2/supplementary_note1.md`. In short: R is scale free, commutes with cue permutation, and ignores any multiple of a system's own mean profile added to any cue. Theorem 1 and Corollary 1.1 carry. Proposition 2 does not carry as stated, since its pair has two options and one cue each and R removes everything. Proposition 3's upper bound carries only when the two mean directions agree. Proposition 5 holds exactly only for a fixed projector, and A4 estimates it from the data.
+A4's confirmatory statistic. With tau held as options by cues (the transpose of the form above), let m be the mean of tau's cue columns and u = m / ||m||. Then R(tau) = (I - u u') tau, with R(tau) = tau if m = 0, and residual CEA(S, T) = cos(R(tau_S), R(tau_T)). Each matrix uses its own u. This is `remove_common` in `scripts/a4_analyse.py:86-97`. Definition, proofs and whether each result above carries to it are in `research/paper/v2/supplementary_note1.md`. In short: R is scale free, commutes with cue permutation, and ignores any multiple of a system's own mean profile added to any cue. Theorem 1 and Corollary 1.1 carry. Proposition 2 does not carry as stated, since its pair has two options and one cue each and R removes everything. Proposition 3's upper bound carries only when the two mean directions agree. Proposition 5 holds exactly only for a fixed projector, and A4 estimates it from the data.
 
 ## What the study needs from this
 
 1. Report tau for the model under a design that breaks natural correlations, and do not treat the same-clip pattern score as causal.
-2. Compare CFA with error consistency and output similarity on the same system. The claim needs a demonstration in which they disagree, and whether one exists here is an empirical result, not an assumption.
+2. Compare CEA with error consistency and output similarity on the same system. The claim needs a demonstration in which they disagree, and whether one exists here is an empirical result, not an assumption.
 3. Recovery: synthetic observers with known tau through the same pipeline, including the Proposition 2 pair.
 
 ## Open
 
-- A finite-sample version: a confidence bound on CFA given trials per stimulus, stimuli per cue and subjects.
+- A finite-sample version: a confidence bound on CEA given trials per stimulus, stimuli per cue and subjects.
 - Whether the bound in Proposition 3 can be tightened for softmax observers with bounded Jacobians.
 - Relation to Teneggi and Sulam and to Han et al.: read 2026-11-08, see Supplementary Note 1, Section 6. Neither contains these results, but other literatures (positivity and extrapolation in causal inference, identifiability of learned representations) were not searched, so no wider novelty claim is made. The results are elementary, so the contribution is the estimand and its use, not the proofs.

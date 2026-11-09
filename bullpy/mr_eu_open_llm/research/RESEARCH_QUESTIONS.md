@@ -99,4 +99,4 @@ Null searches ran for one day with some indexes unavailable. Check CCN, VSS and 
 
 ## General contribution for ML venues
 
-Causal Feature Alignment: an estimand comparing randomised human cue effects with interventional model cue effects, with a noise ceiling, recovery checks, and a proof that behavioural alignment does not imply it. Proofs: `research/theory/causal_feature_alignment.md`.
+Cue Effect Alignment: an estimand comparing randomised human cue effects with interventional model cue effects, with a noise ceiling, recovery checks, and a proof that behavioural alignment does not imply it. Proofs: `research/theory/causal_feature_alignment.md`.

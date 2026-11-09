@@ -40,7 +40,7 @@ Rule: `research/PREREG_A4_DRAFT.md:121-137`. Each dataset alone, then one headli
 - **If Inconclusive.** Name the gate or test that failed. Say what would be needed: a validated render, or the original stimuli. The paper then rests on the audit, the theory and RQ2 (scenario S5).
 - **If Mixed (WC and EA disagree).** Report each dataset and the Mixed headline. Adds no scenario. WC and EA are not independent tests of a model.
 - **Combined with natural clips.** Use outline.md's table "Natural clips by A4". The most informative case is a positive natural-clip score with Not aligned on these renders (scenario S3): it fits the identifiability result, but cannot exclude the avatar domain.
-- **Behaviour beside CFA (Section 6).** If they disagree on the same stimuli, that is the empirical case the theory needs. If they agree, the theorem stands as a logical limit, and these models on these stimuli do not show the gap. Agreement is not a failure of the theory or proof of use.
+- **Behaviour beside CEA (Section 6).** If they disagree on the same stimuli, that is the empirical case the theory needs. If they agree, the theorem stands as a logical limit, and these models on these stimuli do not show the gap. Agreement is not a failure of the theory or proof of use.
 
 ## RQ2: stimulus interventions (A2)
 
@@ -92,7 +92,7 @@ Each item is a disclosed deviation or limit, with its DECISIONS date. Order by w
 13. **A2 cannot reach Null on 8 of 16 contrasts, 10 of 16 on Qwen3-VL** (2026-11-07, "A2 frozen before A1 is read"). (methods)
 14. **A2 source support weakened after the freeze** (2026-11-07, "Source check after the A2 freeze"). P7, P12 and P13 chiefly; contrary evidence for P12 and P13. Predictions unchanged. (methods)
 15. **A2 test liberal under one skewed null; .01 sensitivity** (2026-11-08). Verdicts stay primary; each also reported at *P* < .01. Whether real portrayal gain is skewed this way is unknown. (methods)
-16. **A4 frozen with two exempt accuracy cells and a thin V1 pass** (2026-11-07, "Freeze A4 before A1 is read"). No accuracy claim for residual CFA on weak conversational effects; most families unconfirmed by a detector. (methods)
+16. **A4 frozen with two exempt accuracy cells and a thin V1 pass** (2026-11-07, "Freeze A4 before A1 is read"). No accuracy claim for residual CEA on weak conversational effects; most families unconfirmed by a detector. (methods)
 17. **A4 ceiling uses a related estimator** (2026-11-08). Corrected values are approximate; decisions use uncorrected values. (methods)
 18. **A4 domain limits** (A4 frozen text, `research/PREREG_A4_DRAFT.md:221-250`). Avatars, static peak frames against 1.25 s of motion, linear amplitude mapping, AU22 and AU27 approximated, four faces per set, the EA faces not based on East Asian people. (methods)
 19. **G7 is a scoped limit** (2026-11-07). The literal route test is vacuous; depth is not testable; Stage 0 has not run. (methods)
