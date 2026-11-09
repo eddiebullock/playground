@@ -151,6 +151,42 @@ The detector check passed thinly: 113 of 144 covered pairs rose, .785 against .7
 
 **Figure.** Part of Figure 5.
 
+## 6b. The randomised cue test on a second human sample (A9)
+
+<!-- Added 2026-11-09. A9 was a DRAFT when this was written (research/PREREG_A9_DRAFT.md:3); line numbers are as of that text and must be rechecked against the frozen file. No A9 model output exists. No result is stated. -->
+
+**Question.** Does A4's answer hold against a second set of randomised human observers, Liu et al.'s Experiment II?
+
+**Status.** [PENDING: A9 freeze date and tag `a9-freeze`.] Until A9 is frozen, nothing in this section is preregistered.
+
+**Relation to A4.** A4's verdicts are final as frozen. A9 never enters A4's Holm family, headline or decision table, and is reported here, after A4. A9 and A4 estimates are never pooled. If they disagree for a model, both stand. An A9 Aligned or Not aligned does not make an A4 Inconclusive conclusive (`research/PREREG_A9_DRAFT.md:423-429`).
+
+**Rule (A9, residual CEA, per model, one dataset).** (`research/PREREG_A9_DRAFT.md:553-561`.)
+
+| Outcome | Requires |
+|---|---|
+| Aligned | All gates; signal p < .05; alignment Holm p < .05 within A9 (Gemma 4 and Qwen3-VL); residual CEA at least .30; CI lower bound above 0 |
+| Not aligned | All gates; signal p < .05; CI upper bound divided by the square root of R_S below .30 |
+| Inconclusive | Anything else, including any failed or missing gate, or no recovery-selected design |
+
+Not aligned is written "not aligned on these renders". With one dataset there is no WC and EA headline, so the per-model decision is A9's result (`:561`). Human-level only if the interval reaches the residual Liu against Snoek basic WC reference, which is descriptive (`PREREG_A9_DRAFT.md:522`; value in `research/reproduction/a9_human_ceiling.json`, `human_reference_cfa.basic_WC.residual`, no registry row yet: [PENDING: registry row]). Gates: RQ0 at `single_face`, G2 to G4, V1 inherited from A4's pilot, V2 to V4 recomputed on Liu renders (`PREREG_A9_DRAFT.md`, Validity gate). Design B, by recovery. Decisions stay confirmatory whatever a model's correlation across faces. The accuracy claim for residual CEA on weak effects (0.25 times) is withdrawn under correlated face noise (`:442`; block `withdrawn_under_correlated_face_noise`).
+
+**Slots.** From `results/a9/summary.json` (written by `scripts/a9_analyse.py`), per model (`models.<model>`):
+- residual CEA, CI, R_S: [PENDING: `residual.cfa`, `residual.ci`, `residual.r_s`]
+- alignment Holm *P* within A9, signal *P*: [PENDING: keys as written by `a4_analyse.apply_rule`]
+- gates (RQ0, G2 to G4, V1 to V4): [PENDING: gates block]
+- decision: [PENDING: `decision`]
+- configurations kept and share lost under design B: [PENDING: `n_configurations`, `share_lost`, `lost_ok`]
+- residual correlation across faces, descriptive, with no label on the decision: [PENDING: `face_shared_residual_correlation`]
+- ratio to ceiling, descriptive: [PENDING: `residual.over_ceiling`, `residual.lower_bound_only`]
+- raw CEA, secondary: [PENDING: `raw.cfa`, `raw.ci`]
+- sensitivities (presence coding, without AU22 and AU27, without the abstain row, flagged against confirmed families, `frame_max`): [PENDING: `sensitivities`]
+- behaviour beside CEA, per configuration: [PENDING: `behaviour`]
+- Molmo2, descriptive if run: [PENDING]
+- side-by-side with A4, labelled as separate tests, descriptive only: [PENDING]
+
+**Writing rule.** Never "A9 confirms A4" or "A9 overturns A4". Say A9 is a second sample on the same platform (lab, generator, protocol, culture) and the same renders, not a second method (`PREREG_A9_DRAFT.md:421`).
+
 ## 7. Interventions on the stimulus (RQ2, A2)
 
 **Question.** Do region masks, spatial-frequency filters and changes of frame order move a model's judgement in the direction of a stated human prediction?
@@ -187,6 +223,31 @@ Gate B is B1 to B5 (`research/PREREG_A2_DRAFT.md:109-117`). A model and route th
 **Slots.** Table 1, one row per model: [PENDING: A1 class], A3 Pass (locked, Section 2), [PENDING: natural-clip reading], [PENDING: A4 headline per task], [PENDING: A2 classes per route].
 
 **Figure.** Table 1.
+
+## 8b. Larger models in the same families (A8)
+
+<!-- Added 2026-11-09. A8 is FROZEN, tag a8-freeze (research/PREREG_A8_DRAFT.md:3). No A8 output exists. No result is stated. -->
+
+**Question.** Do the frozen tests give the same answers on Qwen3-VL-32B and Gemma 4 31B?
+
+**Rule.** Every step is judged by its frozen rule, with no new threshold (`research/PREREG_A8_DRAFT.md:678-690`). A1 and A3 as in Section 2, with A8's own Holm family; the RQ0 reading as in the A1 and A3 table. A model that fails G2 to G4, or whose A3 result is not Pass, does not run A1 and is reported "A1 not run, by the A8 stop rule" (`:690`). A2 and A4 by their frozen rules, run only on eligible models. Natural-clip RQ1 is descriptive only. Families are A8 models only (`:694-701`); with one model Holm is the identity, and a smaller family is less strict per model than the frozen three-model family, which the text must say. No pooling with the frozen models, with each other or with the small siblings (`:703`).
+
+**Reporting rule.** A8 rows are labelled A8 and placed under the frozen rows, whatever they show. Where an A8 model and its sibling disagree, both verdicts are reported and the difference is described, not tested (`:705`). A8 cannot change any frozen verdict: a frozen Inconclusive stays Inconclusive, a frozen null stays a null, and Molmo2 stays ineligible (`:707`). A8 may support a statement of scope only.
+
+**Pre-data steps.** [PENDING: date of the A8 code pins; GPU A1 equivalence result (frozen command twice, 2-shard merge, record for record), from the dated pre-data note in `PREREG_A8_DRAFT.md`.]
+
+**Slots,** per A8 model (`qwen3vl_32b`, `gemma4_31b`):
+- vision gates G2 to G4, and whether bfloat16 G2 or G3 was non-zero: [PENDING: `research/reproduction/a8/<a8_id>/vision_gates_<key>.json`]
+- input delivery: [PENDING: `research/reproduction/a8/<a8_id>/input_delivery_<key>.json`]
+- readout ladder, descriptive: [PENDING: `research/reproduction/a8/<a8_id>/readout_ladder_<key>.json`]
+- A3, the same fields as Section 2: [PENDING: `research/reproduction/a8/face_input_validity_summary_a8.json`]
+- A1, the same fields as Section 2, or "A1 not run, by the A8 stop rule": [PENDING: `research/reproduction/a8/rotation_summary_a8.json`; errored trials from `rotation_errored_trials_a8.json`]
+- natural-clip pattern score, descriptive: [PENDING: `research/reproduction/a8/<a8_id>/same_clip_family_model_<a8_id>.json`]
+- Gate B and A2 verdicts, with the .01 reading: [PENDING: A2 output of `research/scripts/a8_analyse_a2.py`, path set at run time]
+- A4 per dataset and headline per task: [PENDING: `results/a8/a4/summary.json`]
+- steps not run, and why (stop rule, not tested after retry, storage, deferral of A4 by a dated note): [PENDING: launcher records under `research/reproduction/a8/<a8_id>/launch/`]
+
+**Figure.** A8 rows join Figures 2, 5 and 6 and Table 1 below the frozen rows, marked A8. [PENDING: figure functions.]
 
 ## 9. The route through the model (RQ3), a scoped limit
 
