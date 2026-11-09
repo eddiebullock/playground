@@ -2,6 +2,12 @@
 
 One entry per working day. User-facing; keep to 5–10 lines.
 
+## 2026-11-09 Europe/London — Qwen A1 running, first file in
+
+Both Qwen A1 arrays left the queue overnight. Task 39982137_0 (rotation 0, real) COMPLETED in 7 h 44 m, so the count is 21 of 30; tasks 39982137_1, 39982138_0 and 39982138_1 are past 7 h, and 39982137_2 started 08:33. GPUs at 100% on the check at 04:01; no task has failed. At about 8 h per task and two per array, the last files should land about 01:00 on 10 Nov. Nothing has been read. SSH dropped once (about 07:30) and was re-opened by the user. Quota 1041.9 GB, 996,125 files.
+
+Where the study stands, from locked analyses only: the original 6AFC task was confounded by option order and option set (category alone matches the peak probes, rho .503); swapping in another face lowers accuracy on all three models (A3 pass, Qwen .24, Gemma .22, Molmo .06), but "None of the above" dominates Qwen and Molmo; output entropy does not track human entropy (H2); natural-clip cues are far more collinear than the randomised Snoek design (1/lambda_min 18.4 against 2.1 to 2.3). The face-dependence answer (G1) and the randomised human comparison (G5) are still to come.
+
 ## 2026-11-04 Europe/London — Prompt confound found
 
 The 6AFC prompt lists the correct answer first on all 243 items, so accuracy is P(chose option 1), and one option set per label means the prompt reveals the category. Category alone reaches grouped rho 0.50, matching the peak probes, and last-token activations decode category at 0.96 to 1.00. The Phase 2 probe claim is withdrawn pending a rerun. Amendment A1 frozen: 5 rotations, real and vision-mismatch, 3 models. Shuffled 4AFC runs and small within-category human correlations suggest some real signal survives.

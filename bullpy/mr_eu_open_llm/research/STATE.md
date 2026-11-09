@@ -2,11 +2,13 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-11-07 Europe/London
+**Updated:** 2026-11-09 Europe/London
 
 ## Current phase
 
 **Rebuilding on a clean task.** Prompt confound found 2026-11-04 (DECISIONS). Branch B stays as a record, but accuracy and last-token probes are confounded. Amendment A1 is the active confirmatory step. Literature-led redesign under way in `research_notes/`.
+
+**2026-11-09:** Qwen A1 arrays running since 00:48; 21 of 30 rotation files at 08:37, none failed, last expected about 01:00 on 10 Nov. Nothing read.
 
 **2026-11-08 evening:** ROADMAP Phase 0 is closed except 0.13. A6 local items closed (PR 87): recovery run 5 matches run 4, freeze prepared, cluster items only. A7 audited (PR 86): numeric complete-cut rule, blocks are not cuts, RQ3 "not testable" where no complete cut is shown; A7 FROZEN 2026-11-08 (tag `a7-freeze`, design 9e40cfcf), before any A2 cell is read; riders descriptive, Stage 0 on the cluster is next. Literature (PR 85): Gold et al. wording fixed; CFA name clash with a WACV 2024 method is NEEDS_INPUT 9. Qwen A1 arrays still PENDING, estimate 2026-11-09 06:56 to 08:40; 20 of 30 rotation files.
 
@@ -18,7 +20,7 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
 
 Goals and what done means: `research/GOALS.md`. The user gave full autonomy on 2026-11-07 and accepted all recommendations, including the four A2 choices.
 
-1. A1 rotation evals: Gemma and Molmo complete, 20 of 30 files on the cluster at 2026-11-07 10:02, not pulled, nothing read. Qwen arrays 39982137 and 39982138 still pending on priority, Slurm estimate 8 Nov about 19:55. The estimate has moved later since 6 Nov. Account fair share is 0, and a 59 min `cas_*` job started on 7 Nov while these 12 h tasks waited, which suggests backfill. About 8 h per task, up to 78 GPU-hours, 2,859 available. When all 30 exist, pull them, run `research/scripts/analyse_rotation.py`, then for each model run `research/scripts/same_clip_family_analysis.py --model-route --au-csv research/reproduction/eu_au_measures.csv --model M --model-evals 'results/baseline/eu_emotions/M/eval_v2_eu_emotions_M_video_only_seed42_rot*_real.json'`. `eu_au_measures.csv` is the right file: the route uses LibreFace and OpenFace 3 from it on `model_1fps` frames, passes no GraphAU file, and yields 243 clips by 4 families. Permutations default to 4,999. Do not analyse early: Holm covers all three models.
+1. A1 rotation evals: Gemma and Molmo complete. Qwen arrays 39982137 and 39982138 started 2026-11-09 00:48 and 01:13 after waiting on priority since 6 Nov. 39982137_0 COMPLETED in 7 h 44 m, so 21 of 30 files at 08:37; tasks run two at a time per array, last files expected about 01:00 on 10 Nov. Nothing pulled or read. About 8 h per task (measured 7 h 44 m), up to 78 GPU-hours, 2,859 available. When all 30 exist, pull them, run `research/scripts/analyse_rotation.py`, then for each model run `research/scripts/same_clip_family_analysis.py --model-route --au-csv research/reproduction/eu_au_measures.csv --model M --model-evals 'results/baseline/eu_emotions/M/eval_v2_eu_emotions_M_video_only_seed42_rot*_real.json'`. `eu_au_measures.csv` is the right file: the route uses LibreFace and OpenFace 3 from it on `model_1fps` frames, passes no GraphAU file, and yields 243 clips by 4 families. Permutations default to 4,999. Do not analyse early: Holm covers all three models.
 2. A3 done 2026-11-05: all three models pass on `single_face`, Molmo at accuracy .072 (RESULTS_REGISTRY). Pass tests vision dependence, not competence. Full reading needs A1.
 3. A2 FROZEN 2026-11-07, tag `a2-freeze`, `design_sha256` 0ae22118, after two independent audits and a third check of the fixes. Gemma and Qwen are eligible subject to RQ0; Molmo is out. The next step needs A1. Then sync A2 code to the cluster, confirm hashes, and run Gate B and the full suite.
 4. Same-clip analysis: RQ1 pattern score on model frames is confirmatory, subject to the 5 percent clip rule (DECISIONS). The claim is "aligned with the human pattern". Cells are exploratory.
