@@ -37,3 +37,8 @@ Method: within a Snoek cohort all subjects share stimuli and row order; within a
 
 - Lead narrowed by check after run 2: decisions stay confirmatory; 0.25x estimation-accuracy claim withdrawn under correlated face noise; face-shared correlation descriptive only. Scope label removed from `a9_analyse.py`.
 - Block hash now `41c95dae865b0ee0e3c61051ac6caeb1516dfea1633bd013bf4fe16ab1a9ec29`. Run 3 on re-pinned code: tables and checks identical to run 2.
+
+## Audit fixes (2026-11-09)
+
+- `results/a9/manifest.csv` is what the runner, render job and recovery read; it is byte-identical to `manifest_designB.csv` (sha256 `4b2f04ae...`). `manifest_designA.csv` is kept only as the design A record.
+- Replication rule fixed in the block; `a9_analyse.py` hashes every input; decision 8 timing stated plainly in the draft, DECISIONS.md and the paper; recovery rerun as run 4.

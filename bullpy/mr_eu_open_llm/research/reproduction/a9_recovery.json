@@ -1,9 +1,9 @@
 {
  "amendment": "A9",
- "design_sha256": "41c95dae865b0ee0e3c61051ac6caeb1516dfea1633bd013bf4fe16ab1a9ec29",
+ "design_sha256": "21341eb47a4d5da81e7d672e21c56c83029cbf9ba2b928f98f10fcba35220192",
  "code_sha256": {
-  "scripts/a9_design.py": "1dc0aeacfd5888849eed91ba82e45c8bf039334778534717151e8c6486ad8c87",
-  "scripts/a9_analyse.py": "00c3b5faa8d94bf36d73fc073d54f4cd18a3940486a978c502235294191911af",
+  "scripts/a9_design.py": "57e851eccd185813795bb79548e82f6f3178b5dc1d4ab14641c4b744cd6c4d9d",
+  "scripts/a9_analyse.py": "a90dbb7b400605e0e10eb73d697deb4560d75412ae2a5d84a130511e7f072bc9",
   "scripts/a9_run.py": "e9d14fb6158918d2f806da1d877301392487e5f51460304b7d1b08616617b144",
   "scripts/a9_recovery.py": "273e0fbf0f11b2224c8513744351945690e14600c2c81fa0e259d1d5977cc785",
   "research/scripts/a9_human_target.py": "a47dc63a59079235b64b7cbee28855f8edb3804bb925d07388e356055a265d24",
@@ -3239,5 +3239,5 @@
  },
  "r_star": 0.0,
  "choice_matches_block": true,
- "runtime_seconds": 8099
+ "runtime_seconds": 6973
 }

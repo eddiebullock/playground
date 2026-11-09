@@ -399,3 +399,68 @@ def test_face_shared_correlation_reads_shared_noise():
     alone = [rng.normal(size=(400, 7)) for _ in range(4)]
     assert ana9.face_shared_correlation(faces, X) > 0.35
     assert abs(ana9.face_shared_correlation(alone, X)) < 0.1
+
+
+# ---------------------------------------------------------------- audit fixes (2026-11-09)
+
+
+def a4_summary_with(model, decision, gates=None):
+    return {"datasets": {"basic_WC": {model: {"decision": decision, "gates": gates or {"all": True}, "p_signal": 0.001}}},
+            "models": {model: {"headline": {"basic": "Inconclusive"}}}}
+
+
+@pytest.mark.parametrize("a4_dec,a9_dec,expected", [
+    ("Aligned", "Aligned", "replicated on a second human sample (same lab and generator)"),
+    ("Not aligned", "Not aligned", "the Not aligned result replicated"),
+    ("Aligned", "Not aligned", "did not replicate"),
+    ("Not aligned", "Aligned", "did not replicate"),
+    ("Inconclusive", "Aligned", "replication not testable"),
+    ("Aligned", "Inconclusive", "replication not testable"),
+    ("Inconclusive", "Inconclusive", "replication not testable"),
+])
+def test_replication_wording_is_the_blocks(a4_dec, a9_dec, expected):
+    entry = {"decision": a9_dec, "gates": {"all": True}, "p_signal": 0.001}
+    out = ana9.replication_reading("gemma4", entry, a4_summary_with("gemma4", a4_dec))
+    assert out["reading"] == expected
+    assert out["a4_basic_headline_beside"] == "Inconclusive"  # reported beside, never the comparator
+    if expected == "replication not testable":
+        assert out["reason"]
+    if a9_dec == "Inconclusive":
+        assert "failed to replicate" not in out["reading"] and out["reading"] != "did not replicate"
+
+
+def test_replication_not_testable_names_the_gate_or_missing_a4():
+    entry = {"decision": "Inconclusive", "gates": {"v3_config_carries": False, "rq0": True}, "p_signal": 0.001}
+    out = ana9.replication_reading("qwen3vl", entry, a4_summary_with("qwen3vl", "Aligned"))
+    assert "v3_config_carries" in out["reason"]
+    out = ana9.replication_reading("qwen3vl", {"decision": "Aligned"}, None)
+    assert out["reading"] == "replication not testable" and "not run" in out["reason"]
+    entry = {"decision": "Inconclusive", "gates": {"all": True}, "p_signal": 0.4}
+    assert "signal" in ana9.why_inconclusive(entry)
+
+
+def test_earlier_rule_reading_is_descriptive():
+    assert ana9.earlier_rule_reading(0.3, 0.0) == "outside the recovery-validated conditions"
+    assert ana9.earlier_rule_reading(0.0, 0.0) == "within the recovery-validated conditions"
+    assert ana9.earlier_rule_reading(None, 0.0) == "face-shared correlation not estimable"
+    assert "first operationalisation" in a9.DESIGN["recovery"]["correlation_use"]
+    assert "applying the rule stated before" not in a9.DESIGN["recovery"]["correlation_use"]
+    assert a9.DESIGN["recovery"]["withdrawn_under_independent_face_noise"] == []
+
+
+def test_pinned_inputs_refuse_another_file(tmp_path):
+    good = ROOT / "research/reproduction/a9_human_target.json"
+    pin = a9.DESIGN["input_pins"]["research/reproduction/a9_human_target.json"]
+    assert ana9.pinned_input(good, pin, "human") == pin
+    other = tmp_path / "other.json"
+    other.write_text("{}", encoding="utf-8")
+    with pytest.raises(SystemExit):
+        ana9.pinned_input(other, pin, "human")
+
+
+def test_behaviour_unavailable_is_recorded(monkeypatch):
+    def broken():
+        raise SystemExit("pin mismatch")
+    monkeypatch.setattr(ht, "load_liu", broken)
+    table, status = ana9.human_configuration_table()
+    assert table is None and status.startswith("unavailable") and "pin mismatch" in status

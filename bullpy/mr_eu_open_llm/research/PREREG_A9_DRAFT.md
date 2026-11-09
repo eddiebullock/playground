@@ -2,14 +2,14 @@
 
 **Status: DRAFT, 2026-11-09, prepared for freezing (code written, design block hashed, recovery rerun on the final code). Not frozen until tagged `a9-freeze`. No model has seen a Liu render, and no render exists.** Nothing here changes A4 (FROZEN, tag `a4-freeze`), and A9 can never rescue, overturn, qualify or otherwise change any A4 verdict (see "Relation to A4").
 
-Current `design_sha256` of the block below: `41c95dae865b0ee0e3c61051ac6caeb1516dfea1633bd013bf4fe16ab1a9ec29`.
+Current `design_sha256` of the block below: `21341eb47a4d5da81e7d672e21c56c83029cbf9ba2b928f98f10fcba35220192`.
 
-**Recovery outcome, stated up front:** on the final code, design A fails 1 of 17 checks and design B passes 17 of 17, so B is selected with residual CEA confirmatory. With noise correlated across faces (rho .25 and .5), B fails one residual check, pair-swapped estimation accuracy at 0.25x (89% and 87% against 90%); every decision check passes. By lead decision 8 (made after seeing that result), decisions stay confirmatory and only the 0.25x accuracy claim is withdrawn for correlated face noise.
+**Recovery outcome, stated up front:** design A fails 1 of 17 checks and design B passes 17 of 17, so B is selected with residual CEA confirmatory. With noise correlated across faces (rho .25 and .5), B fails one residual check, pair-swapped estimation accuracy at 0.25x (89% and 87% against 90%); every decision check passes. **Changed after a result was seen:** the first operationalisation of decision 2, a scope label that with r_star = 0 would have placed every model outside the validated conditions, was replaced after recovery run 2 was seen by decision 8, narrowing by check, which is more favourable to confirmatory decisions. The earlier text (block `b548bc82...`) was never committed. Beside each A9 decision the paper also reports the reading the earlier operationalisation would have given.
 
 **Written:** 2026-11-09. Known at writing: A4's frozen text, code and outputs; the Liu human data, its human target and ceiling computed here (human data only); the recovery runs reported below (synthetic observers only). No A1, A4 or any other model result on avatars was read; none exists for Liu.
 **Depends on:** exactly A4's gates per model: RQ0 through `rq0_status` at `single_face`, G2 to G4, and V1 to V4 as stated under "Validity gate".
 **Models:** A4's Holm family, Gemma 4 and Qwen3-VL (`a4_design.MODELS`). Molmo2 is descriptive if run, as in A4.
-**Code (new, nothing existing edited):** `scripts/a9_design.py` (reads the design block below, checks its hash, the A4 pins, the A9 input pins and the code pins; reads every shared value from `scripts/a4_design.py`), `research/scripts/a9_human_target.py` (human target, ceilings, AU-map and label checks, Chen check), `research/scripts/a9_manifest.py` (render manifest; renders through `a4_stimuli.render_tar`), `scripts/a9_recovery.py` (recovery through `a4_recovery` and `a4_analyse`), `scripts/a9_run.py` (runner glue: A4's `RenderStore` and `score`; refuses without `--a9_frozen` and pinned code), `scripts/a9_analyse.py` (analysis through `a4_analyse`; replaces only `analyse_dataset`, whose dataset lookup cannot take A9's name), `slurm_jobs/study3_a9.sh`, `slurm_jobs/study3_a9_render.sh`, `tests/test_a9.py`. Outputs: `research/reproduction/a9_human_target.json`, `a9_human_ceiling.json`, `a9_recovery.json` (final code), `a9_recovery_run1_draft.json` (first run, draft code, kept), `a9_chen_overlap.json`. Notes: `research/notes_a9.md`.
+**Code (new, nothing existing edited):** `scripts/a9_design.py` (reads the design block below, checks its hash, the A4 pins, the A9 input pins and the code pins; reads every shared value from `scripts/a4_design.py`), `research/scripts/a9_human_target.py` (human target, ceilings, AU-map and label checks, Chen check), `research/scripts/a9_manifest.py` (render manifest; renders through `a4_stimuli.render_tar`), `scripts/a9_recovery.py` (recovery through `a4_recovery` and `a4_analyse`), `scripts/a9_run.py` (runner glue: A4's `RenderStore` and `score`; refuses without `--a9_frozen` and pinned code), `scripts/a9_analyse.py` (analysis through `a4_analyse`; replaces only `analyse_dataset`, whose dataset lookup cannot take A9's name), `slurm_jobs/study3_a9.sh`, `slurm_jobs/study3_a9_render.sh`, `tests/test_a9.py`. Outputs: `research/reproduction/a9_human_target.json`, `a9_human_ceiling.json`, `a9_recovery.json` (run 4, final code), `a9_recovery_run3.json`, `a9_recovery_run2.json` (pre-decision-8 code; the only surviving record of block `b548bc82`), `a9_recovery_run1_draft.json` (first run, draft code), `a9_chen_overlap.json`, all kept. Notes: `research/notes_a9.md`.
 
 ## Design block
 
@@ -337,9 +337,28 @@ A9's own constants are here and nowhere else; values shared with A4 are restated
   ],
   "correlated_noise": "stimulus logit noise per face = sqrt(rho) * shared + sqrt(1 - rho) * own, per configuration and option",
   "selection": "A if residual passes under A; else B if residual passes under B; else no confirmatory analysis",
-  "correlation_use": "Lead decision 2026-11-09, made after recovery run 2 and applying the rule stated before it (narrowed to the conditions that pass), narrowed by check: under face-correlated noise every decision check passes and only pair-swapped estimation accuracy at 0.25x fails. All A9 decisions stay confirmatory whatever the estimated face-shared correlation. The estimation-accuracy claim at 0.25x is withdrawn for correlated face noise. Each model's face-shared residual correlation is estimated and reported descriptively beside its result, with no label attached to decisions. Thresholds never move.",
+  "correlation_use": "Decision 2, stated before recovery run 2: if design B fails under face-correlated noise, the claim is narrowed to the conditions that pass; thresholds never move. Its first operationalisation (a scope label on every decision by r_star, the largest tested rho at which B passes every check; with r_star = 0 it would have placed every model outside the validated conditions; block b548bc82, never committed, surviving only as the design_sha256 of a9_recovery_run2.json) was replaced after run 2's result was seen by decision 8, narrowing by check, which is more favourable to confirmatory decisions: all A9 decisions stay confirmatory; the 0.25x estimation-accuracy claim is withdrawn under face-correlated noise; beside each decision the paper reports the model's face-shared residual correlation and the reading the first operationalisation would have given. No label is attached to the decision itself.",
+  "earlier_rule_reading": "descriptive: outside the recovery-validated conditions if the model's face-shared residual correlation exceeds r_star from a9_recovery.json, within them otherwise",
+  "withdrawn_under_independent_face_noise": [],
   "withdrawn_under_correlated_face_noise": [
    "liu_WC|0.25|pair_error"
+  ]
+ },
+ "replication": {
+  "comparator": "the same model's A4 decision on basic_WC (a4_analyse summary: datasets.basic_WC.<model>.decision); Liu observers are Western and use the same seven options. A4's basic headline is reported beside it and never used as the comparator",
+  "wording_by_a4_then_a9": {
+   "Aligned|Aligned": "replicated on a second human sample (same lab and generator)",
+   "Not aligned|Not aligned": "the Not aligned result replicated",
+   "Aligned|Not aligned": "did not replicate",
+   "Not aligned|Aligned": "did not replicate"
+  },
+  "otherwise": "replication not testable, naming the gate or test that left either decision Inconclusive, or that A4 basic_WC was not run for the model",
+  "mixed": "not needed: A4's per-dataset decision is Aligned, Not aligned or Inconclusive (a4_analyse.decide); Mixed exists only in A4's headline, which is not the comparator",
+  "rules": [
+   "did not replicate: both decisions are reported and no pooled claim is made",
+   "A9 Inconclusive is never reported as a failure to replicate",
+   "the paper never calls A9 independent of the GFG platform: it shares the lab, generator, AU library, protocol and culture with Snoek",
+   "A9 never changes any A4 verdict"
   ]
  },
  "shared_with_a4": {
@@ -423,23 +442,37 @@ The A4 question, on a second, independent human sample: when a face's action uni
 ## Relation to A4
 
 1. A4's verdicts are final as frozen. A9 never enters A4's Holm family, headline, decision table or any A4 sentence that states a verdict. A9 is reported in its own section, after A4's.
-2. A9 has its own Holm family: the two eligible models on the one A9 dataset.
+2. A9 has its own Holm family: the models of A4's family (Gemma 4, Qwen3-VL) that have A9 cells, as in A4 (`a4_analyse.apply_rule`). A model in A4's family that is never scored on A9 is reported as not run, and the Holm family is then the one model that was.
 3. No pooling. A9 and A4 estimates are never averaged, meta-analysed or combined into one decision. A descriptive table may place them side by side, labelled as separate tests.
 4. If A9 and A4 disagree for a model, both stand and the disagreement is reported as such; neither is reinterpreted.
 5. If A4 is Inconclusive for a model, an A9 Aligned or Not aligned does not make A4 conclusive.
+6. A9 is never called independent of the GFG platform. It is a second human sample on the same lab, generator, AU library, response protocol and culture.
+
+**Replication rule, fixed before any model data** (block: `replication`). The comparator for each model is the **same model's A4 decision on basic_WC**: Liu's observers are Western and answered the same seven options. A4's basic headline (which needs WC and EA to agree) is reported beside it and is never the comparator. The paper uses exactly these words:
+
+| A4 basic_WC | A9 | Wording |
+|---|---|---|
+| Aligned | Aligned | "replicated on a second human sample (same lab and generator)" |
+| Not aligned on these renders | Not aligned on these renders | "the Not aligned result replicated" |
+| Aligned | Not aligned | "did not replicate"; both decisions reported, no pooled claim |
+| Not aligned | Aligned | "did not replicate"; both decisions reported, no pooled claim |
+| Inconclusive, or not run for that model | any | "replication not testable", naming the gate or test (or that A4 basic_WC was not run) |
+| any | Inconclusive | "replication not testable", naming the gate or test |
+
+An A9 Inconclusive is never reported as a failure to replicate. No Mixed row is needed: A4's per-dataset decision is Aligned, Not aligned or Inconclusive (`a4_analyse.decide`); Mixed exists only in A4's headline, which is not the comparator. `a9_analyse.py` writes this reading per model (`replication`), from A4's frozen summary, whose design hash it checks.
 
 ## Lead decisions, 2026-11-09
 
 Recorded as given, before freezing and before any model saw a Liu render.
 
 1. **Design B, with `frame_max`.** B is the selected design (recovery rule below); `frame_max` is run as a secondary, descriptive set.
-2. **Face independence is tested, not assumed.** Recovery adds design B with model noise correlated across the four faces of a configuration at rho .25 and .5 (fixed in the block), under A4's unchanged rule, reported per check. Use, as stated before run 2: if B fails under correlation, the paper says so and the confirmatory claim is narrowed to the conditions that pass; thresholds never move. (The draft first operationalised this as a scope label on decisions, by the largest passing rho; decision 8 replaces that operationalisation.)
+2. **Face independence is tested, not assumed.** Recovery adds design B with model noise correlated across the four faces of a configuration at rho .25 and .5, under A4's unchanged rule, reported per check. The general rule, stated before recovery run 2: if B fails under correlation, the paper says so and the confirmatory claim is narrowed to the conditions that pass; thresholds never move. Its first operationalisation, also written before run 2, was a scope label on every decision by r_star, the largest tested rho at which B passes every check; a model whose face-shared correlation exceeded r_star would be reported "outside the recovery-validated conditions". With r_star = 0, that would have placed every model outside (`notes_a9.md`). That operationalisation was replaced by decision 8.
 3. **Response-code order** rests on the `PMI_exp2.m` declaration, Chen et al.'s identical order and the AU signatures; the evidence is recorded in the block (`response_code_evidence`); no further fetch.
 4. **Suffixes** "Open" and "i": disclosed as unverified (block: `suffix_meaning`), as A4 discloses its lip-parting approximation.
 5. **Gender asymmetry** kept: the human fit has no gender column (Liu releases none); the model fit uses rendered gender as A4's frozen `fit_tau` does (gender 0 under design B, where faces are balanced). Disclosed.
 6. **Liu against Snoek basic WC** is a descriptive yardstick only.
 7. **The file is used as released**, including the 323 stimuli with 5 or 6 AUs; disclosed. Contacting the authors is the user's decision and optional.
-8. **Narrowing by check (2026-11-09, made after seeing recovery run 2).** Applying decision 2's rule to run 2's result: under face-correlated noise every decision check passes (false Aligned, prior-only signal, boundary Not aligned, human-like Aligned, half-shared, different-cues Not aligned) and only pair-swapped estimation accuracy at 0.25x fails. So (a) all A9 decisions, Aligned, Not aligned and Inconclusive, stay confirmatory whatever a model's estimated face-shared correlation; (b) the estimation-accuracy claim at 0.25x is withdrawn for correlated face noise (block: `withdrawn_under_correlated_face_noise`), and the paper states this, as A4 withdrew its failing cells; (c) each model's face-shared residual correlation is estimated and reported descriptively beside its result, with the recovery table, and no label is attached to decisions. **Timing, disclosed:** this decision was taken after run 2's result was known, by the lead, applying the narrowing rule stated before the run; it was not part of the pre-run text. The block was changed accordingly (new design hash) and recovery rerun on the re-pinned code (run 3).
+8. **Narrowing by check (2026-11-09, taken after recovery run 2's result was seen).** Run 2 showed that under face-correlated noise every decision check passes (false Aligned, prior-only signal, boundary Not aligned, human-like Aligned, half-shared, different-cues Not aligned) and only pair-swapped estimation accuracy at 0.25x fails. The lead then replaced decision 2's first operationalisation with narrowing by check: (a) all A9 decisions, Aligned, Not aligned and Inconclusive, stay confirmatory; (b) the estimation-accuracy claim at 0.25x is withdrawn under face-correlated noise (block: `withdrawn_under_correlated_face_noise`), and the paper says so, as A4 withdrew its failing cells; (c) each model's face-shared residual correlation is reported descriptively beside its decision, and so is the reading the first operationalisation would have given (`earlier_rule_reading_descriptive`: outside the validated conditions when the correlation exceeds r_star). No label is attached to the decision itself. **Disclosed plainly:** this replacement was chosen after the result was known, and it is more favourable to confirmatory decisions than the operationalisation it replaced, under which every model would have been labelled outside. The text run 2 was hashed against (block `b548bc82...`) was never committed; `a9_recovery_run2.json`, which carries that hash, is its only surviving record. The block was changed (new design hash) and recovery rerun on re-pinned code (runs 3 and 4).
 
 ## Human data
 
@@ -449,7 +482,7 @@ Recorded as given, before freezing and before any model saw a Liu render.
 
 **What the files hold (checked).** `resp_emo` 1,200 by 20, codes 1 to 7, no missing values (24,000 responses). `stimuli_raw` 42 by 1,200 binary. `p` 42 by 1,200 peak amplitudes, continuous in (0, 1], and `p > 0` equals `stimuli_raw` exactly. `pseq` 42 by 75 by 1,200, the per-frame amplitude of each AU; its maximum over frames equals `p` to within .0014. `params.labels` gives the 42 AU names, identical for all 1,200 stimuli. Active raw AUs per stimulus: 1 to 6, mean 3.83, median 4 (17, 112, 328, 420, 250 and 73 stimuli with 1 to 6). The article describes the procedure, which Experiment II says it reuses, as 1 to 4 AUs with median 3; 323 Liu stimuli have 5 or 6. The discrepancy is unexplained and the file is used as released. **Not in the files:** face gender and identity per stimulus, and trial order.
 
-**Response codes.** 1 happy, 2 surprise, 3 fear, 4 disgust, 5 anger, 6 sad, 7 other. Source: Liu's released analysis code (Mendeley Data v3, `PMI_exp2.m`), which declares `emotion_label = {'happy','surprise','fear','disgust','anger','sad','other'}` and drops "other" by `emo_all<7`. That variable is declared but not used to index in the script, so the order rests on the declaration. It is corroborated, not set, by two further sources: the same lab's Chen et al. 2024 deposit labels its codes Happy, Surprise, Fear, Disgust, Anger, Sad, Other; and in the human fit the top AU family per code is AU12 for happy, AU27 for surprise, AU20 for fear, AU09 for disgust, AU17 then AU15 for sad (`label_corroboration_top3_families_by_beta`). Codes are mapped to A4's label order (anger, disgust, fear, happy, sadness, surprise, other) before any fit.
+**Response codes.** 1 happy, 2 surprise, 3 fear, 4 disgust, 5 anger, 6 sad, 7 other. Source: Liu's released analysis code (Mendeley Data v3, `PMI_exp2.m`), which declares `emotion_label = {'happy','surprise','fear','disgust','anger','sad','other'}` and drops "other" by `emo_all<7`. That variable is declared but not used to index in the script, so the order rests on the declaration. It is corroborated, not set, by two further sources: the same lab's Chen et al. 2024 deposit labels its codes Happy, Surprise, Fear, Disgust, Anger, Sad, Other; and in the human fit the top AU family per code is AU12 for happy, AU27 for surprise, AU20 for fear, AU09 for disgust, AU17 then AU15 for sad (`label_corroboration_top3_families_by_beta`). Two further checks, from human data only, also agree with this order. (i) Each Liu label row, read in this order, is closest (cosine of do effects, 25 families) to the same label's row in Snoek basic WC, for all seven labels: anger .648 (next, disgust .535), disgust .882, fear .892, happy .926, sadness .805, surprise .947, other .536. (ii) The one swap the top-family check cannot exclude, anger against disgust, is excluded by their weights: anger has the larger AU04 (.60 against .37), AU07 (.71 against .41) and AU23 (.60 against -.13) log-odds weights, disgust the larger AU09 (2.74 against 1.06) and AU10 (2.67 against .77). (iii) The lab's coding convention in Chen et al.'s file, under this order, matches Snoek's text labels trial by trial with agreement 1.000 in Snoek subjects 16 to 60 (`a9_chen_overlap.json`). These corroborate the order; they did not set it. Codes are mapped to A4's label order (anger, disgust, fear, happy, sadness, surprise, other) before any fit.
 
 **Why not Chen et al. 2024.** Checked at trial level on 2026-11-09 (`a9_chen_overlap.json`): Chen et al.'s Western file (OSF 3m95w, `WE_resp_data.mat`) is the Snoek basic WC experiment. In Snoek's subjects 16 to 60, every one of the 2,342 rows per subject has a unique exact match, across all 45 subjects' responses, to a Chen trial, and per-subject agreement after alignment is 1.000 for all 45. In subjects 01 to 15, 2,211 of 2,368 rows match exactly and per-subject agreement is .964 to .9996 (median .998). Chen's AU coding differs only in labelling: it lacks AU7, AU12L and AU12R as raw codes, and codes AU41 and AU42, which Snoek merged into AU43. Chen et al. 2024 is therefore not a second sample and is not used. Chen's East Asian file was not downloaded; that it matches Snoek basic EA is UNVERIFIED.
 
@@ -468,6 +501,7 @@ Recorded as given, before freezing and before any model saw a Liu render.
 | Face gender in the human fit | Centred covariate, unpenalised | Not available | Human fit has the intercept as its only unpenalised covariate. Model-side fit keeps A4's rendered-gender covariate unchanged; gender is randomised against AUs on both sides, so the marginal do effect is the same estimand |
 | Options | 7AFC: six labels and other | Same labels; "sad" for sadness; "other" includes blends | Same seven options, same order, same abstain mapping as A4 basic |
 | Ridge | Selected per dataset, 0.1 for basic | Selected by the same rule | Selected value 1.0, fixed now (below) |
+| Sets not carried over | A4 has a one-AU set (each column alone at .25, .5 and 1, with neutral faces), its direct contrast and dose read-out, 0.75x and 1.25x amplitude sets, and a blind readout | None of these | A9 renders no one-AU, scale or blind set, so A4's direct-contrast, dose and amplitude sensitivities have no A9 counterpart; V1 is inherited from A4's one-AU pilot |
 
 ## AU map and renderer coverage
 
@@ -570,7 +604,7 @@ Beside the primary, never replacing it, each on residual and raw CEA: presence c
 
 ## Recovery
 
-Synthetic observers answer Liu's real design through A4's estimator, by `scripts/a9_recovery.py` importing `a4_recovery` and `a4_analyse`: the same eight observers, built from Liu's human log-odds matrix, the same realism (stimulus logit noise SD 1 per option, lognormal AU gain error log SD 0.5), strengths .25, .5 and 1, 100 replicates per cell, and A4's pass rule (`a4_design.RECOVERY`) unchanged. A4's two withdrawn cells name A4 datasets, so **no A9 cell is withdrawn** (block: `withdrawn_cells`), which makes A9's rule stricter than A4's as applied. Seventeen checks per statistic and run. Under the correlated runs, each face's stimulus noise is sqrt(rho) times a shared draw plus sqrt(1 - rho) times its own, per configuration and option, before the four faces are averaged.
+Synthetic observers answer Liu's real design through A4's estimator, by `scripts/a9_recovery.py` importing `a4_recovery` and `a4_analyse`: the same eight observers, built from Liu's human log-odds matrix, the same realism (stimulus logit noise SD 1 per option, lognormal AU gain error log SD 0.5), strengths .25, .5 and 1, 100 replicates per cell, and A4's pass rule (`a4_design.RECOVERY`) unchanged. A4's two withdrawn cells name A4 datasets and do not carry over. Under independent face noise no A9 cell is withdrawn (block: `withdrawn_under_independent_face_noise`). Under face-correlated noise one cell is withdrawn by decision 8, `liu_WC|0.25|pair_error`, the same kind of cell A4 withdrew (pair-swapped accuracy at 0.25x). Seventeen checks per statistic and run. Under the correlated runs, each face's stimulus noise is sqrt(rho) times a shared draw plus sqrt(1 - rho) times its own, per configuration and option, before the four faces are averaged.
 
 **Every run, in order. The draft-code run is kept.**
 
@@ -580,19 +614,22 @@ Synthetic observers answer Liu's real design through A4's estimator, by `scripts
 | 1 | draft | A | Raw | 16 of 17 | FAIL: same check, 86% |
 | 1 | draft | B | Residual | 17 of 17 | PASS |
 | 1 | draft | B | Raw | 17 of 17 | PASS |
-| 2 | pre-decision-8 code (`a9_recovery_run2.json`, sha256 `79229b70c4a7d21cfcf9bd957669a899c9b503082932e77cddf94d4aced56e84`) | A | Residual | 16 of 17 | FAIL: pair-swapped 64% at 0.25x |
-| 2 | final | A | Raw | 16 of 17 | FAIL: same check, 81% |
-| 2 | final | B | Residual | 17 of 17 | **PASS** |
-| 2 | final | B | Raw | 17 of 17 | PASS |
-| 2 | final | B, rho .25 | Residual | 16 of 17 | **FAIL**: pair-swapped 89% at 0.25x (rule 90%) |
-| 2 | final | B, rho .25 | Raw | 17 of 17 | PASS |
-| 2 | final | B, rho .5 | Residual | 16 of 17 | **FAIL**: pair-swapped 87% at 0.25x |
-| 2 | final | B, rho .5 | Raw | 17 of 17 | PASS |
-| 3 | final, after decision 8 (`a9_recovery.json`, sha256 `01958263f95c6a2fb614d7e66093eb6ed61e11ede33415d14bc8fab8d076dd85`) | A, B, B rho .25, B rho .5 | Both | as run 2 | Every table and check identical to run 2 (same seeds and recovery code); only `design_sha256` and `code_sha256` differ |
+| 2 | pre-decision-8 code (design `b548bc82`; `a9_recovery_run2.json`, sha256 `79229b70c4a7d21cfcf9bd957669a899c9b503082932e77cddf94d4aced56e84`) | A | Residual | 16 of 17 | FAIL: pair-swapped 64% at 0.25x |
+| 2 | pre-decision-8 code (design `b548bc82`) | A | Raw | 16 of 17 | FAIL: same check, 81% |
+| 2 | pre-decision-8 code (design `b548bc82`) | B | Residual | 17 of 17 | **PASS** |
+| 2 | pre-decision-8 code (design `b548bc82`) | B | Raw | 17 of 17 | PASS |
+| 2 | pre-decision-8 code (design `b548bc82`) | B, rho .25 | Residual | 16 of 17 | **FAIL**: pair-swapped 89% at 0.25x (rule 90%) |
+| 2 | pre-decision-8 code (design `b548bc82`) | B, rho .25 | Raw | 17 of 17 | PASS |
+| 2 | pre-decision-8 code (design `b548bc82`) | B, rho .5 | Residual | 16 of 17 | **FAIL**: pair-swapped 87% at 0.25x |
+| 2 | pre-decision-8 code (design `b548bc82`) | B, rho .5 | Raw | 17 of 17 | PASS |
+| 3 | after decision 8 (design `41c95dae`; `a9_recovery_run3.json`, sha256 `01958263f95c6a2fb614d7e66093eb6ed61e11ede33415d14bc8fab8d076dd85`) | A, B, B rho .25, B rho .5 | Both | as run 2 | Every table and check identical to run 2 (same seeds and recovery code); only `design_sha256` and `code_sha256` differ |
+| 4 | final, after the audit fixes (design `21341eb4`; `a9_recovery.json`, sha256 `0ca7bd249fc0c0f705a5d7676e6eb30db88cb019d5a30c71195d67d20b752d68`) | A, B, B rho .25, B rho .5 | Both | as runs 2 and 3 | Every table and check identical to runs 2 and 3; carries the final design hash and code hashes |
 
-Run 2 carried the block hash `b548bc82...e56c`. Decision 8 changed the block (new hash `41c95dae...ec29`) and `a9_analyse.py`, so recovery was rerun as run 3, which carries the new block hash and the code hashes it ran on, equal to the pins under "Code hashes"; its tables and checks are identical to run 2's, so the recovery verdicts did not change. Its seeds differ from run 1's (the run name is part of the seed), so the two runs are independent draws; their verdicts agree. Run 2 took 81 minutes and run 3 135 minutes on 7 CPU workers.
+Run 2 carried block hash `b548bc82...e56c` (pre-decision-8 text). Decision 8 changed the block (`41c95dae...ec29`) and `a9_analyse.py`, so recovery was rerun as run 3. The audit fixes changed the block again (replication rule, reworded `correlation_use`; `21341eb4...0192`) and `a9_analyse.py`, so recovery was rerun as run 4, which carries the final block hash and the code hashes it ran on, equal to the pins under "Code hashes". `a9_recovery.py` is the same in runs 2 to 4 and the seeds are the same, so their tables and checks are identical; recovery verdicts did not change. Run 1 used the draft recovery code, whose seed vector had no correlation element and whose design B drew no shared noise matrix; runs 2 to 4 seed with `[SEED, dataset, observer, strength, replicate, design index, round(100 rho)]` and draw a shared matrix first under B. So run 1 and run 2 are independent draws; their verdicts for A and B agree. Run 2 took 81 minutes, run 3 135 and run 4 116, on 7 CPU workers (the machine was shared).
 
-**Consequences.** Design B is selected, with residual CEA confirmatory (`choice`, equal to the block's `design_selected`). B fails one check at rho .25 and at .5, the same one: pair-swapped estimation accuracy on weak effects (0.25x human strength). No decision check fails under correlation: false Aligned at most .04, prior-only signal at most .07, boundary Not aligned 0 on residual CEA, human-like Aligned 1.00 at every strength, different-cues Not aligned at least .94 at 1x. By decision 8 (taken after this result, applying the rule stated before it), decisions stay confirmatory, the 0.25x estimation-accuracy claim is withdrawn for correlated face noise, and each model's face-shared residual correlation is reported descriptively with no label on its decision. The file still records `r_star` (0, the largest tested rho at which every check passes), now descriptive only. Thresholds and the decision rule are not changed.
+**Consequences.** Design B is selected, with residual CEA confirmatory (`choice`, equal to the block's `design_selected`). B fails one check at rho .25 and at .5, the same one: pair-swapped estimation accuracy on weak effects (0.25x human strength). No decision check fails under correlation: false Aligned at most .04, prior-only signal at most .07, boundary Not aligned 0 on residual CEA, human-like Aligned 1.00 at every strength, different-cues Not aligned at least .94 at 1x. Decision 8, taken after this result was seen, keeps decisions confirmatory, withdraws the 0.25x estimation-accuracy claim under face-correlated noise, and reports each model's face-shared correlation and the earlier operationalisation's reading beside its decision. The file records `r_star` (0), used only for that descriptive reading. Thresholds and the decision rule are not changed.
+
+**Beyond the tested correlations.** Recovery tested rho up to .5, and a real model's estimated face-shared correlation may be higher, partly because the estimator leans high (it counts any non-additive configuration effect as shared). Two facts bear on that range; neither is a new run. First, design A, one image per configuration, approximates design B at rho = 1, where four faces with fully shared noise carry about the information of one. A passes every decision check in every run: in run 3, on residual CEA, human-like Aligned 1.00 at every strength, false Aligned at most .02, prior-only signal at most .05, boundary Not aligned at most .024, different-cues Not aligned .98 and half-shared Aligned .84 at 1x. A fails only the same pair-swapped accuracy check. Second, that failure is a downward bias: pair-swapped residual CEA reads .346 against a true .411 under A, and .359 against .396 under B at rho .5. A low bias works against Aligned; it could in principle favour Not aligned, but the boundary check, which counts Not aligned when the true CEA is at least .30, passed in every run. The rho = 1 reading is an approximation (A differs from B at rho 1 in its gender covariate and face assignment), not a tested condition.
 
 | Rate, residual CEA, run 2 | A 0.25x | A 1x | B 0.25x | B 0.5x | B 1x | B rho .25, 0.25x | B rho .5, 0.25x |
 |---|---|---|---|---|---|---|---|
@@ -606,7 +643,7 @@ Run 2 carried the block hash `b548bc82...e56c`. Decision 8 changed the block (ne
 
 At 0.5x and 1x, B passes every check at both correlations (pair-swapped accuracy .96 to 1.00). Pair-swapped observers' outputs correlate .88 to .95 with the human-weighted observer on natural-like stimuli (pair r .9, our construction), while their residual CEA is about .38 to .40, as in A4.
 
-**Disclosures on recovery.** Design B was written after A4's recovery history was known, before any A9 recovery number existed. The correlated-noise rhos (.25, .5) and their use were fixed by the lead before run 2. Recovery used 100 bootstrap draws and 6 splits per replicate, against 2,000 and 20 in the real analysis. The ridge was 1.0, the selected human value.
+**Disclosures on recovery.** Design B was written after A4's recovery history was known, before any A9 recovery number existed. The correlated-noise rhos (.25, .5) and the general narrowing rule were set by the lead before run 2; the operationalisation actually used (decision 8) was chosen after run 2 was seen. Recovery does not model face-by-AU interactions: its synthetic faces differ only by a gender intercept and noise, whereas real identities render AUs differently, a systematic effect that design B averages over four faces and design A does not. Pair-swapped observers, whose true residual CEA is about .40, above the SESOI, are decided Aligned in most replicates, as in A4 (A4 draft, "Reading Aligned") Recovery used 100 bootstrap draws and 6 splits per replicate, against 2,000 and 20 in the real analysis. The ridge was 1.0, the selected human value.
 
 ## Disclosures
 
@@ -618,8 +655,9 @@ At 0.5x and 1x, B passes every check at both correlations (pair-swapped accuracy
 - **AU counts** (decision 7): 323 stimuli carry 5 or 6 AUs against the article's 1 to 4; the file is used as released.
 - **Peak frame** combines AUs at their own peaks, which may never have co-occurred; `frame_max` is the descriptive check.
 - **Design B** was added as a fallback after A4's recovery history was known, before any A9 recovery number existed; its benefit under correlated face noise is reported, not assumed (decision 2).
-- **Narrowing by check** (decision 8) was decided after recovery run 2 was seen, by applying the narrowing rule stated before it; the withdrawn claim (0.25x estimation accuracy under correlated face noise) is an accuracy claim, not a decision.
+- **Narrowing by check** (decision 8) replaced, after recovery run 2 was seen, the first operationalisation of decision 2 (a scope label that would have placed every model outside the validated conditions). The replacement is more favourable to confirmatory decisions. The replaced text (block `b548bc82...`) was never committed; `a9_recovery_run2.json` carries its hash. The paper reports beside each decision the reading the replaced rule would have given. The withdrawn claim (0.25x estimation accuracy under face-correlated noise) is an accuracy claim, not a decision.
 - **The ridge, ceiling and AU map** were computed on human data only, before any model data, and are fixed by the block; recovery used synthetic observers only.
+- **Known limits from the audit** (`research/reviews/a9_audit.md`), not acted on further: recovery has no face-by-AU interaction (above); pair-swapped observers clear the SESOI (above); Holm runs over the models with cells (Relation to A4, item 2).
 - **A9 inherits A4's thresholds**, all marked proposed in A4, with no external source.
 
 ## Limits
@@ -639,26 +677,28 @@ Done before this text (2026-11-09):
 - [x] A4 code and outputs pinned in the block (`a4_pins`, each value equal to A4's frozen list); A9 inputs pinned (`input_pins`); manifest pinned (`manifest_sha256`).
 - [x] `scripts/a9_analyse.py`, `scripts/a9_run.py` and both Slurm scripts written; tests added.
 - [x] Human target regenerated on the final code (identical values; runtime field removed so the file is reproducible).
-- [x] Recovery and the correlated-noise sensitivity rerun on the final code after decision 8 (run 3; `a9_recovery.json` carries the block hash and the code hashes it ran on, equal to the pins below; tables identical to run 2).
+- [x] Pre-freeze audit (`research/reviews/a9_audit.md`, 18 findings) answered: replication rule added to the block; decision 8's timing stated plainly; withdrawn-cell text corrected; run labels fixed; `a9_analyse.py` hashes every input, refuses unpinned human, ceiling and detector files, and records all hashes; `*.partial` gitignored.
+- [x] Recovery rerun on the final code after the audit fixes (run 4; `a9_recovery.json` carries the block hash and the code hashes it ran on, equal to the pins below).
 - [x] A9 code pinned under "Code hashes"; `check_code_pins(require=True)` now passes, and `a9_run` and `a9_analyse` refuse to run without it.
 
 Remaining, in order:
 
 1. Audit this draft against A4 (the coordinator or the user).
-2. Commit A9's files and tag `a9-freeze`. The code pins are already in place, so any later edit to pinned code makes the runner and the analysis refuse.
+2. Commit A9's files and tag `a9-freeze`. Files to add: `research/PREREG_A9_DRAFT.md`, `research/notes_a9.md`, `research/DECISIONS.md`, `scripts/a9_design.py`, `scripts/a9_analyse.py`, `scripts/a9_run.py`, `scripts/a9_recovery.py`, `research/scripts/a9_human_target.py`, `research/scripts/a9_manifest.py`, `slurm_jobs/study3_a9.sh`, `slurm_jobs/study3_a9_render.sh`, `tests/test_a9.py`, `research/reproduction/a9_human_target.json`, `a9_human_ceiling.json`, `a9_chen_overlap.json`, `a9_recovery.json`, `a9_recovery_run3.json`, `a9_recovery_run2.json`, `a9_recovery_run1_draft.json`, `.gitignore`, and the paper files edited for A9. Before tagging, check that `git ls-files` covers every path under "Code hashes" and "Other A9 files" except the gitignored manifest. The code pins are already in place, so any later edit to pinned code makes the runner and the analysis refuse.
 3. On the cluster, after the tag: copy `results/a9/manifest.csv` (gitignored; or rebuild it with `a9_manifest.py manifest`, which needs the Liu files) and check its sha256 against the block; render with `sbatch --array=0-39 slurm_jobs/study3_a9_render.sh`.
 4. Timing smoke, then the scored run per eligible model after RQ0 and A4's gates: `A9_FROZEN=1 MODEL=... N_SHARDS=12 sbatch --array=0-11 slurm_jobs/study3_a9.sh`.
 5. Analyse once, after all shards finish: `python -m scripts.a9_analyse --gates gates.json`.
 
 ## Code hashes
 
-Recovery run 3 ran on exactly this code (its `code_sha256` equals these lines). `tests/test_a9.py` is not pinned here, so tests can still be added before the tag; at this text it is `4fefbb29ba8e7b35b51af59eb70fff643ecd45730e8e87c9d814117cfe6f3f60` (42 passed), and its final sha256 is recorded with the tag.
+Recovery run 4 ran on exactly this code (its `code_sha256` equals these lines). `tests/test_a9.py` is not pinned here, so tests can still be added before the tag; at this text it is `645de6e02c6b3f13d806fe4fc65ebe479107800b22069f71632ddc12ccb563c6` (53 passed), and its final sha256 is recorded with the tag.
 
 Other A9 files (sha256), not read by the code-pin check:
 
 - `slurm_jobs/study3_a9.sh`: `d3011382f49dc6b18b48e29e9b2ba8efe113a665b2772c86f21b5ae695214d45`
 - `slurm_jobs/study3_a9_render.sh`: `c4cb4c2e0dcdedba420bd83a984f557926218af08fccf21d88e0cc17d4a2aa76`
-- `research/reproduction/a9_recovery.json`: `01958263f95c6a2fb614d7e66093eb6ed61e11ede33415d14bc8fab8d076dd85`
+- `research/reproduction/a9_recovery.json`: `0ca7bd249fc0c0f705a5d7676e6eb30db88cb019d5a30c71195d67d20b752d68`
+- `research/reproduction/a9_recovery_run3.json`: `01958263f95c6a2fb614d7e66093eb6ed61e11ede33415d14bc8fab8d076dd85`
 - `research/reproduction/a9_recovery_run2.json`: `79229b70c4a7d21cfcf9bd957669a899c9b503082932e77cddf94d4aced56e84`
 - `research/reproduction/a9_recovery_run1_draft.json`: `625675e81eeda31f54f67e7fe2d1cf9b1330089f1b2edbf050f4ba326f680afe`
 - `research/reproduction/a9_chen_overlap.json`: `793fa184215f566ef4899d8d3222a55401c03622c93b8950775a6b092f374a44`
@@ -667,8 +707,8 @@ Other A9 files (sha256), not read by the code-pin check:
 - `results/a9/manifest.csv` (gitignored): `4b2f04aee90a46723227429751bf7a068d36499bbd419279856113acb547250a`, also pinned in the block
 
 ```text
-scripts/a9_design.py 1dc0aeacfd5888849eed91ba82e45c8bf039334778534717151e8c6486ad8c87
-scripts/a9_analyse.py 00c3b5faa8d94bf36d73fc073d54f4cd18a3940486a978c502235294191911af
+scripts/a9_design.py 57e851eccd185813795bb79548e82f6f3178b5dc1d4ab14641c4b744cd6c4d9d
+scripts/a9_analyse.py a90dbb7b400605e0e10eb73d697deb4560d75412ae2a5d84a130511e7f072bc9
 scripts/a9_run.py e9d14fb6158918d2f806da1d877301392487e5f51460304b7d1b08616617b144
 scripts/a9_recovery.py 273e0fbf0f11b2224c8513744351945690e14600c2c81fa0e259d1d5977cc785
 research/scripts/a9_human_target.py a47dc63a59079235b64b7cbee28855f8edb3804bb925d07388e356055a265d24

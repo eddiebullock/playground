@@ -24,7 +24,7 @@ from scripts import a4_design as a4  # noqa: E402
 
 DRAFT = ROOT / "research" / "PREREG_A9_DRAFT.md"
 # Restated in the draft. Any edit to the block must change both, on purpose.
-DESIGN_SHA256 = "41c95dae865b0ee0e3c61051ac6caeb1516dfea1633bd013bf4fe16ab1a9ec29"
+DESIGN_SHA256 = "21341eb47a4d5da81e7d672e21c56c83029cbf9ba2b928f98f10fcba35220192"
 
 _BLOCK = re.compile(r"^## Design block$.*?^```json\n(.*?)^```$", re.M | re.S)
 _CODE = re.compile(r"^## Code hashes$.*?^```text\n(.*?)^```$", re.M | re.S)

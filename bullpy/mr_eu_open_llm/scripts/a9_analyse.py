@@ -7,8 +7,11 @@ null, stimulus bootstrap, split-half R_S, signal test), sensitivities, replicate
 detector_gate, validity_gate, behaviour_metrics, apply_rule (Holm across the eligible models,
 then decide). What is written here replaces a4_analyse.analyse_dataset, which looks up
 a4_design.TASK_OF[dataset] and so cannot take A9's dataset name, and adds design B's averaging
-over faces, the presence and frame_max sensitivities, and the face-shared residual correlation,
-which is descriptive: by the lead decision of 2026-11-09 it attaches no label to any decision. A9 has its own Holm family and never touches an A4 output.
+over faces, the presence and frame_max sensitivities, the face-shared residual correlation and
+the reading the replaced first operationalisation of decision 2 would have given (both descriptive;
+no label is attached to any decision), and the pre-data replication reading against the same
+model's A4 basic_WC decision. Every input read is hashed; the pinned ones must equal their pins,
+and all hashes are written into the summary. A9 has its own Holm family and never touches an A4 output.
 
 Usage (after the freeze and after all shards finish):
     python -m scripts.a9_analyse --gates gates.json --output results/a9/summary.json
@@ -124,26 +127,32 @@ def analyse_model(rows, manifest, store, ceiling, human_table, design, seed=a9.S
     out["replicate"] = an.replicate_check(first, second, groups, rng) if len(groups) > 1 else {}
     out["P_main_mean"] = P.mean(axis=0).tolist() if len(P) else []
     out["face_shared_residual_correlation"] = face_shared_correlation(per_face, X_au)
-    if human_table is not None and len(kept):
+    if isinstance(human_table, str):
+        out["behaviour"] = human_table
+    elif human_table is not None and len(kept):
         out["behaviour"] = an.behaviour_metrics(P, np.vstack([human_table[r["cfg"]] for r in kept]))
     return out, P
 
 
-def human_configuration_table() -> Optional[Dict[str, np.ndarray]]:
-    """Mean human response per configuration, in A4's label order. Needs the Liu files."""
+def human_configuration_table() -> Tuple[Optional[Dict[str, np.ndarray]], str]:
+    """Mean human response per configuration, in A4's label order, and a status. Needs the Liu
+    files; if they are missing or fail their pins, the behaviour metrics are recorded as
+    unavailable with the reason, never dropped silently."""
     try:
         import a9_human_target as ht
 
         data = ht.load_liu()
-    except (SystemExit, FileNotFoundError, OSError):
-        return None
+    except (SystemExit, FileNotFoundError, OSError) as error:
+        reason = f"unavailable: {type(error).__name__}: {error}"
+        print(f"warning: behaviour metrics {reason}", file=sys.stderr)
+        return None, reason
     Y = ht.response_labels(data["codes"])
     labels = list(a9.HUMAN_LABELS)
     table = {}
     for i in range(Y.shape[0]):
         counts = np.array([(Y[i] == lab).sum() for lab in labels], dtype=float)
         table[f"liu{i + 1:04d}"] = counts / counts.sum()
-    return table
+    return table, "ok"
 
 
 def recovery_choice(path: Path) -> Tuple[str, str, Any]:
@@ -158,6 +167,62 @@ def recovery_choice(path: Path) -> Tuple[str, str, Any]:
     return choice["statistic"], choice["design"], block.get("r_star")
 
 
+def sha256(path: Path) -> str:
+    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+
+def pinned_input(path: Path, pinned: str, name: str) -> str:
+    """Hash of a file the analysis reads; refuses one that is not the pinned file."""
+    digest = sha256(path)
+    if digest != pinned:
+        raise SystemExit(f"{name} at {path} is {digest}, not the pinned {pinned}.")
+    return digest
+
+
+def earlier_rule_reading(rho_hat: Optional[float], r_star: Any) -> str:
+    """Descriptive only: what the replaced first operationalisation of decision 2 would have said."""
+    if r_star is None:
+        return "no recovery-validated condition"
+    if rho_hat is None:
+        return "face-shared correlation not estimable"
+    return "outside the recovery-validated conditions" if rho_hat > r_star else "within the recovery-validated conditions"
+
+
+def why_inconclusive(entry: Mapping[str, Any]) -> str:
+    """The gate or test that left a decision Inconclusive, for the replication wording."""
+    gates = entry.get("gates") or {}
+    failed = sorted(k for k, v in gates.items() if v is not True)
+    if failed:
+        return "failed or missing gate: " + ", ".join(failed)
+    if not entry.get("p_signal", 1.0) < a9.ALPHA:
+        return "signal test not passed"
+    return "neither the Aligned nor the Not aligned criteria met"
+
+
+def replication_reading(model: str, a9_entry: Mapping[str, Any], a4_summary: Optional[Mapping[str, Any]]) -> Dict[str, Any]:
+    """The block's pre-data wording, comparing the model's A9 decision with its A4 basic_WC decision."""
+    rule = a9.DESIGN["replication"]
+    a9_decision = a9_entry.get("decision")
+    a4_entry = ((a4_summary or {}).get("datasets", {}).get("basic_WC", {}) or {}).get(model)
+    headline = ((a4_summary or {}).get("models", {}).get(model, {}) or {}).get("headline", {}).get("basic")
+    out: Dict[str, Any] = {"a9_decision": a9_decision, "a4_basic_WC_decision": a4_entry.get("decision") if a4_entry else None,
+                           "a4_basic_headline_beside": headline}
+    if a4_entry is None:
+        out.update(reading=rule["otherwise"].split(",")[0], reason="A4 basic_WC was not run for this model")
+        return out
+    key = f"{a4_entry.get('decision')}|{a9_decision}"
+    if key in rule["wording_by_a4_then_a9"]:
+        out.update(reading=rule["wording_by_a4_then_a9"][key], reason=None)
+        return out
+    reasons = []
+    if a4_entry.get("decision") not in ("Aligned", "Not aligned"):
+        reasons.append(f"A4 basic_WC {a4_entry.get('decision')}: {why_inconclusive(a4_entry)}")
+    if a9_decision not in ("Aligned", "Not aligned"):
+        reasons.append(f"A9 {a9_decision}: {why_inconclusive(a9_entry)}")
+    out.update(reading=rule["otherwise"].split(",")[0], reason="; ".join(reasons))
+    return out
+
+
 def main() -> None:
     import pandas as pd
 
@@ -170,21 +235,40 @@ def main() -> None:
     parser.add_argument("--gates", type=Path, required=True,
                         help="JSON, per model: a1_passed, a3_passed, g2_g4. Missing means not passed.")
     parser.add_argument("--detector", type=Path, default=Path("research/reproduction/a4_v1_pilot.csv"))
+    parser.add_argument("--a4_summary", type=Path, default=Path("results/a4/summary.json"),
+                        help="A4's frozen summary, for the replication reading. Missing means not testable.")
     parser.add_argument("--output", type=Path, default=Path("results/a9/summary.json"))
     args = parser.parse_args()
     a9.check_code_pins(require=True)
     a9.check_pins()
     a9.check_manifest(args.manifest)
     digest = a9.design_hash()
+    inputs = {"human": pinned_input(args.human, a9.DESIGN["input_pins"]["research/reproduction/a9_human_target.json"], "human"),
+              "ceiling": pinned_input(args.ceiling, a9.DESIGN["input_pins"]["research/reproduction/a9_human_ceiling.json"],
+                                      "ceiling"),
+              "detector": pinned_input(args.detector, a9.DESIGN["a4_pins"]["research/reproduction/a4_v1_pilot.csv"],
+                                       "detector"),
+              "manifest": sha256(args.manifest), "recovery": sha256(args.recovery), "gates": sha256(args.gates)}
     statistic, design, r_star = recovery_choice(args.recovery)
+    a4_summary = None
+    if args.a4_summary.exists():
+        inputs["a4_summary"] = sha256(args.a4_summary)
+        a4_summary = json.loads(args.a4_summary.read_text(encoding="utf-8"))
+        from scripts import a4_design
+
+        if a4_summary.get("design_sha256") != a4_design.design_hash():
+            raise SystemExit("The A4 summary does not carry A4's frozen design hash.")
     store = json.loads(args.human.read_text(encoding="utf-8"))
     ceiling = json.loads(args.ceiling.read_text(encoding="utf-8"))["datasets"]
     manifest = pd.read_csv(args.manifest).to_dict("records")
     recorded = json.loads(args.gates.read_text(encoding="utf-8"))
     detector = an.detector_gate(pd.read_csv(args.detector, keep_default_na=False).to_dict("records"))
-    human_table = human_configuration_table()
+    human_table, behaviour_status = human_configuration_table()
+    if human_table is None:
+        human_table = behaviour_status
     models = [m for m in (*a9.MODELS, *a9.DESCRIPTIVE_MODELS) if an.shard_files(args.cells_dir, m)]
     cells = {m: an.read_shards(an.shard_files(args.cells_dir, m), digest) for m in models}
+    inputs["cell_shards"] = {p.name: sha256(p) for m in models for p in an.shard_files(args.cells_dir, m)}
     results: Dict[str, Dict[str, Any]] = {}
     gates: Dict[str, Dict[str, bool]] = {}
     for model in models:
@@ -194,11 +278,16 @@ def main() -> None:
                         **an.validity_gate(P, entry["replicate"], an.image_rms(cells[model], a9.TASK), detector)}
         results[model] = entry
     an.apply_rule(results, gates, statistic)
-    out = {"amendment": "A9", "design_sha256": digest, "code_sha256": a9.own_code_sha256(), "statistic": statistic,
+    for model, entry in results.items():
+        entry["earlier_rule_reading_descriptive"] = earlier_rule_reading(entry["face_shared_residual_correlation"], r_star)
+        entry["replication"] = replication_reading(model, entry, a4_summary)
+    out = {"amendment": "A9", "design_sha256": digest, "code_sha256": a9.own_code_sha256(), "input_sha256": inputs,
+           "behaviour_status": behaviour_status, "statistic": statistic,
            "design": design, "recovery_r_star_descriptive": r_star,
            "withdrawn_under_correlated_face_noise": list(a9.DESIGN["recovery"]["withdrawn_under_correlated_face_noise"]), "detector": detector, "human_reference": json.loads(
                args.ceiling.read_text(encoding="utf-8"))["human_reference_cfa"],
-           "note": "A9's own Holm family. Never changes any A4 verdict.", "models": results}
+           "note": "A9's own Holm family: the models in A4's family that have cells. Never changes any A4 verdict.",
+           "models": results}
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(out, indent=1, default=float) + "\n", encoding="utf-8")
     print(args.output, hashlib.sha256(args.output.read_bytes()).hexdigest())
