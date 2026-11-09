@@ -1,6 +1,5 @@
 {
  "amendment": "A9",
- "status": "DRAFT",
  "source": {
   "article": "Liu M, Duan Y, Ince RAA, Chen C, Garrod OGB, Schyns PG, Jack RE (2022). Facial expressions elicit multiplexed perceptions of emotion categories and dimensions. Current Biology 32(1), 200-209.e6. DOI 10.1016/j.cub.2021.10.035",
   "data_doi": "10.17632/dr853shk56.2",
@@ -3014,6 +3013,5 @@
     }
    }
   }
- },
- "runtime_seconds": 118
+ }
 }

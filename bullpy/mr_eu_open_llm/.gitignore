@@ -113,3 +113,9 @@ data/external/crema_d/
 data/external/liu2022/
 data/external/chen2024/
 results/face_input_validity/*.jsonl
+
+# A4 and A9 render tars while being written (a4_stimuli.render_tar)
+*.partial
+
+# bytecode under research/ (re-included above)
+research/**/__pycache__/

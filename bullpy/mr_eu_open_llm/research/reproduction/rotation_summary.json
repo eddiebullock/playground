@@ -1,0 +1,71 @@
+{
+  "gemma4": {
+    "accuracy_mismatch": 0.1736625514403292,
+    "accuracy_real": 0.4016460905349794,
+    "delta_ci_actor_bootstrap": [
+      0.17155953109072372,
+      0.2827593273035613
+    ],
+    "delta_real_minus_mismatch": 0.22798353909465022,
+    "n_items": 243,
+    "p_delta_actor_sign_flip": 2.999970000299997e-05,
+    "p_delta_holm": 8.999910000899992e-05,
+    "secondary_accuracy_by_target_position": {
+      "0": 0.3786008230452675,
+      "1": 0.35390946502057613,
+      "2": 0.4074074074074074,
+      "3": 0.4444444444444444,
+      "4": 0.42386831275720166
+    },
+    "secondary_real_vs_chance_pooled_p": 4.946870869545764e-84,
+    "secondary_rho_ptarget_human": 0.44387082849442794,
+    "secondary_within_category_r_ptarget_human": 0.13765604387099098,
+    "vision_dependent": true
+  },
+  "molmo2": {
+    "accuracy_mismatch": 0.09218106995884773,
+    "accuracy_real": 0.16296296296296298,
+    "delta_ci_actor_bootstrap": [
+      0.048818425196850396,
+      0.0937759336099585
+    ],
+    "delta_real_minus_mismatch": 0.07078189300411522,
+    "n_items": 243,
+    "p_delta_actor_sign_flip": 5.999940000599994e-05,
+    "p_delta_holm": 8.999910000899992e-05,
+    "secondary_accuracy_by_target_position": {
+      "0": 0.19753086419753085,
+      "1": 0.13168724279835392,
+      "2": 0.13991769547325103,
+      "3": 0.16872427983539096,
+      "4": 0.17695473251028807
+    },
+    "secondary_real_vs_chance_pooled_p": 0.6471240103615885,
+    "secondary_rho_ptarget_human": 0.3803329375963037,
+    "secondary_within_category_r_ptarget_human": 0.23301216855367135,
+    "vision_dependent": true
+  },
+  "qwen3vl": {
+    "accuracy_mismatch": 0.06666666666666668,
+    "accuracy_real": 0.4691358024691358,
+    "delta_ci_actor_bootstrap": [
+      0.34958228530362917,
+      0.46058154155664527
+    ],
+    "delta_real_minus_mismatch": 0.4024691358024692,
+    "n_items": 243,
+    "p_delta_actor_sign_flip": 2.999970000299997e-05,
+    "p_delta_holm": 8.999910000899992e-05,
+    "secondary_accuracy_by_target_position": {
+      "0": 0.4567901234567901,
+      "1": 0.5102880658436214,
+      "2": 0.48559670781893005,
+      "3": 0.448559670781893,
+      "4": 0.4444444444444444
+    },
+    "secondary_real_vs_chance_pooled_p": 3.970644946537762e-132,
+    "secondary_rho_ptarget_human": 0.4092048727832623,
+    "secondary_within_category_r_ptarget_human": 0.28761996725111033,
+    "vision_dependent": true
+  }
+}

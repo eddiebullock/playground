@@ -178,12 +178,29 @@ Not aligned is written "not aligned on these renders". With one dataset there is
 - decision: [PENDING: `decision`]
 - configurations kept and share lost under design B: [PENDING: `n_configurations`, `share_lost`, `lost_ok`]
 - residual correlation across faces, descriptive, with no label on the decision: [PENDING: `face_shared_residual_correlation`]
+- the reading the replaced first operationalisation of lead decision 2 would have given, descriptive, reported beside the decision so readers have both: [PENDING: `earlier_rule_reading_descriptive`]
+- replication reading against the same model's A4 basic WC decision, with A4's basic headline beside it: [PENDING: `replication.reading`, `replication.reason`, `replication.a4_basic_WC_decision`, `replication.a4_basic_headline_beside`]
 - ratio to ceiling, descriptive: [PENDING: `residual.over_ceiling`, `residual.lower_bound_only`]
 - raw CEA, secondary: [PENDING: `raw.cfa`, `raw.ci`]
 - sensitivities (presence coding, without AU22 and AU27, without the abstain row, flagged against confirmed families, `frame_max`): [PENDING: `sensitivities`]
 - behaviour beside CEA, per configuration: [PENDING: `behaviour`]
 - Molmo2, descriptive if run: [PENDING]
 - side-by-side with A4, labelled as separate tests, descriptive only: [PENDING]
+
+**Replication wording, fixed before data** (`PREREG_A9_DRAFT.md`, Relation to A4; block `replication`). Comparator: the same model's A4 decision on basic WC. A4's basic headline is reported beside it, never used as the comparator.
+
+| A4 basic WC | A9 | Words used |
+|---|---|---|
+| Aligned | Aligned | "replicated on a second human sample (same lab and generator)" |
+| Not aligned on these renders | Not aligned on these renders | "the Not aligned result replicated" |
+| Aligned | Not aligned | "did not replicate"; report both, no pooled claim |
+| Not aligned | Aligned | "did not replicate"; report both, no pooled claim |
+| Inconclusive, or not run for that model | any | "replication not testable", naming the gate or test |
+| any | Inconclusive | "replication not testable", naming the gate or test |
+
+A4's per-dataset decision cannot be Mixed, so no Mixed row arises. An A9 Inconclusive is never a failure to replicate. A9 is never called independent of the GFG platform.
+
+**Withdrawn claim.** Under face-correlated noise the claim that residual CEA is estimated accurately on weak effects (0.25 times human strength) is withdrawn. This was decided after recovery run 2 was seen, replacing an earlier operationalisation that would have labelled every model outside the validated conditions (`PREREG_A9_DRAFT.md`, lead decisions 2 and 8).
 
 **Writing rule.** Never "A9 confirms A4" or "A9 overturns A4". Say A9 is a second sample on the same platform (lab, generator, protocol, culture) and the same renders, not a second method (`PREREG_A9_DRAFT.md:421`).
 

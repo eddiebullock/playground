@@ -253,3 +253,31 @@ Every number above that the paper cites matches its file at the stated rounding.
 |---|---|---|---|---|---|
 | Weak labels, face-only human p_target (item mean) | Kind .2290 (n = 9), Unfriendly .2408 (n = 10), Jealous .2571 (n = 7); 26 items; chance 1/6 | verified | `research/scripts/make_figures.py` panel 1d (mean of `trials.*.p_target` by `human_target_label`) | `data/eu_emotions_human_entropy.json` | Matches DECISIONS 2026-11-04 (.229, .241, .257). Weak list from `WEAK_LABELS` in `scripts/run_stimulus_interventions.py` |
 | A2 sign-flip FWER under skewed gain nulls | Per route, long tail opposite the prediction, strong skew: .091 / .098 (gain SD .3), .137 / .130 (SD .5); weak skew .054 / .075, .082 / .093; at step-down P < .01, worst .046 / .044; sharp and hetero .043 to .055 | verified | `research/scripts/a2_gain_skew_sim.py` (1000 reps per cell, frozen `test_family`, exact flips) | `research/reproduction/a2_gain_skew_sim.json` (`results`, `per_route_fwer_by_threshold`) | `single_face` / `video_face`. DECISIONS 2026-11-08 |
+
+## A1 rotated 6AFC, vision mismatch (2026-11-09)
+
+Frozen `research/scripts/analyse_rotation.py` (sha256 `98890c5b...`, unchanged since `410da27`), run once through `analyse_rotation_run.py` (wrapper sha256 `7f52f9e7...`, DECISIONS 2026-11-08, "A1 errored trials") by `research/scripts/post_a1.sh` at 16:55 UTC. Arrays 39982137 and 39982138 COMPLETED. 30 files pulled unread, remote and local sha256 equal (`a1_pull_manifest.json`, sha256 prefix `c7697012`). Output `research/reproduction/rotation_summary.json` (prefix `81500bdd`). A first direct call of the frozen script, before the runbook, stopped on the errored trial with a KeyError before writing or printing anything; the runbook run is the analysis of record.
+
+**Errored trials:** 1 of 7,290 (`rotation_errored_trials.json`, prefix `ec876ebf`): Qwen3-VL, real, rotation 4, `emotions_17/EDITED/Afraid/MF3_cut.mp4`, "Failed to open video" on the cluster (I/O; the clip opened in the other nine Qwen files). Scored wrong in the primary, as frozen, and given 0 target mass in the secondary. Conservative for Qwen's delta.
+
+| Model | Accuracy real | Accuracy mismatch | delta (actor bootstrap 95% CI) | Holm p | Spearman with human p_target | Within-category r | Decision |
+|---|---|---|---|---|---|---|---|
+| Qwen3-VL | .469 | .067 | .402 (.350 to .461) | .00009 | .409 | .288 | Pass |
+| Gemma 4 | .402 | .174 | .228 (.172 to .283) | .00009 | .444 | .138 | Pass |
+| Molmo2 | .163 | .092 | .071 (.049 to .094) | .00009 | .380 | .233 | Pass |
+
+Holm p is at the permutation floor for all three (100,000 draws). Accuracy by target position, real: Qwen .457, .510, .486, .449, .444; Gemma .379, .354, .407, .444, .424; Molmo .198, .132, .140, .169, .177. Accuracy against 1/6, pooled and descriptive: Qwen and Gemma far above; Molmo .163, p .65, not above chance. Molmo's Pass rests on mismatch accuracy falling below chance (.092), so it shows that the face moves Molmo's answers, not that Molmo reads the target; as with A3, a Pass tests vision dependence, not competence.
+
+**Reading against A3** (`PREREG_A3_DRAFT.md`, "Reading against A1"): A1 Pass and A3 Pass on all three models, so "face use on both inputs". RQ0 is settled as R0-a in the Discussion outline, with Molmo2 still out of A2 and of A4's family on its gate failures.
+
+## Natural-clip RQ1, family pattern score, model-frames route (2026-11-09)
+
+`research/scripts/same_clip_family_analysis.py --model-route`, arguments as in STATE item 1, run once per model by the same runbook (exit 0; Qwen 2,230 s, Gemma 341 s, Molmo 296 s). Lambda 10 on all inputs, attempt 1 null of record, 4,999 permutations. Status from the files: "confirmatory: strength rule passed at 0.75x and 1x, at most 5 percent of clips lost" for all three, and the A1/A3 row Pass/Pass makes it confirmatory (DECISIONS 2026-11-07).
+
+| Model | Clips kept | Composite score (p) | First detector (p) | Second detector (p) | Unparsed share | File (sha256 prefix) |
+|---|---|---|---|---|---|---|
+| Qwen3-VL | 242 of 243 | .549 (.0002) | .548 (.0002) | .520 (.0002) | 0 | `same_clip_family_model_qwen3vl.json` (`bc0d6795`) |
+| Gemma 4 | 243 | .418 (.0006) | .411 (.001) | .350 (.0084) | .049 | `same_clip_family_model_gemma4.json` (`0f9c0a26`) |
+| Molmo2 | 243 | .543 (.0002) | .522 (.0002) | .469 (.0004) | .0024 | `same_clip_family_model_molmo2.json` (`9ad3d59d`) |
+
+The composite input is the confirmatory one; the two detectors alone are sensitivities. Qwen drops the errored clip (4 of 5 rotations usable; partial clips leave both matrices, DECISIONS 2026-11-04). .0002 is the floor at 4,999 permutations. Reading, as fixed in advance: each model's responses are **aligned with the human pattern** of AU families on these clips. This does not show that they use the same cues (Proposition 4; different-cues size .055 at 0.75x). Single and family-wise cells are exploratory.

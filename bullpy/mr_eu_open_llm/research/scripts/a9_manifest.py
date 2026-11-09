@@ -11,7 +11,7 @@ not release face gender per stimulus (humans saw 600 female and 600 male random 
 gender is assigned here by seeded hash, 600 and 600, using nothing but the stimulus index.
 
 Usage:
-    python -I research/scripts/a9_manifest.py manifest --out results/a9/manifest.csv --design A
+    python -I research/scripts/a9_manifest.py manifest --out results/a9/manifest.csv
     python -I research/scripts/a9_manifest.py render --manifest results/a9/manifest.csv \
         --out-dir results/a9/renders --tar 0
 """
@@ -111,7 +111,7 @@ def main(argv=None) -> int:
     sub = parser.add_subparsers(dest="command", required=True)
     m = sub.add_parser("manifest")
     m.add_argument("--out", type=Path, required=True)
-    m.add_argument("--design", choices=a9.DESIGNS, default="A")
+    m.add_argument("--design", choices=a9.DESIGNS, default=a9.DESIGN_SELECTED)
     r = sub.add_parser("render")
     r.add_argument("--manifest", type=Path, required=True)
     r.add_argument("--out-dir", type=Path, required=True)

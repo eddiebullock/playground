@@ -1,0 +1,148 @@
+{
+  "analyse_rotation_sha256": "98890c5bff65f13abeb0549b61fe414dc9fa30082b84bcb564671683ec12e24f",
+  "counts": {
+    "gemma4": {
+      "mismatch": {
+        "0": {
+          "n_errored": 0,
+          "trial_ids": []
+        },
+        "1": {
+          "n_errored": 0,
+          "trial_ids": []
+        },
+        "2": {
+          "n_errored": 0,
+          "trial_ids": []
+        },
+        "3": {
+          "n_errored": 0,
+          "trial_ids": []
+        },
+        "4": {
+          "n_errored": 0,
+          "trial_ids": []
+        }
+      },
+      "real": {
+        "0": {
+          "n_errored": 0,
+          "trial_ids": []
+        },
+        "1": {
+          "n_errored": 0,
+          "trial_ids": []
+        },
+        "2": {
+          "n_errored": 0,
+          "trial_ids": []
+        },
+        "3": {
+          "n_errored": 0,
+          "trial_ids": []
+        },
+        "4": {
+          "n_errored": 0,
+          "trial_ids": []
+        }
+      }
+    },
+    "molmo2": {
+      "mismatch": {
+        "0": {
+          "n_errored": 0,
+          "trial_ids": []
+        },
+        "1": {
+          "n_errored": 0,
+          "trial_ids": []
+        },
+        "2": {
+          "n_errored": 0,
+          "trial_ids": []
+        },
+        "3": {
+          "n_errored": 0,
+          "trial_ids": []
+        },
+        "4": {
+          "n_errored": 0,
+          "trial_ids": []
+        }
+      },
+      "real": {
+        "0": {
+          "n_errored": 0,
+          "trial_ids": []
+        },
+        "1": {
+          "n_errored": 0,
+          "trial_ids": []
+        },
+        "2": {
+          "n_errored": 0,
+          "trial_ids": []
+        },
+        "3": {
+          "n_errored": 0,
+          "trial_ids": []
+        },
+        "4": {
+          "n_errored": 0,
+          "trial_ids": []
+        }
+      }
+    },
+    "qwen3vl": {
+      "mismatch": {
+        "0": {
+          "n_errored": 0,
+          "trial_ids": []
+        },
+        "1": {
+          "n_errored": 0,
+          "trial_ids": []
+        },
+        "2": {
+          "n_errored": 0,
+          "trial_ids": []
+        },
+        "3": {
+          "n_errored": 0,
+          "trial_ids": []
+        },
+        "4": {
+          "n_errored": 0,
+          "trial_ids": []
+        }
+      },
+      "real": {
+        "0": {
+          "n_errored": 0,
+          "trial_ids": []
+        },
+        "1": {
+          "n_errored": 0,
+          "trial_ids": []
+        },
+        "2": {
+          "n_errored": 0,
+          "trial_ids": []
+        },
+        "3": {
+          "n_errored": 0,
+          "trial_ids": []
+        },
+        "4": {
+          "n_errored": 1,
+          "trial_ids": [
+            "emotions_17/EDITED/Afraid/MF3_cut.mp4"
+          ]
+        }
+      }
+    }
+  },
+  "total_errored": 1,
+  "what": "stage2 entries without response_distribution, given an empty one for p_target only",
+  "wrapper_sha256": "7f52f9e7b29f0afbbe76977ee3b3330f01c8f6ececf29fe14ddf9655c67d653e"
+}

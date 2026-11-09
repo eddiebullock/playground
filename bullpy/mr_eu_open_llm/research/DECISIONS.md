@@ -468,3 +468,18 @@ The user reported the `cas_*` jobs finished and asked for the free capacity to b
 ## 2026-11-09: A8 frozen (tag `a8-freeze`, design text)
 
 A8 adds Qwen3-VL-32B and Gemma 4 31B through the frozen pipelines, with its own Holm families; it cannot change any frozen verdict. Frozen on the design text (hash 95dd41b5) before the Qwen3-VL-8B A1 result was read, after an independent audit (21 findings), a re-check (R1 to R6) and a final check. The A3 wrapper reproduces the frozen summary hash exactly on the cluster; both weight copies match Hugging Face file by file. Code pins, the GPU A1 equivalence test and timing smokes are a dated pre-data step before any A8 output. Gemma 4 31B is on the lab project store with the user's approval (2026-11-09).
+
+## 2026-11-09: A9 lead decisions (draft entry, before the freeze)
+
+A9 (`research/PREREG_A9_DRAFT.md`) repeats A4's confirmatory test on Liu et al. 2022 Experiment II. Lead decisions, recorded before any model saw a Liu render:
+
+1. Design B (each configuration on all four Western faces, averaged), with the `frame_max` set as secondary and descriptive.
+2. Face independence is tested, not assumed: recovery adds design B with face-correlated noise at rho .25 and .5. General rule, stated before recovery run 2: if B fails under correlation, the claim is narrowed to the conditions that pass, and thresholds never move.
+3. Response-code order from Liu's `PMI_exp2.m`, Chen et al.'s identical order and the AU signatures; corroborated by Liu-to-Snoek row matches (largest on the diagonal for all seven labels) and the Chen trial-level match (1.000). No further fetch.
+4. The "Open" and "i" AU suffixes are disclosed as unverified.
+5. Gender asymmetry kept (no gender in the human fit; rendered gender on the model side, as A4's frozen code), disclosed.
+6. Liu against Snoek basic WC is a descriptive yardstick only.
+7. The Liu file is used as released (323 stimuli with 5 or 6 AUs), disclosed.
+8. Narrowing by check, **taken after recovery run 2's result was seen.** Under face-correlated noise B passed every decision check and failed only pair-swapped estimation accuracy at 0.25x. Decision 2's first operationalisation (a scope label by r_star; with r_star = 0 it would have placed every model outside the validated conditions) was replaced by: all decisions stay confirmatory; the 0.25x accuracy claim is withdrawn under face-correlated noise; each model's face-shared correlation and the reading the replaced rule would have given are reported beside its decision. The replacement is more favourable to confirmatory decisions. The replaced text (block `b548bc82`) was never committed; `a9_recovery_run2.json` carries its hash.
+
+After the independent pre-freeze audit (`research/reviews/a9_audit.md`): the replication rule was fixed before data (comparator: the same model's A4 basic_WC decision; fixed wording per outcome pair; Inconclusive on either side reads "replication not testable"; A9 is never called independent of the GFG platform), and `a9_analyse.py` now hashes every input and refuses unpinned target, ceiling and detector files. Design hash and code pins are in the draft; recovery was rerun as run 4 on the final code. A9 cannot change any A4 verdict.

@@ -1,0 +1,346 @@
+{
+ "analysis_root": "/Users/eb2007/playground/bullpy/mr_eu_open_llm",
+ "commands": [
+  {
+   "cmd": [
+    "/opt/anaconda3/envs/mr_eu_open_llm/bin/python",
+    "research/scripts/analyse_rotation_run.py",
+    "--output",
+    "research/reproduction/rotation_summary.json",
+    "--errored-out",
+    "research/reproduction/rotation_errored_trials.json"
+   ],
+   "cwd": "/Users/eb2007/playground/bullpy/mr_eu_open_llm",
+   "exit_code": 0,
+   "finished": "2026-11-09T16:56:18+00:00",
+   "name": "analyse_rotation",
+   "seconds": 2.3,
+   "started": "2026-11-09T16:56:15+00:00",
+   "stderr_log": "/Users/eb2007/playground/bullpy/mr_eu_open_llm/research/logs/post_a1_20261109T165517Z/analyse_rotation.stderr.log",
+   "stdout_log": "/Users/eb2007/playground/bullpy/mr_eu_open_llm/research/logs/post_a1_20261109T165517Z/analyse_rotation.stdout.log"
+  },
+  {
+   "cmd": [
+    "/opt/anaconda3/envs/mr_eu_open_llm/bin/python",
+    "research/scripts/same_clip_family_analysis.py",
+    "--model-route",
+    "--au-csv",
+    "research/reproduction/eu_au_measures.csv",
+    "--model",
+    "qwen3vl",
+    "--model-evals",
+    "results/baseline/eu_emotions/qwen3vl/eval_v2_eu_emotions_qwen3vl_video_only_seed42_rot*_real.json"
+   ],
+   "cwd": "/Users/eb2007/playground/bullpy/mr_eu_open_llm",
+   "exit_code": 0,
+   "finished": "2026-11-09T17:33:28+00:00",
+   "name": "model_route_qwen3vl",
+   "seconds": 2230.1,
+   "started": "2026-11-09T16:56:18+00:00",
+   "stderr_log": "/Users/eb2007/playground/bullpy/mr_eu_open_llm/research/logs/post_a1_20261109T165517Z/model_route_qwen3vl.stderr.log",
+   "stdout_log": "/Users/eb2007/playground/bullpy/mr_eu_open_llm/research/logs/post_a1_20261109T165517Z/model_route_qwen3vl.stdout.log"
+  },
+  {
+   "cmd": [
+    "/opt/anaconda3/envs/mr_eu_open_llm/bin/python",
+    "research/scripts/same_clip_family_analysis.py",
+    "--model-route",
+    "--au-csv",
+    "research/reproduction/eu_au_measures.csv",
+    "--model",
+    "gemma4",
+    "--model-evals",
+    "results/baseline/eu_emotions/gemma4/eval_v2_eu_emotions_gemma4_video_only_seed42_rot*_real.json"
+   ],
+   "cwd": "/Users/eb2007/playground/bullpy/mr_eu_open_llm",
+   "exit_code": 0,
+   "finished": "2026-11-09T17:39:09+00:00",
+   "name": "model_route_gemma4",
+   "seconds": 340.6,
+   "started": "2026-11-09T17:33:28+00:00",
+   "stderr_log": "/Users/eb2007/playground/bullpy/mr_eu_open_llm/research/logs/post_a1_20261109T165517Z/model_route_gemma4.stderr.log",
+   "stdout_log": "/Users/eb2007/playground/bullpy/mr_eu_open_llm/research/logs/post_a1_20261109T165517Z/model_route_gemma4.stdout.log"
+  },
+  {
+   "cmd": [
+    "/opt/anaconda3/envs/mr_eu_open_llm/bin/python",
+    "research/scripts/same_clip_family_analysis.py",
+    "--model-route",
+    "--au-csv",
+    "research/reproduction/eu_au_measures.csv",
+    "--model",
+    "molmo2",
+    "--model-evals",
+    "results/baseline/eu_emotions/molmo2/eval_v2_eu_emotions_molmo2_video_only_seed42_rot*_real.json"
+   ],
+   "cwd": "/Users/eb2007/playground/bullpy/mr_eu_open_llm",
+   "exit_code": 0,
+   "finished": "2026-11-09T17:44:05+00:00",
+   "name": "model_route_molmo2",
+   "seconds": 296.0,
+   "started": "2026-11-09T17:39:09+00:00",
+   "stderr_log": "/Users/eb2007/playground/bullpy/mr_eu_open_llm/research/logs/post_a1_20261109T165517Z/model_route_molmo2.stderr.log",
+   "stdout_log": "/Users/eb2007/playground/bullpy/mr_eu_open_llm/research/logs/post_a1_20261109T165517Z/model_route_molmo2.stdout.log"
+  }
+ ],
+ "exit_code": 0,
+ "files": [
+  {
+   "bytes": 795247,
+   "match": true,
+   "path": "results/baseline/eu_emotions/qwen3vl/eval_v2_eu_emotions_qwen3vl_video_only_seed42_rot0_real.json",
+   "sha256_local": "a0631fd176f41f3a3f2baeb8a9d30ee6227d7a9f507ad39ae9c9ed3e5ce86b44",
+   "sha256_remote": "a0631fd176f41f3a3f2baeb8a9d30ee6227d7a9f507ad39ae9c9ed3e5ce86b44"
+  },
+  {
+   "bytes": 793004,
+   "match": true,
+   "path": "results/baseline/eu_emotions/qwen3vl/eval_v2_eu_emotions_qwen3vl_video_only_seed42_rot1_real.json",
+   "sha256_local": "03b8c63399ee442b4f3b5c80a8bdfea03d6af95547752d4727ddda0aa87ff869",
+   "sha256_remote": "03b8c63399ee442b4f3b5c80a8bdfea03d6af95547752d4727ddda0aa87ff869"
+  },
+  {
+   "bytes": 793850,
+   "match": true,
+   "path": "results/baseline/eu_emotions/qwen3vl/eval_v2_eu_emotions_qwen3vl_video_only_seed42_rot2_real.json",
+   "sha256_local": "097aa0a34559a457fc9b5040bcccc2248a3b333e5136a6088b3f24142ecb0c5e",
+   "sha256_remote": "097aa0a34559a457fc9b5040bcccc2248a3b333e5136a6088b3f24142ecb0c5e"
+  },
+  {
+   "bytes": 795315,
+   "match": true,
+   "path": "results/baseline/eu_emotions/qwen3vl/eval_v2_eu_emotions_qwen3vl_video_only_seed42_rot3_real.json",
+   "sha256_local": "8eaae49e358fd38a5cc656414f95d5c5caa5df4009aee8430cf6adf92b55ad6f",
+   "sha256_remote": "8eaae49e358fd38a5cc656414f95d5c5caa5df4009aee8430cf6adf92b55ad6f"
+  },
+  {
+   "bytes": 786720,
+   "match": true,
+   "path": "results/baseline/eu_emotions/qwen3vl/eval_v2_eu_emotions_qwen3vl_video_only_seed42_rot4_real.json",
+   "sha256_local": "9fa1d3968ce6eb10d72f6244f31b10ebebb3b1b56201eb3bb4311959ab445e80",
+   "sha256_remote": "9fa1d3968ce6eb10d72f6244f31b10ebebb3b1b56201eb3bb4311959ab445e80"
+  },
+  {
+   "bytes": 814934,
+   "match": true,
+   "path": "results/baseline/eu_emotions/qwen3vl/eval_v2_eu_emotions_qwen3vl_video_only_seed42_rot0_mismatch.json",
+   "sha256_local": "ec1f32ca1eb29298ea6d07b8c2d6ffa95087cf16aa8a29d86750a0f54d20fce2",
+   "sha256_remote": "ec1f32ca1eb29298ea6d07b8c2d6ffa95087cf16aa8a29d86750a0f54d20fce2"
+  },
+  {
+   "bytes": 808855,
+   "match": true,
+   "path": "results/baseline/eu_emotions/qwen3vl/eval_v2_eu_emotions_qwen3vl_video_only_seed42_rot1_mismatch.json",
+   "sha256_local": "0b0a3a6da2468e36af146073441bca0e95cfaa7febab86362788403aaab83d65",
+   "sha256_remote": "0b0a3a6da2468e36af146073441bca0e95cfaa7febab86362788403aaab83d65"
+  },
+  {
+   "bytes": 811890,
+   "match": true,
+   "path": "results/baseline/eu_emotions/qwen3vl/eval_v2_eu_emotions_qwen3vl_video_only_seed42_rot2_mismatch.json",
+   "sha256_local": "6a315a7fa380024a73e7839fc3ee4344cc56249e7ab65031e7d8a8ef75e20cf2",
+   "sha256_remote": "6a315a7fa380024a73e7839fc3ee4344cc56249e7ab65031e7d8a8ef75e20cf2"
+  },
+  {
+   "bytes": 811545,
+   "match": true,
+   "path": "results/baseline/eu_emotions/qwen3vl/eval_v2_eu_emotions_qwen3vl_video_only_seed42_rot3_mismatch.json",
+   "sha256_local": "2fe86088e3c63652db63f4ccfa7f543807a201c09fe4032450bde8c7a07dd2a6",
+   "sha256_remote": "2fe86088e3c63652db63f4ccfa7f543807a201c09fe4032450bde8c7a07dd2a6"
+  },
+  {
+   "bytes": 805895,
+   "match": true,
+   "path": "results/baseline/eu_emotions/qwen3vl/eval_v2_eu_emotions_qwen3vl_video_only_seed42_rot4_mismatch.json",
+   "sha256_local": "83a24cd683a7ae4a744d529fb7ef0867716822be93151ddb729a82097256885e",
+   "sha256_remote": "83a24cd683a7ae4a744d529fb7ef0867716822be93151ddb729a82097256885e"
+  },
+  {
+   "bytes": 723171,
+   "match": true,
+   "path": "results/baseline/eu_emotions/gemma4/eval_v2_eu_emotions_gemma4_video_only_seed42_rot0_real.json",
+   "sha256_local": "6bc0470a9a5fff5d6491d6f3b09deddd0acddae8ce64a64b159b5a8d6ddf4bf0",
+   "sha256_remote": "6bc0470a9a5fff5d6491d6f3b09deddd0acddae8ce64a64b159b5a8d6ddf4bf0"
+  },
+  {
+   "bytes": 725611,
+   "match": true,
+   "path": "results/baseline/eu_emotions/gemma4/eval_v2_eu_emotions_gemma4_video_only_seed42_rot1_real.json",
+   "sha256_local": "3a53ef5ca4b9c8ba048882a329e4e76c7235f1638f3d463a75dab3008e30af84",
+   "sha256_remote": "3a53ef5ca4b9c8ba048882a329e4e76c7235f1638f3d463a75dab3008e30af84"
+  },
+  {
+   "bytes": 724685,
+   "match": true,
+   "path": "results/baseline/eu_emotions/gemma4/eval_v2_eu_emotions_gemma4_video_only_seed42_rot2_real.json",
+   "sha256_local": "11c4fa7386dbc2f0a4125119269b0ae9f9bcca46f8f43aab86f1c60f5584c033",
+   "sha256_remote": "11c4fa7386dbc2f0a4125119269b0ae9f9bcca46f8f43aab86f1c60f5584c033"
+  },
+  {
+   "bytes": 724190,
+   "match": true,
+   "path": "results/baseline/eu_emotions/gemma4/eval_v2_eu_emotions_gemma4_video_only_seed42_rot3_real.json",
+   "sha256_local": "194f42ee5f28d6fcafe6c88af92ee189b9ed40e1b5be1ee44043173c609df475",
+   "sha256_remote": "194f42ee5f28d6fcafe6c88af92ee189b9ed40e1b5be1ee44043173c609df475"
+  },
+  {
+   "bytes": 722605,
+   "match": true,
+   "path": "results/baseline/eu_emotions/gemma4/eval_v2_eu_emotions_gemma4_video_only_seed42_rot4_real.json",
+   "sha256_local": "400af11f45cbe85d4b03679ecf7d30e9e844872207758ae0f9ca253100471716",
+   "sha256_remote": "400af11f45cbe85d4b03679ecf7d30e9e844872207758ae0f9ca253100471716"
+  },
+  {
+   "bytes": 736661,
+   "match": true,
+   "path": "results/baseline/eu_emotions/gemma4/eval_v2_eu_emotions_gemma4_video_only_seed42_rot0_mismatch.json",
+   "sha256_local": "f0bc17d4844527cc37db6acba24618344e8c466173d973b4b8e19bbc940e0fb5",
+   "sha256_remote": "f0bc17d4844527cc37db6acba24618344e8c466173d973b4b8e19bbc940e0fb5"
+  },
+  {
+   "bytes": 735624,
+   "match": true,
+   "path": "results/baseline/eu_emotions/gemma4/eval_v2_eu_emotions_gemma4_video_only_seed42_rot1_mismatch.json",
+   "sha256_local": "f93fcdc881dd73992ccd39aac031381f2db7d60fc21ead97cebbee482eb8e574",
+   "sha256_remote": "f93fcdc881dd73992ccd39aac031381f2db7d60fc21ead97cebbee482eb8e574"
+  },
+  {
+   "bytes": 734882,
+   "match": true,
+   "path": "results/baseline/eu_emotions/gemma4/eval_v2_eu_emotions_gemma4_video_only_seed42_rot2_mismatch.json",
+   "sha256_local": "9beb1519803beb037b99c954cf860e07cbbf6fd480edd8ce496e3a6e82c1e17d",
+   "sha256_remote": "9beb1519803beb037b99c954cf860e07cbbf6fd480edd8ce496e3a6e82c1e17d"
+  },
+  {
+   "bytes": 736626,
+   "match": true,
+   "path": "results/baseline/eu_emotions/gemma4/eval_v2_eu_emotions_gemma4_video_only_seed42_rot3_mismatch.json",
+   "sha256_local": "14140bf3d6066e099e7fb4f982ce0cbadf960f9a6706d377e53a658d9c48d4ee",
+   "sha256_remote": "14140bf3d6066e099e7fb4f982ce0cbadf960f9a6706d377e53a658d9c48d4ee"
+  },
+  {
+   "bytes": 733817,
+   "match": true,
+   "path": "results/baseline/eu_emotions/gemma4/eval_v2_eu_emotions_gemma4_video_only_seed42_rot4_mismatch.json",
+   "sha256_local": "08586af6a7a4553224b7c09d13ca18db000a0cfa8c91107c4847c4207aa3c21c",
+   "sha256_remote": "08586af6a7a4553224b7c09d13ca18db000a0cfa8c91107c4847c4207aa3c21c"
+  },
+  {
+   "bytes": 736546,
+   "match": true,
+   "path": "results/baseline/eu_emotions/molmo2/eval_v2_eu_emotions_molmo2_video_only_seed42_rot0_real.json",
+   "sha256_local": "6c28f6578e94aa78ee4821aff09fcd4001578d6f8c24746503a09c012de51746",
+   "sha256_remote": "6c28f6578e94aa78ee4821aff09fcd4001578d6f8c24746503a09c012de51746"
+  },
+  {
+   "bytes": 740654,
+   "match": true,
+   "path": "results/baseline/eu_emotions/molmo2/eval_v2_eu_emotions_molmo2_video_only_seed42_rot1_real.json",
+   "sha256_local": "251450120ad8df9df3d0f2625b96c9f9a01e5cf1b2a6bfbe4cf97a62d2531a1a",
+   "sha256_remote": "251450120ad8df9df3d0f2625b96c9f9a01e5cf1b2a6bfbe4cf97a62d2531a1a"
+  },
+  {
+   "bytes": 739314,
+   "match": true,
+   "path": "results/baseline/eu_emotions/molmo2/eval_v2_eu_emotions_molmo2_video_only_seed42_rot2_real.json",
+   "sha256_local": "eb114494de9fc29a912af5594ffcc272aa0b2d0312c787f374782b368c736e2d",
+   "sha256_remote": "eb114494de9fc29a912af5594ffcc272aa0b2d0312c787f374782b368c736e2d"
+  },
+  {
+   "bytes": 738928,
+   "match": true,
+   "path": "results/baseline/eu_emotions/molmo2/eval_v2_eu_emotions_molmo2_video_only_seed42_rot3_real.json",
+   "sha256_local": "4b33b4f0163b094a4e7e626b9847fa9b53787c1f8b61dcde98d24c122fbb20b8",
+   "sha256_remote": "4b33b4f0163b094a4e7e626b9847fa9b53787c1f8b61dcde98d24c122fbb20b8"
+  },
+  {
+   "bytes": 739511,
+   "match": true,
+   "path": "results/baseline/eu_emotions/molmo2/eval_v2_eu_emotions_molmo2_video_only_seed42_rot4_real.json",
+   "sha256_local": "9155d773e119d2a79f14105f3d3f78d3e3d73c7d8f5e04b6602824da097a3afa",
+   "sha256_remote": "9155d773e119d2a79f14105f3d3f78d3e3d73c7d8f5e04b6602824da097a3afa"
+  },
+  {
+   "bytes": 746519,
+   "match": true,
+   "path": "results/baseline/eu_emotions/molmo2/eval_v2_eu_emotions_molmo2_video_only_seed42_rot0_mismatch.json",
+   "sha256_local": "88a33a5fa02b881b010795a95177356a8e59c468c7a1f63a6873c9bc8bbe97c3",
+   "sha256_remote": "88a33a5fa02b881b010795a95177356a8e59c468c7a1f63a6873c9bc8bbe97c3"
+  },
+  {
+   "bytes": 742313,
+   "match": true,
+   "path": "results/baseline/eu_emotions/molmo2/eval_v2_eu_emotions_molmo2_video_only_seed42_rot1_mismatch.json",
+   "sha256_local": "a724f422ea112cca2501fcdf755470eb175136f9315fe02c49c7485aa86590c8",
+   "sha256_remote": "a724f422ea112cca2501fcdf755470eb175136f9315fe02c49c7485aa86590c8"
+  },
+  {
+   "bytes": 744848,
+   "match": true,
+   "path": "results/baseline/eu_emotions/molmo2/eval_v2_eu_emotions_molmo2_video_only_seed42_rot2_mismatch.json",
+   "sha256_local": "aec85a02944013cd456dd1469b78d0d8b574c6e1d02cd449579a2ed5cc5c30b0",
+   "sha256_remote": "aec85a02944013cd456dd1469b78d0d8b574c6e1d02cd449579a2ed5cc5c30b0"
+  },
+  {
+   "bytes": 743430,
+   "match": true,
+   "path": "results/baseline/eu_emotions/molmo2/eval_v2_eu_emotions_molmo2_video_only_seed42_rot3_mismatch.json",
+   "sha256_local": "b09a609426508aa4f47c6f8e63e1a9dd06dea4ef8a97bd57bdc9676f8e251ecf",
+   "sha256_remote": "b09a609426508aa4f47c6f8e63e1a9dd06dea4ef8a97bd57bdc9676f8e251ecf"
+  },
+  {
+   "bytes": 741485,
+   "match": true,
+   "path": "results/baseline/eu_emotions/molmo2/eval_v2_eu_emotions_molmo2_video_only_seed42_rot4_mismatch.json",
+   "sha256_local": "2cce9c72206a5d518d2445fea1a541bef88c3504429c5d58b35e8bb66b29ead5",
+   "sha256_remote": "2cce9c72206a5d518d2445fea1a541bef88c3504429c5d58b35e8bb66b29ead5"
+  }
+ ],
+ "finished": "2026-11-09T17:44:05+00:00",
+ "git_commit": "8132bbc28c465134ae77efc2325b03ca1c85eba7",
+ "git_dirty": true,
+ "mode": "real",
+ "outputs_sha256": {
+  "/Users/eb2007/playground/bullpy/mr_eu_open_llm/research/reproduction/rotation_errored_trials.json": "ec876ebf090b9cd528887bebdee9b8afc9f6bcc2a6c46d05f39177c3b9a336cf",
+  "/Users/eb2007/playground/bullpy/mr_eu_open_llm/research/reproduction/rotation_summary.json": "81500bdd229f88c5aa4038736d4ccc0eb2e04080613dc95380cc8c3dd067072a",
+  "/Users/eb2007/playground/bullpy/mr_eu_open_llm/research/reproduction/same_clip_family_model_gemma4.json": "0f9c0a2658cb15c4ac5e0ec03d87fa1f4a521a71ba5e758d54993e96ac37519d",
+  "/Users/eb2007/playground/bullpy/mr_eu_open_llm/research/reproduction/same_clip_family_model_molmo2.json": "9ad3d59dd71b8c2a4f897ac8f05d1c9ed805f9e566c75ceb3651d2eafaf66e3f",
+  "/Users/eb2007/playground/bullpy/mr_eu_open_llm/research/reproduction/same_clip_family_model_qwen3vl.json": "bc0d67951cad79abb28cae1697f96946ec87e6f83eb6096d9cd772ad5cedb810"
+ },
+ "remote_count": "30",
+ "script_sha256": {
+  "research/scripts/analyse_rotation.py": "98890c5bff65f13abeb0549b61fe414dc9fa30082b84bcb564671683ec12e24f",
+  "research/scripts/analyse_rotation_run.py": "7f52f9e7b29f0afbbe76977ee3b3330f01c8f6ececf29fe14ddf9655c67d653e",
+  "research/scripts/human_au_effects.py": "c02a945ba578156cc4394e7d3a49761ad6e74495585034fbb059a4ce40199a2b",
+  "research/scripts/post_a1.sh": "e4aadde71cbe02b890d95f0a0c92866dfef54726bd79835280cdd418934f8f2c",
+  "research/scripts/post_a1_helpers.py": "53ed38888eb00b18b5dab4cc5f03b398cd3d53dcb8ad3292df52f1cc94bed6c0",
+  "research/scripts/same_clip_cue_analysis.py": "26dc0a48de85a720c89142e856ccde8b73363ab2815de96e0034d5b3da9a7109",
+  "research/scripts/same_clip_family_analysis.py": "2e633c534bf1bf0fbfd6d133aff587003be30578ee09ecf800d4eedce5de493f"
+ },
+ "slurm": {
+  "message": "all tasks COMPLETED",
+  "ok": true,
+  "states": {
+   "39982137": {
+    "0": "COMPLETED",
+    "1": "COMPLETED",
+    "2": "COMPLETED",
+    "3": "COMPLETED",
+    "4": "COMPLETED"
+   },
+   "39982138": {
+    "0": "COMPLETED",
+    "1": "COMPLETED",
+    "2": "COMPLETED",
+    "3": "COMPLETED",
+    "4": "COMPLETED"
+   }
+  }
+ },
+ "slurm_check_skipped_reason": null,
+ "source": "eb2007@login.hpc.cam.ac.uk:~/rds/hpc-work/study3",
+ "started": "2026-11-09T16:55:17+00:00",
+ "status": "complete",
+ "synthetic": false,
+ "what": "A1 rotation eval pull and analysis (research/scripts/post_a1.sh)"
+}
