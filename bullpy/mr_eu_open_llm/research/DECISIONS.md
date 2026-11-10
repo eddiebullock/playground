@@ -487,3 +487,11 @@ After the independent pre-freeze audit (`research/reviews/a9_audit.md`): the rep
 ## 2026-11-09: RDS file quota filled by another project's job; this project's jobs held
 
 At 18:21 the file count was 1,033,846 and rising about 3,700 a minute (997,099 at 17:50). The cause was not this project: `hel-c3-prefetch` (job 40470212, `~/rds/hpc-work/helsinki_cosmos`) was unpacking a container image into `tmp/` on RDS. All of this project's pending jobs were held (`scontrol hold`). With the user's approval the prefetch job was cancelled at about 18:25, and the user ran the removal of its leftover build directories (about 51,000 files), which its own script deletes on success. The count reached 1,048,542 of 1,048,576 before the cleanup and 997,449 after it (19:20). A9 render tasks 6 and 7 hit their time limit while writes failed; their `.partial` files (this project's own) were removed and the two tasks rerun as 40473504. All held jobs were released. No output of this project was lost or read. Note for that project: point `APPTAINER_TMPDIR` at node-local scratch, not RDS.
+
+## 2026-11-10: A7 Stage 1 scope, recorded after Stage 0 and before any A2 analysis output exists
+
+Taken under PREREG_A7 "When Stage 1 runs at all". No A2 cell has been written yet (A2 jobs 40468625 and 40468626 are still pending), so nothing in A2 has been opened. The decision rests only on the two Stage 0 tables (RESULTS_REGISTRY, A7 Stage 0) and compute.
+
+- **Route arm: run, on Gemma 4 and Qwen3-VL**, conditional on the preconditions applied by code: RQ0 passed (both did, A1 and A3), gates G2 to G4 and delivery (both passed), Gate B and the sham for that model and route. If any fails for a model, its route arm is not run and is reported as not run with this entry's date. Cost about 1.06 GPU-hours per model, endpoints in the same job. It is a secondary decomposition of the complete exit cut, for the supplement; RQ3 stays "not testable beyond the interface" either way.
+- **Token arm: not run** on either model; Stage 0 did not admit it (region test failed: Gemma `leak_over_limit`, Qwen `token_map_failed`).
+- `DECISION_DATE=2026-11-10` is the value passed to `slurm_jobs/study3_a7.sh` for Stage 1.
