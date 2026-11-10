@@ -86,6 +86,8 @@ Status 2026-11-09 08:37: 1.1 IN PROGRESS. Both arrays running; 39982137_0 COMPLE
 | 2.5 | A6 cluster items: geometry and weights pins, first-frame AU check, decoder preflight, mechanics run, rotation_summary. Then freeze A6 (tag `a6-freeze`). | 2.1 | Frozen, or closed as a limit by its own rule |
 | 2.6 | A7 Stage 0 mechanics on clips outside the analysis set | 2.1 | Complete cut shown or not |
 
+**Status 2026-11-10 13:45.** 2.1 done (113 pins OK on the cluster, `phase2_hash_check.json`). 2.2 done (natural-clip RQ1 confirmatory on all three models, RESULTS_REGISTRY). 2.3 submitted (A2 Gemma 40468625, Qwen 40468626), waiting on priority; Gate B is computed from these cells. 2.4: timing smokes done for both models; scored runs submitted (Gemma 40589226, Qwen 40593824), waiting. 2.5 closed as a limit by A6's own first-frame rule (DECISIONS 2026-11-10). 2.6 done: Stage 0 on both models, exit complete, route arm admitted, token arm not; Stage 1 scope fixed before any A2 output (DECISIONS 2026-11-10). A9 frozen and rendered; scoring waits on the GPU queue after A4. A8 equivalence test 40399722 waiting.
+
 Watch storage at each step. The file count runs at about 996k of 1,048,576. Cells must be JSON lines, never one file per item.
 
 ### Phase 3. Confirmatory analyses (one run each, from frozen code)
