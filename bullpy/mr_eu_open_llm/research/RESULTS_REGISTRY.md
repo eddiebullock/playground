@@ -281,3 +281,20 @@ Holm p is at the permutation floor for all three (100,000 draws). Accuracy by ta
 | Molmo2 | 243 | .543 (.0002) | .522 (.0002) | .469 (.0004) | .0024 | `same_clip_family_model_molmo2.json` (`9ad3d59d`) |
 
 The composite input is the confirmatory one; the two detectors alone are sensitivities. Qwen drops the errored clip (4 of 5 rotations usable; partial clips leave both matrices, DECISIONS 2026-11-04). .0002 is the floor at 4,999 permutations. Reading, as fixed in advance: each model's responses are **aligned with the human pattern** of AU families on these clips. This does not show that they use the same cues (Proposition 4; different-cues size .055 at 0.75x). Single and family-wise cells are exploratory.
+
+## A7 Stage 0, Gemma 4 (2026-11-10)
+
+Job 40468955 (intr QOS, 13 min), frozen A7 code (tag `a7-freeze`, design `9e40cfcf`; the table's `code_sha256` equals the pins). 24 CREMA-D calibration clips only, `single_face`, bfloat16. Records from `research/scripts/a7_stage0_records.py` (commit `dea8734`), records file sha256 `5b10a4d5cba6601918ddee513104a85885c8cb10323e2ad882ed8870f6bf6e37`. Output `research/reproduction/a7_stage0_gemma4.json`, sha256 `fff021f8...12b4`; arms applied by code, nothing reviewed by eye.
+
+| Check | Worst abs nats | Over 0.001 | Result |
+|---|---|---|---|
+| C1 to C4 | 0.0 each | 0 | Pass |
+| C5 blocks A, B | ratios .230, .885 of denominator 5.54 (floor .10) | | both live |
+
+Exit complete; complete cuts: `exit` only; blocks exhaust the exit. Region test: **fail**, reason `leak_over_limit` (leak point .139 and .088, upper .181 and .113 at buffers 0 and 1; token map complete, hit rate 1.0; edit RMS 4.09 against floor .55). **Arms: route yes, token no.**
+
+Reading, from the frozen table (`PREREG_A7_DRAFT.md`, reporting rows): the only complete cut is the whole path, so RQ3 is not testable beyond the interface on Gemma 4. The route arm may run in Stage 1 as a secondary decomposition, only with a DECISIONS entry made before any A2 analysis output is opened. Region test failed: tokens at the cue's location do not contain the cue's effect on calibration clips at this edit, so cue-level mediation is not testable by a token cut on this model.
+
+## A7 Stage 0, Qwen3-VL (2026-11-10)
+
+Job 40468956 (intr QOS, 14 min), same frozen code, records file and clips as Gemma 4. Output `research/reproduction/a7_stage0_qwen3vl.json`, sha256 `3762c7bd...a215`. C1 to C4: worst 0.0 nats, none over 0.001, all pass. C5 blocks A, B: ratios .802, .273 of denominator 4.30, both live. Exit complete; complete cuts `exit` only; blocks exhaust the exit. Region test: **fail**, reason `token_map_failed` (token map hit rate .760 over 96 trials, below its rule), so no leak was computed. **Arms: route yes, token no.** Reading as for Gemma 4: RQ3 not testable beyond the interface; cue-level mediation not testable by a token cut on this model, here because the token map did not locate the cue reliably.
