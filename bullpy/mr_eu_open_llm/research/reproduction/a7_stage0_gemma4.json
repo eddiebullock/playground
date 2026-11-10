@@ -1,0 +1,130 @@
+{
+ "amendment": "A7",
+ "stage": 0,
+ "design_sha256": "9e40cfcfbe8761703da22cf2400c3af6cc7f05019df8b186f91e421dce50bb09",
+ "tolerance_nats": 0.001,
+ "n_clips": 24,
+ "model": "gemma4",
+ "clip_ids": [
+  "1001_DFA_ANG_XX",
+  "1004_ITH_SAD_XX",
+  "1007_ITS_FEA_XX",
+  "1008_MTI_ANG_XX",
+  "1010_IWW_FEA_XX",
+  "1013_IOM_DIS_XX",
+  "1019_IOM_NEU_XX",
+  "1020_IWW_SAD_XX",
+  "1021_IWW_NEU_XX",
+  "1024_DFA_ANG_XX",
+  "1028_IOM_HAP_XX",
+  "1029_MTI_NEU_XX",
+  "1039_IWW_DIS_XX",
+  "1047_MTI_SAD_XX",
+  "1057_TSI_DIS_XX",
+  "1058_DFA_FEA_XX",
+  "1062_WSI_FEA_XX",
+  "1064_ITS_ANG_XX",
+  "1069_IWL_SAD_XX",
+  "1072_IWW_HAP_XX",
+  "1075_DFA_HAP_XX",
+  "1080_WSI_HAP_XX",
+  "1086_ITH_DIS_XX",
+  "1090_MTI_NEU_XX"
+ ],
+ "code_sha256": {
+  "scripts/a7_design.py": "d25c0cb78f6771450eac9c6127690029cd72e6034079cbc51062be324a74ddba",
+  "scripts/a7_cuts.py": "15837f87e46a433fdb97b50e362fdbaefab937f10a147aa1d68fd355f9889db2",
+  "scripts/a7_stage0.py": "a4c46d7111b4f93b9c2d35c706636befa9756ac7cad89259512490b57cd48d5a",
+  "scripts/a7_run.py": "5bfb1a74e21596c944df2b946aea835e00a33244a50fd5917c2c52136bcbb665",
+  "scripts/a7_analyse.py": "00350c9a182090943294efb602f46a31e2c4263240cbb8bb764de26476daaae9",
+  "scripts/a7_recovery.py": "485832ac1678e2379f442d000a1139abd30ae053e4f48dd51d6e6d9a2727fe79",
+  "scripts/a7_toy.py": "b2d39459024046df848d8ca0bb8079cfb13ba08cde1da7a5214547aa1fa10d8c"
+ },
+ "status": "complete",
+ "checks": {
+  "C1": {
+   "worst_abs_nats": 0.0,
+   "worst_clip_index": 0,
+   "worst_word_index": 0,
+   "n_values_over_tolerance": 0,
+   "pass": true,
+   "reason": null
+  },
+  "C2": {
+   "worst_abs_nats": 0.0,
+   "worst_clip_index": 0,
+   "worst_word_index": 0,
+   "n_values_over_tolerance": 0,
+   "pass": true,
+   "reason": null
+  },
+  "C3": {
+   "worst_abs_nats": 0.0,
+   "worst_clip_index": 0,
+   "worst_word_index": 0,
+   "n_values_over_tolerance": 0,
+   "pass": true,
+   "reason": null
+  },
+  "C4": {
+   "worst_abs_nats": 0.0,
+   "worst_clip_index": 0,
+   "worst_word_index": 0,
+   "n_values_over_tolerance": 0,
+   "pass": true,
+   "reason": null
+  },
+  "C5": {
+   "denominator": 5.542948010187892,
+   "fraction": 0.1,
+   "blocks": {
+    "A": {
+     "ratio": 0.22975314907613675,
+     "live": true,
+     "reason": null
+    },
+    "B": {
+     "ratio": 0.8853358456336107,
+     "live": true,
+     "reason": null
+    }
+   }
+  }
+ },
+ "exit_complete": true,
+ "complete_cuts": [
+  "exit"
+ ],
+ "blocks_exhaust_exit": true,
+ "region_test": {
+  "pass": false,
+  "b": null,
+  "reason": "leak_over_limit",
+  "leaks": {
+   "0": {
+    "point": 0.13856235799761266,
+    "upper": 0.18105729616253075
+   },
+   "1": {
+    "point": 0.08781062380535627,
+    "upper": 0.1134062127031419
+   }
+  },
+  "token_map": {
+   "n_trials": 96,
+   "hit_rate": 1.0,
+   "complete": true,
+   "pass": true
+  },
+  "edit_mean_rms": 4.089574749701542,
+  "edit_floor": 0.5542948010187893,
+  "admissible_buffers": [
+   0,
+   1
+  ]
+ },
+ "arms": {
+  "route": true,
+  "token": false
+ }
+}
