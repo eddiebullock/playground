@@ -46,18 +46,7 @@ Vision gates. Gemma 4 passed the option-independence, replay-and-cut and token-s
 
 **Locked text (A3).** On a single face crop, all three models passed A3, on 243 of 243 items each [REG: A3 face input validity]. For Gemma 4, accuracy was .371 on the item's own face and .156 on a mismatched face, a delta of .216 (95% CI .139 to .292, Holm *P* = .00014). For Qwen3-VL the values were .282 and .038, delta .244 (.212 to .276, Holm *P* = .00009). For Molmo2 they were .072 and .010, delta .063 (.040 to .087, Holm *P* = .00010) [REG: A3 table, rows Gemma 4, Qwen3-VL, Molmo2]. A pass tests dependence on the image, not competence. Molmo2 chose "None of the above" on .863 of real cells and .886 of mismatch cells [REG: A3, "Trace (2026-11-08)"]. Its accuracy was .140 with the target in the first position and .025 in the second [REG: A3, "Trace (2026-11-08)", accuracy by target position], so its delta rests on a small share of cells. For Gemma 4 the "None of the above" shares were .206 and .305, and for Qwen3-VL .534 and .688 [REG: A3, "Trace (2026-11-08)"]. Spearman correlations of model with human target probability were .376, .392 and .342 [REG: A3 table, column "Spearman with human p_target"]. These are secondary.
 
-**A1 slots.** Per model (Gemma 4, Qwen3-VL, Molmo2), from `research/reproduction/rotation_summary.json` (written by `research/scripts/analyse_rotation.py`):
-- accuracy, real: [PENDING: `<model>.accuracy_real`]
-- accuracy, mismatch: [PENDING: `<model>.accuracy_mismatch`]
-- delta: [PENDING: `<model>.delta_real_minus_mismatch`]
-- 95% CI: [PENDING: `<model>.delta_ci_actor_bootstrap`]
-- Holm *P*: [PENDING: `<model>.p_delta_holm`]
-- decision: [PENDING: `<model>.vision_dependent`]
-- accuracy by target position: [PENDING: `<model>.secondary_accuracy_by_target_position`]
-- Spearman and within-category *r* with human target probability: [PENDING: `<model>.secondary_rho_ptarget_human`, `<model>.secondary_within_category_r_ptarget_human`]
-- accuracy against 1/6, descriptive only: [PENDING: `<model>.secondary_real_vs_chance_pooled_p`]
-- reading per model from the table above: [PENDING: A1 by A3 cell per model]
-- date A1 was read: [PENDING: date, from DECISIONS or STATE]
+**Locked text (A1, read 9 November 2026).** With option position rotated over five runs and the prompt held fixed, all three models passed A1 [REG: A1 rotated 6AFC]. Qwen3-VL answered correctly on .469 of real cells and .067 when the face came from a mismatched clip, a delta of .402 (95% CI .350 to .461, Holm *P* = .00009). Gemma 4 gave .402 and .174, delta .228 (.172 to .283, Holm *P* = .00009). Molmo2 gave .163 and .092, delta .071 (.049 to .094, Holm *P* = .00009) [REG: A1 table]. Holm *P* is at the floor of 100,000 sign-flip draws for all three. With A3 also passed, every model is in the first row of the table above: face use on both inputs. A pass tests dependence on the image, not competence. Molmo2's accuracy on the item's own face was at chance (.163 against 1/6; pooled *P* = .65, descriptive), and its pass comes from mismatched faces pulling accuracy below chance. Accuracy by target position on real cells ranged from .444 to .510 for Qwen3-VL, .354 to .444 for Gemma 4 and .132 to .198 for Molmo2, so no model favoured the first slot once options were rotated [REG: A1, accuracy by target position]. Spearman correlations with human target probability were .409, .444 and .380, and within-category correlations .288, .138 and .233 (secondary). One Qwen3-VL trial of 7,290 failed to load its clip on the cluster; it was scored as wrong, under a rule fixed before any A1 file was read [REG: A1, errored trials].
 
 **Writing rule.** A Pass is never written as "reads faces" (outline.md, RQ0). If A1 is incomplete, nothing is stated, because Holm covers all three models (outline.md, R0-d).
 
@@ -94,11 +83,7 @@ A positive score supports "aligned with the human pattern", not "uses the same c
 
 **Locked text (recovery).** On this route, power was .995 at 0.75 times and 1.0 at 1 times the human effect, against a limit of .80. Size was .035 for the prior-only observer and .06 for the actor-prior observer at 0.75 times, against .081 [REG: "Pattern score, model-frames route (2026-11-04)"]. Power was .775 at 0.5 times. For an observer sharing half the human weights, power was .60 at 0.75 times [REG: same section]. The different-cues observer had size .055 at 0.75 times [REG: same section]. The half-shared power of .83 at 1 times is in DECISIONS (`research/DECISIONS.md:274`) and methods.md: [PENDING: registry row for half-shared power at 1 times on the model-frames route.]
 
-**Slots.** Per model, from `research/reproduction/same_clip_family_model_<model>.json` (written by `research/scripts/same_clip_family_analysis.py --model-route`):
-- family pattern score: [PENDING: pattern `score` per input, key as written by the route summary]
-- permutation *P*: [PENDING: pattern `p` per input]
-- clips lost and status: [PENDING: `coverage`, `rq1_status`]
-- reading by the RQ0 table: [PENDING: from Section 2]
+**Locked text (models, read 9 November 2026).** All three models are in the Pass and Pass row, and none lost more than 5% of clips, so the score is confirmatory for each [REG: Natural-clip RQ1]. On the composite input, the family pattern score was .549 for Qwen3-VL (permutation *P* = .0002, 242 of 243 clips), .418 for Gemma 4 (*P* = .0006, 243 clips) and .543 for Molmo2 (*P* = .0002, 243 clips) [REG: Natural-clip RQ1 table]. *P* = .0002 is the floor at 4,999 permutations. On each detector alone, a sensitivity, the scores were .548 and .520, .411 and .350, and .522 and .469. Qwen3-VL lost one clip, the one whose trial failed to load. Each model's responses on these clips are therefore aligned with the human pattern of AU families. This does not show that the models use the same cues. The score is a regression on measured cues, and a system responding to an unmeasured cue correlated with them can produce the same slopes (Proposition 4), so the claim stays at alignment with the human pattern, as fixed in advance. Molmo2's alignment sits beside chance-level accuracy in A1, which shows that the pattern score and accuracy measure different things. Single and family-wise cells are exploratory.
 
 **Figure.** Figure 4 or a table: pattern score per model. [PENDING: Figure 4 function (ROADMAP 0.7).]
 
