@@ -1,0 +1,73 @@
+{
+ "apex_rows": 819,
+ "gates_nothing": true,
+ "cells": {
+  "Anger>Disgust|lf_AU09|lfocc_AU10": {
+   "n_clips": 137,
+   "slope_au9": 0.2949421291842827,
+   "slope_au10": 0.0008608666934643017
+  },
+  "Anger>Disgust|lf_AU09|ge_AU10": {
+   "n_clips": 137,
+   "slope_au9": 0.30931693140307676,
+   "slope_au10": 0.030398368472209114
+  },
+  "Anger>Disgust|of_AU09|lfocc_AU10": {
+   "n_clips": 137,
+   "slope_au9": 0.32514632090316353,
+   "slope_au10": 0.0028572711531865275
+  },
+  "Anger>Disgust|of_AU09|ge_AU10": {
+   "n_clips": 137,
+   "slope_au9": 0.33911761197612805,
+   "slope_au10": 0.17505675915487823
+  },
+  "Disgust>Anger|lf_AU09|lfocc_AU10": {
+   "n_clips": 137,
+   "slope_au9": 0.00020332893615960244,
+   "slope_au10": 0.0003463894807337019
+  },
+  "Disgust>Anger|lf_AU09|ge_AU10": {
+   "n_clips": 137,
+   "slope_au9": 0.010400107126779905,
+   "slope_au10": -0.4119059124334281
+  },
+  "Disgust>Anger|of_AU09|lfocc_AU10": {
+   "n_clips": 137,
+   "slope_au9": -0.04461221518698554,
+   "slope_au10": 0.0015213389135931253
+  },
+  "Disgust>Anger|of_AU09|ge_AU10": {
+   "n_clips": 137,
+   "slope_au9": -0.027934462028060113,
+   "slope_au10": -0.25164394838680876
+  }
+ },
+ "first_frame": {
+  "lf_AU09": {
+   "mean_apex": 0.41077981751824816,
+   "mean_first": 0.11963182481751825,
+   "ratio": 0.29123101894411796,
+   "over_limit": false
+  },
+  "of_AU09": {
+   "mean_apex": 0.24538503649635038,
+   "mean_first": 0.020945,
+   "ratio": 0.08535565289170155,
+   "over_limit": false
+  },
+  "lfocc_AU10": {
+   "mean_apex": 3.57751098540146,
+   "mean_first": -13.33326189781022,
+   "ratio": -3.726966025322768,
+   "over_limit": false
+  },
+  "ge_AU10": {
+   "mean_apex": 0.6309318613138686,
+   "mean_first": 0.5054584306569343,
+   "ratio": 0.8011299819355371,
+   "over_limit": true
+  }
+ },
+ "first_frame_blocks_freeze": true
+}
