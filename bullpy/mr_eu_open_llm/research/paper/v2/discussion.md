@@ -14,22 +14,15 @@ Fixed whatever the results: the v1 task put the target first on every item and g
 
 ## RQ0: dependence on the face
 
-A3 passed on all three models (RESULTS_REGISTRY, A3), so only the A1 column varies. Rule: `research/PREREGISTRATION.md:137` and `research/PREREG_A3_DRAFT.md:44-49`.
+Branch R0-a, locked 9 November 2026 (RESULTS_REGISTRY, "A1 rotated 6AFC"). Drafted text:
 
-- **If A1 passes on Gemma 4 and Qwen3-VL (R0-a).** Accuracy needs the matching face on both inputs. Say how much survives the face swap, and compare it with accuracy against 1/6. Stress that this tests dependence on the image, not competence. Natural-clip RQ1 is confirmatory for both, subject to the clip rule.
-- **If A1 passes on one and fails on the other (R0-b).** The models differ. The failing model showed face dependence only on a face crop. Its natural-clip RQ1 is descriptive, and its A2 runs on `single_face` only.
-- **If A1 fails on both (R0-c).** The composite input limits face use, and accuracy on that format cannot be read as face reading. This becomes the audit's main finding (scenario S4). Natural-clip RQ1 is descriptive for both, and temporal predictions P12 to P15 have no route.
-- **If A1 is not complete (R0-d).** Nothing can be stated, because Holm covers all three models. No submission on this branch.
-- **Molmo2, in every branch.** Reported in RQ0. It stays out of A2 and of A4's Holm family on its gate failures. Its A3 delta rests on a small share of cells, since it chose "None of the above" on most of them (RESULTS_REGISTRY, A3 trace).
+With option position rotated and the prompt held fixed, accuracy on all three models fell when the face came from another clip, on the composite video input (A1) and on a single face crop (A3). So the answers these models give on this task depend on the face shown, and not only on the option text, which our earlier design could not exclude. This is a test of dependence, not of competence. Molmo2 shows it most clearly: its accuracy on the right face was at chance, and the face effect came from mismatched faces pulling it below chance. For Qwen3-VL and Gemma 4, accuracy was well above chance and fell by 40 and 23 points when the face was swapped. The composite grid did not prevent face use, despite its small number of image tokens per face (Methods), so the input limits we documented did not decide the outcome here. Molmo2 stays out of A2 and of A4's family on its gate failures, which A1 does not change.
 
 ## RQ1 on natural clips
 
-Rule: DECISIONS 2026-11-04 (`research/DECISIONS.md:232-282`) and 2026-11-07 (`research/DECISIONS.md:327-332`).
+Positive and confirmatory on all three models (RESULTS_REGISTRY, "Natural-clip RQ1"). Drafted text:
 
-- **If the pattern score is positive and confirmatory.** The model is aligned with the human pattern on these clips. It does not show that it uses the same cues (Proposition 4). Point to Section 5 for the cue-level test.
-- **If the score is null.** Alignment is not shown. It is not shown absent: power was .775 at half the human effect, and an observer sharing half the human weights would often be missed (RESULTS_REGISTRY, pattern score on the model-frames route).
-- **If more than 5% of clips are lost, or RQ0 makes it descriptive.** Report the score with no claim, and say which rule applied.
-- **If the model failed both A1 and A3.** Cannot occur, because A3 passed on all three models. Delete at 4.3.
+On natural clips, each model's responses lined up with the human pattern over four families of facial action units, with family pattern scores of .42 to .55, each well outside its permutation null. This is the claim the design supports, and only this one. The score is a regression on measured cues, so a model responding to an unmeasured cue that is correlated with them would produce the same result (Proposition 4); alignment with the human pattern is not evidence that the models use the same cues. The randomised test in the next section is the one built to reach that question. Molmo2's alignment beside chance-level accuracy also shows that the two measures can come apart: a model can track the human pattern of graded responses while rarely putting the most weight on the acted label.
 
 ## RQ1 under randomisation (A4)
 
