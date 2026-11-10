@@ -298,3 +298,18 @@ Reading, from the frozen table (`PREREG_A7_DRAFT.md`, reporting rows): the only 
 ## A7 Stage 0, Qwen3-VL (2026-11-10)
 
 Job 40468956 (intr QOS, 14 min), same frozen code, records file and clips as Gemma 4. Output `research/reproduction/a7_stage0_qwen3vl.json`, sha256 `3762c7bd...a215`. C1 to C4: worst 0.0 nats, none over 0.001, all pass. C5 blocks A, B: ratios .802, .273 of denominator 4.30, both live. Exit complete; complete cuts `exit` only; blocks exhaust the exit. Region test: **fail**, reason `token_map_failed` (token map hit rate .760 over 96 trials, below its rule), so no leak was computed. **Arms: route yes, token no.** Reading as for Gemma 4: RQ3 not testable beyond the interface; cue-level mediation not testable by a token cut on this model, here because the token map did not locate the cue reliably.
+
+## A6 pre-freeze cluster checks: first-frame AU check blocks the freeze (2026-11-10)
+
+No model output. Steps from `slurm_jobs/study3_a6.sh`: decoder preflight (40595458) ok on `.flv` under cv2 4.11; landmarks (40595459) on 819 clips, 0 failures, `results/a6/geometry.json` sha256 `4fac9d90...7089`; AU list (40595460) `results/a6/au_manifest.json` sha256 `22006880...9d38`. `research/scripts/extract_au_measures.py` unchanged on that list: LibreFace and OpenFace (40597352, 8 CPU shards) and ME-GraphAU (40598906, 8 CPU shards), per-frame CSVs in `results/a6/au_frames*` on the cluster. Then `research/scripts/a6_human_target.py --cue_frames` with all three detectors: `research/reproduction/a6_human_cue_check.json`, sha256 `f42a51ef...aeec`. (A first run before GraphAU had finished, sha256 `fb595954...1273`, is kept on the cluster as `a6_human_cue_check_lf_of_only.json`; it reported GraphAU as missing and is superseded.)
+
+First-frame check (mean first-frame value over mean apex value, clips of the Anger-Disgust pair, limit `first_frame_au_ratio_max` .50 for every detector):
+
+| Detector column | Mean apex | Mean first | Ratio | Over limit |
+|---|---|---|---|---|
+| `lf_AU09` | .411 | .120 | .291 | no |
+| `of_AU09` | .245 | .021 | .085 | no |
+| `lfocc_AU10` | 3.578 | -13.333 | -3.727 | no (scale is not a ratio scale; see DECISIONS) |
+| `ge_AU10` | .631 | .505 | .801 | **yes** |
+
+`first_frame_blocks_freeze`: **true**. Under the rule fixed before any model output (A6 "Fixed before freezing", item 6), A6 does not freeze. The human cue slopes are descriptive and gate nothing (in the file).

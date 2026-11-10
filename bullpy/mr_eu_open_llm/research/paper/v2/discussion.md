@@ -60,7 +60,7 @@ Rule: `research/PREREG_A5_DRAFT.md:226-231`, with balance descriptive (`:574-576
 ## RQ3 and RQ5 (one sentence each in the Discussion)
 
 - **RQ3.** A scoped limit in every branch (DECISIONS 2026-11-07). The literal test cannot fail. Pick the A7 reporting row once Stage 0 exists (`research/PREREG_A7_DRAFT.md:391-398`), or R3-e if it has not run.
-- **RQ5.** Only if A6 freezes before its data and finishes. Otherwise named as future work.
+- **RQ5.** Not tested. A6 did not freeze: its own pre-freeze check on the first frame, fixed before any model output, failed on one of three detectors (GraphAU AU10 ratio .80 against .50; DECISIONS 2026-11-10). Named as future work, with the fill design as the thing to change.
 
 ## What would settle it
 
@@ -96,7 +96,7 @@ Each item is a disclosed deviation or limit, with its DECISIONS date. Order by w
 18. **A4 domain limits** (A4 frozen text, `research/PREREG_A4_DRAFT.md:221-250`). Avatars, static peak frames against 1.25 s of motion, linear amplitude mapping, AU22 and AU27 approximated, four faces per set, the EA faces not based on East Asian people. (methods)
 19. **G7 is a scoped limit** (2026-11-07). The literal route test is vacuous; depth is not testable; Stage 0 has not run. (methods)
 20. **A5 balance is descriptive** (2026-11-08, two entries). `min_balance_cells` of 4; balance verdicts left the confirmatory claims after run 6; five recovery failures stay on record. Only the evidence classes are confirmatory. methods.md still calls A5 unfrozen: see the report on proposed changes.
-21. **A6 gives up its cue-absent nulls** (2026-11-08). Not this cue and No tested feature read as Inconclusive on the cue question; adjacency over all pairs descriptive. A6 is not frozen.
+21. **A6 closed as a limit** (2026-11-10). Its first-frame AU check blocked the freeze on GraphAU AU10 (.80 against .50), so RQ5 was not run. Earlier, A6 had given up its cue-absent nulls (2026-11-08).
 22. **Full forwards on all models** (2026-11-04). One scoring path; bfloat16 rounding between paths shown, so cached scoring was dropped. Not a limit on results, but a design choice to state.
 23. **Data and scope limits** (methods.md, Human data). Human predictions come from other stimuli; about 8 of 21 labels overlap the Snoek sets; 17 actors only partly crossed with label; option sets still identify category on the natural task; author-set thresholds; open models only; seven workbook items with no clip and one item with two files (outline.md, inconsistency 16, still open).
 24. **EU-Emotion permissions** (2026-11-08, "EU-Emotion permissions settled"). Norms public and in-memory edits allowed; videos withheld by choice. A data statement, not a limit.
