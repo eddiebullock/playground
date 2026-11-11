@@ -1,0 +1,20 @@
+{
+  "date": "2026-11-11",
+  "question": "Are the two files matched to one EU-Emotion norm row (Bored, CF8; packs emotions_13 'CF8_cut(1).mp4' and emotions_23 'CF8_cut.mp4') the same video?",
+  "where": "CSD3 copy, study2/data/eu_emotions_118",
+  "sha256": {
+    "emotions_13": "5194ca9b70e3fa9d9d0f777a1ee0de7ec187c589a49ffff70b03dba8231125a8",
+    "emotions_23": "084394af9088423a97cf1333096c3d5ff3005c60300763ff1f0f26d5e5f2af16"
+  },
+  "decoded": {
+    "cv2": "4.13.0",
+    "bytes": [5800932, 3005494],
+    "frames": [347, 347],
+    "fps": [23.976023976023978, 23.976023976023978],
+    "shape": [[1080, 1440, 3], [1080, 1440, 3]],
+    "mean_abs_diff_per_frame_max": 0.7091355881344307,
+    "mean_abs_diff_per_frame_mean": 0.49047726594403146
+  },
+  "reading": "Not byte-identical, but same frame count, rate and size, and every frame differs by under 1 grey level on average (0 to 255 scale): one recording encoded twice at different bitrates. Disclose that one video counts twice. Decoded under OpenCV 4.13 on the login node, not the frozen 4.11; the 4.13 fault gives junk frames, which would raise the difference, not lower it.",
+  "script": "inline, research/reproduction/eu_duplicate_clip_check.json records the method: decode every frame of both files with cv2.VideoCapture, int16 absolute difference, mean per frame"
+}
