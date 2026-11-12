@@ -1272,8 +1272,12 @@ def write_sources(out_dir, built):
             "until every locked output in `LOCKED` exists. Synthetic test renders "
             "(`--synthetic`) are written to a temporary folder, never here.", ""]
     for n in sorted(sections):
+        body = list(sections[n])
+        while body and not body[-1].strip():  # one blank line between sections, however they were written
+            body.pop()
         text.append(f"## Figure {n}")
-        text.extend(sections[n])
+        text.extend(body)
+        text.append("")
     path.write_text("\n".join(text).rstrip() + "\n", encoding="utf-8")
     return path
 

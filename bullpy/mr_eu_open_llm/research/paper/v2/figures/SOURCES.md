@@ -35,6 +35,7 @@ Figures 2, 4, 5 and 6 get a section only when built with `--real`, which refuses
 | c, theorem 1 | `research/reproduction/cfa_identifiability.json` | `31bd4b4098026b3438c0293a13b7e379676ff8724cb67d6b88c8f602ead9ea45` | `research/scripts/make_figures.py:439` |
 | d, lambda_min per cue table | `research/reproduction/cfa_identifiability.json` | `31bd4b4098026b3438c0293a13b7e379676ff8724cb67d6b88c8f602ead9ea45` | `research/scripts/make_figures.py:491` |
 | e, condition number per cue table | `research/reproduction/cfa_identifiability.json` | `31bd4b4098026b3438c0293a13b7e379676ff8724cb67d6b88c8f602ead9ea45` | `research/scripts/make_figures.py:491` |
+
 ## Figure 4
 
 | Panel | Input file | sha256 | Script line |
