@@ -1,11 +1,11 @@
 <!--
 Draft v2, 2026-11-07, updated the same day to the frozen A4. Citation numbers continue from introduction.md; see references.md.
 Sources: PREREGISTRATION.md, PREREG_A2_DRAFT.md (frozen), PREREG_A3_DRAFT.md (frozen), PREREG_A4_DRAFT.md (frozen, tag a4-freeze, despite the filename),
-PREREG_A7_DRAFT.md (draft, used only for the scoped limit), DECISIONS.md, theory/causal_feature_alignment.md and the scripts they name.
-A5 was frozen on 2026-11-08; A6 and A7 are unfrozen and appear at outline level only, with none of their thresholds copied.
-Numbers here are design facts only. No A1 result, A2 result or A4 model result is stated. A3 and gate outcomes are [PENDING] and belong in Results.
+PREREG_A7_DRAFT.md (frozen 2026-11-08, used for the scoped limit and its Stage 0 table), DECISIONS.md, theory/causal_feature_alignment.md and the scripts they name.
+A5 and A7 were frozen on 2026-11-08. A6 was closed as a limit on 2026-11-10 by its own pre-freeze check and never frozen; none of its thresholds is copied.
+Numbers here are design facts only. Results, including the A1, A3, gate and Stage 0 outcomes, are in Results; no A2 or A4 model result exists at writing.
 Reused text from research/paper/*_v1.md: none.
-Added 2026-11-09: A8 (PREREG_A8_DRAFT.md, FROZEN, tag a8-freeze) and A9 (PREREG_A9_DRAFT.md, DRAFT at writing, being prepared for freezing).
+Added 2026-11-09: A8 (PREREG_A8_DRAFT.md, FROZEN, tag a8-freeze) and A9 (PREREG_A9_DRAFT.md, frozen 2026-11-09 17:33 UTC, tag a9-freeze; the file's own status line still reads DRAFT, and the tag governs).
 A9 values come from research/reproduction/a9_human_target.json, a9_human_ceiling.json, a9_recovery.json (recovery run 4 on the final code, sha256 0ca7bd24..., design hash 21341eb4...) and a9_chen_overlap.json. Earlier recovery runs are kept as a9_recovery_run1_draft.json, a9_recovery_run2.json (design hash b548bc82, the only record of the pre-decision-8 text) and a9_recovery_run3.json.
 No A8 output and no A9 model output existed when this was written.
 Split 2026-11-09: to fit Nature Human Behaviour Methods length, detail was moved verbatim to supplementary_methods.md (Supplementary Methods, Sections S1 to S11); no content was changed or deleted.
@@ -25,12 +25,13 @@ Each confirmatory analysis was fixed in a dated amendment before its data were r
 | RQ1 natural-clip rules | Unit, null, strength rule, clip rule; reading under each RQ0 outcome | 2026-11-04 (DECISIONS log), before any model matrix existed; RQ0 reading added 2026-11-07, before any A1 result was read | Human matrices and recovery results |
 | A2 | Blind readout gate and stimulus interventions | 2026-11-07, tag `a2-freeze` (commit ca38d89), `design_sha256` 0ae22118, before any A1 result was read and before any full intervention run | A3 result, vision gate results, CEA spectra. The draft predates the A3 result; two audits' corrections do not |
 | A4 | Randomised cue test on rendered faces | 2026-11-07, tag `a4-freeze` (commit 568b6f5), `design_sha256` 12c454da, pinned manifest 2ef1161e, before any A1 result was read and before any model saw a render | A3 result, vision gate results, human Snoek effects and ceilings, the detector-only V1 pilot, and four recovery runs on synthetic observers, which shaped the choice of statistic |
-| A5 | RQ4: prior and evidence on the blind readout | 2026-11-08, tag `a5-freeze`, `design_sha256` fd20495b, before any A2 cell existed. Evidence classes confirmatory; balance verdicts descriptive after recovery run 6 | A2 design and recovery, A5 recoveries 1 to 6 and their diagnostics |
-| A6, A7 | RQ5 and RQ3 | Not frozen. Provisional, and not preregistered unless a freeze is added here | See Scoped and provisional questions |
-| A8 | Two larger open models, Qwen3-VL-32B and Gemma 4 31B, through the frozen pipelines, with their own families | 2026-11-09, tag `a8-freeze`, `design_sha256` 95dd41b5, on the design text, before the Qwen3-VL-8B A1 result was read and before any A8 model ran on a study stimulus. Code pins follow as a dated pre-data step | A3 results of the three first models, vision gates, delivery, the readout ladder, and A2, A4, A5 and A7 as frozen. No A1 result of any model |
-| A9 | A4's confirmatory test repeated on a second human sample (Liu et al. 2022, Experiment II) | Frozen [PENDING: date and tag; the draft names the tag `a9-freeze`]. Draft `design_sha256` 21341eb4 at writing | A4's frozen text, code and outputs; the Liu human target and ceiling; recovery on synthetic observers, including the run after which the correlated-noise claim was narrowed (see the A9 section). No model had seen a Liu render |
+| A5 | RQ4: prior and evidence on the blind readout | 2026-11-08, tag `a5-freeze` (commit 9b12720), `design_sha256` fd20495b, before any A2 cell existed. Evidence classes confirmatory; balance verdicts descriptive after recovery run 6 | A2 design and recovery, A5 recoveries 1 to 6 and their diagnostics |
+| A7 | RQ3: vision-path cuts, Stage 0 mechanics and an optional route arm | 2026-11-08, tag `a7-freeze` (commit 62c6474), design 9e40cfcf, before any full A2 cell was read | A2's design, the vision gates and the cut results on the legacy input. No A2 cell |
+| A6 | RQ5: shared errors on CREMA-D | Not frozen. Closed as a limit on 2026-11-10, when its own pre-freeze first-frame check failed; never run on a model | The human CREMA-D target and A6's recovery runs. No model output |
+| A8 | Two larger open models, Qwen3-VL-32B and Gemma 4 31B, through the frozen pipelines, with their own families | 2026-11-09, tag `a8-freeze` (commit cbf0826), `design_sha256` 95dd41b5, on the design text, before the Qwen3-VL-8B A1 result was read and before any A8 model ran on a study stimulus. Code pins follow as a dated pre-data step | A3 results of the three first models, vision gates, delivery, the readout ladder, and A2, A4, A5 and A7 as frozen. No A1 result of any model |
+| A9 | A4's confirmatory test repeated on a second human sample (Liu et al. 2022, Experiment II) | 2026-11-09 17:33 UTC, tag `a9-freeze` (commit bc41374), `design_sha256` 21341eb4, before any model saw a Liu render | A4's frozen text, code and outputs; the Liu human target and ceiling; recovery on synthetic observers, including the run after which the correlated-noise claim was narrowed (see the A9 section); and the A1 result, computed 37 minutes before the freeze (Disclosure 11). No model had seen a Liu render |
 
-A1 and A3 have no tag, so their freezes are identified by the commits above. [PENDING: dated public links for each amendment, and whether to tag A1 and A3.] [PENDING: date A1 was read.]
+A1 and A3 have no tag, so their freezes are identified by the commits above. No tag was added to them later, since a later tag could be misread as a freeze date. The frozen A1 analysis ran once, on 2026-11-09 at 16:56 UTC, and its result was first read then (RESULTS_REGISTRY, "A1 rotated 6AFC").
 
 **Disclosures.**
 
@@ -44,6 +45,7 @@ A1 and A3 have no tag, so their freezes are identified by the commits above. [PE
 8. *Source checks after the A2 freeze.* A full read of the sources on 2026-11-07 weakened the stated support for several A2 predictions, chiefly P7, P12 and P13. The predictions, family and code are unchanged, and the change is logged as a pre-data deviation in A2.
 9. *Model revisions.* Models were loaded from local copies of Gemma 4 E4B (commit 83df0a88), Qwen3-VL 8B (0c351dd0) and Molmo2-O 7B (78441065). The A8 models' revisions are in "Larger models (A8)".
 10. *A9 narrowing after a recovery run.* A general rule for correlated face noise was stated before the recovery run that tested it: narrow the claim to the conditions that pass. Its first operationalisation, a scope label that would have placed every model outside the validated conditions, was replaced after that run was seen by narrowing by check, which is more favourable to confirmatory decisions. The replaced text was never committed. No threshold moved, and the earlier reading is reported beside each A9 decision (see "Replication on a second human sample (A9)").
+11. *A9 frozen after the A1 analysis ran.* The frozen A1 analysis wrote its result at 16:56 UTC on 2026-11-09, and A9 was tagged at 17:33 UTC the same day. A9's last design changes, committed at 17:29 UTC, applied the findings of an independent audit completed at 15:27 UTC, before A1 ran, among them the replication comparator and its fixed wording, and hashing of every input. None of them refers to an A1 value, and A9's eligibility rule is A4's, frozen on 2026-11-07. No model had seen a Liu render.
 
 ### Models
 
@@ -69,7 +71,7 @@ Full details: Supplementary Methods, Section S1.
 
 **Delivery audit.** For each route and model we logged media token counts, tensor shapes and estimated tokens across the face. On Gemma 4 the grid gives about 1 token across the face, against about 9 for a single face crop. A1 keeps this input as frozen, so a model that fails A1 on a grid has not shown that it cannot use faces. A3 exists for this reason.
 
-**Vision gates.** Three gates checked that image information reaches the output as expected. They are labelled G2 to G4 in the amendments, and we name them by function. Tolerances were fixed before any model ran. [PENDING: gate results.]
+**Vision gates.** Three gates checked that image information reaches the output as expected. They are labelled G2 to G4 in the amendments, and we name them by function. Tolerances were fixed before any model ran. Their outcomes, which decided eligibility, are in Results, Section 1.
 
 Full details: Supplementary Methods, Section S2.
 
@@ -183,7 +185,7 @@ Full details: Supplementary Methods, Section S6.
 
 <!-- Source: research/PREREG_A9_DRAFT.md (DRAFT at writing; status line, Relation to A4, Lead decisions, Human data, AU map, Human target, Recovery, Decision rule). Values from the JSON files named inline. -->
 
-A9 repeats A4's confirmatory test against a second set of human observers. It was frozen [PENDING: date and tag `a9-freeze`] before any model saw a Liu render. It cannot change any A4 verdict. It never enters A4's Holm family, headline or decision table, and A9 and A4 estimates are never pooled. If the two disagree for a model, both stand. An A9 result does not make an A4 Inconclusive conclusive. A9 shares the lab, the generator and its AU library, the response protocol and the culture of Snoek et al.'s data, and we never call it independent of that platform.
+A9 repeats A4's confirmatory test against a second set of human observers. It was frozen on 2026-11-09 (tag `a9-freeze`) before any model saw a Liu render (Disclosure 11 gives the order relative to A1). It cannot change any A4 verdict. It never enters A4's Holm family, headline or decision table, and A9 and A4 estimates are never pooled. If the two disagree for a model, both stand. An A9 result does not make an A4 Inconclusive conclusive. A9 shares the lab, the generator and its AU library, the response protocol and the culture of Snoek et al.'s data, and we never call it independent of that platform.
 
 **What counts as replication, fixed before data.** Each model's A9 decision is compared with the same model's A4 decision on basic WC, because Liu's observers are Western and answered the same seven options; A4's basic headline is reported beside it and is not the comparator. Both Aligned reads "replicated on a second human sample (same lab and generator)". Both Not aligned on these renders reads "the Not aligned result replicated". One Aligned and the other Not aligned reads "did not replicate", and both decisions are reported with no pooled claim. If either is Inconclusive, or A4 basic WC was not run for that model, it reads "replication not testable", naming the gate or test. An A9 Inconclusive is never called a failure to replicate. A4's per-dataset decision cannot be Mixed, so no Mixed case arises (`PREREG_A9_DRAFT.md`, Relation to A4; block `replication`).
 
@@ -252,15 +254,15 @@ Full details: Supplementary Methods, Section S9.
 
 **RQ3, reported as a scoped limit.** RQ3 asks whether a cue's effect is carried from image tokens through the language model, and whether blocking that path removes it. We report this as a limit, not as a test (DECISIONS 2026-11-07). The reason is logical and not one of cost. A cut that takes out the whole vision path gives the same output for every image, so a cue effect under it is zero by construction, and the literal test cannot fail.
 
-A draft amendment, A7, specifies a Stage 0 table on the 24 calibration clips, on `single_face`, with the blind readout. **Stage 0 has not run.** A7 is not frozen, its code does not exist, and its recovery is specified but not run. [PENDING: A7 freeze; Stage 0 table for Gemma 4 and Qwen3-VL.] This paper makes no claim about the route a cue takes through a model, and no site is described as a cut unless Stage 0 shows it complete.
+Amendment A7, frozen on 2026-11-08 (tag `a7-freeze`) before any full A2 cell was read, defines a Stage 0 table on the 24 CREMA-D calibration clips, which are outside the analysis set, on `single_face`, with the blind readout. A site counts as a complete cut only if every clip and every one of the 106 lexicon words stays within 0.001 nats of the image-free reference; a site not run, failed or without output counts as not shown. Stage 0 ran on Gemma 4 and Qwen3-VL on 2026-11-10 (Results, Section 9). Its route arm, a secondary split of the complete exit cut, may run in Stage 1 for a model and route that pass Gate B and the sham; that scope was fixed before any A2 output existed (DECISIONS 2026-11-10), and it is never reported as an RQ3 result. This paper makes no claim about the route a cue takes through a model, and no site is described as a cut unless Stage 0 shows it complete.
 
-**RQ4, frozen, and RQ5, provisional.** A5 (RQ4) was frozen on 2026-11-08 with tag `a5-freeze`, before any A2 cell existed; its evidence classes are confirmatory and its balance verdicts descriptive, because one false-positive recovery check failed under skewed portrayal gain (.094 against .07). A6 is a draft that is still changing, so nothing of it binds and no threshold is given. [PENDING: A6 freeze.] Either is reported as confirmatory only if frozen before its data are read.
+**RQ4, frozen, and RQ5, closed as a limit.** A5 (RQ4) was frozen on 2026-11-08 with tag `a5-freeze`, before any A2 cell existed; its evidence classes are confirmatory and its balance verdicts descriptive, because one false-positive recovery check failed under skewed portrayal gain (.094 against .07). A6 (RQ5) was never frozen. Its own pre-freeze rule, fixed before any model output, requires the first frame of each clip to carry at most half of the apex value of AU9 and AU10 on every detector, so that the frame used as a fill does not keep the cue it should hide. One detector failed it (ME-GraphAU AU10, .80 against .50), so A6 did not freeze or run, and RQ5 is left as future work (DECISIONS 2026-11-10). No CREMA-D model output exists.
 
 Full details: Supplementary Methods, Section S10.
 
 ### Identifiability results
 
-Full statements and proofs are in [PENDING: Supplementary Note 1]. Numerical checks are in `research/scripts/cfa_identifiability.py`.
+Statements, proofs and their extension to residual CEA are in Supplementary Note 1, which draws the proofs of Theorem 1 and Propositions 2 to 5 from the theory note (`research/theory/causal_feature_alignment.md`). Numerical checks are in `research/scripts/cfa_identifiability.py`.
 
 **Setup.** A stimulus has cues *z* in R^*p*. A system *S* maps *z* to a response distribution *f_S*(*z*) on *K* options. Natural stimuli have distribution *P*, and a design *Q* gives the stimuli used for measuring effects. For cue *j*, dose *delta_j* and option *k*, the effect matrix is
 

@@ -242,11 +242,18 @@ STEPS: List[Step] = [
                                      "au12_at_amplitude_1_min_max": [0.014, 0.031], "presence_pairs_rising": 43,
                                      "of_which_score_below_0_at_amplitude_1": 35},
                         "grid_frame_loss": {"clips": 243, "clips_losing_frames_to_grid": 68,
-                                            "clips_within_0p01_s_of_9_s": 3}},
+                                            "clips_within_0p01_s_of_9_s": 3},
+                        "literature_table": {"papers": 8,
+                                             "target_position_code": {"na": 3, "no": 2, "not_stated": 1,
+                                                                      "partial": 1, "yes": 1},
+                                             "option_sets_code": {"na": 2, "not_stated": 2, "partial": 1, "yes": 3},
+                                             "delivery_check_code": {"not_stated": 8},
+                                             "face_dependence_code": {"no": 5, "partial": 3},
+                                             "rows_with_inferred_cells": 1}},
               note="the script prints and stores nothing; values pinned from RESULTS_REGISTRY.md "
-                   "(A4 V1 pilot; Input delivery, 68 of 243)")],
+                   "(A4 V1 pilot; Input delivery, 68 of 243; Literature table)")],
          stdout="results/reproduce/registry_derived_counts.json",
-         note="from the committed a4_v1_pilot.csv and stimulus_features.json"),
+         note="from the committed a4_v1_pilot.csv, stimulus_features.json and literature_table.csv"),
     # ---------------------------------------------------------------- paper figures, last: they read the files above
     Step("paper_figures_1_3", _py("research/scripts/make_figures.py", "--all"),
          [Out("research/paper/v2/figures/fig1.png"), Out("research/paper/v2/figures/fig3.png"),
@@ -258,7 +265,13 @@ STEPS: List[Step] = [
          minutes=0.1, pre="committed_figure_inputs",
          note="Figures 1 and 3 from the committed copies of their inputs, so SOURCES.md records the committed "
               "sha256 (prompt_confound_audit.json is rebuilt above only within tolerance: its Monte Carlo p-values, "
-              "which no panel plots, differ in the last digits); Figures 2, 4, 5, 6 are pending (PENDING)"),
+              "which no panel plots, differ in the last digits); Figures 5 and 6 are pending (PENDING)"),
+    Step("paper_figure_2", _py("research/scripts/make_figures.py", "--fig", "2", "--real"),
+         [Out("research/paper/v2/figures/fig2.png"), Out("research/paper/v2/figures/fig2.pdf")],
+         minutes=0.1, note="Figure 2 from the locked A1 and A3 summaries, which are hash-verified records"),
+    Step("paper_figure_4", _py("research/scripts/make_figures.py", "--fig", "4", "--real"),
+         [Out("research/paper/v2/figures/fig4.png"), Out("research/paper/v2/figures/fig4.pdf")],
+         minutes=0.1, note="Figure 4 from the locked natural-clip files (hash-verified) and the route recovery files"),
     # ---------------------------------------------------------------- long recoveries, full mode
     Step("same_clip_cue_recovery",
          _py("research/scripts/same_clip_cue_analysis.py", "--recovery", "--au-csv",
@@ -558,6 +571,48 @@ PINS: Dict[str, str] = {
         "4315aa3dde0de1b977dbf39f28a1992b8cc9b1b0208849eb4dd5a3b72bdf0165",
     "results/mech/steer_summary_qwen3vl_layer4.json":
         "f39bcd09b1da62f2d818fdf223cfd56c1df03dad8aa7843f92e04080e8d98b1a",
+    # Added 2026-11-12: outputs committed 2026-11-09 to 2026-11-12 (A1 lock, A6 and A7 cluster checks,
+    # A9, benchmark audit, EU-Emotion checks), pinned from the tree that commits them.
+    "research/reproduction/rotation_summary.json":
+        "81500bdd229f88c5aa4038736d4ccc0eb2e04080613dc95380cc8c3dd067072a",
+    "research/reproduction/rotation_errored_trials.json":
+        "ec876ebf090b9cd528887bebdee9b8afc9f6bcc2a6c46d05f39177c3b9a336cf",
+    "research/reproduction/a1_pull_manifest.json":
+        "c769701261f3ff008a3f2d5c4407bdea9599de12e44afda0a26789de29bf5664",
+    "research/reproduction/same_clip_family_model_gemma4.json":
+        "0f9c0a2658cb15c4ac5e0ec03d87fa1f4a521a71ba5e758d54993e96ac37519d",
+    "research/reproduction/same_clip_family_model_qwen3vl.json":
+        "bc0d67951cad79abb28cae1697f96946ec87e6f83eb6096d9cd772ad5cedb810",
+    "research/reproduction/same_clip_family_model_molmo2.json":
+        "9ad3d59dd71b8c2a4f897ac8f05d1c9ed805f9e566c75ceb3651d2eafaf66e3f",
+    "research/reproduction/a6_human_cue_check.json":
+        "f42a51ef02455afbb26a4ba530eb231afa4db72cc5e8b9813ab1cb5ae889aeec",
+    "research/reproduction/a7_stage0_gemma4.json":
+        "fff021f80af84864592300357228adb2875eaadc52b711964c723ed62b0b12b4",
+    "research/reproduction/a7_stage0_qwen3vl.json":
+        "3762c7bdb48c6a0b153d13a8f2d076a6b82a8d4a948bcec70be7d08e0da8a215",
+    "research/reproduction/phase2_hash_check.json":
+        "1f4949e4869eaa1e7f4c0804166774d2cd28b96f027572c689a39f655af1523e",
+    "research/reproduction/eu_duplicate_clip_check.json":
+        "a9f61e39b605375c61b58b2fea01001ec42efc0fb8e1b6dd8d279c5d654ed823",
+    "research/reproduction/eu_missing_items_check.json":
+        "b6a18f2479f01d080f7c8e2b44075753fc3ed318c97489fde553d1ed1c746b8f",
+    "research/reproduction/benchmark_leak_audit.json":
+        "86a93812fb236a17dbc3b788cabeef11288084801c8e67d43697f44f20e3cb49",
+    "research/reproduction/a9_human_target.json":
+        "3f93ccbe2506ad9e01d79c8f594da6eb0bcd33790d410fda2d3945aeaa526ab0",
+    "research/reproduction/a9_human_ceiling.json":
+        "a32e2dbe2e41b00b19594be1261d4aebe78dfb6170e3ab0837d3f612e62de669",
+    "research/reproduction/a9_chen_overlap.json":
+        "793fa184215f566ef4899d8d3222a55401c03622c93b8950775a6b092f374a44",
+    "research/reproduction/a9_recovery.json":
+        "0ca7bd249fc0c0f705a5d7676e6eb30db88cb019d5a30c71195d67d20b752d68",
+    "research/reproduction/a9_recovery_run1_draft.json":
+        "625675e81eeda31f54f67e7fe2d1cf9b1330089f1b2edbf050f4ba326f680afe",
+    "research/reproduction/a9_recovery_run2.json":
+        "79229b70c4a7d21cfcf9bd957669a899c9b503082932e77cddf94d4aced56e84",
+    "research/reproduction/a9_recovery_run3.json":
+        "01958263f95c6a2fb614d7e66093eb6ed61e11ede33415d14bc8fab8d076dd85",
 }
 
 R = "research/reproduction/"
@@ -592,7 +647,25 @@ SNAPSHOTS = [R + f for f in (
     "a5_recovery_run4_as_written.json", "a5_recovery_run5.json", "a5_checks.json", "a5_family_diagnostic.json",
     "a5_run3_calibration_check.json", "a5_run3_dependence_loo.json", "a5_run3_dependence_oracle.json",
     "a5_run3_recalibrated_diagnostic.json", "a5_run4_skew_diagnostic.json", "a5_run5_gain_guard_diagnostic.json",
-    "a6_recovery_run1.json", "a6_recovery_run2.json", "a6_recovery_run4.json")]
+    "a6_recovery_run1.json", "a6_recovery_run2.json", "a6_recovery_run4.json",
+    "a9_recovery_run1_draft.json", "a9_recovery_run2.json", "a9_recovery_run3.json")]
+
+# A1, locked 2026-11-09: made by research/scripts/post_a1.sh from the 30 rotation files, which are model
+# outputs on EU-Emotion clips and stay on the cluster with the clips.
+A1_RECORDS = [R + f for f in (
+    "rotation_summary.json", "rotation_errored_trials.json", "a1_pull_manifest.json",
+    "same_clip_family_model_gemma4.json", "same_clip_family_model_qwen3vl.json", "same_clip_family_model_molmo2.json")]
+
+# Later cluster checks made from videos, AU frames, model forwards or the cluster's file tree.
+CLUSTER_CHECKS = [R + f for f in (
+    "a6_human_cue_check.json", "a7_stage0_gemma4.json", "a7_stage0_qwen3vl.json", "phase2_hash_check.json",
+    "eu_duplicate_clip_check.json", "eu_missing_items_check.json")]
+
+# Made from public data downloaded outside the repository: Liu et al. 2022 Experiment II (CC BY 4.0,
+# Mendeley Data 10.17632/dr853shk56.2), Chen et al. 2024 (OSF 3m95w), and benchmark annotation text.
+# Rebuild commands are in each script's docstring.
+EXTERNAL_PUBLIC = [R + f for f in (
+    "a9_human_target.json", "a9_human_ceiling.json", "a9_chen_overlap.json", "benchmark_leak_audit.json")]
 
 
 def _hash_outs(paths: Sequence[str], note: str, drafts: Sequence[str] = ()) -> List[Out]:
@@ -613,6 +686,19 @@ HASH_STEPS: List[Step] = [
          _hash_outs([R + "a7_recovery.json", R + "a7_recovery_level1.json"],
                     "A7 recovery on the frozen code (tag a7-freeze); Level 2 takes about an hour, so verified "
                     "by hash; rerun with python -m scripts.a7_recovery --level 1|2")),
+    Step("hash_a9_recovery", None, minutes=0.0, outputs=
+         _hash_outs([R + "a9_recovery.json"],
+                    "A9 recovery run 4 on the frozen code (tag a9-freeze); long, so verified by hash; "
+                    "rerun with python -m scripts.a9_recovery")),
+    Step("hash_a1_records", None, minutes=0.0, outputs=
+         _hash_outs(A1_RECORDS, "A1 locked 2026-11-09 by post_a1.sh from rotation cells kept on the cluster; "
+                                "verified by hash, cannot be rerun from public inputs")),
+    Step("hash_cluster_checks", None, minutes=0.0, outputs=
+         _hash_outs(CLUSTER_CHECKS, "cluster checks on videos, AU frames, model forwards or the cluster tree; "
+                                    "verified by hash, cannot be rerun from public inputs")),
+    Step("hash_external_public", None, minutes=0.0, outputs=
+         _hash_outs(EXTERNAL_PUBLIC, "made from public data downloaded outside the repo (Liu 2022, Chen 2024, "
+                                     "benchmark annotations); verified by hash, rebuild per the script docstrings")),
     Step("hash_cluster_records", None, minutes=0.0, outputs=
          _hash_outs(CLUSTER_RECORDS, "made on the cluster from non-public inputs (videos, weights, caches); "
                                      "verified by hash, cannot be rerun from public inputs")),
@@ -631,22 +717,16 @@ UNCOVERED: Dict[str, str] = {}
 # Outputs of analyses that have not run. Listed by path only: nothing here is run, opened or
 # stat-ed, so a pending result cannot be read early. Each moves into STEPS when it is locked.
 PENDING: List[Tuple[str, Tuple[str, ...], str]] = [
-    ("A1 rotation summary (Figure 2, Table 1)",
-     (R + "rotation_summary.json", R + "rotation_errored_trials.json", R + "a1_pull_manifest.json"),
-     "research/scripts/post_a1.sh, research/scripts/analyse_rotation_run.py; needs cluster cells"),
-    ("A1 same-clip model cells (Figure 4)",
-     tuple(R + f"same_clip_family_model_{m}.json" for m in ("gemma4", "qwen3vl", "molmo2")),
-     "research/scripts/same_clip_family_analysis.py --model M, run by post_a1.sh"),
     ("A2 stimulus interventions (Figure 6)",
      tuple(R + f"stimulus_interventions_{m}.json" for m in ("gemma4", "qwen3vl")),
      "scripts/analyse_stimulus_interventions.py; needs cluster cells"),
     ("A4 summary (Figure 5)", ("results/a4/summary.json",), "python -m scripts.a4_analyse; needs cluster cells"),
-    ("A5 analysis", ("results/a5/a5_analysis.json",), "python -m scripts.a5_analyse (draft prereg)"),
-    ("A6 analysis", ("results/a6/a6_stage1.json", "results/a6/a6_stage2_{model}.json"),
-     "python -m scripts.a6_analyse (draft prereg)"),
-    ("A7 analysis", ("results/a7/a7_analysis.json",), "python -m scripts.a7_analyse (draft prereg)"),
-    ("Figures 2, 4, 5, 6",
-     tuple(f"research/paper/v2/figures/fig{n}.{e}" for n in (2, 4, 5, 6) for e in ("pdf", "png")),
+    ("A5 analysis", ("results/a5/a5_analysis.json",), "python -m scripts.a5_analyse (frozen, tag a5-freeze); needs A2 cells"),
+    ("A7 Stage 1 route arm", ("results/a7/a7_analysis.json",),
+     "python -m scripts.a7_analyse (frozen, tag a7-freeze); runs only where Gate B and the sham pass"),
+    ("A9 summary", ("results/a9/summary.json",), "python -m scripts.a9_analyse (frozen, tag a9-freeze); needs cluster cells"),
+    ("Figures 5, 6",
+     tuple(f"research/paper/v2/figures/fig{n}.{e}" for n in (5, 6) for e in ("pdf", "png")),
      "research/scripts/make_figures.py --fig N --real, which refuses until its LOCKED inputs exist"),
     ("Table 1 (profile per model)", (), "not yet written; built from the A1, A2 and A4 outputs above"),
 ]

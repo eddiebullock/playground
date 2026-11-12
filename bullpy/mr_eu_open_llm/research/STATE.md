@@ -6,7 +6,9 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
 
 ## Current phase
 
-**Rebuilding on a clean task.** Prompt confound found 2026-11-04 (DECISIONS). Branch B stays as a record, but accuracy and last-token probes are confounded. Amendment A1 is the active confirmatory step. Literature-led redesign under way in `research_notes/`.
+**Phase 2 runs queued; Phase 3 analyses wait on them.** A1, A3 and natural-clip RQ1 are locked (2026-11-09). Every amendment is frozen or closed: A2, A4, A5, A7, A8 and A9 frozen, A6 closed as a limit. The A2, A4 and A8 GPU jobs are pending on priority. History: the prompt confound found 2026-11-04 withdrew the earlier accuracy and probe results (DECISIONS); Branch B stays as a record only.
+
+**2026-11-12 15:10:** User confirmed that EU-Emotion's creators are collaborators and our copy is the working set, so outline item 16 is closed; the seven item IDs are now in `eu_missing_items_check.json` (DECISIONS 2026-11-12). Independent code-against-text audits of A4, A2 and A5 started (reports to `research/reviews/a{4,2,5}_code_audit.md`), before any of their data exist. Paper: Methods and Results slots that locked files answer are filled (A7 Stage 0, A6 closed, A9 freeze date, weak labels, literature table, half-shared power, Figure 3b values), with four registry rows added; Figures 2 and 4 drawn from the locked A1, A3 and natural-clip outputs and checked by eye. Methods Disclosure 11 records that A9 was tagged 37 minutes after the A1 analysis ran, with its last design changes from an audit finished before A1. Jobs still pending; fair share 0.000008, no start estimate. RDS 1,067.3 GB, 991,062 files.
 
 **2026-11-12 13:40:** Disk cleanup done with the user's approval. Byte-identical model copies replaced by hard links: `study2/models/qwen3vl` now links to `cascade/weights/Qwen3-VL-8B-Instruct` (17 weight and config files; the 17 small download-metadata files differ and were left), and `mnml/weights/qwen3-vl-2b` links to `es_vlm/models/qwen3vl_2b` (12 files). Removed caches `sim/cache/hf` (4.9G), `cascade/cache/pip` (1.2G) and `social_ai/conda/pkgs` (531M), plus this project's scan and survey temp files. RDS 1,095.6 to 1,067.4 GB, files 998,719 to 991,061. GPU jobs still pending; Slurm estimate 2026-11-14 about 11:30 to 13:25.
 
@@ -56,7 +58,7 @@ EU-Emotion: full access and licence, per user 2026-11-04. Full RMET access. CREM
 - Default branch: `main`.
 - Integration branch: `paper-v2`.
 - Task branch: `p1-pipeline`.
-- Tags: `v2-phase0`, `prereg-v1`, `a2-freeze`, `a4-freeze`, `a5-freeze`, `a7-freeze`, `a8-freeze`.
+- Tags: `v2-phase0`, `prereg-v1`, `a2-freeze`, `a4-freeze`, `a5-freeze`, `a7-freeze`, `a8-freeze`, `a9-freeze`.
 - Repo visibility: **public**.
 
 ## Blockers (non-idle)

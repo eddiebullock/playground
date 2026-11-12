@@ -1,7 +1,7 @@
 {
   "date": "2026-11-12",
   "question": "Outline item 16(a): are the seven workbook items with no clip absent from our copy of EU-Emotion, or only from the clip list?",
-  "method": "The seven items were found locally by rerunning the human_entropy.py match of eu_emotions_oreilly_item_level.xlsx against study3/data/eu_emotions_full_manifest.json (249 items, 242 matched, 7 without a clip). Every video file in the six EU-Emotion trees on the cluster (study2/data/eu_emotions, eu_emotions_118, eu_emotions_raw, eu_emotions_voices; study3/data/eu_emotions, eu_emotions_full) was then parsed with parse_stimulus_code and matched on actor letter and item number, with the emotion checked against the file path. Item IDs and paths are kept out of this record until the licence is settled; they are in the private scratch output on the cluster.",
+  "method": "The seven items were found locally by rerunning the human_entropy.py match of eu_emotions_oreilly_item_level.xlsx against study3/data/eu_emotions_full_manifest.json (249 items, 242 matched, 7 without a clip). Every video file in the six EU-Emotion trees on the cluster (study2/data/eu_emotions, eu_emotions_118, eu_emotions_raw, eu_emotions_voices; study3/data/eu_emotions, eu_emotions_full) was then parsed with parse_stimulus_code and matched on actor letter and item number, with the emotion checked against the file path. The cluster scan output is ~/rds/hpc-work/a8_check/scan_out.json (paths) and missing_keys.json (the seven items).",
   "n_video_files_scanned": 791,
   "n_items_checked": 7,
   "n_items_with_unedited_original_in_our_copy": 7,
@@ -9,6 +9,75 @@
   "n_items_with_edited_cut_of_another_take_only": 1,
   "emotion_folder_consistent_for_all_hits": true,
   "manifest_edition_filter": "edited (all 243 clips come from EDITED folders)",
-  "reading": "All seven are in our copy, but only as unedited originals in the packs' Original folders; none has an edited cut. The clip list takes edited files only, so it leaves them out. For one item, an edited cut exists for a different take of the same actor and item, not for the take the workbook names. Whether the distributed set has edited cuts of these seven cannot be told from our copy.",
-  "consequence": "None for the frozen designs, which use the 243 edited clips. The unedited originals differ in trimming and are not substituted."
+  "reading": "All seven are in our copy, but only as unedited originals in the packs' Original folders; none has an edited cut. The clip list takes edited files only, so it leaves them out. For angryHF17v2, an edited cut exists for take v1 of the same actor and item, not for take v2, which the workbook names.",
+  "consequence": "None for the frozen designs, which use the 243 edited clips. The unedited originals differ in trimming and are not substituted.",
+  "items": [
+    {
+      "stimulus_id": "afraidKF3",
+      "emotion": "Afraid",
+      "intensity": "High",
+      "in_our_copy": "original only",
+      "files": [
+        "study3/data/eu_emotions/emotions 37/.../Original/Afraid/KF3.mov"
+      ]
+    },
+    {
+      "stimulus_id": "angryHF17v2",
+      "emotion": "Angry",
+      "intensity": "High",
+      "in_our_copy": "original of this take; edited cut only of take v1",
+      "files": [
+        "study3/data/eu_emotions/emotions 7/.../Original/Angry/HF17v2.mov",
+        "study3/data/eu_emotions/emotions 4/.../Original/Angry/HF17v1.mov (other take)",
+        "study3/data/eu_emotions/emotions 11/.../EDITED/Angry/HF17v1_cut.mp4 (other take; also in study2/data/eu_emotions and eu_emotions_raw)"
+      ]
+    },
+    {
+      "stimulus_id": "angryFF17",
+      "emotion": "Angry",
+      "intensity": "High",
+      "in_our_copy": "original only",
+      "files": [
+        "study3/data/eu_emotions/emotions 35/.../Original/Angry/FF17.mov"
+      ]
+    },
+    {
+      "stimulus_id": "AngryBF17",
+      "emotion": "Angry",
+      "intensity": "High",
+      "in_our_copy": "original only",
+      "files": [
+        "study3/data/eu_emotions/emotions 33/.../Original/Angry/BF17.mov"
+      ]
+    },
+    {
+      "stimulus_id": "disgustedEF5",
+      "emotion": "Disgusted",
+      "intensity": "High",
+      "in_our_copy": "original only",
+      "files": [
+        "study3/data/eu_emotions/emotions 31/.../Original/Disgusted/EF5.mov (also in study2/data/eu_emotions_118)"
+      ]
+    },
+    {
+      "stimulus_id": "disgustedSF5",
+      "emotion": "Disgusted",
+      "intensity": "High",
+      "in_our_copy": "original only",
+      "files": [
+        "study3/data/eu_emotions/emotions 3/.../Original/Disgusted/Sf5.mov"
+      ]
+    },
+    {
+      "stimulus_id": "sadNF16",
+      "emotion": "Sad",
+      "intensity": "Low",
+      "in_our_copy": "original only",
+      "files": [
+        "study3/data/eu_emotions/emotions 33/.../Original/Sad Low Intensity/NF16.mov"
+      ]
+    }
+  ],
+  "item_ids_public_since": "2026-11-08 (DECISIONS, 'EU-Emotion permissions settled'); added to this record 2026-11-12",
+  "settled": "2026-11-12, by the user: EU-Emotion's creators are collaborators and the copy we hold is the set supplied for this work, so the seven have no edited cut in the set studied. Nothing remains to ask the authors (outline item 16)."
 }

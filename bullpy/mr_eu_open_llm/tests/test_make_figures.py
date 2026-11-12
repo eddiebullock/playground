@@ -122,9 +122,14 @@ def test_synthetic_fig6(tmp_path):
 
 
 def check_synthetic_refuses_paper_folder():
+    # Figure 4 is drawn from locked outputs since 2026-11-12, so the paper folder may hold a real
+    # fig4.png. A refused synthetic run must leave whatever is there byte for byte unchanged.
+    target = FIGURES_DIR / "fig4.png"
+    before = target.read_bytes() if target.exists() else None
     result = _run(FIGURES_DIR, "--fig", "4", "--synthetic", check=False)
     assert result.returncode != 0 and "may not be written" in result.stderr
-    assert not (FIGURES_DIR / "fig4.png").exists()
+    after = target.read_bytes() if target.exists() else None
+    assert after == before
 
 
 def test_synthetic_refuses_paper_folder():

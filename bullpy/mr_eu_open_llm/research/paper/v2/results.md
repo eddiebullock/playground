@@ -21,13 +21,13 @@ In the v1 prompt the acted label was the first option on 243 of 243 items [REG: 
 
 The face did not always reach the model. On Gemma 4 the composite grid left a median of 1.08 tokens across the face, against 9.01 on a single face crop [REG: Input delivery, "Gemma 4 tokens across the face, median"]. The gate is 8. On Qwen3-VL the values were 11.54 and 13.52, and all four routes passed [REG: Input delivery, "Qwen3-VL"]. On Molmo2 the single face crop passed at 12.96, and the native video route (5.07) and the grid (2.01) failed [REG: Input delivery, "Molmo2"]. The grid keeps the first 8 frames, so 68 of 243 clips lost frames at 1 frame per second [REG: Input delivery, "Clips losing frames to the 8-cell grid"].
 
-Weak labels. [PENDING: share of face-only human observers choosing the acted label on Kind, Unfriendly and Jealous, and the item count. The values are in DECISIONS 2026-11-04, "Keep acted labels, add human-referenced scoring", and in Figure 1d, but have no registry row. Source: `data/eu_emotions_human_entropy.json`, mean `p_target` by label.]
+Weak labels. On three labels, face-only human observers chose the acted label little more often than chance: Kind .229 (9 items), Unfriendly .241 (10 items) and Jealous .257 (7 items), 26 items in all, against 1/6 [REG: "Rows added 2026-11-08", "Weak labels"]. The acted label is a poor ground truth for these items, so results are also read against the human response distribution (DECISIONS 2026-11-04, "Keep acted labels, add human-referenced scoring").
 
 Vision gates. Gemma 4 passed the option-independence, replay-and-cut and token-swap gates, with a token-swap change of 4.87 nats and a flip rate of .675 at 100% [REG: Vision gates, "Gemma 4"]. Qwen3-VL passed all three at bfloat16 only, at 9.30 nats and .55 [REG: Vision gates, "Qwen3-VL"]. Molmo2 failed option independence at bfloat16 (worst relative L2 .0406 against .01) and failed token swap (2.28 nats, flip rate 0 against .25) [REG: Vision gates, "Molmo2"]. Gemma 4 and Qwen3-VL are therefore eligible for A2 and A4, and Molmo2 is not [REG: Vision gates, "Eligibility"].
 
-**Literature check.** [PENDING: `research/reproduction/literature_table.csv`, one row per paper, fields for option handling, image-free or mismatch control, and verification level (ROADMAP step 0.5).] The prose in the Introduction stands until then.
+**Literature check.** We coded eight recent studies of emotion or mental-state reading by vision-language models [1, 2, 8-13] for four design features, as far as our reading of each went; the level of reading is given per row in `research/reproduction/literature_table.csv`. Target position was controlled in one study and partly in one, fixed in two, not stated in one, and did not arise in three that used no option list. One option set served every item in three studies and partly in one; this was not stated in two and did not arise in two. None stated a check that the images reached the model. Five had no image-free, mismatched or swapped-face control, and three had a partial one [REG: "Rows added 2026-11-12", "Literature table"]. "Not stated" means not stated in what we read.
 
-**Figure.** Figure 1, panels a to d (`research/paper/v2/figures/fig1.pdf`). Panel e, the eight-paper table: [PENDING: ROADMAP 0.5].
+**Figure.** Figure 1, panels a to e (`research/paper/v2/figures/fig1.pdf`). Panel e is the eight-paper table, drawn from `literature_table.csv`.
 
 ## 2. Dependence on the face (RQ0)
 
@@ -50,7 +50,7 @@ Vision gates. Gemma 4 passed the option-independence, replay-and-cut and token-s
 
 **Writing rule.** A Pass is never written as "reads faces" (outline.md, RQ0). If A1 is incomplete, nothing is stated, because Holm covers all three models (outline.md, R0-d).
 
-**Figure.** Figure 2: delta per model and input, with accuracy against 1/6 and by target position. [PENDING: Figure 2 function in `research/scripts/make_figures.py`, gated until A1 is locked (ROADMAP 0.7).]
+**Figure.** Figure 2 (`research/paper/v2/figures/fig2.pdf`), drawn from the locked `rotation_summary.json` and `face_input_validity_summary.json`: delta per model and input with its actor bootstrap CI (a), accuracy on real and mismatched faces against 1/6 (b), and real-face accuracy by target position on A1 (c) and A3 (d).
 
 ## 3. Behaviour cannot settle cue use
 
@@ -64,7 +64,7 @@ The natural clips are poorly conditioned. On the 243 EU-Emotion clips, the small
 
 On synthetic stimuli with paired cues correlated at a constructed .9, pair-swapped observers' outputs correlated .83 to .95 with the human-weighted observer, while their raw CEA on the randomised design was .42 to .56 [REG: A4 recovery, "Pair-swapped, run 2"]. The .9 is ours, not a measurement.
 
-**Figure.** Figure 3, panels a to e (`research/paper/v2/figures/fig3.pdf`). Panel b plots computed values that have no registry row: [PENDING: registry row for the Proposition 2 panel values, or describe panel b without numbers.]
+**Figure.** Figure 3, panels a to e (`research/paper/v2/figures/fig3.pdf`). Panel b shows the Proposition 2 check: for two observers that weight different but correlated cues, the correlation of their outputs equals the cue correlation (.5, .9 and .99), while the cosine between their cue effects stays 0 [REG: "Rows added 2026-11-12", "Proposition 2 check"].
 
 ## 4. Pattern alignment on natural clips (RQ1)
 
@@ -81,11 +81,11 @@ On synthetic stimuli with paired cues correlated at a constructed .9, pair-swapp
 
 A positive score supports "aligned with the human pattern", not "uses the same cues" (`research/DECISIONS.md:234`).
 
-**Locked text (recovery).** On this route, power was .995 at 0.75 times and 1.0 at 1 times the human effect, against a limit of .80. Size was .035 for the prior-only observer and .06 for the actor-prior observer at 0.75 times, against .081 [REG: "Pattern score, model-frames route (2026-11-04)"]. Power was .775 at 0.5 times. For an observer sharing half the human weights, power was .60 at 0.75 times [REG: same section]. The different-cues observer had size .055 at 0.75 times [REG: same section]. The half-shared power of .83 at 1 times is in DECISIONS (`research/DECISIONS.md:274`) and methods.md: [PENDING: registry row for half-shared power at 1 times on the model-frames route.]
+**Locked text (recovery).** On this route, power was .995 at 0.75 times and 1.0 at 1 times the human effect, against a limit of .80. Size was .035 for the prior-only observer and .06 for the actor-prior observer at 0.75 times, against .081 [REG: "Pattern score, model-frames route (2026-11-04)"]. Power was .775 at 0.5 times. For an observer sharing half the human weights, power was .60 at 0.75 times [REG: same section]. The different-cues observer had size .055 at 0.75 times [REG: same section]. At 1 times it was .83 [REG: "Rows added 2026-11-12", "Half-shared pattern power"].
 
 **Locked text (models, read 9 November 2026).** All three models are in the Pass and Pass row, and none lost more than 5% of clips, so the score is confirmatory for each [REG: Natural-clip RQ1]. On the composite input, the family pattern score was .549 for Qwen3-VL (permutation *P* = .0002, 242 of 243 clips), .418 for Gemma 4 (*P* = .0006, 243 clips) and .543 for Molmo2 (*P* = .0002, 243 clips) [REG: Natural-clip RQ1 table]. *P* = .0002 is the floor at 4,999 permutations. On each detector alone, a sensitivity, the scores were .548 and .520, .411 and .350, and .522 and .469. Qwen3-VL lost one clip, the one whose trial failed to load. Each model's responses on these clips are therefore aligned with the human pattern of AU families. This does not show that the models use the same cues. The score is a regression on measured cues, and a system responding to an unmeasured cue correlated with them can produce the same slopes (Proposition 4), so the claim stays at alignment with the human pattern, as fixed in advance. Molmo2's alignment sits beside chance-level accuracy in A1, which shows that the pattern score and accuracy measure different things. Single and family-wise cells are exploratory.
 
-**Figure.** Figure 4 or a table: pattern score per model. [PENDING: Figure 4 function (ROADMAP 0.7).]
+**Figure.** Figure 4 (`research/paper/v2/figures/fig4.pdf`), drawn from the three locked `same_clip_family_model_*.json` files and the route recovery files: the composite pattern score per model with each detector alone, against its permutation null and the recovery range of human-like and prior-only observers.
 
 ## 5. Cue effects under randomisation (RQ1, A4)
 
@@ -222,7 +222,9 @@ Gate B is B1 to B5 (`research/PREREG_A2_DRAFT.md:109-117`). A model and route th
 
 **Rule.** None of its own. Each cell copies the class from Sections 2, 4, 5 and 7. Models are never pooled (methods.md, "Models").
 
-**Slots.** Table 1, one row per model: [PENDING: A1 class], A3 Pass (locked, Section 2), [PENDING: natural-clip reading], [PENDING: A4 headline per task], [PENDING: A2 classes per route].
+**Locked cells.** A1 Pass and A3 Pass for all three models, so face use on both inputs (Section 2). Natural clips: aligned with the human pattern, confirmatory, for all three (Section 4). Molmo2 is not eligible for A2 or A4, on its gate failures (Section 1), so its row ends there.
+
+**Slots.** Gemma 4 and Qwen3-VL: [PENDING: A4 headline per task], [PENDING: A2 classes per route].
 
 **Figure.** Table 1.
 
@@ -255,13 +257,13 @@ Gate B is B1 to B5 (`research/PREREG_A2_DRAFT.md:109-117`). A model and route th
 
 **Question.** Is a cue's effect carried from image tokens through the language model?
 
-**Rule.** Not a test (DECISIONS 2026-11-07, "G7 becomes a scoped limit", `research/DECISIONS.md:355-363`). A7 is a draft, not frozen, not preregistered (`research/PREREG_A7_DRAFT.md:3`). Its reporting table is `research/PREREG_A7_DRAFT.md:391-398`. No site is called a cut unless Stage 0 shows it complete.
+**Rule.** Not a test (DECISIONS 2026-11-07, "G7 becomes a scoped limit", `research/DECISIONS.md:355-363`). A7 was frozen on 2026-11-08, tag `a7-freeze`, before any full A2 cell was read (`research/PREREG_A7_DRAFT.md:3`). Its reporting table is `research/PREREG_A7_DRAFT.md:391-398`. No site is called a cut unless Stage 0 shows it complete.
 
-**Slots.** [PENDING: A7 freeze; Stage 0 table for Gemma 4 and Qwen3-VL (ROADMAP 2.6).] If Stage 0 has not run at submission, the paragraph states that no site was shown complete on `single_face` or on the blind readout (outline.md, R3-e).
+**Locked text (Stage 0, 10 November 2026).** On the 24 calibration clips, on `single_face` with the blind readout, the exit cut, which removes the whole vision path, was complete on both models: in every check the worst change from the image-free reference was 0.0 nats, against a limit of 0.001 [REG: "A7 Stage 0, Gemma 4"; "A7 Stage 0, Qwen3-VL"]. Its two blocks were both live (ratios .230 and .885 on Gemma 4, .802 and .273 on Qwen3-VL, against a floor of .10) and together exhaust it, but a block is not a cut. No site inside the language model was shown complete, so RQ3 is not testable beyond the interface on either model. The region test, which asks whether the tokens at a cue's location carry its effect, failed on both. On Gemma 4 the effect leaked past those tokens (leak .139 and .088 at buffers 0 and 1). On Qwen3-VL the token map located the cue on .760 of 96 trials, below its rule, so no leak was computed. Cue-level mediation is therefore not testable by a token cut on either model. The route arm may run in Stage 1 only as a secondary split of the complete exit cut, and is never reported as an RQ3 result (DECISIONS 2026-11-10).
 
-**Figure.** None in the main text. Stage 0 table in the Supplement, once it exists.
+**Figure.** None in the main text. Stage 0 table in the Supplement, from `research/reproduction/a7_stage0_gemma4.json` and `a7_stage0_qwen3vl.json`.
 
-## 10. Provisional: RQ4 and RQ5
+## 10. RQ4, and RQ5 as future work
 
 **RQ4 (A5).** A5 is frozen, tag `a5-freeze`, on 2026-11-08, before any A2 cell existed (`research/PREREG_A5_DRAFT.md:3`). Only the evidence classes are confirmatory (`:246`, `:576`):
 
@@ -276,6 +278,6 @@ Gate B is B1 to B5 (`research/PREREG_A2_DRAFT.md:109-117`). A model and route th
 
 Slots, per model and route, from the A5 output (`scripts/a5_analyse.py --output <path>`): [PENDING: `confirmatory` block, evidence class], [PENDING: `descriptive` block, balance, Phi with 90% CI, word share, `family_gain_log_sd`].
 
-**RQ5 (A6).** A6 is a draft, not frozen, not preregistered (`research/PREREG_A6_DRAFT.md:3`). No Results text is drafted from it. A section is added only if it freezes before its data are read and its analysis finishes (outline.md, "RQ4 and RQ5, provisional"). Its decision table is at `research/PREREG_A6_DRAFT.md:418-429`. The human target sample is 819 clips and 91 actors [REG: A6 human target, "Sample"]; this is a design fact and is not a result.
+**RQ5 (A6), closed as a limit.** A6 was never frozen. Its own pre-freeze rule, fixed before any model output, required the first frame of each clip to carry at most half of the apex value of AU9 and AU10 on every detector. ME-GraphAU's AU10 gave .801 [REG: "A6 pre-freeze cluster checks"], so A6 did not freeze or run (DECISIONS 2026-11-10), and RQ5 is named as future work in the Discussion. No CREMA-D model output exists. The human target sample, 819 clips and 91 actors [REG: A6 human target, "Sample"], is a design fact.
 
-**Figure.** The free display slot (outline.md, "Display items"), only if A5 or A6 appears.
+**Figure.** The free display slot (outline.md, "Display items"), only if A5 appears.
