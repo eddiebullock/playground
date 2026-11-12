@@ -445,8 +445,8 @@ def fig3_theorem1(ax):
     ax.plot([-1, 1], [-1, 1], color=GRID, linewidth=1, zorder=0)
     ax.plot(req, got, linestyle="none", marker="o", markersize=5.5, color=BLUE,
             markeredgecolor=SURFACE, markeredgewidth=1)
-    ax.text(1.1, -1.05, "Outputs on natural\nitems unchanged:\n"
-            f"largest change {err:.1e}", fontsize=5.8, color=INK, ha="right", va="bottom")
+    ax.text(1.1, -1.05, "Natural outputs equal\nby construction;\n"
+            f"effect-matrix error {err:.1e}", fontsize=5.8, color=INK, ha="right", va="bottom")
     ax.set_xlim(-1.15, 1.15)
     ax.set_ylim(-1.15, 1.15)
     ax.set_xticks([-1, 0, 1])

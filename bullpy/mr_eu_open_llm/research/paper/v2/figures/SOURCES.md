@@ -30,11 +30,11 @@ Figures 2, 4, 5 and 6 get a section only when built with `--real`, which refuses
 
 | Panel | Input file | sha256 | Script line |
 |---|---|---|---|
-| a, schematic of proposition 2 | none: diagram of `research/theory/causal_feature_alignment.md`, no plotted numbers | - | `research/scripts/make_figures.py:389` |
-| b, proposition 2 | `research/reproduction/cfa_identifiability.json` | `31bd4b4098026b3438c0293a13b7e379676ff8724cb67d6b88c8f602ead9ea45` | `research/scripts/make_figures.py:415` |
-| c, theorem 1 | `research/reproduction/cfa_identifiability.json` | `31bd4b4098026b3438c0293a13b7e379676ff8724cb67d6b88c8f602ead9ea45` | `research/scripts/make_figures.py:439` |
-| d, lambda_min per cue table | `research/reproduction/cfa_identifiability.json` | `31bd4b4098026b3438c0293a13b7e379676ff8724cb67d6b88c8f602ead9ea45` | `research/scripts/make_figures.py:491` |
-| e, condition number per cue table | `research/reproduction/cfa_identifiability.json` | `31bd4b4098026b3438c0293a13b7e379676ff8724cb67d6b88c8f602ead9ea45` | `research/scripts/make_figures.py:491` |
+| a, schematic of proposition 2 | none: diagram of `research/theory/causal_feature_alignment.md`, no plotted numbers | - | `research/scripts/make_figures.py:390` |
+| b, proposition 2 | `research/reproduction/cfa_identifiability.json` | `31bd4b4098026b3438c0293a13b7e379676ff8724cb67d6b88c8f602ead9ea45` | `research/scripts/make_figures.py:416` |
+| c, theorem 1 | `research/reproduction/cfa_identifiability.json` | `31bd4b4098026b3438c0293a13b7e379676ff8724cb67d6b88c8f602ead9ea45` | `research/scripts/make_figures.py:440` |
+| d, lambda_min per cue table | `research/reproduction/cfa_identifiability.json` | `31bd4b4098026b3438c0293a13b7e379676ff8724cb67d6b88c8f602ead9ea45` | `research/scripts/make_figures.py:492` |
+| e, condition number per cue table | `research/reproduction/cfa_identifiability.json` | `31bd4b4098026b3438c0293a13b7e379676ff8724cb67d6b88c8f602ead9ea45` | `research/scripts/make_figures.py:492` |
 
 ## Figure 4
 

@@ -208,6 +208,14 @@ STEPS: List[Step] = [
          [Out("research/reproduction/a4_gates.json")], minutes=0.1,
          note="A4's --gates file, built from the locked A1, A3 and vision-gate files by A2's frozen outside_gates "
               "(PREREG_A4 deviation of 2026-11-12, ruling 5)"),
+    Step("snoek_config_overlap", _py("-I", "research/scripts/snoek_config_overlap.py"),
+         [Out("research/reproduction/snoek_config_overlap.json")], needs=SNOEK, minutes=0.3,
+         note="Snoek AU configurations shared between the basic and conversational experiments (draft review "
+              "2026-11-12, finding 7)"),
+    Step("a9_label_corroboration", _py("-I", "research/scripts/a9_label_corroboration.py"),
+         [Out("research/reproduction/a9_label_corroboration.json")], minutes=0.1,
+         note="A9 label-order corroboration from the two committed human-target files (draft review 2026-11-12, "
+              "finding 12)"),
     Step("residual_cea_attenuation",
          _py("research/scripts/residual_cea_attenuation.py", "--out", "research/reproduction/residual_cea_attenuation.json"),
          [Out("research/reproduction/residual_cea_attenuation.json")], minutes=2.7,
@@ -402,6 +410,12 @@ STEPS: List[Step] = [
 # --quick mode). Pinned from the committed tree at d6e190a (= origin/main ee92354 for these files),
 # 2026-11-08. A relock that changes one of these files must update its pin in the same commit.
 PINS: Dict[str, str] = {
+    "research/reproduction/a1_nota_shares.json":
+        "eca6970474a439dc7c7415674c15ee44babc4c9d18dc5b999d87e4a2854a37ce",
+    "research/reproduction/a1_frame_strategies.json":
+        "164adee7b0f9777b94345ad977507d05fd3f465130bf32c803059eea6b5b5829",
+    "research/reproduction/a3_token_floor_sensitivity.json":
+        "672d2b641883946c620427ab5b8a2d48b29a361acd941b14ac34dc649b89da2d",
     "research/reproduction/a7_recovery.json":
         "bf5abf634973c825dbfadefb2449e253e7c81422cd17e526773e446a1e493295",
     "research/reproduction/a7_recovery_level1.json":
@@ -677,6 +691,11 @@ EXTERNAL_PUBLIC = [R + f for f in (
     "a9_human_target.json", "a9_human_ceiling.json", "a9_chen_overlap.json", "benchmark_leak_audit.json")]
 
 
+# Descriptive outputs added 2026-11-12 after the independent draft review, made from locked outputs that
+# stay off the public repo (the A1 rotation files, the A3 cells, the pinned A2 geometry).
+REVIEW_RECORDS = [R + f for f in ("a1_nota_shares.json", "a1_frame_strategies.json", "a3_token_floor_sensitivity.json")]
+
+
 def _hash_outs(paths: Sequence[str], note: str, drafts: Sequence[str] = ()) -> List[Out]:
     return [Out(p, kind="sha256", sha256=PINS[p], draft=p in drafts, note=note) for p in paths]
 
@@ -711,6 +730,10 @@ HASH_STEPS: List[Step] = [
     Step("hash_cluster_records", None, minutes=0.0, outputs=
          _hash_outs(CLUSTER_RECORDS, "made on the cluster from non-public inputs (videos, weights, caches); "
                                      "verified by hash, cannot be rerun from public inputs")),
+    Step("hash_review_records", None, minutes=0.0, outputs=
+         _hash_outs(REVIEW_RECORDS, "descriptive outputs of 2026-11-12 from locked cluster outputs (A1 rotation "
+                                    "files, A3 cells, pinned geometry); verified by hash, rebuild per the script "
+                                    "docstrings where those files are present")),
     Step("hash_snapshots", None, minutes=0.0, outputs=
          _hash_outs(SNAPSHOTS, "snapshot of an earlier run by earlier code; verified by hash, not rerun")),
     Step("hash_curated_inputs", None, minutes=0.0, outputs=

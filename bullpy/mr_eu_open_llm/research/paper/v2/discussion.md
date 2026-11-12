@@ -34,7 +34,7 @@ With option position rotated and the prompt held fixed, accuracy on all three mo
 
 Positive and confirmatory on all three models (RESULTS_REGISTRY, "Natural-clip RQ1"). Drafted text:
 
-On natural clips, each model's responses lined up with the human pattern over four families of facial action units, with family pattern scores of .42 to .55, each well outside its permutation null. This is the claim the design supports, and only this one. The score is a regression on measured cues, so a model responding to an unmeasured cue that is correlated with them would produce the same result (Proposition 4); alignment with the human pattern is not evidence that the models use the same cues. The randomised test in the next section is the one built to reach that question. Molmo2's alignment beside chance-level accuracy also shows that the two measures can come apart: a model can track the human pattern of graded responses while rarely putting the most weight on the acted label.
+On natural clips, each model's responses lined up with the human pattern over four families of facial action units, with family pattern scores of .42 to .55, each well outside its permutation null. This is the claim the design supports, and only this one. The score is a regression on measured cues, so a model responding to an unmeasured cue that is correlated with them would produce the same result (Proposition 4); alignment with the human pattern is not evidence that the models use the same cues. The randomised test in the next section is the one built to reach that question. Two limits apply. For Gemma 4 and Molmo2 the scores come from a composite input on which the face spans one or two image tokens, below our own delivery gate, a limit recorded before any rotated result was read; they show alignment despite that input and say nothing about which visual information carried it. And Molmo2's score sits beside chance-level accuracy and a majority of "None of the above" answers: the score is computed on graded responses over all options, so a model can track the human pattern while rarely putting the most weight on the acted label.
 
 ## RQ1 under randomisation (A4)
 
@@ -101,8 +101,8 @@ On both eligible models the only complete cut of the vision path was the whole p
 
 Then one sentence for the route arm, a secondary split of the complete exit cut reported in the supplement, which has no human reading and never answers RQ3:
 
-- **Carried by one block, or Both blocks with its rider.** On this edit and readout, [model]'s change was carried by [block], [rider]. This is about which tensor carries the effect of one eyes-and-mouth edit, not about how the model reads faces.
-- **No effect to carry.** The joint eyes-and-mouth edit did not move [model]'s option-free judgement enough to trace; a statement about the edit.
+- **Carried by one block, or Both blocks.** On this edit and readout, [model]'s change was carried by [block]. The interaction rider, [rider], is descriptive and is given with its recovery rates. This is about which tensor carries the effect of one eyes-and-mouth edit, not about how the model reads faces.
+- **No effect to carry.** The joint eyes-and-mouth edit did not move [model]'s option-free judgement enough to trace; a statement about the edit, reported with its recovery reach (.62 to .65 at the null).
 - **Not tested.** The route arm's preconditions (Gate B, the sham or the gates) failed for [model], applied by code as recorded before any A2 output existed.
 - **Inconclusive.** [reason code].
 

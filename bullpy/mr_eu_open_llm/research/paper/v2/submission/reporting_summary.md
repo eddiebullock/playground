@@ -52,7 +52,7 @@ For all statistical analyses, confirm the following are given in the figure lege
 | Item | Answer |
 |---|---|
 | Data availability statement | See `data_code_availability.md` in this folder |
-| Accession codes, unique identifiers or web links for public datasets | Snoek AU data, https://doi.org/10.21942/uva.21261885.v1; EU-Emotion norms in the repository; CREMA-D from its authors' repository |
+| Accession codes, unique identifiers or web links for public datasets | Snoek AU data, https://doi.org/10.21942/uva.21261885.v1; Liu et al. 2022 Experiment II, https://doi.org/10.17632/dr853shk56.2; EU-Emotion norms in the repository; CREMA-D from its authors' repository |
 | Restrictions on availability | EU-Emotion videos through the dataset's authors; FACSHuman renders not published (LGPL-3.0 targets with no output clause); CREMA-D videos not redistributed by us; RMET not used in reported analyses |
 
 ## Research involving human participants, their data, or biological material
@@ -63,7 +63,7 @@ For all statistical analyses, confirm the following are given in the figure lege
 | Reporting on race, ethnicity or other socially relevant groupings | Snoek observers were Western (WC) and East Asian (EA) groups, each shown faces of their own ethnicity (Methods, Human data [19]). A4's EA avatar faces are approximate and not based on East Asian people (Methods) |
 | Population characteristics | Not applicable for new data. For secondary data, see the source papers [14,19,26] |
 | Recruitment | Not applicable. No recruitment |
-| Ethics oversight | [USER: the ethics or exemption statement; methods.md line 46 is PENDING. Name the body that approved or exempted the secondary analysis, if any] |
+| Ethics oversight | [USER: the ethics or exemption statement; its slot in methods.md is PENDING. Name the body that approved or exempted the secondary analysis, if any] |
 
 ## Field-specific reporting
 
@@ -73,12 +73,12 @@ Select: **Behavioural and social sciences**. [USER: confirm. The study could als
 
 | Item | Answer |
 |---|---|
-| Study description | Quantitative, preregistered, confirmatory tests of three open vision-language models against existing human data: a validity audit (A1, A3), cue-effect comparison on rendered faces (A4), stimulus interventions (A2), and prior against evidence (A5). Natural-clip pattern alignment under rules dated 2026-11-04 and 2026-11-07 in DECISIONS |
-| Research sample | Models: Gemma 4 E4B, Qwen3-VL-8B, Molmo2-O-7B at pinned revisions. Stimuli: 243 EU-Emotion face clips (17 actors), Snoek AU configurations (4,659, 2,323, 2,318 and 2,325 per dataset), 24 CREMA-D calibration clips. Human data: EU-Emotion face-only norms; Snoek WC and EA observers |
+| Study description | Quantitative, preregistered, confirmatory tests of three open vision-language models against existing human data: a validity audit (A1, A3), cue-effect comparison on rendered faces (A4) and its repetition on a second human sample (A9), stimulus interventions (A2), and prior against evidence (A5). Natural-clip pattern alignment under rules dated 2026-11-04 and 2026-11-07 in DECISIONS. Vision-path cuts (A7) are reported as a scoped limit with a secondary decomposition; larger models in the same families (A8) form their own families; A6 (shared errors) was closed as a limit before any model output |
+| Research sample | Models: Gemma 4 E4B, Qwen3-VL-8B, Molmo2-O-7B at pinned revisions; A8 adds Qwen3-VL-32B and Gemma 4 31B. Stimuli: 243 EU-Emotion face clips (17 actors), Snoek AU configurations (4,659, 2,323, 2,318 and 2,325 per dataset), Liu et al.'s 1,200 AU configurations, 24 CREMA-D calibration clips. Human data: EU-Emotion face-only norms; Snoek WC and EA observers; Liu et al.'s 20 Western observers |
 | Sampling strategy | No power analysis set sample size, because stimulus sets and human samples are fixed (Methods, Statistics and sample size). A4 uses every available configuration, and recovery tested that count |
 | Data collection | Model forwards on a GPU cluster with exact option probabilities, or 20 draws at temperature 1.0 (A1). No human data collected |
-| Timing | A1 and A3 frozen 2026-11-04; A2 and A4 frozen 2026-11-07; A5 frozen 2026-11-08 (see `preregistration_links.md`). [PENDING: run dates of A1, A2 and A4 model runs] |
-| Data exclusions | Items lost per the frozen missing-data rules: A3 needs all 5 real and all 5 mismatch rotations; natural clips need all 5 rotations, descriptive above 5% lost; A4 drops a stimulus without every rotation, and fails a dataset above 5% lost. A3 lost none (RESULTS_REGISTRY, A3). [PENDING: losses for A1, natural clips, A2, A4] |
+| Timing | A1 and A3 frozen 2026-11-04; A2 and A4 frozen 2026-11-07; A5 and A7 frozen 2026-11-08; A8 and A9 frozen 2026-11-09 (see `preregistration_links.md`). A1's runs completed on 2026-11-09 and were analysed once that day (RESULTS_REGISTRY, "A1 rotated 6AFC"). [PENDING: run dates of the A2, A4, A7 Stage 1, A8 and A9 model runs] |
+| Data exclusions | Items lost per the frozen missing-data rules: A3 needs all 5 real and all 5 mismatch rotations; natural clips need all 5 rotations, descriptive above 5% lost; A4 drops a stimulus without every rotation, and fails a dataset above 5% lost. A3 lost none (RESULTS_REGISTRY, A3). A1 lost no item; one Qwen3-VL trial of 7,290 failed to load its clip and was scored wrong, under a rule fixed before any A1 file was read. Natural clips: Qwen3-VL lost 1 of 243 clips, Gemma 4 and Molmo2 none (RESULTS_REGISTRY, "Natural-clip RQ1"). [PENDING: losses for A2, A4 and A9] |
 | Non-participation | Not applicable |
 | Randomization | Option position rotated cyclically through every position (A1, A3, A4). Mismatch partners fixed by seed 42. Human cue effects come from randomised AU presentation in the source study [19] |
 

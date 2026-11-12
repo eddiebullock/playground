@@ -1,0 +1,77 @@
+{
+ "description": "A1 descriptive: how frames were delivered, per trial, in the locked A1 files.",
+ "models": {
+  "gemma4": {
+   "real": {
+    "composite_grid": 1210,
+    "single_first_frame": 5
+   },
+   "mismatch": {
+    "composite_grid": 1210,
+    "single_first_frame": 5
+   }
+  },
+  "qwen3vl": {
+   "real": {
+    "native_list": 1209,
+    "single_first_frame": 5,
+    "None": 1
+   },
+   "mismatch": {
+    "native_list": 1210,
+    "single_first_frame": 5
+   }
+  },
+  "molmo2": {
+   "real": {
+    "composite_grid": 1210,
+    "single_first_frame": 5
+   },
+   "mismatch": {
+    "composite_grid": 1210,
+    "single_first_frame": 5
+   }
+  }
+ },
+ "single_first_frame": {
+  "gemma4|mismatch|/rds/user/eb2007/hpc-work/study3/data/eu_emotions/emotions 30/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Surprised/PF19v2_cut.mp4": 5,
+  "gemma4|real|/rds/user/eb2007/hpc-work/study3/data/eu_emotions/emotions 30/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Surprised/PF19v2_cut.mp4": 5,
+  "molmo2|mismatch|/rds/user/eb2007/hpc-work/study3/data/eu_emotions/emotions 30/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Surprised/PF19v2_cut.mp4": 5,
+  "molmo2|real|/rds/user/eb2007/hpc-work/study3/data/eu_emotions/emotions 30/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Surprised/PF19v2_cut.mp4": 5,
+  "qwen3vl|mismatch|/rds/user/eb2007/hpc-work/study3/data/eu_emotions/emotions 30/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Surprised/PF19v2_cut.mp4": 5,
+  "qwen3vl|real|/rds/user/eb2007/hpc-work/study3/data/eu_emotions/emotions 30/HD Version - Face, Body, Social/Faces - HD Version/EDITED/Surprised/PF19v2_cut.mp4": 5
+ },
+ "inputs_sha256": {
+  "results/baseline/eu_emotions/gemma4/eval_v2_eu_emotions_gemma4_video_only_seed42_rot0_real.json": "6bc0470a9a5fff5d6491d6f3b09deddd0acddae8ce64a64b159b5a8d6ddf4bf0",
+  "results/baseline/eu_emotions/gemma4/eval_v2_eu_emotions_gemma4_video_only_seed42_rot1_real.json": "3a53ef5ca4b9c8ba048882a329e4e76c7235f1638f3d463a75dab3008e30af84",
+  "results/baseline/eu_emotions/gemma4/eval_v2_eu_emotions_gemma4_video_only_seed42_rot2_real.json": "11c4fa7386dbc2f0a4125119269b0ae9f9bcca46f8f43aab86f1c60f5584c033",
+  "results/baseline/eu_emotions/gemma4/eval_v2_eu_emotions_gemma4_video_only_seed42_rot3_real.json": "194f42ee5f28d6fcafe6c88af92ee189b9ed40e1b5be1ee44043173c609df475",
+  "results/baseline/eu_emotions/gemma4/eval_v2_eu_emotions_gemma4_video_only_seed42_rot4_real.json": "400af11f45cbe85d4b03679ecf7d30e9e844872207758ae0f9ca253100471716",
+  "results/baseline/eu_emotions/gemma4/eval_v2_eu_emotions_gemma4_video_only_seed42_rot0_mismatch.json": "f0bc17d4844527cc37db6acba24618344e8c466173d973b4b8e19bbc940e0fb5",
+  "results/baseline/eu_emotions/gemma4/eval_v2_eu_emotions_gemma4_video_only_seed42_rot1_mismatch.json": "f93fcdc881dd73992ccd39aac031381f2db7d60fc21ead97cebbee482eb8e574",
+  "results/baseline/eu_emotions/gemma4/eval_v2_eu_emotions_gemma4_video_only_seed42_rot2_mismatch.json": "9beb1519803beb037b99c954cf860e07cbbf6fd480edd8ce496e3a6e82c1e17d",
+  "results/baseline/eu_emotions/gemma4/eval_v2_eu_emotions_gemma4_video_only_seed42_rot3_mismatch.json": "14140bf3d6066e099e7fb4f982ce0cbadf960f9a6706d377e53a658d9c48d4ee",
+  "results/baseline/eu_emotions/gemma4/eval_v2_eu_emotions_gemma4_video_only_seed42_rot4_mismatch.json": "08586af6a7a4553224b7c09d13ca18db000a0cfa8c91107c4847c4207aa3c21c",
+  "results/baseline/eu_emotions/qwen3vl/eval_v2_eu_emotions_qwen3vl_video_only_seed42_rot0_real.json": "a0631fd176f41f3a3f2baeb8a9d30ee6227d7a9f507ad39ae9c9ed3e5ce86b44",
+  "results/baseline/eu_emotions/qwen3vl/eval_v2_eu_emotions_qwen3vl_video_only_seed42_rot1_real.json": "03b8c63399ee442b4f3b5c80a8bdfea03d6af95547752d4727ddda0aa87ff869",
+  "results/baseline/eu_emotions/qwen3vl/eval_v2_eu_emotions_qwen3vl_video_only_seed42_rot2_real.json": "097aa0a34559a457fc9b5040bcccc2248a3b333e5136a6088b3f24142ecb0c5e",
+  "results/baseline/eu_emotions/qwen3vl/eval_v2_eu_emotions_qwen3vl_video_only_seed42_rot3_real.json": "8eaae49e358fd38a5cc656414f95d5c5caa5df4009aee8430cf6adf92b55ad6f",
+  "results/baseline/eu_emotions/qwen3vl/eval_v2_eu_emotions_qwen3vl_video_only_seed42_rot4_real.json": "9fa1d3968ce6eb10d72f6244f31b10ebebb3b1b56201eb3bb4311959ab445e80",
+  "results/baseline/eu_emotions/qwen3vl/eval_v2_eu_emotions_qwen3vl_video_only_seed42_rot0_mismatch.json": "ec1f32ca1eb29298ea6d07b8c2d6ffa95087cf16aa8a29d86750a0f54d20fce2",
+  "results/baseline/eu_emotions/qwen3vl/eval_v2_eu_emotions_qwen3vl_video_only_seed42_rot1_mismatch.json": "0b0a3a6da2468e36af146073441bca0e95cfaa7febab86362788403aaab83d65",
+  "results/baseline/eu_emotions/qwen3vl/eval_v2_eu_emotions_qwen3vl_video_only_seed42_rot2_mismatch.json": "6a315a7fa380024a73e7839fc3ee4344cc56249e7ab65031e7d8a8ef75e20cf2",
+  "results/baseline/eu_emotions/qwen3vl/eval_v2_eu_emotions_qwen3vl_video_only_seed42_rot3_mismatch.json": "2fe86088e3c63652db63f4ccfa7f543807a201c09fe4032450bde8c7a07dd2a6",
+  "results/baseline/eu_emotions/qwen3vl/eval_v2_eu_emotions_qwen3vl_video_only_seed42_rot4_mismatch.json": "83a24cd683a7ae4a744d529fb7ef0867716822be93151ddb729a82097256885e",
+  "results/baseline/eu_emotions/molmo2/eval_v2_eu_emotions_molmo2_video_only_seed42_rot0_real.json": "6c28f6578e94aa78ee4821aff09fcd4001578d6f8c24746503a09c012de51746",
+  "results/baseline/eu_emotions/molmo2/eval_v2_eu_emotions_molmo2_video_only_seed42_rot1_real.json": "251450120ad8df9df3d0f2625b96c9f9a01e5cf1b2a6bfbe4cf97a62d2531a1a",
+  "results/baseline/eu_emotions/molmo2/eval_v2_eu_emotions_molmo2_video_only_seed42_rot2_real.json": "eb114494de9fc29a912af5594ffcc272aa0b2d0312c787f374782b368c736e2d",
+  "results/baseline/eu_emotions/molmo2/eval_v2_eu_emotions_molmo2_video_only_seed42_rot3_real.json": "4b33b4f0163b094a4e7e626b9847fa9b53787c1f8b61dcde98d24c122fbb20b8",
+  "results/baseline/eu_emotions/molmo2/eval_v2_eu_emotions_molmo2_video_only_seed42_rot4_real.json": "9155d773e119d2a79f14105f3d3f78d3e3d73c7d8f5e04b6602824da097a3afa",
+  "results/baseline/eu_emotions/molmo2/eval_v2_eu_emotions_molmo2_video_only_seed42_rot0_mismatch.json": "88a33a5fa02b881b010795a95177356a8e59c468c7a1f63a6873c9bc8bbe97c3",
+  "results/baseline/eu_emotions/molmo2/eval_v2_eu_emotions_molmo2_video_only_seed42_rot1_mismatch.json": "a724f422ea112cca2501fcdf755470eb175136f9315fe02c49c7485aa86590c8",
+  "results/baseline/eu_emotions/molmo2/eval_v2_eu_emotions_molmo2_video_only_seed42_rot2_mismatch.json": "aec85a02944013cd456dd1469b78d0d8b574c6e1d02cd449579a2ed5cc5c30b0",
+  "results/baseline/eu_emotions/molmo2/eval_v2_eu_emotions_molmo2_video_only_seed42_rot3_mismatch.json": "b09a609426508aa4f47c6f8e63e1a9dd06dea4ef8a97bd57bdc9676f8e251ecf",
+  "results/baseline/eu_emotions/molmo2/eval_v2_eu_emotions_molmo2_video_only_seed42_rot4_mismatch.json": "2cce9c72206a5d518d2445fea1a541bef88c3504429c5d58b35e8bb66b29ead5"
+ },
+ "script_sha256": "ea8dba7f93a81d419b78fb6b9283266442e2972fba19347bc506be72baf9dd4c"
+}

@@ -1,0 +1,159 @@
+{
+ "description": "A9: label-order corroboration from human data only (descriptive).",
+ "families": [
+  "AU01",
+  "AU02",
+  "AU04",
+  "AU05",
+  "AU06",
+  "AU07",
+  "AU09",
+  "AU10",
+  "AU11",
+  "AU12",
+  "AU13",
+  "AU14",
+  "AU15",
+  "AU16",
+  "AU17",
+  "AU20",
+  "AU22",
+  "AU23",
+  "AU24",
+  "AU25",
+  "AU26",
+  "AU27",
+  "AU38",
+  "AU39",
+  "AU43"
+ ],
+ "label_rows": {
+  "anger": {
+   "cosine_with_snoek_basic_WC": {
+    "anger": 0.648,
+    "disgust": 0.5353,
+    "fear": -0.1225,
+    "happy": -0.3839,
+    "sadness": -0.1657,
+    "surprise": -0.3204,
+    "other": -0.0408
+   },
+   "closest": "anger",
+   "same_label_closest": true,
+   "next": "disgust",
+   "next_cosine": 0.5353
+  },
+  "disgust": {
+   "cosine_with_snoek_basic_WC": {
+    "anger": 0.5447,
+    "disgust": 0.8817,
+    "fear": -0.1817,
+    "happy": -0.3737,
+    "sadness": -0.0962,
+    "surprise": -0.4946,
+    "other": -0.3526
+   },
+   "closest": "disgust",
+   "same_label_closest": true,
+   "next": "anger",
+   "next_cosine": 0.5447
+  },
+  "fear": {
+   "cosine_with_snoek_basic_WC": {
+    "anger": -0.1542,
+    "disgust": -0.2448,
+    "fear": 0.8924,
+    "happy": -0.3274,
+    "sadness": -0.2069,
+    "surprise": 0.2265,
+    "other": 0.0311
+   },
+   "closest": "fear",
+   "same_label_closest": true,
+   "next": "surprise",
+   "next_cosine": 0.2265
+  },
+  "happy": {
+   "cosine_with_snoek_basic_WC": {
+    "anger": -0.3475,
+    "disgust": -0.3386,
+    "fear": -0.2828,
+    "happy": 0.926,
+    "sadness": -0.0264,
+    "surprise": -0.249,
+    "other": 0.0208
+   },
+   "closest": "happy",
+   "same_label_closest": true,
+   "next": "other",
+   "next_cosine": 0.0208
+  },
+  "sadness": {
+   "cosine_with_snoek_basic_WC": {
+    "anger": -0.4241,
+    "disgust": -0.1122,
+    "fear": 0.0121,
+    "happy": 0.0175,
+    "sadness": 0.8052,
+    "surprise": -0.3793,
+    "other": 0.2599
+   },
+   "closest": "sadness",
+   "same_label_closest": true,
+   "next": "other",
+   "next_cosine": 0.2599
+  },
+  "surprise": {
+   "cosine_with_snoek_basic_WC": {
+    "anger": -0.1073,
+    "disgust": -0.4675,
+    "fear": 0.1242,
+    "happy": -0.259,
+    "sadness": -0.2427,
+    "surprise": 0.947,
+    "other": 0.0294
+   },
+   "closest": "surprise",
+   "same_label_closest": true,
+   "next": "fear",
+   "next_cosine": 0.1242
+  },
+  "other": {
+   "cosine_with_snoek_basic_WC": {
+    "anger": -0.0472,
+    "disgust": -0.0605,
+    "fear": -0.205,
+    "happy": 0.0165,
+    "sadness": 0.3295,
+    "surprise": -0.2851,
+    "other": 0.5365
+   },
+   "closest": "other",
+   "same_label_closest": true,
+   "next": "sadness",
+   "next_cosine": 0.3295
+  }
+ },
+ "all_same_label_closest": true,
+ "anger_disgust_log_odds_weights": {
+  "anger": {
+   "AU04": 0.6,
+   "AU07": 0.71,
+   "AU23": 0.6,
+   "AU09": 1.06,
+   "AU10": 0.77
+  },
+  "disgust": {
+   "AU04": 0.37,
+   "AU07": 0.41,
+   "AU23": -0.13,
+   "AU09": 2.74,
+   "AU10": 2.67
+  }
+ },
+ "inputs_sha256": {
+  "research/reproduction/a9_human_target.json": "3f93ccbe2506ad9e01d79c8f594da6eb0bcd33790d410fda2d3945aeaa526ab0",
+  "research/reproduction/human_au_effects.json": "58c0f082cbf6aa4827054188ac2fc47da58a254c38da2c7ac202e8f52399310c"
+ },
+ "script_sha256": "7ea41e79ceef2cf38ae633f97855c7489b53940d07b827bb8f5120782b1eaaa5"
+}

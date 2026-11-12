@@ -1,0 +1,112 @@
+{
+ "description": "A3 on clips with at least 8 tokens across the face: the sensitivity DECISIONS 2026-11-04 declared.",
+ "route": "single_face",
+ "floor": 8.0,
+ "primary_reproduced": true,
+ "models": {
+  "qwen3vl": {
+   "tokens_across_view_median": 24.0,
+   "gate_1_share_reproduced": 1.0,
+   "n_items_a3": 243,
+   "n_items_below_floor": 0,
+   "share_items_excluded": 0.0,
+   "items_below_floor": [],
+   "sensitivity": {
+    "n_items": 243,
+    "accuracy_real": 0.28230452674897116,
+    "accuracy_mismatch": 0.03786008230452675,
+    "delta_real_minus_mismatch": 0.24444444444444444,
+    "delta_ci_actor_bootstrap": [
+     0.21166517857142855,
+     0.2762647563147135
+    ],
+    "p_delta_actor_sign_flip": 2.999970000299997e-05,
+    "p_delta_holm": 8.999910000899992e-05,
+    "vision_dependent": true
+   },
+   "primary_vision_dependent": true
+  },
+  "gemma4": {
+   "tokens_across_view_median": 16.0,
+   "gate_1_share_reproduced": 0.8971,
+   "n_items_a3": 243,
+   "n_items_below_floor": 25,
+   "share_items_excluded": 0.1029,
+   "items_below_floor": [
+    "emotions/EDITED/Worried/DF22_cut.mp4",
+    "emotions/EDITED/Worried/FF22_cut.mp4",
+    "emotions_11/EDITED/Frustrated/DF23_cut.mp4",
+    "emotions_11/EDITED/Frustrated/FF23_cut.mp4",
+    "emotions_13/EDITED/Bored/CF8_cut(1).mp4",
+    "emotions_18/EDITED/Disappointed/EF9_cut.mp4",
+    "emotions_21/EDITED/Bored/EF8_cut.mp4",
+    "emotions_23/EDITED/Bored/CF8_cut.mp4",
+    "emotions_29/EDITED/Unfriendly/DF25_cut.mp4",
+    "emotions_31/EDITED/Jealous/CF11_cut.mp4",
+    "emotions_32/EDITED/Neutral/DF28_cut.mp4",
+    "emotions_33/EDITED/Neutral/CF14_cut.mp4",
+    "emotions_33/EDITED/Neutral/EF14_cut.mp4",
+    "emotions_33/EDITED/Neutral/FF28_cut.mp4",
+    "emotions_36/EDITED/Joking/EF12_cut.mp4",
+    "emotions_37/EDITED/Sneaky/Df26_cut.mp4",
+    "emotions_38/EDITED/Joking/CF12_cut.mp4",
+    "emotions_39/EDITED/Hurt/CF10v1_cut.mp4",
+    "emotions_39/EDITED/Hurt/CF10v2_cut.mp4",
+    "emotions_39/EDITED/Hurt/EF10_cut.mp4",
+    "emotions_4/EDITED/Sneaky/FF26_cut.mp4",
+    "emotions_46/EDITED/Disappointed/CF9v1_cut.mp4",
+    "emotions_54/EDITED/Disappointed/CF9v2_cut.mp4",
+    "emotions_6/EDITED/Excited/CF7_cut.mp4",
+    "emotions_6/EDITED/Excited/EF7_cut.mp4"
+   ],
+   "sensitivity": {
+    "n_items": 218,
+    "accuracy_real": 0.37064220183486246,
+    "accuracy_mismatch": 0.14587155963302753,
+    "delta_real_minus_mismatch": 0.22477064220183487,
+    "delta_ci_actor_bootstrap": [
+     0.14953095166314942,
+     0.2942734424166142
+    ],
+    "p_delta_actor_sign_flip": 8.99991000089999e-05,
+    "p_delta_holm": 9.99990000099999e-05,
+    "vision_dependent": true
+   },
+   "primary_vision_dependent": true
+  },
+  "molmo2": {
+   "tokens_across_view_median": 23.0,
+   "gate_1_share_reproduced": 1.0,
+   "n_items_a3": 243,
+   "n_items_below_floor": 0,
+   "share_items_excluded": 0.0,
+   "items_below_floor": [],
+   "sensitivity": {
+    "n_items": 243,
+    "accuracy_real": 0.07242798353909466,
+    "accuracy_mismatch": 0.009876543209876543,
+    "delta_real_minus_mismatch": 0.06255144032921811,
+    "delta_ci_actor_bootstrap": [
+     0.04,
+     0.08745065789473683
+    ],
+    "p_delta_actor_sign_flip": 4.999950000499995e-05,
+    "p_delta_holm": 9.99990000099999e-05,
+    "vision_dependent": true
+   },
+   "primary_vision_dependent": true
+  }
+ },
+ "inputs_sha256": {
+  "research/reproduction/face_input_validity_summary.json": "c1c64e6975b32356a3314268c054f0dee483ddf74b11cd66d03b2faf972e64a4",
+  "data/eu_emotions_human_entropy.json": "f9d91b4e47816fd01b773f0a63f8fff39c7e0cfa2c56a2136b1f52ba5cc33744",
+  "results/face_input_validity/cells_qwen3vl.jsonl": "a3f302b3b150180facff87348f710f12e4927e7b04f2349e3b95b834434bc7e6",
+  "results/face_input_validity/cells_gemma4.jsonl": "05eec2d4f822eb3357f5333efcb10fb289a5686ed848c0b4c60f3e402b9af685",
+  "results/face_input_validity/cells_molmo2.jsonl": "cd80b5c528bdb04acd8a7d256b9199b8cb7d2a1f809513aae9d9e585dd3ea6be",
+  "results/stimulus_interventions/geometry.json": "2bc76dd60be233ee6072ba5b2049721899c5febcd953ec49bff1dcc2f2c72383",
+  "research/reproduction/input_delivery_qwen3vl.json": "802f3231db29f2b27d67e8a6cfd70c78a9ea72c9e3fb4b1cadf7f8c966f1f801",
+  "research/reproduction/input_delivery_gemma4.json": "94f55b9fd96767e0c19c0bbeb34eebd5a47dbbbf5b14058d53d6f15a8b40a8ca",
+  "research/reproduction/input_delivery_molmo2.json": "200ede896d13ccbbea15f7a5e3a561bac9dc7cc35c7ecc3286f4382dd963ec9b"
+ },
+ "script_sha256": "0acd4a76492ad0607e70329e228ed3e1fa9f867ee6e4846204dd4d7b0e38a1b6"
+}
