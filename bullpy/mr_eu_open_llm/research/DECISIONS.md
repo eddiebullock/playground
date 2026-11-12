@@ -508,3 +508,12 @@ A6's own pre-freeze rule (`PREREG_A6_DRAFT.md`, "Fixed before freezing", item 6;
 ## 2026-11-12: EU-Emotion working set; the seven unmatched items are closed
 
 The user confirmed that EU-Emotion's creators are collaborators and that the copy we hold is the set supplied for this work. So the seven workbook items with no clip are settled for the paper: they exist in that set only as unedited originals, and the clip list, which takes edited cuts only, leaves them out. Nothing remains to ask the authors (outline item 16). The frozen designs keep the 243 edited clips and do not substitute the originals, which are trimmed differently. With public item IDs permitted since 2026-11-08, the seven are now listed by ID in `research/reproduction/eu_missing_items_check.json`.
+
+## 2026-11-12: A2 rulings after an independent code audit (pre-data)
+
+An independent audit of A2's frozen code against its text found no change to the code or hashes needed, one ambiguity that could change a verdict, two ways the single run could fail or mislead, and several reporting gaps (`research/reviews/a2_code_audit.md`). No A2 cell exists. The rulings are appended to `PREREG_A2_DRAFT.md` as a dated pre-data deviation, which changes no hash.
+
+- **The verdict-level one:** the fill rule now applies to Opposes as well as Matches, the stricter of the two readings the text allowed. An Opposes verdict on a masked cue stands only if the other two fills share the neutral fill's sign. This can only turn an Opposes into Inconclusive.
+- **Run safety:** a torn cells line is repaired by removing only unparseable lines, logged, and recomputing them; cells are checked for model identity by pixel shape; a run with a missing gate input is void. `research/scripts/a2_prerun_check.py` does the checks and records every input's sha256 with the run. The cluster's six gate files were checked equal to the committed copies today.
+- **Reporting:** 90 percent equivalence intervals and the shuffles-overall table come from `research/scripts/a2_declared_extras.py`, which uses the frozen functions and refuses if an interval does not reproduce the frozen equivalence result. Failed cells are not rerun. The remaining gaps are disclosed as limits.
+- **Why not change the code:** it is frozen and correct for what it computes; every ruling either reads its output more strictly or adds a declared calculation beside it.

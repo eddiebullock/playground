@@ -208,10 +208,10 @@ Gate B is B1 to B5 (`research/PREREG_A2_DRAFT.md:109-117`). A model and route th
 
 **Slots.** Per eligible model and route, from the A2 analysis output (`scripts/analyse_stimulus_interventions.py --output <path>`; path set at run time: [PENDING: path]):
 - Gate B, B1 to B5: [PENDING: gate block, `pass`]
-- per prediction P1 to P15 (16 contrasts): effect, actor-bootstrap CI, step-down *P*, verdict: [PENDING: rows, `verdict`]
-- the .01 reading for each Matches or Opposes verdict: [PENDING]
-- equivalence intervals for capped contrasts: [PENDING]
-- shuffle against `static_apex`, descriptive: [PENDING]
+- per prediction P1 to P15 (16 contrasts): effect, actor-bootstrap CI, step-down *P*, verdict: [PENDING: rows, `verdict`], with an Opposes verdict on a masked cue read through the fill rule as ruled pre-data (`research/scripts/a2_declared_extras.py`, `verdict_after_fill_rule`; PREREG_A2 deviation of 2026-11-12, ruling 1)
+- the .01 reading for each Matches or Opposes verdict: [PENDING: `p_maxt` on Matches rows, `p_maxt_two_sided` on Opposes rows]
+- equivalence intervals for capped contrasts: [PENDING: `a2_declared_extras.py`, `equivalence_interval_90`]
+- shuffle against `static_apex`, descriptive: [PENDING: `a2_declared_extras.py`, `shuffles_overall`, beside `descriptive_changes.static_apex`]
 - sensitivities (without smoke items, canonical words, clips at 8 tokens or more, human modal label): [PENDING]
 
 **Figure.** Figure 6: effect and decision class per prediction, by model and route. [PENDING: Figure 6 function (ROADMAP 0.7).]

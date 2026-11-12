@@ -242,7 +242,7 @@ Added 2026-11-09. #62 read in full (`references.md`). #65 and #66 are cited for 
 4. **Proposition S2 with non-parallel profiles.** The cross terms are not bounded here.
 5. **Set-to form of Theorem 1.** Unchanged from the theory note: the case where an intervened point is a natural item is not covered.
 6. **Finite-sample bound on CEA**, raw or residual, remains open (theory note, Open).
-7. **Citations.** Spearman is now `references.md` #51. The Spearman-Brown step-up (Section 4) is now `references.md` #58 and #59. The Introduction's sentence on breaking natural correlations needs the qualifier set out in Section 6.3.
+7. **Citations.** Spearman is now `references.md` #51. The Spearman-Brown step-up (Section 4) is now `references.md` #58 and #59. The Introduction's sentence on breaking natural correlations needs the qualifier set out in Section 6.3. **Done (checked 2026-11-12):** the Introduction now says that natural data carry some information for linear observers and for tests of a model's own concepts [17], and that breaking natural correlations is needed to learn cue use "without those assumptions".
 8. **Literature beyond #16 and #17.** Positivity and extrapolation in causal inference, and identifiability of learned representations, were not searched (Section 6.3).
 
 ## Appendix A. Statements and proofs of the identifiability results
