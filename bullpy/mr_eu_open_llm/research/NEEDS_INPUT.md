@@ -77,3 +77,13 @@ These only matter at submission. Nothing waits on them.
 **Recommended default.** Yes. Say "drop the notes commit" and allow the force-push when asked. I will then rebuild `p1-pipeline` from `d8c2e01` (the commit before), replaying every later commit with `notes/notes.txt` left out, check that the result differs from the current branch only in that file, and push with `--force-with-lease` pinned to the current tip. Your local notes file is not touched. GitHub may keep the orphaned commit reachable by its hash for a while; if that matters, GitHub support can purge it.
 
 **Meanwhile.** Work continues; nothing waits on this except PRs to `main`.
+
+## 11. Literature table: how to code [1]'s option sets (low priority, 2026-11-12)
+
+**Context.** Figure 1e and the Results literature paragraph code Strachan et al. [1] as "partly" on "one option set served every item". The independent review (finding 36) notes that [1]'s alternatives are set per item and that on the MRMET repeated labels always came with the same three alternatives, which is the prompt-text fault the legend codes as "no".
+
+**Exact question.** Keep "partly" (with a one-line justification in the legend), or recode [1] to "no"?
+
+**Recommended default.** Recode to "no" and say why in the legend; it is the stricter reading. Recoding changes `literature_table.csv`, its registry counts and Figure 1e, so I have not done it without you.
+
+**Meanwhile.** Nothing waits on it.
