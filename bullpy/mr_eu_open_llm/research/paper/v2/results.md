@@ -107,18 +107,20 @@ Residual CEA passed recovery on 66 of 66 checks and raw CEA on 62 of 66, so resi
 
 The detector check passed thinly: 113 of 144 covered pairs rose, .785 against .70 [REG: A4 V1 pilot, "V1 share rising"]. Only 22 of 96 intensity pairs gained at least .5, all in AU01, 05, 25 and 26 [REG: "Intensity pairs with reading at amplitude 1 minus .25 of at least .5"]. Those four families hold .14, .13, .09 and .20 of residual human energy [REG: "Detector-confirmed share of residual energy"].
 
+**Before the run.** `research/scripts/a4_prerun_check.py` must pass and its record is cited with the result (PREREG_A4 deviation of 2026-11-12): 12 complete shards per family model, inputs at their pinned bytes, the scripted gates file, single-threaded BLAS, and any rows with non-finite log probabilities removed and listed.
+
 **Slots.** From `results/a4/summary.json` (written by `scripts/a4_analyse.py`), per model and dataset (`datasets.<dataset>.<model>`):
 - residual CEA, CI, R_S: [PENDING: `residual.cfa`, `residual.ci`, `residual.r_s`]
 - alignment Holm *P*: [PENDING: `p_holm`]
 - signal *P*: [PENDING: `p_signal`]
 - gates V1 to V4 and RQ0: [PENDING: `gates`]
-- decision: [PENDING: `decision`]
-- ratio to ceiling, descriptive: [PENDING: `residual.over_ceiling`, `residual.lower_bound_only`]
+- decision: [PENDING: `decision`], reported as Inconclusive (conflicting interval) where both the Aligned and the Not aligned conditions hold, with the frozen value beside it (ruling 6)
+- ratio to ceiling, descriptive: [PENDING: `residual.over_ceiling`, `residual.lower_bound_only`], reported as undefined where R_S is not positive
 - raw CEA, secondary: [PENDING: `raw.cfa`, `raw.ci`]
 - sensitivities (without AU22 and AU27, without abstain row, flagged against confirmed families, amplitude sets, direct contrast): [PENDING: sensitivity blocks and `models.<model>.scale`, `direct_cfa_residual`]
 - headline per model per task: [PENDING: `models.<model>.headline`]
-- blind readout, secondary, only if its gate passes: [PENDING: `models.<model>.blind`]
-- Molmo2, descriptive if run at all: [PENDING]
+- blind readout, secondary, only if its gate passes: [PENDING: `models.<model>.blind`] (raw CEA)
+- Molmo2, descriptive if run at all (no scored run is planned): [PENDING]; its written headline is not quoted
 
 **Figure.** Figure 5: residual CEA per model and dataset with its between-group reference, raw CEA as secondary. [PENDING: Figure 5 function (ROADMAP 0.7).]
 
@@ -276,7 +278,7 @@ Gate B is B1 to B5 (`research/PREREG_A2_DRAFT.md:109-117`). A model and route th
 
 (`research/PREREG_A5_DRAFT.md:226-231`.) Balance classes and verdict names are descriptive, not error-controlled under skewed portrayal gain (`:574`).
 
-Slots, per model and route, from the A5 output (`scripts/a5_analyse.py --output <path>`): [PENDING: `confirmatory` block, evidence class], [PENDING: `descriptive` block, balance, Phi with 90% CI, word share, `family_gain_log_sd`].
+Slots, per model and route, from the A5 output (`scripts/a5_analyse.py --output <path>`): [PENDING: `confirmatory` block, evidence class, with the row's `flags`, and the row's `reasons` where the class is null], [PENDING: `descriptive` block, balance, Phi with 90% CI, `family_gain_log_sd`; word share from the row's top-level `word_share`]. Read as ruled before data (PREREG_A5 deviation of 2026-11-12): Absent with E*'s 95% interval; survival beside every Shown cell; the chain as point means; lexicon mass from A2's `gate_b` where A5 has none. The pre-run check (`research/scripts/a5_prerun_check.py`) must pass first.
 
 **RQ5 (A6), closed as a limit.** A6 was never frozen. Its own pre-freeze rule, fixed before any model output, required the first frame of each clip to carry at most half of the apex value of AU9 and AU10 on every detector. ME-GraphAU's AU10 gave .801 [REG: "A6 pre-freeze cluster checks"], so A6 did not freeze or run (DECISIONS 2026-11-10), and RQ5 is named as future work in the Discussion. No CREMA-D model output exists. The human target sample, 819 clips and 91 actors [REG: A6 human target, "Sample"], is a design fact.
 

@@ -270,3 +270,31 @@ Twelve shards per model at about 5 h, against a 6 h limit, resumable, about 121 
 3. Render into tars. No model.
 4. After RQ0, run a timing smoke, then the full run per eligible model. Smoke files stay out of the analysis.
 5. Analyse once, after all shards finish.
+
+## Deviations
+
+### 2026-11-08, pre-data: the human ceiling uses a related estimator (recorded here 2026-11-12)
+
+First recorded in DECISIONS 2026-11-08 and Supplementary Note 1; appended here so that the amendment carries it. The ceiling halves are pooled fits at ridge 1.0 for every dataset (`scripts/a4_analyse.py:360`), while the human target is the mean of per-subject fits at the selected ridge, 0.1 for basic (`research/scripts/human_au_effects.py:585-590`). The pooled fit also weights stimuli by trial count and, on basic WC, adds an unpenalised cohort covariate. So R_H is the reliability of a related estimator. Rerunning the frozen procedure at ridge 0.1 moves the basic ceilings by at most .0003 (`research/reviews/a4_code_audit.md`, A4-9). The ceiling enters only the descriptive ratio, never a decision. The "Ridge lambda" column beside the ceilings above gives the target's ridge, not the ceiling's.
+
+### 2026-11-12, pre-data: rulings after an independent code audit
+
+An independent audit of the frozen code against this text (`research/reviews/a4_code_audit.md`) ran before any A4 output existed. All 22 pinned files match the tag, the design hash (`12c454da`), the manifest and the ceiling file reproduce, V1 is .7847, the 60 tests pass, and a synthetic run through `main()` with every frozen constant wrote every key the paper needs. Estimand, residual projection, inference, thresholds, decision rule, Holm and headline match this text. No code, threshold or hash changes. These rulings settle what the audit found unhandled; each was fixed before any A4 output exists. `research/scripts/a4_prerun_check.py` checks rulings 1 to 7 before the single run and records every input's sha256 with the exact command line.
+
+1. **The Holm family is the two named models (audit A4-1).** The code builds Holm from the models whose files exist, so a missing model would drop out of the family and of the output. The family is Gemma 4 and Qwen3-VL whatever cells exist; a family model with no cells would be reported Inconclusive and count in Holm with p = 1. The single run starts only when both models have all 12 scored shards complete, which makes code and text agree.
+2. **A usable response has finite log probabilities (A4-2).** Line 84 requires a usable response on every rotation and does not define usable; the code keeps any row with status ok, and a non-finite value would yield the smallest possible p-value. A row whose joint log probabilities (or blind family log probabilities) are not all finite is not usable. Such rows are counted per model and shard before the run, without reading any other value, and removed in a filtered copy of the shards on which the analysis runs, so their stimuli leave the analysis as line 84 intends and count toward the 5 percent limit. The removed rows are listed with the run.
+3. **Shards complete and clean (A4-3 to A4-6).** For each family model, files `cells_<model>_0.jsonl` to `cells_<model>_11.jsonl` must exist, each holding exactly the cells `planned_cells(manifest, k, 12)` lists, once each, with status ok and the frozen design hash. A torn final line is repaired by resuming that shard, as the runner does. This is a count of keys; no response value is read.
+4. **Inputs at their pinned bytes (A4-7).** The human target, ceiling, V1 pilot and recovery files must match line 9, and `--detector` is the pilot file named in "Order", item 1, not a later detector output.
+5. **Gates from the frozen outputs (A4-8).** The `--gates` file is built by `research/scripts/a4_gates.py` from the A1 and A3 summaries and the vision-gate files, through A2's frozen `outside_gates`, not typed by hand. Built on 2026-11-12: `research/reproduction/a4_gates.json`, sha256 `02b026ea5ffed38ab612a9fb620a2e1a78f6feab90cb404ee62234997a3febe3`; Gemma 4 and Qwen3-VL pass A1, A3 and G2 to G4, and Molmo2 fails G2 to G4.
+6. **Two clarifications, read in the conservative direction (A4-13, A4-15a).**
+   - R_S is the model's split-half reliability stepped up by Spearman-Brown, as the code computes it.
+   - The text does not order Aligned and Not aligned. Both can hold only when the point estimate lies above the bootstrap interval's upper bound. In that case the result is reported as Inconclusive (conflicting interval), with the frozen decision value shown beside it.
+7. **Environment (A4-14).** The analysis runs with single-threaded BLAS (`OMP_NUM_THREADS`, `OPENBLAS_NUM_THREADS`, `MKL_NUM_THREADS` and `VECLIB_MAXIMUM_THREADS` set to 1), as recovery did; with default threads one fit took 25 s against 0.17 s. Library versions are recorded with the run.
+8. **Reporting (A4-10 to A4-12, A4-15).**
+   - Molmo2, if it has cells, is reported as descriptive; its written headline is not quoted.
+   - The ratio to the ceiling is reported as undefined where R_S is not positive.
+   - V2's measured value is not in the output, only its pass; the direct contrast's CFA is at amplitude 1, with dose read from effect magnitudes; the blind CFA is raw and is quoted only where its gate passed.
+   - V2 for the EA datasets is measured on Western faces, since all image-free stimuli are WC renders.
+   - Amplitude sets are fitted on rendered amplitudes, so do(AU = 1) at 0.75x extrapolates past the design's top amplitude.
+   - Recovery also used fewer permutations than the analysis (1,999 cue and 199 signal against 9,999 and 999), beside the draws and splits line 233 names.
+   - "Corrected values are not used for decisions" (line 101) refers to the ratio to the ceiling; the Not aligned rule uses the bound corrected for R_S.

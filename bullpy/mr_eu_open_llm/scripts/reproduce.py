@@ -204,6 +204,10 @@ STEPS: List[Step] = [
          [Out("research/reproduction/a4_human_ceiling.json")], needs=SNOEK, minutes=0.3),
     Step("human_response_predictor", _py("-m", "scripts.human_response_predictor"),
          [Out("research/reproduction/human_response_predictor.json")], needs=SNOEK, minutes=0.3),
+    Step("a4_gates", _py("research/scripts/a4_gates.py"),
+         [Out("research/reproduction/a4_gates.json")], minutes=0.1,
+         note="A4's --gates file, built from the locked A1, A3 and vision-gate files by A2's frozen outside_gates "
+              "(PREREG_A4 deviation of 2026-11-12, ruling 5)"),
     Step("residual_cea_attenuation",
          _py("research/scripts/residual_cea_attenuation.py", "--out", "research/reproduction/residual_cea_attenuation.json"),
          [Out("research/reproduction/residual_cea_attenuation.json")], minutes=2.7,

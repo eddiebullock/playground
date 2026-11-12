@@ -679,3 +679,21 @@ F full text read, P partial, A abstract only, per `research/paper/v2/references.
 | O'Reilly et al. 2016 | F, supplement not obtained | EU-Emotion norms |
 | Cao et al. 2014 | A; data read directly | CREMA-D |
 | McKelvie 1995; Psalta and Andrews 2014 | A, in notes only | Inversion direction |
+
+## Deviations
+
+### 2026-11-12, pre-data: rulings after an independent code audit
+
+An independent audit of the frozen code against this text (`research/reviews/a5_code_audit.md`) ran before any A2 cell existed. All 36 frozen files equal tag `a5-freeze`, all 47 stated hashes match, the block hash is unchanged, the 108 tests pass, and the frozen analysis ran end to end on synthetic cells built as A2's runner writes them, with the real gate files. No finding changes a verdict. Code, thresholds, classes and the block are unchanged. These rulings settle what the audit found unhandled; each was fixed before any A2 cell exists.
+
+1. **A model with no pulled cells (audit A5-1).** A model whose A2 cells or reports are absent is read as having no A2 cells, and the other model's step-down families then shrink, which can only lower its adjusted p-values. Before the single run, both models must have a cells file and a report file for every shard (`research/scripts/a5_prerun_check.py`). A `no_a2_cells` row for a model whose A2 jobs completed is an input error that voids the run; it is not a result.
+2. **A1 and A3 inputs (A5-2).** A missing or altered A3 summary, or an A1 summary without the model, makes every cell Not tested without stopping. Both summaries are locked as Pass for both models, so the run uses the default `--reproduction`, the pre-run check confirms both read `vision_dependent: true` with the A3 summary at its pinned bytes, and any output row whose `gates.a1` or `gates.a3` is not True is an input error that voids the run.
+3. **A route with no ok `original` cell (A5-3).** A2's `gate_b` stops on such a route. Such a model and route is Not tested, because B2 has no input (line 270). The pre-run check counts ok `original` cells per model and route from their status fields; if any count is zero, a dated deviation is written before the run.
+4. **Reporting (A5-4 to A5-7, A5-11, A5-12).**
+   - Word share is read from the row's top-level `word_share`; the `descriptive` block does not hold it.
+   - A null `confirmatory.evidence` with `not_tested` false takes its reason from the row's `reasons` (for example `no_structure`), and every evidence class is reported with the row's `flags`.
+   - The chain is reported as point means, without intervals, as the code writes it; line 196's intervals are not added after the fact. No class uses the chain.
+   - Lexicon mass on real clips is taken from A2's own output (`gate_b.B2_median_lexicon_mass`) where the A5 row has none.
+   - Absent is reported with E*'s 95 percent interval, and reads "below the margin" where that interval excludes 0.
+   - Survival S and its interval are reported beside every Shown cell, whatever the descriptive verdict.
+5. **Inputs read without a hash check (A5-9).** The human norms file must have its frozen sha256 (`f9d91b4e...`), checked before the run; the gate files' sha256 are recorded with the run.

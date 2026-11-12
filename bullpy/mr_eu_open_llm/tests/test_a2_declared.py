@@ -112,3 +112,92 @@ def test_prerun_check_catches_a_torn_line_and_a_foreign_model(tmp_path):
     wrong = root / "cells_qwen3vl_shard0.jsonl"
     wrong.write_text(json.dumps(good) + "\n")
     assert any("not named" in f for f in pre.check("gemma4", [wrong], [report], root)["failures"])
+
+
+a5pre = _load("a5_prerun_check")
+
+
+def test_a5_prerun_check_catches_a_missing_model_and_an_empty_route(tmp_path):
+    cells_dir = tmp_path / "results" / "stimulus_interventions"
+    cells_dir.mkdir(parents=True)
+    rows = [{"condition": "original", "status": "ok", "input_name": "single_face"},
+            {"condition": "original", "status": "failed", "input_name": "video_face"}]
+    (cells_dir / "cells_gemma4_shard0.jsonl").write_text("\n".join(json.dumps(r) for r in rows) + "\n")
+    (cells_dir / "run_gemma4_shard0.json").write_text(json.dumps({"n_shards": 1}))
+    repro = tmp_path / a5pre.REPRO
+    repro.mkdir(parents=True)
+    (repro / "rotation_summary.json").write_text(json.dumps({m: {"vision_dependent": True} for m in a5pre.MODELS}))
+    result = a5pre.check(cells_dir, tmp_path)
+    fails = " | ".join(result["failures"])
+    assert result["models"]["gemma4"]["ok_original_cells"] == {"single_face": 1, "video_face": 0}
+    assert "gemma4 video_face: no ok original cell" in fails
+    assert "qwen3vl: cells and reports are not one complete shard set" in fails
+    assert "A3 summary missing or not the pinned bytes" in fails
+    assert "human norms file missing" in fails
+
+
+a4pre = _load("a4_prerun_check")
+a4gates = _load("a4_gates")
+
+
+def _a4_manifest():
+    rows = [{"stim_id": f"bwc_{i:03d}", "set": "main", "dataset": "basic_WC"} for i in range(30)]
+    rows += [{"stim_id": f"cwc_{i:03d}", "set": "main", "dataset": "conversational_WC"} for i in range(30)]
+    rows += [{"stim_id": "female_a_neutral", "set": "neutral", "dataset": "basic_WC"}]
+    return rows
+
+
+def _write_shards(folder, model, manifest, design, *, skip=None, dup=False, nan_first=False):
+    from scripts import a4_run as run
+    for k in range(a4pre.N_SHARDS):
+        if k == skip:
+            continue
+        rows = []
+        for cell in run.planned_cells(manifest, k, a4pre.N_SHARDS):
+            row = {**cell, "status": "ok", "design_sha256": design}
+            if cell["readout"] in ("blind", "blind_image_free"):
+                row["family_logprob"] = {"Happy": -1.0}
+            else:
+                row["joint_logprob"] = [-1.0, -2.0]
+            rows.append(row)
+        if nan_first and rows:
+            rows[0]["joint_logprob" if "joint_logprob" in rows[0] else "family_logprob"] = [float("nan")]
+        if dup and rows:
+            rows.append(dict(rows[0]))
+        (folder / f"cells_{model}_{k}.jsonl").write_text("".join(json.dumps(r) + "\n" for r in rows))
+
+
+def test_a4_prerun_check_catches_missing_shard_duplicates_and_non_finite(tmp_path):
+    from scripts import a4_run as run
+    manifest = _a4_manifest()
+    design = "d" * 64
+    _write_shards(tmp_path, "gemma4", manifest, design)
+    ok = a4pre.check_model("gemma4", tmp_path, manifest, design, run)
+    assert ok["failures"] == [] and ok["shards"] == list(range(12)) and ok["non_finite_rows"] == []
+    _write_shards(tmp_path, "qwen3vl", manifest, design, skip=7, dup=True, nan_first=True)
+    bad = a4pre.check_model("qwen3vl", tmp_path, manifest, design, run)
+    text = " | ".join(bad["failures"])
+    assert "not 0 to 11" in text and "duplicate cells" in text
+    assert len(bad["non_finite_rows"]) >= 1
+    clean = tmp_path / "clean"
+    a4pre.write_clean(tmp_path, clean, ["qwen3vl"], bad["non_finite_rows"])
+    assert (clean / "removed_non_finite_rows.json").exists()
+    first = bad["non_finite_rows"][0]
+    n_bad = sum(1 for r in bad["non_finite_rows"] if r["file"] == first["file"])  # the duplicate copies the bad row
+    assert n_bad == 2
+    assert sum(1 for _ in (clean / first["file"]).read_text().splitlines()) == \
+        sum(1 for line in (tmp_path / first["file"]).read_text().splitlines() if line.strip()) - n_bad
+
+
+def test_a4_gates_file_matches_its_builder():
+    built = a4gates.build()
+    committed = json.loads((ROOT / "research/reproduction/a4_gates.json").read_text())
+    assert built == committed
+    assert built["gemma4"] == {"a1_passed": True, "a3_passed": True, "g2_g4": True}
+    assert built["molmo2"]["g2_g4"] is False
+
+
+def test_a4_pins_parse_from_the_frozen_text():
+    pins = a4pre.pinned_inputs(ROOT / "research/PREREG_A4_DRAFT.md")
+    assert pins["research/reproduction/a4_v1_pilot.csv"].startswith("c735615a")
+    assert len(pins) == 4

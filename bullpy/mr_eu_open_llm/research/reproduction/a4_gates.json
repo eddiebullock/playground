@@ -1,0 +1,17 @@
+{
+ "gemma4": {
+  "a1_passed": true,
+  "a3_passed": true,
+  "g2_g4": true
+ },
+ "molmo2": {
+  "a1_passed": true,
+  "a3_passed": true,
+  "g2_g4": false
+ },
+ "qwen3vl": {
+  "a1_passed": true,
+  "a3_passed": true,
+  "g2_g4": true
+ }
+}
