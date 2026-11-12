@@ -201,3 +201,29 @@ def test_a4_pins_parse_from_the_frozen_text():
     pins = a4pre.pinned_inputs(ROOT / "research/PREREG_A4_DRAFT.md")
     assert pins["research/reproduction/a4_v1_pilot.csv"].startswith("c735615a")
     assert len(pins) == 4
+
+
+def test_a9_prerun_reuses_the_a4_check_on_a9_cells(tmp_path):
+    from scripts import a9_design as a9
+    from scripts import a9_run
+    manifest = [{"stim_id": f"liu_{i:04d}", "set": "main", "dataset": a9.DATASET} for i in range(40)]
+    design = "e" * 64
+    for k in range(a4pre.N_SHARDS):
+        rows = [{**c, "status": "ok", "design_sha256": design, "joint_logprob": [-1.0, -2.0]}
+                for c in a9_run.planned_cells(manifest, k, a4pre.N_SHARDS)]
+        (tmp_path / f"cells_gemma4_{k}.jsonl").write_text("".join(json.dumps(r) + "\n" for r in rows))
+    ok = a4pre.check_model("gemma4", tmp_path, manifest, design, a9_run)
+    assert ok["failures"] == [] and ok["non_finite_rows"] == []
+    missing = a4pre.check_model("qwen3vl", tmp_path, manifest, design, a9_run)
+    assert any("not 0 to 11" in f for f in missing["failures"])
+
+
+def test_a9_prerun_script_reports_failures_without_inputs(tmp_path):
+    a9pre = _load("a9_prerun_check")
+    record = tmp_path / "record.json"
+    code = a9pre.main(["--cells_dir", str(tmp_path), "--manifest", str(tmp_path / "none.csv"),
+                       "--a4_summary", str(tmp_path / "none.json"), "--record", str(record)])
+    out = json.loads(record.read_text())
+    assert code == 1
+    text = " | ".join(out["failures"])
+    assert "A4's summary does not exist yet" in text and "manifest" in text
