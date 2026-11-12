@@ -67,7 +67,8 @@ LOCKED = {
     2: [REPRO / "rotation_summary.json", REPRO / "face_input_validity_summary.json"],
     4: [REPRO / f"same_clip_family_model_{m}.json" for m in ("gemma4", "qwen3vl", "molmo2")],
     5: [ROOT / "results" / "a4" / "summary.json"],
-    6: [REPRO / f"stimulus_interventions_{m}.json" for m in ("gemma4", "qwen3vl")],  # Molmo is out of A2 (PREREG_A2 Models); trim further if RQ0 removes a model
+    6: [REPRO / f"stimulus_interventions_{m}.json" for m in ("gemma4", "qwen3vl")]  # Molmo is out of A2 (PREREG_A2 Models); trim further if RQ0 removes a model
+       + [REPRO / f"a2_extras_{m}.json" for m in ("gemma4", "qwen3vl")],  # verdicts after the fill-rule ruling (DECISIONS 2026-11-12)
 }
 UNLOCKED = tuple(sorted(LOCKED))
 SYNTHETIC_TAG = "SYNTHETIC"
@@ -1160,11 +1161,40 @@ def fig6_from(outputs, synthetic=False):
     return fig
 
 
+def apply_fill_rule(out, extras, out_sha256, label="A2"):
+    """The frozen A2 output with each primary verdict replaced by `verdict_after_fill_rule` from the
+    declared extras (DECISIONS 2026-11-12, A2 ruling 1: an Opposes on a masked cue stands only if the
+    other fills share the neutral fill's sign). Refuses extras computed from another output, and any
+    row whose recorded frozen verdict differs from the output's."""
+    if extras.get("a2_output_sha256") != out_sha256:
+        raise SystemExit(f"{label}: the extras were not computed from this A2 output.")
+    fixed = json.loads(json.dumps(out))
+    for route in FIG6_ROUTES:
+        rows = fixed[route]["results"]["primary_blind_acted"]
+        for cid, row in rows.items():
+            extra = require(require(extras, [route], label)[route], ["contrasts"], route)["contrasts"].get(cid)
+            if extra is None:
+                raise SystemExit(f"{label} {route} {cid}: no fill-rule verdict in the extras.")
+            if extra["frozen_verdict"] != row["verdict"]:
+                raise SystemExit(f"{label} {route} {cid}: extras record {extra['frozen_verdict']}, output says {row['verdict']}.")
+            row["verdict"] = extra["verdict_after_fill_rule"]
+    return fixed
+
+
 def make_fig6_real():
+    paths = {p.stem: p for p in LOCKED[6]}
     outputs = {}
-    for path in LOCKED[6]:
-        m = path.stem.rsplit("_", 1)[1]
-        outputs[m] = load_json(path, 6, f"A2 output, {MODEL_NAMES[m]}")
+    for stem, path in paths.items():
+        if not stem.startswith("stimulus_interventions_"):
+            continue
+        m = stem.rsplit("_", 1)[1]
+        extras_path = paths.get(f"a2_extras_{m}")
+        if extras_path is None:
+            raise SystemExit(f"Figure 6: no declared extras listed for {m}; the fill-rule verdicts are required.")
+        out = load_json(path, 6, f"A2 output, {MODEL_NAMES[m]}")
+        extras = load_json(extras_path, 6, f"A2 declared extras, {MODEL_NAMES[m]}")
+        outputs[m] = apply_fill_rule(out, extras, hashlib.sha256(path.read_bytes()).hexdigest(),
+                                     f"A2 {MODEL_NAMES[m]}")
     return fig6_from(outputs)
 
 

@@ -1,4 +1,5 @@
 import csv
+import hashlib
 import importlib.util
 import json
 import re
@@ -177,6 +178,15 @@ def check_real_loaders_read_the_schema(out):
             path = out / name
             path.write_text(json.dumps(data), encoding="utf-8")
             mod.LOCKED[n].append(path)
+            if n == 6:  # declared extras beside each A2 output, verdicts unchanged by the fill rule
+                extras = {"a2_output_sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+                          **{route: {"contrasts": {cid: {"frozen_verdict": row["verdict"],
+                                                          "verdict_after_fill_rule": row["verdict"]}
+                                                    for cid, row in data[route]["results"]["primary_blind_acted"].items()}}
+                             for route in mod.FIG6_ROUTES}}
+                extra_path = out / name.replace("stimulus_interventions_", "a2_extras_")
+                extra_path.write_text(json.dumps(extras), encoding="utf-8")
+                mod.LOCKED[n].append(extra_path)
         fig = mod.REAL[n]()
         assert len(fig.axes) >= 1
         plt.close(fig)
@@ -240,3 +250,29 @@ if __name__ == "__main__":
     check_schema_errors_are_loud()
     check_synthetic_titles_and_constants()
     print("ok")
+
+
+def test_fig6_uses_the_fill_rule_verdicts():
+    """Figure 6 plots `verdict_after_fill_rule` (DECISIONS 2026-11-12, A2 ruling 1), and refuses extras
+    computed from another output or recording a different frozen verdict."""
+    import pytest
+
+    mod = _module()
+    out = {route: {"results": {"primary_blind_acted": {
+        "P1": {"mean_change": 0.2, "ci95": [0.1, 0.3], "direction": -1, "verdict": "opposes_prediction"},
+        "P2": {"mean_change": 0.1, "ci95": [0.0, 0.2], "direction": 1, "verdict": "matches_prediction"}}}}
+        for route in mod.FIG6_ROUTES}
+    extras = {"a2_output_sha256": "abc", **{route: {"contrasts": {
+        "P1": {"frozen_verdict": "opposes_prediction", "verdict_after_fill_rule": "inconclusive"},
+        "P2": {"frozen_verdict": "matches_prediction", "verdict_after_fill_rule": "matches_prediction"}}}
+        for route in mod.FIG6_ROUTES}}
+    fixed = mod.apply_fill_rule(out, extras, "abc")
+    for route in mod.FIG6_ROUTES:
+        rows = fixed[route]["results"]["primary_blind_acted"]
+        assert rows["P1"]["verdict"] == "inconclusive" and rows["P2"]["verdict"] == "matches_prediction"
+        assert out[route]["results"]["primary_blind_acted"]["P1"]["verdict"] == "opposes_prediction"
+    with pytest.raises(SystemExit):
+        mod.apply_fill_rule(out, extras, "other")
+    extras[mod.FIG6_ROUTES[0]]["contrasts"]["P2"]["frozen_verdict"] = "null"
+    with pytest.raises(SystemExit):
+        mod.apply_fill_rule(out, extras, "abc")
