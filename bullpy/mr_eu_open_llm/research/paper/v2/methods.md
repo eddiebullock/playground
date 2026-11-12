@@ -284,7 +284,7 @@ We ran no power analysis to set sample size, because the stimulus sets are fixed
 
 ### Data availability
 
-Snoek data are public [25]. Liu et al.'s Experiment II data are public under CC BY 4.0 [60] and are not copied into the repository. EU-Emotion is a collaborator dataset. Its item-level norms are public in the repository, and in-memory edits as in A2 are permitted (confirmed 2026-11-08). Clips, frames and edited images are not in the public repository, for size; access is through the dataset's authors. Renders are not published, because FACSHuman's targets are LGPL-3.0 with no output clause. [PENDING: data availability statement.]
+Snoek data are public [25]. Liu et al.'s Experiment II data are public under CC BY 4.0 [60] and are not copied into the repository. EU-Emotion is a collaborator dataset. Its item-level norms are public in the repository, and in-memory edits as in A2 are permitted (confirmed 2026-11-08). Clips, frames and edited images are not in the public repository, for size; access is through the dataset's authors. Renders are not published, because FACSHuman's targets are LGPL-3.0 with no output clause. The full statement, with licences and access routes, is drafted in `research/paper/v2/submission/data_code_availability.md`; the EU-Emotion access route is the authors' to supply [USER].
 
 ### Code availability
 

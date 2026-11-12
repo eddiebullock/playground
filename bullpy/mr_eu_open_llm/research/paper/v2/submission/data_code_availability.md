@@ -10,6 +10,8 @@ No new human data were collected for this study.
 
 Human cue effects come from public trial-level data from Snoek et al. [19], deposited at the University of Amsterdam data repository under CC BY 4.0 (https://doi.org/10.21942/uva.21261885.v1) [25].
 
+The replication on a second human sample (A9) uses the public trial-level data of Liu et al. [60], Experiment II, deposited at Mendeley Data under CC BY 4.0 (https://doi.org/10.17632/dr853shk56.2). They are not copied into the repository; `research/scripts/a9_human_target.py` reads them from a local download, and its outputs are checked by sha256 (`scripts/reproduce.py`).
+
 EU-Emotion [14] is a collaborator dataset. Its item-level face-only response norms, as used here, are public in the repository (`data/eu_emotions_human_entropy.json`). The clips, frames and edited images are not in the repository. Access to the EU-Emotion videos is through the dataset's authors [USER: contact route or address for access requests].
 
 CREMA-D [26] clips were used for readout calibration (24 clips, labels and votes unread). CREMA-D is distributed by its authors (repository CheyneyComputerScience/CREMA-D) under the Open Database License, with contents under the Database Contents License (`research/CREMA_D_PLAN.md`, line 3). We do not redistribute its videos. The clip identifiers we used are in `research/reproduction/crema_calibration_clips.csv`.

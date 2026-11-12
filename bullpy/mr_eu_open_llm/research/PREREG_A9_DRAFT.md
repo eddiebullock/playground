@@ -714,3 +714,17 @@ scripts/a9_recovery.py 273e0fbf0f11b2224c8513744351945690e14600c2c81fa0e259d1d59
 research/scripts/a9_human_target.py a47dc63a59079235b64b7cbee28855f8edb3804bb925d07388e356055a265d24
 research/scripts/a9_manifest.py 9abc55e6c69d06730c120d858cba07c7c975222cbeaae94311a84730ee9b77a9
 ```
+
+## Deviations
+
+### 2026-11-12, pre-data: status, and rulings carried over from A4's code audit
+
+**Status.** This amendment was frozen on 2026-11-09 at 17:33 UTC, tag `a9-freeze` (commit `bc41374`), with the design hash stated at the top. The status line at the top still reads DRAFT because it was not edited at the freeze; the tag governs. The order relative to A1 is disclosed in the paper's Methods (Disclosure 11): the A1 analysis wrote its result 37 minutes before the tag, and the last design changes came from an audit finished before A1 ran.
+
+**Rulings.** An independent audit of A4's frozen code (`research/reviews/a4_code_audit.md`) found points in functions that A9 imports unchanged (`stimulus_responses`, `estimate`, `decide`). No Liu render has been scored and no A9 cell exists. A9 takes the same readings as A4's deviation of 2026-11-12, fixed now:
+
+1. A row whose joint log probabilities are not all finite is not a usable response. Such rows are counted per model and shard before the single run, without reading other values, and removed in a filtered copy of the shards, so their stimuli leave the analysis and count toward its clip limit. The removed rows are listed with the run.
+2. Where both the Aligned and the Not aligned conditions hold, which needs the point estimate above its bootstrap upper bound, the result is reported as Inconclusive (conflicting interval), with the frozen decision value beside it.
+3. R_S is the Spearman-Brown stepped split-half value, as the code computes it.
+4. The analysis runs with single-threaded BLAS, and library versions are recorded with the run.
+5. Before the single run, every scored shard of each model must be present and complete, with each planned cell once, status ok and the frozen design hash, and every input must match its pin; a check script for A9, built like `research/scripts/a4_prerun_check.py` on A9's own plan, is written before any A9 cell exists. The Holm family stays as stated in the design: a model of A4's family that is never scored on A9 is reported as not run.

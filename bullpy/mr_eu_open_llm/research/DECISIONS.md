@@ -525,3 +525,13 @@ The audit (`research/reviews/a5_code_audit.md`) found that the code which will r
 - **Input errors void the run, they are not results:** a model with no pulled cells (which would also shrink the other model's step-down families), A1 or A3 not reading True, and a route with no ok original cell. `research/scripts/a5_prerun_check.py` checks all three, and the human norms hash, before the run.
 - **Reporting:** word share, null-evidence reasons, flags, chain without intervals, lexicon mass from A2's output, Absent with E*'s interval ("below the margin" where it excludes 0), and survival beside every Shown cell.
 - **Why not change code:** it is frozen and computes what the text says; the rulings fix inputs and readings before data.
+
+## 2026-11-12: A4 rulings after an independent code audit (pre-data)
+
+The audit (`research/reviews/a4_code_audit.md`) found the frozen code byte-identical to the tag and matching the text on the estimand, inference, thresholds, decision rule and Holm. It found two inputs that could change a verdict in an unusual case (a missing family model shrinks Holm; a non-finite log probability gets the smallest p-value), several ways the single run could fail or silently lose stimuli, and reporting gaps. No A4 output exists. The rulings are appended to `PREREG_A4_DRAFT.md` as dated pre-data deviations; the design hash is unchanged (`12c454da`).
+
+- **Verdict-level:** the Holm family is fixed at the two named models, enforced by requiring all 12 complete shards of both before the run; rows with non-finite log probabilities are not usable and are removed in a filtered copy before the run, so their stimuli leave the analysis and count toward the 5 percent limit.
+- **Conservative clarifications:** where Aligned and Not aligned both hold, which needs the point estimate above its bootstrap upper bound, the result is reported Inconclusive; R_S is stated as the Spearman-Brown stepped value.
+- **Run safety:** shard completeness and uniqueness, inputs at pinned bytes, a gates file built by script from the frozen outputs (`research/reproduction/a4_gates.json`), and single-threaded BLAS, all checked by `research/scripts/a4_prerun_check.py`, which records every input's sha256.
+- **Also appended:** the ceiling-estimator disclosure of 2026-11-08, quantified by the audit at .0003 or less on the basic ceilings.
+- **Correction to my own text, same day:** the residual noise-ceiling simulation added to Supplementary Note 1 this morning corrects the point estimate, not the bootstrap upper bound that the Not aligned rule corrects. The note and the registry row now say so, and cite recovery's boundary check (at most .026) as the evidence for the rule as applied.
