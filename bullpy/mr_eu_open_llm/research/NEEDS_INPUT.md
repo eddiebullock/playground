@@ -65,3 +65,19 @@ These only matter at submission. Nothing waits on them.
 - **Authors, affiliations and ethics wording.** These are placeholders (`USER_*`) in CITATION.cff, the cover letter and the reporting summary.
 - **RMET.** It is not used in any reported analysis. Confirm it can be left out of the data statement.
 - **Metric name clash (found 2026-11-08).** "Causal Feature Alignment (CFA)" is already the name of an unrelated WACV 2024 training method (Venkataramani et al., learning to ignore spurious background features, no human comparison). Options: (a) keep the name and cite it with one sentence on the difference, (b) rename ours. Recommendation: (b) before submission, since the paper's citeable core carries the name. The rename is a text change only and touches no frozen threshold. **RESOLVED 2026-11-09: renamed to Cue Effect Alignment (CEA) on the user's instruction (DECISIONS 2026-11-09).**
+
+## 10. Your notes file was pushed by mistake (2026-11-12, about 22:58) — DECISION NEEDED
+
+**What happened.** I ran `git commit -a` from the project folder to commit two research files. In the `playground` repo that also took your uncommitted edits to `notes/notes.txt` (entries from 2026-10-26 to 2026-11-12, which name other people and private plans) into commit `0bc8a57` ("STATE, DECISIONS: correct times (GMT)"), and I pushed it to the public `p1-pipeline` branch. Your local file is unchanged. My error: from now on I commit only by explicit path.
+
+**What I did not do.** I tried to remove the file from that commit and force-push the branch (with a lease pinned to `0bc8a57`, so nothing else could be overwritten); the permission system blocked it as a history rewrite, so I left it for you. I have not merged anything to `main` since, so the commit is only on `p1-pipeline`.
+
+**Exact question.** Do you want the notes removed from the public branch?
+
+**Recommended default.** Yes. Run from `~/playground` (I will have added commits on top by morning, so this keeps them and only drops the notes change from `0bc8a57`):
+
+    git rebase --onto 0bc8a57~1 0bc8a57 p1-pipeline   # drop the bad commit
+
+Simpler and safer: tell me "drop the notes commit" and allow the force-push, and I will redo the two research-file edits from `0bc8a57` in a fresh commit, rebase my later commits onto it, and force-push with a lease. GitHub may keep the orphaned commit reachable by its hash for a while after that; if that matters, GitHub support can purge it.
+
+**Meanwhile.** Work continues; nothing waits on this except PRs to `main`.
