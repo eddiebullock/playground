@@ -215,7 +215,7 @@ A2 tests a narrower thing, its stimulus arm: whether region masks, spatial-frequ
 
 **Estimand.** For item *i* and condition *c*, delta(*i*, *c*) is *y*(*i*, *c*) minus *y*(*i*, original), within item and route. The primary outcome *y* is the CLR of the acted family. Effects are averaged per actor.
 
-**Inference.** The actor is the unit. We used an exact sign-flip test of actor effects with Westfall-Young step-down maxT [52] within one model and route, at familywise alpha .05, and actor-bootstrap 95% intervals (10,000 draws). A check run after the freeze, and before any A2 cell, found the test exact without per-actor gain and under symmetric gain-scaled noise, but liberal when actor effects average zero yet are skewed, with the long tail opposite the prediction: familywise error per route reached .09 to .10 at portrayal-gain SD .3 and .13 to .14 at SD .5 (`research/reproduction/a2_gain_skew_sim.json`). The verdicts stand as frozen. As a sensitivity fixed before the run, each Supports or Opposes verdict is also reported against step-down *P* < .01, which kept familywise error at or under .046 in every simulated case.
+**Inference.** The actor is the unit. We used an exact sign-flip test of actor effects with Westfall-Young step-down maxT [52] within one model and route, at familywise alpha .05, and actor-bootstrap 95% intervals (10,000 draws). A check run after the freeze, and before any A2 cell, found the test exact without per-actor gain and under symmetric gain-scaled noise, but liberal when actor effects average zero yet are skewed, with the long tail opposite the prediction: familywise error per route reached .09 to .10 at portrayal-gain SD .3 and .13 to .14 at SD .5 (`research/reproduction/a2_gain_skew_sim.json`). The verdicts stand as frozen. As a sensitivity fixed before the run, each Matches prediction or Opposes verdict is also reported against step-down *P* < .01, which kept familywise error at or under .046 in every simulated case.
 
 **Predictions.** The contrasts in Supplementary Methods, Section S8, are the only confirmatory ones. That section also gives the sources checked for each prediction. All carry a BASIC ONLY scope tag, so they make no claim about complex labels. These 14 predictions make 16 contrasts. These source checks came after the freeze. They change the stated support and not the predictions (see Disclosures).
 
@@ -224,7 +224,7 @@ A2 tests a narrower thing, its stimulus arm: whether region masks, spatial-frequ
 | Outcome | Requires |
 |---|---|
 | Matches prediction | RQ0, the vision gates, Gate B, route delivery and the sham passed; step-down *P* < .05 in the predicted direction on the blind readout; the first-frame and blur fills share the neutral fill's sign |
-| Opposes prediction | The same gates passed; step-down *P* < .05 two-sided in the opposite direction |
+| Opposes prediction | The same gates passed; step-down *P* < .05 two-sided in the opposite direction; for a masked cue, the first-frame and blur fills share the neutral fill's sign (ruled before any A2 cell existed, 2026-11-12) |
 | Null | The same gates passed; neither test significant; every null condition below met |
 | Inconclusive | Anything else, including a gate with no result |
 

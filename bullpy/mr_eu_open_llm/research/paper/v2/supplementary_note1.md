@@ -1,6 +1,6 @@
 # Supplementary Note 1: estimand, residual CEA and identifiability
 
-**Status:** draft, 2026-11-08. Written from `research/theory/causal_feature_alignment.md` (the theory note), `research/PREREG_A4_DRAFT.md` (frozen, tag `a4-freeze`) and the frozen A4 code. The sha256 of `scripts/a4_analyse.py`, `scripts/a4_recovery.py`, `scripts/a4_design.py` and `research/scripts/human_au_effects.py` in the working tree was checked against the frozen list in the amendment (line 7) on 2026-11-08, and all four match. So the line numbers below refer to the frozen code. No model output was used. Every number cites its file. Section 6 (relation to prior work) was added on 2026-11-08 from a reading of `references.md` #16 and #17.
+**Status:** draft, 2026-11-08; Appendix A (statements and proofs) added 2026-11-12. Written from `research/theory/causal_feature_alignment.md` (the theory note), `research/PREREG_A4_DRAFT.md` (frozen, tag `a4-freeze`) and the frozen A4 code. The sha256 of `scripts/a4_analyse.py`, `scripts/a4_recovery.py`, `scripts/a4_design.py` and `research/scripts/human_au_effects.py` in the working tree was checked against the frozen list in the amendment (line 7) on 2026-11-08, and all four match. So the line numbers below refer to the frozen code. No model output was used. Every number cites its file. Section 6 (relation to prior work) was added on 2026-11-08 from a reading of `references.md` #16 and #17.
 
 Plain summary. CEA compares two systems' cue effect matrices by their cosine. Residual CEA, the confirmatory statistic of A4, first removes from each matrix the part of every cue's effect that lies along that matrix's own average cue effect. It then takes the cosine. This note defines residual CEA as the code computes it, proves the properties the amendment relies on, and states which theory-note results carry over to it.
 
@@ -113,7 +113,7 @@ Reading. The common-profile share c_H is what `human_energy` reports as `common_
 
 ## 3. Identifiability results, and whether they carry to residual CEA
 
-The theory note's statements and proofs are not repeated here. This section says what each result states and whether it carries to residual CEA.
+Full statements and proofs are in Appendix A, copied from the theory note; the line references below are to the theory note. This section says what each result states and whether it carries to residual CEA.
 
 **Theorem 1 and Corollary 1.1** (theory note, lines 29-41). With finitely many natural items and the intervened points off the natural support, any zero-sum effect matrix is reachable by a system that matches a given system on every natural item. So for any r in [-1, 1] there is a system behaviourally identical to H on every behavioural metric with CEA(S, H) = r. Theorem 1 is about tau itself, so it carries to any function of tau. The corollary carries to residual CEA as follows.
 
@@ -159,6 +159,7 @@ Source: `research/reproduction/a4_human_ceiling.json` (fields `ceiling`, `ceilin
 
 - If the projectors were fixed and known, R(tau-hat) = P tau + P e with P e zero mean and independent across systems. Proposition 5 then applies to the residual matrices unchanged, with s replaced by E||P e||^2, which is at most s.
 - In A4 each projector is estimated from the noisy matrix. Then R(tau-hat) is not linear in the noise and Proposition 5 does not hold exactly. The split-half residual reliability measures the combined effect empirically, but no identity links it to the attenuation of residual CEA. The disattenuated residual value is therefore an approximation without a proof here.
+- **Numerical check (2026-11-12).** A simulation on synthetic matrices with A4's shapes measured the gap (`research/scripts/residual_cea_attenuation.py`, output `research/reproduction/residual_cea_attenuation.json`, 192 settings of 1,000 replicates; RESULTS_REGISTRY, "Rows added 2026-11-12"). Estimating each projector lowered the observed residual cosine by up to .044 against a fixed projector, in settings with a weak common profile and a noisy model matrix. The split-half residual reliability, computed with estimated projectors as A4 does, absorbed this: corrected for both reliabilities, residual CEA was within -.008 to +.019 of its true value in every setting. Corrected for the model's reliability alone, which is the form A4's Not aligned rule applies to its interval's upper bound, it was within -.027 to +.010 of the truth, and within -.016 to +.007 near the .30 bound. That form therefore slightly understates residual CEA, mostly because the human side is left uncorrected. The check does not model ridge shrinkage or the refit on each half, and it is not a proof.
 
 **Spearman's correction.** Proposition 5 is Spearman's correction for attenuation [51] (`references.md` #51), written for matrices. Spearman's form is r_pq = r_p'q' / sqrt(r_p'p' r_q'q'), where r_p'p' and r_q'q' are correlations between independent repeated series of observations of the same quantity (Part 2, Section 2, "'Attenuation' by Errors", read in the 2010 International Journal of Epidemiology reprint). The split-half reliabilities here play that role, after the Spearman-Brown step-up [58, 59].
 
@@ -235,11 +236,108 @@ Added 2026-11-09. #62 read in full (`references.md`). #65 and #66 are cited for 
 
 ## 7. Open gaps
 
-1. **Proposition 5 for residual CEA.** No exact attenuation result with an estimated projector. A delta-method or simulation bound is needed. The recovery runs show behaviour on synthetic observers but do not prove it.
+1. **Proposition 5 for residual CEA.** No exact attenuation result with an estimated projector. A delta-method or simulation bound is needed. The recovery runs show behaviour on synthetic observers but do not prove it. **Narrowed 2026-11-12:** the simulation in Section 4 bounds the bias of the corrected value in A4's shapes; a proof is still open.
 2. **Human ceiling estimator.** The ceiling halves are pooled fits at ridge 1.0 for all four datasets (`scripts/a4_analyse.py:360`). The human target is the mean of per-subject fits at the selected ridge, which is 0.1 for basic (`research/scripts/human_au_effects.py:585-590`; `research/reproduction/human_au_effects.json`). So R_H is the reliability of a related estimator, not of the target itself. The amendment does not state this. The earlier log-odds ceiling used the same default (`research/scripts/human_au_effects.py:353, 401-402`).
 3. **Proposition 3 with different projectors.** No bound is given when u_S and u_T differ. R is discontinuous at m = 0, so any bound needs ||m|| bounded away from zero.
 4. **Proposition S2 with non-parallel profiles.** The cross terms are not bounded here.
 5. **Set-to form of Theorem 1.** Unchanged from the theory note: the case where an intervened point is a natural item is not covered.
 6. **Finite-sample bound on CEA**, raw or residual, remains open (theory note, Open).
-7. **Citations.** Spearman is now `references.md` #51. The Spearman-Brown step-up (Section 4) is now `references.md` #58 and #59. The Introduction's sentence on breaking natural correlations needs the qualifier set out in Section 6.3.
+7. **Citations.** Spearman is now `references.md` #51. The Spearman-Brown step-up (Section 4) is now `references.md` #58 and #59. The Introduction's sentence on breaking natural correlations needs the qualifier set out in Section 6.3. **Done (checked 2026-11-12):** the Introduction now says that natural data carry some information for linear observers and for tests of a model's own concepts [17], and that breaking natural correlations is needed to learn cue use "without those assumptions".
 8. **Literature beyond #16 and #17.** Positivity and extrapolation in causal inference, and identifiability of learned representations, were not searched (Section 6.3).
+
+## Appendix A. Statements and proofs of the identifiability results
+
+Added 2026-11-12 so that the supplement does not depend on a repository file. The statements and proofs are those of the theory note (`research/theory/causal_feature_alignment.md`), which keeps its file name because frozen amendments cite it. Each proof was rechecked step by step when it was copied here, and no result changed. Three precisions were added: Proposition 2 states b not zero, which its correlation needs; Proposition 3 names the mean mu and lambda_max, which its proof uses; and the theory note's sentence on the set-to form, which was ambiguous, is stated precisely in A.1. Numbers come from `research/scripts/cfa_identifiability.py` (output `research/reproduction/cfa_identifiability.json`, tests in `tests/test_cfa_identifiability.py`). No model output was used.
+
+### A.1 Setup
+
+A stimulus has cues z in R^p. A system S maps z to a response distribution f_S(z) on K options. Natural stimuli have distribution P. A design Q gives the stimuli used for measuring effects, and delta_j > 0 is a chosen dose for cue j.
+
+**Effect matrix.** For cue j and option k,
+
+    tau_S(j, k) = E_{z~Q}[ f_S^k(z + delta_j e_j) - f_S^k(z) ]
+
+Each row sums to zero, because f_S lies on the simplex.
+
+**Set-to form.** Amendment A4 and the human matrix use do(z_j = 1) minus do(z_j = 0), other cues as observed, averaged over Q. For a linear observer this equals the dose form at delta_j = 1, and Propositions 2 and 3 hold unchanged. Theorem 1 is proved for the dose form. Its construction carries to the set-to form when neither of the two intervened points, z with z_j set to 1 and z with z_j set to 0, is a natural item. The case in which one of them is a natural item is not covered (Section 7, gap 5).
+
+**Cue Effect Alignment.** For systems S and T,
+
+    CEA(S, T) = cos(tau_S, tau_T) = <tau_S, tau_T> / (||tau_S||_F ||tau_T||_F)
+
+Row sums of zero make the mean of the entries zero, so this equals the Pearson correlation over entries. It is undefined if either matrix is zero.
+
+**Behavioural metric.** Any functional of the joint distribution of items and responses on P. This covers accuracy, confusion matrices, error consistency, and representational similarity computed on outputs. If f_S = f_T P-almost everywhere, S and T have the same value on every such metric.
+
+The human effect matrix tau_H comes from a randomised design. Nothing below assumes that human responses are linear or that the cue list is complete, except where stated.
+
+### A.2 Theorem 1: behaviour on natural items does not constrain alignment
+
+**Theorem 1.** Let P have finite support Z, take Q = P, and suppose the map (z, j) -> z + delta_j e_j is injective on Z x {1, ..., p} with image disjoint from Z. Let T be any system, with fbar = E_P[f_T], and let tau* be any p by K matrix with zero row sums and fbar + tau*(j, .) on the simplex for all j. Then there is a system S with f_S = f_T on Z and tau_S = tau*.
+
+*Proof.* Set f_S = f_T on Z, and f_S(z + delta_j e_j) = fbar + tau*(j, .) for each z in Z and each j. Injectivity and disjointness make this well defined, and it is a distribution by assumption. Off these points, take any value. Then
+
+    tau_S(j, k) = E_P[fbar^k + tau*(j, k) - f_T^k(z)] = fbar^k + tau*(j, k) - fbar^k = tau*(j, k). QED
+
+**Corollary 1.1.** Let H be a reference system with tau_H non-zero, let fbar = E_P[f_T] be in the interior of the simplex, and let p(K - 1) >= 2. For any r in [-1, 1], there is a system S that matches T on every natural item and has CEA(S, H) = r. In particular, take T = H. Then S is indistinguishable from H on Z, on every behavioural metric and however many trials are collected, and yet CEA(S, H) can take any value, including -1.
+
+*Proof.* Let U = tau_H / ||tau_H||_F. The zero-row-sum matrices form a space of dimension p(K - 1) >= 2 that contains U, so it has a unit vector V orthogonal to U. Put M = r U + sqrt(1 - r^2) V, which has cosine r with tau_H and zero row sums. Because fbar is interior, there is a > 0 small enough that fbar + a M(j, .) is on the simplex for all j. Apply Theorem 1 with tau* = a M. Cosine is scale free, so CEA(S, H) = r. QED
+
+**What this does not say.** The construction changes f off the natural support and is not smooth, so it shows that behaviour imposes no logical constraint. It does not show that trained networks behave this way. Propositions 2 and 3 give the smooth version, and what trained models do is the empirical question this study addresses.
+
+### A.3 Proposition 2: correlated cues, smooth systems
+
+**Proposition 2.** Let z have two standardised cues with correlation rho, and let S and T be linear observers on one output, f_S(z) = a + b z_1 and f_T(z) = a + b z_2 with b not zero, each with Q = P and b small enough that outputs stay in range when mapped to a two-option distribution. Then
+
+    corr(f_S, f_T) = rho
+    E[(f_S - f_T)^2] = 2 b^2 (1 - rho)
+    CEA(S, T) = 0, for equal doses
+
+*Proof.* The first line holds because f_S and f_T are the same affine map, with non-zero slope, of z_1 and z_2. For the second, E[(z_1 - z_2)^2] = 1 + 1 - 2 rho. For the third, with dose delta, tau_S has the row delta (b, -b) for cue 1 and a zero row for cue 2, and tau_T the reverse, so the two matrices are orthogonal. QED
+
+So as rho goes to 1, behaviour converges while alignment stays at 0. Figure 3b plots these values at rho .5, .9 and .99 (`cfa_identifiability.json`, `checks.proposition_2`). Section 3 gives the three-option analogue for residual CEA (Example S4).
+
+### A.4 Proposition 3: what behaviour can and cannot bound
+
+**Proposition 3.** Let f_S(z) = a_S + B_S z and f_T(z) = a_T + B_T z be linear observers, with B a K by p matrix, and let P have mean mu and covariance Sigma with smallest and largest eigenvalues lambda_min and lambda_max. Let D = B_S - B_T, with equal doses delta on all cues and means matched, a_S + B_S mu = a_T + B_T mu. Then
+
+    (delta^2 / lambda_max) E_P ||f_S - f_T||^2 <= ||tau_S - tau_T||_F^2 <= (delta^2 / lambda_min) E_P ||f_S - f_T||^2
+
+Both bounds are attained. If lambda_min = 0, behavioural equivalence places no constraint on the upper side.
+
+*Proof.* With means matched, f_S - f_T = D (z - mu), so E_P ||f_S - f_T||^2 = tr(D Sigma D'). With s_i the rows of D, tr(D Sigma D') = sum_i s_i Sigma s_i', which lies between lambda_min ||D||_F^2 and lambda_max ||D||_F^2 by the Rayleigh quotient. For linear observers tau_S - tau_T = delta D', so ||tau_S - tau_T||_F^2 = delta^2 ||D||_F^2. Substituting gives both bounds. Equality holds when every row of D is a multiple of the eigenvector for lambda_min, or of that for lambda_max. QED
+
+**Reading.** 1 / lambda_min is an invisibility factor: the most by which a unit of behavioural disagreement can understate a squared difference in cue effects, per unit dose. A randomised design makes Sigma close to the identity, which is why it identifies cue effects. For a softmax observer the same statement holds locally, on the Jacobian of the log-odds at a reference point.
+
+**Measured values, correlation matrices of the cue tables** (`cfa_identifiability.json`; RESULTS_REGISTRY, "Cue spectra").
+
+| Cue table | Rows | Cues | lambda_min | Condition number | 1 / lambda_min |
+|---|---|---|---|---|---|
+| EU-Emotion, LibreFace | 243 clips | 15 | .054 | 76.1 | 18.4 |
+| EU-Emotion, OpenFace 3.0 | 243 clips | 10 | .125 | 22.4 | 8.0 |
+| Snoek design, basic WC | 4,659 configurations | 33 | .178 | 13.7 | 5.6 |
+| Snoek design, basic EA | 2,322 | 33 | .199 | 11.3 | 5.0 |
+| Snoek design, conversational WC | 2,314 | 33 | .209 | 11.0 | 4.8 |
+| Snoek design, conversational EA | 2,322 | 33 | .199 | 11.3 | 5.0 |
+
+With the left and right versions of each AU merged, the Snoek designs have 25 cues, lambda_min .44 to .47, condition number 3.4 to 3.5 and 1 / lambda_min 2.1 to 2.3, so most of the spread in the Snoek rows comes from bilateral pairs, which are correlated by design. Cue counts differ between rows. The EU-Emotion cues are detector estimates, so measurement noise changes the spectrum, and clip-level means ignore variation within a clip.
+
+### A.5 Proposition 4: regression on measured cues can show alignment without shared cues
+
+**Proposition 4.** Let T respond linearly to an unmeasured cue U, f_T = a + b U, and let U = G z + e on P, with e uncorrelated with z and G the matrix of regression slopes of U on z. Then the population regression of f_T on z has slopes b G, whereas the effect of intervening on z alone is zero unless the edit also changes U. A system using z directly with weights b G and a system using U have the same regression slopes on P.
+
+*Proof.* The slope is Cov(f_T, z) Var(z)^-1 = b Cov(U, z) Var(z)^-1 = b G, since e is uncorrelated with z. An intervention on z that leaves U fixed leaves f_T fixed. QED
+
+This is why the confirmatory claim of the natural-clip analysis is "aligned with the human pattern", not "uses the same cues". The pattern score is a regression result.
+
+### A.6 Proposition 5: noise ceiling
+
+**Proposition 5.** Let tau-hat_S = tau_S + e_S and tau-hat_H = tau_H + e_H, with e_S and e_H zero mean and independent of each other, and with sums of variances over entries s_S and s_H. Then
+
+    E<tau-hat_S, tau-hat_H> = <tau_S, tau_H>
+    E||tau-hat_S||^2 = ||tau_S||^2 + s_S, and likewise for H
+
+*Proof.* Expand the inner product and the squared norm; every cross term has expectation zero by independence and zero means. QED
+
+So, as a ratio of expectations, the observed cosine is CEA times sqrt(R_S R_H), with R_S = ||tau_S||^2 / (||tau_S||^2 + s_S). This is Spearman's correction for attenuation applied to a matrix. Section 4 sets out how A4 estimates R_H and R_S, and why the result holds exactly for residual CEA only with a fixed projector.
+

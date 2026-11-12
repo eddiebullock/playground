@@ -155,7 +155,7 @@ Stage 0 table for RQ3: Supplement, from `a7_stage0_gemma4.json` and `a7_stage0_q
 
 ## Pending items blocking a first full draft
 
-**Updated 2026-11-12.** Done: A1 read; gate and A3 tables in Results; A7 freeze and Stage 0; A5 frozen; A6 closed as a limit; the licence for edits (2026-11-08); the two EU-Emotion facts in item 16; Supplementary Note 1, including residual CEA; Figures 2 and 4 drawn from locked outputs. From the queue: A2 run (Gate B), then A5 on its cells and A7's route arm where Gate B and the sham pass; A4 scoring and analysis, then A9 scoring; A8. For the user: ethics statement; a dated public record of each amendment (archive DOI or registry deposit), since the journal does not say whether a tagged commit counts. To merge into the supplement: the theory note's full proofs, which Supplementary Note 1 cites but does not repeat.
+**Updated 2026-11-12.** Done: A1 read; gate and A3 tables in Results; A7 freeze and Stage 0; A5 frozen; A6 closed as a limit; the licence for edits (2026-11-08); the two EU-Emotion facts in item 16; Supplementary Note 1, including residual CEA; Figures 2 and 4 drawn from locked outputs. From the queue: A2 run (Gate B), then A5 on its cells and A7's route arm where Gate B and the sham pass; A4 scoring and analysis, then A9 scoring; A8. For the user: ethics statement; a dated public record of each amendment (archive DOI or registry deposit), since the journal does not say whether a tagged commit counts. The theory note's full proofs are now Appendix A of Supplementary Note 1 (2026-11-12).
 
 ## Inconsistencies found across the repo's documents
 

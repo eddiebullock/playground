@@ -204,6 +204,11 @@ STEPS: List[Step] = [
          [Out("research/reproduction/a4_human_ceiling.json")], needs=SNOEK, minutes=0.3),
     Step("human_response_predictor", _py("-m", "scripts.human_response_predictor"),
          [Out("research/reproduction/human_response_predictor.json")], needs=SNOEK, minutes=0.3),
+    Step("residual_cea_attenuation",
+         _py("research/scripts/residual_cea_attenuation.py", "--out", "research/reproduction/residual_cea_attenuation.json"),
+         [Out("research/reproduction/residual_cea_attenuation.json")], minutes=2.7,
+         note="G9 numerical check of Proposition 5 for residual CEA with estimated projectors (Supp. Note 1, section 4); "
+              "synthetic matrices only"),
     Step("cfa_identifiability",
          _py("research/scripts/cfa_identifiability.py", "--au-csv", "research/reproduction/eu_au_measures.csv",
              "--snoek-zip", "data/external/snoek_au/au_emotion_data.zip",
