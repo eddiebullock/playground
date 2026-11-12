@@ -200,3 +200,7 @@ Not byte-identical, and why:
 Full mode was not run (hours of CPU; at most 2 workers were free). Its A2 single-column step was run on its own: see below.
 
 **A2 single-column check (full-mode step `a2_gain_skew_single_column`), run once on its own on 2026-11-08:** `python research/scripts/a2_gain_skew_single_column.py`, one process, about 70 minutes on the loaded machine. All six output lines equal `single_column_check` in the committed `a2_gain_skew_sim.json` (compared with the script's own capture and compare rules: `within_tolerance`, equal after parsing). The 1000-replicate maxT part of that file stays hash-verified.
+
+## Clean-checkout test, 2026-11-12
+
+`python scripts/reproduce.py --quick --rev HEAD --external data/external --workers 2` at revision `6abfa91`, conda env `mr_eu_open_llm`, Python 3.10.20: 37 outputs rebuilt and matched (byte-identical or within the stated tolerance), 109 verified by pinned sha256, 7 pending, 0 uncovered, 1 failed. The failure was `research/paper/v2/figures/SOURCES.md`, one blank line off after a rebuild in a different order; `make_figures.py` now writes it the same way in any order (commit `9ee4603`). Figures 2 and 4 rebuilt byte-identically. A first run the same day used a stale local `origin/main` and is not a result.
