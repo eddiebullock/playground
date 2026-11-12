@@ -74,10 +74,6 @@ These only matter at submission. Nothing waits on them.
 
 **Exact question.** Do you want the notes removed from the public branch?
 
-**Recommended default.** Yes. Run from `~/playground` (I will have added commits on top by morning, so this keeps them and only drops the notes change from `0bc8a57`):
-
-    git rebase --onto 0bc8a57~1 0bc8a57 p1-pipeline   # drop the bad commit
-
-Simpler and safer: tell me "drop the notes commit" and allow the force-push, and I will redo the two research-file edits from `0bc8a57` in a fresh commit, rebase my later commits onto it, and force-push with a lease. GitHub may keep the orphaned commit reachable by its hash for a while after that; if that matters, GitHub support can purge it.
+**Recommended default.** Yes. Say "drop the notes commit" and allow the force-push when asked. I will then rebuild `p1-pipeline` from `d8c2e01` (the commit before), replaying every later commit with `notes/notes.txt` left out, check that the result differs from the current branch only in that file, and push with `--force-with-lease` pinned to the current tip. Your local notes file is not touched. GitHub may keep the orphaned commit reachable by its hash for a while; if that matters, GitHub support can purge it.
 
 **Meanwhile.** Work continues; nothing waits on this except PRs to `main`.
