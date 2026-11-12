@@ -2,11 +2,13 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-11-09 Europe/London
+**Updated:** 2026-11-12 Europe/London
 
 ## Current phase
 
 **Rebuilding on a clean task.** Prompt confound found 2026-11-04 (DECISIONS). Branch B stays as a record, but accuracy and last-token probes are confounded. Amendment A1 is the active confirmatory step. Literature-led redesign under way in `research_notes/`.
+
+**2026-11-12 10:00:** SSH was down from 2026-11-11 about 15:00 until the user re-authenticated this morning. No GPU job has started; A2, A4 and A8 still pending on priority (last Slurm estimate 2026-11-13 about 20:15). RDS 1,093.2 GB of 1,099.5 soft, 998,566 files. Outline item 16(a) settled for our copy: the seven workbook items without a clip are present as unedited originals only (`research/reproduction/eu_missing_items_check.json`). Disk cleanup asked for by the user is under way (caches and byte-identical duplicate weights).
 
 **2026-11-11 10:40:** No GPU job has started. Slurm's estimated starts: A8 equivalence and A2 (both models) 2026-11-13 about 23:30; A4 Gemma 2026-11-14 00:00, Qwen 01:25. GPU fair share 0.000 (account usage 4,513 of 7,121 h). Shorter limits would not help: A4 and A2 shards need hours, and intr allows one job under 1 h. Nothing here is bought; SL2 would cost money. RDS 1,092.2 GB of 1,099.5 soft, growing about 0.8 GB per `hel-c3-intr` run (helsinki_cosmos, not this project), 998,445 files.
 
