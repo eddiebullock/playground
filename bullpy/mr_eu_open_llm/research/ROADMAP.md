@@ -145,6 +145,26 @@ Watch storage at each step. The file count runs at about 996k of 1,048,576. Cell
 
 **Reporting.** A short visible status each tick: what changed, what is next, and anything the user must do. A push notification when a phase completes.
 
+**Overnight plan, 2026-11-12 to 13** (written at the user's request: "work towards completing this project/study ... plan how you will problem solve without me"). The rules above stand; this adds the triggers for tonight.
+
+*Constraints new tonight.* The `intr` QoS belongs to another project's agent (it runs as the same Unix user, as `hel-*` jobs): never submit to it, never touch `hel-*` or `cas_*` jobs. The SSH master persists (`ControlPersist=yes`); only the user can re-authenticate (TOTP). History rewrites on the public repo need the user (NEEDS_INPUT 10), so no PR to `main` until that item is settled. Commit by explicit path only. **All GPU work must finish before the `Dec2026-shutdown` reservation (every GPU node, 2026-12-07 07:00 to 2027-01-10 18:00).** Fair share is 0 and the queue holds about 570 jobs, so each new submission waits a day or more: submit early, size time limits from smokes, avoid resubmission rounds.
+
+*Timing evidence (read for seconds only).* A4 smokes: about 1 s per cell (Gemma .97, Qwen 1.09; 40 cells each, all ok), a third of the 3.0 s planning bound, so a 6 h A4 shard should take about 2 h. A2: 4 to 6 h per shard against 12 h (A2 Cost). Time limits stay as submitted: running jobs show other `gpu2` users ahead of us on fair share, not a backfill gap that shorter limits would fill.
+
+| Event at a heartbeat | Action |
+|---|---|
+| A9 smoke COMPLETED | Read only Elapsed, MaxRSS and the `seconds` field. Submit the scored run per model, `A9_FROZEN=1 MODEL=<m> N_SHARDS=12 sbatch --array=0-11 slurm_jobs/study3_a9.sh` (6 h default; about 3,000 cells a shard), and note it in DECISIONS |
+| A2 arrays all COMPLETED | `post_phase3.py pull a2 --jobs 40468625 40468626`, then `analyse a2`; read outputs only after the run note; registry rows; then `analyse a5`; then A7 once its Stage 1 is pulled (`pull a7 --jobs 40795186 40795187`, `analyse a7`); Results 7 and 10, Figure 6 |
+| A4 arrays all COMPLETED | `pull a4 --jobs 40589226 40593824`, `analyse a4`; registry; Figure 5; Results 5 and 6; then A9's analysis once its shards finish |
+| A task FAILED, TIMEOUT, NODE_FAIL or OUT_OF_MEMORY | Read its `.err` and `.out`. Environmental: resubmit that task index with the same script and environment (the runners resume), then pull with `--waive <task> --reason`. A bug in frozen code: a dated DECISIONS deviation before any rerun |
+| A8 equivalence 40399722 COMPLETED | Record as A8's dated pre-data note (checklist item 2). A8 jobs still wait for every Phase 2 run to complete |
+| Quota over 1,080 GB or 1,040,000 files | No new submissions. If another project's job is driving it, `scontrol hold` this project's pending jobs and write NEEDS_INPUT; never cancel another project's job |
+| SSH socket gone | Stop cluster work; STATE note and NEEDS_INPUT 1 reopened; local work continues |
+
+*Local queue while the GPUs wait, in order.* (1) Apply the independent draft review (`research/reviews/draft_review_2026-11-13.md`). (2) Results: stale items (A9 status), A7 Stage 1 slots, registry rows for values already locked before any data (A2 gain-skew error rates, A9 human reference). (3) Figure functions pointed at the runbook's output paths. (4) A8's pull and analysis path checked against its launcher. (5) Supplement tables (A7 Stage 0; dated deviations). (6) Submission pack refreshed. (7) Full test suite and the clean-checkout check.
+
+*Morning hand-off.* A summary at the top of STATE.md; anything only the user can do in NEEDS_INPUT.
+
 **Risk register.**
 
 | Risk | Mitigation |
@@ -154,3 +174,4 @@ Watch storage at each step. The file count runs at about 996k of 1,048,576. Cell
 | A frozen test shows a weakness late | Dated sensitivity, fixed before the data are read, as with A2 skew. |
 | A null on the core result | The paper stands as written: the identifiability results plus the audit carry it, and the null is reported as a result. |
 | SSH drops overnight | Local phases continue; the user is asked to log in. |
+| GPU shutdown 2026-12-07 07:00 to 2027-01-10 (reservation `Dec2026-shutdown`, found 2026-11-12) | Phase 2 and A9 first; A8 sized against the days left after them, and deferred by its own dated-note rule where it cannot finish (A4 is the step A8 defers first). |
