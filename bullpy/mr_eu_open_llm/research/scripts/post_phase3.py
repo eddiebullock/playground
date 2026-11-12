@@ -4,14 +4,15 @@
 Two subcommands, run by the coordinator from the project root on the Mac:
 
   pull AMENDMENT --jobs ID [ID ...]
-      AMENDMENT is a2, a4 or a9. Over the SSH control socket: every task of every named Slurm array must
+      AMENDMENT is a2, a4, a7 or a9 (a7: the Stage 1 route-arm shards). Over the SSH control socket: every task of every named Slurm array must
       be COMPLETED; every expected file must exist on the cluster. Records the remote sha256 of each file,
       copies them with scp into a staging folder, checks each copy's sha256, and only then moves them to
       the same relative path here. Refuses to overwrite a local file. Never prints or opens a file's
       contents. Writes `research/reproduction/<amendment>_pull_manifest.json`.
 
   analyse AMENDMENT
-      AMENDMENT is a2, a4, a5 or a9. Runs the amendment's pre-run check (DECISIONS 2026-11-12), and only
+      AMENDMENT is a2, a4, a5, a7 or a9. A5 and A7 read A2's cells and output, so they run after A2.
+      For A7 the pre-run check also writes the inputs file `a7_analyse` reads (added 2026-11-12). Runs the amendment's pre-run check (DECISIONS 2026-11-12), and only
       if it passes, the frozen analysis with the frozen command, single-threaded BLAS, once: it refuses if
       the output already exists. For A2 it then runs the declared extras. Writes a run note,
       `research/reproduction/<amendment>_run_note.json`, with the commands, environment, times, the
@@ -64,6 +65,8 @@ def expected_files(amendment: str) -> List[str]:
         return ["results/a4/manifest.csv"] + [f"results/a4/cells_{m}_{k}.jsonl" for m in MODELS for k in range(12)]
     if amendment == "a9":
         return ["results/a9/manifest.csv"] + [f"results/a9/cells_{m}_{k}.jsonl" for m in MODELS for k in range(12)]
+    if amendment == "a7":  # Stage 1 route arm, N_SHARDS=2 (DECISIONS 2026-11-10, 2026-11-12)
+        return [f"results/a7/a7_cells_{m}_shard{k}.jsonl" for m in MODELS for k in range(2)]
     raise SystemExit(f"nothing to pull for {amendment}")
 
 
@@ -73,6 +76,7 @@ def outputs(amendment: str) -> Dict[str, List[str]]:
         "a2": [f"{REPRO}/stimulus_interventions_{m}.json" for m in MODELS] + [f"{REPRO}/a2_extras_{m}.json" for m in MODELS],
         "a4": ["results/a4/summary.json"],
         "a5": ["results/a5/a5_analysis.json"],
+        "a7": [f"{REPRO}/a7_analysis.json"],
         "a9": ["results/a9/summary.json"],
     }[amendment]
 
@@ -103,6 +107,11 @@ def commands(amendment: str, cells_dir: Optional[str] = None) -> List[List[str]]
     if amendment == "a5":
         return [[PY, "research/scripts/a5_prerun_check.py", "--record", f"{REPRO}/a5_prerun.json"],
                 [PY, "-m", "scripts.a5_analyse", "--output", "results/a5/a5_analysis.json", "--a5_frozen", "--a2_frozen"]]
+    if amendment == "a7":
+        return [[PY, "research/scripts/a7_prerun_check.py", "--record", f"{REPRO}/a7_prerun.json",
+                 "--inputs", f"{REPRO}/a7_inputs.json"],
+                [PY, "-m", "scripts.a7_analyse", "--inputs", f"{REPRO}/a7_inputs.json",
+                 "--output", f"{REPRO}/a7_analysis.json", "--a7_frozen", "--a2_frozen"]]
     if amendment == "a9":
         check = [PY, "research/scripts/a9_prerun_check.py", "--record", f"{REPRO}/a9_prerun.json",
                  "--clean_dir", CLEAN["a9"]]
@@ -223,12 +232,12 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     sub = ap.add_subparsers(dest="cmd", required=True)
     p = sub.add_parser("pull")
-    p.add_argument("amendment", choices=("a2", "a4", "a9"))
+    p.add_argument("amendment", choices=("a2", "a4", "a7", "a9"))
     p.add_argument("--jobs", nargs="+", required=True)
     p.add_argument("--waive", nargs="*", default=(), help="array tasks (e.g. 40589226_7) rerun under a job in --jobs")
     p.add_argument("--reason", default="")
     a = sub.add_parser("analyse")
-    a.add_argument("amendment", choices=("a2", "a4", "a5", "a9"))
+    a.add_argument("amendment", choices=("a2", "a4", "a5", "a7", "a9"))
     args = ap.parse_args(argv)
     if args.cmd == "pull":
         return pull(args.amendment, args.jobs, args.waive, args.reason)

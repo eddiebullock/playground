@@ -2,11 +2,13 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-11-12 Europe/London
+**Updated:** 2026-11-12 23:20 Europe/London
 
 ## Current phase
 
 **Phase 2 runs queued; Phase 3 analyses wait on them.** A1, A3 and natural-clip RQ1 are locked (2026-11-09). Every amendment is frozen or closed: A2, A4, A5, A7, A8 and A9 frozen, A6 closed as a limit. The A2, A4 and A8 GPU jobs are pending on priority. History: the prompt confound found 2026-11-04 withdrew the earlier accuracy and probe results (DECISIONS); Branch B stays as a record only.
+
+**2026-11-12 23:20 (new agent session; the user is away until the morning of 2026-11-13):** Took over after the previous session closed. The user re-authenticated CSD3 on a new ControlMaster with `ControlPersist=yes` and keepalives (the 12 h persist is what dropped it on 2026-11-11), and `caffeinate` holds the Mac awake. The user has given the `intr` QoS to another project's agent, so this project does not use it; none of its jobs did (all `gpu2`). Queue unchanged: A2, A4, A8 and A7 Stage 1 pending on priority (about 189, fair share 0, no start estimate). RDS 1,067.3 GB, 991,062 files. Submitted the A9 timing smokes (Gemma 40843619, Qwen 40843620; 40 cells, 30 min) after checking run-path hashes, the manifest pin and the 40 render tars on the cluster (DECISIONS 2026-11-12). Added A7 Stage 1 to the Phase 3 runbook with its own pre-run check, `research/scripts/a7_prerun_check.py`, which also builds the inputs file `a7_analyse.py` needs; tests pass (`tests/test_a7_prerun.py`). A self-paced heartbeat checks the cluster about hourly overnight.
 
 **2026-11-12 16:55:** A7 Stage 1 route arm submitted (Gemma 4 40795186, Qwen3-VL 40795187; 2 tasks each, 59 min cap, DECISION_DATE 2026-11-10), before A2's output exists, to gain queue age; its A2 preconditions are applied by A7's analysis code (DECISIONS 2026-11-12). Pending on priority with the A2, A4 and A8 jobs.
 
@@ -50,6 +52,8 @@ Merge with true merge commits, not squash: a squash on PR 50 caused a conflict o
 Do not cancel A1/A2/CAS jobs. `cas_*` jobs belong to the separate CASCADE project (`~/rds/hpc-work/cascade/code`), and appear to be resubmitted by a local loop there (`build/chain_loop.sh`), inferred from timing. Ablation 39709579, 39709583, 39709584 were cancelled 2026-11-02 and are not requeued.
 
 SSH: `ssh -o ControlPath=/Users/eb2007/.ssh/cm-%r@%h:%p -o ControlMaster=no -o BatchMode=yes eb2007@login.hpc.cam.ac.uk`
+
+Master (the user runs it, TOTP): `ssh -fN -o ControlMaster=yes -o ControlPath=/Users/eb2007/.ssh/cm-%r@%h:%p -o ControlPersist=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=10 eb2007@login.hpc.cam.ac.uk`. Do not use the `intr` QoS: the user gave it to another project's agent on 2026-11-12.
 
 ## Decoder
 
