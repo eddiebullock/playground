@@ -50,7 +50,7 @@ Item 2 already disclosed that `data/eu_emotions_human_entropy.json` (item-level 
 
 **If the answer is no:** the file would have to come out of history as well as the latest commit, which means rewriting a public branch, and that is the user's call. Reproduction would then read it from a private location.
 
-**Meanwhile:** the paper files give counts, not the seven unmatched item IDs, so that nothing further depends on the answer.
+**Meanwhile:** the paper files give counts, not the seven unmatched item IDs, so that nothing further depends on the answer. **Update 2026-11-12:** with the permission settled, the seven IDs are now listed in `research/reproduction/eu_missing_items_check.json`. The user also confirmed that the copy we hold is the collaborators' working set, so whether a distributed set differs is not a question for this paper (outline item 16).
 
 ## 8. Snoek group contacted — AWAITING REPLY (2026-11-08)
 

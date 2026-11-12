@@ -504,3 +504,7 @@ A6's own pre-freeze rule (`PREREG_A6_DRAFT.md`, "Fixed before freezing", item 6;
 - **Consequence for the paper.** RQ5 is named as future work, as the Discussion outline already provides ("Only if A6 freezes before its data and finishes. Otherwise named as future work"). No CREMA-D model output exists; none was produced.
 - **Jobs.** The A6 weight-manifest jobs 40595461 and 40595462, no longer needed, were cancelled before they ran. The A6 outputs above stay on the cluster as this project's own records.
 - **A redesign** (for example a fill taken from a neutral clip of the same actor rather than the first frame) would be a new amendment written and frozen before any data, not an edit of A6.
+
+## 2026-11-12: EU-Emotion working set; the seven unmatched items are closed
+
+The user confirmed that EU-Emotion's creators are collaborators and that the copy we hold is the set supplied for this work. So the seven workbook items with no clip are settled for the paper: they exist in that set only as unedited originals, and the clip list, which takes edited cuts only, leaves them out. Nothing remains to ask the authors (outline item 16). The frozen designs keep the 243 edited clips and do not substitute the originals, which are trimmed differently. With public item IDs permitted since 2026-11-08, the seven are now listed by ID in `research/reproduction/eu_missing_items_check.json`.
