@@ -535,3 +535,10 @@ The audit (`research/reviews/a4_code_audit.md`) found the frozen code byte-ident
 - **Run safety:** shard completeness and uniqueness, inputs at pinned bytes, a gates file built by script from the frozen outputs (`research/reproduction/a4_gates.json`), and single-threaded BLAS, all checked by `research/scripts/a4_prerun_check.py`, which records every input's sha256.
 - **Also appended:** the ceiling-estimator disclosure of 2026-11-08, quantified by the audit at .0003 or less on the basic ceilings.
 - **Correction to my own text, same day:** the residual noise-ceiling simulation added to Supplementary Note 1 this morning corrects the point estimate, not the bootstrap upper bound that the Not aligned rule corrects. The note and the registry row now say so, and cite recovery's boundary check (at most .026) as the evidence for the rule as applied.
+
+## 2026-11-12: A7 Stage 1 route arm submitted before A2's output exists (scheduling only)
+
+The route-arm GPU jobs are submitted now, so that they gain queue age while the A2 and A4 jobs wait. Nothing in the run depends on A2's results: it reads its own Stage 0 table and the pinned geometry, with `--decision_date 2026-11-10`, the entry that scoped Stage 1. No A2 cell or analysis output exists, so none has been opened.
+
+- **Preconditions** (RQ0, gates and delivery, Gate B and the sham, per model and route) are applied by A7's analysis code when A2's output exists, as `PREREG_A7_DRAFT.md`, "When Stage 1 runs at all", provides. Where one fails, the verdict is A7's own "Not tested", and those cells carry no verdict. This replaces the 2026-11-10 entry's wording "is not run" for that case; no threshold, arm or estimand changes.
+- **Cost:** about 1.06 GPU-hours per model as an upper bound, on the free SL3 allocation, in 59-minute tasks.
