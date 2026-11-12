@@ -276,7 +276,7 @@ Gate B is B1 to B5 (`research/PREREG_A2_DRAFT.md:109-117`). A model and route th
 
 (`research/PREREG_A5_DRAFT.md:226-231`.) Balance classes and verdict names are descriptive, not error-controlled under skewed portrayal gain (`:574`).
 
-Slots, per model and route, from the A5 output (`scripts/a5_analyse.py --output <path>`): [PENDING: `confirmatory` block, evidence class], [PENDING: `descriptive` block, balance, Phi with 90% CI, word share, `family_gain_log_sd`].
+Slots, per model and route, from the A5 output (`scripts/a5_analyse.py --output <path>`): [PENDING: `confirmatory` block, evidence class, with the row's `flags`, and the row's `reasons` where the class is null], [PENDING: `descriptive` block, balance, Phi with 90% CI, `family_gain_log_sd`; word share from the row's top-level `word_share`]. Read as ruled before data (PREREG_A5 deviation of 2026-11-12): Absent with E*'s 95% interval; survival beside every Shown cell; the chain as point means; lexicon mass from A2's `gate_b` where A5 has none. The pre-run check (`research/scripts/a5_prerun_check.py`) must pass first.
 
 **RQ5 (A6), closed as a limit.** A6 was never frozen. Its own pre-freeze rule, fixed before any model output, required the first frame of each clip to carry at most half of the apex value of AU9 and AU10 on every detector. ME-GraphAU's AU10 gave .801 [REG: "A6 pre-freeze cluster checks"], so A6 did not freeze or run (DECISIONS 2026-11-10), and RQ5 is named as future work in the Discussion. No CREMA-D model output exists. The human target sample, 819 clips and 91 actors [REG: A6 human target, "Sample"], is a design fact.
 

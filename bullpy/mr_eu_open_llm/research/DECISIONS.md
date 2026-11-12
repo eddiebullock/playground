@@ -517,3 +517,11 @@ An independent audit of A2's frozen code against its text found no change to the
 - **Run safety:** a torn cells line is repaired by removing only unparseable lines, logged, and recomputing them; cells are checked for model identity by pixel shape; a run with a missing gate input is void. `research/scripts/a2_prerun_check.py` does the checks and records every input's sha256 with the run. The cluster's six gate files were checked equal to the committed copies today.
 - **Reporting:** 90 percent equivalence intervals and the shuffles-overall table come from `research/scripts/a2_declared_extras.py`, which uses the frozen functions and refuses if an interval does not reproduce the frozen equivalence result. Failed cells are not rerun. The remaining gaps are disclosed as limits.
 - **Why not change the code:** it is frozen and correct for what it computes; every ruling either reads its output more strictly or adds a declared calculation beside it.
+
+## 2026-11-12: A5 rulings after an independent code audit (pre-data)
+
+The audit (`research/reviews/a5_code_audit.md`) found that the code which will run implements A5's final rules and evidence-class definitions on the real A2 cell format, with every pin intact. It found three input mistakes that would crash the single run or silently change it, and some reporting gaps. No A2 cell exists. Rulings are appended to `PREREG_A5_DRAFT.md` as a dated pre-data deviation, outside the hashed block and the code-hash section, so no hash changes.
+
+- **Input errors void the run, they are not results:** a model with no pulled cells (which would also shrink the other model's step-down families), A1 or A3 not reading True, and a route with no ok original cell. `research/scripts/a5_prerun_check.py` checks all three, and the human norms hash, before the run.
+- **Reporting:** word share, null-evidence reasons, flags, chain without intervals, lexicon mass from A2's output, Absent with E*'s interval ("below the margin" where it excludes 0), and survival beside every Shown cell.
+- **Why not change code:** it is frozen and computes what the text says; the rulings fix inputs and readings before data.

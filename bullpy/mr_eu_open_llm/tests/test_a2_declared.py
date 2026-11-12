@@ -112,3 +112,25 @@ def test_prerun_check_catches_a_torn_line_and_a_foreign_model(tmp_path):
     wrong = root / "cells_qwen3vl_shard0.jsonl"
     wrong.write_text(json.dumps(good) + "\n")
     assert any("not named" in f for f in pre.check("gemma4", [wrong], [report], root)["failures"])
+
+
+a5pre = _load("a5_prerun_check")
+
+
+def test_a5_prerun_check_catches_a_missing_model_and_an_empty_route(tmp_path):
+    cells_dir = tmp_path / "results" / "stimulus_interventions"
+    cells_dir.mkdir(parents=True)
+    rows = [{"condition": "original", "status": "ok", "input_name": "single_face"},
+            {"condition": "original", "status": "failed", "input_name": "video_face"}]
+    (cells_dir / "cells_gemma4_shard0.jsonl").write_text("\n".join(json.dumps(r) for r in rows) + "\n")
+    (cells_dir / "run_gemma4_shard0.json").write_text(json.dumps({"n_shards": 1}))
+    repro = tmp_path / a5pre.REPRO
+    repro.mkdir(parents=True)
+    (repro / "rotation_summary.json").write_text(json.dumps({m: {"vision_dependent": True} for m in a5pre.MODELS}))
+    result = a5pre.check(cells_dir, tmp_path)
+    fails = " | ".join(result["failures"])
+    assert result["models"]["gemma4"]["ok_original_cells"] == {"single_face": 1, "video_face": 0}
+    assert "gemma4 video_face: no ok original cell" in fails
+    assert "qwen3vl: cells and reports are not one complete shard set" in fails
+    assert "A3 summary missing or not the pinned bytes" in fails
+    assert "human norms file missing" in fails
