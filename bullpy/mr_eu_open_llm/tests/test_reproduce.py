@@ -101,8 +101,10 @@ def test_inventory_covers_every_committed_output(rp):
 
 # ----------------------------------------------------------------------------- pending isolation
 
-PENDING_TOKENS = ("rotation_summary", "rotation_errored_trials", "a1_pull_manifest", "same_clip_family_model_",
-                  "stimulus_interventions_{m}", "results/a4/summary", "a5_analysis", "a6_stage", "a7_analysis")
+# A1 and the natural-clip model files left this list when they were locked (2026-11-09) and are now
+# hash-verified records; A6 left it when it was closed as a limit without running (2026-11-10).
+PENDING_TOKENS = ("stimulus_interventions_{m}", "results/a4/summary", "a5_analysis", "a7_analysis",
+                  "results/a9/summary")
 
 
 def test_pending_never_in_a_step(rp):

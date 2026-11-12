@@ -313,3 +313,11 @@ First-frame check (mean first-frame value over mean apex value, clips of the Ang
 | `ge_AU10` | .631 | .505 | .801 | **yes** |
 
 `first_frame_blocks_freeze`: **true**. Under the rule fixed before any model output (A6 "Fixed before freezing", item 6), A6 does not freeze. The human cue slopes are descriptive and gate nothing (in the file).
+
+## Rows added 2026-11-12 (paper slots that locked files already answer)
+
+| claim | value | status | script | output file | notes |
+|---|---|---|---|---|---|
+| Half-shared pattern power, model-frames route | .34 at 0.5x, .83 at 1x, .97 at 2x; AUC against prior-only .824, .974, .995 | verified | `research/scripts/same_clip_family_analysis.py` (route pattern run, DECISIONS 2026-11-04, "Pattern score on the model-frames route, result") | `research/reproduction/same_clip_family_route_pattern_within_category.json` `pattern[*].power_half_shared`, `auc_half_shared_vs_prior_only` (sha256 `2bed8ba2...`) | commit `fae0ebc`; .60 at 0.75x is in the 0.75x file (section "Pattern score, model-frames route"); results.md section 4 |
+| Literature table, eight papers coded | Target position controlled: yes 1, partly 1, no 2, not stated 1, does not arise 3. One option set across items: yes 3, partly 1, not stated 2, does not arise 2. Delivery to the model checked: not stated 8. Face dependence tested: no 5, partly 3. Rows with an inferred cell: 1 | verified | `research/scripts/registry_derived_counts.py` block 3 (codes as in the CSV; labels as in `make_figures.py` `LIT_CODES`) | `research/reproduction/literature_table.csv` (sha256 `48a7005d...`, commit `2422a6c`) | Figure 1e; results.md section 1. Codes record what our reading of each paper found, at the verification level in each row's `verification` cell; "not stated" means not stated in what we read |
+| Proposition 2 check, Figure 3b | At cue correlation .5, .9 and .99: output correlation .5, .9, .99; mean squared output difference 1.0, .2, .02; effect cosine (CEA) 0 at every value | verified | `research/scripts/cfa_identifiability.py` (`two_cue_case`) | `research/reproduction/cfa_identifiability.json` `checks.proposition_2` (sha256 `31bd4b40...`) | commit `3fddfc5`; quick, exact (section "Cue spectra"); results.md section 3 |

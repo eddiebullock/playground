@@ -73,7 +73,7 @@ Status keys: DONE, NOW (unblocked, in progress or next), WAIT (dependency named)
 | 1.3 | Read against the A1/A3 table in `PREREG_A3_DRAFT.md`. Record per model in RESULTS_REGISTRY and STATE. | G1 done |
 | 1.4 | Commit, push, PR with a true merge commit. | Merged |
 
-Status 2026-11-09 08:37: 1.1 IN PROGRESS. Both arrays running; 39982137_0 COMPLETED (7 h 44 m), 21 of 30 files, no failures. Last tasks expected about 01:00 on 10 Nov.
+Status 2026-11-09 17:45: DONE. All 30 files pulled unread, the frozen analysis run once (16:56 UTC), A1 Pass and A3 Pass on all three models (RESULTS_REGISTRY, "A1 rotated 6AFC"), merged.
 
 ### Phase 2. Runs that follow G1 (G2, G4, G5, G8)
 
@@ -87,6 +87,8 @@ Status 2026-11-09 08:37: 1.1 IN PROGRESS. Both arrays running; 39982137_0 COMPLE
 | 2.6 | A7 Stage 0 mechanics on clips outside the analysis set | 2.1 | Complete cut shown or not |
 
 **Status 2026-11-10 13:45.** 2.1 done (113 pins OK on the cluster, `phase2_hash_check.json`). 2.2 done (natural-clip RQ1 confirmatory on all three models, RESULTS_REGISTRY). 2.3 submitted (A2 Gemma 40468625, Qwen 40468626), waiting on priority; Gate B is computed from these cells. 2.4: timing smokes done for both models; scored runs submitted (Gemma 40589226, Qwen 40593824), waiting. 2.5 closed as a limit by A6's own first-frame rule (DECISIONS 2026-11-10). 2.6 done: Stage 0 on both models, exit complete, route arm admitted, token arm not; Stage 1 scope fixed before any A2 output (DECISIONS 2026-11-10). A9 frozen and rendered; scoring waits on the GPU queue after A4. A8 equivalence test 40399722 waiting.
+
+**Status 2026-11-12 15:10.** No change in the queue: 2.3 and 2.4 scored runs and the A8 equivalence test still pending on priority (fair share about 0, no start estimate). Before their data exist, independent code audits of A4, A2 and A5 are running (Part 3, parallel work).
 
 Watch storage at each step. The file count runs at about 996k of 1,048,576. Cells must be JSON lines, never one file per item.
 
@@ -111,6 +113,8 @@ Watch storage at each step. The file count runs at about 996k of 1,048,576. Cell
 | 4.5 | `reproduce.py` extended to every new output. Clean-checkout test passes. |
 | 4.6 | An independent review agent reads the full draft against the registry and the preregistrations; fixes applied. |
 | 4.7 | Submission pack complete. NEEDS_INPUT lists what the user must do: submission, authorship, Zenodo DOI, any email. |
+
+**Status 2026-11-12.** 4.1 under way: every Results and Methods slot that a locked output answers is filled, with registry rows. 4.2 under way: Figures 2 and 4 drawn from locked outputs and checked by eye; Figures 5 and 6 wait on A4 and A2.
 
 ### What only the user can do
 

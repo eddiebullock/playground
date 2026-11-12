@@ -18,6 +18,10 @@ Read-only: writes nothing, prints one JSON object. Each block names its input an
    clip loses frames when that exceeds the 8 cells the composite grid keeps. `duration_s` is
    stored to two decimals, so a clip within .01 s of 9 s (the 8-to-9 frame boundary) could
    round across it; those are counted separately.
+3. Literature table (Results, "Literature check"; Figure 1e), from
+   `research/reproduction/literature_table.csv`: the number of papers, and per coded column
+   (target position, option sets, delivery check, face-dependence test) how many rows carry each
+   code, plus how many rows have any cell marked as inferred. The codes are the table's own.
 
 Usage (from bullpy/mr_eu_open_llm):
     PYTHONPATH=.:src python research/scripts/registry_derived_counts.py
@@ -27,7 +31,7 @@ from __future__ import annotations
 import csv
 import json
 import math
-from collections import defaultdict
+from collections import Counter, defaultdict
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -83,8 +87,22 @@ def frame_loss() -> dict:
             "clips_within_0p01_s_of_9_s": near}
 
 
+LITERATURE_CODED = ("target_position_code", "option_sets_code", "delivery_check_code", "face_dependence_code")
+
+
+def literature_table() -> dict:
+    with (REPRO / "literature_table.csv").open(encoding="utf-8", newline="") as fh:
+        rows = list(csv.DictReader(fh))
+    out: dict = {"papers": len(rows)}
+    for col in LITERATURE_CODED:
+        out[col] = dict(sorted(Counter(r[col] for r in rows).items()))
+    out["rows_with_inferred_cells"] = sum(bool(r["inferred_cells"].strip()) for r in rows)
+    return out
+
+
 def main() -> int:
-    print(json.dumps({"v1_pilot": v1_pilot(), "grid_frame_loss": frame_loss()}, indent=2))
+    print(json.dumps({"v1_pilot": v1_pilot(), "grid_frame_loss": frame_loss(),
+                      "literature_table": literature_table()}, indent=2))
     return 0
 
 
