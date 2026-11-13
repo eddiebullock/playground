@@ -2,9 +2,9 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-11-13 09:35 Europe/London
+**Updated:** 2026-11-13 09:50 Europe/London
 
-## Hand-off, 2026-11-13 (written 05:35, last refreshed 09:35)
+## Hand-off, 2026-11-13 (written 05:35, last refreshed 09:50)
 
 **Done this morning on your instructions (about 09:15):**
 - **Item 10: your notes file is off the public branch.**
@@ -37,11 +37,11 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
   - A9 smokes: 40843619, 40843620
   - A9 scored runs: 40863756, 40863757
 - Why they wait:
-  - The free tier's `gpu2` QoS is capped at 32 GPUs for all SL3 users together; 28 were in use at 09:08.
-  - Our fair share is 0, so our priority grows only with age, about 1.5 a hour. Our oldest jobs were at 204 at 09:08.
-  - 1,261 `gpu2` tasks with higher priority were waiting at 08:46, about the same as at 05:22.
+  - The free tier's `gpu2` QoS is capped at 32 GPUs for all SL3 users together; 28 were in use at 09:47.
+  - Our fair share is 0, so our priority grows only with age, about 1.5 a hour. Our oldest jobs were at 205 at 09:47.
+  - 1,270 `gpu2` tasks with higher priority were waiting at 09:47.
   - Our past starts all came from backfill.
-  - The `gpu2` jobs running at 06:20 had waited 26 to 37 h. By the age Slurm counts, ours had waited about 70 h at 08:46.
+  - The `gpu2` jobs running at 06:20 had waited 26 to 37 h. By the age Slurm counts, ours had waited about 71 h at 09:47.
   - Fair share is per account. Since 2026-10-16 your user has used 891 GPU hours on this account: CASCADE (`cas_*`) 709, this project 168, `hel-*` 14.
   - So this project's jobs rank behind those of accounts with less recent use. For your information only: I have not touched the other projects' jobs.
 - Nothing more can be done for free. The A2 and A4 time limits stay as they are, because a TIMEOUT would cost days in the queue.
@@ -73,13 +73,15 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
   - Full test suite at `d6dcb93`: 1,096 passed, 26 skipped, 0 failed (09:28). Clean-checkout rerun of the steps changed by the recode at `d6dcb93`: 6 rebuilt and matched, 1 verified by hash, 0 failed.
   - Clean-checkout reproduction at `f4306cb`: 43 rebuilt and matched, 112 verified by hash, 0 failed.
 
-**FYI:** CSD3 `/home` is at 49.8 of 52.4 GB. This project writes nothing there; its jobs write to RDS. The space is in other folders, such as `LEAP3mri`. RDS: 1,067.4 GB of 1,099.5; 991,082 of 1,048,576 files.
+**FYI:** CSD3 `/home` is at 49.8 of 52.4 GB. This project writes nothing there; its jobs write to RDS. The space is in other folders, such as `LEAP3mri`. RDS: 1,067.4 GB of 1,099.5; 991,094 of 1,048,576 files.
 
 **When jobs finish**, the heartbeat follows ROADMAP Part 3: pull unread, pre-run check, one frozen analysis with its run note, then registry rows and figures.
 
 ## Current phase
 
 **Phase 2 runs queued; Phase 3 analyses wait on them.** A1, A3 and natural-clip RQ1 are locked (2026-11-09). Every amendment is frozen or closed: A2, A4, A5, A7, A8 and A9 frozen, A6 closed as a limit. The A2, A4, A7 Stage 1, A8 and A9 GPU jobs are pending on priority. History: the prompt confound found 2026-11-04 withdrew the earlier accuracy and probe results (DECISIONS); Branch B stays as a record only.
+
+**2026-11-13 09:50:** Queue unchanged at 09:47: nothing started or failed. Oldest jobs at priority 205; `gpu2` had 28 of 32 GPUs in use; 1,270 `gpu2` tasks rank above ours. RDS 1,067.4 GB, 991,094 files.
 
 **2026-11-13 09:35:** Ethics statement written as recommended, marked provisional, on your instruction (Methods, reporting summary, NEEDS_INPUT 9). Checks at `d6dcb93`: full suite 1,096 passed, 26 skipped, 0 failed. Clean-checkout rerun of the recode's steps: Figures 1 and 3, `SOURCES.md`, the derived counts and the table's hash all matched. `p1-pipeline` merged into `main` as PR #114, true merge commit `ee3913a` (09:33), so today's commits count on your GitHub contribution graph, which counts only the default branch. From now on I merge into `main` after each coherent step, so each day's work shows the same day.
 
