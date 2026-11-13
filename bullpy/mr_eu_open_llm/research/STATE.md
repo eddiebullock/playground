@@ -2,9 +2,9 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-11-13 07:50 Europe/London
+**Updated:** 2026-11-13 08:50 Europe/London
 
-## Morning hand-off, 2026-11-13 (written 05:35, last refreshed 07:50)
+## Morning hand-off, 2026-11-13 (written 05:35, last refreshed 08:50)
 
 **Only you can do these** (details in `research/NEEDS_INPUT.md`):
 1. **Item 10, decision needed: your notes file is on the public branch.** On 2026-11-12 at about 22:58 my `git commit -a` took your uncommitted `notes/notes.txt` into commit `0bc8a57` on the public `p1-pipeline` branch. Your local file is unchanged. Say "drop the notes commit" and allow the force-push, and I will rebuild the branch without that file (plan in item 10). Until then there is no PR to `main`.
@@ -27,11 +27,11 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
   - A9 smokes: 40843619, 40843620
   - A9 scored runs: 40863756, 40863757
 - Why they wait:
-  - The free tier's `gpu2` QoS is capped at 32 GPUs for all SL3 users together; 28 were in use at 07:46.
-  - Our fair share is 0, so our priority grows only with age, about 1.5 a hour. Our oldest jobs were at 202 at 07:46.
-  - About 1,260 `gpu2` tasks with higher priority were waiting at 05:22.
+  - The free tier's `gpu2` QoS is capped at 32 GPUs for all SL3 users together; all 32 were in use at 08:46, and the first of those jobs is due to end by about 10:44.
+  - Our fair share is 0, so our priority grows only with age, about 1.5 a hour. Our oldest jobs were at 204 at 08:46.
+  - 1,261 `gpu2` tasks with higher priority were waiting at 08:46, about the same as at 05:22.
   - Our past starts all came from backfill.
-  - The `gpu2` jobs running at 06:20 had waited 26 to 37 h. Ours have waited about 68 h.
+  - The `gpu2` jobs running at 06:20 had waited 26 to 37 h. By the age Slurm counts, ours had waited about 70 h at 08:46.
   - Fair share is per account. Since 2026-10-16 your user has used 891 GPU hours on this account: CASCADE (`cas_*`) 709, this project 168, `hel-*` 14.
   - So this project's jobs rank behind those of accounts with less recent use. For your information only: I have not touched the other projects' jobs.
 - Nothing more can be done for free. The A2 and A4 time limits stay as they are, because a TIMEOUT would cost days in the queue.
@@ -70,6 +70,8 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
 ## Current phase
 
 **Phase 2 runs queued; Phase 3 analyses wait on them.** A1, A3 and natural-clip RQ1 are locked (2026-11-09). Every amendment is frozen or closed: A2, A4, A5, A7, A8 and A9 frozen, A6 closed as a limit. The A2, A4, A7 Stage 1, A8 and A9 GPU jobs are pending on priority. History: the prompt confound found 2026-11-04 withdrew the earlier accuracy and probe results (DECISIONS); Branch B stays as a record only.
+
+**2026-11-13 08:50:** Queue unchanged at 08:46: nothing started or failed. Oldest jobs at priority 204 (age 104 of 1,000; age grows 1,000 over 28 days, about 1.5 a hour; fair share 0). `gpu2` had all 32 GPUs in use; the first of those jobs is due to end by about 10:44, and 1,261 `gpu2` tasks rank above ours. RDS 1,067.4 GB, 991,082 files.
 
 **2026-11-13 07:50:** Queue unchanged at 07:46: nothing started or failed. Oldest jobs at priority 202; `gpu2` had 28 of 32 GPUs in use; RDS 1,067.4 GB, 991,082 files. The equivalence job's copy of the A8 sharding code (`~/rds/hpc-work/a8_check`) is byte-identical to the local files to be pinned (`a8_rotation_shard.py`, `a8_design.py`, `a8_preflight.py`, `scripts/evaluate.py`), so its result will count for the pinned code.
 
