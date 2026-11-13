@@ -36,6 +36,8 @@ The main text is set to run about 1,700 to 2,700 words over. None of the cuts be
 
 *Applied 2026-11-13, cut 4 in part (it depends on no pending result).* The Introduction's paper-by-paper list gave way to a pointer to Figure 1e, with the eight papers cited together. The search-coverage sentences moved to Supplementary Methods, Section S2, which already held the literature check, rather than to Methods, which is itself long. The Introduction is now 1,470 words, against 1,606; the last 69 words to the plan's 1,401 are left for the final pass, because they would mean rewording sentences the citation check and the draft review passed.
 
+*Applied 2026-11-13, cut 5 (it depends on no pending result).* The benchmark-audit recommendation is now 189 words, against 341. The audit's detail (the two partial cases, the source of the majority-class gap, and why these accuracies are lower bounds) moved word for word to Supplementary Methods, Section S2. The Discussion keeps what DECISIONS 2026-11-09 requires there: the recommendation, its exploratory status, and that no field-level claim is made. It stops short of the plan's 120 words because the rest would cut those caveats.
+
 Together these save about 1,850 to 2,350 words; the rest comes from writing each chosen branch to its budget at steps 4.1 and 4.3. Methods (7,402 words) and the figure legends (1,017) fall outside the limit, but check both against the journal's formatting guide before submission.
 
 ## Abstract template (150 words at most)
