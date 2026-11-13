@@ -263,7 +263,7 @@ Gate B is B1 to B5 (`research/PREREG_A2_DRAFT.md:109-117`). A model and route th
 
 **Locked text (Stage 0, 10 November 2026).** On the 24 calibration clips, on `single_face` with the blind readout, the exit cut, which removes the whole vision path, was complete on both models: in every check the worst change from the image-free reference was 0.0 nats, against a limit of 0.001 [REG: "A7 Stage 0, Gemma 4"; "A7 Stage 0, Qwen3-VL"]. Its two blocks were both live (ratios .230 and .885 on Gemma 4, .802 and .273 on Qwen3-VL, against a floor of .10) and together exhaust it, but a block is not a cut. No site inside the language model was shown complete, so RQ3 is not testable beyond the interface on either model. The region test, which asks whether the tokens at a cue's location carry its effect, failed on both. On Gemma 4 the effect leaked past those tokens (leak .139 and .088 at buffers 0 and 1). On Qwen3-VL the token map located the cue on .760 of 96 trials, below its rule, so no leak was computed. Cue-level mediation is therefore not testable by a token cut on either model. The route arm may run in Stage 1 only as a secondary split of the complete exit cut, and is never reported as an RQ3 result (DECISIONS 2026-11-10).
 
-**Figure.** None in the main text. Stage 0 table in the Supplement, from `research/reproduction/a7_stage0_gemma4.json` and `a7_stage0_qwen3vl.json`.
+**Figure.** None in the main text. Stage 0 table in the Supplement (`research/paper/v2/supplementary_table_a7_stage0.md`, built by `research/scripts/make_stage0_table.py` from `research/reproduction/a7_stage0_gemma4.json` and `a7_stage0_qwen3vl.json`).
 
 ## 10. RQ4, and RQ5 as future work
 
