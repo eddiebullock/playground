@@ -277,6 +277,9 @@ STEPS: List[Step] = [
     # ---------------------------------------------------------------- paper figures, last: they read the files above
     Step("table1", _py("research/scripts/make_table1.py"), [Out("research/paper/v2/table1.md")], minutes=0.1,
          note="Table 1 from locked outputs only; A2, A4 and A9 cells read pending until their run notes exist"),
+    Step("table_a7_stage0", _py("research/scripts/make_stage0_table.py"),
+         [Out("research/paper/v2/supplementary_table_a7_stage0.md")], minutes=0.1,
+         note="Supplementary Stage 0 table from the locked a7_stage0 files"),
     Step("paper_figures_1_3", _py("research/scripts/make_figures.py", "--all"),
          [Out("research/paper/v2/figures/fig1.png"), Out("research/paper/v2/figures/fig3.png"),
           Out("research/paper/v2/figures/fig1.pdf",
