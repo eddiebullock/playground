@@ -2,9 +2,9 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-11-13 09:50 Europe/London
+**Updated:** 2026-11-13 11:20 Europe/London
 
-## Hand-off, 2026-11-13 (written 05:35, last refreshed 09:50)
+## Hand-off, 2026-11-13 (written 05:35, last refreshed 11:20)
 
 **Done this morning on your instructions (about 09:15):**
 - **Item 10: your notes file is off the public branch.**
@@ -36,14 +36,13 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
   - A7 Stage 1: 40795186, 40795187
   - A9 smokes: 40843619, 40843620
   - A9 scored runs: 40863756, 40863757
-- Why they wait:
-  - The free tier's `gpu2` QoS is capped at 32 GPUs for all SL3 users together; 28 were in use at 09:47.
-  - Our fair share is 0, so our priority grows only with age, about 1.5 a hour. Our oldest jobs were at 205 at 09:47.
-  - 1,270 `gpu2` tasks with higher priority were waiting at 09:47.
-  - Our past starts all came from backfill.
-  - The `gpu2` jobs running at 06:20 had waited 26 to 37 h. By the age Slurm counts, ours had waited about 71 h at 09:47.
-  - Fair share is per account. Since 2026-10-16 your user has used 891 GPU hours on this account: CASCADE (`cas_*`) 709, this project 168, `hel-*` 14.
-  - So this project's jobs rank behind those of accounts with less recent use. For your information only: I have not touched the other projects' jobs.
+- Why they wait (corrected at 11:20; I had misread the free-tier limit overnight, DECISIONS 2026-11-13):
+  - The A100 partition is full, and every tier shares it. At 11:16, 46 of its 74 nodes were busy, 17 were in maintenance, 1 was down and 9 were powered down with no recent use. Even interactive jobs at priority 10,000 were waiting.
+  - The free tier's 32-GPU limit is per user, not shared by all SL3 users as I wrote overnight. It is not what holds us back.
+  - 381 pending jobs ranked above our oldest (2,405 tasks counting each array task). 233 are paid-tier: their tier adds 500 points to priority, against our 100, so a newly submitted paid job ranks above ours until ours has aged about 11 days.
+  - Our priority grows only with age, about 1.5 a hour; our oldest jobs were at 208 at 11:16, about 73 h of counted age.
+  - Fair share adds little to anyone here: at most 48 points among the jobs above ours. Ours is 0 because your user has used 891 GPU hours on this account since 2026-10-16 (CASCADE `cas_*` 709, this project 168, `hel-*` 14). I have not touched the other projects' jobs.
+  - Our past starts all came from backfill; a 12 h task submitted on 2026-11-04 waited about 4.4 days.
 - Nothing more can be done for free. The A2 and A4 time limits stay as they are, because a TIMEOUT would cost days in the queue.
 - **Risk:** every GPU node is reserved from 2026-12-07 07:00 to 2027-01-10 (`Dec2026-shutdown`), and A8 can start only after A2 and A4 finish.
   - A8's own dated-note rule defers whatever cannot finish, A4 first.
@@ -80,6 +79,8 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
 ## Current phase
 
 **Phase 2 runs queued; Phase 3 analyses wait on them.** A1, A3 and natural-clip RQ1 are locked (2026-11-09). Every amendment is frozen or closed: A2, A4, A5, A7, A8 and A9 frozen, A6 closed as a limit. The A2, A4, A7 Stage 1, A8 and A9 GPU jobs are pending on priority. History: the prompt confound found 2026-11-04 withdrew the earlier accuracy and probe results (DECISIONS); Branch B stays as a record only.
+
+**2026-11-13 11:20:** Queue unchanged at 11:16: nothing started or failed. Oldest jobs at priority 208. Correction: the 32-GPU limit of `gpu2` is per user (`MaxTRESPU`), not shared by all SL3 users as written from 03:15 on; at 11:12 `gpu2` had 36 GPUs in use, 32 of them one user's. Our jobs wait because the A100 partition is full (46 of 74 nodes busy, 17 in maintenance, 1 down, 9 powered down) and 381 jobs rank above ours, 233 of them paid-tier. No decision changes. Corrected in the hand-off and the ROADMAP risk row; a new DECISIONS entry, with a pointer from the A9 entry; a dated note in the A9 prereg, outside its hashed block. Entries below keep their "of 32" counts: the GPUs in use were counted right, only the limit was misread. RDS 1,067.5 GB, 991,118 files.
 
 **2026-11-13 09:50:** Queue unchanged at 09:47: nothing started or failed. Oldest jobs at priority 205; `gpu2` had 28 of 32 GPUs in use; 1,270 `gpu2` tasks rank above ours. RDS 1,067.4 GB, 991,094 files.
 
