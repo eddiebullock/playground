@@ -2,9 +2,9 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-11-13 20:00 Europe/London
+**Updated:** 2026-11-13 19:40 Europe/London
 
-## Hand-off, 2026-11-13 (written 05:35, last refreshed 20:00)
+## Hand-off, 2026-11-13 (written 05:35, last refreshed 19:40)
 
 **New at 17:50: you allowed the `intr` QoS for this project** (DECISIONS 2026-11-13).
 - Its limits, read with each field named: jobs of at most 1 h, and one job per user at a time, pending or running, of up to 3 nodes. It adds 10,000 priority points, against 100 for `gpu2`.
@@ -130,7 +130,7 @@ With cuts 4 and 5, the main text is about 490 words shorter. What remains waits 
 - So each shard takes two slices, the second about half-length. A4 in all is about 12 slices, done around 03:30 to 04:00 if starts stay this quick.
 - Queue otherwise unchanged; no failures; RDS 1,067.5 GB, 991,136 files.
 
-**2026-11-13 20:00:** A2 prepared to follow A4 on `intr`, before any A2 cell exists (DECISIONS 2026-11-13, A2 slices; decisions table row 86; commit `e601019`).
+**2026-11-13 19:36:** A2 prepared to follow A4 on `intr`, before any A2 cell exists (DECISIONS 2026-11-13, A2 slices; decisions table row 86; commit `e601019`).
 - The wrapper passed 23 stub checks, including the A2-2 repair. It is on the cluster and matches the commit (sha256 `f3503d8d...`).
 - The planner's dry run shows no A2 cells yet, and would first slot Gemma shards 0 to 2 and Qwen shard 0.
 - The sequencer is armed.
