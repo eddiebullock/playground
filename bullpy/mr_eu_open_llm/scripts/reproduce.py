@@ -275,6 +275,8 @@ STEPS: List[Step] = [
          stdout="results/reproduce/registry_derived_counts.json",
          note="from the committed a4_v1_pilot.csv, stimulus_features.json and literature_table.csv"),
     # ---------------------------------------------------------------- paper figures, last: they read the files above
+    Step("table1", _py("research/scripts/make_table1.py"), [Out("research/paper/v2/table1.md")], minutes=0.1,
+         note="Table 1 from locked outputs only; A2, A4 and A9 cells read pending until their run notes exist"),
     Step("paper_figures_1_3", _py("research/scripts/make_figures.py", "--all"),
          [Out("research/paper/v2/figures/fig1.png"), Out("research/paper/v2/figures/fig3.png"),
           Out("research/paper/v2/figures/fig1.pdf",
@@ -757,13 +759,12 @@ PENDING: List[Tuple[str, Tuple[str, ...], str]] = [
      "scripts/analyse_stimulus_interventions.py; needs cluster cells"),
     ("A4 summary (Figure 5)", ("results/a4/summary.json",), "python -m scripts.a4_analyse; needs cluster cells"),
     ("A5 analysis", ("results/a5/a5_analysis.json",), "python -m scripts.a5_analyse (frozen, tag a5-freeze); needs A2 cells"),
-    ("A7 Stage 1 route arm", ("results/a7/a7_analysis.json",),
+    ("A7 Stage 1 route arm", (R + "a7_analysis.json",),
      "python -m scripts.a7_analyse (frozen, tag a7-freeze); runs only where Gate B and the sham pass"),
     ("A9 summary", ("results/a9/summary.json",), "python -m scripts.a9_analyse (frozen, tag a9-freeze); needs cluster cells"),
     ("Figures 5, 6",
      tuple(f"research/paper/v2/figures/fig{n}.{e}" for n in (5, 6) for e in ("pdf", "png")),
      "research/scripts/make_figures.py --fig N --real, which refuses until its LOCKED inputs exist"),
-    ("Table 1 (profile per model)", (), "not yet written; built from the A1, A2 and A4 outputs above"),
 ]
 
 
