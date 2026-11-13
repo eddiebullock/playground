@@ -122,6 +122,15 @@ The detector check passed thinly: 113 of 144 covered pairs rose, .785 against .7
 - blind readout, secondary, only if its gate passes: [PENDING: `models.<model>.blind`] (raw CEA)
 - Molmo2, descriptive if run at all (no scored run is planned): [PENDING]; its written headline is not quoted
 
+**Drafted text per outcome** (written 2026-11-13, before any A2, A4, A5 or A7 Stage 1 output existed; values are slots filled from `research/scripts/registry_tables.py`, and the branch that matches is kept at step 4.1):
+
+- *Each dataset.* For [model] on [dataset], [n] main stimuli entered with a complete rotation set ([share] lost, against a limit of 5%). The rendered action units moved its responses (signal *P* = [p]). Residual CEA was [v] (95% CI [lo] to [hi]; *R_S* = [r]), with alignment Holm *P* = [p].
+  - Aligned: so [model] is aligned with the human cue effects on [dataset]. [Its interval reaches / Its interval does not reach] the agreement between the two human groups ([.780 or .732]), so it [is / is not] human-level by that descriptive standard.
+  - Not aligned: its upper bound, corrected for reliability ([v]), is below .30, so it is not aligned on these renders.
+  - Inconclusive: no decision, because [no signal / gate [name] failed / the interval spans the floor / both conditions held (conflicting interval; frozen value [class])].
+- *Headline.* With WC and EA read together, [model]'s headline is [class] for basic labels and [class] for conversational states. The two sets share most configurations within each culture (Methods), so they are separate claims but not independent tests.
+- *Secondary.* Raw CEA was [v] ([lo] to [hi]). [Sensitivity that changes the reading, if any; otherwise: no sensitivity changed a decision.]
+
 **Figure.** Figure 5: residual CEA per model and dataset with its between-group reference, raw CEA as secondary. [PENDING: Figure 5 function (ROADMAP 0.7).]
 
 ## 6. Do behaviour and cue effects disagree?
@@ -135,6 +144,12 @@ The detector check passed thinly: 113 of 144 covered pairs rose, .785 against .7
 - modal agreement and kappa: [PENDING: keys as written by `behaviour_metrics`]
 
 **Writing rule.** Agreement is not a failure of the theory, nor proof of use (outline.md, section 6).
+
+**Drafted text per outcome** (written 2026-11-13, before any A2, A4, A5 or A7 Stage 1 output existed; values are slots filled from `research/scripts/registry_tables.py`, and the branch that matches is kept at step 4.1):
+
+- On [dataset], [model]'s responses correlated r = [v] with the mean human response once option means were removed, and its modal answer agreed with the human mode on [v] of stimuli (kappa [v]), beside residual CEA of [v].
+  - They disagree: behaviour and cue effects point different ways on the same stimuli, which is the case the identifiability result allows ([which is higher]).
+  - They agree: on these models and stimuli the two measures do not come apart; the proposition remains a limit of logic, not a forecast.
 
 **Figure.** Part of Figure 5.
 
@@ -216,6 +231,13 @@ Gate B is B1 to B5 (`research/PREREG_A2_DRAFT.md:109-117`). A model and route th
 - shuffle against `static_apex`, descriptive: [PENDING: `a2_declared_extras.py`, `shuffles_overall`, beside `descriptive_changes.static_apex`]
 - sensitivities (without smoke items, canonical words, clips at 8 tokens or more, human modal label): [PENDING]
 
+**Drafted text per outcome** (written 2026-11-13, before any A2, A4, A5 or A7 Stage 1 output existed; values are slots filled from `research/scripts/registry_tables.py`, and the branch that matches is kept at step 4.1):
+
+- *Gates.* On [route], Gate B [passed / failed on B[k]] for [model]; RQ0, the vision gates, delivery and the sham [passed / name the failure]. Where Gate B failed, no RQ2 claim is made on that route.
+- *Classes.* Of the 16 confirmatory contrasts on [route], [n] matched the stated human prediction, [n] opposed it, [n] met every condition of the null rule and [n] were inconclusive, after the fill rule, which turned [n] frozen Opposes into Inconclusive. Of the Matches, [n] also hold at step-down *P* < .01, and of the Opposes, [n].
+- *Capped contrasts.* The [n] contrasts that cannot reach Null by design gave 90% equivalence intervals of [range]; they are reported as intervals, not as nulls.
+- *Scope.* Every class is on basic labels in this stimulus set (BASIC ONLY) and concerns the model's option-free judgement, not how people would respond to these edits.
+
 **Figure.** Figure 6: effect and decision class per prediction, by model and route. [PENDING: Figure 6 function (ROADMAP 0.7).]
 
 ## 8. What each model has shown
@@ -263,6 +285,10 @@ Gate B is B1 to B5 (`research/PREREG_A2_DRAFT.md:109-117`). A model and route th
 
 **Locked text (Stage 0, 10 November 2026).** On the 24 calibration clips, on `single_face` with the blind readout, the exit cut, which removes the whole vision path, was complete on both models: in every check the worst change from the image-free reference was 0.0 nats, against a limit of 0.001 [REG: "A7 Stage 0, Gemma 4"; "A7 Stage 0, Qwen3-VL"]. Its two blocks were both live (ratios .230 and .885 on Gemma 4, .802 and .273 on Qwen3-VL, against a floor of .10) and together exhaust it, but a block is not a cut. No site inside the language model was shown complete, so RQ3 is not testable beyond the interface on either model. The region test, which asks whether the tokens at a cue's location carry its effect, failed on both. On Gemma 4 the effect leaked past those tokens (leak .139 and .088 at buffers 0 and 1). On Qwen3-VL the token map located the cue on .760 of 96 trials, below its rule, so no leak was computed. Cue-level mediation is therefore not testable by a token cut on either model. The route arm may run in Stage 1 only as a secondary split of the complete exit cut, and is never reported as an RQ3 result (DECISIONS 2026-11-10).
 
+**Drafted text per outcome** (written 2026-11-13, before any A2, A4, A5 or A7 Stage 1 output existed; values are slots filled from `research/scripts/registry_tables.py`, and the branch that matches is kept at step 4.1):
+
+- *Route arm, per model.* [Not tested: a precondition failed ([name]), applied by code as recorded before any A2 output existed. / No effect to carry: the joint eyes-and-mouth edit did not move the option-free judgement beyond the margin (TE [v], 90% CI [lo] to [hi]); recovery reach at the null was .62 to .65. / Carried by A (or B, or both blocks, or opposed blocks): phi_A [v] ([lo] to [hi]), phi_B [v] ([lo] to [hi]); the interaction, [rider], is descriptive.] This is a decomposition of the complete exit cut on one edit, has no human reading, and leaves RQ3 not testable beyond the interface.
+
 **Figure.** None in the main text. Stage 0 table in the Supplement (`research/paper/v2/supplementary_table_a7_stage0.md`, built by `research/scripts/make_stage0_table.py` from `research/reproduction/a7_stage0_gemma4.json` and `a7_stage0_qwen3vl.json`).
 
 ## 10. RQ4, and RQ5 as future work
@@ -279,6 +305,10 @@ Gate B is B1 to B5 (`research/PREREG_A2_DRAFT.md:109-117`). A model and route th
 (`research/PREREG_A5_DRAFT.md:226-231`.) Balance classes and verdict names are descriptive, not error-controlled under skewed portrayal gain (`:574`).
 
 Slots, per model and route, from the A5 output (`scripts/a5_analyse.py --output <path>`): [PENDING: `confirmatory` block, evidence class, with the row's `flags`, and the row's `reasons` where the class is null], [PENDING: `descriptive` block, balance, Phi with 90% CI, `family_gain_log_sd`; word share from the row's top-level `word_share`]. Read as ruled before data (PREREG_A5 deviation of 2026-11-12): Absent with E*'s 95% interval; survival beside every Shown cell; the chain as point means; lexicon mass from A2's `gate_b` where A5 has none. The pre-run check (`research/scripts/a5_prerun_check.py`) must pass first.
+
+**Drafted text per outcome** (written 2026-11-13, before any A2, A4, A5 or A7 Stage 1 output existed; values are slots filled from `research/scripts/registry_tables.py`, and the branch that matches is kept at step 4.1):
+
+- On [route], [model]'s evidence class was [Shown / Unmapped / Absent / Unresolved] (E* [v], 95% CI [lo] to [hi], step-down *P* = [p]; [reason code where null]). Balance ([class]), Phi ([v], 90% CI [lo] to [hi]) and word share ([v]) are descriptive. [Absent: E*'s 95% interval is [lo] to [hi]; where it excludes 0, the text says "below the margin" (PREREG_A5 deviation of 2026-11-12).]
 
 **RQ5 (A6), closed as a limit.** A6 was never frozen. Its own pre-freeze rule, fixed before any model output, required the first frame of each clip to carry at most half of the apex value of AU9 and AU10 on every detector. ME-GraphAU's AU10 gave .801 [REG: "A6 pre-freeze cluster checks"], so A6 did not freeze or run (DECISIONS 2026-11-10), and RQ5 is named as future work in the Discussion. No CREMA-D model output exists. The human target sample, 819 clips and 91 actors [REG: A6 human target, "Sample"], is a design fact.
 
