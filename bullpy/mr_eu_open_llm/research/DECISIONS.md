@@ -682,3 +682,63 @@ The 03:15 queue check read `sacctmgr show qos gpu2` as a limit of 32 GPUs for al
 - Fair share counts for little: 128 of the 381 jobs had any fair-share points, at most 48 (about 32 hours of age); ours is 0.
 - No decision changes. Submitting early still gains queue age, the only thing that raises our priority, and every start so far came by backfill.
 - Corrected in place: the ROADMAP risk row and STATE's hand-off. The A9 prereg has its own dated correction note, and the A9 entry above points here. Older STATE entries keep their "of 32" counts: the counts of GPUs in use were right, only the limit set against them was misread.
+
+## 2026-11-13: The `intr` QoS may now carry this project's jobs (user's instruction; scheduling only, no design change)
+
+At about 17:50 the user wrote: "i believe ther is nothing else in the HPC queue using intr nodes therefore you can now use them for this project to get priority compute access". Until then `intr` was kept for another project's agent (ROADMAP Part 3, "Constraints new tonight").
+- `sacctmgr show qos intr`, read at 17:52 with each field named:
+  - Priority 100000, which adds 10,000 points against 100 for `gpu2`.
+  - MaxWall 1 h.
+  - MaxTRESPU node=3.
+  - MaxSubmitPU 1: one job per user, pending or running, of up to 3 nodes. An array counts once per task.
+  - Our association allows only `gpu2` and `intr`, on `ampere`.
+- So only jobs of an hour or less can use it, one at a time. Of our queued jobs, as submitted, that is the two A9 timing smokes (30 min) and the four A7 Stage 1 tasks (59 min each). A2 (12 h), A4 (6 h), the A9 scored runs (6 h) and the A8 equivalence job (4 h) cannot.
+- `intr` is not an empty lane. At 17:58, 11 other users' `intr` jobs were pending on `ampere`, the oldest since 2026-11-11 20:32. This user's own `intr` jobs started within 1 to 8 minutes: `hel-*` on 2026-11-12 (1 GPU) and `cas_*` today (4 GPUs).
+- A9 smoke 40843619 moved to `intr` at 17:55 by `scontrol update` (same job, script, inputs and 30-min limit). The other short jobs follow one at a time, each when the job before it ends.
+- Same partition, hardware, code, inputs and time limits: the QoS changes only when a job starts. No design, threshold or analysis changes. `cas_*` and `hel-*` jobs stay untouched.
+
+## 2026-11-13: A4's scored shards may run in one-hour slices under `intr` (scheduling only, before any A4 cell exists)
+
+- **Why.** A4's 24 scored shards (Gemma 40589226, Qwen 40593824; 6 h limit, about 2 h of work each by the timing smokes) wait behind 400 jobs on `gpu2`. `intr` takes jobs of at most 1 h, one per user at a time, of up to 3 nodes (entry above). Since 2026-11-12 13:26 no 1-GPU `intr` job on `ampere` has started, ours included: A9 smoke 40843619 has been pending since 17:55. Single-node 4-GPU `intr` jobs did start within minutes: `cas_*` at 09:31 and 11:48, and another user's at 17:50.
+- **How.** `slurm_jobs/study3_intr_slices.sh` runs up to four A4 shards on one node.
+  - Each shard runs as its own job step on one GPU, through the unchanged `slurm_jobs/study3_a4.sh` (sha256 `dd9a360b...`, pinned), with the queued arrays' settings: MODEL, N_SHARDS=12, A4_FROZEN=1, and the shard as SLURM_ARRAY_TASK_ID.
+  - `timeout` stops each step at 52 minutes.
+  - `scripts/a4_run.py` already resumes: it drops a partial last line, skips cells already written and appends to `results/a4/cells_<model>_<shard>.jsonl`.
+  - So a shard takes about three slices. Its file holds what one uninterrupted run would write, in the same cell order, each cell scored on its own.
+- **Safeguards.**
+  - The `gpu2` array task for a shard is held before any slice runs that shard, so two runs never write one file. It is cancelled once the shard is complete.
+  - Completeness is decided only by the frozen pre-run check (exact planned cells per shard). A slice job that ends COMPLETED says nothing about its shards.
+  - Nothing in the cells is read before the pre-run check and the frozen analysis. Between slices only line counts are checked.
+  - The pull (`post_phase3.py pull a4`) lists the slice jobs, and waives the cancelled `gpu2` tasks with this entry as the reason.
+- **What stays the same.** No design, code, threshold or analysis change. Hardware (A100 on `ampere`), weights, precision and inputs are as for the `gpu2` runs.
+- **Testing.** The wrapper was tested with stubs on the cluster login node. All 17 checks passed: the budget stop, a normal end, a failure, the settings passed through, and bad or duplicate slots rejected.
+- **The single `intr` slot.** A9 smoke 40843619 returns to `gpu2`, with its submit time and age unchanged, to free the slot for the first slice.
+- **Update 18:30, first slice running.**
+  - Slice 40920485 started at 18:22 on one node, about 5 minutes after submission. Loading the model took about 6 minutes, with four processes loading at once.
+  - Between slices, the check now reads mechanics only: line counts, the count of cells whose status is not "ok", partial lines and the `seconds` field (`research/scripts/a4_intr_next_slice.sh`, dry run). No score field is read.
+  - At 18:29 all four shard files held only "ok" cells, at about 0.7 s per cell. So a shard takes two slices, not three: about 12 slices for A4 in all.
+
+## 2026-11-13: A2's full-run shards may run in one-hour slices under `intr` after A4 (scheduling only, before any A2 cell exists)
+
+- **Why.** The reason is A4's (entry above). A2's six full-run shards (Gemma 40468625, Qwen 40468626; 12 h limit, 4 to 6 h of work each) wait behind about 400 jobs on `gpu2`. Single-node `intr` slices start within minutes: A4's first two started 5 minutes and 1 minute after submission. `intr` takes one job at a time, so A2 starts only when every A4 shard is complete.
+- **How.**
+  - `slurm_jobs/study3_intr_slices_a2.sh` runs up to four A2 shards on one node. Each runs as its own job step on one GPU, through the unchanged `slurm_jobs/study3_stimulus_interventions.sh`.
+  - Each step uses the full run's settings: STEP=run, N_SHARDS=3, CONFIRM_GATES_PASSED=1, the default inputs, and the shard as SLURM_ARRAY_TASK_ID.
+  - `timeout` stops each step at 52 minutes. `scripts/run_stimulus_interventions.py` resumes, because `done_cells` skips cells already written.
+  - Each shard plans 81 items times 29 cells, 2,349 cells.
+- **What differs from A4, and how it is handled.**
+  - *Torn lines.* The A2 runner skips an unparseable line but does not trim it, so a row written after a torn line would join it.
+    - Before each slice, the wrapper applies A2's own repair rule (PREREG_A2, ruling A2-2) to any unparseable line. It removes only that line, and logs its number, byte offset, length and sha256 to `results/stimulus_interventions_torn/repairs.jsonl`.
+    - It keeps the original file there, under a name that does not match `cells_*_shard*.jsonl`. The resumed run then recomputes the missing cells. No parseable row is edited or removed.
+    - In A4's first slice all four budget stops fell between lines, so a repair should be rare.
+  - *Run reports.* Each run rewrites its shard's run report (`run_<model>_shard<k>.json`).
+    - From the reports, the analysis reads only the model, the smoke flag, the design hash, the shard numbers, the delivery rows and the baselines (`load_shards`, `delivery_rows`, `baselines`).
+    - Each run recomputes delivery for the shard's first items and the baselines for its first clip, whether or not their cells are done. So the last run's report holds the same delivery rows and baselines an uninterrupted run computes.
+    - Its counts (cells ok, failed, timing) cover only the last slice. Failed cells stay in the cells file with their reasons, as the analysis requires.
+- **Safeguards, as for A4.**
+  - The `gpu2` task for a shard is held before any slice runs it, and cancelled once the shard is complete.
+  - The planner (`research/scripts/a2_intr_next_slice.sh`) reads mechanics only: line counts, unparseable lines, cells by status and mean seconds. It reads no score field. It takes the four least-advanced shards each time.
+  - A2's frozen pre-run check and analysis decide completeness.
+  - The pull lists the slice jobs, and waives the cancelled `gpu2` tasks with this entry as the reason.
+- **What stays the same.** No design, code, threshold or analysis change. Hardware, weights, precision and inputs are as for the `gpu2` runs.
+- **Testing.** The wrapper was tested with stubs on the cluster login node. All 23 checks passed: the settings passed through, the budget stop, a normal end, a failure, the A2-2 repair on a torn last line and on an unparseable middle line, a clean file left untouched, and bad slots rejected.

@@ -2,9 +2,26 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-11-13 17:45 Europe/London
+**Updated:** 2026-11-13 20:05 Europe/London
 
-## Hand-off, 2026-11-13 (written 05:35, last refreshed 17:45)
+## Hand-off, 2026-11-13 (written 05:35, last refreshed 20:05)
+
+**New at 17:50: you allowed the `intr` QoS for this project** (DECISIONS 2026-11-13).
+- Its limits, read with each field named: jobs of at most 1 h, and one job per user at a time, pending or running, of up to 3 nodes. It adds 10,000 priority points, against 100 for `gpu2`.
+- As submitted, only the two A9 timing smokes (30 min) and the four A7 Stage 1 tasks (59 min) fit. A2 (12 h), A4 (6 h), the A9 scored runs (6 h) and the A8 check (4 h) do not.
+- It is not an empty lane. At 17:58, 11 other users' `intr` jobs were waiting on the A100s, the oldest since 2026-11-11, but this user's own `intr` jobs (`hel-*` yesterday, `cas_*` today) started within 1 to 8 minutes.
+- A9 smoke 40843619 moved to `intr` at 17:55, with the same job, script and 30-minute limit. The rest follow one at a time.
+- A4's runner resumes a shard where it stopped (`scripts/a4_run.py`), and the pre-run check needs only the planned cells in each shard file. So A4 can run in one-hour slices on `intr` with no change to frozen code (DECISIONS 2026-11-13, second entry).
+- Since 2026-11-12 13:26, no 1-GPU `intr` job on the A100s has started, ours included, while single-node 4-GPU `intr` jobs started within minutes. So at 18:17 the A9 smoke went back to `gpu2`, with its age unchanged, and the first A4 slice went in: job 40920485, Gemma shards 0 to 3 on one node, 52 minutes each, through the unchanged `study3_a4.sh`. Those four shards' `gpu2` tasks (40589226_0 to _3) are held, so no two runs write one file.
+- **How the slices continue:** a loop on the Mac (scratchpad `a4_chain.sh`, under `caffeinate -i`, started 18:40) waits for each slice to end, then runs `research/scripts/a4_intr_next_slice.sh` for real. That script reads mechanics only (line counts, non-ok status counts, partial lines, mean seconds; no score field). It holds the `gpu2` task of each shard it slots, cancels the held task of each complete shard, and submits the next slice.
+  - The loop stops and tells me on: a slice not ending COMPLETED, a planner STOP, fewer than 1,000 new lines in a slice, SSH failures, or no new job ID.
+  - By hand, from the Mac: `ssh <host> 'DRY_RUN=0 bash -l -s' < research/scripts/a4_intr_next_slice.sh`. Only one `intr` job may exist at a time.
+  - **Rate (measured over the first full slice):** about 1.6 cells per second per shard, after about 6 minutes of model loading. Shards hold 6,281 to 6,899 cells, so each takes two slices, the second about half-length: about 12 slices, done around 03:30 to 04:00 if each starts within minutes.
+  - **Risk:** the loop needs this Mac awake and the SSH connection up. `caffeinate` stops idle sleep, not a closed lid.
+- **A2 follows A4 on `intr`** (DECISIONS 2026-11-13, "A2's full-run shards may run in one-hour slices"):
+  - `slurm_jobs/study3_intr_slices_a2.sh` runs four A2 shards per slice through the pinned `study3_stimulus_interventions.sh` (sha256 `1c8d22ea...`) with the full run's settings. Before each slice it applies A2's torn-line rule (A2-2), with a log.
+  - `research/scripts/a2_intr_next_slice.sh` plans each slice. A2 has six shards of 2,349 cells, 4 to 6 GPU-hours each, so about 9 or 10 slices.
+  - A sequencer on the Mac waits for the A4 chain to end. If A4 ends with every shard complete, it starts the A2 chain (scratchpad `intr_chain.sh`). If A4 stops for any other reason, A2 does not start.
 
 **Done this morning on your instructions (about 09:15):**
 - **Item 10: your notes file is off the public branch.**
@@ -13,7 +30,7 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
   - Your local `notes/notes.txt` is unchanged.
   - The old history is kept on your Mac only, in the local branch `backup/p1-pipeline-before-notes-removal`.
 - **Item 11:** [1] recoded to "no" on option sets. Figure 1 rebuilt (DECISIONS 2026-11-13).
-- **Merged into `main`:** PR #114, true merge commit `ee3913a`, then PR #115 (`da95a75`, 11:48) with the later records, then PR #116 (`d1d1246`, 16:58) with the two length cuts and the afternoon records. Today's commits now count on your GitHub contribution graph.
+- **Merged into `main`:** PR #114, true merge commit `ee3913a`, then PR #115 (`da95a75`, 11:48) with the later records, then PR #116 (`d1d1246`, 16:58) with the two length cuts and the afternoon records, then PR #117 (`40f38e9`, 17:58) with cut 3. Today's commits now count on your GitHub contribution graph.
 - **Ethics:** you said the ethics position is fine, so Methods ("Human data") and the reporting summary now carry the recommended statement. It says no separate ethical approval was required, because the study recruited no participants and used only existing materials under their permission or licence terms. It is marked provisional, for you to confirm before submission.
 
 **Only you can do these** (details in `research/NEEDS_INPUT.md`):
@@ -47,7 +64,7 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
   - Our priority grows only with age, about 1.5 a hour; our oldest jobs were at 208 at 11:16, about 73 h of counted age.
   - Fair share adds little to anyone here: at most 48 points among the jobs above ours. Ours is 0 because your user has used 891 GPU hours on this account since 2026-10-16 (CASCADE `cas_*` 709, this project 168, `hel-*` 14). I have not touched the other projects' jobs.
   - Our past starts all came from backfill; a 12 h task submitted on 2026-11-04 waited about 4.4 days.
-- Nothing more can be done for free. The A2 and A4 time limits stay as they are, because a TIMEOUT would cost days in the queue.
+- Nothing more could be done for free until 17:50, when you allowed the `intr` QoS (top of this hand-off). The A2 and A4 time limits stay as they are on `gpu2`, because a TIMEOUT would cost days in the queue.
   - The free CPU allocation (199,744 h) is no way round it either (checked 14:29). A8's preregistration pins the A100, and A2's and A7's costs were measured on A100 in bfloat16. By my estimate, CPU inference would be 10 to 100 times slower, and its numbers would not match the GPU runs.
 - **Risk:** every GPU node is reserved from 2026-12-07 07:00 to 2027-01-10 (`Dec2026-shutdown`), and A8 can start only after A2 and A4 finish.
   - A8's own dated-note rule defers whatever cannot finish, A4 first.
@@ -99,6 +116,30 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
 - Section 5: the run 3 rates and exempt-cell values came out; both were already in Methods and Section S6.
 
 With cuts 4 and 5, the main text is about 490 words shorter. What remains waits on cut 1 (hand-off item 5, your view), cut 2 (after the results) and writing each branch to its budget.
+
+**2026-11-13 18:05:** Full suite at `9181a4d`: 1,096 passed, 26 skipped, 0 failed. Merged into `main` as PR #117, true merge commit `40f38e9` (17:58). You allowed the `intr` QoS at about 17:50: A9 smoke 40843619 moved there at 17:55 and is pending, seventh in the `intr` line at 18:03 (DECISIONS 2026-11-13; hand-off, top). Decisions table row 84 added.
+
+**2026-11-13 18:20:** A4 slices started (DECISIONS 2026-11-13, "A4's scored shards may run in one-hour slices"). The wrapper `slurm_jobs/study3_intr_slices.sh` passed 17 stub checks on the login node and was committed (`eefa487`) before being copied to the cluster; it matches the commit (sha256 `18d1e8ed...`). Held 40589226_0 to _3; A9 smoke 40843619 back to `gpu2`; slice 40920485 (Gemma shards 0 to 3) pending at 18:17. Decisions table row 85. ROADMAP's A4 trigger now names the slice jobs and the waivers.
+
+**2026-11-13 18:40:** Slice 40920485 started at 18:22 on gpu-q-13, about 5 minutes after submission. Model load took about 6 minutes (four processes at once). At 18:35 every shard file held only "ok" cells at about 0.65 s of model time per cell, and lines grew at about 0.9 per second per shard. A planner (`research/scripts/a4_intr_next_slice.sh`, commits `0f2d993` and `a471bfe`) and a local chain loop now carry the slices on; DECISIONS has a dated update (18:30).
+
+**2026-11-13 19:27:** The first automatic handover worked.
+- Slice 40920485 ended COMPLETED at 19:14 (52 min). All four Gemma shards stopped cleanly on the budget.
+- Each shard got 4,433 to 4,499 cells, all "ok", none partial, at about 0.61 s of model time per cell: 17,892 lines in all.
+- The chain loop submitted slice 40925702 (the same shards) at 19:18, and it started at 19:19 on gpu-q-9.
+- So each shard takes two slices, the second about half-length. A4 in all is about 12 slices, done around 03:30 to 04:00 if starts stay this quick.
+- Queue otherwise unchanged; no failures; RDS 1,067.5 GB, 991,136 files.
+
+**2026-11-13 19:36:** A2 prepared to follow A4 on `intr`, before any A2 cell exists (DECISIONS 2026-11-13, A2 slices; decisions table row 86; commit `e601019`).
+- The wrapper passed 23 stub checks, including the A2-2 repair. It is on the cluster and matches the commit (sha256 `f3503d8d...`).
+- The planner's dry run shows no A2 cells yet, and would first slot Gemma shards 0 to 2 and Qwen shard 0.
+- The sequencer is armed.
+
+**2026-11-13 20:02:** Gemma A4 shards 0 to 3 are complete: 6,281, 6,407, 6,603 and 6,847 lines, each exactly its planned count, none partial, all cells "ok".
+- Slice 40925702 ran 19:19 to 19:50, and all four runs ended by themselves.
+- The planner then cancelled the held `gpu2` tasks 40589226_0 to _3, held _4 to _7, and submitted slice 40927225 for Gemma shards 4 to 7. It started at 19:52 on gpu-q-9.
+- Four shards take about 1.5 hours over two slices, so A4's other 20 shards should finish around 03:30 to 04:00.
+- No failures; RDS 1,067.5 GB, 991,147 files.
 
 **2026-11-13 11:47:** Supplementary decisions table brought up to date: rows 81 to 83 for today's three new decision-log entries, and a superseded-entries row (75 to 83). It again has one row per entry, 83, checked in order against DECISIONS. ROADMAP Phase 4 status refreshed: every step that needs no new GPU output is done. The node counts in the 11:20 correction now include the node that was powering up. Full suite at `62a8b79` with these record edits: 1,096 passed, 26 skipped, 0 failed. Merged into `main` as PR #115, true merge commit `da95a75` (11:48).
 
