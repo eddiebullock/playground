@@ -94,7 +94,7 @@ Watch storage at each step. The file count runs at about 996k of 1,048,576. Cell
 
 ### Phase 3. Confirmatory analyses (one run each, from frozen code)
 
-**Status 2026-11-13 01:05.** Rehearsed end to end on synthetic cells in the real format before any real cell exists: A4 (pre-run check, frozen analysis in 383 s, registry table, Figure 5, Table 1), A9 (pre-run check, frozen analysis with the replication wording) and A7 (pre-run check and frozen entry point, `tests/test_a7_main_integration.py`). A2 and A5 were rehearsed by their code audits. Each analysis still runs once, on real cells, by `post_phase3.py`.
+**Status 2026-11-13 00:55.** Rehearsed end to end on synthetic cells in the real format before any real cell exists: A4 (pre-run check, frozen analysis in 383 s, registry table, Figure 5, Table 1), A9 (pre-run check, frozen analysis with the replication wording) and A7 (pre-run check and frozen entry point, `tests/test_a7_main_integration.py`). A2 and A5 were rehearsed by their code audits. Each analysis still runs once, on real cells, by `post_phase3.py`.
 
 | # | Step | Goal |
 |---|---|---|
