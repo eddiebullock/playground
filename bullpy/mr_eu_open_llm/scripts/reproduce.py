@@ -213,7 +213,10 @@ STEPS: List[Step] = [
          note="Snoek AU configurations shared between the basic and conversational experiments (draft review "
               "2026-11-12, finding 7)"),
     Step("a9_label_corroboration", _py("-I", "research/scripts/a9_label_corroboration.py"),
-         [Out("research/reproduction/a9_label_corroboration.json")], minutes=0.1,
+         [Out("research/reproduction/a9_label_corroboration.json", ignore=("inputs_sha256",),
+              note="input hashes skipped: human_au_effects.json is rebuilt earlier in the same run with an unordered "
+                   "pair in tie order, so its bytes can differ; both inputs are checked elsewhere, values in full")],
+         minutes=0.1,
          note="A9 label-order corroboration from the two committed human-target files (draft review 2026-11-12, "
               "finding 12)"),
     Step("residual_cea_attenuation",
