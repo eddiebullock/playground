@@ -2,9 +2,16 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-11-13 17:45 Europe/London
+**Updated:** 2026-11-13 18:05 Europe/London
 
-## Hand-off, 2026-11-13 (written 05:35, last refreshed 17:45)
+## Hand-off, 2026-11-13 (written 05:35, last refreshed 18:05)
+
+**New at 17:50: you allowed the `intr` QoS for this project** (DECISIONS 2026-11-13).
+- Its limits, read with each field named: jobs of at most 1 h, and one job per user at a time, pending or running, of up to 3 nodes. It adds 10,000 priority points, against 100 for `gpu2`.
+- As submitted, only the two A9 timing smokes (30 min) and the four A7 Stage 1 tasks (59 min) fit. A2 (12 h), A4 (6 h), the A9 scored runs (6 h) and the A8 check (4 h) do not.
+- It is not an empty lane. At 17:58, 11 other users' `intr` jobs were waiting on the A100s, the oldest since 2026-11-11, but this user's own `intr` jobs (`hel-*` yesterday, `cas_*` today) started within 1 to 8 minutes.
+- A9 smoke 40843619 moved to `intr` at 17:55, with the same job, script and 30-minute limit. The rest follow one at a time.
+- A4's runner resumes a shard where it stopped (`scripts/a4_run.py`), and the pre-run check needs only the planned cells in each shard file. So A4 could run in one-hour slices on `intr` with no change to frozen code. I am first watching how fast `intr` starts our jobs.
 
 **Done this morning on your instructions (about 09:15):**
 - **Item 10: your notes file is off the public branch.**
@@ -13,7 +20,7 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
   - Your local `notes/notes.txt` is unchanged.
   - The old history is kept on your Mac only, in the local branch `backup/p1-pipeline-before-notes-removal`.
 - **Item 11:** [1] recoded to "no" on option sets. Figure 1 rebuilt (DECISIONS 2026-11-13).
-- **Merged into `main`:** PR #114, true merge commit `ee3913a`, then PR #115 (`da95a75`, 11:48) with the later records, then PR #116 (`d1d1246`, 16:58) with the two length cuts and the afternoon records. Today's commits now count on your GitHub contribution graph.
+- **Merged into `main`:** PR #114, true merge commit `ee3913a`, then PR #115 (`da95a75`, 11:48) with the later records, then PR #116 (`d1d1246`, 16:58) with the two length cuts and the afternoon records, then PR #117 (`40f38e9`, 17:58) with cut 3. Today's commits now count on your GitHub contribution graph.
 - **Ethics:** you said the ethics position is fine, so Methods ("Human data") and the reporting summary now carry the recommended statement. It says no separate ethical approval was required, because the study recruited no participants and used only existing materials under their permission or licence terms. It is marked provisional, for you to confirm before submission.
 
 **Only you can do these** (details in `research/NEEDS_INPUT.md`):
@@ -47,7 +54,7 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
   - Our priority grows only with age, about 1.5 a hour; our oldest jobs were at 208 at 11:16, about 73 h of counted age.
   - Fair share adds little to anyone here: at most 48 points among the jobs above ours. Ours is 0 because your user has used 891 GPU hours on this account since 2026-10-16 (CASCADE `cas_*` 709, this project 168, `hel-*` 14). I have not touched the other projects' jobs.
   - Our past starts all came from backfill; a 12 h task submitted on 2026-11-04 waited about 4.4 days.
-- Nothing more can be done for free. The A2 and A4 time limits stay as they are, because a TIMEOUT would cost days in the queue.
+- Nothing more could be done for free until 17:50, when you allowed the `intr` QoS (top of this hand-off). The A2 and A4 time limits stay as they are on `gpu2`, because a TIMEOUT would cost days in the queue.
   - The free CPU allocation (199,744 h) is no way round it either (checked 14:29). A8's preregistration pins the A100, and A2's and A7's costs were measured on A100 in bfloat16. By my estimate, CPU inference would be 10 to 100 times slower, and its numbers would not match the GPU runs.
 - **Risk:** every GPU node is reserved from 2026-12-07 07:00 to 2027-01-10 (`Dec2026-shutdown`), and A8 can start only after A2 and A4 finish.
   - A8's own dated-note rule defers whatever cannot finish, A4 first.
@@ -99,6 +106,8 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
 - Section 5: the run 3 rates and exempt-cell values came out; both were already in Methods and Section S6.
 
 With cuts 4 and 5, the main text is about 490 words shorter. What remains waits on cut 1 (hand-off item 5, your view), cut 2 (after the results) and writing each branch to its budget.
+
+**2026-11-13 18:05:** Full suite at `9181a4d`: 1,096 passed, 26 skipped, 0 failed. Merged into `main` as PR #117, true merge commit `40f38e9` (17:58). You allowed the `intr` QoS at about 17:50: A9 smoke 40843619 moved there at 17:55 and is pending, seventh in the `intr` line at 18:03 (DECISIONS 2026-11-13; hand-off, top). Decisions table row 84 added.
 
 **2026-11-13 11:47:** Supplementary decisions table brought up to date: rows 81 to 83 for today's three new decision-log entries, and a superseded-entries row (75 to 83). It again has one row per entry, 83, checked in order against DECISIONS. ROADMAP Phase 4 status refreshed: every step that needs no new GPU output is done. The node counts in the 11:20 correction now include the node that was powering up. Full suite at `62a8b79` with these record edits: 1,096 passed, 26 skipped, 0 failed. Merged into `main` as PR #115, true merge commit `da95a75` (11:48).
 

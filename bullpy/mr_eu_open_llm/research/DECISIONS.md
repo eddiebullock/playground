@@ -682,3 +682,17 @@ The 03:15 queue check read `sacctmgr show qos gpu2` as a limit of 32 GPUs for al
 - Fair share counts for little: 128 of the 381 jobs had any fair-share points, at most 48 (about 32 hours of age); ours is 0.
 - No decision changes. Submitting early still gains queue age, the only thing that raises our priority, and every start so far came by backfill.
 - Corrected in place: the ROADMAP risk row and STATE's hand-off. The A9 prereg has its own dated correction note, and the A9 entry above points here. Older STATE entries keep their "of 32" counts: the counts of GPUs in use were right, only the limit set against them was misread.
+
+## 2026-11-13: The `intr` QoS may now carry this project's jobs (user's instruction; scheduling only, no design change)
+
+At about 17:50 the user wrote: "i believe ther is nothing else in the HPC queue using intr nodes therefore you can now use them for this project to get priority compute access". Until then `intr` was kept for another project's agent (ROADMAP Part 3, "Constraints new tonight").
+- `sacctmgr show qos intr`, read at 17:52 with each field named:
+  - Priority 100000, which adds 10,000 points against 100 for `gpu2`.
+  - MaxWall 1 h.
+  - MaxTRESPU node=3.
+  - MaxSubmitPU 1: one job per user, pending or running, of up to 3 nodes. An array counts once per task.
+  - Our association allows only `gpu2` and `intr`, on `ampere`.
+- So only jobs of an hour or less can use it, one at a time. Of our queued jobs, as submitted, that is the two A9 timing smokes (30 min) and the four A7 Stage 1 tasks (59 min each). A2 (12 h), A4 (6 h), the A9 scored runs (6 h) and the A8 equivalence job (4 h) cannot.
+- `intr` is not an empty lane. At 17:58, 11 other users' `intr` jobs were pending on `ampere`, the oldest since 2026-11-11 20:32. This user's own `intr` jobs started within 1 to 8 minutes: `hel-*` on 2026-11-12 (1 GPU) and `cas_*` today (4 GPUs).
+- A9 smoke 40843619 moved to `intr` at 17:55 by `scontrol update` (same job, script, inputs and 30-min limit). The other short jobs follow one at a time, each when the job before it ends.
+- Same partition, hardware, code, inputs and time limits: the QoS changes only when a job starts. No design, threshold or analysis changes. `cas_*` and `hel-*` jobs stay untouched.
