@@ -798,7 +798,7 @@ At about 17:50 the user wrote: "i believe ther is nothing else in the HPC queue 
   - The planner passed 9 new tests in `tests/test_intr_planners.py`, with stand-ins for Slurm.
   - A dry run on the login node at 23:12 gave, for the first slice after A4: A2's six shards and both smokes, on two nodes.
 - **When.** From the first slice after A4 is complete. The Mac sequencer that was to start A2's planner now starts this one.
-- **Update 23:50: which models are eligible, and when that was known.**
+- **Update 23:49: which models are eligible, and when that was known.**
   - A9 depends on "exactly A4's gates per model: RQ0 through `rq0_status` at `single_face`, G2 to G4, and V1 to V4 as stated under 'Validity gate'" (PREREG_A9, line 10). That section inherits V1 from A4's frozen pilot (`a4_v1_pilot.csv`), which passed. It recomputes V2 to V4 on Liu renders, in A9's own analysis.
   - RQ0 and G2 to G4 are in `research/reproduction/a4_gates.json`, built on 2026-11-12 from locked results (`research/scripts/a4_gates.py`; committed then and unchanged since). At 23:49 it rebuilt identically: Gemma 4 and Qwen3-VL pass A1, A3 and G2 to G4. Molmo2 is not an A9 scored model.
-  - So eligibility needs nothing from A4's own analysis, and both models are eligible now. `results/a9/scored_slices_models.txt` lists both from 23:50, earlier than the "after A4's analysis" written above. Each model's scored shards still start only after its smoke is complete and ok.
+  - So eligibility needs nothing from A4's own analysis, and both models are eligible now. `results/a9/scored_slices_models.txt` lists both from 23:49 (file time 23:49:41), earlier than the "after A4's analysis" written above. Each model's scored shards still start only after its smoke is complete and ok.
