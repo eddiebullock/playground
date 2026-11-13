@@ -715,5 +715,5 @@ At about 17:50 the user wrote: "i believe ther is nothing else in the HPC queue 
 - **The single `intr` slot.** A9 smoke 40843619 returns to `gpu2`, with its submit time and age unchanged, to free the slot for the first slice.
 - **Update 18:30, first slice running.**
   - Slice 40920485 started at 18:22 on one node, about 5 minutes after submission. Loading the model took about 6 minutes, with four processes loading at once.
-  - Between slices, the check now reads mechanics only: line counts, the count of cells whose status is not "ok", partial lines and the `seconds` field (`a4_health.sh`). No score field is read.
+  - Between slices, the check now reads mechanics only: line counts, the count of cells whose status is not "ok", partial lines and the `seconds` field (`research/scripts/a4_intr_next_slice.sh`, dry run). No score field is read.
   - At 18:29 all four shard files held only "ok" cells, at about 0.7 s per cell. So a shard takes two slices, not three: about 12 slices for A4 in all.
