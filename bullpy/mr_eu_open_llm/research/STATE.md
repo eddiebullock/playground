@@ -2,9 +2,9 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-11-13 11:20 Europe/London
+**Updated:** 2026-11-13 11:47 Europe/London
 
-## Hand-off, 2026-11-13 (written 05:35, last refreshed 11:20)
+## Hand-off, 2026-11-13 (written 05:35, last refreshed 11:47)
 
 **Done this morning on your instructions (about 09:15):**
 - **Item 10: your notes file is off the public branch.**
@@ -37,7 +37,7 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
   - A9 smokes: 40843619, 40843620
   - A9 scored runs: 40863756, 40863757
 - Why they wait (corrected at 11:20; I had misread the free-tier limit overnight, DECISIONS 2026-11-13):
-  - The A100 partition is full, and every tier shares it. At 11:16, 46 of its 74 nodes were busy, 17 were in maintenance, 1 was down and 9 were powered down with no recent use. Even interactive jobs at priority 10,000 were waiting.
+  - The A100 partition is full, and every tier shares it. At 11:16, 46 of its 74 nodes were busy, 17 were in maintenance, 1 was down, 1 was powering up and 9 were powered down with no recent use. Even interactive jobs at priority 10,000 were waiting.
   - The free tier's 32-GPU limit is per user, not shared by all SL3 users as I wrote overnight. It is not what holds us back.
   - 381 pending jobs ranked above our oldest (2,405 tasks counting each array task). 233 are paid-tier: their tier adds 500 points to priority, against our 100, so a newly submitted paid job ranks above ours until ours has aged about 11 days.
   - Our priority grows only with age, about 1.5 a hour; our oldest jobs were at 208 at 11:16, about 73 h of counted age.
@@ -80,7 +80,9 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
 
 **Phase 2 runs queued; Phase 3 analyses wait on them.** A1, A3 and natural-clip RQ1 are locked (2026-11-09). Every amendment is frozen or closed: A2, A4, A5, A7, A8 and A9 frozen, A6 closed as a limit. The A2, A4, A7 Stage 1, A8 and A9 GPU jobs are pending on priority. History: the prompt confound found 2026-11-04 withdrew the earlier accuracy and probe results (DECISIONS); Branch B stays as a record only.
 
-**2026-11-13 11:20:** Queue unchanged at 11:16: nothing started or failed. Oldest jobs at priority 208. Correction: the 32-GPU limit of `gpu2` is per user (`MaxTRESPU`), not shared by all SL3 users as written from 03:15 on; at 11:12 `gpu2` had 36 GPUs in use, 32 of them one user's. Our jobs wait because the A100 partition is full (46 of 74 nodes busy, 17 in maintenance, 1 down, 9 powered down) and 381 jobs rank above ours, 233 of them paid-tier. No decision changes. Corrected in the hand-off and the ROADMAP risk row; a new DECISIONS entry, with a pointer from the A9 entry; a dated note in the A9 prereg, outside its hashed block. Entries below keep their "of 32" counts: the GPUs in use were counted right, only the limit was misread. RDS 1,067.5 GB, 991,118 files.
+**2026-11-13 11:47:** Supplementary decisions table brought up to date: rows 81 to 83 for today's three new decision-log entries, and a superseded-entries row (75 to 83). It again has one row per entry, 83, checked in order against DECISIONS. ROADMAP Phase 4 status refreshed: every step that needs no new GPU output is done. The node counts in the 11:20 correction now include the node that was powering up. Full suite at `62a8b79` with these record edits: 1,096 passed, 26 skipped, 0 failed.
+
+**2026-11-13 11:20:** Queue unchanged at 11:16: nothing started or failed. Oldest jobs at priority 208. Correction: the 32-GPU limit of `gpu2` is per user (`MaxTRESPU`), not shared by all SL3 users as written from 03:15 on; at 11:12 `gpu2` had 36 GPUs in use, 32 of them one user's. Our jobs wait because the A100 partition is full (46 of 74 nodes busy, 17 in maintenance, 1 down, 1 powering up, 9 powered down) and 381 jobs rank above ours, 233 of them paid-tier. No decision changes. Corrected in the hand-off and the ROADMAP risk row; a new DECISIONS entry, with a pointer from the A9 entry; a dated note in the A9 prereg, outside its hashed block. Entries below keep their "of 32" counts: the GPUs in use were counted right, only the limit was misread. RDS 1,067.5 GB, 991,118 files.
 
 **2026-11-13 09:50:** Queue unchanged at 09:47: nothing started or failed. Oldest jobs at priority 205; `gpu2` had 28 of 32 GPUs in use; 1,270 `gpu2` tasks rank above ours. RDS 1,067.4 GB, 991,094 files.
 

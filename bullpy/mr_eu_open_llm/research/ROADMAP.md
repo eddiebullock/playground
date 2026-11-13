@@ -116,7 +116,14 @@ Watch storage at each step. The file count runs at about 996k of 1,048,576. Cell
 | 4.6 | An independent review agent reads the full draft against the registry and the preregistrations; fixes applied. |
 | 4.7 | Submission pack complete. NEEDS_INPUT lists what the user must do: submission, authorship, Zenodo DOI, any email. |
 
-**Status 2026-11-12.** 4.1 under way: every Results and Methods slot that a locked output answers is filled, with registry rows. 4.2 under way: Figures 2 and 4 drawn from locked outputs and checked by eye; Figures 5 and 6 wait on A4 and A2.
+**Status 2026-11-13.** Every Phase 4 step that needs no new GPU output is done; the rest waits on the queued runs.
+- 4.1: every Results and Methods slot that a locked output answers is filled, with registry rows. Results sections 5, 6, 7, 9 and 10 carry drafted text for every outcome, with values as slots.
+- 4.2: Figures 1 to 4 built from locked outputs and checked by eye; Figures 5 and 6 wait on A4 and A2.
+- 4.3: Discussion drafted for every open branch, before the data.
+- 4.4: Supplementary tables for A7 Stage 0 and for all 83 dated decisions built; the rest wait on the runs.
+- 4.5: `reproduce.py` covers every locked output; clean-checkout check passed at `f4306cb`.
+- 4.6: independent review of the draft done and applied, except citation renumbering, left for the final text.
+- 4.7: submission pack drafted; the user's items are in NEEDS_INPUT (ethics confirmation, Zenodo DOI, authors).
 
 ### What only the user can do
 
