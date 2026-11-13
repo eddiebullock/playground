@@ -78,6 +78,8 @@ This table lists every dated entry in the study's decision log, one row per entr
 | 72 | 2026-11-12 | A7 Stage 1 added to the Phase 3 runbook (no design change) | Repository or process | before any Stage 1 cell or A2 output existed | Nothing in the design; adds the A7 Stage 1 pre-run check | not needed |
 | 73 | 2026-11-12 | Snoek archive placed on the cluster so A8's A4 analysis can run (logistics only) | Scheduling or logistics (no design change) | before any A8 output (A8 dated note) | Nothing; A8's A4 analysis can run on the cluster | not needed |
 | 74 | 2026-11-12 | A7's token-floor sensitivity made available (pre-data; supersedes one line of the A2 audit rulings) | Pre-data ruling on a frozen text | before any A2 cell existed | A7's declared token-floor sensitivity can be reported, computed with A2's frozen functions on A2's own inputs; no verdict changes | not yet: reported with A7's results, which do not exist yet (DECISIONS 2026-11-12) |
+| 75 | 2026-11-13 | A9 scored runs submitted before the timing smokes ran (scheduling only) | Scheduling or logistics (no design change) | before any A9 cell, smoke or scored, existed | Nothing; the smokes still run first, being older and shorter, and set the scored tasks' time limits (lowered only) | not needed |
+| 76 | 2026-11-13 | A9's pre-run check enforces the A4-summary rule (no design change) | Repository or process | before any A9 cell existed | Nothing in the design; A9's single analysis cannot start on an A4 summary other than the one A4's run recorded | not needed |
 
 Reading the last column: "methods.md Disclosure N" is item N of the numbered Disclosures under "Preregistration and order of work"; "discussion.md Limitations N" is item N of the Limitations list; "covered by the v1 withdrawal" marks entries about the withdrawn v1 (Branch B) study whose claims the paper no longer makes; "NOT DISCLOSED in part" marks rows whose main point is disclosed but some ruling is not. Dates are as written in DECISIONS.md, which is not in date order. The A3, A5 and A9 freezes and the first reading of the A1 result (2026-11-09) have no DECISIONS entry of their own, so they have no row; methods.md's amendment table and Disclosure 11 date them.
 
@@ -110,6 +112,7 @@ Not deviations, but absent from the draft, for the authors' judgement: row 31's 
 | 37 (last bullet, the clip rule as built) | 38 | Partial clips dropped; row 38 says it replaces that bullet |
 | 39 (provisional Qwen lines from a 2-clip smoke) | 40 | Replaced by the full Qwen gate run, as row 40 says |
 | 39 and 40 (stored cut fraction read as a share of the image effect; "the routes are redundant") | 45 | The stored fraction is not a share, and redundancy is not proved by the stored rows |
+| 71 (last sentence: the scored runs follow once a smoke has given its timing) | 75 | The scored runs were submitted before the smokes ran, to gain queue age; the smokes still run first and set the time limits |
 | 45 (block admissibility left to A7's audit) | 53 | Stricter reading: a block is not a cut |
 | 47 (no balance class below 4 cells) | 51 | Balance verdicts leave the confirmatory claims at every family size |
 | 46 and 54 (A6 design rulings) | 65 | A6 closed as a limit, never frozen or run |

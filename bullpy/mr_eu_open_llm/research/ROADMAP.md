@@ -155,9 +155,10 @@ Watch storage at each step. The file count runs at about 996k of 1,048,576. Cell
 
 | Event at a heartbeat | Action |
 |---|---|
-| A9 smoke COMPLETED | Read only Elapsed, MaxRSS and the `seconds` field. Submit the scored run per model, `A9_FROZEN=1 MODEL=<m> N_SHARDS=12 sbatch --array=0-11 slurm_jobs/study3_a9.sh` (6 h default; about 3,000 cells a shard), and note it in DECISIONS |
+| A9 smoke COMPLETED | Read only Elapsed, MaxRSS and the `seconds` field. The scored arrays are already in (Gemma 40863756, Qwen 40863757, 6 h cap; DECISIONS 2026-11-13). If the projected shard time is well under 6 h, lower their limit to three times it (half-hour steps, at least 2 h): `scontrol update JobId=<id> TimeLimit=<t>`. If it is over 6 h, cancel and resubmit with a longer cap before any task starts. If a smoke fails, `scontrol hold` the scored arrays until the cause is known |
 | A2 arrays all COMPLETED | `post_phase3.py pull a2 --jobs 40468625 40468626`, then `analyse a2`; read outputs only after the run note; registry rows; then `analyse a5`; then A7 once its Stage 1 is pulled (`pull a7 --jobs 40795186 40795187`, `analyse a7`); Results 7 and 10, Figure 6 |
-| A4 arrays all COMPLETED | `pull a4 --jobs 40589226 40593824`, `analyse a4`; registry; Figure 5; Results 5 and 6; then A9's analysis once its shards finish |
+| A4 arrays all COMPLETED | `pull a4 --jobs 40589226 40593824`, `analyse a4`; registry; Figure 5; Results 5 and 6 |
+| A9 scored arrays all COMPLETED | `pull a9 --jobs 40863756 40863757`; `analyse a9` only after `analyse a4` has written its run note (the A9 pre-run check refuses otherwise); registry; Results 6b |
 | A task FAILED, TIMEOUT, NODE_FAIL or OUT_OF_MEMORY | Read its `.err` and `.out`. Environmental: resubmit that task index with the same script and environment (the runners resume), then pull with `--waive <task> --reason`. A bug in frozen code: a dated DECISIONS deviation before any rerun |
 | A8 equivalence 40399722 COMPLETED | Record as A8's dated pre-data note (checklist item 2). A8 jobs still wait for every Phase 2 run to complete |
 | Quota over 1,080 GB or 1,040,000 files | No new submissions. If another project's job is driving it, `scontrol hold` this project's pending jobs and write NEEDS_INPUT; never cancel another project's job |
@@ -177,3 +178,4 @@ Watch storage at each step. The file count runs at about 996k of 1,048,576. Cell
 | A null on the core result | The paper stands as written: the identifiability results plus the audit carry it, and the null is reported as a result. |
 | SSH drops overnight | Local phases continue; the user is asked to log in. |
 | GPU shutdown 2026-12-07 07:00 to 2027-01-10 (reservation `Dec2026-shutdown`, found 2026-11-12) | Phase 2 and A9 first; A8 sized against the days left after them, and deferred by its own dated-note rule where it cannot finish (A4 is the step A8 defers first). |
+| `gpu2` is capped at 32 GPUs for all SL3 users together (GrpTRES, found 2026-11-13); about 870 higher-priority `gpu2` tasks were ahead of our oldest job; fair share 0, so priority grows only by age (about 1.5 a hour) | Everything that can run is submitted now, so it ages (A9 scored runs went in before their smokes; DECISIONS 2026-11-13). All our `gpu2` starts since 2026-10-30 were by backfill, where short limits help: limits are lowered from smoke timings, never padded. A 12 h task submitted 2026-11-04 waited about 4.4 days. |

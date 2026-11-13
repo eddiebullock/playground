@@ -229,6 +229,28 @@ def test_a9_prerun_script_reports_failures_without_inputs(tmp_path):
     assert "A4's summary does not exist yet" in text and "manifest" in text
 
 
+def test_a9_prerun_reads_a4s_summary_only_at_the_sha256_a4s_run_note_recorded(tmp_path):
+    from scripts import a4_design
+    a9pre = _load("a9_prerun_check")
+    summary = tmp_path / "summary.json"
+    summary.write_text(json.dumps({"design_sha256": a4_design.design_hash()}))
+    note = tmp_path / "a4_run_note.json"
+    args = ["--cells_dir", str(tmp_path), "--manifest", str(tmp_path / "none.csv"), "--a4_summary", str(summary),
+            "--a4_run_note", str(note), "--record", str(tmp_path / "record.json")]
+
+    def a4_failures():
+        assert a9pre.main(args) == 1  # the other checks fail here: no cells, no manifest
+        return [f for f in json.loads((tmp_path / "record.json").read_text())["failures"] if f.startswith("A4's")]
+
+    assert len(a4_failures()) == 1 and "run note is missing" in a4_failures()[0]
+    note.write_text(json.dumps({"status": "stopped", "outputs": {}}))
+    assert "run note is missing or incomplete" in a4_failures()[0]
+    note.write_text(json.dumps({"status": "complete", "outputs": {"results/a4/summary.json": "0" * 64}}))
+    assert "differs from the sha256" in a4_failures()[0]
+    note.write_text(json.dumps({"status": "complete", "outputs": {"results/a4/summary.json": a4pre.sha256(summary)}}))
+    assert a4_failures() == []
+
+
 post = _load("post_phase3")
 
 

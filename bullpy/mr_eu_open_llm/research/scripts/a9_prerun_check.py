@@ -14,7 +14,9 @@ Checks, each of which must pass:
    the rows that are not are written there with the list, and the analysis runs on that folder.
 4. The gates file is the one built from the frozen outputs (`research/scripts/a4_gates.py`): A9's gates
    are exactly A4's, per model.
-5. A4's summary exists and carries A4's frozen design hash (A9 compares with A4's decisions).
+5. A4's summary exists and carries A4's frozen design hash (A9 compares with A4's decisions), and its
+   sha256 equals the one A4's run note recorded when `post_phase3.py analyse a4` ran, so A9's single
+   analysis reads no other A4 summary (A9's replication rule (ii); added 2026-11-13, before any A9 cell).
 6. BLAS runs single-threaded (ruling 4).
 
 Usage (project root):
@@ -47,6 +49,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     ap.add_argument("--manifest", type=Path, default=Path("results/a9/manifest.csv"))
     ap.add_argument("--gates", type=Path, default=Path("research/reproduction/a4_gates.json"))
     ap.add_argument("--a4_summary", type=Path, default=Path("results/a4/summary.json"))
+    ap.add_argument("--a4_run_note", type=Path, default=Path("research/reproduction/a4_run_note.json"))
     ap.add_argument("--clean_dir", type=Path, default=None)
     ap.add_argument("--record", type=Path, required=True)
     args = ap.parse_args(argv)
@@ -78,6 +81,14 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         failures.append("A4's summary does not exist yet; A9 runs after A4's single analysis")
     elif json.loads(args.a4_summary.read_text(encoding="utf-8")).get("design_sha256") != a4_design.design_hash():
         failures.append("A4's summary does not carry A4's frozen design hash")
+    else:
+        note = json.loads(args.a4_run_note.read_text(encoding="utf-8")) if args.a4_run_note.exists() else {}
+        recorded = (note.get("outputs") or {}).get("results/a4/summary.json")
+        if note.get("status") != "complete" or not recorded:
+            failures.append("A4's run note is missing or incomplete: A9 reads A4's summary only as A4's single analysis "
+                            "recorded it (replication rule (ii))")
+        elif pre.sha256(args.a4_summary) != recorded:
+            failures.append("A4's summary differs from the sha256 in A4's run note (replication rule (ii))")
     design = a9.design_hash()
     record["design_sha256"] = design
     manifest = pandas.read_csv(args.manifest).to_dict("records") if args.manifest.exists() else []
