@@ -94,6 +94,8 @@ Watch storage at each step. The file count runs at about 996k of 1,048,576. Cell
 
 ### Phase 3. Confirmatory analyses (one run each, from frozen code)
 
+**Status 2026-11-13 00:55.** Rehearsed end to end on synthetic cells in the real format before any real cell exists: A4 (pre-run check, frozen analysis in 383 s, registry table, Figure 5, Table 1), A9 (pre-run check, frozen analysis with the replication wording) and A7 (pre-run check and frozen entry point, `tests/test_a7_main_integration.py`). A2 and A5 were rehearsed by their code audits. Each analysis still runs once, on real cells, by `post_phase3.py`.
+
 | # | Step | Goal |
 |---|---|---|
 | 3.1 | A2 analysis: classify each prediction by the decision rule, plus the dated .01 sensitivity | G4 |
@@ -145,6 +147,63 @@ Watch storage at each step. The file count runs at about 996k of 1,048,576. Cell
 
 **Reporting.** A short visible status each tick: what changed, what is next, and anything the user must do. A push notification when a phase completes.
 
+**Overnight plan, 2026-11-12 to 13** (written at the user's request: "work towards completing this project/study ... plan how you will problem solve without me"). The rules above stand; this adds the triggers for tonight.
+
+*Constraints new tonight.* The `intr` QoS belongs to another project's agent (it runs as the same Unix user, as `hel-*` jobs): never submit to it, never touch `hel-*` or `cas_*` jobs. The SSH master persists (`ControlPersist=yes`); only the user can re-authenticate (TOTP). History rewrites on the public repo need the user (NEEDS_INPUT 10), so no PR to `main` until that item is settled. Commit by explicit path only. **All GPU work must finish before the `Dec2026-shutdown` reservation (every GPU node, 2026-12-07 07:00 to 2027-01-10 18:00).** Fair share is 0 and the queue holds about 570 jobs, so each new submission waits a day or more: submit early, size time limits from smokes, avoid resubmission rounds.
+
+*Timing evidence (read for seconds only).* A4 smokes: about 1 s per cell (Gemma .97, Qwen 1.09; 40 cells each, all ok), a third of the 3.0 s planning bound, so a 6 h A4 shard should take about 2 h. A2: 4 to 6 h per shard against 12 h (A2 Cost). Time limits stay as submitted: running jobs show other `gpu2` users ahead of us on fair share, not a backfill gap that shorter limits would fill.
+
+| Event at a heartbeat | Action |
+|---|---|
+| A9 smoke COMPLETED | Read only Elapsed, MaxRSS and the `seconds` field. The scored arrays are already in (Gemma 40863756, Qwen 40863757, 6 h cap; DECISIONS 2026-11-13). If the projected shard time is well under 6 h, lower their limit to three times it (half-hour steps, at least 2 h): `scontrol update JobId=<id> TimeLimit=<t>`. If it is over 6 h, cancel and resubmit with a longer cap before any task starts. If a smoke fails, `scontrol hold` the scored arrays until the cause is known |
+| A2 arrays all COMPLETED | `post_phase3.py pull a2 --jobs 40468625 40468626`, then `analyse a2`; read outputs only after the run note; registry rows; then `analyse a5`; then A7 once its Stage 1 is pulled (`pull a7 --jobs 40795186 40795187`, `analyse a7`); Results 7 and 10, Figure 6 |
+| A4 arrays all COMPLETED | `pull a4 --jobs 40589226 40593824`, `analyse a4`; registry; Figure 5; Results 5 and 6 |
+| A9 scored arrays all COMPLETED | `pull a9 --jobs 40863756 40863757`; `analyse a9` only after `analyse a4` has written its run note (the A9 pre-run check refuses otherwise); registry; Results 6b |
+| A task FAILED, TIMEOUT, NODE_FAIL or OUT_OF_MEMORY | Read its `.err` and `.out`. Environmental: resubmit that task index with the same script and environment (the runners resume), then pull with `--waive <task> --reason`. A bug in frozen code: a dated DECISIONS deviation before any rerun |
+| A8 equivalence 40399722 COMPLETED | Record as A8's dated pre-data note (checklist item 2). A8 jobs still wait for every Phase 2 run to complete |
+| Quota over 1,080 GB or 1,040,000 files | No new submissions. If another project's job is driving it, `scontrol hold` this project's pending jobs and write NEEDS_INPUT; never cancel another project's job |
+| SSH socket gone | Stop cluster work; STATE note and NEEDS_INPUT 1 reopened; local work continues |
+
+*Local queue while the GPUs wait, in order.* (1) Apply the independent draft review (`research/reviews/draft_review_2026-11-13.md`). (2) Results: stale items (A9 status), A7 Stage 1 slots, registry rows for values already locked before any data (A2 gain-skew error rates, A9 human reference). (3) Figure functions pointed at the runbook's output paths. (4) A8's pull and analysis path checked against its launcher. (5) Supplement tables (A7 Stage 0; dated deviations). (6) Submission pack refreshed. (7) Full test suite and the clean-checkout check.
+
+*Morning hand-off.* A summary at the top of STATE.md; anything only the user can do in NEEDS_INPUT.
+
+*Local queue status, 2026-11-13 06:20.*
+- Items 1 to 3, 5 and 6 are done. Item 7 is done: full suite at `c88ca73`, and clean-checkout reproduction at `f4306cb` (43 rebuilt, 112 hash-verified, 0 failed).
+- Item 4 is done. The A8 audit found three faults in A8's own code, now fixed before the code pins, and A2's and A4's rulings are now carried over to A8 by a dated note (both in DECISIONS 2026-11-13). The runbook is below.
+- Two minor items from that audit are done: provenance for `a8_a4_gates.py` and `a8_analyse_a2.py`, and gate and delivery files read only from jobs that ended ok. `post_phase3.py pull a8` exists too (2026-11-13), so nothing from the audit is open.
+
+**A8 runbook** (written 2026-11-13; it runs once the queue rule in A8's block allows: both Qwen A1 arrays and the Phase 2 runs COMPLETED). Each cluster step runs through `slurm_jobs/a8_job.sh` with `STEP` and `A8_ID`. The CPU steps may use `-A BARON-COHEN-SL3-CPU -p icelake --gres=none`.
+
+0. **Code-pin step** (A8 Freeze checklist item 2, dated note):
+   - Fill "Code hashes" with the sha256 of every file in A8's Code table.
+   - Sync to `~/rds/hpc-work/study3`, then run `sha256sum -c` there.
+   - Record the A1 GPU equivalence result (job 40399722).
+   - Read the timing smokes for mechanics, then set the GPU and shard counts by dated notes.
+1. **Phase A, both models together:** `gates`, `delivery`, `ladder`, `a3`.
+2. **A3 summary:** `python research/scripts/a8_face_input_validity_summary.py`.
+3. **A1, where the stop rule allows** (the launcher refuses otherwise):
+   - `a1_shard` for each rotation, condition and shard;
+   - `a1_merge` for each rotation and condition;
+   - then `python research/scripts/a8_analyse_rotation.py`.
+4. **Natural-clip RQ1:** `natural_rq1` per model (CPU).
+5. **Scored runs:** `a2_run` and `a4_run` where eligible (the launcher applies the frozen rules).
+6. **A2, per model:**
+   - `python research/scripts/a8_prerun_check.py a2 --a8_id <id>`. Its record (`research/reproduction/a8/<id>/a2_prerun_check.json`) must pass, because the analysis refuses without it.
+   - `python research/scripts/a8_analyse_a2.py --a8_id <id> -- --output research/reproduction/a8/<id>/stimulus_interventions_<key>.json --a2_frozen`
+   - `python research/scripts/a2_declared_extras.py --model <key> --cells <the same cells> --run_report <the same reports> --a2_output <that output> --output research/reproduction/a8/<id>/a2_extras_<key>.json`
+7. **A4:**
+   - `python research/scripts/a8_a4_gates.py`
+   - `python research/scripts/a8_prerun_check.py a4`. Add `--apply_filter`, `--no_result <id>` or `--deferred <id> --deferral_note <the dated note>` only as A8's dated note of 2026-11-13 and its addendum allow. The record (`research/reproduction/a8/a4_prerun_check.json`) must pass, because `a4_analyse` refuses without it.
+   - Then `STEP=a4_analyse`, which runs single-threaded.
+8. **Final checks:**
+   - `python research/scripts/a8_preflight.py --full_hash` (weights unchanged).
+   - Pull from the Mac: `PYTHONPATH=.:src python research/scripts/post_phase3.py pull a8 --jobs <every A8 job id>`.
+     It checks every A8 provenance file on the cluster, copies `research/reproduction/a8/` and A8's A4 summary with sha256 checks, and records the sha256 of the cells and shards that stay on the cluster.
+   - Then provenance checks, registry rows and Results 8b.
+
+A step whose output file was written before its job failed is retried only after that file is moved aside with a record, because the launcher refuses to overwrite.
+
 **Risk register.**
 
 | Risk | Mitigation |
@@ -154,3 +213,5 @@ Watch storage at each step. The file count runs at about 996k of 1,048,576. Cell
 | A frozen test shows a weakness late | Dated sensitivity, fixed before the data are read, as with A2 skew. |
 | A null on the core result | The paper stands as written: the identifiability results plus the audit carry it, and the null is reported as a result. |
 | SSH drops overnight | Local phases continue; the user is asked to log in. |
+| GPU shutdown 2026-12-07 07:00 to 2027-01-10 (reservation `Dec2026-shutdown`, found 2026-11-12) | Phase 2 and A9 first; A8 sized against the days left after them, and deferred by its own dated-note rule where it cannot finish (A4 is the step A8 defers first). |
+| `gpu2` is capped at 32 GPUs for all SL3 users together (GrpTRES, found 2026-11-13); about 870 higher-priority `gpu2` tasks were ahead of our oldest job; fair share 0, so priority grows only by age (about 1.5 a hour) | Everything that can run is submitted now, so it ages (A9 scored runs went in before their smokes; DECISIONS 2026-11-13). All our `gpu2` starts since 2026-10-30 were by backfill, where short limits help: limits are lowered from smoke timings, never padded. A 12 h task submitted 2026-11-04 waited about 4.4 days. |

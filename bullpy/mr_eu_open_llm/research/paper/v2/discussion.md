@@ -2,15 +2,27 @@
 Draft v2 scaffold, 2026-11-08 (ROADMAP step 0.8). An outline, not conclusions. No A1, A2 or A4 model result has been read.
 For each main question, one short paragraph per outcome class allowed by its frozen decision rule. The branch that matches the locked results is picked at ROADMAP step 4.3; the others are deleted.
 Classes are taken from the amendments and DECISIONS, with no class added. The Discussion carries no subheadings in the journal; the headings here are for drafting only.
+
+2026-11-12, late (new agent session): every branch still open is now drafted as prose, before any A2, A4, A5, A7 Stage 1, A8 or A9 output exists, so that at step 4.3 a branch is chosen and its slots filled, not written after the result is seen. Added: A9 (wording fixed by its block), A8 (scope only), the A7 route arm (secondary). Scenario S4 is struck (RQ0 locked as R0-a); S2 is folded into S3 (natural clips positive for all three models, so any A4 Not aligned is S3). Limitations brought up to date (A7 Stage 0 ran; A5 frozen; outline item 16 closed). Numbers stated here are only those already locked in RESULTS_REGISTRY; every other value is a [slot].
 -->
 
 # Discussion (outline)
 
 ## Opening paragraph
 
-One paragraph from the scenario table in outline.md, "How the whole paper reads" (S1 to S6). [PENDING: scenario, once RQ0, RQ1 and RQ2 are locked.] The audit, the identifiability results and the estimand stand in every scenario.
+Built from three parts: a fixed opening, one A4 sentence group from the live scenario, and one A2 sentence. Scenarios from outline.md, "How the whole paper reads". [PENDING: scenario, once A4 and A2 are locked.]
 
-Fixed whatever the results: the v1 task put the target first on every item and gave each label one option set (Results, Section 1). Behaviour on natural items cannot settle cue use (Results, Section 3). These are locked and can be discussed now.
+**Fixed opening (locked parts only).** We asked how similar vision-language models are to people in how they read emotion from faces, beyond giving the same answers. Three findings hold whatever the later tests showed. The design we used before, and several published designs, let option position or prompt text identify the answer, so accuracy on such designs is not evidence that a model read the face (Results, Section 1). Once option position was rotated and the prompt held fixed, the answers of all three models depended on the face shown (Section 2), and on natural clips their graded responses lined up with the human pattern over four families of facial actions (Section 4). And alignment of that kind cannot show which cues a model uses, because a model that responds to unmeasured cues correlated with the measured ones produces the same score (Section 3; Supplementary Note 1). The randomised test was built to reach past that limit.
+
+**S1 (A4 Aligned on a task for [models]).** When facial actions were randomised on rendered faces, so that no cue could stand in for another, the cue effects of [models] lined up with those measured in people on [task] labels, beyond what chance and measurement noise allow. That is a shared pattern of cue effects on these renders, at a peak frame; it is not evidence that the models follow the same strategy, and no test here reaches computation.
+
+**S3 (A4 Not aligned on these renders for [models]).** When facial actions were randomised on rendered faces, the cue effects of [models] stayed below the floor we set for alignment, even after correction for measurement noise: not aligned on these renders. Agreement on natural clips therefore did not carry over to randomised cue effects on rendered faces. The identifiability result allows exactly this, since a model can match the human pattern on natural clips through cues that are correlated with the ones people use. It does not show that this is what happened, because rendered faces differ from natural ones in domain, in motion and in how intensity maps to amplitude.
+
+**S5 (A4 Inconclusive for [models]).** The randomised test did not reach a decision for [models], because [gate or test]. The audit and the identifiability results stand without it, and the cue-level question stays open with its requirements stated: [a render validated by a detector for the failing families, or the original stimuli].
+
+**S6 (the models differ).** The two eligible models reached different degrees of similarity: [model] [degree], [model] [degree]. We report them as profiles and make no pooled statement.
+
+**A2 sentence, one of.** (R2-a or b) Region masks, frequency filters and changes of frame order moved the option-free judgement in the direction people's data predict for [n of 16] contrasts, on basic labels in this stimulus set. (R2-c) For [contrasts], the edits moved the judgement against the stated human prediction. (R2-d) Most stimulus edits were not decided, and capped contrasts cannot reach a null by design. (R2-f) The option-free readout carried no usable face signal for [model and route], so the stimulus edits could not be tested there.
 
 ## RQ0: dependence on the face
 
@@ -22,45 +34,83 @@ With option position rotated and the prompt held fixed, accuracy on all three mo
 
 Positive and confirmatory on all three models (RESULTS_REGISTRY, "Natural-clip RQ1"). Drafted text:
 
-On natural clips, each model's responses lined up with the human pattern over four families of facial action units, with family pattern scores of .42 to .55, each well outside its permutation null. This is the claim the design supports, and only this one. The score is a regression on measured cues, so a model responding to an unmeasured cue that is correlated with them would produce the same result (Proposition 4); alignment with the human pattern is not evidence that the models use the same cues. The randomised test in the next section is the one built to reach that question. Molmo2's alignment beside chance-level accuracy also shows that the two measures can come apart: a model can track the human pattern of graded responses while rarely putting the most weight on the acted label.
+On natural clips, each model's responses lined up with the human pattern over four families of facial action units, with family pattern scores of .42 to .55, each well outside its permutation null. This is the claim the design supports, and only this one. The score is a regression on measured cues, so a model responding to an unmeasured cue that is correlated with them would produce the same result (Proposition 4); alignment with the human pattern is not evidence that the models use the same cues. The randomised test in the next section is the one built to reach that question. Two limits apply. For Gemma 4 and Molmo2 the scores come from a composite input on which the face spans one or two image tokens, below our own delivery gate, a limit recorded before any rotated result was read; they show alignment despite that input and say nothing about which visual information carried it. And Molmo2's score sits beside chance-level accuracy and a majority of "None of the above" answers: the score is computed on graded responses over all options, so a model can track the human pattern while rarely putting the most weight on the acted label.
 
 ## RQ1 under randomisation (A4)
 
-Rule: `research/PREREG_A4_DRAFT.md:121-137`. Each dataset alone, then one headline per model per task.
+Rule: `research/PREREG_A4_DRAFT.md:121-137`. Each dataset alone, then one headline per model per task. Basic and conversational are separate claims. Drafted text per branch; use the one that matches each model and task, and say which datasets each headline rests on.
 
-- **If Aligned.** A reliable shared pattern of cue effects on these avatars, on a peak frame. Not the same strategy. Human-level only if the interval reaches the residual WC to EA reference, .780 for basic or .732 for conversational (RESULTS_REGISTRY, A4 human ceiling). Note that most families are not confirmed by a detector.
-- **If Not aligned on these renders.** The model responds to the AUs, yet its cue pattern stays below the floor after disattenuation. Always in those words. Domain, the static route and the amplitude mapping remain open. It says nothing about real faces.
-- **If Inconclusive.** Name the gate or test that failed. Say what would be needed: a validated render, or the original stimuli. The paper then rests on the audit, the theory and RQ2 (scenario S5).
-- **If Mixed (WC and EA disagree).** Report each dataset and the Mixed headline. Adds no scenario. WC and EA are not independent tests of a model.
-- **Combined with natural clips.** Use outline.md's table "Natural clips by A4". The most informative case is a positive natural-clip score with Not aligned on these renders (scenario S3): it fits the identifiability result, but cannot exclude the avatar domain.
-- **Behaviour beside CEA (Section 6).** If they disagree on the same stimuli, that is the empirical case the theory needs. If they agree, the theorem stands as a logical limit, and these models on these stimuli do not show the gap. Agreement is not a failure of the theory or proof of use.
+**Aligned.** On faces where the facial actions were set at random, [model]'s responses to [task] labels changed with each action in the same pattern as people's did, with a residual cue effect alignment of [value] (95% CI [lower, upper]) on [datasets], against a smallest value of interest of .30. "Residual" means that the part of each effect shared by all actions, such as a general move away from "none of the above" whenever the face moves, was removed first, so the score reflects which action moves which label. This is a reliable shared pattern of cue effects on these avatars, at a peak frame. It is not evidence of the same strategy: in recovery, an observer with 16 of 25 action families swapped in pairs could still clear .30 (Methods). It is human-level only if the interval reaches the agreement between the two human groups on the same task, .780 for basic and .732 for conversational labels; [it does / it does not]. Most action families on these renders are not confirmed by a detector, so the pattern is one of rendered recipes, each of which may not produce the movement it names.
+
+**Not aligned on these renders.** [Model] responded to the rendered actions (signal *P* [value]), so the cues reached it, yet the pattern of its cue effects stayed below .30 even at the upper end of its interval after correction for its own reliability ([value]). Its cue effects are not aligned with people's on these renders. Three explanations remain open, and A4 cannot separate them: the domain of the avatars, the static peak frame against 1.25 s of human-viewed motion, and the linear mapping of intensity to amplitude. The result says nothing about real faces.
+
+**Inconclusive.** A4 did not decide for [model] on [dataset or task], because [the gate or test that failed, for example no signal, a failed V-gate, or an interval spanning both floors]. An Inconclusive is not a null. Reaching a decision would need [a render that passes the failing gate, or the original stimuli].
+
+**Mixed (WC and EA disagree).** [Model] was [class] on the Western Caucasian set and [class] on the East Asian set for [task], so its headline is Mixed. The two sets share neither observers nor most configurations, but they are not independent tests of a model, and we draw no claim about culture from the difference: the East Asian faces were not based on East Asian people.
+
+**Natural clips beside A4.** With natural clips positive for both eligible models, the informative reading is a positive natural-clip score beside Not aligned on these renders (scenario S3). That pair fits the identifiability result and is the empirical case it predicts can occur. It cannot exclude the avatar domain as the reason. A positive natural-clip score beside Aligned is consistent all the way down to the renders, and still says nothing about strategy.
+
+**Behaviour beside cue effects (Section 6).** If behaviour and cue effects disagree on the same stimuli, that is the case the theory needs, observed: [describe]. If they agree, the proposition still stands as a limit of logic, and these models on these stimuli simply did not show the gap. Agreement is not a failure of the theory or proof of cue use.
+
+## A second human sample (A9)
+
+Rule and wording fixed before any model data (`research/PREREG_A9_DRAFT.md`, "Relation to A4" and block `replication`). Comparator: the same model's A4 decision on basic WC; A4's basic headline beside it. A9 is a second sample on the same platform (lab, generator, protocol, culture) and the same renders, not a second method, and is never called independent of the GFG platform. Never "A9 confirms A4" or "A9 overturns A4".
+
+- **Both Aligned.** The basic-label alignment for [model] replicated on a second human sample (same lab and generator), Liu et al.'s 20 observers, with residual alignment [value] ([CI]).
+- **Both Not aligned on these renders.** For [model], the Not aligned result replicated on Liu et al.'s observers.
+- **One of each.** For [model] the result did not replicate: A4 basic WC was [class], A9 was [class]. Both are reported and no pooled claim is made. The two samples differ in observers and in configurations (Liu's faces carry 1 to 6 actions).
+- **Either Inconclusive, or A4 basic WC not run for the model.** Replication not testable for [model], because [gate or test].
+
+An A9 Inconclusive is never a failure to replicate. A9 cannot change an A4 verdict.
 
 ## RQ2: stimulus interventions (A2)
 
-Rule: `research/PREREG_A2_DRAFT.md:188-206`, the deviation at `:332-353`, and the .01 reading (DECISIONS 2026-11-08). BASIC ONLY scope on every result. RQ2 here is A2's stimulus arm, which says nothing on necessity or sufficiency of an AU.
+Rule: `research/PREREG_A2_DRAFT.md:188-206`, the deviation at `:332-353`, the .01 reading (DECISIONS 2026-11-08) and the pre-data rulings of 2026-11-12 (the fill rule also governs Opposes). BASIC ONLY scope on every result. RQ2 here is A2's stimulus arm, which says nothing on necessity or sufficiency of an AU, and nothing about how people would respond to these edits, which nobody has measured.
 
-- **If Gate B passes and most predictions Match (R2-a).** Judgement moves with the stated human predictions on basic labels in this stimulus set. Say which verdicts also hold at *P* < .01. No claim that people would respond this way to these edits. A Match on P12 or P13 is a match to a weakly sourced prediction.
-- **If classes are mixed (R2-b).** Report by cue type: regions, frequency bands, temporal order.
-- **If several Oppose (R2-c).** The model moves against the stated prediction. Check the fill rule and the bridge readout. An Opposes on P12 or P13 says nothing against human alignment, since the closest human test found no cost of shuffling.
-- **If most are Inconclusive (R2-d).** Capped contrasts cannot reach Null by design (8 of 16, or 10 of 16 on Qwen3-VL). Give equivalence intervals and do not call them nulls.
-- **If Null on eligible contrasts (R2-e).** Hard to reach, so reportable as a real result for that cue, model and route only.
-- **If Gate B fails (R2-f).** The option-free readout carries no usable face signal for that model and route. No RQ2 claim there. This is also a finding for RQ4.
-- **If no model is eligible (R2-g).** Report the gates and stop. RQ2 is not tested.
+- **Most predictions Match, Gate B passed (R2-a).** On basic labels, masking regions, filtering spatial frequencies and changing frame order moved [model]'s option-free judgement in the direction human studies predict for [n] of 16 contrasts on [route]. [n] of these also hold at *P* < .01, the level that keeps the familywise error under .05 under the skewed nulls we simulated (Methods). The predictions come from other stimuli, so a Match is agreement with a stated prediction, not with human data on these clips. A Match on P12 or P13 is a match to a weakly sourced prediction, against which the closest human test found no cost of shuffling.
+- **Mixed classes (R2-b).** Report by cue type. [Regions] matched, [frequency bands] [class], [temporal order] [class]. Say which hold at *P* < .01.
+- **Several Oppose (R2-c).** For [contrasts], the edits moved [model]'s judgement against the stated prediction, with the other two fills agreeing in sign with the neutral fill, as the fill rule requires. An Opposes on P12 or P13 says nothing against human alignment, since the closest human test found no cost of shuffling.
+- **Mostly Inconclusive (R2-d).** Most contrasts were not decided. Eight of 16 contrasts, and 10 of 16 on Qwen3-VL, cannot reach Null by design, because their predictions are capped; we give their 90% equivalence intervals ([range]) and do not call them nulls.
+- **Null on eligible contrasts (R2-e).** For [contrasts] on [model and route], the edit left the option-free judgement unchanged within the margin. Null is hard to reach under A2's rules, so this is a real result, for that cue, model and route only.
+- **Gate B fails (R2-f).** For [model and route], the option-free readout carried no usable face signal (failed [B-check]), so no RQ2 claim is made there. This is also a finding for RQ4 (A5).
+- **No model eligible (R2-g).** Report the gates and stop; RQ2 is not tested.
 
 ## RQ4: prior and evidence (A5)
 
-Rule: `research/PREREG_A5_DRAFT.md:226-231`, with balance descriptive (`:574-576`). A5 is a reanalysis of A2's cells, so it exists only where A2 ran.
+Rule: `research/PREREG_A5_DRAFT.md:226-231`, with balance descriptive (`:574-576`), and the pre-data rulings of 2026-11-12 (input errors void a run; Absent reported with E*'s interval, "below the margin" where it excludes 0). A5 is a reanalysis of A2's cells, so it exists only where A2 ran.
 
-- **If Shown.** Face evidence moves the blind judgement towards the portrayed word, with Gate B passed. Balance and word share are given as description, not as a claim.
-- **If Unmapped.** Portrayals move the judgement consistently, but not to the acted word. If only B3 failed, the shift is too small on the image scale to be called mapped.
-- **If Absent.** No face evidence on this route, with face information shown to reach the output. The word-knowledge reading needs Absent with Default, and the Default part is descriptive, so state it as Absent evidence with the balance beside it.
-- **If Unresolved.** Inconclusive, with the reason code.
-- **If A2 did not run for a model and route.** A5 has nothing to classify there. Name it as not tested.
+- **Shown.** On [route], evidence from the face moved [model]'s option-free judgement towards the portrayed word, with Gate B passed, so the judgement is not word knowledge alone. Balance between prior and evidence ([class]) and the share carried by words ([value]) are description, not claims.
+- **Unmapped.** Portrayals moved [model]'s judgement consistently, but not towards the acted word. [If only B3 failed: the shift is too small on the image scale to be called mapped.]
+- **Absent.** On [route], we found no face evidence in [model]'s option-free judgement, with E* at [value] ([interval]), even though face information was shown to reach the output. The word-knowledge reading needs Absent together with Default balance, and balance is descriptive here, so we state it as absent evidence with the balance beside it ([class]).
+- **Unresolved.** Not decided, [reason code].
+- **A2 not run for a model and route.** A5 has nothing to classify there; not tested.
 
-## RQ3 and RQ5 (one sentence each in the Discussion)
+## Larger models (A8)
 
-- **RQ3.** A scoped limit in every branch (DECISIONS 2026-11-07). The literal test cannot fail. Pick the A7 reporting row once Stage 0 exists (`research/PREREG_A7_DRAFT.md:391-398`), or R3-e if it has not run.
-- **RQ5.** Not tested. A6 did not freeze: its own pre-freeze check on the first frame, fixed before any model output, failed on one of three detectors (GraphAU AU10 ratio .80 against .50; DECISIONS 2026-11-10). Named as future work, with the fill design as the thing to change.
+Rule: `research/PREREG_A8_DRAFT.md:678-707`. A8 rows sit under the frozen rows, may support a statement of scope only, and cannot change a frozen verdict. Families are A8's own, smaller than the frozen ones, which the text must say.
+
+- **A8 model agrees with its sibling.** On [test], [larger model] reached the same class as [small sibling], which extends that result's scope within the family to [size]. It is not a new test of the claim.
+- **A8 model differs from its sibling.** On [test], [larger model] was [class] where [sibling] was [class]. Both are reported and the difference is described, not tested. It bounds the frozen result's scope to the model size tested.
+- **Not run.** [Step] was not run on [model] because [the A8 stop rule, a failed retry, storage, or deferral by a dated note], and nothing is inferred from that.
+
+## RQ3: the route through the model
+
+A scoped limit in every branch (DECISIONS 2026-11-07). Stage 0 is locked (RESULTS_REGISTRY, "A7 Stage 0", 2026-11-10). Drafted text:
+
+On both eligible models the only complete cut of the vision path was the whole path, at its exit into the language model, and the contrast of a whole-path cut is zero by construction. No site inside the language model was shown to be a complete cut, so whether a cue's effect is carried through the language model is not testable here beyond the interface. The tokens at a cue's location did not hold its effect on Gemma 4, where it leaked past them, and could not be located reliably on Qwen3-VL, so cue-level mediation is not testable by a token cut on either model.
+
+Then one sentence for the route arm, a secondary split of the complete exit cut reported in the supplement, which has no human reading and never answers RQ3:
+
+- **Carried by one block, or Both blocks.** On this edit and readout, [model]'s change was carried by [block]. The interaction rider, [rider], is descriptive and is given with its recovery rates. This is about which tensor carries the effect of one eyes-and-mouth edit, not about how the model reads faces.
+- **No effect to carry.** The joint eyes-and-mouth edit did not move [model]'s option-free judgement enough to trace; a statement about the edit, reported with its recovery reach (.62 to .65 at the null).
+- **Not tested.** The route arm's preconditions (Gate B, the sham or the gates) failed for [model], applied by code as recorded before any A2 output existed.
+- **Inconclusive.** [reason code].
+
+Never "the model does not use route R" without "on this edit"; never "blocking route R"; no depth statement about the language model.
+
+## RQ5
+
+Not tested. A6 did not freeze: its own pre-freeze check on the first frame, fixed before any model output, failed on one of three detectors (GraphAU AU10 ratio .80 against .50; DECISIONS 2026-11-10). Named as future work, with the fill design as the thing to change: a fill taken from a neutral clip of the same actor rather than the first frame, in a new amendment frozen before any data.
 
 ## What would settle it
 
@@ -91,12 +141,14 @@ Each item is a disclosed deviation or limit, with its DECISIONS date. Order by w
 13. **A2 cannot reach Null on 8 of 16 contrasts, 10 of 16 on Qwen3-VL** (2026-11-07, "A2 frozen before A1 is read"). (methods)
 14. **A2 source support weakened after the freeze** (2026-11-07, "Source check after the A2 freeze"). P7, P12 and P13 chiefly; contrary evidence for P12 and P13. Predictions unchanged. (methods)
 15. **A2 test liberal under one skewed null; .01 sensitivity** (2026-11-08). Verdicts stay primary; each also reported at *P* < .01. Whether real portrayal gain is skewed this way is unknown. (methods)
-16. **A4 frozen with two exempt accuracy cells and a thin V1 pass** (2026-11-07, "Freeze A4 before A1 is read"). No accuracy claim for residual CEA on weak conversational effects; most families unconfirmed by a detector. (methods)
-17. **A4 ceiling uses a related estimator** (2026-11-08). Corrected values are approximate; decisions use uncorrected values. (methods)
-18. **A4 domain limits** (A4 frozen text, `research/PREREG_A4_DRAFT.md:221-250`). Avatars, static peak frames against 1.25 s of motion, linear amplitude mapping, AU22 and AU27 approximated, four faces per set, the EA faces not based on East Asian people. (methods)
-19. **G7 is a scoped limit** (2026-11-07). The literal route test is vacuous; depth is not testable; Stage 0 has not run. (methods)
-20. **A5 balance is descriptive** (2026-11-08, two entries). `min_balance_cells` of 4; balance verdicts left the confirmatory claims after run 6; five recovery failures stay on record. Only the evidence classes are confirmatory. methods.md still calls A5 unfrozen: see the report on proposed changes.
-21. **A6 closed as a limit** (2026-11-10). Its first-frame AU check blocked the freeze on GraphAU AU10 (.80 against .50), so RQ5 was not run. Earlier, A6 had given up its cue-absent nulls (2026-11-08).
-22. **Full forwards on all models** (2026-11-04). One scoring path; bfloat16 rounding between paths shown, so cached scoring was dropped. Not a limit on results, but a design choice to state.
-23. **Data and scope limits** (methods.md, Human data). Human predictions come from other stimuli; about 8 of 21 labels overlap the Snoek sets; 17 actors only partly crossed with label; option sets still identify category on the natural task; author-set thresholds; open models only; seven workbook items with no clip and one item with two files (outline.md, inconsistency 16, still open).
-24. **EU-Emotion permissions** (2026-11-08, "EU-Emotion permissions settled"). Norms public and in-memory edits allowed; videos withheld by choice. A data statement, not a limit.
+16. **A2, A4 and A5 pre-data rulings after independent code audits** (2026-11-12). No code or hash changed; each ruling reads the frozen output more strictly or adds a declared calculation (A2's fill rule also on Opposes; A4's Holm family fixed at two models and non-finite rows unusable; Aligned and Not aligned both met read as Inconclusive; input errors void a run). Made before any of their data existed.
+17. **A4 frozen with two exempt accuracy cells and a thin V1 pass** (2026-11-07, "Freeze A4 before A1 is read"). No accuracy claim for residual CEA on weak conversational effects; most families unconfirmed by a detector. (methods)
+18. **A4 ceiling uses a related estimator** (2026-11-08; quantified by the 2026-11-12 audit at .0003 or less on the basic ceilings). Corrected values are approximate; decisions use uncorrected values. (methods)
+19. **A4 domain limits** (A4 frozen text, `research/PREREG_A4_DRAFT.md:221-250`). Avatars, static peak frames against 1.25 s of motion, linear amplitude mapping, AU22 and AU27 approximated, four faces per set, the EA faces not based on East Asian people. (methods)
+20. **A9's narrowing was chosen after a recovery run was seen** (lead decision 8, 2026-11-09). The replacement keeps every decision confirmatory and withdraws the weak-effect accuracy claim under correlated face noise; it is more favourable to confirmatory decisions than the rule it replaced, whose reading is reported beside each decision. A9 shares lab, generator, protocol and culture with A4.
+21. **G7 is a scoped limit** (2026-11-07). The literal route test is vacuous; Stage 0 (2026-11-10) found the exit cut complete and no complete cut inside the language model, so depth is not testable, and the region test failed on both models. The route arm is a secondary split, submitted before A2's output existed with its preconditions applied by code (2026-11-12). (methods)
+22. **A5 balance is descriptive** (2026-11-08, two entries). `min_balance_cells` of 4; balance verdicts left the confirmatory claims after run 6; five recovery failures stay on record. Only the evidence classes are confirmatory.
+23. **A6 closed as a limit** (2026-11-10). Its first-frame AU check blocked the freeze on GraphAU AU10 (.80 against .50), so RQ5 was not run. Earlier, A6 had given up its cue-absent nulls (2026-11-08).
+24. **Full forwards on all models** (2026-11-04). One scoring path; bfloat16 rounding between paths shown, so cached scoring was dropped. Not a limit on results, but a design choice to state.
+25. **Data and scope limits** (methods.md, Human data). Human predictions come from other stimuli; about 8 of 21 labels overlap the Snoek sets; 17 actors only partly crossed with label; option sets still identify category on the natural task; author-set thresholds; open models only. Seven workbook items have no edited clip in the collaborators' working set and are left out (DECISIONS 2026-11-12; IDs in `eu_missing_items_check.json`).
+26. **EU-Emotion permissions** (2026-11-08, "EU-Emotion permissions settled"). Norms public and in-memory edits allowed; videos withheld by choice. A data statement, not a limit.

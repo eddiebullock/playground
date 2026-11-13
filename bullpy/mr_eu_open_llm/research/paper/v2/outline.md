@@ -20,7 +20,7 @@ Drafted 2026-11-07, updated the same day after the A4 freeze. No A1 result has b
 
 ## Abstract template (150 words at most)
 
-> Some vision-language models are reported to match people at reading mental states from faces, but several claims we located cannot rule out option order or prompt text. We audited [PENDING: n] models on 243 acted clips, with option position controlled and faces swapped under fixed prompts. [PENDING: RQ0 sentence.] We prove that agreement on natural items cannot settle which cues a system uses, because natural cues are correlated. We therefore compared model cue effects with human effects from randomised facial action units. [PENDING: RQ1 sentence.] Stimulus interventions tested preregistered human predictions. [PENDING: RQ2 sentence.] [PENDING: closing sentence from the scenario table.]
+> Some vision-language models are reported to match people at reading mental states from faces, but several claims we located cannot rule out option order or prompt text. We audited [PENDING: n] models on 243 acted clips, with option position controlled and faces swapped under fixed prompts. [PENDING: RQ0 sentence.] We prove that agreement on natural items does not in general determine which cues a system uses. We therefore compared model cue effects with human effects from randomised facial action units. [PENDING: RQ1 sentence.] Stimulus interventions tested preregistered human predictions. [PENDING: RQ2 sentence.] [PENDING: closing sentence from the scenario table.]
 
 ## Results structure
 
@@ -28,7 +28,7 @@ Subheadings are provisional. Sections 1 and 3 hold whatever the outcomes are.
 
 1. **Several published designs, and our earlier one, cannot rule out option order or prompt text.** The audit: target position, option sets, delivery, weak labels, the eight-paper table. Figure 1.
 2. **Dependence on the face (RQ0).** A1, then A3, per model, read through the frozen table. Figure 2.
-3. **Behaviour cannot settle cue use.** The identifiability results, and the cue spectra as the empirical measure of the gap. Figure 3.
+3. **Behaviour on natural items does not in general settle cue use.** The identifiability results, and the cue spectra as the empirical measure of the gap. Figure 3.
 4. **Pattern alignment on natural clips (RQ1).** Family pattern score per model. Table or Figure 4.
 5. **Cue effects under randomisation (RQ1).** A4: validity gate, with the thin V1 pass and the family flag stated, then residual CEA per model and dataset against its own between-group reference, with raw CEA as secondary. Figure 5.
 6. **Do behaviour and cue effects disagree?** CEA beside output similarity and modal agreement. Part of Figure 5.

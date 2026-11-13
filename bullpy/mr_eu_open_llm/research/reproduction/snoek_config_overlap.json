@@ -1,0 +1,75 @@
+{
+ "description": "Snoek et al.: how far the basic and conversational experiments share AU configurations.",
+ "archive_sha256": "6542ef31530545135f9572609a194d34c80566078b82fea0490266e6f015d706",
+ "script_sha256": "156343c115ace10a2742064ccaf421554f2f4fe975b7db815596f919e99f53ee",
+ "coding": {
+  "values": {
+   "unique_configurations": {
+    "basic_WC": 4659,
+    "basic_EA": 2322,
+    "conversational_WC": 2314,
+    "conversational_EA": 2322
+   },
+   "pairs": {
+    "basic_EA|conversational_EA": {
+     "overlap": 2322,
+     "identical": true,
+     "second_within_first": true,
+     "first_within_second": true
+    },
+    "basic_WC|conversational_WC": {
+     "overlap": 2314,
+     "identical": false,
+     "second_within_first": true,
+     "first_within_second": false
+    },
+    "basic_WC|basic_EA": {
+     "overlap": 507,
+     "identical": false,
+     "second_within_first": false,
+     "first_within_second": false
+    },
+    "conversational_WC|conversational_EA": {
+     "overlap": 502,
+     "identical": false,
+     "second_within_first": false,
+     "first_within_second": false
+    }
+   }
+  },
+  "presence": {
+   "unique_configurations": {
+    "basic_WC": 3618,
+    "basic_EA": 1926,
+    "conversational_WC": 1933,
+    "conversational_EA": 1926
+   },
+   "pairs": {
+    "basic_EA|conversational_EA": {
+     "overlap": 1926,
+     "identical": true,
+     "second_within_first": true,
+     "first_within_second": true
+    },
+    "basic_WC|conversational_WC": {
+     "overlap": 1933,
+     "identical": false,
+     "second_within_first": true,
+     "first_within_second": false
+    },
+    "basic_WC|basic_EA": {
+     "overlap": 856,
+     "identical": false,
+     "second_within_first": false,
+     "first_within_second": false
+    },
+    "conversational_WC|conversational_EA": {
+     "overlap": 721,
+     "identical": false,
+     "second_within_first": false,
+     "first_within_second": false
+    }
+   }
+  }
+ }
+}

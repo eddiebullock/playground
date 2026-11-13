@@ -542,3 +542,134 @@ The route-arm GPU jobs are submitted now, so that they gain queue age while the 
 
 - **Preconditions** (RQ0, gates and delivery, Gate B and the sham, per model and route) are applied by A7's analysis code when A2's output exists, as `PREREG_A7_DRAFT.md`, "When Stage 1 runs at all", provides. Where one fails, the verdict is A7's own "Not tested", and those cells carry no verdict. This replaces the 2026-11-10 entry's wording "is not run" for that case; no threshold, arm or estimand changes.
 - **Cost:** about 1.06 GPU-hours per model as an upper bound, on the free SL3 allocation, in 59-minute tasks.
+
+## 2026-11-12: A9 timing smokes submitted (scheduling only)
+
+A9's freeze checklist step 4 needs RQ0 and A4's gates. Both are settled: A1 and A3 passed on all three models (2026-11-09), and `research/reproduction/a4_gates.json` (scripted from the frozen outputs, 2026-11-12) has Gemma 4 and Qwen3-VL eligible and Molmo2 not (G2 to G4). So the timing smokes went in at about 22:50, to gain queue age while A2 and A4 wait: Gemma 40843619, Qwen 40843620, 40 cells each on shard 0, 30-minute cap, QoS `gpu2` (not `intr`, which the user has given to another project's agent). Before submission, on the cluster: every A9 and A4 run-path file and `src/` equal to the committed copies by sha256, the manifest equal to its pin (`4b2f04ae...`), and 40 render tars present. Smoke cells go to `cells_{model}_smoke_0.jsonl`, beside the real cells, and stay out of the analysis, as A4's did. The scored runs follow once a smoke has given its timing, as step 4 orders; only status, seconds and memory are read from a smoke.
+
+## 2026-11-12: A7 Stage 1 added to the Phase 3 runbook (no design change)
+
+`research/scripts/post_phase3.py` now pulls and analyses A7 Stage 1 (`pull a7`, `analyse a7`), through a new pre-run check, `research/scripts/a7_prerun_check.py`, written before any Stage 1 cell or A2 output exists. It refuses unless A2's analysis has run (complete run note, outputs at the recorded sha256), and makes A7 read exactly the A2 cells and reports A2's analysis read, at the bytes A2's pre-run check recorded. It checks every Stage 1 line parses, carries A7's design hash, the 2026-11-10 decision date and the route, and has no duplicate. It writes the inputs file `a7_analyse.py` needs: the Stage 0 tables, the cells, A2's output, the decisions as the 2026-11-10 entry records them (route run, conditional on the preconditions applied by code; token not run), and the clips under 8 tokens, computed with A2's frozen functions as A2's analysis computes them, for A7's declared sensitivity. Output: `research/reproduction/a7_analysis.json`. Frozen A7 and A2 code is unchanged; `tests/test_a7_prerun.py` covers it on synthetic files.
+
+## 2026-11-12: Snoek archive placed on the cluster so A8's A4 analysis can run (logistics only)
+
+Found while checking A8's path from launch to analysis: the launcher's `a4_analyse` step needs the cluster (its storage check calls `quota`), and the frozen A4 analysis reads the Snoek archive by default from `data/external/snoek_au/`, which was only on the Mac. The archive (CC BY 4.0, public) was copied there on the cluster, read-only, with sha256 equal to the pin in `scripts/reproduce.py`; the other default inputs were checked equal. Dated note appended to `PREREG_A8_DRAFT.md` (outside the hashed block). Also found: a cluster-wide shutdown, reservation `Dec2026-shutdown`, 2026-12-07 07:00 to 2027-01-10, covering every GPU node; added to the ROADMAP risk register. A8 is sized against what is left before it.
+
+## 2026-11-12: A7's token-floor sensitivity made available (pre-data; supersedes one line of the A2 audit rulings)
+
+The A2 rulings of 2026-11-12 (`PREREG_A2_DRAFT.md`, Deviations, item 9) say A7's token-floor sensitivity "is reported as not available", because A2's output writes only the share of clips under 8 tokens, not the list. The A7 pre-run check written tonight (`research/scripts/a7_prerun_check.py`) computes that list with A2's frozen functions (`delivery_rows`, `below_token_floor`) on A2's own run reports and the pinned geometry, exactly as A2's analysis computes its share, so the sensitivity A7's text declares ("Clips with at least 8 tokens across the face, by `below_token_floor`") can be reported. This is decided before any A2 cell exists; it adds a declared sensitivity and changes no verdict, threshold or frozen file. The A7 run note will record the list's sha256 with the inputs file.
+
+## 2026-11-13: A9 scored runs submitted before the timing smokes ran (scheduling only)
+
+At about 03:19 the A9 scored arrays went in with the command in `PREREG_A9_DRAFT.md`, checklist step 4: Gemma 4 40863756 and Qwen3-VL 40863757, 12 shards each, 6-hour cap, QoS `gpu2` (not `intr`). The timing smokes (40843619, 40843620) are still pending. This supersedes the last sentence of the 2026-11-12 smoke entry ("The scored runs follow once a smoke has given its timing").
+
+- **Why now.** A check of the queue at 03:15 found that the `gpu2` QoS is capped at 32 GPUs for all its users together (`sacctmgr show qos gpu2`: GrpTRES `gres/gpu=32`), 28 of them in use, and about 870 pending `gpu2` tasks of other users with higher priority than this project's oldest job. This project's fair share is 0, so its priority grows only with age, about 1.5 a hour (PriorityMaxAge 28 days, age weight 1,000). Every `gpu2` job of this project since 2026-10-30 started by backfill; 12-hour tasks submitted on 2026-11-04 waited about 4.4 days. Submitting only after a smoke finished would start the scored runs' queue age days later, against the GPU shutdown on 2026-12-07 that A8 also has to clear.
+- **The order step 4 asks for is kept in practice.** The smoke is for timing. Both smokes are older and shorter than the scored tasks, so both the main and the backfill scheduler reach them first (priority 106 against 100 at submission; both age at the same rate, so the gap stays). Smoke cells go to `cells_{model}_smoke_0.jsonl`, which the runbook never pulls.
+- **Use of the smokes, fixed now.** Only status, Elapsed, MaxRSS and the `seconds` field are read, as before. A pending job's limit can be lowered but not raised. If a smoke projects a shard well under the cap, the scored tasks' limit is lowered to three times the projected shard time, rounded up to the half hour and never below 2 hours, so they fit more backfill gaps. If a smoke projects over the cap (above about 7 s a cell, against A4's measured 1 s on the same models), the scored arrays are cancelled and resubmitted with a longer cap before any task starts. If a smoke fails, the scored arrays are held (`scontrol hold`) until the cause is known.
+- **Checked before submission, on the cluster:** the 33 run-path files (A9's code pins, A4's pins, `slurm_jobs/study3_a9.sh` and `src/`) equal to the committed copies by sha256, the manifest equal to its pin (`4b2f04ae...`) and 40 render tars present. The runner also refuses unpinned code itself.
+- **Nothing read; nothing changed.** No A9 cell exists. Design, thresholds and hashes are unchanged. The runbook pulls these arrays with `post_phase3.py pull a9 --jobs 40863756 40863757`, then `analyse a9`.
+
+## 2026-11-13: A9's pre-run check enforces the A4-summary rule (no design change)
+
+A9's replication rule (ii) says the A4 summary supplied to A9's analysis must be the file whose sha256 was recorded when A4 was analysed. The pre-run check checked only that A4's summary exists and carries A4's design hash, and A9's analysis records the sha256 it read, so a wrong file would only have been found after A9's single run. `research/scripts/a9_prerun_check.py` now also requires A4's run note (`research/reproduction/a4_run_note.json`, written by `post_phase3.py analyse a4`) to be complete and to record that same sha256 for `results/a4/summary.json`; otherwise it fails and A9's analysis does not start. Written before any A9 cell exists; frozen code unchanged; tested in `tests/test_a2_declared.py`.
+
+## 2026-11-13: A8's launcher and family code fixed before its code pins (no design change)
+
+A read-only audit of A8's path from launch to analysis (ROADMAP local item 4) ran on 2026-11-13. An independent agent did the audit, and the coordinator checked each finding used here against the code. It found faults in A8's own code, which is not pinned yet (`PREREG_A8_DRAFT.md`, "Code hashes": "pinned by a dated, pre-data step before any A8 output exists"), so fixing them needs no deviation. Fixed and tested (`tests/test_a8.py`: 59 passed, 1 skipped, the GPU test):
+
+- **`natural_rq1` could not finish.** The frozen `research/scripts/same_clip_family_analysis.py` ends with `sys.exit(main())`. The launcher runs frozen scripts in its own process, so that clean exit escaped before the declared output was moved under the A8 roots. Slurm would have shown COMPLETED and the launcher record "failed", and a retry would have been refused, because the unmoved file exists. `run_frozen` now treats a clean exit (code None or 0) as the script finishing; any other code, or a refusal message, still fails the job. No other frozen step ends this way (checked).
+- **The dated note of 2026-11-09 was not in the code.** The note says that a partial A3 file after two out-of-memory attempts at the largest GPU count counts as "no A3 result" for that model, and the other model goes on. The family code instead waited, with no way past.
+  - The A3 family now applies the note from the launcher records.
+  - The records now keep a crash's cause (`error`) and mark an out-of-memory crash as `out_of_memory`. A3's frozen script does not catch CUDA errors per cell, so such a crash was recorded only as `failed`.
+  - A crash with no out-of-memory evidence still makes the family wait.
+- **Provenance named absolute paths.** A summary written on the cluster could not be checked after a pull, and one written on the Mac would fail the launcher's eligibility check on the cluster. Paths under the project root are now stored relative to it.
+- **A8's `a4_analyse` step ran with multi-threaded BLAS,** unlike A4's own analysis (A4 pre-data ruling 7, 2026-11-12). `slurm_jobs/a8_job.sh` now sets the four thread variables to 1 for that step; the launcher refuses the step otherwise and records the values.
+
+Open from the same audit:
+- **A2's and A4's rulings of 2026-11-12 are not yet applied to A8's runs of the same frozen analyses:** the fill rule on Opposes, non-finite rows, and shard and input checks. They are to be settled by a dated A8 note before any A8 output exists, with A8 pre-run checks.
+- **A8 has no runbook:** no order of steps on the cluster, no pull with hashes, and no run note.
+- **Minor:** two A8 producers write no provenance, and gate files are read without their launcher record.
+
+Nothing was read. The hashed block, its 48 frozen-file pins and every threshold are unchanged. The pending A8 equivalence job (40399722) runs from its own folder (`~/rds/hpc-work/a8_check`) and is not affected. Nothing was synced to the cluster; the code-pin step syncs and pins A8's code.
+
+## 2026-11-13: A2's and A4's rulings of 2026-11-12 carried over to A8 (pre-data; no design change)
+
+A8 runs A2's and A4's frozen analyses on two larger models, and its rows are read under the frozen rows. The rulings that A2's and A4's code audits produced on 2026-11-12 came after A8 was frozen, so A8's runs of the same analyses would have been read differently from the frozen ones. Examples:
+- Opposes verdicts without the fill rule, which Table 1 and Figure 6 apply.
+- Non-finite rows kept.
+- No shard or input check before the single run.
+
+A dated note in `PREREG_A8_DRAFT.md` (2026-11-13, about 06:00, outside the hashed block) carries the rulings over, as A9 did for A4's on 2026-11-12:
+- **A2 rulings 1 to 9 apply to each A8 model's A2 output.**
+- **A4 rulings 1 to 8 apply to A8's A4 analysis,** with three points that A8's block settles differently:
+  - *Family.* The block's family stands: the models with A4 cells in `results/a8/a4`. The single run waits until every such model is complete.
+  - *Shards.* The shard count is a run setting, read from the ok `a4_run` launcher records.
+  - *Non-finite rows.* The block fixes `--cells_dir results/a8/a4`, so ruling 2's filtered copy cannot be a separate folder. The original moves, unchanged, to `results/a8/a4/unfiltered/`, and the filtered copy takes its name. The frozen analysis reads only `cells_<model>_<n>.jsonl` at the top of the folder (`scripts/a4_analyse.py`, `shard_files`), so it does not read the original.
+- **No A4 result for a model** whose A4 cannot finish under the dated note of 2026-11-09. Its shard files are moved, unchanged, to `results/a8/a4/no_result/`, so the other model's analysis goes on.
+
+Why this reading. It is the one that keeps A8's rows comparable with the frozen rows. Without it, A8's verdicts would be read by a different rule from the frozen rows they sit under. Changing the hashed block to add a filtered folder would need a new design hash for a case that may never occur. Not running A8's A4 on a single non-finite row would drop the other model's result too.
+
+New: `research/scripts/a8_prerun_check.py`, with subcommands `a2 --a8_id <id>` and `a4 [--apply_filter] [--no_result <id>]`, written before any A8 output exists.
+- It reuses A2's and A4's own pre-run check functions, unchanged.
+- It runs A4's `check_model` at the launched shard count.
+- It reads only A8's own gate files, delivery records and summaries.
+- Tests: `tests/test_a8.py` 64 passed, 1 skipped, and `tests/test_a2_declared.py` passes.
+
+The script is listed in A8's Code table, so it is pinned at the code-pin step. So are the two pre-run check modules it loads and `a2_declared_extras.py`. Nothing read; block hash `95dd41b5` unchanged.
+
+## 2026-11-13: A8's gate, delivery and provenance handling brought in line with its block (no design change)
+
+These are the two minor findings left open by the A8 audit (entry above). Both are fixed in A8's own, still unpinned, code before any A8 output exists.
+
+- **Gate and delivery files are read only from jobs that ended ok.** Block rule `inputs_from_launched_jobs` says model outputs are read only when a launcher record with status ok and the design's weights exists for the job that wrote them. The A3 family, the A1 family, the launcher's eligibility check and the A4 gates builder read gate and delivery files without that record, so a file left by a failed job could have been read as a result.
+  - They now go through `a8_family.gate_result` and `delivery_status`.
+  - Two failed attempts with no file (rule `not_tested_after_retry`), or a file left by two out-of-memory attempts at the largest GPU count (dated note 2026-11-09), mean no result. For gates, no result counts as not passed.
+  - In any other case the caller waits.
+- **Provenance for the last two producers.** `PREREG_A8_DRAFT.md` ("Analyses outside the launcher") says `a8_a4_gates.py` and `a8_analyse_a2.py` each write a provenance file that the next consumer checks; neither did.
+  - Both now write one.
+  - A8's A4 pre-run check verifies the gates file's provenance.
+
+Tests: `tests/test_a8.py` 66 passed, 1 skipped. Nothing read; block hash `95dd41b5` unchanged. Still open: a `pull a8` command in `post_phase3.py`. It is needed only after A8's jobs run; the order of steps is in the ROADMAP's A8 runbook.
+
+## 2026-11-13: Independent review of the night's A8 code; findings fixed before the code pins (no design change)
+
+An independent agent reviewed commits `b5c4896`, `d4f11d4` and `d0e945e` against the A8 block, the dated notes and the carried-over rulings. Its report: no frozen file changed, and the block hash is `95dd41b5` at every commit. It found real problems in A8's own, still unpinned, code. I checked each against the code before fixing.
+
+- **A model could leave A8's A4 family unnoticed.** Membership came from shard files only, so a model whose `a4_run` jobs were queued, or had crashed before writing a cell, would have dropped out of the Holm family without the 2026-11-09 condition. It is now accounted for if eligible, launched or holding cells.
+- **Files could move on a failing check, and a later file could overwrite a kept original.** The set-aside ran before every other check and used a plain move. Moves and filters now happen only on a passing check, never onto an existing file, and every record hashes what was moved.
+- **A crashed gates job could block both models (a regression from `d0e945e`).** `vision_gates.py` saves its file before loading the model, so a crashed job always left a file with no verdict. Under the stricter reading that file was never "no output", and every all-model builder waited. Such a file is now read as no output file. The A1 family also checks A3 before gates.
+- **The single analyses did not require the check.** They now refuse without a passing record at a fixed path, and the files they read must be exactly the set, with the bytes, that the record hashed.
+- **An interrupted filter could lose a shard name.** The original moved first, and a rerun never repaired it. The original is now copied first, and the filtered copy takes the name in one rename.
+- **Low-severity items:**
+  - An unknown `--no_result` id crashed the check. It is now a failure message.
+  - The check now waits for A8's code pins and checks the frozen code, like every A8 entry point.
+  - A retry still in Slurm's queue counted as an ended attempt. The launcher now records the job id, and the family code waits while the job is listed.
+  - The A4 check now records A4's design hash, the pandas version and the Snoek archive's sha256, as A4's own check does.
+
+The note's text is brought into line by an addendum to the 2026-11-13 dated note in `PREREG_A8_DRAFT.md`. Tests: `tests/test_a8.py` 74 passed, 1 skipped, with a regression test for each finding. Of the reviewer's six reproductions, five now fail as intended. The sixth, a retry in flight, needs Slurm's queue, so it is tested with a stand-in for `squeue`. Nothing read; block hash unchanged.
+
+## 2026-11-13: `p1-pipeline` rebuilt to take the user's notes file off the public branch (repository only; no project file changed)
+
+On 2026-11-12 at about 22:58 a `git commit -a` took the user's uncommitted `notes/notes.txt` into a commit on the public `p1-pipeline` branch (NEEDS_INPUT 10). On the user's instruction, given 2026-11-13 at about 09:10:
+- The branch was rebuilt from `d8c2e01`, the commit before, with `notes/notes.txt` restored to its `d8c2e01` version in each of the 40 later commits.
+- It was force-pushed with a lease pinned to the old tip. The new tip is `f37beae`.
+
+Checked before the push:
+- Each rebuilt commit has the same message, author, committer and dates as its original, and its tree differs only in `notes/notes.txt`, which is outside the project folder. So every project file at every commit is unchanged.
+- The leaked version cannot be reached from the new tip.
+- No tag holds the old commits (every amendment's freeze tag predates them), and no PR was open.
+
+Commit IDs cited in the documents (STATE, ROADMAP, this file, `REPRODUCE.md`, `data_code_availability.md`) were changed to the rebuilt commits' IDs, which have the same project content. So the clean-checkout test recorded at `feefec8` stands as recorded. Two rebuilt commit messages still cite old IDs. The old history is kept in a local branch on the user's Mac only. GitHub may keep the old commits reachable by their IDs until it purges them; asking GitHub Support is the user's choice (NEEDS_INPUT 10).
+
+## 2026-11-13: Literature table, [1] recoded from "partly" to "no" on option sets (user's decision; no analysis affected)
+
+NEEDS_INPUT 11, from review finding 36. The user chose the recommended stricter reading.
+- Strachan et al. [1] set its alternatives per item. On the MRMET, a repeated label always came with the same three alternatives, which is the prompt-text fault the Figure 1e legend codes as "no".
+- `literature_table.csv` now codes [1]'s `option_sets_code` as `no`. One option set across items: yes 3, no 1, not stated 2, does not arise 2 (was yes 3, partly 1, not stated 2, does not arise 2).
+- Updated to match:
+  - the registry row "Literature table, eight papers coded";
+  - the pinned counts and sha256 in `scripts/reproduce.py`;
+  - the Results literature paragraph;
+  - the Figure 1e legend, with one line on why;
+  - Figure 1, rebuilt in the reproduction environment, where only `fig1.png`, `fig1.pdf` and one `SOURCES.md` row changed, and Figure 3 rebuilt byte-identically.
+- The table is descriptive: no preregistered analysis, threshold or verdict reads it.

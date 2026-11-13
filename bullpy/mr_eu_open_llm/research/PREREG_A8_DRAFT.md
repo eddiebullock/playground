@@ -760,6 +760,7 @@ No existing file is edited. New files, written 2026-11-09, to be pinned in "Code
 | `research/scripts/a8_a4_gates.py` | The `--gates` file for the frozen A4 analysis |
 | `slurm_jobs/a8_job.sh` | Environment per step, then the launcher |
 | `tests/test_a8.py` | Unit tests and the three equivalence tests; GPU and frozen-file tests skip without them |
+| `research/scripts/a8_prerun_check.py` | Added 2026-11-13, before any A8 output (dated note of that day): the A2 and A4 pre-run checks on A8's own inputs. It loads `research/scripts/a2_prerun_check.py` and `research/scripts/a4_prerun_check.py`, and the A2 step runs `research/scripts/a2_declared_extras.py`; those three are pinned with A8's code |
 
 ## Code hashes
 
@@ -854,3 +855,53 @@ Audit: `research/reviews/a8_audit.md`. "Fixed" means fixed in the block, code or
 - 2026-11-09 (Freeze checklist item 5, read-only, before any A8 output): Gemma 4 E4B A1 task times from Slurm accounting, arrays 39982133 and 39982134 (real and mismatch; identified by output-file times, since the model was passed by environment variable): 33 min 10 s to 38 min 45 s per rotation task, 10 tasks. Molmo2 (39982135, 39982136): 42 to 49 min. Qwen3-VL-8B (39982137_0, _1): 7 h 44 min and 7 h 42 min. A1 cost is therefore model-specific, not proportional to parameter count; the compute section's Gemma estimate is a run-planning figure only and changes no rule.
 
 **2026-11-09, about 17:48, checklist items 3 and 6 (after the Phase 2 sync, before any A8 output).** On the cluster in `~/rds/hpc-work/study3`, `sha256sum -c` against the block: all 48 entries of `frozen_code_sha256` OK, and all 10 entries of `data_sha256` OK, including the five rotation lookups `data/eu_emotions_human_entropy_rot{0..4}.json`, so the off-repo regeneration and the cluster copies agree. The Phase 2 sync itself logged 113 pinned files with no mismatch (`research/reproduction/phase2_hash_check.json`). Item 2 is still open: the GPU equivalence test, job 40399722, is waiting on priority.
+
+**2026-11-12, about 23:30 (before any A8 output; run logistics, no design change).** The launcher's `a4_analyse` step cannot run on the Mac, because its storage check calls CSD3's `quota`, and it could not have run on the cluster, because the frozen `scripts/a4_analyse.py` reads the Snoek archive at its default `data/external/snoek_au/au_emotion_data.zip`, which was only on the Mac. The archive (CC BY 4.0) was copied to that path on the cluster and made read-only; its sha256 there is `6542ef31...d706`, equal to the pin in `scripts/reproduce.py`. The other inputs `a4_analyse` reads by default (`human_au_effects.json`, `a4_human_ceiling.json`, `a4_recovery.json`) were checked equal by sha256 on the cluster, and `results/a4/manifest.csv` is there. So A8's A4 analysis runs on the cluster through the launcher, as the block's command fixes. The frozen A4 analysis of the two frozen models still runs on the Mac (`post_phase3.py`).
+
+**2026-11-13, about 06:00 (before any A8 output; no design change): A2's and A4's rulings of 2026-11-12 carried over to A8.**
+
+A8 runs A2's and A4's frozen analyses on two larger models (block `steps`: A2 "with both dated deviations and the .01 sensitivity", A4 "PREREG_A4_DRAFT.md"), and its rows are read under the frozen rows. Independent audits of A2's and A4's code produced rulings on 2026-11-12, after A8 was frozen, on points their texts left open (`PREREG_A2_DRAFT.md` and `PREREG_A4_DRAFT.md`, "Deviations", 2026-11-12). A8 takes the same readings, as A9 did for A4's, fixed now:
+
+1. **A2 (rulings 1 to 9) apply to each A8 model's A2 output as to the frozen ones.**
+   - The fill rule governs Opposes verdicts (ruling 1).
+   - `research/scripts/a2_declared_extras.py` runs on each A8 output. It also writes the equivalence intervals and the shuffles (rulings 4 and 5).
+   - Before `a8_analyse_a2.py` runs, an A8 pre-run check applies rulings 2, 3, 6 and 7 to A8's own inputs:
+     - the cells and run reports under `results/a8/<a8_id>/stimulus_interventions/`;
+     - the A8 model's own delivery record, for pixel shapes;
+     - A8's own gate files and A1 and A3 summaries, with their provenance and launcher records;
+     - the pinned geometry.
+   - The small siblings' gate files are never read for an A8 model.
+2. **A4 (rulings 1 to 8) apply to A8's run of A4's analysis.** A8's block settles three points differently:
+   - *Family.* The block's family stands: the frozen Holm over the models with A4 cells in `results/a8/a4` (block `families.a4`). The single run starts only when every model with any A4 cell there has all its shards complete, so no model enters the family with part of its data.
+   - *Shards.* The shard count is a run setting.
+     - For each model it is the `n_shards` of its ok `a4_run` launcher records, which must agree.
+     - Each shard file holds exactly `planned_cells(manifest, k, n_shards)`, once each, with status ok and A4's design hash.
+     - Each shard has an ok `a4_run` launcher record with the design's weights (block rule `inputs_from_launched_jobs`).
+   - *Rows that are not finite (ruling 2).* The block fixes `--cells_dir results/a8/a4`, so the analysis cannot be pointed at a filtered folder.
+     - The pre-run check moves each shard file that holds such a row, unchanged, into `results/a8/a4/unfiltered/`. The frozen analysis reads only `cells_<model>_<n>.jsonl` at the top of the folder, so it does not read that subfolder.
+     - The check then writes the filtered copy under the original name.
+     - The removed rows, and the sha256 of both versions, are recorded with the run.
+   - Rulings 4 to 8 apply as written:
+     - inputs at their pinned bytes;
+     - gates built by `research/scripts/a8_a4_gates.py` from A8's outputs;
+     - Inconclusive where Aligned and Not aligned both hold;
+     - R_S as the code computes it;
+     - single-threaded BLAS (enforced by the launcher since 2026-11-13);
+     - the reporting points.
+3. **No A4 result for one model.** A model's A4 may be unable to finish, under the dated note of 2026-11-09 (two out-of-memory attempts at the largest GPU count used for a shard). That model then has no A4 result. Its shard files are moved, unchanged, to `results/a8/a4/no_result/` before the single run, so the other models' analysis goes on, and the move is recorded with the run. The model is then outside the block's family, which counts only models with cells in `results/a8/a4`.
+
+Nothing in the block changes; thresholds, families and hashes are as frozen. Recorded in DECISIONS 2026-11-13.
+
+**2026-11-13, about 06:40, addendum to the note above (before any A8 output; no design change).** An independent review of the code written for that note found that it fell short of the note in four ways. All four are closed in A8's own code, which is not pinned yet.
+
+1. **Which models A4's single run must account for.** A model with no shard file in `results/a8/a4` could leave the family unnoticed, for example if its jobs were still queued or had crashed before writing a cell. The check now accounts for every model that is eligible for A4 by the frozen rules (block rule `a2_a4_only_if_eligible`), has an `a4_run` launcher record, or has shard files. Each such model must be in one of three states:
+   - complete;
+   - set aside under the dated note of 2026-11-09;
+   - deferred by a dated note, named in the check's record, and only when no A4 job or cell exists for it.
+2. **When files move.** Files are moved or filtered only after every other check has passed, never onto an existing file. Every record hashes the files in `unfiltered/` and `no_result/`. A filtered copy takes its shard's name in one rename, so an interrupted filter never leaves a shard missing.
+3. **The analyses require the check.** `a8_analyse_a2.py` and the launcher's `a4_analyse` step refuse to run unless the check's record, at its fixed path, shows no failure. The files they read must be exactly the set, with the bytes, that the check hashed. This chains the check before the analysis, as A2's and A4's own runs do.
+4. **Rule `not_tested_after_retry` in practice.**
+   - `scripts/vision_gates.py` saves its file before it loads the model. A gate file without a verdict is therefore read as no output file, so two crashed gates jobs mean no gate result (not passed), as the rule intends.
+   - An attempt whose Slurm job is still queued or running has not ended. The launcher now records the job id, and the family code waits while the job is listed.
+
+Recorded in DECISIONS 2026-11-13.

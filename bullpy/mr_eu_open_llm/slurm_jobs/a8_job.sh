@@ -105,6 +105,12 @@ case "${STEP}" in
     ;;
 esac
 
+# A4's analysis runs with single-threaded BLAS (A4 pre-data ruling 7, DECISIONS 2026-11-12); the
+# launcher refuses a4_analyse otherwise.
+if [ "${STEP}" = "a4_analyse" ]; then
+  export OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 VECLIB_MAXIMUM_THREADS=1
+fi
+
 ARGS=(--step "${STEP}" --confirm_phase2_completed)
 [ -n "${A8_ID}" ] && ARGS+=(--a8_id "${A8_ID}")
 [ -n "${ROTATION:-}" ] && ARGS+=(--rotation "${ROTATION}")

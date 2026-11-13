@@ -208,6 +208,17 @@ STEPS: List[Step] = [
          [Out("research/reproduction/a4_gates.json")], minutes=0.1,
          note="A4's --gates file, built from the locked A1, A3 and vision-gate files by A2's frozen outside_gates "
               "(PREREG_A4 deviation of 2026-11-12, ruling 5)"),
+    Step("snoek_config_overlap", _py("-I", "research/scripts/snoek_config_overlap.py"),
+         [Out("research/reproduction/snoek_config_overlap.json")], needs=SNOEK, minutes=0.3,
+         note="Snoek AU configurations shared between the basic and conversational experiments (draft review "
+              "2026-11-12, finding 7)"),
+    Step("a9_label_corroboration", _py("-I", "research/scripts/a9_label_corroboration.py"),
+         [Out("research/reproduction/a9_label_corroboration.json", ignore=("inputs_sha256",),
+              note="input hashes skipped: human_au_effects.json is rebuilt earlier in the same run with an unordered "
+                   "pair in tie order, so its bytes can differ; both inputs are checked elsewhere, values in full")],
+         minutes=0.1,
+         note="A9 label-order corroboration from the two committed human-target files (draft review 2026-11-12, "
+              "finding 12)"),
     Step("residual_cea_attenuation",
          _py("research/scripts/residual_cea_attenuation.py", "--out", "research/reproduction/residual_cea_attenuation.json"),
          [Out("research/reproduction/residual_cea_attenuation.json")], minutes=2.7,
@@ -255,7 +266,7 @@ STEPS: List[Step] = [
                         "literature_table": {"papers": 8,
                                              "target_position_code": {"na": 3, "no": 2, "not_stated": 1,
                                                                       "partial": 1, "yes": 1},
-                                             "option_sets_code": {"na": 2, "not_stated": 2, "partial": 1, "yes": 3},
+                                             "option_sets_code": {"na": 2, "no": 1, "not_stated": 2, "yes": 3},
                                              "delivery_check_code": {"not_stated": 8},
                                              "face_dependence_code": {"no": 5, "partial": 3},
                                              "rows_with_inferred_cells": 1}},
@@ -264,6 +275,11 @@ STEPS: List[Step] = [
          stdout="results/reproduce/registry_derived_counts.json",
          note="from the committed a4_v1_pilot.csv, stimulus_features.json and literature_table.csv"),
     # ---------------------------------------------------------------- paper figures, last: they read the files above
+    Step("table1", _py("research/scripts/make_table1.py"), [Out("research/paper/v2/table1.md")], minutes=0.1,
+         note="Table 1 from locked outputs only; A2, A4 and A9 cells read pending until their run notes exist"),
+    Step("table_a7_stage0", _py("research/scripts/make_stage0_table.py"),
+         [Out("research/paper/v2/supplementary_table_a7_stage0.md")], minutes=0.1,
+         note="Supplementary Stage 0 table from the locked a7_stage0 files"),
     Step("paper_figures_1_3", _py("research/scripts/make_figures.py", "--all"),
          [Out("research/paper/v2/figures/fig1.png"), Out("research/paper/v2/figures/fig3.png"),
           Out("research/paper/v2/figures/fig1.pdf",
@@ -402,6 +418,12 @@ STEPS: List[Step] = [
 # --quick mode). Pinned from the committed tree at d6e190a (= origin/main ee92354 for these files),
 # 2026-11-08. A relock that changes one of these files must update its pin in the same commit.
 PINS: Dict[str, str] = {
+    "research/reproduction/a1_nota_shares.json":
+        "eca6970474a439dc7c7415674c15ee44babc4c9d18dc5b999d87e4a2854a37ce",
+    "research/reproduction/a1_frame_strategies.json":
+        "164adee7b0f9777b94345ad977507d05fd3f465130bf32c803059eea6b5b5829",
+    "research/reproduction/a3_token_floor_sensitivity.json":
+        "672d2b641883946c620427ab5b8a2d48b29a361acd941b14ac34dc649b89da2d",
     "research/reproduction/a7_recovery.json":
         "bf5abf634973c825dbfadefb2449e253e7c81422cd17e526773e446a1e493295",
     "research/reproduction/a7_recovery_level1.json":
@@ -491,7 +513,7 @@ PINS: Dict[str, str] = {
     "research/reproduction/input_delivery_qwen3vl.json":
         "802f3231db29f2b27d67e8a6cfd70c78a9ea72c9e3fb4b1cadf7f8c966f1f801",
     "research/reproduction/literature_table.csv":
-        "48a7005d3a5ea695a4646f3e42e4117a91929c3ee7b786826e2a7cb2995820db",
+        "b855a64ad672a3a2c9c98cdd7b987e6981cc0a20e39d544b93c44250646b35d6",
     "research/reproduction/phase2_gate.json":
         "e5319dd49d354e431e73343ce1dee3d2e0ee45b69f3eff423bb9aa33fd60c489",
     "research/reproduction/phase2_gate_all_layers_gemma4.json":
@@ -677,6 +699,11 @@ EXTERNAL_PUBLIC = [R + f for f in (
     "a9_human_target.json", "a9_human_ceiling.json", "a9_chen_overlap.json", "benchmark_leak_audit.json")]
 
 
+# Descriptive outputs added 2026-11-12 after the independent draft review, made from locked outputs that
+# stay off the public repo (the A1 rotation files, the A3 cells, the pinned A2 geometry).
+REVIEW_RECORDS = [R + f for f in ("a1_nota_shares.json", "a1_frame_strategies.json", "a3_token_floor_sensitivity.json")]
+
+
 def _hash_outs(paths: Sequence[str], note: str, drafts: Sequence[str] = ()) -> List[Out]:
     return [Out(p, kind="sha256", sha256=PINS[p], draft=p in drafts, note=note) for p in paths]
 
@@ -711,6 +738,10 @@ HASH_STEPS: List[Step] = [
     Step("hash_cluster_records", None, minutes=0.0, outputs=
          _hash_outs(CLUSTER_RECORDS, "made on the cluster from non-public inputs (videos, weights, caches); "
                                      "verified by hash, cannot be rerun from public inputs")),
+    Step("hash_review_records", None, minutes=0.0, outputs=
+         _hash_outs(REVIEW_RECORDS, "descriptive outputs of 2026-11-12 from locked cluster outputs (A1 rotation "
+                                    "files, A3 cells, pinned geometry); verified by hash, rebuild per the script "
+                                    "docstrings where those files are present")),
     Step("hash_snapshots", None, minutes=0.0, outputs=
          _hash_outs(SNAPSHOTS, "snapshot of an earlier run by earlier code; verified by hash, not rerun")),
     Step("hash_curated_inputs", None, minutes=0.0, outputs=
@@ -731,13 +762,12 @@ PENDING: List[Tuple[str, Tuple[str, ...], str]] = [
      "scripts/analyse_stimulus_interventions.py; needs cluster cells"),
     ("A4 summary (Figure 5)", ("results/a4/summary.json",), "python -m scripts.a4_analyse; needs cluster cells"),
     ("A5 analysis", ("results/a5/a5_analysis.json",), "python -m scripts.a5_analyse (frozen, tag a5-freeze); needs A2 cells"),
-    ("A7 Stage 1 route arm", ("results/a7/a7_analysis.json",),
+    ("A7 Stage 1 route arm", (R + "a7_analysis.json",),
      "python -m scripts.a7_analyse (frozen, tag a7-freeze); runs only where Gate B and the sham pass"),
     ("A9 summary", ("results/a9/summary.json",), "python -m scripts.a9_analyse (frozen, tag a9-freeze); needs cluster cells"),
     ("Figures 5, 6",
      tuple(f"research/paper/v2/figures/fig{n}.{e}" for n in (5, 6) for e in ("pdf", "png")),
      "research/scripts/make_figures.py --fig N --real, which refuses until its LOCKED inputs exist"),
-    ("Table 1 (profile per model)", (), "not yet written; built from the A1, A2 and A4 outputs above"),
 ]
 
 

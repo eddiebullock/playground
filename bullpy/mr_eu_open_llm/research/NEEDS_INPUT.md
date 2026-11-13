@@ -62,6 +62,36 @@ These only matter at submission. Nothing waits on them.
 
 - **Code DOI.** NHB wants code in a DOI-minting repository. Zenodo needs your login. `CITATION.cff` and `.zenodo.json` are drafted in the project folder, but GitHub and Zenodo only read them at the root of `playground`, and a Zenodo release would archive the whole `playground` repo. Options: (a) a release of `playground` as it is, (b) a separate public repo holding only `mr_eu_open_llm`. (b) is cleaner.
 - **Preregistration record.** NHB's policy asks for an active link and a date, but does not say whether a tagged commit counts. The amendments are tagged on public GitHub. Depositing the tagged PDFs on OSF (free, your account) would remove the doubt.
-- **Authors, affiliations and ethics wording.** These are placeholders (`USER_*`) in CITATION.cff, the cover letter and the reporting summary.
+- **Authors, affiliations and ethics wording.** These are placeholders (`USER_*`) in CITATION.cff, the cover letter and the reporting summary. **Ethics, 2026-11-13:** on your instruction, Methods and the reporting summary now carry the recommended statement: no separate ethical approval was required, because the study recruited no participants and used only existing materials under their permission or licence terms. It is marked provisional, for you to confirm with the institution before submission.
 - **RMET.** It is not used in any reported analysis. Confirm it can be left out of the data statement.
 - **Metric name clash (found 2026-11-08).** "Causal Feature Alignment (CFA)" is already the name of an unrelated WACV 2024 training method (Venkataramani et al., learning to ignore spurious background features, no human comparison). Options: (a) keep the name and cite it with one sentence on the difference, (b) rename ours. Recommendation: (b) before submission, since the paper's citeable core carries the name. The rename is a text change only and touches no frozen threshold. **RESOLVED 2026-11-09: renamed to Cue Effect Alignment (CEA) on the user's instruction (DECISIONS 2026-11-09).**
+
+## 10. Your notes file was pushed by mistake (2026-11-12, about 22:58) — RESOLVED 2026-11-13
+
+**What happened.** I ran `git commit -a` from the project folder to commit two research files. In the `playground` repo that also took your uncommitted edits to `notes/notes.txt` (entries from 2026-10-26 to 2026-11-12, which name other people and private plans) into the commit "STATE, DECISIONS: correct times (GMT)", and I pushed it to the public `p1-pipeline` branch. My error: from now on I commit only by explicit path.
+
+**Resolved 2026-11-13, about 09:20, on your instruction.**
+- `p1-pipeline` was rebuilt from `d8c2e01`, the commit before, with `notes/notes.txt` restored to its `d8c2e01` version in all 40 later commits. It was force-pushed with a lease pinned to the old tip. The new tip is `f37beae`.
+- Checked before the push:
+  - Each rebuilt commit has the same message, author, committer and dates as its original, and differs from it only in `notes/notes.txt`.
+  - The leaked version of the file cannot be reached from the new tip.
+  - No tag or open PR held the old commits.
+- Your local `notes/notes.txt` is byte-identical to before. It shows as a local, uncommitted change, as it did before the mistake.
+- The old history is kept on your Mac only, in the local branch `backup/p1-pipeline-before-notes-removal`. Delete it when you no longer want it: `git branch -D backup/p1-pipeline-before-notes-removal`.
+- Commit IDs cited in the documents now name the rebuilt commits, whose project files are identical. Two rebuilt commit messages still cite old IDs.
+
+**Left for you, optional.** GitHub keeps the old commits reachable by their IDs until it garbage-collects them, and the branch's activity log names the old tip.
+- To remove them sooner, ask GitHub Support to purge the repository's unreachable commits (GitHub's guide "Removing sensitive data from a repository").
+- The old IDs are left out of this file for that reason.
+
+## 11. Literature table: how to code [1]'s option sets (low priority, 2026-11-12) — RESOLVED 2026-11-13
+
+**Context.** Figure 1e and the Results literature paragraph code Strachan et al. [1] as "partly" on "one option set served every item". The independent review (finding 36) notes that [1]'s alternatives are set per item and that on the MRMET repeated labels always came with the same three alternatives, which is the prompt-text fault the legend codes as "no".
+
+**Exact question.** Keep "partly" (with a one-line justification in the legend), or recode [1] to "no"?
+
+**Recommended default.** Recode to "no" and say why in the legend; it is the stricter reading. Recoding changes `literature_table.csv`, its registry counts and Figure 1e, so I have not done it without you.
+
+**Meanwhile.** Nothing waits on it.
+
+**Resolved 2026-11-13, on your instruction: recoded to "no".** The table, registry row, pinned counts, Results paragraph and Figure 1e legend were updated, and Figure 1 was rebuilt (DECISIONS 2026-11-13).
