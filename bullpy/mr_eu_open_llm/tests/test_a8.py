@@ -298,6 +298,50 @@ def test_launcher_refuses_before_phase2_and_before_code_pins(monkeypatch):
         a8_launch.main(["--a8_id", "qwen3vl_32b", "--step", "gates", "--confirm_phase2_completed"])
 
 
+def test_a_frozen_script_that_ends_with_sys_exit_still_finishes_its_step(tmp_path):
+    """same_clip_family_analysis.py ends with sys.exit(main()). Run in the launcher's process, its clean
+    exit must not skip the move of the declared output (natural_rq1); a refusal still fails the job."""
+    assert (ROOT / "research/scripts/same_clip_family_analysis.py").read_text().rstrip().endswith("sys.exit(main())")
+    script = tmp_path / "frozen.py"
+    script.write_text("import sys\nfrom pathlib import Path\n\n\ndef main():\n    Path(sys.argv[1]).write_text('{}')\n\n\n"
+                      "if __name__ == '__main__':\n    sys.exit(main())\n")
+    declared, target = tmp_path / "outside.json", tmp_path / "a8" / "inside.json"
+    a8_launch.run_frozen_step({"path": str(script), "argv": [str(declared)], "outputs": [str(target)]}, str(declared))
+    assert target.read_text() == "{}" and not declared.exists()
+    for body, code in (("raise SystemExit('refused: not frozen')", "refused: not frozen"), ("sys.exit(3)", 3)):
+        bad = tmp_path / "bad.py"
+        bad.write_text(f"import sys\n{body}\n")
+        with pytest.raises(SystemExit) as info:
+            a8_launch.run_frozen({"path": str(bad), "argv": []})
+        assert info.value.code == code
+
+
+def test_job_status_records_an_out_of_memory_crash():
+    """A crash whose message is an out-of-memory error is recorded as out_of_memory (dated note 2026-11-09)."""
+    oom = "OutOfMemoryError: CUDA out of memory. Tried to allocate 2.00 GiB"
+    assert a8_launch.final_status(True, [], [], None) == "ok"
+    assert a8_launch.final_status(False, [], [], None) == "failed"
+    assert a8_launch.final_status(False, [], [], "SystemExit: refused") == "failed"
+    assert a8_launch.final_status(False, [], [], oom) == "out_of_memory"
+    assert a8_launch.final_status(True, [], ["cells.jsonl"], None) == "out_of_memory"
+    assert a8_launch.final_status(False, ["frozen.json"], ["cells.jsonl"], oom) == "frozen_output_changed"
+
+
+def test_a4_analyse_runs_single_threaded(monkeypatch):
+    """A4 pre-data ruling 7 (DECISIONS 2026-11-12) holds for A8's run of the same frozen analysis."""
+    for v in a8_launch.THREAD_VARS:
+        monkeypatch.delenv(v, raising=False)
+    with pytest.raises(SystemExit, match="single-threaded"):
+        a8_launch.check_threads("a4_analyse")
+    assert a8_launch.check_threads("gates") == {v: None for v in a8_launch.THREAD_VARS}
+    for v in a8_launch.THREAD_VARS:
+        monkeypatch.setenv(v, "1")
+    assert a8_launch.check_threads("a4_analyse") == {v: "1" for v in a8_launch.THREAD_VARS}
+    text = (ROOT / "slurm_jobs/a8_job.sh").read_text()
+    block = text[text.index('if [ "${STEP}" = "a4_analyse" ]'):].split("\nfi")[0]
+    assert all(f"{v}=1" in block for v in a8_launch.THREAD_VARS)
+
+
 def test_slurm_file_never_sets_the_models_dir_and_mirrors_the_frozen_environments():
     text = (ROOT / "slurm_jobs/a8_job.sh").read_text()
     assert "unset MR_EU_HPC_MODELS_DIR" in text and "export MR_EU_HPC_MODELS_DIR" not in text
@@ -695,6 +739,38 @@ def test_an_incomplete_a3_cell_file_is_refused(tmp_path, a3_cells):
     a8_family.check_a3_cells_complete(folder / "cells_qwen3vl.jsonl")
 
 
+def test_an_a3_file_left_incomplete_by_two_oom_attempts_at_the_top_gpu_count_is_no_result(tmp_path, a3_cells):
+    """Dated note 2026-11-09: a partial A3 file after two out-of-memory attempts at the largest GPU count
+    used counts as no A3 result for that model, and the other model goes on. Until then the family waits."""
+    fiv, folder = a3_cells
+    design = a8_design.load_design()
+    for a8_id, key in (("qwen3vl_32b", "qwen3vl"), ("gemma4_31b", "gemma4")):
+        _delivery(tmp_path, a8_id, key, True)
+        path = a8_family.a3_cells_path(tmp_path, a8_id, key)
+        path.parent.mkdir(parents=True)
+        shutil.copy(folder / f"cells_{key}.jsonl", path)
+    _launch(tmp_path, "gemma4_31b", "a3")
+    partial = a8_family.a3_cells_path(tmp_path, "qwen3vl_32b", "qwen3vl")
+    partial.write_text("".join(partial.read_text().splitlines(keepends=True)[:100]))
+
+    def attempt(status, gpus, stamp):
+        _launch(tmp_path, "qwen3vl_32b", "a3", status=status, stamp=stamp)
+        p = tmp_path / "research/reproduction/a8/qwen3vl_32b/launch" / f"a3_{stamp}.json"
+        p.write_text(json.dumps(dict(json.loads(p.read_text()), visible_gpus=gpus)))
+
+    attempt("out_of_memory", 2, "1")
+    attempt("out_of_memory", 2, "2")
+    attempt("out_of_memory", 4, "3")  # one out-of-memory attempt so far at the largest count: wait
+    with pytest.raises(SystemExit, match="not 243"):
+        a8_family.a3_family(design, tmp_path)
+    attempt("failed", 4, "4")  # a crash with no out-of-memory evidence does not count
+    with pytest.raises(SystemExit, match="not 243"):
+        a8_family.a3_family(design, tmp_path)
+    attempt("out_of_memory", 4, "5")
+    family, excluded = a8_family.a3_family(design, tmp_path)
+    assert [n for n, _ in family] == ["gemma4_31b"] and "dated note 2026-11-09" in excluded["qwen3vl_32b"]
+
+
 def _a1_files(base, a8_id, gpus=1, test_mode=False):
     for r in a8_family.ROTATIONS:
         for c in a8_family.CONDITIONS:
@@ -744,6 +820,30 @@ def test_provenance_refuses_a_changed_output_or_input(tmp_path):
     out.write_text("4")
     with pytest.raises(SystemExit, match="differs"):
         a8_family.check_provenance(out)
+
+
+def test_provenance_written_on_one_machine_is_checked_on_another(tmp_path, monkeypatch):
+    """Paths under the project root are stored relative to it, so a summary written on the cluster can be
+    checked after a pull, and no record names one machine's folders."""
+    first, second = tmp_path / "cluster", tmp_path / "mac"
+    for root in (first, second):
+        (root / "results/a8").mkdir(parents=True)
+    monkeypatch.setattr(a8_design, "ROOT", first)
+    out, inp = first / "research/reproduction/a8/summary.json", first / "results/a8/cells.jsonl"
+    out.parent.mkdir(parents=True)
+    inp.write_text("1")
+    out.write_text("2")
+    a8_family.write_provenance(out, [inp], {})
+    record = json.loads(a8_family.provenance_path(out).read_text())
+    assert record["output"] == "research/reproduction/a8/summary.json"
+    assert list(record["inputs_sha256"]) == ["results/a8/cells.jsonl"]
+    shutil.copytree(first / "research", second / "research")
+    shutil.copy(inp, second / "results/a8/cells.jsonl")
+    monkeypatch.setattr(a8_design, "ROOT", second)
+    a8_family.check_provenance(second / "research/reproduction/a8/summary.json")
+    (second / "results/a8/cells.jsonl").write_text("3")
+    with pytest.raises(SystemExit, match="changed"):
+        a8_family.check_provenance(second / "research/reproduction/a8/summary.json")
 
 
 # A1 analysis ----------------------------------------------------------------

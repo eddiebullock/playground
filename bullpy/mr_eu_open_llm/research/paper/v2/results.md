@@ -131,7 +131,7 @@ The detector check passed thinly: 113 of 144 covered pairs rose, .785 against .7
 - *Headline.* With WC and EA read together, [model]'s headline is [class] for basic labels and [class] for conversational states. The two sets share most configurations within each culture (Methods), so they are separate claims but not independent tests.
 - *Secondary.* Raw CEA was [v] ([lo] to [hi]). [Sensitivity that changes the reading, if any; otherwise: no sensitivity changed a decision.]
 
-**Figure.** Figure 5: residual CEA per model and dataset with its between-group reference, raw CEA as secondary. [PENDING: Figure 5 function (ROADMAP 0.7).]
+**Figure.** Figure 5: residual CEA per model and dataset with its between-group reference, raw CEA as secondary. [PENDING: drawn by `research/scripts/make_figures.py --fig 5 --real` from `results/a4/summary.json` once A4's single analysis is locked. The function exists, is tested on synthetic data (`tests/test_make_figures.py`), and read the real-schema summary in the Phase 3 rehearsal (2026-11-13).]
 
 ## 6. Do behaviour and cue effects disagree?
 
@@ -238,7 +238,7 @@ Gate B is B1 to B5 (`research/PREREG_A2_DRAFT.md:109-117`). A model and route th
 - *Capped contrasts.* The [n] contrasts that cannot reach Null by design gave 90% equivalence intervals of [range]; they are reported as intervals, not as nulls.
 - *Scope.* Every class is on basic labels in this stimulus set (BASIC ONLY) and concerns the model's option-free judgement, not how people would respond to these edits.
 
-**Figure.** Figure 6: effect and decision class per prediction, by model and route. [PENDING: Figure 6 function (ROADMAP 0.7).]
+**Figure.** Figure 6: effect and decision class per prediction, by model and route. [PENDING: drawn by `research/scripts/make_figures.py --fig 6 --real` from A2's outputs and declared extras (verdicts after the fill-rule ruling) once A2's single analysis is locked. The function exists and is tested on synthetic data (`tests/test_make_figures.py`).]
 
 ## 8. What each model has shown
 

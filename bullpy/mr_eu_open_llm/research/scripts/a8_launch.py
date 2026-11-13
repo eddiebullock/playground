@@ -49,6 +49,7 @@ import a8_family  # noqa: E402
 import a8_rotation_shard as shard  # noqa: E402
 
 ROOT = a8_design.ROOT
+THREAD_VARS = ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS", "VECLIB_MAXIMUM_THREADS")
 # The frozen jobs run `python -m ...` from the project root, so the root and src are importable.
 for _p in (str(ROOT / "src"), str(ROOT)):
     if _p not in sys.path:
@@ -180,6 +181,13 @@ def check_loader_path(key: str, weights_dir: Path) -> Dict[str, str]:
 
 
 def run_frozen(spec: Mapping[str, Any]) -> None:
+    """Run a frozen script in this process, as `python -m <module>` or `python <path>` would.
+
+    A frozen script may end with `sys.exit(main())`, as `same_clip_family_analysis.py` does. Run in
+    this process, that exit would also end the launcher before the rest of the job (the move of a
+    declared output, the final record), so a clean exit, code None or 0, counts as the script
+    finishing. Any other code, or a refusal message, still fails the job.
+    """
     saved = sys.argv
     try:
         if "module" in spec:
@@ -188,8 +196,42 @@ def run_frozen(spec: Mapping[str, Any]) -> None:
         else:
             sys.argv = [spec["path"], *spec["argv"]]
             runpy.run_path(str(ROOT / spec["path"]), run_name="__main__")
+    except SystemExit as exc:
+        if exc.code not in (None, 0):
+            raise
     finally:
         sys.argv = saved
+
+
+def run_frozen_step(spec: Mapping[str, Any], declared: Optional[str] = None) -> None:
+    """A frozen script, then the move of an output it writes outside the A8 roots to its A8 path."""
+    run_frozen(spec)
+    if declared:
+        target = ROOT / spec["outputs"][0]
+        target.parent.mkdir(parents=True, exist_ok=True)
+        os.replace(ROOT / declared, target)
+
+
+def final_status(finished: bool, moved: Sequence[str], oom_files: Sequence[str], error: Optional[str]) -> str:
+    """A job's status. A changed frozen output overrides everything. Design rule `oom` reads the
+    structured error fields of the outputs; a job that crashed with an out-of-memory error (for
+    example a CUDA error raised out of a frozen script that does not catch it) is recorded as
+    out_of_memory too, so the dated note of 2026-11-09 (a step incomplete after two out-of-memory
+    attempts at the largest GPU count) can be applied from the records alone."""
+    if moved:
+        return "frozen_output_changed"
+    if oom_files or (not finished and shard.is_oom(error)):
+        return "out_of_memory"
+    return "ok" if finished else "failed"
+
+
+def check_threads(step: str) -> Dict[str, Optional[str]]:
+    """A4's analysis runs with single-threaded BLAS (A4 pre-data ruling 7, DECISIONS 2026-11-12);
+    A8's a4_analyse step runs the same frozen analysis, so it is held to the same rule."""
+    threads = {v: os.environ.get(v) for v in THREAD_VARS}
+    if step == "a4_analyse" and any(value != "1" for value in threads.values()):
+        raise SystemExit("a4_analyse runs with single-threaded BLAS: set " + ", ".join(f"{v}=1" for v in THREAD_VARS))
+    return threads
 
 
 def a1_shard_files(design: Mapping[str, Any], ctx: Mapping[str, Any]) -> List[Path]:
@@ -252,6 +294,7 @@ def main(argv: Optional[Sequence[str]] = None) -> Dict[str, Any]:
     record["rds_usage"] = usage
     record["versions"] = shard.versions()
     record["visible_gpus"] = shard.visible_gpus()
+    record["threads"] = check_threads(args.step)
     if args.step in design["software_versions"]["enforced_steps"]:
         shard.check_versions(record["versions"], design["software_versions"]["pinned"])
     if base["decoder_preflight"]:
@@ -274,7 +317,7 @@ def main(argv: Optional[Sequence[str]] = None) -> Dict[str, Any]:
     # Written now, so a job killed by Slurm still leaves an attempt on record (rule not_tested_after_retry).
     record["status"] = "started"
     record_path.write_text(json.dumps(record, indent=2, sort_keys=True, default=str) + "\n", encoding="utf-8")
-    status = "failed"
+    finished = False
     try:
         if args.step == "a1_shard":
             ns = argparse.Namespace(cmd="run", a8_id=args.a8_id, equivalence_label=None, equivalence_models_dir=None,
@@ -285,19 +328,17 @@ def main(argv: Optional[Sequence[str]] = None) -> Dict[str, Any]:
         elif args.step == "a1_merge":
             shard.merge(a1_shard_files(design, ctx), ROOT / spec["outputs"][0])
         else:
-            run_frozen(spec)
-            if declared:
-                (ROOT / spec["outputs"][0]).parent.mkdir(parents=True, exist_ok=True)
-                os.replace(ROOT / declared, ROOT / spec["outputs"][0])
-        status = "ok"
+            run_frozen_step(spec, declared)
+        finished = True
+    except BaseException as exc:
+        # Kept in the record, so a crash's cause (an out-of-memory error above all) is read from the record.
+        record["error"] = f"{type(exc).__name__}: {exc}"[:4000]
+        raise
     finally:
         moved = changed(before, frozen_output_files(design["frozen_outputs_guard"], keys))
         record["frozen_outputs_changed"] = moved
         record["oom_files"] = oom_in_outputs([ROOT / o for o in spec["outputs"]], args.step)
-        if moved:
-            status = "frozen_output_changed"
-        elif record["oom_files"]:
-            status = "out_of_memory"
+        status = final_status(finished, moved, record["oom_files"], record.get("error"))
         record["status"] = status
         record["finished_at_utc"] = datetime.now(timezone.utc).isoformat()
         record_path.write_text(json.dumps(record, indent=2, sort_keys=True, default=str) + "\n", encoding="utf-8")

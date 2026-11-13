@@ -102,6 +102,20 @@ def not_tested(base: Path, a8_id: str, step: str) -> bool:
     return len(records) >= 2 and not any(r.get("status") == "ok" for r in records)
 
 
+def oom_retries_spent(base: Path, a8_id: str, step: str) -> bool:
+    """Dated note 2026-11-09 (`PREREG_A8_DRAFT.md`, "Dated notes"): no attempt ended ok, and two
+    attempts at the largest GPU count used for the step ended out of memory. The launcher records
+    the GPU count of every attempt and marks an out-of-memory crash as out_of_memory."""
+    records = launch_records(base, a8_id, step)
+    if any(r.get("status") == "ok" for r in records):
+        return False
+    counts = [r["visible_gpus"] for r in records if isinstance(r.get("visible_gpus"), int)]
+    if not counts:
+        return False
+    top = max(counts)
+    return sum(r.get("visible_gpus") == top and r.get("status") == "out_of_memory" for r in records) >= 2
+
+
 def a3_family(design: Mapping[str, Any], base: Path, check_launch: bool = True) -> Tuple[List[Tuple[str, Path]], Dict[str, str]]:
     """(name, cells file) for the A3 family, in block order, and the excluded with reasons."""
     family, excluded = [], {}
@@ -120,6 +134,10 @@ def a3_family(design: Mapping[str, Any], base: Path, check_launch: bool = True) 
         path = a3_cells_path(base, a8_id, key)
         if not path.exists() and not_tested(base, a8_id, "a3"):
             excluded[a8_id] = "A3 job did not finish after one retry: no A3 result"
+            continue
+        if path.exists() and oom_retries_spent(base, a8_id, "a3"):
+            excluded[a8_id] = ("A3 cell file incomplete after two out-of-memory attempts at the largest GPU count used: "
+                               "no A3 result (PREREG_A8_DRAFT.md, dated note 2026-11-09)")
             continue
         check_a3_cells_complete(path)
         if check_launch:
@@ -177,13 +195,29 @@ def provenance_path(output: Path) -> Path:
     return Path(str(output) + ".provenance.json")
 
 
+def portable(path: Path) -> str:
+    """A path under the project root is stored relative to it, so a provenance record written on the
+    cluster can be checked after a pull to the Mac, and the other way round. Other paths (test folders)
+    are stored as given."""
+    try:
+        return Path(path).resolve().relative_to(a8_design.ROOT.resolve()).as_posix()
+    except ValueError:
+        return str(path)
+
+
+def located(name: str) -> Path:
+    """The inverse of `portable`: a relative name is read under the project root."""
+    p = Path(name)
+    return p if p.is_absolute() else a8_design.ROOT / p
+
+
 def write_provenance(output: Path, inputs: List[Path], extra: Dict[str, Any]) -> Path:
     import hashlib
 
     record = {
-        "output": str(output),
+        "output": portable(output),
         "output_sha256": hashlib.sha256(Path(output).read_bytes()).hexdigest(),
-        "inputs_sha256": {str(p): hashlib.sha256(Path(p).read_bytes()).hexdigest() for p in inputs},
+        "inputs_sha256": {portable(p): hashlib.sha256(Path(p).read_bytes()).hexdigest() for p in inputs},
         **extra,
     }
     path = provenance_path(output)
@@ -202,7 +236,8 @@ def check_provenance(output: Path) -> Dict[str, Any]:
     if hashlib.sha256(Path(output).read_bytes()).hexdigest() != record["output_sha256"]:
         raise SystemExit(f"{output} differs from the file its producer wrote.")
     for name, digest in record["inputs_sha256"].items():
-        if not Path(name).exists() or hashlib.sha256(Path(name).read_bytes()).hexdigest() != digest:
+        path = located(name)
+        if not path.exists() or hashlib.sha256(path.read_bytes()).hexdigest() != digest:
             raise SystemExit(f"Input {name} of {output} changed after it was produced.")
     return record
 

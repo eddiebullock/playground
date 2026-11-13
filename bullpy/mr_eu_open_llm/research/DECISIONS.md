@@ -572,3 +572,22 @@ At about 03:19 the A9 scored arrays went in with the command in `PREREG_A9_DRAFT
 ## 2026-11-13: A9's pre-run check enforces the A4-summary rule (no design change)
 
 A9's replication rule (ii) says the A4 summary supplied to A9's analysis must be the file whose sha256 was recorded when A4 was analysed. The pre-run check checked only that A4's summary exists and carries A4's design hash, and A9's analysis records the sha256 it read, so a wrong file would only have been found after A9's single run. `research/scripts/a9_prerun_check.py` now also requires A4's run note (`research/reproduction/a4_run_note.json`, written by `post_phase3.py analyse a4`) to be complete and to record that same sha256 for `results/a4/summary.json`; otherwise it fails and A9's analysis does not start. Written before any A9 cell exists; frozen code unchanged; tested in `tests/test_a2_declared.py`.
+
+## 2026-11-13: A8's launcher and family code fixed before its code pins (no design change)
+
+A read-only audit of A8's path from launch to analysis (ROADMAP local item 4) ran on 2026-11-13. An independent agent did the audit, and the coordinator checked each finding used here against the code. It found faults in A8's own code, which is not pinned yet (`PREREG_A8_DRAFT.md`, "Code hashes": "pinned by a dated, pre-data step before any A8 output exists"), so fixing them needs no deviation. Fixed and tested (`tests/test_a8.py`: 59 passed, 1 skipped, the GPU test):
+
+- **`natural_rq1` could not finish.** The frozen `research/scripts/same_clip_family_analysis.py` ends with `sys.exit(main())`. The launcher runs frozen scripts in its own process, so that clean exit escaped before the declared output was moved under the A8 roots. Slurm would have shown COMPLETED and the launcher record "failed", and a retry would have been refused, because the unmoved file exists. `run_frozen` now treats a clean exit (code None or 0) as the script finishing; any other code, or a refusal message, still fails the job. No other frozen step ends this way (checked).
+- **The dated note of 2026-11-09 was not in the code.** The note says that a partial A3 file after two out-of-memory attempts at the largest GPU count counts as "no A3 result" for that model, and the other model goes on. The family code instead waited, with no way past.
+  - The A3 family now applies the note from the launcher records.
+  - The records now keep a crash's cause (`error`) and mark an out-of-memory crash as `out_of_memory`. A3's frozen script does not catch CUDA errors per cell, so such a crash was recorded only as `failed`.
+  - A crash with no out-of-memory evidence still makes the family wait.
+- **Provenance named absolute paths.** A summary written on the cluster could not be checked after a pull, and one written on the Mac would fail the launcher's eligibility check on the cluster. Paths under the project root are now stored relative to it.
+- **A8's `a4_analyse` step ran with multi-threaded BLAS,** unlike A4's own analysis (A4 pre-data ruling 7, 2026-11-12). `slurm_jobs/a8_job.sh` now sets the four thread variables to 1 for that step; the launcher refuses the step otherwise and records the values.
+
+Open from the same audit:
+- **A2's and A4's rulings of 2026-11-12 are not yet applied to A8's runs of the same frozen analyses:** the fill rule on Opposes, non-finite rows, and shard and input checks. They are to be settled by a dated A8 note before any A8 output exists, with A8 pre-run checks.
+- **A8 has no runbook:** no order of steps on the cluster, no pull with hashes, and no run note.
+- **Minor:** two A8 producers write no provenance, and gate files are read without their launcher record.
+
+Nothing was read. The hashed block, its 48 frozen-file pins and every threshold are unchanged. The pending A8 equivalence job (40399722) runs from its own folder (`~/rds/hpc-work/a8_check`) and is not affected. Nothing was synced to the cluster; the code-pin step syncs and pins A8's code.
