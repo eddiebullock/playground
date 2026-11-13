@@ -38,6 +38,13 @@ The main text is set to run about 1,700 to 2,700 words over. None of the cuts be
 
 *Applied 2026-11-13, cut 5 (it depends on no pending result).* The benchmark-audit recommendation is now 189 words, against 341. The audit's detail (the two partial cases, the source of the majority-class gap, and why these accuracies are lower bounds) moved word for word to Supplementary Methods, Section S2. The Discussion keeps what DECISIONS 2026-11-09 requires there: the recommendation, its exploratory status, and that no field-level claim is made. It stops short of the plan's 120 words because the rest would cut those caveats.
 
+*Applied 2026-11-13, cut 3 (it depends on no pending result).* About 200 words came out of the Results' locked prose, against the plan's 450 to 550:
+- Section 1 (106 words): the literature check is now a short summary that points to Figure 1e, and the full coding moved word for word to Supplementary Methods, Section S2.
+- Section 4 (63 words): the natural-clip recovery values gave way to one sentence. All of them were already given in Methods and in Supplementary Methods, Section S5.
+- Section 5 (31 words): the run 3 rates and the exempt cells' values came out. Both were already in Methods and Section S6.
+
+The plan's estimate assumed recovery detail in section 2, which holds none, and it counted section 5's thin detector pass, which stays because the Results structure above requires it. Each cut is noted in place in results.md, and the registry's literature row names both places. With cuts 4 and 5, the main text is about 490 words shorter than the estimate above. The rest waits on cut 1 (the user's view, STATE hand-off item 5), on cut 2 (after the results) and on writing each branch to its budget.
+
 Together these save about 1,850 to 2,350 words; the rest comes from writing each chosen branch to its budget at steps 4.1 and 4.3. Methods (7,402 words) and the figure legends (1,017) fall outside the limit, but check both against the journal's formatting guide before submission.
 
 ## Abstract template (150 words at most)

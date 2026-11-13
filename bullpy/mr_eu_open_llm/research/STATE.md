@@ -2,9 +2,9 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-11-13 17:00 Europe/London
+**Updated:** 2026-11-13 17:45 Europe/London
 
-## Hand-off, 2026-11-13 (written 05:35, last refreshed 17:00)
+## Hand-off, 2026-11-13 (written 05:35, last refreshed 17:45)
 
 **Done this morning on your instructions (about 09:15):**
 - **Item 10: your notes file is off the public branch.**
@@ -92,6 +92,13 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
 **2026-11-13 15:30:** Queue unchanged for us: nothing started or failed; oldest jobs at priority 214, with 383 jobs (2,442 tasks) ranked above them. RDS 1,067.5 GB, 991,119 files. Applied the one length cut that depends on no pending result (cut 4, in part; `paper/v2/outline.md`): the Introduction's paper-by-paper list gave way to a pointer to Figure 1e, which codes the same eight papers, and its search-coverage sentences moved to Supplementary Methods, Section S2. Introduction 1,606 to 1,470 words; no claim, number or citation left the paper. The citation check carries a dated note.
 
 **2026-11-13 16:36:** Queue unchanged for us: nothing started or failed. Our oldest jobs are at priority 215, and the count above them keeps growing: 402 jobs (2,919 tasks), against 358 at 13:29. RDS 1,067.5 GB, 991,119 files. Applied length cut 5, which also depends on no pending result: the Discussion's benchmark-audit recommendation went from 341 to 189 words. Its detail moved word for word to Supplementary Methods, Section S2; the recommendation, its exploratory status and the no-field-level-claim scope stay in the Discussion (DECISIONS 2026-11-09). Decisions table row 60 now names both places. Full suite at `f95e012`: 1,096 passed, 26 skipped, 0 failed. Merged into `main` as PR #116, true merge commit `d1d1246` (16:58).
+
+**2026-11-13 17:38:** Queue unchanged for us: nothing started or failed. Our oldest jobs are at priority 217, with 400 jobs (2,668 tasks) ranked above them. RDS 1,067.5 GB, 991,119 files. Applied length cut 3, the last cut that depends on no pending result: about 200 words came out of the Results' locked prose (`paper/v2/outline.md`).
+- Section 1: the literature check is now a short summary pointing to Figure 1e; the full coding moved word for word to Supplementary Methods, Section S2.
+- Section 4: the natural-clip recovery values gave way to one sentence; all were already in Methods and Section S5.
+- Section 5: the run 3 rates and exempt-cell values came out; both were already in Methods and Section S6.
+
+With cuts 4 and 5, the main text is about 490 words shorter. What remains waits on cut 1 (hand-off item 5, your view), cut 2 (after the results) and writing each branch to its budget.
 
 **2026-11-13 11:47:** Supplementary decisions table brought up to date: rows 81 to 83 for today's three new decision-log entries, and a superseded-entries row (75 to 83). It again has one row per entry, 83, checked in order against DECISIONS. ROADMAP Phase 4 status refreshed: every step that needs no new GPU output is done. The node counts in the 11:20 correction now include the node that was powering up. Full suite at `62a8b79` with these record edits: 1,096 passed, 26 skipped, 0 failed. Merged into `main` as PR #115, true merge commit `da95a75` (11:48).
 
