@@ -2,9 +2,9 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-11-13 18:20 Europe/London
+**Updated:** 2026-11-13 18:40 Europe/London
 
-## Hand-off, 2026-11-13 (written 05:35, last refreshed 18:20)
+## Hand-off, 2026-11-13 (written 05:35, last refreshed 18:40)
 
 **New at 17:50: you allowed the `intr` QoS for this project** (DECISIONS 2026-11-13).
 - Its limits, read with each field named: jobs of at most 1 h, and one job per user at a time, pending or running, of up to 3 nodes. It adds 10,000 priority points, against 100 for `gpu2`.
@@ -13,7 +13,11 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
 - A9 smoke 40843619 moved to `intr` at 17:55, with the same job, script and 30-minute limit. The rest follow one at a time.
 - A4's runner resumes a shard where it stopped (`scripts/a4_run.py`), and the pre-run check needs only the planned cells in each shard file. So A4 can run in one-hour slices on `intr` with no change to frozen code (DECISIONS 2026-11-13, second entry).
 - Since 2026-11-12 13:26, no 1-GPU `intr` job on the A100s has started, ours included, while single-node 4-GPU `intr` jobs started within minutes. So at 18:17 the A9 smoke went back to `gpu2`, with its age unchanged, and the first A4 slice went in: job 40920485, Gemma shards 0 to 3 on one node, 52 minutes each, through the unchanged `study3_a4.sh`. Those four shards' `gpu2` tasks (40589226_0 to _3) are held, so no two runs write one file.
-- **How to continue the slices:** when a slice ends, read only its wrapper log and each shard's line count. Then submit the next slice, holding first the `gpu2` task of any shard new to the slices: `SLOTS="a4:<model>:<shard> ..." sbatch slurm_jobs/study3_intr_slices.sh` from `~/rds/hpc-work/study3`. Only one `intr` job may exist at a time.
+- **How the slices continue:** a loop on the Mac (scratchpad `a4_chain.sh`, under `caffeinate -i`, started 18:40) waits for each slice to end, then runs `research/scripts/a4_intr_next_slice.sh` for real. That script reads mechanics only (line counts, non-ok status counts, partial lines, mean seconds; no score field). It holds the `gpu2` task of each shard it slots, cancels the held task of each complete shard, and submits the next slice.
+  - The loop stops and tells me on: a slice not ending COMPLETED, a planner STOP, fewer than 1,000 new lines in a slice, SSH failures, or no new job ID.
+  - By hand, from the Mac: `ssh <host> 'DRY_RUN=0 bash -l -s' < research/scripts/a4_intr_next_slice.sh`. Only one `intr` job may exist at a time.
+  - **Rate:** about 0.9 cells per second per shard. Shards hold 6,281 to 6,899 cells, so most need three slices, the third short: about 18 slices, roughly 15 to 16 hours, if each starts within minutes as the first did.
+  - **Risk:** the loop needs this Mac awake and the SSH connection up. `caffeinate` stops idle sleep, not a closed lid.
 
 **Done this morning on your instructions (about 09:15):**
 - **Item 10: your notes file is off the public branch.**
@@ -112,6 +116,8 @@ With cuts 4 and 5, the main text is about 490 words shorter. What remains waits 
 **2026-11-13 18:05:** Full suite at `9181a4d`: 1,096 passed, 26 skipped, 0 failed. Merged into `main` as PR #117, true merge commit `40f38e9` (17:58). You allowed the `intr` QoS at about 17:50: A9 smoke 40843619 moved there at 17:55 and is pending, seventh in the `intr` line at 18:03 (DECISIONS 2026-11-13; hand-off, top). Decisions table row 84 added.
 
 **2026-11-13 18:20:** A4 slices started (DECISIONS 2026-11-13, "A4's scored shards may run in one-hour slices"). The wrapper `slurm_jobs/study3_intr_slices.sh` passed 17 stub checks on the login node and was committed (`eefa487`) before being copied to the cluster; it matches the commit (sha256 `18d1e8ed...`). Held 40589226_0 to _3; A9 smoke 40843619 back to `gpu2`; slice 40920485 (Gemma shards 0 to 3) pending at 18:17. Decisions table row 85. ROADMAP's A4 trigger now names the slice jobs and the waivers.
+
+**2026-11-13 18:40:** Slice 40920485 started at 18:22 on gpu-q-13, about 5 minutes after submission. Model load took about 6 minutes (four processes at once). At 18:35 every shard file held only "ok" cells at about 0.65 s of model time per cell, and lines grew at about 0.9 per second per shard. A planner (`research/scripts/a4_intr_next_slice.sh`, commits `0f2d993` and `a471bfe`) and a local chain loop now carry the slices on; DECISIONS has a dated update (18:30).
 
 **2026-11-13 11:47:** Supplementary decisions table brought up to date: rows 81 to 83 for today's three new decision-log entries, and a superseded-entries row (75 to 83). It again has one row per entry, 83, checked in order against DECISIONS. ROADMAP Phase 4 status refreshed: every step that needs no new GPU output is done. The node counts in the 11:20 correction now include the node that was powering up. Full suite at `62a8b79` with these record edits: 1,096 passed, 26 skipped, 0 failed. Merged into `main` as PR #115, true merge commit `da95a75` (11:48).
 
