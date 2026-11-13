@@ -228,7 +228,7 @@ Gate B is B1 to B5 (`research/PREREG_A2_DRAFT.md:109-117`). A model and route th
 
 **Slots.** Gemma 4 and Qwen3-VL: [PENDING: A4 headline per task], [PENDING: A2 classes per route].
 
-**Figure.** Table 1.
+**Figure.** Table 1 (`research/paper/v2/table1.md`), built by `research/scripts/make_table1.py` from locked outputs only; its A2, A4 and A9 cells read pending until each analysis's run note is complete, and its A2 classes are the verdicts after the fill-rule ruling.
 
 ## 8b. Larger models in the same families (A8)
 
