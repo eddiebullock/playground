@@ -2,9 +2,9 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-11-13 06:45 Europe/London
+**Updated:** 2026-11-13 06:55 Europe/London
 
-## Morning hand-off, 2026-11-13 (written 05:35, last refreshed 06:45)
+## Morning hand-off, 2026-11-13 (written 05:35, last refreshed 06:55)
 
 **Only you can do these** (details in `research/NEEDS_INPUT.md`):
 1. **Item 10, decision needed: your notes file is on the public branch.** On 2026-11-12 at about 22:58 my `git commit -a` took your uncommitted `notes/notes.txt` into commit `0bc8a57` on the public `p1-pipeline` branch. Your local file is unchanged. Say "drop the notes commit" and allow the force-push, and I will rebuild the branch without that file (plan in item 10). Until then there is no PR to `main`.
@@ -55,7 +55,7 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
   - Deviations table, 76 rows.
   - Submission pack: software versions, ethics draft, code availability.
 - **Checks:**
-  - Full test suite: 1,076 passed, 26 skipped, 0 failed.
+  - Full test suite at `39c6f72`: 1,096 passed, 26 skipped, 0 failed (06:53).
   - Clean-checkout reproduction at `5d1ffd5`: 43 rebuilt and matched, 112 verified by hash, 0 failed.
 
 **FYI:** CSD3 `/home` is at 49.8 of 52.4 GB. This project writes nothing there; its jobs write to RDS. The space is in other folders, such as `LEAP3mri`. RDS: 1,067.4 GB of 1,099.5; 991,082 of 1,048,576 files.
@@ -65,6 +65,8 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
 ## Current phase
 
 **Phase 2 runs queued; Phase 3 analyses wait on them.** A1, A3 and natural-clip RQ1 are locked (2026-11-09). Every amendment is frozen or closed: A2, A4, A5, A7, A8 and A9 frozen, A6 closed as a limit. The A2, A4, A7 Stage 1, A8 and A9 GPU jobs are pending on priority. History: the prompt confound found 2026-11-04 withdrew the earlier accuracy and probe results (DECISIONS); Branch B stays as a record only.
+
+**2026-11-13 06:55:** Queue unchanged at 06:54: nothing started or failed. Oldest jobs at priority 201; `gpu2` had 24 of 32 GPUs in use; RDS 1,067.4 GB, 991,082 files. Full suite at `39c6f72`: 1,096 passed, 26 skipped, 0 failed.
 
 **2026-11-13 06:45:** An independent review of the night's A8 code (commits `75dfac8`, `a362a56`, `6dc6ce0`) found real problems. Two were in the new A4 pre-run check, and one was a regression from `6dc6ce0`: a crashed gates job could block both models. I checked each against the code and fixed all of them before A8's code pins:
 - A8's A4 run now accounts for every eligible or launched model.
