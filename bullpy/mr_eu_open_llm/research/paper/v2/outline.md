@@ -34,6 +34,8 @@ The main text is set to run about 1,700 to 2,700 words over. None of the cuts be
 4. The Introduction goes back to its plan of 1,401 words or below. Saves about 200 to 400. For example, the search-coverage sentences (62 words) move to Methods, and the paper-by-paper list in the fifth paragraph (99 words) is already given by Results section 1 and Figure 1e.
 5. The benchmark-audit recommendation shrinks to about 120 words, with the audit itself in Methods. Saves about 200.
 
+*Applied 2026-11-13, cut 4 in part (it depends on no pending result).* The Introduction's paper-by-paper list gave way to a pointer to Figure 1e, with the eight papers cited together. The search-coverage sentences moved to Supplementary Methods, Section S2, which already held the literature check, rather than to Methods, which is itself long. The Introduction is now 1,470 words, against 1,606; the last 69 words to the plan's 1,401 are left for the final pass, because they would mean rewording sentences the citation check and the draft review passed.
+
 Together these save about 1,850 to 2,350 words; the rest comes from writing each chosen branch to its budget at steps 4.1 and 4.3. Methods (7,402 words) and the figure legends (1,017) fall outside the limit, but check both against the journal's formatting guide before submission.
 
 ## Abstract template (150 words at most)

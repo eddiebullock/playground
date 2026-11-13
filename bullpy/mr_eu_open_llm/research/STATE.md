@@ -2,9 +2,9 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-11-13 14:30 Europe/London
+**Updated:** 2026-11-13 15:35 Europe/London
 
-## Hand-off, 2026-11-13 (written 05:35, last refreshed 14:30)
+## Hand-off, 2026-11-13 (written 05:35, last refreshed 15:35)
 
 **Done this morning on your instructions (about 09:15):**
 - **Item 10: your notes file is off the public branch.**
@@ -88,6 +88,8 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
 **2026-11-13 12:30:** Queue unchanged at 12:25 and again at 13:29: nothing started or failed. Oldest jobs at priority 209, then 211; 361, then 358 jobs ranked above ours; RDS 1,067.5 GB, 991,119 files. Length check of the draft (`paper/v2/outline.md`, "Length check"): the main text is set to come to about 6,700 to 7,700 words once one branch is kept, against the limit of 5,000 (Introduction 1,606; Results 2,700 to 3,200; Discussion 2,400 to 2,900). A cut plan is recorded there and in ROADMAP Phase 4, with hand-off item 5 for the one structural choice.
 
 **2026-11-13 14:29:** Nothing of ours started or failed; the oldest jobs are at priority 212. More jobs now rank above ours: 379 (2,677 tasks), against 358 (2,423) at 13:29. RDS 1,067.5 GB, 991,119 files. I checked whether the free CPU allocation could take any of the queued work; it cannot (hand-off, "Nothing more can be done for free").
+
+**2026-11-13 15:30:** Queue unchanged for us: nothing started or failed; oldest jobs at priority 214, with 383 jobs (2,442 tasks) ranked above them. RDS 1,067.5 GB, 991,119 files. Applied the one length cut that depends on no pending result (cut 4, in part; `paper/v2/outline.md`): the Introduction's paper-by-paper list gave way to a pointer to Figure 1e, which codes the same eight papers, and its search-coverage sentences moved to Supplementary Methods, Section S2. Introduction 1,606 to 1,470 words; no claim, number or citation left the paper. The citation check carries a dated note.
 
 **2026-11-13 11:47:** Supplementary decisions table brought up to date: rows 81 to 83 for today's three new decision-log entries, and a superseded-entries row (75 to 83). It again has one row per entry, 83, checked in order against DECISIONS. ROADMAP Phase 4 status refreshed: every step that needs no new GPU output is done. The node counts in the 11:20 correction now include the node that was powering up. Full suite at `62a8b79` with these record edits: 1,096 passed, 26 skipped, 0 failed. Merged into `main` as PR #115, true merge commit `da95a75` (11:48).
 
