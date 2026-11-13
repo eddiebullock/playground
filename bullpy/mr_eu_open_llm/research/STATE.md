@@ -2,15 +2,19 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-11-13 05:35 Europe/London
+**Updated:** 2026-11-13 06:30 Europe/London
 
-## Morning hand-off, 2026-11-13 (written 05:35, refreshed at each check until you are back)
+## Morning hand-off, 2026-11-13 (written 05:35, last refreshed 06:30)
 
 **Only you can do these** (details in `research/NEEDS_INPUT.md`):
 1. **Item 10, decision needed: your notes file is on the public branch.** On 2026-11-12 at about 22:58 my `git commit -a` took your uncommitted `notes/notes.txt` into commit `0bc8a57` on the public `p1-pipeline` branch. Your local file is unchanged. Say "drop the notes commit" and allow the force-push, and I will rebuild the branch without that file (plan in item 10). Until then there is no PR to `main`.
 2. Item 11, low priority: how to code [1]'s option sets in the literature table. I recommend recoding it to "no".
 3. Ethics wording: one [USER] marker in `paper/v2/methods.md` ("Human data"). It asks whether your institution required ethics review for this secondary use of existing data, and for the reference if so.
 4. At submission (item 9): the Zenodo DOI for the code; an OSF deposit of the tagged preregistrations, if wanted; authors and affiliations. The Snoek group's reply is still awaited (item 8). Nothing waits on it.
+5. To review, not urgent: a reading decision I made overnight for A8 (dated note at the end of `research/PREREG_A8_DRAFT.md`; DECISIONS 2026-11-13).
+   - A2's and A4's rulings of 2026-11-12 now apply to A8's runs of the same analyses, so A8 rows are read like the frozen rows above them.
+   - One A8-specific choice: A8's hashed command fixes the A4 cells folder, so non-finite rows are filtered in place, with the originals kept unchanged in a subfolder the analysis does not read.
+   - It is pre-data with no hash change. If you prefer another reading, it can still change before A8's code-pin step.
 
 **Cluster: nothing of ours started overnight, and nothing failed.**
 - Every job is pending on priority, and Slurm gives no start estimate:
@@ -35,6 +39,7 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
   - Timing smokes and scored runs submitted. The scored runs went in before their smokes ran, to gain queue age; nothing was read (DECISIONS 2026-11-13).
   - A9's pre-run check now enforces replication rule (ii).
 - **A7 Stage 1:** added to the Phase 3 runbook, with its own pre-run check.
+- **A8:** an audit of its path from launch to paper found three faults in A8's own code. The worst: the natural-clip step could never have finished. All three are fixed with tests, before A8's code is pinned. I also wrote the dated note in item 5, an A8 pre-run check and an A8 runbook (ROADMAP Part 3).
 - **Phase 3 rehearsal:** run end to end on synthetic cells for A4, A9 and A7. A4's real analysis should take minutes.
 - **Found and fixed before any data:**
   - A8's `a4_analyse` step could not have run. The Snoek archive is now on the cluster at its pinned hash.
@@ -47,7 +52,7 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
   - Submission pack: software versions, ethics draft, code availability.
 - **Checks:**
   - Full test suite: 1,076 passed, 26 skipped, 0 failed.
-  - Clean-checkout reproduction: passed after one fix.
+  - Clean-checkout reproduction at `5d1ffd5`: 43 rebuilt and matched, 112 verified by hash, 0 failed.
 
 **FYI:** CSD3 `/home` is at 49.8 of 52.4 GB. This project writes nothing there; its jobs write to RDS. The space is in other folders, such as `LEAP3mri`. RDS: 1,067.4 GB of 1,099.5; 991,082 of 1,048,576 files.
 
