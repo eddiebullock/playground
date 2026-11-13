@@ -2,9 +2,9 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-11-13 19:30 Europe/London
+**Updated:** 2026-11-13 20:00 Europe/London
 
-## Hand-off, 2026-11-13 (written 05:35, last refreshed 19:30)
+## Hand-off, 2026-11-13 (written 05:35, last refreshed 20:00)
 
 **New at 17:50: you allowed the `intr` QoS for this project** (DECISIONS 2026-11-13).
 - Its limits, read with each field named: jobs of at most 1 h, and one job per user at a time, pending or running, of up to 3 nodes. It adds 10,000 priority points, against 100 for `gpu2`.
@@ -18,6 +18,10 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
   - By hand, from the Mac: `ssh <host> 'DRY_RUN=0 bash -l -s' < research/scripts/a4_intr_next_slice.sh`. Only one `intr` job may exist at a time.
   - **Rate (measured over the first full slice):** about 1.6 cells per second per shard, after about 6 minutes of model loading. Shards hold 6,281 to 6,899 cells, so each takes two slices, the second about half-length: about 12 slices, done around 03:30 to 04:00 if each starts within minutes.
   - **Risk:** the loop needs this Mac awake and the SSH connection up. `caffeinate` stops idle sleep, not a closed lid.
+- **A2 follows A4 on `intr`** (DECISIONS 2026-11-13, "A2's full-run shards may run in one-hour slices"):
+  - `slurm_jobs/study3_intr_slices_a2.sh` runs four A2 shards per slice through the pinned `study3_stimulus_interventions.sh` (sha256 `1c8d22ea...`) with the full run's settings. Before each slice it applies A2's torn-line rule (A2-2), with a log.
+  - `research/scripts/a2_intr_next_slice.sh` plans each slice. A2 has six shards of 2,349 cells, 4 to 6 GPU-hours each, so about 9 or 10 slices.
+  - A sequencer on the Mac waits for the A4 chain to end. If A4 ends with every shard complete, it starts the A2 chain (scratchpad `intr_chain.sh`). If A4 stops for any other reason, A2 does not start.
 
 **Done this morning on your instructions (about 09:15):**
 - **Item 10: your notes file is off the public branch.**
@@ -125,6 +129,11 @@ With cuts 4 and 5, the main text is about 490 words shorter. What remains waits 
 - The chain loop submitted slice 40925702 (the same shards) at 19:18, and it started at 19:19 on gpu-q-9.
 - So each shard takes two slices, the second about half-length. A4 in all is about 12 slices, done around 03:30 to 04:00 if starts stay this quick.
 - Queue otherwise unchanged; no failures; RDS 1,067.5 GB, 991,136 files.
+
+**2026-11-13 20:00:** A2 prepared to follow A4 on `intr`, before any A2 cell exists (DECISIONS 2026-11-13, A2 slices; decisions table row 86; commit `e601019`).
+- The wrapper passed 23 stub checks, including the A2-2 repair. It is on the cluster and matches the commit (sha256 `f3503d8d...`).
+- The planner's dry run shows no A2 cells yet, and would first slot Gemma shards 0 to 2 and Qwen shard 0.
+- The sequencer is armed.
 
 **2026-11-13 11:47:** Supplementary decisions table brought up to date: rows 81 to 83 for today's three new decision-log entries, and a superseded-entries row (75 to 83). It again has one row per entry, 83, checked in order against DECISIONS. ROADMAP Phase 4 status refreshed: every step that needs no new GPU output is done. The node counts in the 11:20 correction now include the node that was powering up. Full suite at `62a8b79` with these record edits: 1,096 passed, 26 skipped, 0 failed. Merged into `main` as PR #115, true merge commit `da95a75` (11:48).
 
