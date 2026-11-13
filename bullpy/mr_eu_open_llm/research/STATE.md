@@ -2,16 +2,18 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-11-13 18:05 Europe/London
+**Updated:** 2026-11-13 18:20 Europe/London
 
-## Hand-off, 2026-11-13 (written 05:35, last refreshed 18:05)
+## Hand-off, 2026-11-13 (written 05:35, last refreshed 18:20)
 
 **New at 17:50: you allowed the `intr` QoS for this project** (DECISIONS 2026-11-13).
 - Its limits, read with each field named: jobs of at most 1 h, and one job per user at a time, pending or running, of up to 3 nodes. It adds 10,000 priority points, against 100 for `gpu2`.
 - As submitted, only the two A9 timing smokes (30 min) and the four A7 Stage 1 tasks (59 min) fit. A2 (12 h), A4 (6 h), the A9 scored runs (6 h) and the A8 check (4 h) do not.
 - It is not an empty lane. At 17:58, 11 other users' `intr` jobs were waiting on the A100s, the oldest since 2026-11-11, but this user's own `intr` jobs (`hel-*` yesterday, `cas_*` today) started within 1 to 8 minutes.
 - A9 smoke 40843619 moved to `intr` at 17:55, with the same job, script and 30-minute limit. The rest follow one at a time.
-- A4's runner resumes a shard where it stopped (`scripts/a4_run.py`), and the pre-run check needs only the planned cells in each shard file. So A4 could run in one-hour slices on `intr` with no change to frozen code. I am first watching how fast `intr` starts our jobs.
+- A4's runner resumes a shard where it stopped (`scripts/a4_run.py`), and the pre-run check needs only the planned cells in each shard file. So A4 can run in one-hour slices on `intr` with no change to frozen code (DECISIONS 2026-11-13, second entry).
+- Since 2026-11-12 13:26, no 1-GPU `intr` job on the A100s has started, ours included, while single-node 4-GPU `intr` jobs started within minutes. So at 18:17 the A9 smoke went back to `gpu2`, with its age unchanged, and the first A4 slice went in: job 40920485, Gemma shards 0 to 3 on one node, 52 minutes each, through the unchanged `study3_a4.sh`. Those four shards' `gpu2` tasks (40589226_0 to _3) are held, so no two runs write one file.
+- **How to continue the slices:** when a slice ends, read only its wrapper log and each shard's line count. Then submit the next slice, holding first the `gpu2` task of any shard new to the slices: `SLOTS="a4:<model>:<shard> ..." sbatch slurm_jobs/study3_intr_slices.sh` from `~/rds/hpc-work/study3`. Only one `intr` job may exist at a time.
 
 **Done this morning on your instructions (about 09:15):**
 - **Item 10: your notes file is off the public branch.**
@@ -108,6 +110,8 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
 With cuts 4 and 5, the main text is about 490 words shorter. What remains waits on cut 1 (hand-off item 5, your view), cut 2 (after the results) and writing each branch to its budget.
 
 **2026-11-13 18:05:** Full suite at `9181a4d`: 1,096 passed, 26 skipped, 0 failed. Merged into `main` as PR #117, true merge commit `40f38e9` (17:58). You allowed the `intr` QoS at about 17:50: A9 smoke 40843619 moved there at 17:55 and is pending, seventh in the `intr` line at 18:03 (DECISIONS 2026-11-13; hand-off, top). Decisions table row 84 added.
+
+**2026-11-13 18:20:** A4 slices started (DECISIONS 2026-11-13, "A4's scored shards may run in one-hour slices"). The wrapper `slurm_jobs/study3_intr_slices.sh` passed 17 stub checks on the login node and was committed (`eefa487`) before being copied to the cluster; it matches the commit (sha256 `18d1e8ed...`). Held 40589226_0 to _3; A9 smoke 40843619 back to `gpu2`; slice 40920485 (Gemma shards 0 to 3) pending at 18:17. Decisions table row 85. ROADMAP's A4 trigger now names the slice jobs and the waivers.
 
 **2026-11-13 11:47:** Supplementary decisions table brought up to date: rows 81 to 83 for today's three new decision-log entries, and a superseded-entries row (75 to 83). It again has one row per entry, 83, checked in order against DECISIONS. ROADMAP Phase 4 status refreshed: every step that needs no new GPU output is done. The node counts in the 11:20 correction now include the node that was powering up. Full suite at `62a8b79` with these record edits: 1,096 passed, 26 skipped, 0 failed. Merged into `main` as PR #115, true merge commit `da95a75` (11:48).
 
