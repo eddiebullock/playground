@@ -30,7 +30,7 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
   - Your local `notes/notes.txt` is unchanged.
   - The old history is kept on your Mac only, in the local branch `backup/p1-pipeline-before-notes-removal`.
 - **Item 11:** [1] recoded to "no" on option sets. Figure 1 rebuilt (DECISIONS 2026-11-13).
-- **Merged into `main`:** PR #114, true merge commit `ee3913a`, then PR #115 (`da95a75`, 11:48) with the later records, then PR #116 (`d1d1246`, 16:58) with the two length cuts and the afternoon records, then PR #117 (`40f38e9`, 17:58) with cut 3. Today's commits now count on your GitHub contribution graph.
+- **Merged into `main`:** PR #114, true merge commit `ee3913a`, then PR #115 (`da95a75`, 11:48) with the later records, then PR #116 (`d1d1246`, 16:58) with the two length cuts and the afternoon records, then PR #117 (`40f38e9`, 17:58) with cut 3, then PR #118 (`4419db4`, 20:21) with the `intr` slice tooling and the evening's records (full suite at `555ff91`: 1,096 passed, 26 skipped, 0 failed). Today's commits now count on your GitHub contribution graph.
 - **Ethics:** you said the ethics position is fine, so Methods ("Human data") and the reporting summary now carry the recommended statement. It says no separate ethical approval was required, because the study recruited no participants and used only existing materials under their permission or licence terms. It is marked provisional, for you to confirm before submission.
 
 **Only you can do these** (details in `research/NEEDS_INPUT.md`):
