@@ -2,11 +2,13 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-11-13 00:55 Europe/London
+**Updated:** 2026-11-13 02:15 Europe/London
 
 ## Current phase
 
 **Phase 2 runs queued; Phase 3 analyses wait on them.** A1, A3 and natural-clip RQ1 are locked (2026-11-09). Every amendment is frozen or closed: A2, A4, A5, A7, A8 and A9 frozen, A6 closed as a limit. The A2, A4 and A8 GPU jobs are pending on priority. History: the prompt confound found 2026-11-04 withdrew the earlier accuracy and probe results (DECISIONS); Branch B stays as a record only.
+
+**2026-11-13 02:15:** Queue unchanged (checks at 01:22 and 02:14; SSH master up; RDS 1,067.3 GB, 991,070 files). Results sections 5, 6, 7, 9 and 10 now carry drafted text for every outcome, written before any of their data, with values as slots for `registry_tables.py`. The A7 pre-run check is now tested against the A2 run note as `post_phase3.analyse` writes it from the real command list.
 
 **2026-11-13 00:55:** Queue unchanged (priority 192, rising about 1.5 a hour). Phase 3 rehearsed end to end on SYNTHETIC cells in the runners' exact format (`research/scripts/rehearse_cells.py`; all in the scratch folder, nothing under `results/`): A4 and A9 manifests rebuilt with their pinned sha256; A4 pre-run check passed; the frozen `a4_analyse` ran in 383 s single-threaded and wrote all eight decisions and both headlines; A9 pre-run check passed and the frozen `a9_analyse` ran in 45 s with the fixed replication wording; `registry_tables.py a4`, Figure 5 (`fig5_from`) and Table 1 all read the real-schema summaries correctly. The A7 chain was rehearsed earlier (`tests/test_a7_main_integration.py`); A2 and A5 were rehearsed by their code audits (2026-11-12). One gap found, in the synthetic rows only (blind rows need `lexicon_mass`, which the real runner writes). A4's real analysis should take minutes, not hours.
 

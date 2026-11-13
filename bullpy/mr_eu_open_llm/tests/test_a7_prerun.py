@@ -108,3 +108,15 @@ def test_runbook_knows_a7():
     assert "research/scripts/a7_prerun_check.py" in check
     assert analysis[1:3] == ["-m", "scripts.a7_analyse"] and "--a7_frozen" in analysis and "--a2_frozen" in analysis
     assert book.outputs("a7") == ["research/reproduction/a7_analysis.json"]
+
+
+def test_a7_prerun_parses_the_run_note_as_the_runbook_writes_it():
+    """The A2 run note is built here exactly as post_phase3.analyse builds it, from the real command list."""
+    steps = [{"command": [Path(c).name if c == book.PY else c for c in command]} for command in book.commands("a2")]
+    note = {"status": "complete", "steps": steps}
+    for m in MODELS:
+        cells, reports, out = pre.a2_inputs(note, m)
+        assert cells == [f"results/stimulus_interventions/cells_{m}_shard{k}.jsonl" for k in range(3)]
+        assert reports == [f"results/stimulus_interventions/run_{m}_shard{k}.json" for k in range(3)]
+        assert out == f"research/reproduction/stimulus_interventions_{m}.json"
+        assert out in book.outputs("a2")
