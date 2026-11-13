@@ -717,3 +717,28 @@ At about 17:50 the user wrote: "i believe ther is nothing else in the HPC queue 
   - Slice 40920485 started at 18:22 on one node, about 5 minutes after submission. Loading the model took about 6 minutes, with four processes loading at once.
   - Between slices, the check now reads mechanics only: line counts, the count of cells whose status is not "ok", partial lines and the `seconds` field (`research/scripts/a4_intr_next_slice.sh`, dry run). No score field is read.
   - At 18:29 all four shard files held only "ok" cells, at about 0.7 s per cell. So a shard takes two slices, not three: about 12 slices for A4 in all.
+
+## 2026-11-13: A2's full-run shards may run in one-hour slices under `intr` after A4 (scheduling only, before any A2 cell exists)
+
+- **Why.** The reason is A4's (entry above). A2's six full-run shards (Gemma 40468625, Qwen 40468626; 12 h limit, 4 to 6 h of work each) wait behind about 400 jobs on `gpu2`. Single-node `intr` slices start within minutes: A4's first two started 5 minutes and 1 minute after submission. `intr` takes one job at a time, so A2 starts only when every A4 shard is complete.
+- **How.**
+  - `slurm_jobs/study3_intr_slices_a2.sh` runs up to four A2 shards on one node. Each runs as its own job step on one GPU, through the unchanged `slurm_jobs/study3_stimulus_interventions.sh`.
+  - Each step uses the full run's settings: STEP=run, N_SHARDS=3, CONFIRM_GATES_PASSED=1, the default inputs, and the shard as SLURM_ARRAY_TASK_ID.
+  - `timeout` stops each step at 52 minutes. `scripts/run_stimulus_interventions.py` resumes, because `done_cells` skips cells already written.
+  - Each shard plans 81 items times 29 cells, 2,349 cells.
+- **What differs from A4, and how it is handled.**
+  - *Torn lines.* The A2 runner skips an unparseable line but does not trim it, so a row written after a torn line would join it.
+    - Before each slice, the wrapper applies A2's own repair rule (PREREG_A2, ruling A2-2) to any unparseable line. It removes only that line, and logs its number, byte offset, length and sha256 to `results/stimulus_interventions_torn/repairs.jsonl`.
+    - It keeps the original file there, under a name that does not match `cells_*_shard*.jsonl`. The resumed run then recomputes the missing cells. No parseable row is edited or removed.
+    - In A4's first slice all four budget stops fell between lines, so a repair should be rare.
+  - *Run reports.* Each run rewrites its shard's run report (`run_<model>_shard<k>.json`).
+    - From the reports, the analysis reads only the model, the smoke flag, the design hash, the shard numbers, the delivery rows and the baselines (`load_shards`, `delivery_rows`, `baselines`).
+    - Each run recomputes delivery for the shard's first items and the baselines for its first clip, whether or not their cells are done. So the last run's report holds the same delivery rows and baselines an uninterrupted run computes.
+    - Its counts (cells ok, failed, timing) cover only the last slice. Failed cells stay in the cells file with their reasons, as the analysis requires.
+- **Safeguards, as for A4.**
+  - The `gpu2` task for a shard is held before any slice runs it, and cancelled once the shard is complete.
+  - The planner (`research/scripts/a2_intr_next_slice.sh`) reads mechanics only: line counts, unparseable lines, cells by status and mean seconds. It reads no score field. It takes the four least-advanced shards each time.
+  - A2's frozen pre-run check and analysis decide completeness.
+  - The pull lists the slice jobs, and waives the cancelled `gpu2` tasks with this entry as the reason.
+- **What stays the same.** No design, code, threshold or analysis change. Hardware, weights, precision and inputs are as for the `gpu2` runs.
+- **Testing.** The wrapper was tested with stubs on the cluster login node. All 23 checks passed: the settings passed through, the budget stop, a normal end, a failure, the A2-2 repair on a torn last line and on an unparseable middle line, a clean file left untouched, and bad slots rejected.
