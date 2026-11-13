@@ -18,6 +18,24 @@ Drafted 2026-11-07, updated the same day after the A4 freeze. No A1 result has b
 
 **Update 2026-11-07.** `citation_check.md` read the public journal pages: Article limits, preregistration rules and the reporting summary are there. A Registered Report is not possible, because data collection has started, so this is an Article. **Earlier note.** Preregistration statement rules, reporting summary rules, and current data and code requirements. A web search found a 2021 editorial (s41562-021-01190-w) saying that central custom code is peer reviewed, must go to a DOI-granting repository at acceptance, and that "available on request" code statements are generally refused. That came through a search summary only. Whether a repository tag counts as preregistration for the journal is also unverified. Page charges and preprint policy remain unverified (`LIT_CHECK_2026-11-07.md`).
 
+**Length check, 2026-11-13 (before any A2, A4, A7 Stage 1, A8 or A9 output).** Words counted with HTML comments and headings left out. The estimate also leaves out registry and slot markers, citations and the drafting scaffold (Question, Rule, Slots, Writing rule, Figure notes), and keeps one outcome branch per slot.
+
+| Part | Drafted now, all branches | Estimate with one branch kept | Plan (table above) |
+|---|---|---|---|
+| Introduction | 1,606 | 1,606 | 1,401 |
+| Results | 6,137 | 2,700 to 3,200: locked prose about 2,100, plus 500 to 1,000 for one branch per slot, depending on whether model-level sentences are written once or per model | about 2,500 |
+| Discussion | 4,102 | 2,400 to 2,900, of which Limitations 963 and the benchmark-audit recommendation 337 | about 1,100 |
+| Main text | | 6,700 to 7,700 | 5,000 |
+
+The main text is set to run about 1,700 to 2,700 words over. None of the cuts below changes a claim, a number or a disclosure: every deviation is disclosed in Methods, which the limit does not count, and in the Supplementary decisions table. Cuts, in the order they would be made:
+1. Limitations: a paragraph of about 250 words in the Discussion on the limits that bear on the claims made. The numbered list moves to the Supplementary Information, each item beside its Methods disclosure. Saves about 700.
+2. Per-model and per-dataset values go to Table 1 and the figures; the text gives each model's headline and the exceptions. Saves about 300 to 500.
+3. Results section 1's literature check moves to the Figure 1 legend and the Supplementary Information (about 150). The locked prose of sections 2 and 4 drops recovery detail that Methods already gives (about 300 to 400).
+4. The Introduction goes back to its plan of 1,401 words or below. Saves about 200 to 400. For example, the search-coverage sentences (62 words) move to Methods, and the paper-by-paper list in the fifth paragraph (99 words) is already given by Results section 1 and Figure 1e.
+5. The benchmark-audit recommendation shrinks to about 120 words, with the audit itself in Methods. Saves about 200.
+
+Together these save about 1,850 to 2,350 words; the rest comes from writing each chosen branch to its budget at steps 4.1 and 4.3. Methods (7,402 words) and the figure legends (1,017) fall outside the limit, but check both against the journal's formatting guide before submission.
+
 ## Abstract template (150 words at most)
 
 > Some vision-language models are reported to match people at reading mental states from faces, but several claims we located cannot rule out option order or prompt text. We audited [PENDING: n] models on 243 acted clips, with option position controlled and faces swapped under fixed prompts. [PENDING: RQ0 sentence.] We prove that agreement on natural items does not in general determine which cues a system uses. We therefore compared model cue effects with human effects from randomised facial action units. [PENDING: RQ1 sentence.] Stimulus interventions tested preregistered human predictions. [PENDING: RQ2 sentence.] [PENDING: closing sentence from the scenario table.]

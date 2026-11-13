@@ -2,9 +2,9 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-11-13 11:47 Europe/London
+**Updated:** 2026-11-13 12:30 Europe/London
 
-## Hand-off, 2026-11-13 (written 05:35, last refreshed 11:47)
+## Hand-off, 2026-11-13 (written 05:35, last refreshed 12:30)
 
 **Done this morning on your instructions (about 09:15):**
 - **Item 10: your notes file is off the public branch.**
@@ -27,6 +27,10 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
    - An independent review of the night's A8 code then found real problems, all now fixed. One was a regression I had introduced. The addendum at the end of the A8 prereg lists them.
    - A8's next step is its code pins (Freeze checklist item 2). That step also needs the GPU equivalence test (40399722), which is still queued.
    - You said to proceed, so I will take the step when that job has run, unless you object to the note first. If you object after the pins, the change is still possible as a dated pre-data deviation.
+5. To review, not urgent: the paper is too long. Once one branch per outcome is kept, the main text should come to about 6,700 to 7,700 words, against the journal's limit of 5,000.
+   - The cut plan is in `research/paper/v2/outline.md` ("Length check"). No cut changes a claim, a number or a disclosure.
+   - Its biggest choice: the numbered Limitations list (963 words) moves to the Supplementary Information, and the Discussion keeps a paragraph of about 250 words.
+   - I will apply the plan when the text is assembled after the results, unless you would rather keep the list in the main text. The cuts would then have to come from elsewhere.
 
 **Cluster: nothing of ours started overnight, and nothing failed.**
 - Every job is pending on priority, and Slurm gives no start estimate:
@@ -79,6 +83,8 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
 ## Current phase
 
 **Phase 2 runs queued; Phase 3 analyses wait on them.** A1, A3 and natural-clip RQ1 are locked (2026-11-09). Every amendment is frozen or closed: A2, A4, A5, A7, A8 and A9 frozen, A6 closed as a limit. The A2, A4, A7 Stage 1, A8 and A9 GPU jobs are pending on priority. History: the prompt confound found 2026-11-04 withdrew the earlier accuracy and probe results (DECISIONS); Branch B stays as a record only.
+
+**2026-11-13 12:30:** Queue unchanged at 12:25: nothing started or failed. Oldest jobs at priority 209; 361 jobs ranked above ours; RDS 1,067.5 GB, 991,119 files. Length check of the draft (`paper/v2/outline.md`, "Length check"): the main text is set to come to about 6,700 to 7,700 words once one branch is kept, against the limit of 5,000 (Introduction 1,606; Results 2,700 to 3,200; Discussion 2,400 to 2,900). A cut plan is recorded there and in ROADMAP Phase 4, with hand-off item 5 for the one structural choice.
 
 **2026-11-13 11:47:** Supplementary decisions table brought up to date: rows 81 to 83 for today's three new decision-log entries, and a superseded-entries row (75 to 83). It again has one row per entry, 83, checked in order against DECISIONS. ROADMAP Phase 4 status refreshed: every step that needs no new GPU output is done. The node counts in the 11:20 correction now include the node that was powering up. Full suite at `62a8b79` with these record edits: 1,096 passed, 26 skipped, 0 failed. Merged into `main` as PR #115, true merge commit `da95a75` (11:48).
 
