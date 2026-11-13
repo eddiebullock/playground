@@ -2,9 +2,9 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-11-13 19:40 Europe/London
+**Updated:** 2026-11-13 20:05 Europe/London
 
-## Hand-off, 2026-11-13 (written 05:35, last refreshed 19:40)
+## Hand-off, 2026-11-13 (written 05:35, last refreshed 20:05)
 
 **New at 17:50: you allowed the `intr` QoS for this project** (DECISIONS 2026-11-13).
 - Its limits, read with each field named: jobs of at most 1 h, and one job per user at a time, pending or running, of up to 3 nodes. It adds 10,000 priority points, against 100 for `gpu2`.
@@ -134,6 +134,12 @@ With cuts 4 and 5, the main text is about 490 words shorter. What remains waits 
 - The wrapper passed 23 stub checks, including the A2-2 repair. It is on the cluster and matches the commit (sha256 `f3503d8d...`).
 - The planner's dry run shows no A2 cells yet, and would first slot Gemma shards 0 to 2 and Qwen shard 0.
 - The sequencer is armed.
+
+**2026-11-13 20:02:** Gemma A4 shards 0 to 3 are complete: 6,281, 6,407, 6,603 and 6,847 lines, each exactly its planned count, none partial, all cells "ok".
+- Slice 40925702 ran 19:19 to 19:50, and all four runs ended by themselves.
+- The planner then cancelled the held `gpu2` tasks 40589226_0 to _3, held _4 to _7, and submitted slice 40927225 for Gemma shards 4 to 7. It started at 19:52 on gpu-q-9.
+- Four shards take about 1.5 hours over two slices, so A4's other 20 shards should finish around 03:30 to 04:00.
+- No failures; RDS 1,067.5 GB, 991,147 files.
 
 **2026-11-13 11:47:** Supplementary decisions table brought up to date: rows 81 to 83 for today's three new decision-log entries, and a superseded-entries row (75 to 83). It again has one row per entry, 83, checked in order against DECISIONS. ROADMAP Phase 4 status refreshed: every step that needs no new GPU output is done. The node counts in the 11:20 correction now include the node that was powering up. Full suite at `62a8b79` with these record edits: 1,096 passed, 26 skipped, 0 failed. Merged into `main` as PR #115, true merge commit `da95a75` (11:48).
 
