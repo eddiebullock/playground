@@ -767,3 +767,34 @@ At about 17:50 the user wrote: "i believe ther is nothing else in the HPC queue 
     - A4: 11 idle nodes gave 3 nodes, with Gemma 8 to 11 first and then Qwen 0 to 7.
     - A2: 10 idle nodes gave 2 nodes, for all six shards.
 - **When.** The new planners were installed at 22:19, while 40937285 ran. The first slice that can take more than one node is the first one with Qwen shards.
+
+## 2026-11-13: A9's smoke and scored shards may run in one-hour slices beside A2's (scheduling only, before any A9 cell exists)
+
+- **Why.** After A4, A2's six shards fill only six of the twelve GPUs one `intr` job may hold (entries above). A9's two timing smokes (40843619, 40843620; 30-minute limit) and its 24 scored shards (40863756, 40863757; 6-hour limit) wait behind about 400 jobs on `gpu2`, like A2 and A4 did. A9's runner is A4's, and it resumes the same way. So A9 can use the GPUs that A2 leaves free, in the same jobs.
+- **How.**
+  - `slurm_jobs/study3_intr_slices_mixed.sh` runs one slice.
+    - Its `a2` slots go, unchanged, to A2's own slice wrapper (`study3_intr_slices_a2.sh`, sha256 `f3503d8d...`, with its A2-2 repair), which runs as a child of the job.
+    - Its `a9` and `a9smoke` slots each run as their own one-GPU step through the unchanged `slurm_jobs/study3_a9.sh` (sha256 `d3011382...`, pinned in the A9 block's file list), with the queued arrays' settings: MODEL, N_SHARDS=12, A9_FROZEN=1, and the shard as SLURM_ARRAY_TASK_ID. A smoke also has MAX_CELLS=40 and shard 0, as submitted.
+    - `timeout` stops each step at 52 minutes. `scripts/a9_run.py` drops a partial last line and skips cells already written. It writes smoke cells beside the scored cells, to `cells_<model>_smoke_0.jsonl`.
+  - `research/scripts/mixed_intr_next_slice.sh` plans each slice. Slots come in this order, four per node, on up to 3 nodes, and never on more nodes than are idle:
+    1. A2's open shards, least advanced first.
+    2. The smokes, until each holds 40 cells.
+    3. A9's open scored shards, partial ones first.
+  - A model's scored shards are slotted only when its smoke holds 40 cells, all "ok", **and** the model is listed in `results/a9/scored_slices_models.txt`. That list is written by hand after A4's analysis, for the models eligible under RQ0 and A4's gates. This keeps A9's checklist step 4 as written: "Timing smoke, then the scored run per eligible model after RQ0 and A4's gates."
+  - Planned cells per scored shard come from `planned_cells(results/a9/manifest.csv, k, 12)` on the pinned manifest (`4b2f04ae...`, checked on the cluster before the dry run below): 2,728 to 3,202 per shard, 36,002 per model.
+- **Smokes.** As fixed on 2026-11-13, only status, elapsed time, memory and the `seconds` field are read. A smoke with any cell that is not "ok" stops the planner, and the scored shards then wait until the cause is known. The cap rule (lower the `gpu2` scored tasks' limit, or resubmit them with a longer cap) has nothing left to act on once the shards run in resumed slices, so it lapses.
+- **Safeguards, as for A2 and A4.**
+  - Every `gpu2` task a slice runs (A2 tasks, smoke jobs, scored tasks) is held first, so no two runs write one file. It is cancelled once its file is complete.
+  - The planner reads mechanics only (line counts, partial lines, cells by status, mean seconds) and no score field. It stops on an over-full shard, an A9 cell that is not "ok", or an A2 status other than ok or failed. It also stops when only scored shards that may not run are left.
+  - A9's frozen pre-run check and single analysis decide completeness. The pull lists the slice jobs, and waives the cancelled `gpu2` tasks with this entry as the reason.
+- **What stays the same.** No design, code, threshold or analysis change. Hardware, weights, precision and inputs are as for the `gpu2` runs. Smoke cells are never pulled. The A2 slices run as in their own entry, through their own wrapper.
+- **Testing.**
+  - The new wrapper passed 28 stub checks on the login node. The checks used the real A2 wrapper as the child, whose A2-2 repair ran on a torn stub file. They covered:
+    - the settings passed through for each kind;
+    - budget stops;
+    - normal ends;
+    - failures of an A9 step or of A2's wrapper;
+    - bad, duplicate or excess slots rejected.
+  - The planner passed 9 new tests in `tests/test_intr_planners.py`, with stand-ins for Slurm.
+  - A dry run on the login node at 23:12 gave, for the first slice after A4: A2's six shards and both smokes, on two nodes.
+- **When.** From the first slice after A4 is complete. The Mac sequencer that was to start A2's planner now starts this one.

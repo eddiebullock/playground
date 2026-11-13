@@ -2,9 +2,9 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-11-13 23:10 Europe/London
+**Updated:** 2026-11-13 23:13 Europe/London
 
-## Hand-off, 2026-11-13 (written 05:35, last refreshed 23:10)
+## Hand-off, 2026-11-13 (written 05:35, last refreshed 23:13)
 
 **New at 17:50: you allowed the `intr` QoS for this project** (DECISIONS 2026-11-13).
 - Its limits, read with each field named: jobs of at most 1 h, and one job per user at a time, pending or running, of up to 3 nodes. It adds 10,000 priority points, against 100 for `gpu2`.
@@ -19,10 +19,12 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
   - **Rate (measured over the first full slice):** about 1.6 cells per second per shard, after about 6 minutes of model loading. Shards hold 6,281 to 6,899 cells, so each takes two slices, the second about half-length.
   - **New at 22:19: a slice may take up to three nodes** (DECISIONS 2026-11-13, "A4's and A2's slices may take up to three nodes"). That is `intr`'s per-user limit, and the planner takes only nodes that are idle when it plans. Only the planners changed; each shard still runs as its own one-GPU step, exactly as before. All twelve Gemma shards were complete by 22:44. At 22:46, slice 40938356 started all twelve Qwen shards on three nodes (gpu-q-3, gpu-q-4, gpu-q-47), four one-GPU steps per node, about a minute after submission. Qwen runs at about 1.0 cell per second per shard, against Gemma's 1.6, so its shards need three slices: A4 should be done around 01:00, against 03:30 to 04:00 on one node. `MAX_NODES=1` in front of a planner run restores one-node slices.
   - **Risk:** the loop needs this Mac awake and the SSH connection up. `caffeinate` stops idle sleep, not a closed lid.
-- **A2 follows A4 on `intr`** (DECISIONS 2026-11-13, "A2's full-run shards may run in one-hour slices"):
-  - `slurm_jobs/study3_intr_slices_a2.sh` runs up to four A2 shards per node, and since 22:19 up to three nodes per slice (all six shards on two nodes), through the pinned `study3_stimulus_interventions.sh` (sha256 `1c8d22ea...`) with the full run's settings. Before each slice it applies A2's torn-line rule (A2-2), with a log.
-  - `research/scripts/a2_intr_next_slice.sh` plans each slice. A2 has six shards of 2,349 cells, 4 to 6 GPU-hours each, so about 6 to 8 slices with all six shards running at once.
-  - A sequencer on the Mac waits for the A4 chain to end. If A4 ends with every shard complete, it starts the A2 chain (scratchpad `intr_chain.sh`). If A4 stops for any other reason, A2 does not start.
+- **A2 and A9 follow A4 on `intr`, in the same slices** (DECISIONS 2026-11-13: "A2's full-run shards may run in one-hour slices" and "A9's smoke and scored shards may run in one-hour slices beside A2's"):
+  - `slurm_jobs/study3_intr_slices_mixed.sh` runs one slice. Its A2 slots go, unchanged, to A2's own wrapper (`study3_intr_slices_a2.sh`), which applies A2's torn-line rule (A2-2), with a log, and runs the pinned `study3_stimulus_interventions.sh` (sha256 `1c8d22ea...`) with the full run's settings. Its A9 slots run the pinned `study3_a9.sh` with the queued arrays' settings.
+  - `research/scripts/mixed_intr_next_slice.sh` plans each slice: A2's six shards first, then A9's two timing smokes, then A9's scored shards.
+  - A9's scored shards run only for models listed in `results/a9/scored_slices_models.txt` on the cluster, and only after that model's smoke is complete and ok. I write that list after A4's analysis, for the models eligible under RQ0 and A4's gates, as A9's checklist orders. Until then the slices carry A2, plus the smokes once.
+  - A2 has six shards of 2,349 cells, 4 to 6 GPU-hours each, so about 6 to 8 slices. A9 has 24 shards of about 3,000 cells; at A4's rates each should take one or two slices, beside A2's.
+  - A sequencer on the Mac waits for the A4 chain to end. If A4 ends with every shard complete, it starts the mixed chain (scratchpad `intr_chain.sh` with the mixed planner). If A4 stops for any other reason, nothing starts.
 
 **Done this morning on your instructions (about 09:15):**
 - **Item 10: your notes file is off the public branch.**
@@ -150,13 +152,19 @@ With cuts 4 and 5, the main text is about 490 words shorter. What remains waits 
   - The unchanged A4 wrapper ran 12 stub slots on the login node.
 - No failures; RDS 1,067.5 GB, 991,163 files.
 
-**2026-11-13 23:10:** All twelve Gemma A4 shards are complete, each at exactly its planned count, with none partial and every cell "ok".
+**2026-11-13 23:05:** All twelve Gemma A4 shards are complete, each at exactly its planned count, with none partial and every cell "ok".
 - Slice 40937285 finished shards 8 to 11 by 22:44; all four runs ended by themselves.
 - The planner cancelled 40589226_8 to _11. All twelve Gemma `gpu2` tasks are now cancelled, as the slice plan intends (they are waived at the pull).
 - The new planner saw 13 idle nodes and submitted slice 40938356 for Qwen shards 0 to 11 on three nodes, after holding all twelve Qwen `gpu2` tasks.
   - It started at 22:46:22 on gpu-q-[3-4,47], with steps 0 to 11 placed four per node, each with 1 GPU, 16 CPUs and 120 GB.
   - Model loading took about 3.5 minutes. At 23:03 every Qwen shard file held 788 to 856 lines, growing at about 1.0 a second each.
 - Full suite at `8bc1e52`: 1,113 passed, 26 skipped, 0 failed. Merged into `main` as PR #119, true merge commit `dd67a11` (22:41).
+
+**2026-11-13 23:13:** A9 prepared to run beside A2 after A4, before any A9 cell exists (DECISIONS 2026-11-13, "A9's smoke and scored shards may run in one-hour slices beside A2's"; decisions table row 88).
+- `slurm_jobs/study3_intr_slices_mixed.sh` passed 28 stub checks on the login node, with the real A2 wrapper as its child.
+- `research/scripts/mixed_intr_next_slice.sh` has 9 new tests in `tests/test_intr_planners.py`, which now has 26.
+- A dry run gave, for the first slice after A4: A2's six shards and both A9 smokes, on two nodes.
+- The ROADMAP triggers for A2 and A9 now name the slice jobs and the waivers, plus the step that allows A9's scored shards after A4's analysis.
 
 **2026-11-13 11:47:** Supplementary decisions table brought up to date: rows 81 to 83 for today's three new decision-log entries, and a superseded-entries row (75 to 83). It again has one row per entry, 83, checked in order against DECISIONS. ROADMAP Phase 4 status refreshed: every step that needs no new GPU output is done. The node counts in the 11:20 correction now include the node that was powering up. Full suite at `62a8b79` with these record edits: 1,096 passed, 26 skipped, 0 failed. Merged into `main` as PR #115, true merge commit `da95a75` (11:48).
 
