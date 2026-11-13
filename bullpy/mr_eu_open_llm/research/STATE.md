@@ -2,9 +2,9 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-11-13 22:25 Europe/London
+**Updated:** 2026-11-13 23:10 Europe/London
 
-## Hand-off, 2026-11-13 (written 05:35, last refreshed 22:25)
+## Hand-off, 2026-11-13 (written 05:35, last refreshed 23:10)
 
 **New at 17:50: you allowed the `intr` QoS for this project** (DECISIONS 2026-11-13).
 - Its limits, read with each field named: jobs of at most 1 h, and one job per user at a time, pending or running, of up to 3 nodes. It adds 10,000 priority points, against 100 for `gpu2`.
@@ -17,7 +17,7 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
   - The loop stops and tells me on: a slice not ending COMPLETED, a planner STOP, fewer than 1,000 new lines in a slice, SSH failures, or no new job ID.
   - By hand, from the Mac: `ssh <host> 'DRY_RUN=0 bash -l -s' < research/scripts/a4_intr_next_slice.sh`. Only one `intr` job may exist at a time.
   - **Rate (measured over the first full slice):** about 1.6 cells per second per shard, after about 6 minutes of model loading. Shards hold 6,281 to 6,899 cells, so each takes two slices, the second about half-length.
-  - **New at 22:19: a slice may take up to three nodes** (DECISIONS 2026-11-13, "A4's and A2's slices may take up to three nodes"). That is `intr`'s per-user limit, and the planner takes only nodes that are idle when it plans. Only the planners changed; each shard still runs as its own one-GPU step, exactly as before. Gemma's last four shards finish on one node in slice 40937285 (started 22:18). The next slice should then run all twelve Qwen shards at once. If Qwen runs at Gemma's rate, A4 is done around 00:30 to 01:00, not 03:30 to 04:00. `MAX_NODES=1` in front of a planner run restores one-node slices.
+  - **New at 22:19: a slice may take up to three nodes** (DECISIONS 2026-11-13, "A4's and A2's slices may take up to three nodes"). That is `intr`'s per-user limit, and the planner takes only nodes that are idle when it plans. Only the planners changed; each shard still runs as its own one-GPU step, exactly as before. All twelve Gemma shards were complete by 22:44. At 22:46, slice 40938356 started all twelve Qwen shards on three nodes (gpu-q-3, gpu-q-4, gpu-q-47), four one-GPU steps per node, about a minute after submission. Qwen runs at about 1.0 cell per second per shard, against Gemma's 1.6, so its shards need three slices: A4 should be done around 01:00, against 03:30 to 04:00 on one node. `MAX_NODES=1` in front of a planner run restores one-node slices.
   - **Risk:** the loop needs this Mac awake and the SSH connection up. `caffeinate` stops idle sleep, not a closed lid.
 - **A2 follows A4 on `intr`** (DECISIONS 2026-11-13, "A2's full-run shards may run in one-hour slices"):
   - `slurm_jobs/study3_intr_slices_a2.sh` runs up to four A2 shards per node, and since 22:19 up to three nodes per slice (all six shards on two nodes), through the pinned `study3_stimulus_interventions.sh` (sha256 `1c8d22ea...`) with the full run's settings. Before each slice it applies A2's torn-line rule (A2-2), with a log.
@@ -149,6 +149,14 @@ With cuts 4 and 5, the main text is about 490 words shorter. What remains waits 
   - They were tested with stand-ins for Slurm (`tests/test_intr_planners.py`, 17 tests), dry-run on the login node, and installed at 22:19.
   - The unchanged A4 wrapper ran 12 stub slots on the login node.
 - No failures; RDS 1,067.5 GB, 991,163 files.
+
+**2026-11-13 23:10:** All twelve Gemma A4 shards are complete, each at exactly its planned count, with none partial and every cell "ok".
+- Slice 40937285 finished shards 8 to 11 by 22:44; all four runs ended by themselves.
+- The planner cancelled 40589226_8 to _11. All twelve Gemma `gpu2` tasks are now cancelled, as the slice plan intends (they are waived at the pull).
+- The new planner saw 13 idle nodes and submitted slice 40938356 for Qwen shards 0 to 11 on three nodes, after holding all twelve Qwen `gpu2` tasks.
+  - It started at 22:46:22 on gpu-q-[3-4,47], with steps 0 to 11 placed four per node, each with 1 GPU, 16 CPUs and 120 GB.
+  - Model loading took about 3.5 minutes. At 23:03 every Qwen shard file held 788 to 856 lines, growing at about 1.0 a second each.
+- Full suite at `8bc1e52`: 1,113 passed, 26 skipped, 0 failed. Merged into `main` as PR #119, true merge commit `dd67a11` (22:41).
 
 **2026-11-13 11:47:** Supplementary decisions table brought up to date: rows 81 to 83 for today's three new decision-log entries, and a superseded-entries row (75 to 83). It again has one row per entry, 83, checked in order against DECISIONS. ROADMAP Phase 4 status refreshed: every step that needs no new GPU output is done. The node counts in the 11:20 correction now include the node that was powering up. Full suite at `62a8b79` with these record edits: 1,096 passed, 26 skipped, 0 failed. Merged into `main` as PR #115, true merge commit `da95a75` (11:48).
 
