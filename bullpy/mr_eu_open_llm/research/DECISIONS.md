@@ -591,3 +591,28 @@ Open from the same audit:
 - **Minor:** two A8 producers write no provenance, and gate files are read without their launcher record.
 
 Nothing was read. The hashed block, its 48 frozen-file pins and every threshold are unchanged. The pending A8 equivalence job (40399722) runs from its own folder (`~/rds/hpc-work/a8_check`) and is not affected. Nothing was synced to the cluster; the code-pin step syncs and pins A8's code.
+
+## 2026-11-13: A2's and A4's rulings of 2026-11-12 carried over to A8 (pre-data; no design change)
+
+A8 runs A2's and A4's frozen analyses on two larger models, and its rows are read under the frozen rows. The rulings that A2's and A4's code audits produced on 2026-11-12 came after A8 was frozen, so A8's runs of the same analyses would have been read differently from the frozen ones. Examples:
+- Opposes verdicts without the fill rule, which Table 1 and Figure 6 apply.
+- Non-finite rows kept.
+- No shard or input check before the single run.
+
+A dated note in `PREREG_A8_DRAFT.md` (2026-11-13, about 06:00, outside the hashed block) carries the rulings over, as A9 did for A4's on 2026-11-12:
+- **A2 rulings 1 to 9 apply to each A8 model's A2 output.**
+- **A4 rulings 1 to 8 apply to A8's A4 analysis,** with three points that A8's block settles differently:
+  - *Family.* The block's family stands: the models with A4 cells in `results/a8/a4`. The single run waits until every such model is complete.
+  - *Shards.* The shard count is a run setting, read from the ok `a4_run` launcher records.
+  - *Non-finite rows.* The block fixes `--cells_dir results/a8/a4`, so ruling 2's filtered copy cannot be a separate folder. The original moves, unchanged, to `results/a8/a4/unfiltered/`, and the filtered copy takes its name. The frozen analysis reads only `cells_<model>_<n>.jsonl` at the top of the folder (`scripts/a4_analyse.py`, `shard_files`), so it does not read the original.
+- **No A4 result for a model** whose A4 cannot finish under the dated note of 2026-11-09. Its shard files are moved, unchanged, to `results/a8/a4/no_result/`, so the other model's analysis goes on.
+
+Why this reading. It is the one that keeps A8's rows comparable with the frozen rows. Without it, A8's verdicts would be read by a different rule from the frozen rows they sit under. Changing the hashed block to add a filtered folder would need a new design hash for a case that may never occur. Not running A8's A4 on a single non-finite row would drop the other model's result too.
+
+New: `research/scripts/a8_prerun_check.py`, with subcommands `a2 --a8_id <id>` and `a4 [--apply_filter] [--no_result <id>]`, written before any A8 output exists.
+- It reuses A2's and A4's own pre-run check functions, unchanged.
+- It runs A4's `check_model` at the launched shard count.
+- It reads only A8's own gate files, delivery records and summaries.
+- Tests: `tests/test_a8.py` 64 passed, 1 skipped, and `tests/test_a2_declared.py` passes.
+
+The script is listed in A8's Code table, so it is pinned at the code-pin step. So are the two pre-run check modules it loads and `a2_declared_extras.py`. Nothing read; block hash `95dd41b5` unchanged.

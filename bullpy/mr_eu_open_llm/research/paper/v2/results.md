@@ -271,7 +271,7 @@ Gate B is B1 to B5 (`research/PREREG_A2_DRAFT.md:109-117`). A model and route th
 - A3, the same fields as Section 2: [PENDING: `research/reproduction/a8/face_input_validity_summary_a8.json`]
 - A1, the same fields as Section 2, or "A1 not run, by the A8 stop rule": [PENDING: `research/reproduction/a8/rotation_summary_a8.json`; errored trials from `rotation_errored_trials_a8.json`]
 - natural-clip pattern score, descriptive: [PENDING: `research/reproduction/a8/<a8_id>/same_clip_family_model_<a8_id>.json`]
-- Gate B and A2 verdicts, with the .01 reading: [PENDING: A2 output of `research/scripts/a8_analyse_a2.py`, path set at run time]
+- Gate B and A2 verdicts, with the .01 reading: [PENDING: `research/reproduction/a8/<a8_id>/stimulus_interventions_<key>.json` (written by `research/scripts/a8_analyse_a2.py`, path fixed in the A8 runbook, ROADMAP Part 3), with verdicts after the fill rule from `a2_extras_<key>.json` (A8 dated note 2026-11-13)]
 - A4 per dataset and headline per task: [PENDING: `results/a8/a4/summary.json`]
 - steps not run, and why (stop rule, not tested after retry, storage, deferral of A4 by a dated note): [PENDING: launcher records under `research/reproduction/a8/<a8_id>/launch/`]
 

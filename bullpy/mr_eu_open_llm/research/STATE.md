@@ -57,6 +57,20 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
 
 **Phase 2 runs queued; Phase 3 analyses wait on them.** A1, A3 and natural-clip RQ1 are locked (2026-11-09). Every amendment is frozen or closed: A2, A4, A5, A7, A8 and A9 frozen, A6 closed as a limit. The A2, A4, A7 Stage 1, A8 and A9 GPU jobs are pending on priority. History: the prompt confound found 2026-11-04 withdrew the earlier accuracy and probe results (DECISIONS); Branch B stays as a record only.
 
+**2026-11-13 06:25:** Queue unchanged at 05:54 (oldest jobs at priority 200; `gpu2` 20 of 32 GPUs in use; RDS unchanged).
+- **Reproduction.** Clean-checkout reproduction at `5d1ffd5`: 43 rebuilt and matched, 112 verified by hash, 0 failed, 6 pending.
+- **A8 path audit (ROADMAP local item 4).** An independent agent audited the path; I checked each finding against the code before acting.
+  - **Three faults in A8's own code,** which is not pinned yet. All are fixed with tests (`75dfac8`; DECISIONS 2026-11-13):
+    - The natural-clip step could never have finished: the frozen script's `sys.exit(main())` ended the launcher before the output was moved.
+    - The dated note of 2026-11-09 on out-of-memory retries was not in the code.
+    - Provenance could not be checked after a pull.
+  - Also: A8's A4 analysis now runs single-threaded, as A4's does.
+  - **A2's and A4's rulings of 2026-11-12 carried over to A8** by a dated note, pre-data, with the block hash unchanged (`95dd41b5`). A new `research/scripts/a8_prerun_check.py` applies them to A8's own inputs.
+  - **A8 runbook** written (ROADMAP Part 3).
+  - Still open: `pull a8`, plus two minor items.
+  - Tests: `tests/test_a8.py` 64 passed, 1 skipped; `tests/test_a2_declared.py` passes.
+- **Paper.** The Figure 5 and 6 markers now say their functions exist and wait only on data, and the Figure 6 legend names the fill-rule input.
+
 **2026-11-13 05:35:** Queue unchanged at 05:22: nothing started or failed. Priority is 199 for the oldest jobs (age 99, fair share 0), and `gpu2` had 24 of its 32 GPUs in use. RDS 1,067.4 GB, 991,082 files. Morning hand-off written at the top of this file. ROADMAP local item 4 is under way: a read-only audit of A8's pull and analysis path against its launcher.
 
 **2026-11-13 04:25:** Queue unchanged at 04:20 (nothing started or failed; RDS 1,067.4 GB, 991,082 files). Submission pack (ROADMAP 4.7): the reporting summary's software row now lists the verified versions (analysis env; torch and transformers as the vision-gate outputs record them; LibreFace 0.2.0, OpenFace 3.0 as `openface-test` 0.1.26, MediaPipe 0.10.14 and ME-GraphAU commit `dda53cba`, read from the cluster environment). Methods now carries a draft ethics statement (with a [USER] marker for the institutional part), the reproduction-script sentence and the journal's standard reporting-summary line. A9's prereg has a dated note for the early submission and the rule (ii) check, and the preregistration links table has the A9 row; the A9 design hash is unchanged (`21341eb4`, 53 A9 tests pass).

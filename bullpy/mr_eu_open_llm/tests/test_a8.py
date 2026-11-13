@@ -1132,3 +1132,143 @@ def test_a4_gates_file_is_built_from_a8_outputs(tmp_path):
     out = a8_a4_gates.gates(tmp_path)
     assert out["qwen3vl"] == {"a8_id": "qwen3vl_32b", "a1_passed": False, "a3_passed": True, "g2_g4": True}
     assert out["gemma4"]["a1_passed"] is None and out["gemma4"]["g2_g4"] is False
+
+
+# Pre-run checks for A8's A2 and A4 analyses (dated note 2026-11-13) ----------
+
+
+import a8_prerun_check as a8pre  # noqa: E402
+
+
+def _a4_manifest():
+    rows = [{"stim_id": f"bwc_{i:03d}", "set": "main", "dataset": "basic_WC"} for i in range(30)]
+    rows += [{"stim_id": f"cwc_{i:03d}", "set": "main", "dataset": "conversational_WC"} for i in range(30)]
+    rows += [{"stim_id": "female_a_neutral", "set": "neutral", "dataset": "basic_WC"}]
+    return rows
+
+
+def _a8_a4_shards(base, key, manifest, design_hash, n, nan_in=None):
+    from scripts import a4_run as run
+
+    folder = base / a8pre.CELLS_A4
+    folder.mkdir(parents=True, exist_ok=True)
+    for k in range(n):
+        rows = []
+        for cell in run.planned_cells(manifest, k, n):
+            row = {**cell, "status": "ok", "design_sha256": design_hash}
+            if cell["readout"] in ("blind", "blind_image_free"):
+                row["family_logprob"] = {"Happy": -1.0}
+            else:
+                row["joint_logprob"] = [-1.0, -2.0]
+            rows.append(row)
+        if k == nan_in:
+            row = next(r for r in rows if "joint_logprob" in r)
+            row["joint_logprob"] = [float("nan"), -2.0]
+        (folder / f"cells_{key}_{k}.jsonl").write_text("".join(json.dumps(r) + "\n" for r in rows))
+
+
+def test_a8_a4_prerun_uses_the_launched_shard_count_and_filters_in_place(tmp_path):
+    """A4's own row check at A8's run-setting shard count. Non-finite rows: the original moves unchanged to
+    unfiltered/, the filtered copy takes its name, which is all the frozen analysis reads."""
+    from scripts import a4_analyse, a4_run as run
+
+    design_hash, manifest = "d" * 64, _a4_manifest()
+    weights = a8_design.load_design()["models"]["qwen3vl_32b"]["weights_dir"]
+    for k in range(3):
+        _launch(tmp_path, "qwen3vl_32b", "a4_run", context={"shard": k, "n_shards": 3}, stamp=str(k))
+    _a8_a4_shards(tmp_path, "qwen3vl", manifest, design_hash, 3, nan_in=1)
+    out = a8pre.check_a4_model(tmp_path, "qwen3vl_32b", "qwen3vl", weights, manifest, design_hash, run)
+    assert out["failures"] == [] and out["n_shards"] == 3 and out["shards"] == [0, 1, 2]
+    assert [r["file"] for r in out["non_finite_rows"]] == ["cells_qwen3vl_1.jsonl"]
+    folder = tmp_path / a8pre.CELLS_A4
+    before = (folder / "cells_qwen3vl_1.jsonl").read_bytes()
+    moved = a8pre.filter_in_place(folder, out["non_finite_rows"])
+    assert set(moved) == {"cells_qwen3vl_1.jsonl"}
+    assert (folder / "unfiltered/cells_qwen3vl_1.jsonl").read_bytes() == before
+    assert len((folder / "cells_qwen3vl_1.jsonl").read_bytes().splitlines()) == len(before.splitlines()) - 1
+    assert [p.name for p in a4_analyse.shard_files(folder, "qwen3vl")] == [f"cells_qwen3vl_{k}.jsonl" for k in range(3)]
+    again = a8pre.check_a4_model(tmp_path, "qwen3vl_32b", "qwen3vl", weights, manifest, design_hash, run)
+    assert again["failures"] == [] and again["filtered_earlier"] == ["cells_qwen3vl_1.jsonl"]
+    (folder / "cells_qwen3vl_1.jsonl").write_bytes(before)  # a copy that is not its original filtered
+    tampered = a8pre.check_a4_model(tmp_path, "qwen3vl_32b", "qwen3vl", weights, manifest, design_hash, run)
+    assert any("differs from its original" in f for f in tampered["failures"])
+    _launch(tmp_path, "qwen3vl_32b", "a4_run", context={"shard": 0, "n_shards": 4}, stamp="9")
+    mixed = a8pre.check_a4_model(tmp_path, "qwen3vl_32b", "qwen3vl", weights, manifest, design_hash, run)
+    assert "shard counts" in mixed["failures"][0]
+
+
+def test_a8_a4_shards_need_a_launcher_record_each(tmp_path):
+    from scripts import a4_run as run
+
+    design_hash, manifest = "d" * 64, _a4_manifest()
+    weights = a8_design.load_design()["models"]["gemma4_31b"]["weights_dir"]
+    for k in (0, 1):
+        _launch(tmp_path, "gemma4_31b", "a4_run", context={"shard": k, "n_shards": 3}, stamp=str(k))
+    _a8_a4_shards(tmp_path, "gemma4", manifest, design_hash, 3)
+    out = a8pre.check_a4_model(tmp_path, "gemma4_31b", "gemma4", weights, manifest, design_hash, run)
+    assert "no launcher record with status ok" in out["failures"][0]
+
+
+def test_a8_a4_model_without_a_result_is_set_aside_only_when_out_of_retries(tmp_path):
+    """Dated note 2026-11-09, read per shard: two out-of-memory attempts at the largest GPU count."""
+    design = a8_design.load_design()
+    folder = tmp_path / a8pre.CELLS_A4
+    folder.mkdir(parents=True)
+    (folder / "cells_gemma4_0.jsonl").write_text("{}\n")
+
+    def attempt(status, gpus, stamp):
+        _launch(tmp_path, "gemma4_31b", "a4_run", status=status, context={"shard": 0, "n_shards": 2}, stamp=stamp)
+        p = tmp_path / "research/reproduction/a8/gemma4_31b/launch" / f"a4_run_0_2_{stamp}.json"
+        p.write_text(json.dumps(dict(json.loads(p.read_text()), visible_gpus=gpus)))
+
+    attempt("out_of_memory", 4, "1")
+    assert a8pre.a4_models(design, tmp_path) == [("gemma4_31b", "gemma4")]
+    with pytest.raises(SystemExit, match="no shard"):
+        a8pre.set_aside(tmp_path, design, "gemma4_31b")
+    attempt("out_of_memory", 4, "2")
+    out = a8pre.set_aside(tmp_path, design, "gemma4_31b")
+    assert out["shards_out_of_retries"] == [0] and (folder / "no_result/cells_gemma4_0.jsonl").exists()
+    assert a8pre.a4_models(design, tmp_path) == []
+
+
+def test_a8_a2_prerun_reads_the_a8_models_own_inputs(tmp_path):
+    """A2 rulings 2, 3 and 6 on A8's own files; the small sibling's gate files are never needed."""
+    base, a8_id, key = tmp_path, "gemma4_31b", "gemma4"
+    (base / "scripts").mkdir()
+    (base / a8pre.a2pre.ROOT_MARKER).write_text("")
+    for k in range(2):
+        _launch(base, a8_id, "a2_run", context={"shard": k, "n_shards": 2}, stamp=str(k))
+    _launch(base, a8_id, "gates", stamp="g")
+    _launch(base, a8_id, "delivery", stamp="d")
+    folder = base / "results/a8" / a8_id / "stimulus_interventions"
+    folder.mkdir(parents=True)
+    good = {"status": "ok", "input": {"pixel_shapes": {"pixel_values": [1, 2520, 768]}}}
+    other = {"status": "ok", "input": {"pixel_shapes": {"pixel_values": [2304, 1536]}}}
+    (folder / "cells_gemma4_shard0.jsonl").write_text(json.dumps(good) + "\n" + json.dumps(other) + "\n")
+    (folder / "cells_gemma4_shard1.jsonl").write_text(json.dumps(good) + "\n" + '{"status": "ok", "inp')
+    for k in range(2):
+        (folder / f"run_gemma4_shard{k}.json").write_text("{}")
+    repro = a8_family.repro(base, a8_id)
+    (repro / f"input_delivery_{key}.json").write_text(json.dumps(
+        {"items": [{"single_face": {"input": {"pixel_shapes": {"pixel_values": [1, 2520, 768]}}}}]}))
+    (repro / f"vision_gates_{key}.json").write_text("{}")
+    for summary in (a8_family.A3_SUMMARY, a8_family.A1_SUMMARY):
+        (base / summary).write_text("{}")
+        a8_family.write_provenance(base / summary, [], {})
+    result = a8pre.check_a2(a8_id, base)
+    fails = " | ".join(result["failures"])
+    assert result["n_rows_not_matching_model"] == 1 and "cells_gemma4_shard1.jsonl" in result["unparseable_lines"]
+    assert "geometry.json is missing" in fails
+    assert "launcher records" not in fails and "summary" not in fails and "gate input" not in fails
+    assert not (base / "research/reproduction/vision_gates_gemma4.json").exists()
+    (base / a8_family.A1_SUMMARY).write_text('{"changed": true}')
+    assert "A8 A1 summary" in " | ".join(a8pre.check_a2(a8_id, base)["failures"])
+
+
+def test_a8_a4_prerun_script_reports_failures_and_writes_its_record(tmp_path, monkeypatch):
+    for v in a8_launch.THREAD_VARS:
+        monkeypatch.delenv(v, raising=False)
+    record = tmp_path / "record.json"
+    assert a8pre.main(["a4", "--record", str(record), "--root", str(tmp_path)]) == 1
+    fails = " | ".join(json.loads(record.read_text())["failures"])
+    assert "single-threaded" in fails and "manifest" in fails and "no model has A4 cells" in fails

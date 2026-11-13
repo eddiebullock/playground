@@ -168,6 +168,41 @@ Watch storage at each step. The file count runs at about 996k of 1,048,576. Cell
 
 *Morning hand-off.* A summary at the top of STATE.md; anything only the user can do in NEEDS_INPUT.
 
+*Local queue status, 2026-11-13 06:20.*
+- Items 1 to 3, 5 and 6 are done. Item 7 is done: full suite at `3e0c5f0`, and clean-checkout reproduction at `5d1ffd5` (43 rebuilt, 112 hash-verified, 0 failed).
+- Item 4 is done. The A8 audit found three faults in A8's own code, now fixed before the code pins, and A2's and A4's rulings are now carried over to A8 by a dated note (both in DECISIONS 2026-11-13). The runbook is below.
+- Still open from that audit: a `pull a8` command in `post_phase3.py`, provenance for `a8_a4_gates.py` and `a8_analyse_a2.py`, and gate files read with their launcher records.
+
+**A8 runbook** (written 2026-11-13; it runs once the queue rule in A8's block allows: both Qwen A1 arrays and the Phase 2 runs COMPLETED). Each cluster step runs through `slurm_jobs/a8_job.sh` with `STEP` and `A8_ID`. The CPU steps may use `-A BARON-COHEN-SL3-CPU -p icelake --gres=none`.
+
+0. **Code-pin step** (A8 Freeze checklist item 2, dated note):
+   - Fill "Code hashes" with the sha256 of every file in A8's Code table.
+   - Sync to `~/rds/hpc-work/study3`, then run `sha256sum -c` there.
+   - Record the A1 GPU equivalence result (job 40399722).
+   - Read the timing smokes for mechanics, then set the GPU and shard counts by dated notes.
+1. **Phase A, both models together:** `gates`, `delivery`, `ladder`, `a3`.
+2. **A3 summary:** `python research/scripts/a8_face_input_validity_summary.py`.
+3. **A1, where the stop rule allows** (the launcher refuses otherwise):
+   - `a1_shard` for each rotation, condition and shard;
+   - `a1_merge` for each rotation and condition;
+   - then `python research/scripts/a8_analyse_rotation.py`.
+4. **Natural-clip RQ1:** `natural_rq1` per model (CPU).
+5. **Scored runs:** `a2_run` and `a4_run` where eligible (the launcher applies the frozen rules).
+6. **A2, per model:**
+   - `python research/scripts/a8_prerun_check.py a2 --a8_id <id> --record research/reproduction/a8/<id>/a2_prerun_check.json`
+   - `python research/scripts/a8_analyse_a2.py --a8_id <id> -- --output research/reproduction/a8/<id>/stimulus_interventions_<key>.json --a2_frozen`
+   - `python research/scripts/a2_declared_extras.py --model <key> --cells <the same cells> --run_report <the same reports> --a2_output <that output> --output research/reproduction/a8/<id>/a2_extras_<key>.json`
+7. **A4:**
+   - `python research/scripts/a8_a4_gates.py`
+   - `python research/scripts/a8_prerun_check.py a4 --record research/reproduction/a8/a4_prerun_check.json`. Add `--apply_filter` and `--no_result <id>` only as A8's dated note of 2026-11-13 allows.
+   - Then `STEP=a4_analyse`, which runs single-threaded.
+8. **Final checks:**
+   - `python research/scripts/a8_preflight.py --full_hash` (weights unchanged).
+   - Pull `research/reproduction/a8/` and the A8 summaries to the Mac with sha256 on both sides; the cells stay on the cluster.
+   - Then provenance checks, registry rows and Results 8b.
+
+A step whose output file was written before its job failed is retried only after that file is moved aside with a record, because the launcher refuses to overwrite.
+
 **Risk register.**
 
 | Risk | Mitigation |

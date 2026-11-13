@@ -102,11 +102,13 @@ def not_tested(base: Path, a8_id: str, step: str) -> bool:
     return len(records) >= 2 and not any(r.get("status") == "ok" for r in records)
 
 
-def oom_retries_spent(base: Path, a8_id: str, step: str) -> bool:
+def oom_retries_spent(base: Path, a8_id: str, step: str, context: Mapping[str, Any] = None) -> bool:
     """Dated note 2026-11-09 (`PREREG_A8_DRAFT.md`, "Dated notes"): no attempt ended ok, and two
     attempts at the largest GPU count used for the step ended out of memory. The launcher records
-    the GPU count of every attempt and marks an out-of-memory crash as out_of_memory."""
-    records = launch_records(base, a8_id, step)
+    the GPU count of every attempt and marks an out-of-memory crash as out_of_memory. With a context
+    (for example one shard), only that job's attempts count."""
+    records = [r for r in launch_records(base, a8_id, step)
+               if not context or all((r.get("context") or {}).get(k) == v for k, v in context.items())]
     if any(r.get("status") == "ok" for r in records):
         return False
     counts = [r["visible_gpus"] for r in records if isinstance(r.get("visible_gpus"), int)]
