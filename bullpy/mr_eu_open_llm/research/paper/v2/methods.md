@@ -248,6 +248,13 @@ The two eligible models are small, and both were weak on the A3 task (Results, S
 
 **Families.** A8 forms its own A3, A1 and A4 Holm families of A8 models only, computed from the A8 output files with no hand-picked list.
 
+**Pre-data readings.** The A2 and A4 rulings of 2026-11-12 came after A8 was frozen. They apply to A8's runs of the same analyses, under a dated note written on 2026-11-13, before any A8 output existed (`PREREG_A8_DRAFT.md`, "Dated notes"). So A8 rows are read like the frozen rows above them:
+- the fill rule governs Opposes verdicts;
+- rows whose log probabilities are not finite are removed before A4's analysis;
+- shards and inputs are checked before each single run.
+
+A model whose step cannot finish after two out-of-memory attempts at the largest GPU count has no result for that step (dated note, 2026-11-09).
+
 **Limits.** A8 tests scale within two families, not generality across families. For Gemma 4, scale and model generation change together. Both models run at bfloat16 only. The float32 checks of G2 and G3 are expected to run out of memory, and the frozen gate script then keeps the bfloat16 verdict, as was accepted for Qwen3-VL-8B partly because its bfloat16 values were exactly zero. If an A8 model shows a non-zero bfloat16 value on G2 or G3, no float32 check can separate rounding from leakage, and we say so for that model.
 
 Full details: Supplementary Methods, Section S9.

@@ -1339,3 +1339,58 @@ def test_gate_and_delivery_files_are_read_only_from_jobs_that_ended_ok(tmp_path)
     _launch(tmp_path, "gemma4_31b", "gates", stamp="3", weights="/home/eb2007/rds/hpc-work/study2/models/gemma4")
     with pytest.raises(SystemExit, match="loaded"):
         a8_family.gate_result(design, tmp_path, "gemma4_31b")
+
+
+# The A8 pull (post_phase3.py pull a8) ------------------------------------------
+
+
+def _runbook():
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location("post_phase3_for_a8", ROOT / "research/scripts/post_phase3.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def test_a8_pull_copies_outputs_and_only_hashes_cells_and_shards():
+    book = _runbook()
+    remote = {"research/reproduction/a8/face_input_validity_summary_a8.json": "a",
+              "research/reproduction/a8/qwen3vl_32b/launch/gates_1.json": "b",
+              "results/a8/a4/summary.json": "c",
+              "results/a8/a4/cells_qwen3vl_0.jsonl": "d",
+              "results/a8/a4/unfiltered/cells_qwen3vl_0.jsonl": "e",
+              "results/a8/qwen3vl_32b/rotation/eval_v2_eu_emotions_qwen3vl_32b_video_only_seed42_rot0_real.json": "f"}
+    copy, hashed = book.a8_plan(remote)
+    assert copy == ["research/reproduction/a8/face_input_validity_summary_a8.json",
+                    "research/reproduction/a8/qwen3vl_32b/launch/gates_1.json", "results/a8/a4/summary.json"]
+    assert hashed == sorted(set(remote) - set(copy))
+
+
+def test_a8_pull_checks_provenance_with_the_script_it_sends(tmp_path, monkeypatch, capsys):
+    """The script the pull runs on the cluster, run here on a synthetic tree: ok, then a changed input."""
+    book = _runbook()
+    monkeypatch.setattr(a8_design, "ROOT", tmp_path)
+    monkeypatch.setattr(sys, "path", list(sys.path))
+    out = tmp_path / a8_family.A3_SUMMARY
+    inp = tmp_path / "results/a8/qwen3vl_32b/face_input_validity/cells_qwen3vl.jsonl"
+    out.parent.mkdir(parents=True)
+    inp.parent.mkdir(parents=True)
+    inp.write_text("1")
+    out.write_text("2")
+    a8_family.write_provenance(out, [inp], {})
+    monkeypatch.chdir(tmp_path)
+    exec(compile(book.A8_PROVENANCE_CHECK, "a8_provenance_check", "exec"), {})
+    assert json.loads(capsys.readouterr().out) == {a8_family.A3_SUMMARY: "ok"}
+    inp.write_text("3")
+    exec(compile(book.A8_PROVENANCE_CHECK, "a8_provenance_check", "exec"), {})
+    assert "changed" in json.loads(capsys.readouterr().out)[a8_family.A3_SUMMARY]
+
+
+def test_a8_pull_runs_once(tmp_path, monkeypatch):
+    book = _runbook()
+    monkeypatch.setattr(book, "ROOT", tmp_path)
+    (tmp_path / book.REPRO).mkdir(parents=True)
+    (tmp_path / book.REPRO / "a8_pull_manifest.json").write_text("{}")
+    with pytest.raises(SystemExit, match="runs once"):
+        book.main(["pull", "a8", "--jobs", "40399722"])

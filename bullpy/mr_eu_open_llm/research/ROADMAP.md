@@ -171,7 +171,7 @@ Watch storage at each step. The file count runs at about 996k of 1,048,576. Cell
 *Local queue status, 2026-11-13 06:20.*
 - Items 1 to 3, 5 and 6 are done. Item 7 is done: full suite at `3e0c5f0`, and clean-checkout reproduction at `5d1ffd5` (43 rebuilt, 112 hash-verified, 0 failed).
 - Item 4 is done. The A8 audit found three faults in A8's own code, now fixed before the code pins, and A2's and A4's rulings are now carried over to A8 by a dated note (both in DECISIONS 2026-11-13). The runbook is below.
-- Two minor items from that audit are done: provenance for `a8_a4_gates.py` and `a8_analyse_a2.py`, and gate and delivery files read only from jobs that ended ok. Still open: a `pull a8` command in `post_phase3.py`, needed only after A8 runs.
+- Two minor items from that audit are done: provenance for `a8_a4_gates.py` and `a8_analyse_a2.py`, and gate and delivery files read only from jobs that ended ok. `post_phase3.py pull a8` exists too (2026-11-13), so nothing from the audit is open.
 
 **A8 runbook** (written 2026-11-13; it runs once the queue rule in A8's block allows: both Qwen A1 arrays and the Phase 2 runs COMPLETED). Each cluster step runs through `slurm_jobs/a8_job.sh` with `STEP` and `A8_ID`. The CPU steps may use `-A BARON-COHEN-SL3-CPU -p icelake --gres=none`.
 
@@ -198,7 +198,8 @@ Watch storage at each step. The file count runs at about 996k of 1,048,576. Cell
    - Then `STEP=a4_analyse`, which runs single-threaded.
 8. **Final checks:**
    - `python research/scripts/a8_preflight.py --full_hash` (weights unchanged).
-   - Pull `research/reproduction/a8/` and the A8 summaries to the Mac with sha256 on both sides; the cells stay on the cluster.
+   - Pull from the Mac: `PYTHONPATH=.:src python research/scripts/post_phase3.py pull a8 --jobs <every A8 job id>`.
+     It checks every A8 provenance file on the cluster, copies `research/reproduction/a8/` and A8's A4 summary with sha256 checks, and records the sha256 of the cells and shards that stay on the cluster.
    - Then provenance checks, registry rows and Results 8b.
 
 A step whose output file was written before its job failed is retried only after that file is moved aside with a record, because the launcher refuses to overwrite.

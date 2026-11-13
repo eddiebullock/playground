@@ -4,7 +4,7 @@
 Two subcommands, run by the coordinator from the project root on the Mac:
 
   pull AMENDMENT --jobs ID [ID ...]
-      AMENDMENT is a2, a4, a7 or a9 (a7: the Stage 1 route-arm shards). Over the SSH control socket: every task of every named Slurm array must
+      AMENDMENT is a2, a4, a7, a8 or a9 (a7: the Stage 1 route-arm shards; a8: see below). Over the SSH control socket: every task of every named Slurm array must
       be COMPLETED; every expected file must exist on the cluster. Records the remote sha256 of each file,
       copies them with scp into a staging folder, checks each copy's sha256, and only then moves them to
       the same relative path here. Refuses to overwrite a local file. Never prints or opens a file's
@@ -19,6 +19,13 @@ Two subcommands, run by the coordinator from the project root on the Mac:
       pre-run record and every output's sha256. For A4 and A9 the check always gets a folder for a
       filtered copy; it writes one only if some rows have non-finite log probabilities (the ruling), and
       the analysis then reads that folder, which the run note names.
+
+  pull a8 --jobs ID [ID ...]
+      A8's analyses run on the cluster through its launcher (ROADMAP Part 3, A8 runbook), so A8 has its own
+      pull (added 2026-11-13). Every listed job must be COMPLETED, and every A8 provenance file must check on
+      the cluster, where its inputs are. Then `research/reproduction/a8/` and A8's A4 summary are copied with
+      sha256 checks, and the sha256 of every other file under `results/a8/` is recorded without copying it.
+      Writes `research/reproduction/a8_pull_manifest.json`.
 
 Nothing here reads a result. The coordinator reads the outputs only after the run note exists, then
 records them in RESULTS_REGISTRY.md.
@@ -39,7 +46,7 @@ import shutil
 import subprocess
 import sys
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Sequence
+from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 ROOT = Path(__file__).resolve().parents[2]
 PY = sys.executable
@@ -228,17 +235,97 @@ def analyse(amendment: str) -> int:
     return 0
 
 
+A8_COPY_ROOT = "research/reproduction/a8"  # copied in full: summaries, gate files, launch records, provenance
+A8_COPY_ALSO = ("results/a8/a4/summary.json",)  # A4's output; the cells and shards stay on the cluster
+A8_HASH_ROOT = "results/a8"  # every other A8 file: sha256 recorded in the manifest, not copied
+REMOTE_PY = "~/rds/hpc-work/study2/conda_envs/mr_eu_open_llm/bin/python"  # the project env; the login python is 3.6
+A8_PROVENANCE_CHECK = """\
+import glob, json, sys
+sys.path.insert(0, "research/scripts")
+import a8_family
+out = {}
+for p in sorted(glob.glob("research/reproduction/a8/**/*.provenance.json", recursive=True)
+                + glob.glob("results/a8/**/*.provenance.json", recursive=True)):
+    target = p[:-len(".provenance.json")]
+    try:
+        a8_family.check_provenance(a8_family.located(target))
+        out[target] = "ok"
+    except SystemExit as exc:
+        out[target] = str(exc)
+print(json.dumps(out))
+"""
+
+
+def a8_plan(remote: Dict[str, str]) -> Tuple[List[str], List[str]]:
+    """A8 files to copy (outputs, records, provenance) and files only hashed (cells, shards, merged A1 files)."""
+    copy = sorted(p for p in remote if p.startswith(A8_COPY_ROOT + "/") or p in A8_COPY_ALSO)
+    return copy, sorted(p for p in remote if p not in copy)
+
+
+def pull_a8(jobs: Sequence[str], waive: Sequence[str] = (), reason: str = "") -> int:
+    """A8's analyses run on the cluster, where their inputs are (ROADMAP Part 3, A8 runbook). Every listed
+    job must be COMPLETED; every provenance file must check on the cluster, where its inputs are; then the
+    A8 outputs are copied with their sha256 checked, and every other A8 file's sha256 is recorded."""
+    manifest_path = ROOT / REPRO / "a8_pull_manifest.json"
+    if manifest_path.exists():
+        raise SystemExit(f"{manifest_path} exists: this pull runs once.")
+    if waive and not reason:
+        raise SystemExit("--waive needs --reason, and the task's replacement job must be in --jobs.")
+    states = array_states(jobs)
+    bad = [s for job in jobs for s in states.get(job, [f"{job}:MISSING"])
+           if not s.endswith(":COMPLETED") and s.split(":")[0] not in waive]
+    if bad or any(job not in states for job in jobs):
+        raise SystemExit(f"Not every task is COMPLETED: {bad[:12]}")
+    provenance = json.loads(ssh(f"cd ~/{REMOTE_ROOT} && {REMOTE_PY} -c {shlex.quote(A8_PROVENANCE_CHECK)}", timeout=600))
+    failed = {k: v for k, v in provenance.items() if v != "ok"}
+    if failed:
+        raise SystemExit(f"Provenance does not check on the cluster: {list(failed.items())[:6]}")
+    listing = ssh(f"cd ~/{REMOTE_ROOT} && find {A8_COPY_ROOT} {A8_HASH_ROOT} -type f -print0 | xargs -0 sha256sum",
+                  timeout=1800)
+    remote = {line.split(None, 1)[1].strip(): line.split(None, 1)[0] for line in listing.splitlines() if line.strip()}
+    copy, hashed = a8_plan(remote)
+    if not copy:
+        raise SystemExit("No A8 output on the cluster.")
+    for rel in copy:
+        if (ROOT / rel).exists():
+            raise SystemExit(f"{rel} already exists here; refusing to overwrite.")
+    stamp = dt.datetime.now(dt.timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    staging = ROOT / "research" / "logs" / f"pull_a8_{stamp}"
+    staging.mkdir(parents=True)
+    for rel in copy:
+        dest = staging / rel
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        result = subprocess.run(["perl", "-e", "alarm 900; exec @ARGV", *SCP, f"{HOST}:{REMOTE_ROOT}/{rel}", str(dest)])
+        if result.returncode != 0:
+            raise SystemExit(f"scp failed for {rel}")
+        if sha256(dest) != remote[rel]:
+            raise SystemExit(f"{rel}: local sha256 differs from the cluster's")
+    for rel in copy:
+        target = ROOT / rel
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.move(str(staging / rel), str(target))
+    record = {"amendment": "a8", "pulled_at": now(), "jobs": {j: states[j] for j in jobs},
+              "waived_tasks": list(waive), "waiver_reason": reason, "provenance_checked_on_cluster": provenance,
+              "files": {rel: remote[rel] for rel in copy}, "on_cluster_only": {rel: remote[rel] for rel in hashed},
+              "contents_read": False}
+    manifest_path.write_text(json.dumps(record, indent=1) + "\n", encoding="utf-8")
+    print(f"pulled {len(copy)} A8 files, recorded {len(hashed)} more; manifest {manifest_path.relative_to(ROOT)}")
+    return 0
+
+
 def main(argv: Optional[Sequence[str]] = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     sub = ap.add_subparsers(dest="cmd", required=True)
     p = sub.add_parser("pull")
-    p.add_argument("amendment", choices=("a2", "a4", "a7", "a9"))
+    p.add_argument("amendment", choices=("a2", "a4", "a7", "a8", "a9"))
     p.add_argument("--jobs", nargs="+", required=True)
     p.add_argument("--waive", nargs="*", default=(), help="array tasks (e.g. 40589226_7) rerun under a job in --jobs")
     p.add_argument("--reason", default="")
     a = sub.add_parser("analyse")
     a.add_argument("amendment", choices=("a2", "a4", "a5", "a7", "a9"))
     args = ap.parse_args(argv)
+    if args.cmd == "pull" and args.amendment == "a8":
+        return pull_a8(args.jobs, args.waive, args.reason)
     if args.cmd == "pull":
         return pull(args.amendment, args.jobs, args.waive, args.reason)
     return analyse(args.amendment)

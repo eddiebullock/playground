@@ -29,6 +29,9 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
   - Our fair share is 0, so our priority grows only with age, about 1.5 a hour. Our oldest jobs are at 199.
   - About 1,260 `gpu2` tasks with higher priority were waiting at 05:22.
   - Our past starts all came from backfill.
+  - The `gpu2` jobs running at 06:20 had waited 26 to 37 h. Ours have waited about 68 h.
+  - Fair share is per account. Since 2026-10-16 your user has used 891 GPU hours on this account: CASCADE (`cas_*`) 709, this project 168, `hel-*` 14.
+  - So this project's jobs rank behind those of accounts with less recent use. For your information only: I have not touched the other projects' jobs.
 - Nothing more can be done for free. The A2 and A4 time limits stay as they are, because a TIMEOUT would cost days in the queue.
 - **Risk:** every GPU node is reserved from 2026-12-07 07:00 to 2027-01-10 (`Dec2026-shutdown`), and A8 can start only after A2 and A4 finish.
   - A8's own dated-note rule defers whatever cannot finish, A4 first.
@@ -75,7 +78,8 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
   - The two minor items are done too, with the block hash unchanged:
     - gate and delivery files are read only from jobs that ended ok;
     - the gates file and the A2 output carry provenance.
-  - Still open: `pull a8`, needed only after A8 runs.
+  - `post_phase3.py pull a8` is written as well. It checks provenance on the cluster, copies the outputs, and records the sha256 of the cells that stay there. Nothing from the audit is open.
+  - Full test suite at `6dc6ce0`: 1,088 passed, 26 skipped, 0 failed (13 min).
   - Tests: `tests/test_a8.py` 66 passed, 1 skipped; `tests/test_a2_declared.py` passes.
 - **Paper.** The Figure 5 and 6 markers now say their functions exist and wait only on data, and the Figure 6 legend names the fill-rule input.
 
