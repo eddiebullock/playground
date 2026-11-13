@@ -713,3 +713,7 @@ At about 17:50 the user wrote: "i believe ther is nothing else in the HPC queue 
 - **What stays the same.** No design, code, threshold or analysis change. Hardware (A100 on `ampere`), weights, precision and inputs are as for the `gpu2` runs.
 - **Testing.** The wrapper was tested with stubs on the cluster login node. All 17 checks passed: the budget stop, a normal end, a failure, the settings passed through, and bad or duplicate slots rejected.
 - **The single `intr` slot.** A9 smoke 40843619 returns to `gpu2`, with its submit time and age unchanged, to free the slot for the first slice.
+- **Update 18:30, first slice running.**
+  - Slice 40920485 started at 18:22 on one node, about 5 minutes after submission. Loading the model took about 6 minutes, with four processes loading at once.
+  - Between slices, the check now reads mechanics only: line counts, the count of cells whose status is not "ok", partial lines and the `seconds` field (`a4_health.sh`). No score field is read.
+  - At 18:29 all four shard files held only "ok" cells, at about 0.7 s per cell. So a shard takes two slices, not three: about 12 slices for A4 in all.
