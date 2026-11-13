@@ -165,6 +165,7 @@ With cuts 4 and 5, the main text is about 490 words shorter. What remains waits 
 - `research/scripts/mixed_intr_next_slice.sh` has 9 new tests in `tests/test_intr_planners.py`, which now has 26.
 - A dry run gave, for the first slice after A4: A2's six shards and both A9 smokes, on two nodes.
 - The ROADMAP triggers for A2 and A9 now name the slice jobs and the waivers, plus the step that allows A9's scored shards after A4's analysis.
+- The Mac sequencer that starts the next chain after A4 was replaced (scratchpad `seq_mixed.sh`, started 23:14). The old one would never have started A2: its process check (`pgrep -f "bash a4_chain.sh"`) also matched its own command line. The new one waits on the A4 chain's process ID. If the A4 chain ends with every shard complete, it starts the mixed chain.
 
 **2026-11-13 11:47:** Supplementary decisions table brought up to date: rows 81 to 83 for today's three new decision-log entries, and a superseded-entries row (75 to 83). It again has one row per entry, 83, checked in order against DECISIONS. ROADMAP Phase 4 status refreshed: every step that needs no new GPU output is done. The node counts in the 11:20 correction now include the node that was powering up. Full suite at `62a8b79` with these record edits: 1,096 passed, 26 skipped, 0 failed. Merged into `main` as PR #115, true merge commit `da95a75` (11:48).
 
