@@ -696,3 +696,20 @@ At about 17:50 the user wrote: "i believe ther is nothing else in the HPC queue 
 - `intr` is not an empty lane. At 17:58, 11 other users' `intr` jobs were pending on `ampere`, the oldest since 2026-11-11 20:32. This user's own `intr` jobs started within 1 to 8 minutes: `hel-*` on 2026-11-12 (1 GPU) and `cas_*` today (4 GPUs).
 - A9 smoke 40843619 moved to `intr` at 17:55 by `scontrol update` (same job, script, inputs and 30-min limit). The other short jobs follow one at a time, each when the job before it ends.
 - Same partition, hardware, code, inputs and time limits: the QoS changes only when a job starts. No design, threshold or analysis changes. `cas_*` and `hel-*` jobs stay untouched.
+
+## 2026-11-13: A4's scored shards may run in one-hour slices under `intr` (scheduling only, before any A4 cell exists)
+
+- **Why.** A4's 24 scored shards (Gemma 40589226, Qwen 40593824; 6 h limit, about 2 h of work each by the timing smokes) wait behind 400 jobs on `gpu2`. `intr` takes jobs of at most 1 h, one per user at a time, of up to 3 nodes (entry above). Since 2026-11-12 13:26 no 1-GPU `intr` job on `ampere` has started, ours included: A9 smoke 40843619 has been pending since 17:55. Single-node 4-GPU `intr` jobs did start within minutes: `cas_*` at 09:31 and 11:48, and another user's at 17:50.
+- **How.** `slurm_jobs/study3_intr_slices.sh` runs up to four A4 shards on one node.
+  - Each shard runs as its own job step on one GPU, through the unchanged `slurm_jobs/study3_a4.sh` (sha256 `dd9a360b...`, pinned), with the queued arrays' settings: MODEL, N_SHARDS=12, A4_FROZEN=1, and the shard as SLURM_ARRAY_TASK_ID.
+  - `timeout` stops each step at 52 minutes.
+  - `scripts/a4_run.py` already resumes: it drops a partial last line, skips cells already written and appends to `results/a4/cells_<model>_<shard>.jsonl`.
+  - So a shard takes about three slices. Its file holds what one uninterrupted run would write, in the same cell order, each cell scored on its own.
+- **Safeguards.**
+  - The `gpu2` array task for a shard is held before any slice runs that shard, so two runs never write one file. It is cancelled once the shard is complete.
+  - Completeness is decided only by the frozen pre-run check (exact planned cells per shard). A slice job that ends COMPLETED says nothing about its shards.
+  - Nothing in the cells is read before the pre-run check and the frozen analysis. Between slices only line counts are checked.
+  - The pull (`post_phase3.py pull a4`) lists the slice jobs, and waives the cancelled `gpu2` tasks with this entry as the reason.
+- **What stays the same.** No design, code, threshold or analysis change. Hardware (A100 on `ampere`), weights, precision and inputs are as for the `gpu2` runs.
+- **Testing.** The wrapper was tested with stubs on the cluster login node. All 17 checks passed: the budget stop, a normal end, a failure, the settings passed through, and bad or duplicate slots rejected.
+- **The single `intr` slot.** A9 smoke 40843619 returns to `gpu2`, with its submit time and age unchanged, to free the slot for the first slice.
