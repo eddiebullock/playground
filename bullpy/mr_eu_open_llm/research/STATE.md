@@ -2,21 +2,29 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-11-13 08:50 Europe/London
+**Updated:** 2026-11-13 09:45 Europe/London
 
-## Morning hand-off, 2026-11-13 (written 05:35, last refreshed 08:50)
+## Hand-off, 2026-11-13 (written 05:35, last refreshed 09:45)
+
+**Done this morning on your instructions (about 09:15):**
+- **Item 10: your notes file is off the public branch.**
+  - `p1-pipeline` was rebuilt without it and force-pushed; the new tip is `f37beae`.
+  - Every other change is kept, including all of today's commits, with the same messages and dates. Only the commit IDs changed, and the documents now cite the new ones.
+  - Your local `notes/notes.txt` is unchanged.
+  - The old history is kept on your Mac only, in the local branch `backup/p1-pipeline-before-notes-removal`.
+- **Item 11:** [1] recoded to "no" on option sets. Figure 1 rebuilt (DECISIONS 2026-11-13).
 
 **Only you can do these** (details in `research/NEEDS_INPUT.md`):
-1. **Item 10, decision needed: your notes file is on the public branch.** On 2026-11-12 at about 22:58 my `git commit -a` took your uncommitted `notes/notes.txt` into commit `0bc8a57` on the public `p1-pipeline` branch. Your local file is unchanged. Say "drop the notes commit" and allow the force-push, and I will rebuild the branch without that file (plan in item 10). Until then there is no PR to `main`.
-2. Item 11, low priority: how to code [1]'s option sets in the literature table. I recommend recoding it to "no".
-3. Ethics wording: one [USER] marker in `paper/v2/methods.md` ("Human data"). It asks whether your institution required ethics review for this secondary use of existing data, and for the reference if so.
-4. At submission (item 9): the Zenodo DOI for the code; an OSF deposit of the tagged preregistrations, if wanted; authors and affiliations. The Snoek group's reply is still awaited (item 8). Nothing waits on it.
-5. To review, not urgent: a reading decision I made overnight for A8 (dated note at the end of `research/PREREG_A8_DRAFT.md`; DECISIONS 2026-11-13).
+1. Ethics wording: one [USER] marker in `paper/v2/methods.md` ("Human data"). It asks whether your institution required ethics review for this secondary use of existing data, and for the reference if so.
+2. At submission (item 9): the Zenodo DOI for the code; an OSF deposit of the tagged preregistrations, if wanted; authors and affiliations. The Snoek group's reply is still awaited (item 8). Nothing waits on it.
+3. Optional (item 10): GitHub keeps the old commits reachable by their IDs until it purges them. To remove them sooner, ask GitHub Support.
+4. To review, not urgent: a reading decision I made overnight for A8 (dated note at the end of `research/PREREG_A8_DRAFT.md`; DECISIONS 2026-11-13).
    - A2's and A4's rulings of 2026-11-12 now apply to A8's runs of the same analyses, so A8 rows are read like the frozen rows above them.
    - One A8-specific choice: A8's hashed command fixes the A4 cells folder, so non-finite rows are filtered in place, with the originals kept unchanged in a subfolder the analysis does not read.
-   - It is pre-data with no hash change. If you prefer another reading, it can still change before A8's code-pin step.
+   - It is pre-data with no hash change.
    - An independent review of the night's A8 code then found real problems, all now fixed. One was a regression I had introduced. The addendum at the end of the A8 prereg lists them.
-   - A8's next step is its code pins (Freeze checklist item 2). I have left that until you have looked at this item and the equivalence job has run.
+   - A8's next step is its code pins (Freeze checklist item 2). That step also needs the GPU equivalence test (40399722), which is still queued.
+   - You said to proceed, so I will take the step when that job has run, unless you object to the note first. If you object after the pins, the change is still possible as a dated pre-data deviation.
 
 **Cluster: nothing of ours started overnight, and nothing failed.**
 - Every job is pending on priority, and Slurm gives no start estimate:
@@ -27,8 +35,8 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
   - A9 smokes: 40843619, 40843620
   - A9 scored runs: 40863756, 40863757
 - Why they wait:
-  - The free tier's `gpu2` QoS is capped at 32 GPUs for all SL3 users together; all 32 were in use at 08:46, and the first of those jobs is due to end by about 10:44.
-  - Our fair share is 0, so our priority grows only with age, about 1.5 a hour. Our oldest jobs were at 204 at 08:46.
+  - The free tier's `gpu2` QoS is capped at 32 GPUs for all SL3 users together; 28 were in use at 09:08.
+  - Our fair share is 0, so our priority grows only with age, about 1.5 a hour. Our oldest jobs were at 204 at 09:08.
   - 1,261 `gpu2` tasks with higher priority were waiting at 08:46, about the same as at 05:22.
   - Our past starts all came from backfill.
   - The `gpu2` jobs running at 06:20 had waited 26 to 37 h. By the age Slurm counts, ours had waited about 70 h at 08:46.
@@ -60,8 +68,8 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
   - Deviations table, 80 rows.
   - Submission pack: software versions, ethics draft, code availability.
 - **Checks:**
-  - Full test suite at `39c6f72`: 1,096 passed, 26 skipped, 0 failed (06:53).
-  - Clean-checkout reproduction at `5d1ffd5`: 43 rebuilt and matched, 112 verified by hash, 0 failed.
+  - Full test suite at `86c0441`: 1,096 passed, 26 skipped, 0 failed (06:53).
+  - Clean-checkout reproduction at `f4306cb`: 43 rebuilt and matched, 112 verified by hash, 0 failed.
 
 **FYI:** CSD3 `/home` is at 49.8 of 52.4 GB. This project writes nothing there; its jobs write to RDS. The space is in other folders, such as `LEAP3mri`. RDS: 1,067.4 GB of 1,099.5; 991,082 of 1,048,576 files.
 
@@ -71,13 +79,22 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
 
 **Phase 2 runs queued; Phase 3 analyses wait on them.** A1, A3 and natural-clip RQ1 are locked (2026-11-09). Every amendment is frozen or closed: A2, A4, A5, A7, A8 and A9 frozen, A6 closed as a limit. The A2, A4, A7 Stage 1, A8 and A9 GPU jobs are pending on priority. History: the prompt confound found 2026-11-04 withdrew the earlier accuracy and probe results (DECISIONS); Branch B stays as a record only.
 
+**2026-11-13 09:45:** You returned at about 09:05 and approved NEEDS_INPUT items 10 and 11.
+- Item 10: `p1-pipeline` was rebuilt from `d8c2e01` with `notes/notes.txt` restored in all 40 later commits, checked, and force-pushed with a lease. The new tip is `f37beae`.
+  - Each rebuilt commit matches its original in message, author, committer and dates, and differs only in the notes file.
+  - No tag or PR held the old commits.
+  - Cited commit IDs in the documents were moved to the rebuilt ones.
+- Item 11: [1] recoded to "no", and Figure 1 rebuilt. Figure 3 rebuilt byte-identically, which confirms the environment.
+- Today's work is all committed and pushed. The only untracked project files are legacy `results/stats` outputs from June, left out on purpose.
+- Queue unchanged at 09:08: nothing started or failed; `gpu2` had 28 of 32 GPUs in use.
+
 **2026-11-13 08:50:** Queue unchanged at 08:46: nothing started or failed. Oldest jobs at priority 204 (age 104 of 1,000; age grows 1,000 over 28 days, about 1.5 a hour; fair share 0). `gpu2` had all 32 GPUs in use; the first of those jobs is due to end by about 10:44, and 1,261 `gpu2` tasks rank above ours. RDS 1,067.4 GB, 991,082 files.
 
 **2026-11-13 07:50:** Queue unchanged at 07:46: nothing started or failed. Oldest jobs at priority 202; `gpu2` had 28 of 32 GPUs in use; RDS 1,067.4 GB, 991,082 files. The equivalence job's copy of the A8 sharding code (`~/rds/hpc-work/a8_check`) is byte-identical to the local files to be pinned (`a8_rotation_shard.py`, `a8_design.py`, `a8_preflight.py`, `scripts/evaluate.py`), so its result will count for the pinned code.
 
-**2026-11-13 06:55:** Queue unchanged at 06:54: nothing started or failed. Oldest jobs at priority 201; `gpu2` had 24 of 32 GPUs in use; RDS 1,067.4 GB, 991,082 files. Full suite at `39c6f72`: 1,096 passed, 26 skipped, 0 failed.
+**2026-11-13 06:55:** Queue unchanged at 06:54: nothing started or failed. Oldest jobs at priority 201; `gpu2` had 24 of 32 GPUs in use; RDS 1,067.4 GB, 991,082 files. Full suite at `86c0441`: 1,096 passed, 26 skipped, 0 failed.
 
-**2026-11-13 06:45:** An independent review of the night's A8 code (commits `75dfac8`, `a362a56`, `6dc6ce0`) found real problems. Two were in the new A4 pre-run check, and one was a regression from `6dc6ce0`: a crashed gates job could block both models. I checked each against the code and fixed all of them before A8's code pins:
+**2026-11-13 06:45:** An independent review of the night's A8 code (commits `b5c4896`, `d4f11d4`, `d0e945e`) found real problems. Two were in the new A4 pre-run check, and one was a regression from `d0e945e`: a crashed gates job could block both models. I checked each against the code and fixed all of them before A8's code pins:
 - A8's A4 run now accounts for every eligible or launched model.
 - Files move only on a passing check, never onto an existing file.
 - The single analyses refuse without a passing check record.
@@ -87,9 +104,9 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
 The A8 note has a same-day addendum, and the block hash is unchanged. `tests/test_a8.py`: 74 passed, 1 skipped, with a regression test per finding (DECISIONS 2026-11-13).
 
 **2026-11-13 06:25:** Queue unchanged at 05:54 (oldest jobs at priority 200; `gpu2` 20 of 32 GPUs in use; RDS unchanged).
-- **Reproduction.** Clean-checkout reproduction at `5d1ffd5`: 43 rebuilt and matched, 112 verified by hash, 0 failed, 6 pending.
+- **Reproduction.** Clean-checkout reproduction at `f4306cb`: 43 rebuilt and matched, 112 verified by hash, 0 failed, 6 pending.
 - **A8 path audit (ROADMAP local item 4).** An independent agent audited the path; I checked each finding against the code before acting.
-  - **Three faults in A8's own code,** which is not pinned yet. All are fixed with tests (`75dfac8`; DECISIONS 2026-11-13):
+  - **Three faults in A8's own code,** which is not pinned yet. All are fixed with tests (`b5c4896`; DECISIONS 2026-11-13):
     - The natural-clip step could never have finished: the frozen script's `sys.exit(main())` ended the launcher before the output was moved.
     - The dated note of 2026-11-09 on out-of-memory retries was not in the code.
     - Provenance could not be checked after a pull.
@@ -100,7 +117,7 @@ The A8 note has a same-day addendum, and the block hash is unchanged. `tests/tes
     - gate and delivery files are read only from jobs that ended ok;
     - the gates file and the A2 output carry provenance.
   - `post_phase3.py pull a8` is written as well. It checks provenance on the cluster, copies the outputs, and records the sha256 of the cells that stay there. Nothing from the audit is open.
-  - Full test suite at `6dc6ce0`: 1,088 passed, 26 skipped, 0 failed (13 min).
+  - Full test suite at `d0e945e`: 1,088 passed, 26 skipped, 0 failed (13 min).
   - Tests: `tests/test_a8.py` 66 passed, 1 skipped; `tests/test_a2_declared.py` passes.
 - **Paper.** The Figure 5 and 6 markers now say their functions exist and wait only on data, and the Figure 6 legend names the fill-rule input.
 
@@ -108,15 +125,15 @@ The A8 note has a same-day addendum, and the block hash is unchanged. `tests/tes
 
 **2026-11-13 04:25:** Queue unchanged at 04:20 (nothing started or failed; RDS 1,067.4 GB, 991,082 files). Submission pack (ROADMAP 4.7): the reporting summary's software row now lists the verified versions (analysis env; torch and transformers as the vision-gate outputs record them; LibreFace 0.2.0, OpenFace 3.0 as `openface-test` 0.1.26, MediaPipe 0.10.14 and ME-GraphAU commit `dda53cba`, read from the cluster environment). Methods now carries a draft ethics statement (with a [USER] marker for the institutional part), the reproduction-script sentence and the journal's standard reporting-summary line. A9's prereg has a dated note for the early submission and the rule (ii) check, and the preregistration links table has the A9 row; the A9 design hash is unchanged (`21341eb4`, 53 A9 tests pass).
 
-**2026-11-13 03:25:** A9 scored arrays submitted before their smokes ran, to gain queue age: Gemma 40863756 and Qwen 40863757, 12 shards each, 6 h cap, `gpu2`. The 03:15 check found `gpu2` capped at 32 GPUs for all SL3 users together (28 in use), with about 870 higher-priority `gpu2` tasks ahead of our oldest job. With fair share 0, our priority grows only by age, about 1.5 a hour. The smokes are older and shorter, so they still run first, and their timing now only lowers the scored limits (DECISIONS 2026-11-13). Before submitting I checked on the cluster: the 33 run-path files, the manifest pin and the 40 render tars. The A9 pre-run check now also requires A4's run note and compares A4's summary with the sha256 recorded there (A9 rule (ii)), so A9's single analysis cannot read another A4 summary. Other jobs unchanged; RDS 1,067.4 GB, 991,082 files. Full test suite at `3e0c5f0`: 1,076 passed, 26 skipped, 0 failed (22 min).
+**2026-11-13 03:25:** A9 scored arrays submitted before their smokes ran, to gain queue age: Gemma 40863756 and Qwen 40863757, 12 shards each, 6 h cap, `gpu2`. The 03:15 check found `gpu2` capped at 32 GPUs for all SL3 users together (28 in use), with about 870 higher-priority `gpu2` tasks ahead of our oldest job. With fair share 0, our priority grows only by age, about 1.5 a hour. The smokes are older and shorter, so they still run first, and their timing now only lowers the scored limits (DECISIONS 2026-11-13). Before submitting I checked on the cluster: the 33 run-path files, the manifest pin and the 40 render tars. The A9 pre-run check now also requires A4's run note and compares A4's summary with the sha256 recorded there (A9 rule (ii)), so A9's single analysis cannot read another A4 summary. Other jobs unchanged; RDS 1,067.4 GB, 991,082 files. Full test suite at `c88ca73`: 1,076 passed, 26 skipped, 0 failed (22 min).
 
 **2026-11-13 02:15:** Queue unchanged (checks at 01:22 and 02:14; SSH master up; RDS 1,067.3 GB, 991,070 files). Results sections 5, 6, 7, 9 and 10 now carry drafted text for every outcome, written before any of their data, with values as slots for `registry_tables.py`. The A7 pre-run check is now tested against the A2 run note as `post_phase3.analyse` writes it from the real command list.
 
 **2026-11-13 00:55:** Queue unchanged (priority 192, rising about 1.5 a hour). Phase 3 rehearsed end to end on SYNTHETIC cells in the runners' exact format (`research/scripts/rehearse_cells.py`; all in the scratch folder, nothing under `results/`): A4 and A9 manifests rebuilt with their pinned sha256; A4 pre-run check passed; the frozen `a4_analyse` ran in 383 s single-threaded and wrote all eight decisions and both headlines; A9 pre-run check passed and the frozen `a9_analyse` ran in 45 s with the fixed replication wording; `registry_tables.py a4`, Figure 5 (`fig5_from`) and Table 1 all read the real-schema summaries correctly. The A7 chain was rehearsed earlier (`tests/test_a7_main_integration.py`); A2 and A5 were rehearsed by their code audits (2026-11-12). One gap found, in the synthetic rows only (blind rows need `lexicon_mass`, which the real runner writes). A4's real analysis should take minutes, not hours.
 
-**2026-11-13 00:10:** Queue unchanged. Full test suite 1,064 passed, 26 skipped, 0 failed; clean-checkout reproduction at `6fffab1`: 40 rebuilt and matched, 112 verified by hash, 1 failure fixed and rechecked (REPRODUCE.md, 2026-11-13). Built from locked outputs and rebuilt by `reproduce.py`: Table 1 (`paper/v2/table1.md`, `research/scripts/make_table1.py`; A2, A4 and A9 cells read pending until their run notes are complete) and the Supplementary A7 Stage 0 table (`make_stage0_table.py`). Results-day aids: `research/scripts/registry_tables.py a2|a4` prints registry tables from the outputs (frozen verdict, fill-rule verdict and .01 reading side by side); `tests/test_a7_main_integration.py` runs the frozen A7 entry point on the inputs file the A7 pre-run check writes. Methods Disclosures 2 and 3 now say which A1 files were opened, and when.
+**2026-11-13 00:10:** Queue unchanged. Full test suite 1,064 passed, 26 skipped, 0 failed; clean-checkout reproduction at `feefec8`: 40 rebuilt and matched, 112 verified by hash, 1 failure fixed and rechecked (REPRODUCE.md, 2026-11-13). Built from locked outputs and rebuilt by `reproduce.py`: Table 1 (`paper/v2/table1.md`, `research/scripts/make_table1.py`; A2, A4 and A9 cells read pending until their run notes are complete) and the Supplementary A7 Stage 0 table (`make_stage0_table.py`). Results-day aids: `research/scripts/registry_tables.py a2|a4` prints registry tables from the outputs (frozen verdict, fill-rule verdict and .01 reading side by side); `tests/test_a7_main_integration.py` runs the frozen A7 entry point on the inputs file the A7 pre-run check writes. Methods Disclosures 2 and 3 now say which A1 files were opened, and when.
 
-**2026-11-12 23:50:** Queue unchanged at every hourly check (all jobs pending on priority, no start estimate). Found: a cluster-wide GPU shutdown, reservation `Dec2026-shutdown`, 2026-12-07 07:00 to 2027-01-10 (ROADMAP risk register); and A8's `a4_analyse` step could not have run anywhere, so the Snoek archive was placed on the cluster at its pinned sha256 (DECISIONS). A4 smokes ran about 1 s per cell, so A4 shards should take about 2 h of their 6 h; time limits left as submitted. Independent draft review done (`research/reviews/draft_review_2026-11-13.md`, 41 findings, numbers nearly all correct, references all real) and applied, except citation renumbering (pre-submission pass) and the [1] option-set code (NEEDS_INPUT 11). Deviations table built (`paper/v2/supplementary_table_decisions.md`, 74 rows); its four disclosure gaps closed, including A3's declared token-floor sensitivity, now computed with the frozen functions (Gemma 4 still passes on 218 of 243 clips). Figure 6 now plots A2's verdicts after the fill-rule ruling. A test-order fault found and fixed (`tests/conftest.py`): A7's recovery tests swapped A2's sign-flip function in-process; the real analyses run as fresh processes and never see it. Discussion drafted for every open branch before its data. Commits `d3ac428` to `541f2c9` on `p1-pipeline`; no PR to `main` while NEEDS_INPUT 10 (notes file pushed by mistake) is open.
+**2026-11-12 23:50:** Queue unchanged at every hourly check (all jobs pending on priority, no start estimate). Found: a cluster-wide GPU shutdown, reservation `Dec2026-shutdown`, 2026-12-07 07:00 to 2027-01-10 (ROADMAP risk register); and A8's `a4_analyse` step could not have run anywhere, so the Snoek archive was placed on the cluster at its pinned sha256 (DECISIONS). A4 smokes ran about 1 s per cell, so A4 shards should take about 2 h of their 6 h; time limits left as submitted. Independent draft review done (`research/reviews/draft_review_2026-11-13.md`, 41 findings, numbers nearly all correct, references all real) and applied, except citation renumbering (pre-submission pass) and the [1] option-set code (NEEDS_INPUT 11). Deviations table built (`paper/v2/supplementary_table_decisions.md`, 74 rows); its four disclosure gaps closed, including A3's declared token-floor sensitivity, now computed with the frozen functions (Gemma 4 still passes on 218 of 243 clips). Figure 6 now plots A2's verdicts after the fill-rule ruling. A test-order fault found and fixed (`tests/conftest.py`): A7's recovery tests swapped A2's sign-flip function in-process; the real analyses run as fresh processes and never see it. Discussion drafted for every open branch before its data. Commits `d3ac428` to `d4cce83` on `p1-pipeline`; no PR to `main` while NEEDS_INPUT 10 (notes file pushed by mistake) is open.
 
 **2026-11-12 22:45 (new agent session; the user is away until the morning of 2026-11-13):** Took over after the previous session closed. The user re-authenticated CSD3 on a new ControlMaster with `ControlPersist=yes` and keepalives (the 12 h persist is what dropped it on 2026-11-11), and `caffeinate` holds the Mac awake. The user has given the `intr` QoS to another project's agent, so this project does not use it; none of its jobs did (all `gpu2`). Queue unchanged: A2, A4, A8 and A7 Stage 1 pending on priority (about 189, fair share 0, no start estimate). RDS 1,067.3 GB, 991,062 files. Submitted the A9 timing smokes (Gemma 40843619, Qwen 40843620; 40 cells, 30 min) after checking run-path hashes, the manifest pin and the 40 render tars on the cluster (DECISIONS 2026-11-12). Added A7 Stage 1 to the Phase 3 runbook with its own pre-run check, `research/scripts/a7_prerun_check.py`, which also builds the inputs file `a7_analyse.py` needs; tests pass (`tests/test_a7_prerun.py`). A self-paced heartbeat checks the cluster about hourly overnight.
 

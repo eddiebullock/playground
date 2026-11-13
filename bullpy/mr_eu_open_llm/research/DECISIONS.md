@@ -633,11 +633,11 @@ Tests: `tests/test_a8.py` 66 passed, 1 skipped. Nothing read; block hash `95dd41
 
 ## 2026-11-13: Independent review of the night's A8 code; findings fixed before the code pins (no design change)
 
-An independent agent reviewed commits `75dfac8`, `a362a56` and `6dc6ce0` against the A8 block, the dated notes and the carried-over rulings. Its report: no frozen file changed, and the block hash is `95dd41b5` at every commit. It found real problems in A8's own, still unpinned, code. I checked each against the code before fixing.
+An independent agent reviewed commits `b5c4896`, `d4f11d4` and `d0e945e` against the A8 block, the dated notes and the carried-over rulings. Its report: no frozen file changed, and the block hash is `95dd41b5` at every commit. It found real problems in A8's own, still unpinned, code. I checked each against the code before fixing.
 
 - **A model could leave A8's A4 family unnoticed.** Membership came from shard files only, so a model whose `a4_run` jobs were queued, or had crashed before writing a cell, would have dropped out of the Holm family without the 2026-11-09 condition. It is now accounted for if eligible, launched or holding cells.
 - **Files could move on a failing check, and a later file could overwrite a kept original.** The set-aside ran before every other check and used a plain move. Moves and filters now happen only on a passing check, never onto an existing file, and every record hashes what was moved.
-- **A crashed gates job could block both models (a regression from `6dc6ce0`).** `vision_gates.py` saves its file before loading the model, so a crashed job always left a file with no verdict. Under the stricter reading that file was never "no output", and every all-model builder waited. Such a file is now read as no output file. The A1 family also checks A3 before gates.
+- **A crashed gates job could block both models (a regression from `d0e945e`).** `vision_gates.py` saves its file before loading the model, so a crashed job always left a file with no verdict. Under the stricter reading that file was never "no output", and every all-model builder waited. Such a file is now read as no output file. The A1 family also checks A3 before gates.
 - **The single analyses did not require the check.** They now refuse without a passing record at a fixed path, and the files they read must be exactly the set, with the bytes, that the record hashed.
 - **An interrupted filter could lose a shard name.** The original moved first, and a rerun never repaired it. The original is now copied first, and the filtered copy takes the name in one rename.
 - **Low-severity items:**
@@ -647,3 +647,29 @@ An independent agent reviewed commits `75dfac8`, `a362a56` and `6dc6ce0` against
   - The A4 check now records A4's design hash, the pandas version and the Snoek archive's sha256, as A4's own check does.
 
 The note's text is brought into line by an addendum to the 2026-11-13 dated note in `PREREG_A8_DRAFT.md`. Tests: `tests/test_a8.py` 74 passed, 1 skipped, with a regression test for each finding. Of the reviewer's six reproductions, five now fail as intended. The sixth, a retry in flight, needs Slurm's queue, so it is tested with a stand-in for `squeue`. Nothing read; block hash unchanged.
+
+## 2026-11-13: `p1-pipeline` rebuilt to take the user's notes file off the public branch (repository only; no project file changed)
+
+On 2026-11-12 at about 22:58 a `git commit -a` took the user's uncommitted `notes/notes.txt` into a commit on the public `p1-pipeline` branch (NEEDS_INPUT 10). On the user's instruction, given 2026-11-13 at about 09:15:
+- The branch was rebuilt from `d8c2e01`, the commit before, with `notes/notes.txt` restored to its `d8c2e01` version in each of the 40 later commits.
+- It was force-pushed with a lease pinned to the old tip. The new tip is `f37beae`.
+
+Checked before the push:
+- Each rebuilt commit has the same message, author, committer and dates as its original, and its tree differs only in `notes/notes.txt`, which is outside the project folder. So every project file at every commit is unchanged.
+- The leaked version cannot be reached from the new tip.
+- No tag holds the old commits (every amendment's freeze tag predates them), and no PR was open.
+
+Commit IDs cited in the documents (STATE, ROADMAP, this file, `REPRODUCE.md`, `data_code_availability.md`) were changed to the rebuilt commits' IDs, which have the same project content. So the clean-checkout test recorded at `feefec8` stands as recorded. Two rebuilt commit messages still cite old IDs. The old history is kept in a local branch on the user's Mac only. GitHub may keep the old commits reachable by their IDs until it purges them; asking GitHub Support is the user's choice (NEEDS_INPUT 10).
+
+## 2026-11-13: Literature table, [1] recoded from "partly" to "no" on option sets (user's decision; no analysis affected)
+
+NEEDS_INPUT 11, from review finding 36. The user chose the recommended stricter reading.
+- Strachan et al. [1] set its alternatives per item. On the MRMET, a repeated label always came with the same three alternatives, which is the prompt-text fault the Figure 1e legend codes as "no".
+- `literature_table.csv` now codes [1]'s `option_sets_code` as `no`. One option set across items: yes 3, no 1, not stated 2, does not arise 2 (was yes 3, partly 1, not stated 2, does not arise 2).
+- Updated to match:
+  - the registry row "Literature table, eight papers coded";
+  - the pinned counts and sha256 in `scripts/reproduce.py`;
+  - the Results literature paragraph;
+  - the Figure 1e legend, with one line on why;
+  - Figure 1, rebuilt in the reproduction environment, where only `fig1.png`, `fig1.pdf` and one `SOURCES.md` row changed, and Figure 3 rebuilt byte-identically.
+- The table is descriptive: no preregistered analysis, threshold or verdict reads it.

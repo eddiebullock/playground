@@ -169,7 +169,7 @@ Watch storage at each step. The file count runs at about 996k of 1,048,576. Cell
 *Morning hand-off.* A summary at the top of STATE.md; anything only the user can do in NEEDS_INPUT.
 
 *Local queue status, 2026-11-13 06:20.*
-- Items 1 to 3, 5 and 6 are done. Item 7 is done: full suite at `3e0c5f0`, and clean-checkout reproduction at `5d1ffd5` (43 rebuilt, 112 hash-verified, 0 failed).
+- Items 1 to 3, 5 and 6 are done. Item 7 is done: full suite at `c88ca73`, and clean-checkout reproduction at `f4306cb` (43 rebuilt, 112 hash-verified, 0 failed).
 - Item 4 is done. The A8 audit found three faults in A8's own code, now fixed before the code pins, and A2's and A4's rulings are now carried over to A8 by a dated note (both in DECISIONS 2026-11-13). The runbook is below.
 - Two minor items from that audit are done: provenance for `a8_a4_gates.py` and `a8_analyse_a2.py`, and gate and delivery files read only from jobs that ended ok. `post_phase3.py pull a8` exists too (2026-11-13), so nothing from the audit is open.
 
