@@ -2,9 +2,9 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-11-13 09:55 Europe/London
+**Updated:** 2026-11-13 11:47 Europe/London
 
-## Hand-off, 2026-11-13 (written 05:35, last refreshed 09:55)
+## Hand-off, 2026-11-13 (written 05:35, last refreshed 11:47)
 
 **Done this morning on your instructions (about 09:15):**
 - **Item 10: your notes file is off the public branch.**
@@ -13,6 +13,7 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
   - Your local `notes/notes.txt` is unchanged.
   - The old history is kept on your Mac only, in the local branch `backup/p1-pipeline-before-notes-removal`.
 - **Item 11:** [1] recoded to "no" on option sets. Figure 1 rebuilt (DECISIONS 2026-11-13).
+- **Merged into `main`:** PR #114, true merge commit `ee3913a`. Today's commits now count on your GitHub contribution graph.
 - **Ethics:** you said the ethics position is fine, so Methods ("Human data") and the reporting summary now carry the recommended statement. It says no separate ethical approval was required, because the study recruited no participants and used only existing materials under their permission or licence terms. It is marked provisional, for you to confirm before submission.
 
 **Only you can do these** (details in `research/NEEDS_INPUT.md`):
@@ -35,14 +36,13 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
   - A7 Stage 1: 40795186, 40795187
   - A9 smokes: 40843619, 40843620
   - A9 scored runs: 40863756, 40863757
-- Why they wait:
-  - The free tier's `gpu2` QoS is capped at 32 GPUs for all SL3 users together; 28 were in use at 09:08.
-  - Our fair share is 0, so our priority grows only with age, about 1.5 a hour. Our oldest jobs were at 204 at 09:08.
-  - 1,261 `gpu2` tasks with higher priority were waiting at 08:46, about the same as at 05:22.
-  - Our past starts all came from backfill.
-  - The `gpu2` jobs running at 06:20 had waited 26 to 37 h. By the age Slurm counts, ours had waited about 70 h at 08:46.
-  - Fair share is per account. Since 2026-10-16 your user has used 891 GPU hours on this account: CASCADE (`cas_*`) 709, this project 168, `hel-*` 14.
-  - So this project's jobs rank behind those of accounts with less recent use. For your information only: I have not touched the other projects' jobs.
+- Why they wait (corrected at 11:20; I had misread the free-tier limit overnight, DECISIONS 2026-11-13):
+  - The A100 partition is full, and every tier shares it. At 11:16, 46 of its 74 nodes were busy, 17 were in maintenance, 1 was down, 1 was powering up and 9 were powered down with no recent use. Even interactive jobs at priority 10,000 were waiting.
+  - The free tier's 32-GPU limit is per user, not shared by all SL3 users as I wrote overnight. It is not what holds us back.
+  - 381 pending jobs ranked above our oldest (2,405 tasks counting each array task). 233 are paid-tier: their tier adds 500 points to priority, against our 100, so a newly submitted paid job ranks above ours until ours has aged about 11 days.
+  - Our priority grows only with age, about 1.5 a hour; our oldest jobs were at 208 at 11:16, about 73 h of counted age.
+  - Fair share adds little to anyone here: at most 48 points among the jobs above ours. Ours is 0 because your user has used 891 GPU hours on this account since 2026-10-16 (CASCADE `cas_*` 709, this project 168, `hel-*` 14). I have not touched the other projects' jobs.
+  - Our past starts all came from backfill; a 12 h task submitted on 2026-11-04 waited about 4.4 days.
 - Nothing more can be done for free. The A2 and A4 time limits stay as they are, because a TIMEOUT would cost days in the queue.
 - **Risk:** every GPU node is reserved from 2026-12-07 07:00 to 2027-01-10 (`Dec2026-shutdown`), and A8 can start only after A2 and A4 finish.
   - A8's own dated-note rule defers whatever cannot finish, A4 first.
@@ -69,10 +69,10 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
   - Deviations table, 80 rows.
   - Submission pack: software versions, ethics draft, code availability.
 - **Checks:**
-  - Full test suite at `d6dcb93`: 1,096 passed, 26 skipped, 0 failed (09:45). Clean-checkout rerun of the steps changed by the recode at `d6dcb93`: 6 rebuilt and matched, 1 verified by hash, 0 failed.
+  - Full test suite at `d6dcb93`: 1,096 passed, 26 skipped, 0 failed (09:28). Clean-checkout rerun of the steps changed by the recode at `d6dcb93`: 6 rebuilt and matched, 1 verified by hash, 0 failed.
   - Clean-checkout reproduction at `f4306cb`: 43 rebuilt and matched, 112 verified by hash, 0 failed.
 
-**FYI:** CSD3 `/home` is at 49.8 of 52.4 GB. This project writes nothing there; its jobs write to RDS. The space is in other folders, such as `LEAP3mri`. RDS: 1,067.4 GB of 1,099.5; 991,082 of 1,048,576 files.
+**FYI:** CSD3 `/home` is at 49.8 of 52.4 GB. This project writes nothing there; its jobs write to RDS. The space is in other folders, such as `LEAP3mri`. RDS: 1,067.4 GB of 1,099.5; 991,094 of 1,048,576 files.
 
 **When jobs finish**, the heartbeat follows ROADMAP Part 3: pull unread, pre-run check, one frozen analysis with its run note, then registry rows and figures.
 
@@ -80,7 +80,13 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
 
 **Phase 2 runs queued; Phase 3 analyses wait on them.** A1, A3 and natural-clip RQ1 are locked (2026-11-09). Every amendment is frozen or closed: A2, A4, A5, A7, A8 and A9 frozen, A6 closed as a limit. The A2, A4, A7 Stage 1, A8 and A9 GPU jobs are pending on priority. History: the prompt confound found 2026-11-04 withdrew the earlier accuracy and probe results (DECISIONS); Branch B stays as a record only.
 
-**2026-11-13 09:55:** Ethics statement written as recommended, marked provisional, on your instruction (Methods, reporting summary, NEEDS_INPUT 9). Checks at `d6dcb93`: full suite 1,096 passed, 26 skipped, 0 failed. Clean-checkout rerun of the recode's steps: Figures 1 and 3, `SOURCES.md`, the derived counts and the table's hash all matched. Next: merge `p1-pipeline` into `main`, so that today's commits count on your GitHub contribution graph, which counts only the default branch.
+**2026-11-13 11:47:** Supplementary decisions table brought up to date: rows 81 to 83 for today's three new decision-log entries, and a superseded-entries row (75 to 83). It again has one row per entry, 83, checked in order against DECISIONS. ROADMAP Phase 4 status refreshed: every step that needs no new GPU output is done. The node counts in the 11:20 correction now include the node that was powering up. Full suite at `62a8b79` with these record edits: 1,096 passed, 26 skipped, 0 failed.
+
+**2026-11-13 11:20:** Queue unchanged at 11:16: nothing started or failed. Oldest jobs at priority 208. Correction: the 32-GPU limit of `gpu2` is per user (`MaxTRESPU`), not shared by all SL3 users as written from 03:15 on; at 11:12 `gpu2` had 36 GPUs in use, 32 of them one user's. Our jobs wait because the A100 partition is full (46 of 74 nodes busy, 17 in maintenance, 1 down, 1 powering up, 9 powered down) and 381 jobs rank above ours, 233 of them paid-tier. No decision changes. Corrected in the hand-off and the ROADMAP risk row; a new DECISIONS entry, with a pointer from the A9 entry; a dated note in the A9 prereg, outside its hashed block. Entries below keep their "of 32" counts: the GPUs in use were counted right, only the limit was misread. RDS 1,067.5 GB, 991,118 files.
+
+**2026-11-13 09:50:** Queue unchanged at 09:47: nothing started or failed. Oldest jobs at priority 205; `gpu2` had 28 of 32 GPUs in use; 1,270 `gpu2` tasks rank above ours. RDS 1,067.4 GB, 991,094 files.
+
+**2026-11-13 09:35:** Ethics statement written as recommended, marked provisional, on your instruction (Methods, reporting summary, NEEDS_INPUT 9). Checks at `d6dcb93`: full suite 1,096 passed, 26 skipped, 0 failed. Clean-checkout rerun of the recode's steps: Figures 1 and 3, `SOURCES.md`, the derived counts and the table's hash all matched. `p1-pipeline` merged into `main` as PR #114, true merge commit `ee3913a` (09:33), so today's commits count on your GitHub contribution graph, which counts only the default branch. From now on I merge into `main` after each coherent step, so each day's work shows the same day.
 
 **2026-11-13 09:25:** You returned at about 09:05 and approved NEEDS_INPUT items 10 and 11.
 - Item 10: `p1-pipeline` was rebuilt from `d8c2e01` with `notes/notes.txt` restored in all 40 later commits, checked, and force-pushed with a lease. The new tip is `f37beae`.
