@@ -22,7 +22,7 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
 - **A2 and A9 follow A4 on `intr`, in the same slices** (DECISIONS 2026-11-13: "A2's full-run shards may run in one-hour slices" and "A9's smoke and scored shards may run in one-hour slices beside A2's"):
   - `slurm_jobs/study3_intr_slices_mixed.sh` runs one slice. Its A2 slots go, unchanged, to A2's own wrapper (`study3_intr_slices_a2.sh`), which applies A2's torn-line rule (A2-2), with a log, and runs the pinned `study3_stimulus_interventions.sh` (sha256 `1c8d22ea...`) with the full run's settings. Its A9 slots run the pinned `study3_a9.sh` with the queued arrays' settings.
   - `research/scripts/mixed_intr_next_slice.sh` plans each slice: A2's six shards first, then A9's two timing smokes, then A9's scored shards.
-  - A9's scored shards run only for models listed in `results/a9/scored_slices_models.txt` on the cluster, and only after that model's smoke is complete and ok. I write that list after A4's analysis, for the models eligible under RQ0 and A4's gates, as A9's checklist orders. Until then the slices carry A2, plus the smokes once.
+  - A9's scored shards run only for models listed in `results/a9/scored_slices_models.txt` on the cluster, and only after that model's smoke is complete and ok. Since 23:50 the list holds Gemma 4 and Qwen3-VL. Both are eligible under RQ0 and A4's gates, which were locked on 2026-11-12 in `research/reproduction/a4_gates.json` and need nothing from A4's own analysis (DECISIONS, A9 slices, update 23:50). So the first slice after A4 carries A2 and the smokes, and later slices carry A2 and A9's scored shards.
   - A2 has six shards of 2,349 cells, 4 to 6 GPU-hours each, so about 6 to 8 slices. A9 has 24 shards of about 3,000 cells; at A4's rates each should take one or two slices, beside A2's.
   - A sequencer on the Mac waits for the A4 chain to end. If A4 ends with every shard complete, it starts the mixed chain (scratchpad `intr_chain.sh` with the mixed planner). If A4 stops for any other reason, nothing starts.
 
@@ -166,6 +166,11 @@ With cuts 4 and 5, the main text is about 490 words shorter. What remains waits 
 - A dry run gave, for the first slice after A4: A2's six shards and both A9 smokes, on two nodes.
 - The ROADMAP triggers for A2 and A9 now name the slice jobs and the waivers, plus the step that allows A9's scored shards after A4's analysis.
 - The Mac sequencer that starts the next chain after A4 was replaced (scratchpad `seq_mixed.sh`, started 23:14). The old one would never have started A2: its process check (`pgrep -f "bash a4_chain.sh"`) also matched its own command line. The new one waits on the A4 chain's process ID. If the A4 chain ends with every shard complete, it starts the mixed chain.
+
+**2026-11-13 23:52:** Qwen A4 slice 40938356 ran 22:46 to 23:38. All twelve shards stopped at the budget at 2,968 to 3,079 lines each, none partial, at about 0.95 s of model time per cell.
+- Slice 40941357 continues them on three nodes. It was submitted at 23:39 and started at 23:48, after gpu-q-9 powered up.
+- A9's eligible models were written to `results/a9/scored_slices_models.txt`: Gemma 4 and Qwen3-VL, from the locked A4 gates (DECISIONS, A9 slices, update 23:50).
+- No failures; RDS 1,067.5 GB, 991,196 files.
 
 **2026-11-13 11:47:** Supplementary decisions table brought up to date: rows 81 to 83 for today's three new decision-log entries, and a superseded-entries row (75 to 83). It again has one row per entry, 83, checked in order against DECISIONS. ROADMAP Phase 4 status refreshed: every step that needs no new GPU output is done. The node counts in the 11:20 correction now include the node that was powering up. Full suite at `62a8b79` with these record edits: 1,096 passed, 26 skipped, 0 failed. Merged into `main` as PR #115, true merge commit `da95a75` (11:48).
 
