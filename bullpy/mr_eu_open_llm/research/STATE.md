@@ -2,9 +2,9 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-11-13 06:30 Europe/London
+**Updated:** 2026-11-13 06:45 Europe/London
 
-## Morning hand-off, 2026-11-13 (written 05:35, last refreshed 06:30)
+## Morning hand-off, 2026-11-13 (written 05:35, last refreshed 06:45)
 
 **Only you can do these** (details in `research/NEEDS_INPUT.md`):
 1. **Item 10, decision needed: your notes file is on the public branch.** On 2026-11-12 at about 22:58 my `git commit -a` took your uncommitted `notes/notes.txt` into commit `0bc8a57` on the public `p1-pipeline` branch. Your local file is unchanged. Say "drop the notes commit" and allow the force-push, and I will rebuild the branch without that file (plan in item 10). Until then there is no PR to `main`.
@@ -15,6 +15,7 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
    - A2's and A4's rulings of 2026-11-12 now apply to A8's runs of the same analyses, so A8 rows are read like the frozen rows above them.
    - One A8-specific choice: A8's hashed command fixes the A4 cells folder, so non-finite rows are filtered in place, with the originals kept unchanged in a subfolder the analysis does not read.
    - It is pre-data with no hash change. If you prefer another reading, it can still change before A8's code-pin step.
+   - An independent review of the night's A8 code then found real problems, all now fixed. One was a regression I had introduced. The addendum at the end of the A8 prereg lists them.
 
 **Cluster: nothing of ours started overnight, and nothing failed.**
 - Every job is pending on priority, and Slurm gives no start estimate:
@@ -64,6 +65,15 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
 ## Current phase
 
 **Phase 2 runs queued; Phase 3 analyses wait on them.** A1, A3 and natural-clip RQ1 are locked (2026-11-09). Every amendment is frozen or closed: A2, A4, A5, A7, A8 and A9 frozen, A6 closed as a limit. The A2, A4, A7 Stage 1, A8 and A9 GPU jobs are pending on priority. History: the prompt confound found 2026-11-04 withdrew the earlier accuracy and probe results (DECISIONS); Branch B stays as a record only.
+
+**2026-11-13 06:45:** An independent review of the night's A8 code (commits `75dfac8`, `a362a56`, `6dc6ce0`) found real problems. Two were in the new A4 pre-run check, and one was a regression from `6dc6ce0`: a crashed gates job could block both models. I checked each against the code and fixed all of them before A8's code pins:
+- A8's A4 run now accounts for every eligible or launched model.
+- Files move only on a passing check, never onto an existing file.
+- The single analyses refuse without a passing check record.
+- An interrupted filter can no longer lose a shard.
+- A retry still in Slurm's queue is no longer counted as ended.
+
+The A8 note has a same-day addendum, and the block hash is unchanged. `tests/test_a8.py`: 74 passed, 1 skipped, with a regression test per finding (DECISIONS 2026-11-13).
 
 **2026-11-13 06:25:** Queue unchanged at 05:54 (oldest jobs at priority 200; `gpu2` 20 of 32 GPUs in use; RDS unchanged).
 - **Reproduction.** Clean-checkout reproduction at `5d1ffd5`: 43 rebuilt and matched, 112 verified by hash, 0 failed, 6 pending.

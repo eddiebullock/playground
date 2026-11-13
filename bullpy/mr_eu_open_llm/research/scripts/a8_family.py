@@ -13,6 +13,8 @@ tests). Every rule here is the design block's `families` text in code:
 from __future__ import annotations
 
 import json
+import shutil
+import subprocess
 from pathlib import Path
 from typing import Any, Dict, List, Mapping, Tuple
 
@@ -37,6 +39,15 @@ def merged_path(base: Path, a8_id: str, rotation: int, condition: str) -> Path:
 
 A3_SUMMARY = "research/reproduction/a8/face_input_validity_summary_a8.json"
 A1_SUMMARY = "research/reproduction/a8/rotation_summary_a8.json"
+# Records of A8's pre-run checks, at fixed paths, which the single analyses require (dated note 2026-11-13).
+A2_PRERUN = "research/reproduction/a8/{a8_id}/a2_prerun_check.json"
+A4_PRERUN = "research/reproduction/a8/a4_prerun_check.json"
+A4_CELLS = "results/a8/a4"
+
+
+def a4_cells_files(base: Path) -> List[Path]:
+    """The shard files the frozen A4 analysis reads: cells_<key>_<n>.jsonl at the top of results/a8/a4."""
+    return sorted(p for p in (base / A4_CELLS).glob("cells_*_*.jsonl") if p.stem.rsplit("_", 1)[-1].isdigit())
 
 
 def _json(path: Path) -> Any:
@@ -96,9 +107,26 @@ def ok_record(base: Path, a8_id: str, step: str, weights_dir: str, context: Mapp
     raise SystemExit(f"{a8_id} {step}{' ' + str(dict(context)) if context else ''}: no launcher record with status ok.")
 
 
+def job_in_queue(job_id: Any) -> bool:
+    """True while Slurm still lists the job, pending or running. Off the cluster, or for a record without a
+    job id, False: such a record's attempt counts as ended, as before the launcher recorded the id."""
+    if not job_id or shutil.which("squeue") is None:
+        return False
+    out = subprocess.run(["squeue", "-h", "-j", str(job_id), "-o", "%T"], capture_output=True, text=True, check=False)
+    return out.returncode == 0 and bool(out.stdout.strip())
+
+
+def in_flight(records: List[Dict[str, Any]]) -> bool:
+    """An attempt whose record still says started while its Slurm job is queued or running has not ended,
+    so no rule may conclude from the attempts yet."""
+    return any(r.get("status") == "started" and job_in_queue(r.get("slurm_job_id")) for r in records)
+
+
 def not_tested(base: Path, a8_id: str, step: str) -> bool:
-    """Design rule not_tested_after_retry: two launched attempts, none ok."""
+    """Design rule not_tested_after_retry: two launched attempts, none ok, none still running."""
     records = launch_records(base, a8_id, step)
+    if in_flight(records):
+        return False
     return len(records) >= 2 and not any(r.get("status") == "ok" for r in records)
 
 
@@ -109,7 +137,7 @@ def oom_retries_spent(base: Path, a8_id: str, step: str, context: Mapping[str, A
     (for example one shard), only that job's attempts count."""
     records = [r for r in launch_records(base, a8_id, step)
                if not context or all((r.get("context") or {}).get(k) == v for k, v in context.items())]
-    if any(r.get("status") == "ok" for r in records):
+    if any(r.get("status") == "ok" for r in records) or in_flight(records):
         return False
     counts = [r["visible_gpus"] for r in records if isinstance(r.get("visible_gpus"), int)]
     if not counts:
@@ -118,10 +146,24 @@ def oom_retries_spent(base: Path, a8_id: str, step: str, context: Mapping[str, A
     return sum(r.get("visible_gpus") == top and r.get("status") == "out_of_memory" for r in records) >= 2
 
 
+def has_output(step: str, path: Path) -> bool:
+    """Whether a step left its output file. `scripts/vision_gates.py` saves its file before it loads the
+    model, so a gate file without a verdict is what a crashed gates job leaves: no output file."""
+    if not path.exists():
+        return False
+    if step == "gates":
+        try:
+            return "verdict" in json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            return False
+    return True
+
+
 def _no_result(base: Path, a8_id: str, step: str, path: Path) -> bool:
     """Rule not_tested_after_retry (two attempts, none ok, no output file), or the dated note of 2026-11-09
     (a file left by two out-of-memory attempts at the largest GPU count): no result for this step."""
-    return (not path.exists() and not_tested(base, a8_id, step)) or (path.exists() and oom_retries_spent(base, a8_id, step))
+    present = has_output(step, path)
+    return (not present and not_tested(base, a8_id, step)) or (present and oom_retries_spent(base, a8_id, step))
 
 
 def gate_result(design: Mapping[str, Any], base: Path, a8_id: str) -> bool:
@@ -191,7 +233,9 @@ def a1_family(design: Mapping[str, Any], base: Path) -> Tuple[List[str], Dict[st
     for a8_id in a8_design.active_models(design):
         files = [merged_path(base, a8_id, r, c) for r in ROTATIONS for c in CONDITIONS]
         present = [p for p in files if p.exists()]
-        runs = gate_result(design, base, a8_id) and (a3.get(a8_id) or {}).get("vision_dependent") is True
+        # A3 first: a model that is not A3 Pass is outside the family whatever its gates, so its gate file is
+        # not needed, and a gates job still open for it cannot hold up the other model.
+        runs = (a3.get(a8_id) or {}).get("vision_dependent") is True and gate_result(design, base, a8_id)
         if runs:
             if len(present) != len(files):
                 raise SystemExit(f"{a8_id} is in the A1 family but has {len(present)} of {len(files)} merged files.")
@@ -277,8 +321,34 @@ def check_provenance(output: Path) -> Dict[str, Any]:
     return record
 
 
-def eligibility(design: Mapping[str, Any], base: Path, a8_id: str, step: str) -> Dict[str, Any]:
-    """Design rule eligibility_checked_by_launcher, by the frozen rules, from A8 files only."""
+def check_prerun_record(record_path: Path, files: List[Path], base: Path) -> Dict[str, Any]:
+    """Before a single A8 analysis: A8's pre-run check passed (`research/scripts/a8_prerun_check.py`), and the
+    files the analysis reads are the bytes that check saw (dated note 2026-11-13, as A2's and A4's own runs
+    chain their checks before the analysis)."""
+    import hashlib
+
+    if not record_path.exists():
+        raise SystemExit(f"{record_path} is missing: run A8's pre-run check first.")
+    record = json.loads(record_path.read_text(encoding="utf-8"))
+    if record.get("failures") != []:
+        raise SystemExit(f"A8's pre-run check did not pass ({record_path}): {(record.get('failures') or ['no result'])[:3]}")
+    seen = record.get("sha256") or {}
+    names = []
+    for path in files:
+        try:
+            name = Path(path).resolve().relative_to(base.resolve()).as_posix()
+        except ValueError:
+            name = str(path)
+        names.append(name)
+        if name not in seen or not Path(path).exists() or hashlib.sha256(Path(path).read_bytes()).hexdigest() != seen[name]:
+            raise SystemExit(f"{name} is not the file A8's pre-run check passed; run the check again.")
+    if sorted(names) != sorted(record.get("analysed_files") or []):
+        raise SystemExit(f"The files to analyse are not the set A8's pre-run check passed ({record_path}); run it again.")
+    return {"record": str(record_path), "record_sha256": hashlib.sha256(record_path.read_bytes()).hexdigest()}
+
+
+def eligibility_decision(design: Mapping[str, Any], base: Path, a8_id: str, step: str) -> Dict[str, Any]:
+    """The eligibility decision by the frozen rules, from A8 files only, without refusing (see `eligibility`)."""
     a3_path = base / A3_SUMMARY
     check_provenance(a3_path)
     a3 = (json.loads(a3_path.read_text(encoding="utf-8")).get(a8_id) or {}).get("vision_dependent")
@@ -302,6 +372,12 @@ def eligibility(design: Mapping[str, Any], base: Path, a8_id: str, step: str) ->
             decision["eligible"] = decision["eligible"] and decision["single_face_delivery"]
     else:
         raise SystemExit(f"No eligibility rule for {step}.")
+    return decision
+
+
+def eligibility(design: Mapping[str, Any], base: Path, a8_id: str, step: str) -> Dict[str, Any]:
+    """Design rule eligibility_checked_by_launcher, by the frozen rules, from A8 files only."""
+    decision = eligibility_decision(design, base, a8_id, step)
     if not decision["eligible"]:
         raise SystemExit(f"{a8_id} is not eligible for {step} by the frozen rules: {decision}")
     return decision

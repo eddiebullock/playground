@@ -189,12 +189,12 @@ Watch storage at each step. The file count runs at about 996k of 1,048,576. Cell
 4. **Natural-clip RQ1:** `natural_rq1` per model (CPU).
 5. **Scored runs:** `a2_run` and `a4_run` where eligible (the launcher applies the frozen rules).
 6. **A2, per model:**
-   - `python research/scripts/a8_prerun_check.py a2 --a8_id <id> --record research/reproduction/a8/<id>/a2_prerun_check.json`
+   - `python research/scripts/a8_prerun_check.py a2 --a8_id <id>`. Its record (`research/reproduction/a8/<id>/a2_prerun_check.json`) must pass, because the analysis refuses without it.
    - `python research/scripts/a8_analyse_a2.py --a8_id <id> -- --output research/reproduction/a8/<id>/stimulus_interventions_<key>.json --a2_frozen`
    - `python research/scripts/a2_declared_extras.py --model <key> --cells <the same cells> --run_report <the same reports> --a2_output <that output> --output research/reproduction/a8/<id>/a2_extras_<key>.json`
 7. **A4:**
    - `python research/scripts/a8_a4_gates.py`
-   - `python research/scripts/a8_prerun_check.py a4 --record research/reproduction/a8/a4_prerun_check.json`. Add `--apply_filter` and `--no_result <id>` only as A8's dated note of 2026-11-13 allows.
+   - `python research/scripts/a8_prerun_check.py a4`. Add `--apply_filter`, `--no_result <id>` or `--deferred <id> --deferral_note <the dated note>` only as A8's dated note of 2026-11-13 and its addendum allow. The record (`research/reproduction/a8/a4_prerun_check.json`) must pass, because `a4_analyse` refuses without it.
    - Then `STEP=a4_analyse`, which runs single-threaded.
 8. **Final checks:**
    - `python research/scripts/a8_preflight.py --full_hash` (weights unchanged).

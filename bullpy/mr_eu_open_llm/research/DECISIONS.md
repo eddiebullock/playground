@@ -630,3 +630,20 @@ These are the two minor findings left open by the A8 audit (entry above). Both a
   - A8's A4 pre-run check verifies the gates file's provenance.
 
 Tests: `tests/test_a8.py` 66 passed, 1 skipped. Nothing read; block hash `95dd41b5` unchanged. Still open: a `pull a8` command in `post_phase3.py`. It is needed only after A8's jobs run; the order of steps is in the ROADMAP's A8 runbook.
+
+## 2026-11-13: Independent review of the night's A8 code; findings fixed before the code pins (no design change)
+
+An independent agent reviewed commits `75dfac8`, `a362a56` and `6dc6ce0` against the A8 block, the dated notes and the carried-over rulings. Its report: no frozen file changed, and the block hash is `95dd41b5` at every commit. It found real problems in A8's own, still unpinned, code. I checked each against the code before fixing.
+
+- **A model could leave A8's A4 family unnoticed.** Membership came from shard files only, so a model whose `a4_run` jobs were queued, or had crashed before writing a cell, would have dropped out of the Holm family without the 2026-11-09 condition. It is now accounted for if eligible, launched or holding cells.
+- **Files could move on a failing check, and a later file could overwrite a kept original.** The set-aside ran before every other check and used a plain move. Moves and filters now happen only on a passing check, never onto an existing file, and every record hashes what was moved.
+- **A crashed gates job could block both models (a regression from `6dc6ce0`).** `vision_gates.py` saves its file before loading the model, so a crashed job always left a file with no verdict. Under the stricter reading that file was never "no output", and every all-model builder waited. Such a file is now read as no output file. The A1 family also checks A3 before gates.
+- **The single analyses did not require the check.** They now refuse without a passing record at a fixed path, and the files they read must be exactly the set, with the bytes, that the record hashed.
+- **An interrupted filter could lose a shard name.** The original moved first, and a rerun never repaired it. The original is now copied first, and the filtered copy takes the name in one rename.
+- **Low-severity items:**
+  - An unknown `--no_result` id crashed the check. It is now a failure message.
+  - The check now waits for A8's code pins and checks the frozen code, like every A8 entry point.
+  - A retry still in Slurm's queue counted as an ended attempt. The launcher now records the job id, and the family code waits while the job is listed.
+  - The A4 check now records A4's design hash, the pandas version and the Snoek archive's sha256, as A4's own check does.
+
+The note's text is brought into line by an addendum to the 2026-11-13 dated note in `PREREG_A8_DRAFT.md`. Tests: `tests/test_a8.py` 74 passed, 1 skipped, with a regression test for each finding. Of the reviewer's six reproductions, five now fail as intended. The sixth, a retry in flight, needs Slurm's queue, so it is tested with a stand-in for `squeue`. Nothing read; block hash unchanged.

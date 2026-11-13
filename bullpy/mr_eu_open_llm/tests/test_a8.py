@@ -1070,6 +1070,14 @@ def test_a2_production_path_gives_the_frozen_output_byte_for_byte(tmp_path, monk
         _launch(tmp_path, "gemma4_31b", "a2_run", context={"shard": k, "n_shards": 3})
     _launch(tmp_path, "gemma4_31b", "gates")
     _launch(tmp_path, "gemma4_31b", "delivery")
+    with pytest.raises(SystemExit, match="pre-run check first"):
+        a2w.run("gemma4_31b", [*common, "--output", str(wrapped)], base=tmp_path)
+    used_cells, used_reports, _ = a2w.shard_inputs(a8_design.load_design(), tmp_path, "gemma4_31b")
+    names = [Path(p) for p in (*used_cells, *used_reports)]
+    rel = lambda p: p.resolve().relative_to(tmp_path.resolve()).as_posix()
+    (tmp_path / a8_family.A2_PRERUN.format(a8_id="gemma4_31b")).write_text(json.dumps(
+        {"failures": [], "analysed_files": [rel(p) for p in names],
+         "sha256": {rel(p): hashlib.sha256(p.read_bytes()).hexdigest() for p in names}}))
     a2w.run("gemma4_31b", [*common, "--output", str(wrapped)], base=tmp_path)
     assert json.loads((folder / "rotation_summary.json").read_text()) == {"gemma4": {"vision_dependent": True}}
     record = a8_family.check_provenance(wrapped)  # the prereg's provenance file, checked as the next consumer would
@@ -1175,8 +1183,15 @@ def _a8_a4_shards(base, key, manifest, design_hash, n, nan_in=None):
         (folder / f"cells_{key}_{k}.jsonl").write_text("".join(json.dumps(r) + "\n" for r in rows))
 
 
+def _attempt(base, a8_id, step, status, gpus, stamp, context=None):
+    _launch(base, a8_id, step, status=status, context=context, stamp=stamp)
+    tag = "_".join(str(v) for v in (context or {}).values())
+    p = base / "research/reproduction/a8" / a8_id / "launch" / f"{step}{'_' + tag if tag else ''}_{stamp}.json"
+    p.write_text(json.dumps(dict(json.loads(p.read_text()), visible_gpus=gpus)))
+
+
 def test_a8_a4_prerun_uses_the_launched_shard_count_and_filters_in_place(tmp_path):
-    """A4's own row check at A8's run-setting shard count. Non-finite rows: the original moves unchanged to
+    """A4's own row check at A8's run-setting shard count. Non-finite rows: the original is kept unchanged in
     unfiltered/, the filtered copy takes its name, which is all the frozen analysis reads."""
     from scripts import a4_analyse, a4_run as run
 
@@ -1185,24 +1200,55 @@ def test_a8_a4_prerun_uses_the_launched_shard_count_and_filters_in_place(tmp_pat
     for k in range(3):
         _launch(tmp_path, "qwen3vl_32b", "a4_run", context={"shard": k, "n_shards": 3}, stamp=str(k))
     _a8_a4_shards(tmp_path, "qwen3vl", manifest, design_hash, 3, nan_in=1)
-    out = a8pre.check_a4_model(tmp_path, "qwen3vl_32b", "qwen3vl", weights, manifest, design_hash, run)
+    check = lambda: a8pre.check_a4_model(tmp_path, "qwen3vl_32b", "qwen3vl", weights, manifest, design_hash, run)
+    out = check()
     assert out["failures"] == [] and out["n_shards"] == 3 and out["shards"] == [0, 1, 2]
     assert [r["file"] for r in out["non_finite_rows"]] == ["cells_qwen3vl_1.jsonl"]
+    assert out["pending_filter"] == ["cells_qwen3vl_1.jsonl"]
     folder = tmp_path / a8pre.CELLS_A4
     before = (folder / "cells_qwen3vl_1.jsonl").read_bytes()
-    moved = a8pre.filter_in_place(folder, out["non_finite_rows"])
-    assert set(moved) == {"cells_qwen3vl_1.jsonl"}
+    done = a8pre.filter_in_place(folder, out["non_finite_rows"], out["pending_filter"])
+    assert set(done) == {"cells_qwen3vl_1.jsonl"}
     assert (folder / "unfiltered/cells_qwen3vl_1.jsonl").read_bytes() == before
     assert len((folder / "cells_qwen3vl_1.jsonl").read_bytes().splitlines()) == len(before.splitlines()) - 1
     assert [p.name for p in a4_analyse.shard_files(folder, "qwen3vl")] == [f"cells_qwen3vl_{k}.jsonl" for k in range(3)]
-    again = a8pre.check_a4_model(tmp_path, "qwen3vl_32b", "qwen3vl", weights, manifest, design_hash, run)
-    assert again["failures"] == [] and again["filtered_earlier"] == ["cells_qwen3vl_1.jsonl"]
-    (folder / "cells_qwen3vl_1.jsonl").write_bytes(before)  # a copy that is not its original filtered
-    tampered = a8pre.check_a4_model(tmp_path, "qwen3vl_32b", "qwen3vl", weights, manifest, design_hash, run)
-    assert any("differs from its original" in f for f in tampered["failures"])
+    again = check()
+    assert again["failures"] == [] and again["pending_filter"] == [] and again["filtered_earlier"] == ["cells_qwen3vl_1.jsonl"]
+    (folder / "cells_qwen3vl_1.jsonl").write_bytes(before + b'{"extra": 1}\n')  # neither the original nor its filter
+    assert any("differs from its original" in f for f in check()["failures"])
     _launch(tmp_path, "qwen3vl_32b", "a4_run", context={"shard": 0, "n_shards": 4}, stamp="9")
-    mixed = a8pre.check_a4_model(tmp_path, "qwen3vl_32b", "qwen3vl", weights, manifest, design_hash, run)
-    assert "shard counts" in mixed["failures"][0]
+    assert "shard counts" in check()["failures"][0]
+
+
+def test_an_interrupted_filter_is_completed_by_a_rerun(tmp_path, monkeypatch):
+    """Review finding 5: a failed write never leaves a shard name empty, and the next run completes it."""
+    from scripts import a4_run as run
+
+    design_hash, manifest = "d" * 64, _a4_manifest()
+    weights = a8_design.load_design()["models"]["qwen3vl_32b"]["weights_dir"]
+    for k in range(3):
+        _launch(tmp_path, "qwen3vl_32b", "a4_run", context={"shard": k, "n_shards": 3}, stamp=str(k))
+    _a8_a4_shards(tmp_path, "qwen3vl", manifest, design_hash, 3, nan_in=1)
+    folder = tmp_path / a8pre.CELLS_A4
+    check = lambda: a8pre.check_a4_model(tmp_path, "qwen3vl_32b", "qwen3vl", weights, manifest, design_hash, run)
+    out = check()
+    real = Path.write_bytes
+
+    def quota_full(self, data):
+        if self.name.endswith(".filtered"):
+            raise OSError("Disk quota exceeded")
+        return real(self, data)
+
+    monkeypatch.setattr(Path, "write_bytes", quota_full)
+    with pytest.raises(OSError):
+        a8pre.filter_in_place(folder, out["non_finite_rows"], out["pending_filter"])
+    monkeypatch.setattr(Path, "write_bytes", real)
+    assert (folder / "cells_qwen3vl_1.jsonl").exists() and (folder / "unfiltered/cells_qwen3vl_1.jsonl").exists()
+    again = check()
+    assert again["failures"] == [] and again["pending_filter"] == ["cells_qwen3vl_1.jsonl"]
+    a8pre.filter_in_place(folder, again["non_finite_rows"], again["pending_filter"])
+    final = check()
+    assert final["failures"] == [] and final["pending_filter"] == [] and final["shards"] == [0, 1, 2]
 
 
 def test_a8_a4_shards_need_a_launcher_record_each(tmp_path):
@@ -1217,26 +1263,105 @@ def test_a8_a4_shards_need_a_launcher_record_each(tmp_path):
     assert "no launcher record with status ok" in out["failures"][0]
 
 
-def test_a8_a4_model_without_a_result_is_set_aside_only_when_out_of_retries(tmp_path):
+def test_a8_a4_set_aside_needs_spent_retries_and_never_overwrites(tmp_path):
     """Dated note 2026-11-09, read per shard: two out-of-memory attempts at the largest GPU count."""
     design = a8_design.load_design()
     folder = tmp_path / a8pre.CELLS_A4
     folder.mkdir(parents=True)
     (folder / "cells_gemma4_0.jsonl").write_text("{}\n")
-
-    def attempt(status, gpus, stamp):
-        _launch(tmp_path, "gemma4_31b", "a4_run", status=status, context={"shard": 0, "n_shards": 2}, stamp=stamp)
-        p = tmp_path / "research/reproduction/a8/gemma4_31b/launch" / f"a4_run_0_2_{stamp}.json"
-        p.write_text(json.dumps(dict(json.loads(p.read_text()), visible_gpus=gpus)))
-
-    attempt("out_of_memory", 4, "1")
-    assert a8pre.a4_models(design, tmp_path) == [("gemma4_31b", "gemma4")]
+    _attempt(tmp_path, "gemma4_31b", "a4_run", "out_of_memory", 4, "1", {"shard": 0, "n_shards": 2})
     with pytest.raises(SystemExit, match="no shard"):
-        a8pre.set_aside(tmp_path, design, "gemma4_31b")
-    attempt("out_of_memory", 4, "2")
-    out = a8pre.set_aside(tmp_path, design, "gemma4_31b")
-    assert out["shards_out_of_retries"] == [0] and (folder / "no_result/cells_gemma4_0.jsonl").exists()
-    assert a8pre.a4_models(design, tmp_path) == []
+        a8pre.set_aside_plan(tmp_path, design, "gemma4_31b")
+    _attempt(tmp_path, "gemma4_31b", "a4_run", "out_of_memory", 4, "2", {"shard": 0, "n_shards": 2})
+    plan = a8pre.set_aside_plan(tmp_path, design, "gemma4_31b")
+    assert plan["shards_out_of_retries"] == [0] and plan["files"] == ["cells_gemma4_0.jsonl"]
+    assert (folder / "cells_gemma4_0.jsonl").exists()  # planning moves nothing
+    done = a8pre.apply_set_aside(tmp_path, plan)
+    assert (folder / "no_result/cells_gemma4_0.jsonl").exists() and set(done["moved_sha256"]) == {"cells_gemma4_0.jsonl"}
+    (folder / "cells_gemma4_0.jsonl").write_text('{"later": 1}\n')
+    with pytest.raises(SystemExit, match="nothing is overwritten"):
+        a8pre.set_aside_plan(tmp_path, design, "gemma4_31b")
+    with pytest.raises(SystemExit, match="not an active A8 model|Unknown|not"):
+        a8pre.set_aside_plan(tmp_path, design, "gemma4_31")
+
+
+def _a4_tree(base, monkeypatch):
+    """Both A8 models eligible for A4 (A1 and A3 Pass, gates passed), the gates file built with provenance,
+    the synthetic manifest, and the input pins switched off (they are tested with the real files elsewhere)."""
+    import a8_a4_gates
+
+    for v in a8_launch.THREAD_VARS:
+        monkeypatch.setenv(v, "1")
+    monkeypatch.setattr(a8_design, "check_data", lambda design, names, root=None: {})
+    monkeypatch.setattr(a8pre.a4pre, "pinned_inputs", lambda path: {})
+    for a8_id, key in (("qwen3vl_32b", "qwen3vl"), ("gemma4_31b", "gemma4")):
+        _gates(base, a8_id, key, True)
+    for summary in (a8_family.A3_SUMMARY, a8_family.A1_SUMMARY):
+        (base / summary).write_text(json.dumps({m: {"vision_dependent": True} for m in ("qwen3vl_32b", "gemma4_31b")}))
+        a8_family.write_provenance(base / summary, [], {})
+    a8_a4_gates.produce(base)
+    (base / a8pre.MANIFEST_A4).parent.mkdir(parents=True, exist_ok=True)
+    import pandas
+
+    pandas.DataFrame(_a4_manifest()).to_csv(base / a8pre.MANIFEST_A4, index=False)
+
+
+def test_a8_a4_prerun_accounts_for_every_eligible_or_launched_model(tmp_path, monkeypatch):
+    """Review finding 1: a model launched for A4 (or eligible for it) without shard files fails the check;
+    it is not silently outside the family."""
+    from scripts import a4_design
+
+    _a4_tree(tmp_path, monkeypatch)
+    for k in range(2):
+        _launch(tmp_path, "qwen3vl_32b", "a4_run", context={"shard": k, "n_shards": 2}, stamp=str(k))
+    _a8_a4_shards(tmp_path, "qwen3vl", _a4_manifest(), a4_design.design_hash(), 2)
+    result = a8pre.check_a4(tmp_path)
+    assert result["members"]["gemma4_31b"] == ["eligible"]
+    assert any("gemma4_31b: eligible for A4 but no a4_run job has started" in f for f in result["failures"])
+    _launch(tmp_path, "gemma4_31b", "a4_run", status="started", context={"shard": 0, "n_shards": 2}, stamp="0")
+    result = a8pre.check_a4(tmp_path)
+    assert any(f.startswith("gemma4_31b: launcher records") for f in result["failures"])
+    deferred = a8pre.check_a4(tmp_path, deferred=["gemma4_31b"], deferral_note="PREREG_A8 dated note")
+    assert any("--deferred, but A4 jobs or cells exist" in f for f in deferred["failures"])
+    assert any("gemma4_31" in f for f in a8pre.check_a4(tmp_path, no_result=["gemma4_31"])["failures"])  # no traceback
+
+
+def test_a8_a4_prerun_moves_files_only_when_everything_else_passes(tmp_path, monkeypatch):
+    """Review findings 2 and 4: the set-aside and the filter happen only on a passing check, a rerun is safe,
+    every record hashes what was moved, and the analysis needs the passing record and those bytes."""
+    from scripts import a4_design
+
+    _a4_tree(tmp_path, monkeypatch)
+    design_hash = a4_design.design_hash()
+    for k in range(2):
+        _launch(tmp_path, "qwen3vl_32b", "a4_run", context={"shard": k, "n_shards": 2}, stamp=str(k))
+    _a8_a4_shards(tmp_path, "qwen3vl", _a4_manifest(), design_hash, 2, nan_in=0)
+    folder = tmp_path / a8pre.CELLS_A4
+    (folder / "cells_gemma4_0.jsonl").write_text('{"partial": true}\n')
+    for stamp in ("1", "2"):
+        _attempt(tmp_path, "gemma4_31b", "a4_run", "out_of_memory", 4, stamp, {"shard": 0, "n_shards": 2})
+    held = a8pre.check_a4(tmp_path, apply_filter=False, no_result=["gemma4_31b"])
+    assert any("--apply_filter" in f for f in held["failures"]) and any("no file was moved" in f for f in held["failures"])
+    assert (folder / "cells_gemma4_0.jsonl").exists() and not (folder / "unfiltered").exists()
+    done = a8pre.check_a4(tmp_path, apply_filter=True, no_result=["gemma4_31b"])
+    assert done["failures"] == [], done["failures"]
+    assert (folder / "no_result/cells_gemma4_0.jsonl").exists() and (folder / "unfiltered/cells_qwen3vl_0.jsonl").exists()
+    assert done["analysed_files"] == [f"results/a8/a4/cells_qwen3vl_{k}.jsonl" for k in range(2)]
+    assert "results/a8/a4/no_result/cells_gemma4_0.jsonl" in done["sha256"]
+    rerun = a8pre.check_a4(tmp_path, apply_filter=True, no_result=["gemma4_31b"])
+    assert rerun["failures"] == [] and "results/a8/a4/no_result/cells_gemma4_0.jsonl" in rerun["sha256"]
+    record = tmp_path / a8_family.A4_PRERUN
+    record.write_text(json.dumps(rerun))
+    a8_family.check_prerun_record(record, a8_family.a4_cells_files(tmp_path), tmp_path)
+    (folder / "cells_qwen3vl_1.jsonl").write_text((folder / "cells_qwen3vl_1.jsonl").read_text() + "\n")
+    with pytest.raises(SystemExit, match="not the file"):
+        a8_family.check_prerun_record(record, a8_family.a4_cells_files(tmp_path), tmp_path)
+    record.write_text(json.dumps({**rerun, "failures": ["x"]}))
+    with pytest.raises(SystemExit, match="did not pass"):
+        a8_family.check_prerun_record(record, a8_family.a4_cells_files(tmp_path), tmp_path)
+    record.unlink()
+    with pytest.raises(SystemExit, match="pre-run check first"):
+        a8_family.check_prerun_record(record, a8_family.a4_cells_files(tmp_path), tmp_path)
 
 
 def test_a8_a2_prerun_reads_the_a8_models_own_inputs(tmp_path):
@@ -1268,18 +1393,60 @@ def test_a8_a2_prerun_reads_the_a8_models_own_inputs(tmp_path):
     assert result["n_rows_not_matching_model"] == 1 and "cells_gemma4_shard1.jsonl" in result["unparseable_lines"]
     assert "geometry.json is missing" in fails
     assert "launcher records" not in fails and "summary" not in fails and "gate input" not in fails
+    assert len(result["analysed_files"]) == 4
     assert not (base / "research/reproduction/vision_gates_gemma4.json").exists()
     (base / a8_family.A1_SUMMARY).write_text('{"changed": true}')
     assert "A8 A1 summary" in " | ".join(a8pre.check_a2(a8_id, base)["failures"])
+    assert "gemma4_31" in a8pre.check_a2("gemma4_31", base)["failures"][0]  # an unknown id is a failure, not a traceback
 
 
-def test_a8_a4_prerun_script_reports_failures_and_writes_its_record(tmp_path, monkeypatch):
-    for v in a8_launch.THREAD_VARS:
-        monkeypatch.delenv(v, raising=False)
-    record = tmp_path / "record.json"
-    assert a8pre.main(["a4", "--record", str(record), "--root", str(tmp_path)]) == 1
-    fails = " | ".join(json.loads(record.read_text())["failures"])
-    assert "single-threaded" in fails and "manifest" in fails and "no model has A4 cells" in fails
+def test_a8_prerun_check_waits_for_the_code_pins_like_every_a8_entry_point():
+    with pytest.raises(SystemExit, match="not pinned"):
+        a8pre.main(["a4"])
+    with pytest.raises(SystemExit, match="not pinned"):
+        a8pre.main(["a2", "--a8_id", "qwen3vl_32b"])
+
+
+def test_a_crashed_gates_job_leaves_no_gate_result_and_does_not_hold_up_the_other_model(tmp_path):
+    """Review finding 3: vision_gates.py saves its file before it loads the model, so a crashed job leaves a
+    file without a verdict. Two such attempts are no gate result (not passed), and the other model goes on."""
+    import a8_a4_gates
+
+    design = a8_design.load_design()
+    _gates(tmp_path, "qwen3vl_32b", "qwen3vl", True)
+    repro = a8_family.repro(tmp_path, "gemma4_31b")
+    repro.mkdir(parents=True, exist_ok=True)
+    (repro / "vision_gates_gemma4.json").write_text(json.dumps({"model": "gemma4", "smoke": False, "stages": {}}))
+    _launch(tmp_path, "gemma4_31b", "gates", status="failed", stamp="1")
+    with pytest.raises(SystemExit, match="not read yet"):  # one failed attempt: the retry decides
+        a8_family.gate_result(design, tmp_path, "gemma4_31b")
+    _launch(tmp_path, "gemma4_31b", "gates", status="failed", stamp="2")
+    assert a8_family.gate_result(design, tmp_path, "gemma4_31b") is False
+    for summary in (a8_family.A3_SUMMARY, a8_family.A1_SUMMARY):
+        (tmp_path / summary).write_text(json.dumps({"qwen3vl_32b": {"vision_dependent": True}}))
+    assert a8_a4_gates.gates(tmp_path)["gemma4"]["g2_g4"] is False
+    for r in a8_family.ROTATIONS:
+        for c in a8_family.CONDITIONS:
+            p = a8_family.merged_path(tmp_path, "qwen3vl_32b", r, c)
+            p.parent.mkdir(parents=True, exist_ok=True)
+            p.write_text("{}")
+    family, excluded = a8_family.a1_family(design, tmp_path)
+    assert family == ["qwen3vl_32b"] and "gemma4_31b" in excluded
+
+
+def test_a_retry_still_in_the_queue_is_not_an_ended_attempt(tmp_path, monkeypatch):
+    """Review finding 6: a started record whose Slurm job is still queued or running has not ended, so the
+    family code waits instead of concluding not tested."""
+    design = a8_design.load_design()
+    _launch(tmp_path, "gemma4_31b", "delivery", status="failed", stamp="1")
+    _launch(tmp_path, "gemma4_31b", "delivery", status="started", stamp="2")
+    p = tmp_path / "research/reproduction/a8/gemma4_31b/launch/delivery_2.json"
+    p.write_text(json.dumps(dict(json.loads(p.read_text()), slurm_job_id="41000001")))
+    monkeypatch.setattr(a8_family, "job_in_queue", lambda job: job == "41000001")
+    with pytest.raises(SystemExit, match="no delivery file from a finished delivery job"):
+        a8_family.delivery_status(design, tmp_path, "gemma4_31b")
+    monkeypatch.setattr(a8_family, "job_in_queue", lambda job: False)  # the job has left the queue: it ended
+    assert a8_family.delivery_status(design, tmp_path, "gemma4_31b") == "not_tested"
 
 
 def test_a4_gates_file_is_written_once_with_provenance(tmp_path):

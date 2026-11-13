@@ -289,6 +289,10 @@ def main(argv: Optional[Sequence[str]] = None) -> Dict[str, Any]:
     record["data_sha256"] = a8_design.check_data(design, [fill(n, ctx) for n in design["data_by_step"].get(args.step, [])])
     if args.step in ("a1_shard", "a2_run", "a4_run"):
         record["eligibility"] = a8_family.eligibility(design, ROOT, args.a8_id, args.step)
+    if args.step == "a4_analyse":
+        # The single A4 analysis runs only on the shard files A8's pre-run check passed (dated note 2026-11-13).
+        record["prerun"] = a8_family.check_prerun_record(ROOT / a8_family.A4_PRERUN, a8_family.a4_cells_files(ROOT), ROOT)
+    record["slurm_job_id"] = os.environ.get("SLURM_JOB_ID")
     usage = pre.parse_quota(pre.subprocess.run(["quota"], capture_output=True, text=True, check=False).stdout)
     pre.check_storage(usage, design["storage_stop"])
     record["rds_usage"] = usage

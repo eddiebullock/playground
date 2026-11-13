@@ -161,6 +161,9 @@ def run(a8_id: str, rest: Sequence[str], base: Path = ROOT) -> None:
     a8_family.check_provenance(a3_path)
     a8_family.check_provenance(a1_path)
     cells, reports, _ = shard_inputs(design, base, a8_id)
+    # The single A2 analysis runs only on the files A8's pre-run check passed (dated note 2026-11-13).
+    a8_family.check_prerun_record(base / a8_family.A2_PRERUN.format(a8_id=a8_id),
+                                  [Path(p) for p in (*cells, *reports)], base)
     target.parent.mkdir(parents=True, exist_ok=True)
     view = write_a1_view(a1_path, a8_id, key, folder)
     an = load_frozen()
