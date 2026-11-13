@@ -54,7 +54,7 @@ We tested three open models: Gemma 4 E4B (`google/gemma-4-E4B-it`), Qwen3-VL-8B 
 
 ### Human data
 
-No new human data were collected. [PENDING: ethics or exemption statement.]
+No new human data were collected, and no participant was contacted. The study used existing data only: the EU-Emotion stimulus set and its published response norms [14], with its creators' permission; 24 CREMA-D clips [26], used only to choose the readout; and the public, de-identified trial-level data of Snoek et al. [19,25] and Liu et al. [60]. No clip, frame or face image appears in the paper or the public repository. [USER: whether the authors' institution required ethics review for this secondary use, and the approval or exemption reference if so.]
 
 **EU-Emotion.** We used 243 silent face clips with six response options per item (five named labels and None of the above), drawn from the 249 face items of the published set [14]. Clips show 21 labels (20 states plus neutral), acted by 17 face actors.
 
@@ -290,8 +290,8 @@ Snoek data are public [25]. Liu et al.'s Experiment II data are public under CC 
 
 ### Code availability
 
-Analysis code, frozen hashes and derived outputs are in the public repository. [PENDING: DOI-granting code archive; clean-checkout reproduction test.]
+Analysis code, frozen hashes and derived outputs are in the public repository. A reproduction script (`scripts/reproduce.py`) checks out the committed tree, reruns every CPU step from public inputs and compares each output with the committed file, and verifies the outputs it cannot rerun (GPU runs, data not in the repository, long simulations) against pinned sha256 values; the clean-checkout tests are reported in `research/reproduction/REPRODUCE.md`. [PENDING: DOI-granting code archive, created by the authors at submission (USER).]
 
 ### Reporting summary
 
-A Nature Portfolio reporting summary is required for this journal and is to be supplied at submission. [PENDING: the summary itself.]
+Further information on research design is available in the Nature Portfolio Reporting Summary linked to this article. <!-- Draft: research/paper/v2/submission/reporting_summary.md; its result-dependent rows are completed after the Phase 3 analyses. -->

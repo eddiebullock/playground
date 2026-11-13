@@ -728,3 +728,10 @@ research/scripts/a9_manifest.py 9abc55e6c69d06730c120d858cba07c7c975222cbeaae943
 3. R_S is the Spearman-Brown stepped split-half value, as the code computes it.
 4. The analysis runs with single-threaded BLAS, and library versions are recorded with the run.
 5. Before the single run, every scored shard of each model must be present and complete, with each planned cell once, status ok and the frozen design hash, and every input must match its pin; a check script for A9, built like `research/scripts/a4_prerun_check.py` on A9's own plan, is written before any A9 cell exists (written the same day: `research/scripts/a9_prerun_check.py`, which also requires A4's summary to exist with A4's design hash, and reads A9's gates from the scripted `research/reproduction/a4_gates.json`). The Holm family stays as stated in the design: a model of A4's family that is never scored on A9 is reported as not run.
+
+### 2026-11-13, pre-data: scored runs submitted before the timing smokes; replication rule (ii) checked before the run
+
+No A9 cell, smoke or scored, existed when either point below was settled. Design, thresholds and hashes are unchanged.
+
+1. **Order of checklist step 4.** Step 4 orders a timing smoke, then the scored run. The scored arrays were submitted on 2026-11-13 at about 03:19, before either smoke had run (Gemma 4 40863756, Qwen3-VL 40863757). The reason was the queue: the shared `gpu2` limit is 32 GPUs for all SL3 users, and with a fair share of 0 each new submission waits days. The smokes are older and shorter, so the scheduler still reaches them first. Their timing is now used only to lower the scored tasks' time limit, never to raise it, or to cancel the scored arrays and resubmit them with a longer cap before any task starts (DECISIONS 2026-11-13).
+2. **Replication rule (ii) is checked before the single run.** `research/scripts/a9_prerun_check.py` now refuses unless A4's run note (`research/reproduction/a4_run_note.json`) is complete and records, for `results/a4/summary.json`, the sha256 of the summary A9 reads. Before this, a different A4 summary would have been found only in the analysis output, after the single run.

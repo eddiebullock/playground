@@ -49,6 +49,7 @@ The journal asks for every deviation with its rationale. Each is logged in the a
 | A8 | 2026-11-09 | A step with an incomplete output after two out-of-memory attempts counts as no result for that model (before any A8 output) | `research/PREREG_A8_DRAFT.md`, Dated notes |
 | A9 | 2026-11-09 | Lead decision 8, taken before the freeze but after recovery run 2 was seen: decisions stay confirmatory, the weak-effect accuracy claim is withdrawn under face-correlated noise, and the replaced rule's reading is reported beside each decision. Before the freeze, so not a deviation from the frozen text; disclosed because of its timing | `research/PREREG_A9_DRAFT.md`, lead decisions; DECISIONS 2026-11-09 |
 | A9 | 2026-11-12 | Status note (frozen 2026-11-09, tag governs) and the A4 pre-data rulings carried over to the A4 functions A9 imports. No code or hash changed | `research/PREREG_A9_DRAFT.md`, Deviations, 2026-11-12 |
+| A9 | 2026-11-13 | Scored runs submitted before the timing smokes ran, against checklist step 4's order, to gain queue age; the smokes still run first and only lower the scored time limit. The pre-run check now enforces replication rule (ii). No code or hash changed | `research/PREREG_A9_DRAFT.md`, Deviations, 2026-11-13; DECISIONS 2026-11-13 |
 
 ## Notes
 
