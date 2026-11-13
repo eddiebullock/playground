@@ -16,6 +16,7 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
    - One A8-specific choice: A8's hashed command fixes the A4 cells folder, so non-finite rows are filtered in place, with the originals kept unchanged in a subfolder the analysis does not read.
    - It is pre-data with no hash change. If you prefer another reading, it can still change before A8's code-pin step.
    - An independent review of the night's A8 code then found real problems, all now fixed. One was a regression I had introduced. The addendum at the end of the A8 prereg lists them.
+   - A8's next step is its code pins (Freeze checklist item 2). I have left that until you have looked at this item and the equivalence job has run.
 
 **Cluster: nothing of ours started overnight, and nothing failed.**
 - Every job is pending on priority, and Slurm gives no start estimate:
@@ -26,8 +27,8 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
   - A9 smokes: 40843619, 40843620
   - A9 scored runs: 40863756, 40863757
 - Why they wait:
-  - The free tier's `gpu2` QoS is capped at 32 GPUs for all SL3 users together; 24 were in use at 05:22.
-  - Our fair share is 0, so our priority grows only with age, about 1.5 a hour. Our oldest jobs are at 199.
+  - The free tier's `gpu2` QoS is capped at 32 GPUs for all SL3 users together; 24 were in use at 06:54.
+  - Our fair share is 0, so our priority grows only with age, about 1.5 a hour. Our oldest jobs were at 201 at 06:54.
   - About 1,260 `gpu2` tasks with higher priority were waiting at 05:22.
   - Our past starts all came from backfill.
   - The `gpu2` jobs running at 06:20 had waited 26 to 37 h. Ours have waited about 68 h.
@@ -43,7 +44,11 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
   - Timing smokes and scored runs submitted. The scored runs went in before their smokes ran, to gain queue age; nothing was read (DECISIONS 2026-11-13).
   - A9's pre-run check now enforces replication rule (ii).
 - **A7 Stage 1:** added to the Phase 3 runbook, with its own pre-run check.
-- **A8:** an audit of its path from launch to paper found three faults in A8's own code. The worst: the natural-clip step could never have finished. All three are fixed with tests, before A8's code is pinned. I also wrote the dated note in item 5, an A8 pre-run check and an A8 runbook (ROADMAP Part 3).
+- **A8:**
+  - An audit of its path from launch to paper found three faults in A8's own code. The worst: the natural-clip step could never have finished. All three are fixed with tests, before A8's code is pinned.
+  - I also wrote the dated note in item 5, an A8 pre-run check, an A8 runbook (ROADMAP Part 3) and a `pull a8` command.
+  - An independent review of that code found more problems, now fixed (DECISIONS 2026-11-13).
+  - The pending equivalence job (40399722) runs from its own copy of the A8 sharding code. That copy is byte-identical to the code to be pinned, so its result will count.
 - **Phase 3 rehearsal:** run end to end on synthetic cells for A4, A9 and A7. A4's real analysis should take minutes.
 - **Found and fixed before any data:**
   - A8's `a4_analyse` step could not have run. The Snoek archive is now on the cluster at its pinned hash.
@@ -52,7 +57,7 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
   - Independent draft review (41 findings) applied, except citation renumbering (left for the pre-submission pass) and item 11.
   - Results sections 5, 6, 7, 9 and 10 and the Discussion drafted for every outcome, before any of their data.
   - Table 1 and the A7 Stage 0 table built.
-  - Deviations table, 76 rows.
+  - Deviations table, 80 rows.
   - Submission pack: software versions, ethics draft, code availability.
 - **Checks:**
   - Full test suite at `39c6f72`: 1,096 passed, 26 skipped, 0 failed (06:53).
