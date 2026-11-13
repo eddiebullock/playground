@@ -40,7 +40,7 @@ This file holds the full text moved from Methods on 2026-11-09, with no change o
 
 **Cue scores (continued).** AU intensities came from LibreFace [27], and per-AU occurrence outputs from OpenFace 3.0 [28], used as continuous scores, on the frames models saw; which AUs it outputs is taken from its code, since the paper does not list them. A family score is the mean of its members' z-scores, rescaled to unit variance.
 
-**Model fit (continued).** Ridge strength is frozen at the human value, 10. A category intercept absorbs the label prior and the foils offered.
+**Model fit (continued).** Ridge strength is frozen at the human value, 10. A category intercept absorbs the label prior and the foils offered. On the human side the family pattern is a small refinement on category: on the model-frames route it lowers the held-out cross-entropy of human responses by 0.38% relative to category alone (.25860 against .25958; 0.61% on all frames), and recovery's human-like observers were calibrated to that gain (`research/reproduction/same_clip_family.json`; RESULTS_REGISTRY, "Rows added 2026-11-12, late"). The pattern score therefore compares a model with a weak within-category human signal, which is why its power was checked at 0.5 to 2 times that signal.
 
 **Model responses (continued).** A clip needs a usable response on all five rotations. This route uses A1's composite-grid rotations, so its reading depends on RQ0.
 
