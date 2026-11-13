@@ -171,7 +171,7 @@ Watch storage at each step. The file count runs at about 996k of 1,048,576. Cell
 *Local queue status, 2026-11-13 06:20.*
 - Items 1 to 3, 5 and 6 are done. Item 7 is done: full suite at `3e0c5f0`, and clean-checkout reproduction at `5d1ffd5` (43 rebuilt, 112 hash-verified, 0 failed).
 - Item 4 is done. The A8 audit found three faults in A8's own code, now fixed before the code pins, and A2's and A4's rulings are now carried over to A8 by a dated note (both in DECISIONS 2026-11-13). The runbook is below.
-- Still open from that audit: a `pull a8` command in `post_phase3.py`, provenance for `a8_a4_gates.py` and `a8_analyse_a2.py`, and gate files read with their launcher records.
+- Two minor items from that audit are done: provenance for `a8_a4_gates.py` and `a8_analyse_a2.py`, and gate and delivery files read only from jobs that ended ok. Still open: a `pull a8` command in `post_phase3.py`, needed only after A8 runs.
 
 **A8 runbook** (written 2026-11-13; it runs once the queue rule in A8's block allows: both Qwen A1 arrays and the Phase 2 runs COMPLETED). Each cluster step runs through `slurm_jobs/a8_job.sh` with `STEP` and `A8_ID`. The CPU steps may use `-A BARON-COHEN-SL3-CPU -p icelake --gres=none`.
 

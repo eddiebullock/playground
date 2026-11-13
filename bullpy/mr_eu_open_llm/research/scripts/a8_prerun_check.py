@@ -298,6 +298,8 @@ def check_a4(base: Path = ROOT, apply_filter: bool = False, no_result: Sequence[
     try:
         if not gates.exists() or json.loads(gates.read_text(encoding="utf-8")) != a8_a4_gates.gates(base):
             failures.append(f"{GATES_A4} missing or not what a8_a4_gates.py builds from A8's outputs")
+        else:
+            a8_family.check_provenance(gates)
     except (OSError, ValueError, SystemExit) as exc:
         failures.append(f"{GATES_A4}: {exc}")
     manifest_path = base / MANIFEST_A4

@@ -616,3 +616,17 @@ New: `research/scripts/a8_prerun_check.py`, with subcommands `a2 --a8_id <id>` a
 - Tests: `tests/test_a8.py` 64 passed, 1 skipped, and `tests/test_a2_declared.py` passes.
 
 The script is listed in A8's Code table, so it is pinned at the code-pin step. So are the two pre-run check modules it loads and `a2_declared_extras.py`. Nothing read; block hash `95dd41b5` unchanged.
+
+## 2026-11-13: A8's gate, delivery and provenance handling brought in line with its block (no design change)
+
+These are the two minor findings left open by the A8 audit (entry above). Both are fixed in A8's own, still unpinned, code before any A8 output exists.
+
+- **Gate and delivery files are read only from jobs that ended ok.** Block rule `inputs_from_launched_jobs` says model outputs are read only when a launcher record with status ok and the design's weights exists for the job that wrote them. The A3 family, the A1 family, the launcher's eligibility check and the A4 gates builder read gate and delivery files without that record, so a file left by a failed job could have been read as a result.
+  - They now go through `a8_family.gate_result` and `delivery_status`.
+  - Two failed attempts with no file (rule `not_tested_after_retry`), or a file left by two out-of-memory attempts at the largest GPU count (dated note 2026-11-09), mean no result. For gates, no result counts as not passed.
+  - In any other case the caller waits.
+- **Provenance for the last two producers.** `PREREG_A8_DRAFT.md` ("Analyses outside the launcher") says `a8_a4_gates.py` and `a8_analyse_a2.py` each write a provenance file that the next consumer checks; neither did.
+  - Both now write one.
+  - A8's A4 pre-run check verifies the gates file's provenance.
+
+Tests: `tests/test_a8.py` 66 passed, 1 skipped. Nothing read; block hash `95dd41b5` unchanged. Still open: a `pull a8` command in `post_phase3.py`. It is needed only after A8's jobs run; the order of steps is in the ROADMAP's A8 runbook.

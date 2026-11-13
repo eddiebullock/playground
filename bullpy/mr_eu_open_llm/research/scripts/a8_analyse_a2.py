@@ -162,12 +162,23 @@ def run(a8_id: str, rest: Sequence[str], base: Path = ROOT) -> None:
     a8_family.check_provenance(a1_path)
     cells, reports, _ = shard_inputs(design, base, a8_id)
     target.parent.mkdir(parents=True, exist_ok=True)
-    write_a1_view(a1_path, a8_id, key, folder)
+    view = write_a1_view(a1_path, a8_id, key, folder)
     an = load_frozen()
     sha = hashlib.sha256(a3_path.read_bytes()).hexdigest()
     loader = a3_loader(a3_path, sha, lambda s: {key: s[a8_id]} if a8_id in s else {})
     argv = ["--model", key, "--reproduction", str(folder), "--cells", *cells, "--run_report", *reports, *rest]
     run_frozen_main(an, argv, loader)
+    if not target.exists():
+        raise SystemExit(f"The frozen analysis wrote no {known.output}.")
+    # Provenance (PREREG_A8_DRAFT.md, "Analyses outside the launcher"): output and input hashes, checked by
+    # the next consumer and after the pull.
+    inputs = [Path(p) for p in (*cells, *reports)] + [a3_path, a1_path, view, folder / f"vision_gates_{key}.json",
+                                                       folder / f"input_delivery_{key}.json"]
+    a8_family.write_provenance(target, [p for p in inputs if p.exists()], {
+        "a8_id": a8_id, "key": key, "frozen_argv": [str(a) for a in argv],
+        "wrapper_sha256": a8_design.file_sha256(Path(__file__).resolve()),
+        "design_sha256": a8_design.block_hash(),
+    })
 
 
 def main(argv: Optional[Sequence[str]] = None) -> None:

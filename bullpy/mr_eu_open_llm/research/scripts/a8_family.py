@@ -118,19 +118,53 @@ def oom_retries_spent(base: Path, a8_id: str, step: str, context: Mapping[str, A
     return sum(r.get("visible_gpus") == top and r.get("status") == "out_of_memory" for r in records) >= 2
 
 
+def _no_result(base: Path, a8_id: str, step: str, path: Path) -> bool:
+    """Rule not_tested_after_retry (two attempts, none ok, no output file), or the dated note of 2026-11-09
+    (a file left by two out-of-memory attempts at the largest GPU count): no result for this step."""
+    return (not path.exists() and not_tested(base, a8_id, step)) or (path.exists() and oom_retries_spent(base, a8_id, step))
+
+
+def gate_result(design: Mapping[str, Any], base: Path, a8_id: str) -> bool:
+    """G2 to G4 for one A8 model. The gate file is read only when a gates job ended ok with the design's
+    weights (block rule inputs_from_launched_jobs). No result after a retry is not passed (rule
+    not_tested_after_retry); a job not yet ended ok makes the caller wait."""
+    entry = design["models"][a8_id]
+    key = entry["code_key"]
+    if any(r.get("status") == "ok" for r in launch_records(base, a8_id, "gates")):
+        ok_record(base, a8_id, "gates", entry["weights_dir"])
+        return gates_passed(base, a8_id, key)
+    if _no_result(base, a8_id, "gates", repro(base, a8_id) / f"vision_gates_{key}.json"):
+        return False
+    raise SystemExit(f"{a8_id}: no gates job has ended ok, so its gate file is not read yet.")
+
+
+def delivery_status(design: Mapping[str, Any], base: Path, a8_id: str) -> str:
+    """'passed' or 'failed' from a delivery job that ended ok with the design's weights, or 'not_tested'
+    after a retry (rule not_tested_after_retry); a job not yet ended ok makes the caller wait."""
+    entry = design["models"][a8_id]
+    key = entry["code_key"]
+    if any(r.get("status") == "ok" for r in launch_records(base, a8_id, "delivery")):
+        ok_record(base, a8_id, "delivery", entry["weights_dir"])
+        delivered = single_face_delivery(base, a8_id, key)
+        if delivered is None:
+            raise SystemExit(f"{a8_id}: the delivery job ended ok but wrote no delivery file.")
+        return "passed" if delivered else "failed"
+    if _no_result(base, a8_id, "delivery", repro(base, a8_id) / f"input_delivery_{key}.json"):
+        return "not_tested"
+    raise SystemExit(f"{a8_id} has no delivery file from a finished delivery job; the A3 family cannot be set yet.")
+
+
 def a3_family(design: Mapping[str, Any], base: Path, check_launch: bool = True) -> Tuple[List[Tuple[str, Path]], Dict[str, str]]:
     """(name, cells file) for the A3 family, in block order, and the excluded with reasons."""
     family, excluded = [], {}
     for a8_id in a8_design.active_models(design):
         entry = design["models"][a8_id]
         key = entry["code_key"]
-        delivered = single_face_delivery(base, a8_id, key)
-        if delivered is None:
-            if not_tested(base, a8_id, "delivery"):
-                excluded[a8_id] = "delivery job did not finish after one retry: single_face delivery failed, not tested"
-                continue
-            raise SystemExit(f"{a8_id} has no delivery file; the A3 family cannot be set yet.")
-        if not delivered:
+        status = delivery_status(design, base, a8_id)
+        if status == "not_tested":
+            excluded[a8_id] = "delivery job did not finish after one retry: single_face delivery failed, not tested"
+            continue
+        if status == "failed":
             excluded[a8_id] = "single_face delivery failed: not tested (PREREG_A3_DRAFT.md, Preconditions)"
             continue
         path = a3_cells_path(base, a8_id, key)
@@ -155,10 +189,9 @@ def a1_family(design: Mapping[str, Any], base: Path) -> Tuple[List[str], Dict[st
         raise SystemExit(f"{A3_SUMMARY} does not exist; the A1 family needs the A3 result.")
     family, excluded = [], {}
     for a8_id in a8_design.active_models(design):
-        key = design["models"][a8_id]["code_key"]
         files = [merged_path(base, a8_id, r, c) for r in ROTATIONS for c in CONDITIONS]
         present = [p for p in files if p.exists()]
-        runs = gates_passed(base, a8_id, key) and (a3.get(a8_id) or {}).get("vision_dependent") is True
+        runs = gate_result(design, base, a8_id) and (a3.get(a8_id) or {}).get("vision_dependent") is True
         if runs:
             if len(present) != len(files):
                 raise SystemExit(f"{a8_id} is in the A1 family but has {len(present)} of {len(files)} merged files.")
@@ -246,11 +279,10 @@ def check_provenance(output: Path) -> Dict[str, Any]:
 
 def eligibility(design: Mapping[str, Any], base: Path, a8_id: str, step: str) -> Dict[str, Any]:
     """Design rule eligibility_checked_by_launcher, by the frozen rules, from A8 files only."""
-    key = design["models"][a8_id]["code_key"]
     a3_path = base / A3_SUMMARY
     check_provenance(a3_path)
     a3 = (json.loads(a3_path.read_text(encoding="utf-8")).get(a8_id) or {}).get("vision_dependent")
-    decision: Dict[str, Any] = {"step": step, "g2_g4": gates_passed(base, a8_id, key), "a3": a3}
+    decision: Dict[str, Any] = {"step": step, "g2_g4": gate_result(design, base, a8_id), "a3": a3}
     if step == "a1_shard":
         decision["eligible"] = decision["g2_g4"] and a3 is True
     elif step in ("a2_run", "a4_run"):
@@ -263,7 +295,10 @@ def eligibility(design: Mapping[str, Any], base: Path, a8_id: str, step: str) ->
         decision["rq0_single_face"] = rq0_status(a1, a3, "single_face")
         decision["eligible"] = decision["g2_g4"] and decision["rq0_single_face"]
         if step == "a2_run":
-            decision["single_face_delivery"] = single_face_delivery(base, a8_id, key) is True
+            try:
+                decision["single_face_delivery"] = delivery_status(design, base, a8_id) == "passed"
+            except SystemExit:  # no finished delivery job: not passed, so the model is refused below
+                decision["single_face_delivery"] = False
             decision["eligible"] = decision["eligible"] and decision["single_face_delivery"]
     else:
         raise SystemExit(f"No eligibility rule for {step}.")

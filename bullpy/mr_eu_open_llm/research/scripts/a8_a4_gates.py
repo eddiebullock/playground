@@ -15,7 +15,7 @@ import json
 import os
 import sys
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any, Dict, List
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
@@ -36,22 +36,41 @@ def gates(base: Path) -> Dict[str, Dict[str, Any]]:
             "a8_id": a8_id,
             "a1_passed": (a1.get(a8_id) or {}).get("vision_dependent"),
             "a3_passed": (a3.get(a8_id) or {}).get("vision_dependent"),
-            "g2_g4": a8_family.gates_passed(base, a8_id, key),
+            "g2_g4": a8_family.gate_result(design, base, a8_id),
         }
     return out
+
+
+def gate_inputs(base: Path) -> List[Path]:
+    """The files `gates` reads: both A8 summaries and each active model's gate file."""
+    design = a8_design.load_design()
+    files = [base / a8_family.A3_SUMMARY, base / a8_family.A1_SUMMARY]
+    files += [a8_family.repro(base, m) / f"vision_gates_{design['models'][m]['code_key']}.json"
+              for m in a8_design.active_models(design)]
+    return [p for p in files if p.exists()]
+
+
+def produce(base: Path) -> Path:
+    """The gates file, written once, with its provenance (PREREG_A8_DRAFT.md, "Analyses outside the
+    launcher"), which A8's A4 pre-run check verifies."""
+    a8_family.check_provenance(base / a8_family.A3_SUMMARY)
+    a8_family.check_provenance(base / a8_family.A1_SUMMARY)
+    path = base / OUTPUT
+    if path.exists():
+        raise SystemExit(f"{path} exists.")
+    path.write_text(json.dumps(gates(base), indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    a8_family.write_provenance(path, gate_inputs(base), {
+        "wrapper_sha256": a8_design.file_sha256(Path(__file__).resolve()),
+        "design_sha256": a8_design.block_hash(),
+    })
+    return path
 
 
 def main() -> Path:
     root = a8_design.ROOT
     os.chdir(root)
     a8_design.check_own_code(require=True)
-    a8_family.check_provenance(root / a8_family.A3_SUMMARY)
-    a8_family.check_provenance(root / a8_family.A1_SUMMARY)
-    path = root / OUTPUT
-    if path.exists():
-        raise SystemExit(f"{path} exists.")
-    path.write_text(json.dumps(gates(root), indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    return path
+    return produce(root)
 
 
 if __name__ == "__main__":

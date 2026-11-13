@@ -72,8 +72,11 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
   - Also: A8's A4 analysis now runs single-threaded, as A4's does.
   - **A2's and A4's rulings of 2026-11-12 carried over to A8** by a dated note, pre-data, with the block hash unchanged (`95dd41b5`). A new `research/scripts/a8_prerun_check.py` applies them to A8's own inputs.
   - **A8 runbook** written (ROADMAP Part 3).
-  - Still open: `pull a8`, plus two minor items.
-  - Tests: `tests/test_a8.py` 64 passed, 1 skipped; `tests/test_a2_declared.py` passes.
+  - The two minor items are done too, with the block hash unchanged:
+    - gate and delivery files are read only from jobs that ended ok;
+    - the gates file and the A2 output carry provenance.
+  - Still open: `pull a8`, needed only after A8 runs.
+  - Tests: `tests/test_a8.py` 66 passed, 1 skipped; `tests/test_a2_declared.py` passes.
 - **Paper.** The Figure 5 and 6 markers now say their functions exist and wait only on data, and the Figure 6 legend names the fill-rule input.
 
 **2026-11-13 05:35:** Queue unchanged at 05:22: nothing started or failed. Priority is 199 for the oldest jobs (age 99, fair share 0), and `gpu2` had 24 of its 32 GPUs in use. RDS 1,067.4 GB, 991,082 files. Morning hand-off written at the top of this file. ROADMAP local item 4 is under way: a read-only audit of A8's pull and analysis path against its launcher.

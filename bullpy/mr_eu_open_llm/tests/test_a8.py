@@ -622,17 +622,23 @@ def test_a1_equivalence_on_qwen3vl_8b_gpu():
 # Families -------------------------------------------------------------------
 
 
-def _delivery(base, a8_id, key, passed):
+def _delivery(base, a8_id, key, passed, launched=True):
+    """A delivery file and, by default, the ok launcher record of the job that wrote it (inputs_from_launched_jobs)."""
     folder = a8_family.repro(base, a8_id)
     folder.mkdir(parents=True, exist_ok=True)
     (folder / f"input_delivery_{key}.json").write_text(json.dumps({"verdicts": {"single_face": {"pass": passed}}}))
+    if launched:
+        _launch(base, a8_id, "delivery", stamp="d")
 
 
-def _gates(base, a8_id, key, passed):
+def _gates(base, a8_id, key, passed, launched=True):
+    """A gate file and, by default, the ok launcher record of the job that wrote it (inputs_from_launched_jobs)."""
     folder = a8_family.repro(base, a8_id)
     folder.mkdir(parents=True, exist_ok=True)
     verdict = {g: {"pass": passed} for g in ("G2", "G3", "G4")}
     (folder / f"vision_gates_{key}.json").write_text(json.dumps({"smoke": False, "verdict": verdict}))
+    if launched:
+        _launch(base, a8_id, "gates", stamp="g")
 
 
 def _launch(base, a8_id, step, status="ok", context=None, weights=None, stamp="0"):
@@ -1066,6 +1072,8 @@ def test_a2_production_path_gives_the_frozen_output_byte_for_byte(tmp_path, monk
     _launch(tmp_path, "gemma4_31b", "delivery")
     a2w.run("gemma4_31b", [*common, "--output", str(wrapped)], base=tmp_path)
     assert json.loads((folder / "rotation_summary.json").read_text()) == {"gemma4": {"vision_dependent": True}}
+    record = a8_family.check_provenance(wrapped)  # the prereg's provenance file, checked as the next consumer would
+    assert record["a8_id"] == "gemma4_31b" and len(record["inputs_sha256"]) == 3 + 3 + 5
 
     # The frozen analysis, frozen loader, on the same folder with the pinned A3 file in it.
     shutil.copy(frozen_a3, folder / frozen_a3.name)
@@ -1272,3 +1280,62 @@ def test_a8_a4_prerun_script_reports_failures_and_writes_its_record(tmp_path, mo
     assert a8pre.main(["a4", "--record", str(record), "--root", str(tmp_path)]) == 1
     fails = " | ".join(json.loads(record.read_text())["failures"])
     assert "single-threaded" in fails and "manifest" in fails and "no model has A4 cells" in fails
+
+
+def test_a4_gates_file_is_written_once_with_provenance(tmp_path):
+    """PREREG_A8_DRAFT.md: the gates file A4 reads carries a provenance file that the next consumer checks."""
+    import a8_a4_gates
+
+    (tmp_path / "research/reproduction/a8").mkdir(parents=True)
+    for summary in (a8_family.A3_SUMMARY, a8_family.A1_SUMMARY):
+        (tmp_path / summary).write_text(json.dumps({"qwen3vl_32b": {"vision_dependent": True}}))
+        a8_family.write_provenance(tmp_path / summary, [], {})
+    _gates(tmp_path, "qwen3vl_32b", "qwen3vl", True)
+    with pytest.raises(SystemExit, match="no gates job has ended ok"):  # gemma4_31b's gates job has not ended
+        a8_a4_gates.produce(tmp_path)
+    assert not (tmp_path / a8_a4_gates.OUTPUT).exists()  # nothing written when the build refuses
+    _gates(tmp_path, "gemma4_31b", "gemma4", False)
+    path = a8_a4_gates.produce(tmp_path)
+    record = a8_family.check_provenance(path)
+    assert len(record["inputs_sha256"]) == 4  # two summaries and the two gate files
+    with pytest.raises(SystemExit, match="exists"):
+        a8_a4_gates.produce(tmp_path)
+    (tmp_path / a8_family.A1_SUMMARY).write_text("{}")
+    with pytest.raises(SystemExit, match="changed"):
+        a8_family.check_provenance(path)
+
+
+def test_gate_and_delivery_files_are_read_only_from_jobs_that_ended_ok(tmp_path):
+    """Block rule inputs_from_launched_jobs for gate and delivery files: a file with no ok job behind it is
+    not read; two failed attempts with no file (not_tested_after_retry), or a file left by two out-of-memory
+    attempts at the largest GPU count (dated note 2026-11-09), mean no result; otherwise the caller waits."""
+    design = a8_design.load_design()
+    _gates(tmp_path, "qwen3vl_32b", "qwen3vl", True, launched=False)
+    _delivery(tmp_path, "qwen3vl_32b", "qwen3vl", True, launched=False)
+    with pytest.raises(SystemExit, match="no gates job has ended ok"):
+        a8_family.gate_result(design, tmp_path, "qwen3vl_32b")
+    with pytest.raises(SystemExit, match="no delivery file from a finished delivery job"):
+        a8_family.delivery_status(design, tmp_path, "qwen3vl_32b")
+
+    def attempt(step, status, gpus, stamp):
+        _launch(tmp_path, "qwen3vl_32b", step, status=status, stamp=stamp)
+        p = tmp_path / "research/reproduction/a8/qwen3vl_32b/launch" / f"{step}_{stamp}.json"
+        p.write_text(json.dumps(dict(json.loads(p.read_text()), visible_gpus=gpus)))
+
+    for stamp in ("1", "2"):
+        attempt("gates", "out_of_memory", 2, stamp)
+        attempt("delivery", "out_of_memory", 2, stamp)
+    assert a8_family.gate_result(design, tmp_path, "qwen3vl_32b") is False  # a file left by spent retries: not passed
+    assert a8_family.delivery_status(design, tmp_path, "qwen3vl_32b") == "not_tested"
+    _launch(tmp_path, "qwen3vl_32b", "gates", stamp="3")
+    _launch(tmp_path, "qwen3vl_32b", "delivery", stamp="3")
+    assert a8_family.gate_result(design, tmp_path, "qwen3vl_32b") is True
+    assert a8_family.delivery_status(design, tmp_path, "qwen3vl_32b") == "passed"
+    for name in ("gates", "delivery"):  # two plain failures and no file: not tested, as the frozen rule says
+        _launch(tmp_path, "gemma4_31b", name, status="failed", stamp="1")
+        _launch(tmp_path, "gemma4_31b", name, status="started", stamp="2")
+    assert a8_family.gate_result(design, tmp_path, "gemma4_31b") is False
+    assert a8_family.delivery_status(design, tmp_path, "gemma4_31b") == "not_tested"
+    _launch(tmp_path, "gemma4_31b", "gates", stamp="3", weights="/home/eb2007/rds/hpc-work/study2/models/gemma4")
+    with pytest.raises(SystemExit, match="loaded"):
+        a8_family.gate_result(design, tmp_path, "gemma4_31b")
