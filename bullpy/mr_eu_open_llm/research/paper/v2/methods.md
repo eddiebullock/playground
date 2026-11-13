@@ -54,7 +54,7 @@ We tested three open models: Gemma 4 E4B (`google/gemma-4-E4B-it`), Qwen3-VL-8B 
 
 ### Human data
 
-No new human data were collected, and no participant was contacted. The study used existing data only: the EU-Emotion stimulus set and its published response norms [14], with its creators' permission; 24 CREMA-D clips [26], used only to choose the readout; and the public, de-identified trial-level data of Snoek et al. [19,25] and Liu et al. [60]. No clip, frame or face image appears in the paper or the public repository. [USER: whether the authors' institution required ethics review for this secondary use, and the approval or exemption reference if so.]
+No new human data were collected, and no participant was contacted. The study used existing data only: the EU-Emotion stimulus set and its published response norms [14], with its creators' permission; 24 CREMA-D clips [26], used only to choose the readout; and the public, de-identified trial-level data of Snoek et al. [19,25] and Liu et al. [60]. No clip, frame or face image appears in the paper or the public repository. Because the study recruited no participants and used only these existing materials, under their permission or licence terms, it did not require separate ethical approval. [USER, provisional 2026-11-13: confirm with the institution before submission, and add the exemption reference if one is issued.]
 
 **EU-Emotion.** We used 243 silent face clips with six response options per item (five named labels and None of the above), drawn from the 249 face items of the published set [14]. Clips show 21 labels (20 states plus neutral), acted by 17 face actors.
 

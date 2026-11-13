@@ -63,7 +63,7 @@ For all statistical analyses, confirm the following are given in the figure lege
 | Reporting on race, ethnicity or other socially relevant groupings | Snoek observers were Western (WC) and East Asian (EA) groups, each shown faces of their own ethnicity (Methods, Human data [19]). A4's EA avatar faces are approximate and not based on East Asian people (Methods) |
 | Population characteristics | Not applicable for new data. For secondary data, see the source papers [14,19,26] |
 | Recruitment | Not applicable. No recruitment |
-| Ethics oversight | [USER: the ethics or exemption statement; its slot in methods.md is PENDING. Name the body that approved or exempted the secondary analysis, if any] |
+| Ethics oversight | No ethical approval was required. The study recruited no participants and used only existing stimulus sets, under their creators' permission or licence terms, and existing de-identified response data (Methods, Human data). [USER, provisional 2026-11-13: confirm with the institution before submission; name the body if it issues an exemption] |
 
 ## Field-specific reporting
 
@@ -92,7 +92,7 @@ Select: **Behavioural and social sciences**. [USER: confirm. The study could als
 
 ## Open items
 
-1. [USER] Ethics or exemption statement.
+1. [USER] Ethics: a provisional statement is in Methods (Human data) and above, written 2026-11-13 on the user's instruction. Confirm it with the institution before submission.
 2. [USER] Whether tagged commits count as preregistration for the journal, or whether to deposit the amendments on a registry such as OSF.
 3. [USER] Create the Zenodo DOI.
 4. [PENDING] All result-dependent rows, after ROADMAP phases 1 to 3.

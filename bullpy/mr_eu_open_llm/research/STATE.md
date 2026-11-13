@@ -2,9 +2,9 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-11-13 09:25 Europe/London
+**Updated:** 2026-11-13 09:55 Europe/London
 
-## Hand-off, 2026-11-13 (written 05:35, last refreshed 09:25)
+## Hand-off, 2026-11-13 (written 05:35, last refreshed 09:55)
 
 **Done this morning on your instructions (about 09:15):**
 - **Item 10: your notes file is off the public branch.**
@@ -13,9 +13,10 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
   - Your local `notes/notes.txt` is unchanged.
   - The old history is kept on your Mac only, in the local branch `backup/p1-pipeline-before-notes-removal`.
 - **Item 11:** [1] recoded to "no" on option sets. Figure 1 rebuilt (DECISIONS 2026-11-13).
+- **Ethics:** you said the ethics position is fine, so Methods ("Human data") and the reporting summary now carry the recommended statement. It says no separate ethical approval was required, because the study recruited no participants and used only existing materials under their permission or licence terms. It is marked provisional, for you to confirm before submission.
 
 **Only you can do these** (details in `research/NEEDS_INPUT.md`):
-1. Ethics wording: one [USER] marker in `paper/v2/methods.md` ("Human data"). It asks whether your institution required ethics review for this secondary use of existing data, and for the reference if so.
+1. Later, before submission: confirm the provisional ethics statement with your institution (Methods, "Human data"; reporting summary; NEEDS_INPUT 9).
 2. At submission (item 9): the Zenodo DOI for the code; an OSF deposit of the tagged preregistrations, if wanted; authors and affiliations. The Snoek group's reply is still awaited (item 8). Nothing waits on it.
 3. Optional (item 10): GitHub keeps the old commits reachable by their IDs until it purges them. To remove them sooner, ask GitHub Support.
 4. To review, not urgent: a reading decision I made overnight for A8 (dated note at the end of `research/PREREG_A8_DRAFT.md`; DECISIONS 2026-11-13).
@@ -68,7 +69,7 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
   - Deviations table, 80 rows.
   - Submission pack: software versions, ethics draft, code availability.
 - **Checks:**
-  - Full test suite at `86c0441`: 1,096 passed, 26 skipped, 0 failed (06:53).
+  - Full test suite at `d6dcb93`: 1,096 passed, 26 skipped, 0 failed (09:45). Clean-checkout rerun of the steps changed by the recode at `d6dcb93`: 6 rebuilt and matched, 1 verified by hash, 0 failed.
   - Clean-checkout reproduction at `f4306cb`: 43 rebuilt and matched, 112 verified by hash, 0 failed.
 
 **FYI:** CSD3 `/home` is at 49.8 of 52.4 GB. This project writes nothing there; its jobs write to RDS. The space is in other folders, such as `LEAP3mri`. RDS: 1,067.4 GB of 1,099.5; 991,082 of 1,048,576 files.
@@ -78,6 +79,8 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
 ## Current phase
 
 **Phase 2 runs queued; Phase 3 analyses wait on them.** A1, A3 and natural-clip RQ1 are locked (2026-11-09). Every amendment is frozen or closed: A2, A4, A5, A7, A8 and A9 frozen, A6 closed as a limit. The A2, A4, A7 Stage 1, A8 and A9 GPU jobs are pending on priority. History: the prompt confound found 2026-11-04 withdrew the earlier accuracy and probe results (DECISIONS); Branch B stays as a record only.
+
+**2026-11-13 09:55:** Ethics statement written as recommended, marked provisional, on your instruction (Methods, reporting summary, NEEDS_INPUT 9). Checks at `d6dcb93`: full suite 1,096 passed, 26 skipped, 0 failed. Clean-checkout rerun of the recode's steps: Figures 1 and 3, `SOURCES.md`, the derived counts and the table's hash all matched. Next: merge `p1-pipeline` into `main`, so that today's commits count on your GitHub contribution graph, which counts only the default branch.
 
 **2026-11-13 09:25:** You returned at about 09:05 and approved NEEDS_INPUT items 10 and 11.
 - Item 10: `p1-pipeline` was rebuilt from `d8c2e01` with `notes/notes.txt` restored in all 40 later commits, checked, and force-pushed with a lease. The new tip is `f37beae`.
