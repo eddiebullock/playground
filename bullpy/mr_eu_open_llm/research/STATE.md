@@ -2,9 +2,9 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-11-13 11:47 Europe/London
+**Updated:** 2026-11-13 16:40 Europe/London
 
-## Hand-off, 2026-11-13 (written 05:35, last refreshed 11:47)
+## Hand-off, 2026-11-13 (written 05:35, last refreshed 16:40)
 
 **Done this morning on your instructions (about 09:15):**
 - **Item 10: your notes file is off the public branch.**
@@ -13,7 +13,7 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
   - Your local `notes/notes.txt` is unchanged.
   - The old history is kept on your Mac only, in the local branch `backup/p1-pipeline-before-notes-removal`.
 - **Item 11:** [1] recoded to "no" on option sets. Figure 1 rebuilt (DECISIONS 2026-11-13).
-- **Merged into `main`:** PR #114, true merge commit `ee3913a`. Today's commits now count on your GitHub contribution graph.
+- **Merged into `main`:** PR #114, true merge commit `ee3913a`, then PR #115 (`da95a75`, 11:48) with the later records. Today's commits now count on your GitHub contribution graph.
 - **Ethics:** you said the ethics position is fine, so Methods ("Human data") and the reporting summary now carry the recommended statement. It says no separate ethical approval was required, because the study recruited no participants and used only existing materials under their permission or licence terms. It is marked provisional, for you to confirm before submission.
 
 **Only you can do these** (details in `research/NEEDS_INPUT.md`):
@@ -27,6 +27,10 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
    - An independent review of the night's A8 code then found real problems, all now fixed. One was a regression I had introduced. The addendum at the end of the A8 prereg lists them.
    - A8's next step is its code pins (Freeze checklist item 2). That step also needs the GPU equivalence test (40399722), which is still queued.
    - You said to proceed, so I will take the step when that job has run, unless you object to the note first. If you object after the pins, the change is still possible as a dated pre-data deviation.
+5. To review, not urgent: the paper is too long. Once one branch per outcome is kept, the main text should come to about 6,700 to 7,700 words, against the journal's limit of 5,000.
+   - The cut plan is in `research/paper/v2/outline.md` ("Length check"). No cut changes a claim, a number or a disclosure.
+   - Its biggest choice: the numbered Limitations list (963 words) moves to the Supplementary Information, and the Discussion keeps a paragraph of about 250 words.
+   - I will apply the plan when the text is assembled after the results, unless you would rather keep the list in the main text. The cuts would then have to come from elsewhere.
 
 **Cluster: nothing of ours started overnight, and nothing failed.**
 - Every job is pending on priority, and Slurm gives no start estimate:
@@ -44,6 +48,7 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
   - Fair share adds little to anyone here: at most 48 points among the jobs above ours. Ours is 0 because your user has used 891 GPU hours on this account since 2026-10-16 (CASCADE `cas_*` 709, this project 168, `hel-*` 14). I have not touched the other projects' jobs.
   - Our past starts all came from backfill; a 12 h task submitted on 2026-11-04 waited about 4.4 days.
 - Nothing more can be done for free. The A2 and A4 time limits stay as they are, because a TIMEOUT would cost days in the queue.
+  - The free CPU allocation (199,744 h) is no way round it either (checked 14:29). A8's preregistration pins the A100, and A2's and A7's costs were measured on A100 in bfloat16. By my estimate, CPU inference would be 10 to 100 times slower, and its numbers would not match the GPU runs.
 - **Risk:** every GPU node is reserved from 2026-12-07 07:00 to 2027-01-10 (`Dec2026-shutdown`), and A8 can start only after A2 and A4 finish.
   - A8's own dated-note rule defers whatever cannot finish, A4 first.
   - A8 can add only a statement of scope, so no frozen verdict depends on it.
@@ -80,7 +85,15 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
 
 **Phase 2 runs queued; Phase 3 analyses wait on them.** A1, A3 and natural-clip RQ1 are locked (2026-11-09). Every amendment is frozen or closed: A2, A4, A5, A7, A8 and A9 frozen, A6 closed as a limit. The A2, A4, A7 Stage 1, A8 and A9 GPU jobs are pending on priority. History: the prompt confound found 2026-11-04 withdrew the earlier accuracy and probe results (DECISIONS); Branch B stays as a record only.
 
-**2026-11-13 11:47:** Supplementary decisions table brought up to date: rows 81 to 83 for today's three new decision-log entries, and a superseded-entries row (75 to 83). It again has one row per entry, 83, checked in order against DECISIONS. ROADMAP Phase 4 status refreshed: every step that needs no new GPU output is done. The node counts in the 11:20 correction now include the node that was powering up. Full suite at `62a8b79` with these record edits: 1,096 passed, 26 skipped, 0 failed.
+**2026-11-13 12:30:** Queue unchanged at 12:25 and again at 13:29: nothing started or failed. Oldest jobs at priority 209, then 211; 361, then 358 jobs ranked above ours; RDS 1,067.5 GB, 991,119 files. Length check of the draft (`paper/v2/outline.md`, "Length check"): the main text is set to come to about 6,700 to 7,700 words once one branch is kept, against the limit of 5,000 (Introduction 1,606; Results 2,700 to 3,200; Discussion 2,400 to 2,900). A cut plan is recorded there and in ROADMAP Phase 4, with hand-off item 5 for the one structural choice.
+
+**2026-11-13 14:29:** Nothing of ours started or failed; the oldest jobs are at priority 212. More jobs now rank above ours: 379 (2,677 tasks), against 358 (2,423) at 13:29. RDS 1,067.5 GB, 991,119 files. I checked whether the free CPU allocation could take any of the queued work; it cannot (hand-off, "Nothing more can be done for free").
+
+**2026-11-13 15:30:** Queue unchanged for us: nothing started or failed; oldest jobs at priority 214, with 383 jobs (2,442 tasks) ranked above them. RDS 1,067.5 GB, 991,119 files. Applied the one length cut that depends on no pending result (cut 4, in part; `paper/v2/outline.md`): the Introduction's paper-by-paper list gave way to a pointer to Figure 1e, which codes the same eight papers, and its search-coverage sentences moved to Supplementary Methods, Section S2. Introduction 1,606 to 1,470 words; no claim, number or citation left the paper. The citation check carries a dated note.
+
+**2026-11-13 16:36:** Queue unchanged for us: nothing started or failed. Our oldest jobs are at priority 215, and the count above them keeps growing: 402 jobs (2,919 tasks), against 358 at 13:29. RDS 1,067.5 GB, 991,119 files. Applied length cut 5, which also depends on no pending result: the Discussion's benchmark-audit recommendation went from 341 to 189 words. Its detail moved word for word to Supplementary Methods, Section S2; the recommendation, its exploratory status and the no-field-level-claim scope stay in the Discussion (DECISIONS 2026-11-09). Decisions table row 60 now names both places.
+
+**2026-11-13 11:47:** Supplementary decisions table brought up to date: rows 81 to 83 for today's three new decision-log entries, and a superseded-entries row (75 to 83). It again has one row per entry, 83, checked in order against DECISIONS. ROADMAP Phase 4 status refreshed: every step that needs no new GPU output is done. The node counts in the 11:20 correction now include the node that was powering up. Full suite at `62a8b79` with these record edits: 1,096 passed, 26 skipped, 0 failed. Merged into `main` as PR #115, true merge commit `da95a75` (11:48).
 
 **2026-11-13 11:20:** Queue unchanged at 11:16: nothing started or failed. Oldest jobs at priority 208. Correction: the 32-GPU limit of `gpu2` is per user (`MaxTRESPU`), not shared by all SL3 users as written from 03:15 on; at 11:12 `gpu2` had 36 GPUs in use, 32 of them one user's. Our jobs wait because the A100 partition is full (46 of 74 nodes busy, 17 in maintenance, 1 down, 1 powering up, 9 powered down) and 381 jobs rank above ours, 233 of them paid-tier. No decision changes. Corrected in the hand-off and the ROADMAP risk row; a new DECISIONS entry, with a pointer from the A9 entry; a dated note in the A9 prereg, outside its hashed block. Entries below keep their "of 32" counts: the GPUs in use were counted right, only the limit was misread. RDS 1,067.5 GB, 991,118 files.
 

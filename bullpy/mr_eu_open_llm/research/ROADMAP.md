@@ -124,6 +124,7 @@ Watch storage at each step. The file count runs at about 996k of 1,048,576. Cell
 - 4.5: `reproduce.py` covers every locked output; clean-checkout check passed at `f4306cb`.
 - 4.6: independent review of the draft done and applied, except citation renumbering, left for the final text.
 - 4.7: submission pack drafted; the user's items are in NEEDS_INPUT (ethics confirmation, Zenodo DOI, authors).
+- Length (checked 2026-11-13): the main text is set to come to about 6,700 to 7,700 words once one branch is kept, against the limit of 5,000. The cut plan is in `paper/v2/outline.md` ("Length check"), applied at 4.1 and 4.3. Cuts 4 and 5, which depend on no pending result, were applied on 2026-11-13, cut 4 in part: the Introduction is now 1,470 words, and the benchmark-audit recommendation 189.
 
 ### What only the user can do
 
