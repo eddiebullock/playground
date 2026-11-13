@@ -266,7 +266,7 @@ STEPS: List[Step] = [
                         "literature_table": {"papers": 8,
                                              "target_position_code": {"na": 3, "no": 2, "not_stated": 1,
                                                                       "partial": 1, "yes": 1},
-                                             "option_sets_code": {"na": 2, "not_stated": 2, "partial": 1, "yes": 3},
+                                             "option_sets_code": {"na": 2, "no": 1, "not_stated": 2, "yes": 3},
                                              "delivery_check_code": {"not_stated": 8},
                                              "face_dependence_code": {"no": 5, "partial": 3},
                                              "rows_with_inferred_cells": 1}},
@@ -513,7 +513,7 @@ PINS: Dict[str, str] = {
     "research/reproduction/input_delivery_qwen3vl.json":
         "802f3231db29f2b27d67e8a6cfd70c78a9ea72c9e3fb4b1cadf7f8c966f1f801",
     "research/reproduction/literature_table.csv":
-        "48a7005d3a5ea695a4646f3e42e4117a91929c3ee7b786826e2a7cb2995820db",
+        "b855a64ad672a3a2c9c98cdd7b987e6981cc0a20e39d544b93c44250646b35d6",
     "research/reproduction/phase2_gate.json":
         "e5319dd49d354e431e73343ce1dee3d2e0ee45b69f3eff423bb9aa33fd60c489",
     "research/reproduction/phase2_gate_all_layers_gemma4.json":

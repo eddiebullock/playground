@@ -17,7 +17,7 @@ Figures 2, 4, 5 and 6 get a section only when built with `--real`, which refuses
 | c, delivery Molmo2 | `research/reproduction/input_delivery_molmo2.json` | `200ede896d13ccbbea15f7a5e3a561bac9dc7cc35c7ecc3286f4382dd963ec9b` | `research/scripts/make_figures.py:233` |
 | d, human p_target per label | `data/eu_emotions_human_entropy.json` | `f9d91b4e47816fd01b773f0a63f8fff39c7e0cfa2c56a2136b1f52ba5cc33744` | `research/scripts/make_figures.py:270` |
 | d, weak-label list | `scripts/run_stimulus_interventions.py` | `f7880c94e9671cc294cd4eaeece2108d7cd1d7a4c7e6f9e30a1c495964e6cd82` | `research/scripts/make_figures.py:271` |
-| e, eight-paper table | `research/reproduction/literature_table.csv` | `48a7005d3a5ea695a4646f3e42e4117a91929c3ee7b786826e2a7cb2995820db` | `research/scripts/make_figures.py:314` |
+| e, eight-paper table | `research/reproduction/literature_table.csv` | `b855a64ad672a3a2c9c98cdd7b987e6981cc0a20e39d544b93c44250646b35d6` | `research/scripts/make_figures.py:314` |
 
 ## Figure 2
 
