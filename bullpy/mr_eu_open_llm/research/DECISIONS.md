@@ -742,3 +742,28 @@ At about 17:50 the user wrote: "i believe ther is nothing else in the HPC queue 
   - The pull lists the slice jobs, and waives the cancelled `gpu2` tasks with this entry as the reason.
 - **What stays the same.** No design, code, threshold or analysis change. Hardware, weights, precision and inputs are as for the `gpu2` runs.
 - **Testing.** The wrapper was tested with stubs on the cluster login node. All 23 checks passed: the settings passed through, the budget stop, a normal end, a failure, the A2-2 repair on a torn last line and on an unparseable middle line, a clean file left untouched, and bad slots rejected.
+
+## 2026-11-13: A4's and A2's slices may take up to three nodes (scheduling only, within the `intr` per-user limit)
+
+- **Why.** A one-node slice runs four shards at a time. Gemma's twelve A4 shards finish on one node in the slice 40937285 (planned at 22:18 by the old planner). After that, Qwen's twelve would take about six one-node slices, roughly six hours, and A2's six shards about four more. `intr` allows one job per user of up to 3 nodes (MaxTRESPU node=3; entry of 17:50 above). One job can therefore run all twelve Qwen shards at once, and A2's six on two nodes.
+- **How.** Only the planners change: `research/scripts/a4_intr_next_slice.sh` and `research/scripts/a2_intr_next_slice.sh`.
+  - A slice takes four shards per node, on up to 3 nodes. It never takes more nodes than the `ampere` partition has idle (on, or powered down) when the slice is planned, and it always takes at least one. So a slice never waits to gather nodes, and never holds nodes back from other jobs while it gathers more. Nodes in a maintenance reservation are not counted as idle. At 22:04, 2 nodes were idle, 7 were powered down and 17 were in maintenance.
+  - The planners submit the unchanged wrappers with `--nodes=N --ntasks=4N --ntasks-per-node=4`.
+  - The wrappers are A4 (sha256 `18d1e8ed...`) and A2 (`f3503d8d...`). Each already accepts up to `SLURM_NTASKS` slots and starts each slot as its own one-GPU step (`srun --exact --nodes=1 --ntasks=1 --gres=gpu:1`). So each shard runs exactly as it does in a one-node slice.
+  - There is still one `intr` job at a time. The Mac loop waits for each slice to end before it plans the next.
+  - `MAX_NODES=1` restores one-node slices.
+- **What stays the same.** For each shard: the step, hardware, job script, settings, 52-minute budget and resume. There is no design, code, threshold or analysis change, and between slices only mechanics are read. A shard's `gpu2` task is still held before a slice runs it, and cancelled once the shard is complete.
+- **Testing.**
+  - On the Mac, both planners ran with stand-ins for the Slurm commands. This was first done as 42 scratch checks, now kept as `tests/test_intr_planners.py` (17 tests). The checks covered:
+    - the node count from idle nodes, with maintenance nodes not counted;
+    - the cap at 3 nodes and `MAX_NODES=1`;
+    - the slot order;
+    - holds and cancels;
+    - no change in a dry run;
+    - the Mac loop's line total.
+  - On the login node, the cluster's unchanged A4 wrapper ran 12 stub slots, and all 12 stopped at the budget with their own model and shard.
+  - `sbatch --test-only` accepted the 3-node request. It ran under `gpu2`, because the one `intr` slot was in use.
+  - At 22:19 both planners' logic ran as a dry run on the login node's Python 3.6.8, reading line counts only.
+    - A4: 11 idle nodes gave 3 nodes, with Gemma 8 to 11 first and then Qwen 0 to 7.
+    - A2: 10 idle nodes gave 2 nodes, for all six shards.
+- **When.** The new planners were installed at 22:19, while 40937285 ran. The first slice that can take more than one node is the first one with Qwen shards.
