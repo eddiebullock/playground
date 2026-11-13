@@ -2,11 +2,62 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-11-13 04:25 Europe/London
+**Updated:** 2026-11-13 05:35 Europe/London
+
+## Morning hand-off, 2026-11-13 (written 05:35, refreshed at each check until you are back)
+
+**Only you can do these** (details in `research/NEEDS_INPUT.md`):
+1. **Item 10, decision needed: your notes file is on the public branch.** On 2026-11-12 at about 22:58 my `git commit -a` took your uncommitted `notes/notes.txt` into commit `0bc8a57` on the public `p1-pipeline` branch. Your local file is unchanged. Say "drop the notes commit" and allow the force-push, and I will rebuild the branch without that file (plan in item 10). Until then there is no PR to `main`.
+2. Item 11, low priority: how to code [1]'s option sets in the literature table. I recommend recoding it to "no".
+3. Ethics wording: one [USER] marker in `paper/v2/methods.md` ("Human data"). It asks whether your institution required ethics review for this secondary use of existing data, and for the reference if so.
+4. At submission (item 9): the Zenodo DOI for the code; an OSF deposit of the tagged preregistrations, if wanted; authors and affiliations. The Snoek group's reply is still awaited (item 8). Nothing waits on it.
+
+**Cluster: nothing of ours started overnight, and nothing failed.**
+- Every job is pending on priority, and Slurm gives no start estimate:
+  - A2: 40468625, 40468626
+  - A4: 40589226, 40593824
+  - A8 equivalence: 40399722
+  - A7 Stage 1: 40795186, 40795187
+  - A9 smokes: 40843619, 40843620
+  - A9 scored runs: 40863756, 40863757
+- Why they wait:
+  - The free tier's `gpu2` QoS is capped at 32 GPUs for all SL3 users together; 24 were in use at 05:22.
+  - Our fair share is 0, so our priority grows only with age, about 1.5 a hour. Our oldest jobs are at 199.
+  - About 1,260 `gpu2` tasks with higher priority were waiting at 05:22.
+  - Our past starts all came from backfill.
+- Nothing more can be done for free. The A2 and A4 time limits stay as they are, because a TIMEOUT would cost days in the queue.
+- **Risk:** every GPU node is reserved from 2026-12-07 07:00 to 2027-01-10 (`Dec2026-shutdown`), and A8 can start only after A2 and A4 finish.
+  - A8's own dated-note rule defers whatever cannot finish, A4 first.
+  - A8 can add only a statement of scope, so no frozen verdict depends on it.
+
+**Done overnight** (dated entries below; reasons in DECISIONS):
+- **A9:**
+  - Timing smokes and scored runs submitted. The scored runs went in before their smokes ran, to gain queue age; nothing was read (DECISIONS 2026-11-13).
+  - A9's pre-run check now enforces replication rule (ii).
+- **A7 Stage 1:** added to the Phase 3 runbook, with its own pre-run check.
+- **Phase 3 rehearsal:** run end to end on synthetic cells for A4, A9 and A7. A4's real analysis should take minutes.
+- **Found and fixed before any data:**
+  - A8's `a4_analyse` step could not have run. The Snoek archive is now on the cluster at its pinned hash.
+  - A test-order fault in the suite.
+- **Paper:**
+  - Independent draft review (41 findings) applied, except citation renumbering (left for the pre-submission pass) and item 11.
+  - Results sections 5, 6, 7, 9 and 10 and the Discussion drafted for every outcome, before any of their data.
+  - Table 1 and the A7 Stage 0 table built.
+  - Deviations table, 76 rows.
+  - Submission pack: software versions, ethics draft, code availability.
+- **Checks:**
+  - Full test suite: 1,076 passed, 26 skipped, 0 failed.
+  - Clean-checkout reproduction: passed after one fix.
+
+**FYI:** CSD3 `/home` is at 49.8 of 52.4 GB. This project writes nothing there; its jobs write to RDS. The space is in other folders, such as `LEAP3mri`. RDS: 1,067.4 GB of 1,099.5; 991,082 of 1,048,576 files.
+
+**When jobs finish**, the heartbeat follows ROADMAP Part 3: pull unread, pre-run check, one frozen analysis with its run note, then registry rows and figures.
 
 ## Current phase
 
 **Phase 2 runs queued; Phase 3 analyses wait on them.** A1, A3 and natural-clip RQ1 are locked (2026-11-09). Every amendment is frozen or closed: A2, A4, A5, A7, A8 and A9 frozen, A6 closed as a limit. The A2, A4, A7 Stage 1, A8 and A9 GPU jobs are pending on priority. History: the prompt confound found 2026-11-04 withdrew the earlier accuracy and probe results (DECISIONS); Branch B stays as a record only.
+
+**2026-11-13 05:35:** Queue unchanged at 05:22: nothing started or failed. Priority is 199 for the oldest jobs (age 99, fair share 0), and `gpu2` had 24 of its 32 GPUs in use. RDS 1,067.4 GB, 991,082 files. Morning hand-off written at the top of this file. ROADMAP local item 4 is under way: a read-only audit of A8's pull and analysis path against its launcher.
 
 **2026-11-13 04:25:** Queue unchanged at 04:20 (nothing started or failed; RDS 1,067.4 GB, 991,082 files). Submission pack (ROADMAP 4.7): the reporting summary's software row now lists the verified versions (analysis env; torch and transformers as the vision-gate outputs record them; LibreFace 0.2.0, OpenFace 3.0 as `openface-test` 0.1.26, MediaPipe 0.10.14 and ME-GraphAU commit `dda53cba`, read from the cluster environment). Methods now carries a draft ethics statement (with a [USER] marker for the institutional part), the reproduction-script sentence and the journal's standard reporting-summary line. A9's prereg has a dated note for the early submission and the rule (ii) check, and the preregistration links table has the A9 row; the A9 design hash is unchanged (`21341eb4`, 53 A9 tests pass).
 
