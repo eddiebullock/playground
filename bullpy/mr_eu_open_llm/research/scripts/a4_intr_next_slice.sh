@@ -5,7 +5,7 @@
 #
 # Mechanics only: line counts, the count of cells whose status is not "ok", partial lines and the mean of
 # the `seconds` field. No score field is read. It refuses to plan while any intr job of ours exists, stops
-# on a non-ok cell or an over-full shard, never slots a shard whose gpu2 task is running, holds the gpu2
+# on a non-ok cell or an over-full shard, leaves any shard whose gpu2 task is running to that task, holds the gpu2
 # task of each shard it slots, and cancels the held gpu2 task of each shard whose file is complete.
 # Planned cells per shard come from planned_cells(results/a4/manifest.csv, k, 12), the same for both models.
 set -u
@@ -73,7 +73,7 @@ for model, k in ORDER:
     if n == PLANNED[k]:
         complete.append((model, k, tid, st))
     elif st[0] == "RUNNING":
-        problems.append(f"{model}_{k}: its gpu2 task is RUNNING; leave this shard to it")
+        print(f"  {model}_{k}: its gpu2 task is running, so this shard is left to it")
     elif n > 0:
         partial_shards.append((model, k, tid, st))
     else:
