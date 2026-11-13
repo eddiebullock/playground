@@ -650,7 +650,7 @@ The note's text is brought into line by an addendum to the 2026-11-13 dated note
 
 ## 2026-11-13: `p1-pipeline` rebuilt to take the user's notes file off the public branch (repository only; no project file changed)
 
-On 2026-11-12 at about 22:58 a `git commit -a` took the user's uncommitted `notes/notes.txt` into a commit on the public `p1-pipeline` branch (NEEDS_INPUT 10). On the user's instruction, given 2026-11-13 at about 09:15:
+On 2026-11-12 at about 22:58 a `git commit -a` took the user's uncommitted `notes/notes.txt` into a commit on the public `p1-pipeline` branch (NEEDS_INPUT 10). On the user's instruction, given 2026-11-13 at about 09:10:
 - The branch was rebuilt from `d8c2e01`, the commit before, with `notes/notes.txt` restored to its `d8c2e01` version in each of the 40 later commits.
 - It was force-pushed with a lease pinned to the old tip. The new tip is `f37beae`.
 

@@ -2,9 +2,9 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-11-13 09:45 Europe/London
+**Updated:** 2026-11-13 09:25 Europe/London
 
-## Hand-off, 2026-11-13 (written 05:35, last refreshed 09:45)
+## Hand-off, 2026-11-13 (written 05:35, last refreshed 09:25)
 
 **Done this morning on your instructions (about 09:15):**
 - **Item 10: your notes file is off the public branch.**
@@ -79,7 +79,7 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
 
 **Phase 2 runs queued; Phase 3 analyses wait on them.** A1, A3 and natural-clip RQ1 are locked (2026-11-09). Every amendment is frozen or closed: A2, A4, A5, A7, A8 and A9 frozen, A6 closed as a limit. The A2, A4, A7 Stage 1, A8 and A9 GPU jobs are pending on priority. History: the prompt confound found 2026-11-04 withdrew the earlier accuracy and probe results (DECISIONS); Branch B stays as a record only.
 
-**2026-11-13 09:45:** You returned at about 09:05 and approved NEEDS_INPUT items 10 and 11.
+**2026-11-13 09:25:** You returned at about 09:05 and approved NEEDS_INPUT items 10 and 11.
 - Item 10: `p1-pipeline` was rebuilt from `d8c2e01` with `notes/notes.txt` restored in all 40 later commits, checked, and force-pushed with a lease. The new tip is `f37beae`.
   - Each rebuilt commit matches its original in message, author, committer and dates, and differs only in the notes file.
   - No tag or PR held the old commits.
