@@ -2,9 +2,9 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-11-14 13:22 Europe/London
+**Updated:** 2026-11-14 13:45 Europe/London
 
-## Hand-off, 2026-11-14 (written 01:38, last refreshed 13:22)
+## Hand-off, 2026-11-14 (written 01:38, last refreshed 13:45)
 
 **A4 is done and analysed, once, by its frozen code** (RESULTS_REGISTRY, "A4 confirmatory analysis (2026-11-14)"; Results, Sections 5 and 6; Figure 5).
 - **Gemma 4: Aligned on basic labels, Mixed on conversational states.**
@@ -55,6 +55,8 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
   - The same verdicts held in six of seven sensitivities. The seventh, the whole-judgement RMS readout, is Inconclusive on both, because the RMS cannot be negative and the frozen effect rule needs the (negative) mask fills to share its sign.
   - The token arm and RQ3 are not testable, as Stage 0 had already shown.
 - **Written into the paper:** Results 9, the Discussion's RQ3 branch, the Methods clause "A7 Stage 1 runs", Supplementary Methods S10 (the route arm in full), registry rows, and `reproduce.py` (A7's five records hash-pinned; A8 is now the only pending output).
+
+**Merged into main at 13:45:** PR #122, true merge commit `c281bec`, head `0e7df74`. Full suite at `8f1fe7c`: 1,123 passed, 26 skipped, 0 failed; the one later commit changes a sentence of Supplementary Methods only. Clean-checkout reproduction at `8f1fe7c`: 5 rebuilt and matched, 26 verified by hash, 0 failed.
 
 **What is left.**
 - **A8** only. Its GPU equivalence test (40399722, 4 h on `gpu2`) is still queued, and its code pins (Freeze checklist item 2) come next. The A8 note review is yours (below). Every GPU node is reserved from 2026-12-07 07:00.
