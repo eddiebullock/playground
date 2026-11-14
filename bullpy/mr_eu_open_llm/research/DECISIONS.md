@@ -846,3 +846,29 @@ The test is PREREG_A8 Freeze checklist item 2's "A1 GPU equivalence test (frozen
 - **Safeguards.** 40399722 is held before the `intr` job is submitted, so the test does not run twice. It is cancelled after the `intr` job ends with both reports written. If the `intr` job fails for a cluster reason, the hold is released.
 - **Reading.** The rule is the block's `a1_gpu_rule`, unchanged. If the two frozen runs are identical, the merged shards must be identical to them; if the two frozen runs differ, A1 sharding is not shown, and A1 on A8 models waits on a dated ruling. The two `equivalence_report.json` files and the step logs are read, and the result goes into PREREG_A8's dated notes.
 - **What stays the same.** No design, threshold, code or analysis change. The hardware (A100 on `ampere`), environment, weights, items and commands are those of the queued job.
+
+## 2026-11-14: Independent check of the text written from the locked A2, A5 and A7 outputs; corrections, and one gap in A7's frozen code disclosed (after the analyses; no result changed)
+
+An independent reader (ROADMAP step 4.6) checked the text written on 2026-11-14 against RESULTS_REGISTRY, the locked outputs and the preregistrations. That text is Results 7 to 10, the Discussion's opening and its RQ2, RQ3 and RQ4 sections, the Abstract, Supplementary Methods S8 and S10, Table 1 and the Figure 6 legend. Every number recomputed from the outputs matched. Each finding below was checked against its source before it was corrected, the same day. Nothing was rerun, and no classification changed.
+- **Claims corrected.**
+  - "Beyond P1" became "beyond P1 on both models and P5 on Qwen3-VL": Qwen3-VL's P5 also stays Matches under every sensitivity.
+  - "The closest human test found no cost of shuffling" is replaced by the licensed reason: P12 has no direct source and rests on an analogy, and the one human shuffle test is mixed (PREREG_A2, 2026-11-08 deviation; citation check).
+  - "Where the predictions are strongest" is removed. P4 and P5 rest on the weakest sources.
+  - "Five of 16 contrasts" became five of the ten single-face contrasts, and "people's data predict" became "the stated predictions".
+  - Table 1's note now gives 16 contrasts per model (10 and 6), not per route.
+  - "Frame order" is replaced by shuffled frames and clips cut to a third (P14 and P15 compare thirds; reversal has no prediction).
+  - The A6 first-frame rule is now stated as the ratio of means on the Anger and Disgust pair's clips.
+  - A7's verdict-table citation is corrected.
+- **Wording rules applied.**
+  - "Not robust to this null" for every verdict that holds only at .05: Gemma 4's P5, P9 and P12, and Qwen3-VL's P4 (DECISIONS 2026-11-08).
+  - The Abstract's A2 sentence now carries the BASIC ONLY scope and the single-face route.
+  - "Not aligned on these renders" in Table 1.
+  - A9's fixed "(same lab and generator)".
+  - "Per contrast" in the Figure 6 legend.
+- **Omissions filled, as the preregistrations require.**
+  - A2's MCQ bridge and human-modal readouts (PREREG_A2, decision rule and human response distribution), with their disagreements.
+  - A5's intervals for Phi, word share and survival; E*/D beside Evidence-led; H1 and H2 with their repeats; and the chain as point means (PREREG_A5, reporting, comparison with humans, ruling 4 of 2026-11-12).
+  - The route arm's verdict sentence moved to the supplement, where PREREG_A7's reporting table places it.
+  - The failed A2 cells are named: eye-aperture edits on closed eyes, outside the family.
+- **One gap in A7's frozen code.** The design names, among the riders, the relative L2 of each hybrid from its nearest native state. The frozen runner never wrote it: the hybrid cells carry no such field, and the frozen analysis reports only each block's relative change. It is a descriptive rider and no verdict depends on it. It is disclosed in Supplementary Methods S10 and in decisions table row 92, and it is not computed after the fact, which would need a new GPU run outside the frozen code.
+- **Values.** Every added statement's values are in RESULTS_REGISTRY, "Rows added after the independent check of the text (2026-11-14)".
