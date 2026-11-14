@@ -2,9 +2,9 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-11-14 14:52 Europe/London
+**Updated:** 2026-11-14 15:12 Europe/London
 
-## Hand-off, 2026-11-14 (written 01:38, last refreshed 14:52)
+## Hand-off, 2026-11-14 (written 01:38, last refreshed 15:12)
 
 **A4 is done and analysed, once, by its frozen code** (RESULTS_REGISTRY, "A4 confirmatory analysis (2026-11-14)"; Results, Sections 5 and 6; Figure 5).
 - **Gemma 4: Aligned on basic labels, Mixed on conversational states.**
@@ -56,7 +56,7 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
   - The token arm and RQ3 are not testable, as Stage 0 had already shown.
 - **Written into the paper:** Results 9, the Discussion's RQ3 branch, the Methods clause "A7 Stage 1 runs", Supplementary Methods S10 (the route arm in full), registry rows, and `reproduce.py` (A7's five records hash-pinned; A8 is now the only pending output).
 
-**Merged into main at 13:45:** PR #122, true merge commit `c281bec`, head `0e7df74`. Full suite at `8f1fe7c`: 1,123 passed, 26 skipped, 0 failed; the one later commit changes a sentence of Supplementary Methods only. Clean-checkout reproduction at `8f1fe7c`: 5 rebuilt and matched, 26 verified by hash, 0 failed.
+**Merged into main:** PR #122 (`c281bec`, 13:45) with A2, A5 and A7 Stage 1; then PR #123 (`62fc542`, 15:12) with the corrections after the independent check and the refreshed submission pack. Full suite at `ee4dd83`, the head of #123: 1,123 passed, 26 skipped, 0 failed. Clean-checkout reproduction at `ee4dd83`: 5 rebuilt and matched, 26 verified by hash, 0 failed.
 
 **Independent check of today's text, done (14:52).** A separate reader checked Results 7 to 10, the new Discussion branches, the Abstract, S8, S10, Table 1 and the Figure 6 legend against the registry, the locked outputs and the preregistrations. Every number matched. It found wrong claims, rule breaches and omissions; each was checked against its source and corrected (commit `dcf6dc9`; DECISIONS 2026-11-14, "Independent check"). The main ones:
 - Qwen3-VL's P5 also survives every sensitivity.
