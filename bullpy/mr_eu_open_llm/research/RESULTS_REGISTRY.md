@@ -390,3 +390,51 @@ Other values from the same file (formatted with `registry_tables.py`'s helpers):
 | A4 V1 detector (as used by the analysis) | share rising .785, pass True | verified | `python -m scripts.a4_analyse` (frozen; run once by `post_phase3.py analyse a4`) | `results/a4/summary.json` `detector` | equal to the A4 V1 pilot rows above |
 | A4 residual CI upper bound over the square root of R_S (the Not aligned test), Gemma 4 | basic_WC .398 (not below .30); basic_EA .537 (not below .30); conversational_WC .053 (below .30); conversational_EA .387 (not below .30) | verified (derived) | ci[1] / sqrt(r_s) from the summary fields; `PREREG_A4` Not aligned rule | `results/a4/summary.json` `datasets.*.<model>.residual.ci`, `.r_s` | applies only where every gate passed and signal P < .05 |
 | A4 residual CI upper bound over the square root of R_S (the Not aligned test), Qwen3-VL | basic_WC .066 (below .30); basic_EA .306 (not below .30); conversational_WC -.131 (below .30); conversational_EA 1.148 (not below .30) | verified (derived) | ci[1] / sqrt(r_s) from the summary fields; `PREREG_A4` Not aligned rule | `results/a4/summary.json` `datasets.*.<model>.residual.ci`, `.r_s` | applies only where every gate passed and signal P < .05 |
+
+## A9 confirmatory analysis (2026-11-14)
+
+Frozen `scripts/a9_analyse.py`, run once by `research/scripts/post_phase3.py analyse a9` at commit `b9f0241`, single-threaded, 06:33 to 06:34 UTC. Run note: `research/reproduction/a9_run_note.json`. Pre-run record: `research/reproduction/a9_prerun.json` (12 complete shards per model, no failures, no rows with non-finite log probabilities; A4's run note and summary sha256 checked, replication rule (ii)). Cells: 24 shard files, 72,004 cells, all status ok, written by five one-hour `intr` slices beside A2's (DECISIONS 2026-11-13, "A9's smoke and scored shards may run in one-hour slices beside A2's"), after both timing smokes (40 of 40 cells ok each), and pulled with their sha256 (`research/reproduction/a9_pull_manifest.json`; the 24 cancelled `gpu2` tasks are waived with that entry as the reason). The local pre-freeze copy of the manifest, byte-identical to the pin (`4b2f04ae...`), was moved to `results/a9_local_premanifest/` so that the pull could write the cluster's copy. Output: `results/a9/summary.json`, sha256 `1d1a99959e79f58c52a36284819cce13c317cb54d1a27184273bce07cb3e4a7f`.
+
+Source `results/a9/summary.json` (sha256 `1d1a9995...`), printed by `research/scripts/registry_tables.py`.
+
+Statistic: residual; design B.
+
+| Model | Signal P | Residual CEA | 95% CI | R_S | Alignment Holm P (within A9) | Raw CEA (secondary) | Configurations (share lost) | Decision |
+|---|---|---|---|---|---|---|---|---|
+| Gemma 4 | .001 | .483 | .469 to .496 | .993 | .00020 | .450 | 1200 (.000) | Aligned |
+| Qwen3-VL | .001 | .230 | .189 to .269 | .973 | .037 | .102 | 1200 (.000) | Not aligned |
+
+| Model | Gates not passed | Replication reading | A9 decision | A4 basic WC decision (comparator) | A4 basic headline (beside) | Reason |
+|---|---|---|---|---|---|---|
+| Gemma 4 | none | replicated on a second human sample (same lab and generator) | Aligned | Aligned | Aligned | - |
+| Qwen3-VL | none | replication not testable | Not aligned | Inconclusive | Inconclusive | A4 basic_WC Inconclusive: failed or missing gate: v4_domain |
+
+| Model | Over ceiling (descriptive) | Residual correlation across faces (descriptive) | Earlier operationalisation of lead decision 2 (descriptive) |
+|---|---|---|---|
+| Gemma 4 | .504 | .192 | outside the recovery-validated conditions |
+| Qwen3-VL | .242 | .338 | outside the recovery-validated conditions |
+
+Other values from the same file (formatted with `registry_tables.py`'s helpers):
+
+| claim | value | status | script | output file | notes |
+|---|---|---|---|---|---|
+| A9 gates, Gemma 4 | all passed | verified | `python -m scripts.a9_analyse` (frozen; run once by `post_phase3.py analyse a9`) | `results/a9/summary.json` `models.<model>.gates` | RQ0 and G2 to G4 as in A4; V1 from A4's frozen pilot; V2 to V4 recomputed on Liu renders |
+| A9 gates, Qwen3-VL | all passed | verified | `python -m scripts.a9_analyse` (frozen; run once by `post_phase3.py analyse a9`) | `results/a9/summary.json` `models.<model>.gates` | RQ0 and G2 to G4 as in A4; V1 from A4's frozen pilot; V2 to V4 recomputed on Liu renders |
+| A9 V3 replicate configurations, Gemma 4 | delta_js .165, P .00010 (n 200) | verified | `python -m scripts.a9_analyse` (frozen; run once by `post_phase3.py analyse a9`) | `results/a9/summary.json` `models.<model>.replicate` | V3 passes at P < .01 |
+| A9 V3 replicate configurations, Qwen3-VL | delta_js .064, P .00010 (n 200) | verified | `python -m scripts.a9_analyse` (frozen; run once by `post_phase3.py analyse a9`) | `results/a9/summary.json` `models.<model>.replicate` | V3 passes at P < .01 |
+| A9 configurations and share lost, Gemma 4 | 1200 configurations, design B, share lost .000 | verified | `python -m scripts.a9_analyse` (frozen; run once by `post_phase3.py analyse a9`) | `results/a9/summary.json` `models.<model>.n_configurations, .design, .share_lost` | limit .05 |
+| A9 configurations and share lost, Qwen3-VL | 1200 configurations, design B, share lost .000 | verified | `python -m scripts.a9_analyse` (frozen; run once by `post_phase3.py analyse a9`) | `results/a9/summary.json` `models.<model>.n_configurations, .design, .share_lost` | limit .05 |
+| A9 residual CEA over ceiling, descriptive, Gemma 4 | .504 | verified | `python -m scripts.a9_analyse` (frozen; run once by `post_phase3.py analyse a9`) | `results/a9/summary.json` `models.<model>.residual.over_ceiling` |  |
+| A9 residual CEA over ceiling, descriptive, Qwen3-VL | .242 | verified | `python -m scripts.a9_analyse` (frozen; run once by `post_phase3.py analyse a9`) | `results/a9/summary.json` `models.<model>.residual.over_ceiling` |  |
+| A9 raw CEA with 95% CI, secondary, Gemma 4 | .450 (.438 to .458), R_S .993 | verified | `python -m scripts.a9_analyse` (frozen; run once by `post_phase3.py analyse a9`) | `results/a9/summary.json` `models.<model>.raw` |  |
+| A9 raw CEA with 95% CI, secondary, Qwen3-VL | .102 (.078 to .124), R_S .979 | verified | `python -m scripts.a9_analyse` (frozen; run once by `post_phase3.py analyse a9`) | `results/a9/summary.json` `models.<model>.raw` |  |
+| A9 residual CI upper bound over the square root of R_S (the Not aligned test), Gemma 4 | .497 (not below .30) | verified (derived) | from the summary fields; A9 decision rule (unchanged from A4) | `results/a9/summary.json` `models.<model>.residual.ci, .r_s` | derived: ci[1] / sqrt(r_s); applies only where every gate passed and signal P < .05 |
+| A9 residual CI upper bound over the square root of R_S (the Not aligned test), Qwen3-VL | .273 (below .30) | verified (derived) | from the summary fields; A9 decision rule (unchanged from A4) | `results/a9/summary.json` `models.<model>.residual.ci, .r_s` | derived: ci[1] / sqrt(r_s); applies only where every gate passed and signal P < .05 |
+| A9 sensitivities, residual CEA, Gemma 4 | without_AU22_AU27 .445; without_other .490; flagged_families .477; confirmed_families .523; presence .468; frame_max .502 | verified | `python -m scripts.a9_analyse` (frozen; run once by `post_phase3.py analyse a9`) | `results/a9/summary.json` `models.<model>.sensitivities.*.residual` | beside the primary, never replacing it |
+| A9 sensitivities, residual CEA, Qwen3-VL | without_AU22_AU27 .267; without_other .231; flagged_families .321; confirmed_families -.224; presence .253; frame_max .243 | verified | `python -m scripts.a9_analyse` (frozen; run once by `post_phase3.py analyse a9`) | `results/a9/summary.json` `models.<model>.sensitivities.*.residual` | beside the primary, never replacing it |
+| A9 behaviour on the same renders, descriptive, Gemma 4 | r .290, modal agreement .182, kappa .122 | verified | `python -m scripts.a9_analyse` (frozen; run once by `post_phase3.py analyse a9`) | `results/a9/summary.json` `models.<model>.behaviour` | per configuration; option means removed before r |
+| A9 behaviour on the same renders, descriptive, Qwen3-VL | r .083, modal agreement .043, kappa .009 | verified | `python -m scripts.a9_analyse` (frozen; run once by `post_phase3.py analyse a9`) | `results/a9/summary.json` `models.<model>.behaviour` | per configuration; option means removed before r |
+| A9 descriptive fields, Gemma 4 | residual correlation across faces .192; earlier operationalisation of lead decision 2: outside the recovery-validated conditions | verified | `python -m scripts.a9_analyse` (frozen; run once by `post_phase3.py analyse a9`) | `results/a9/summary.json` `models.<model>.face_shared_residual_correlation, .earlier_rule_reading_descriptive` | descriptive, no label on the decision |
+| A9 descriptive fields, Qwen3-VL | residual correlation across faces .338; earlier operationalisation of lead decision 2: outside the recovery-validated conditions | verified | `python -m scripts.a9_analyse` (frozen; run once by `post_phase3.py analyse a9`) | `results/a9/summary.json` `models.<model>.face_shared_residual_correlation, .earlier_rule_reading_descriptive` | descriptive, no label on the decision |
+| A9 human references (as used by the analysis) | Liu against Snoek basic WC residual .690, raw .861; against basic EA residual .709, raw .815; Snoek WC to EA residual .780 | verified | `python -m scripts.a9_analyse` (frozen; run once by `post_phase3.py analyse a9`) | `results/a9/summary.json` `human_reference` | human-level only if the interval reaches the residual Liu against Snoek basic WC reference (descriptive) |
+| A9 withdrawn claim and design | withdrawn under correlated face noise: liu_WC|0.25|pair_error; design B; behaviour ok | verified | `python -m scripts.a9_analyse` (frozen; run once by `post_phase3.py analyse a9`) | `results/a9/summary.json` `withdrawn_under_correlated_face_noise, design, behaviour_status` | PREREG_A9 lead decisions 2 and 8 |

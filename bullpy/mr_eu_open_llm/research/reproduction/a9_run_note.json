@@ -1,0 +1,47 @@
+{
+ "amendment": "a9",
+ "git_commit": "b9f024168c1a2721891e8ecff575fa0cea18c9ad",
+ "python": "/opt/anaconda3/bin/python3",
+ "threads": {
+  "OMP_NUM_THREADS": "1",
+  "OPENBLAS_NUM_THREADS": "1",
+  "MKL_NUM_THREADS": "1",
+  "VECLIB_MAXIMUM_THREADS": "1"
+ },
+ "cells_dir_used": null,
+ "steps": [
+  {
+   "command": [
+    "python3",
+    "research/scripts/a9_prerun_check.py",
+    "--record",
+    "research/reproduction/a9_prerun.json",
+    "--clean_dir",
+    "results/a9_clean"
+   ],
+   "started": "2026-11-14T06:33:34Z",
+   "finished": "2026-11-14T06:33:36Z",
+   "exit": 0
+  },
+  {
+   "command": [
+    "python3",
+    "-m",
+    "scripts.a9_analyse",
+    "--cells_dir",
+    "results/a9",
+    "--gates",
+    "research/reproduction/a4_gates.json",
+    "--output",
+    "results/a9/summary.json"
+   ],
+   "started": "2026-11-14T06:33:36Z",
+   "finished": "2026-11-14T06:34:43Z",
+   "exit": 0
+  }
+ ],
+ "outputs": {
+  "results/a9/summary.json": "1d1a99959e79f58c52a36284819cce13c317cb54d1a27184273bce07cb3e4a7f"
+ },
+ "status": "complete"
+}
