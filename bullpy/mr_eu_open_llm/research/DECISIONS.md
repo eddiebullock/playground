@@ -831,3 +831,18 @@ At about 08:40 the user chose option (a) of NEEDS_INPUT 12: "go with option a fo
 - **Timing against the data.** No A7 Stage 1 model output existed before the rerun, so this is a pre-data deviation for Stage 1. A7's Stage 0, which read its clips through `--records`, is unaffected. A2's analysis ran at 12:26 to 12:28, before this rerun. A7's analysis reads A2's run note, as its pre-run check requires.
 - **Testing.** The wrapper passed 14 stub checks on the login node, including that `JOB_SCRIPT` reaches all four steps.
 - **Disclosure.** Decisions table row 90; a dated note at the end of `research/PREREG_A7_DRAFT.md`, outside the code hashes; Methods, A7, at assembly.
+
+## 2026-11-14: A8's GPU equivalence test runs as one intr job, its two conditions in parallel steps (scheduling only, before any A8 output)
+
+The test is PREREG_A8 Freeze checklist item 2's "A1 GPU equivalence test (frozen twice, shards, merge)", block `equivalence_tests.a1_sharding_gpu`: on Qwen3-VL-8B, rotation 0, 6 items, both conditions. It runs on the 8B model, which is not an A8 model, so it writes no A8 output.
+- **Why now.** Its `gpu2` job (40399722, submitted 2026-11-09, 4 h limit) has waited on priority for five days. A8's code pins wait on it. The user allowed `intr` for this project on 2026-11-13 at 17:50, one job at a time, and said on 2026-11-14 to proceed with all other jobs. No `intr` job of this project is queued now.
+- **Why two steps.** `intr` allows one hour. At the 8B's A1 rate (7 h 40 min to 8 h 00 min per 243-item rotation task, arrays 39982137 and 39982138, so about 1.9 min per item), one condition is about 18 item-runs and four model loads, about 40 minutes. Both conditions one after the other would not fit in an hour. Run at once, on one GPU each, they do.
+- **How.**
+  - `slurm_jobs/a8_equiv_intr.sh` (sha256 `75929945...`) sets up the environment of the queued job script (`a8_equiv_job.sh`, sha256 `16c90a45...`) line for line, then runs two steps of 59 minutes, one per condition.
+  - Each step runs `research/scripts/a8_equiv_driver_condition.py` (sha256 `e929e3d0...`). That is the queued job's driver (`a8_equiv_driver.py`, sha256 `51a0887b...`) restricted to one condition.
+  - Within a condition, the frozen command runs twice and the shard runner twice, then the merge, one after another on one GPU, as before. Run with `subprocess.run` stubbed, the two drivers issue the same ten commands, with the same arguments and output paths, in the same order.
+  - Both run from the scratch copy `~/rds/hpc-work/a8_check`, as the queued job does. No file in the project tree changes.
+  - That copy's `research/scripts/a8_rotation_shard.py` (`fa418669...`) and `a8_design.py` (`dba592be...`) are equal to the committed ones at `cd25575` and to those in `~/rds/hpc-work/study3`. The night's A8 fixes (2026-11-13) did not touch them.
+- **Safeguards.** 40399722 is held before the `intr` job is submitted, so the test does not run twice. It is cancelled after the `intr` job ends with both reports written. If the `intr` job fails for a cluster reason, the hold is released.
+- **Reading.** The rule is the block's `a1_gpu_rule`, unchanged. If the two frozen runs are identical, the merged shards must be identical to them; if the two frozen runs differ, A1 sharding is not shown, and A1 on A8 models waits on a dated ruling. The two `equivalence_report.json` files and the step logs are read, and the result goes into PREREG_A8's dated notes.
+- **What stays the same.** No design, threshold, code or analysis change. The hardware (A100 on `ampere`), environment, weights, items and commands are those of the queued job.
