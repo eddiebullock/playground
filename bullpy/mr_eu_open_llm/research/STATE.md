@@ -2,9 +2,9 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-11-14 12:41 Europe/London
+**Updated:** 2026-11-14 13:22 Europe/London
 
-## Hand-off, 2026-11-14 (written 01:38, last refreshed 12:41)
+## Hand-off, 2026-11-14 (written 01:38, last refreshed 13:22)
 
 **A4 is done and analysed, once, by its frozen code** (RESULTS_REGISTRY, "A4 confirmatory analysis (2026-11-14)"; Results, Sections 5 and 6; Figure 5).
 - **Gemma 4: Aligned on basic labels, Mixed on conversational states.**
@@ -43,10 +43,22 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
   - `reproduce.py`, where A2's and A5's records are hash-pinned and Figure 6 is a rebuild step.
 - The frozen A2 run printed a numerical warning from its fill check. Traced with the frozen functions, it changes no verdict (registry note).
 
-**A7 Stage 1 (your choice at about 08:40, option (a)): the first run hit a path fault, and the rerun is running.**
-- The whole job (40966325, 12:28 to 12:33) wrote 400 rows, all "failed: video_unreadable". A7's runner defaults its data root to the project root and its pinned job script passes none, while the clips are under `data/eu_emotions`. No clip was loaded, so there is no model output.
-- Documented before the rerun as a deviation (DECISIONS 2026-11-14; PREREG_A7 dated note; decisions table row 90): a copy of the pinned job script that adds only `--data_root data/eu_emotions`. The failed rows were moved unchanged to `results/a7_path_fault/`.
-- Rerun job 40966694 was submitted at 12:38. Then: pull, `analyse a7` (its pre-run check needs A2's run note, which exists), and Results 9.
+**A7 Stage 1 is done and analysed, once, by its frozen code (13:13)** (RESULTS_REGISTRY, "A7 Stage 1 route arm (2026-11-14)"; Results, Section 9; Supplementary Methods, Section S10).
+- **How it ran.** Your option (a), one whole `intr` job.
+  - The first run (40966325, 12:28 to 12:33) wrote 400 rows, all "failed: video_unreadable". A7's runner defaults its data root to the project root, its pinned job script passes none, and the clips are under `data/eu_emotions`. No clip was loaded, so no model output existed.
+  - This was documented before the rerun as a deviation (DECISIONS 2026-11-14; PREREG_A7 dated note; decisions table row 90): a copy of the pinned job script that adds only `--data_root data/eu_emotions`. The failed rows are kept unchanged in `results/a7_path_fault/` on the cluster.
+  - The rerun (40966694, 12:41 to 13:12) wrote 1,640 rows, all ok. The four `gpu2` tasks were cancelled without running and waived in the pull. Pulled at 13:13; pre-run check and analysis 13:13.
+  - A7's cells agree with A2's on the same 200 items to within .00005 in every word log-probability, so the rerun read the clips A2 read.
+- **Result.** Every precondition passed on both models, and the joint eyes-and-mouth edit had an effect (TE -3.36 and -3.07 nats).
+  - Route-arm verdicts (confirmatory, a secondary split of the complete exit cut): Gemma 4 **Carried by B** (the per-layer input at image positions); Qwen3-VL **Both blocks** (main visual tokens and DeepStack injections).
+  - The interaction riders, Additive and Synergic, are descriptive.
+  - The same verdicts held in six of seven sensitivities. The seventh, the whole-judgement RMS readout, is Inconclusive on both, because the RMS cannot be negative and the frozen effect rule needs the (negative) mask fills to share its sign.
+  - The token arm and RQ3 are not testable, as Stage 0 had already shown.
+- **Written into the paper:** Results 9, the Discussion's RQ3 branch, the Methods clause "A7 Stage 1 runs", Supplementary Methods S10 (the route arm in full), registry rows, and `reproduce.py` (A7's five records hash-pinned; A8 is now the only pending output).
+
+**What is left.**
+- **A8** only. Its GPU equivalence test (40399722, 4 h on `gpu2`) is still queued, and its code pins (Freeze checklist item 2) come next. The A8 note review is yours (below). Every GPU node is reserved from 2026-12-07 07:00.
+- **Storage, watch item (13:22):** `/rds-d7/user/eb2007` holds 1,067.6 GB (soft quota 1,099.5, hard 1,209.5) and 991,396 files (limit 1,048,576). The file count is close to where another project's job filled it on 2026-11-09 (DECISIONS 2026-11-09). Nothing of this project is writing now.
 
 **Only you can do these:**
 - Unchanged from yesterday (items below): the ethics confirmation; at submission, the Zenodo DOI and authors; optionally, the GitHub Support purge; the A8 note review.
@@ -393,7 +405,7 @@ Do not cancel A1/A2/CAS jobs. `cas_*` jobs belong to the separate CASCADE projec
 
 SSH: `ssh -o ControlPath=/Users/eb2007/.ssh/cm-%r@%h:%p -o ControlMaster=no -o BatchMode=yes eb2007@login.hpc.cam.ac.uk`
 
-Master (the user runs it, TOTP): `ssh -fN -o ControlMaster=yes -o ControlPath=/Users/eb2007/.ssh/cm-%r@%h:%p -o ControlPersist=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=10 eb2007@login.hpc.cam.ac.uk`. Do not use the `intr` QoS: the user gave it to another project's agent on 2026-11-12.
+Master (the user runs it, TOTP): `ssh -fN -o ControlMaster=yes -o ControlPath=/Users/eb2007/.ssh/cm-%r@%h:%p -o ControlPersist=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=10 eb2007@login.hpc.cam.ac.uk`. The `intr` QoS: the user gave it to another project's agent on 2026-11-12, then allowed it again for this project at 17:50 on 2026-11-13, one job at a time.
 
 ## Decoder
 

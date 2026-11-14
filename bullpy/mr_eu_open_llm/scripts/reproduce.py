@@ -659,6 +659,17 @@ PINS: Dict[str, str] = {
         "b93cc7749411ded1b502927c4143ca9928365bb8ba25b62f44ac050f34784f69",
     "results/a4/summary.json":
         "08148303f2eb6bc98b694fdc4776da2fd0f800b634cfcc1d5584c66714ee36af",
+    # Added 2026-11-14: A7 Stage 1 route arm locked (pull and single analysis by research/scripts/post_phase3.py).
+    "research/reproduction/a7_pull_manifest.json":
+        "e188e0b79679cbd48a05f216af36d0e1075430003074dac8a0ce7b7149073e1a",
+    "research/reproduction/a7_prerun.json":
+        "fb06a7efb01ba5a6b8afe856a6a4ef77620a08380e597b6fd14d776c5dd75ef2",
+    "research/reproduction/a7_inputs.json":
+        "dcd59e94bc858562a49f69a3bf6dc753415b9713574978aa5ce71949a4583af3",
+    "research/reproduction/a7_run_note.json":
+        "1ee61c4b52d56a3eecc1399c69d1c16cd1914d8dd81bf1544de0d7731774d7bd",
+    "research/reproduction/a7_analysis.json":
+        "e9c6dcab081ed623dd5e5b338a6ab6e86cd7ae18b6b86d2c597abbc2f8e25255",
     # Added 2026-11-14: A2 and A5 locked (pull and single analyses by research/scripts/post_phase3.py).
     "research/reproduction/a2_pull_manifest.json":
         "ccaddf0b8c77b33f4df3ae68d997ef81feaff44db601c837d3045752c85e91e2",
@@ -748,6 +759,10 @@ A2_RECORDS = [R + f for f in ("a2_pull_manifest.json", "a2_prerun_gemma4.json", 
                               "a2_extras_gemma4.json", "a2_extras_qwen3vl.json")]
 A5_RECORDS = [R + f for f in ("a5_prerun.json", "a5_run_note.json")] + ["results/a5/a5_analysis.json"]
 
+# A7 Stage 1, locked 2026-11-14: its pull manifest, pre-run record, inputs, run note and analysis, made by post_phase3.py from
+# four shard files kept on the cluster.
+A7_RECORDS = [R + f for f in ("a7_pull_manifest.json", "a7_prerun.json", "a7_inputs.json", "a7_run_note.json", "a7_analysis.json")]
+
 # A9, locked 2026-11-14: the same four records, made by post_phase3.py from 24 shard files kept on the cluster.
 A9_RECORDS = [R + f for f in ("a9_pull_manifest.json", "a9_prerun.json", "a9_run_note.json")] + [
     "results/a9/summary.json"]
@@ -802,6 +817,9 @@ HASH_STEPS: List[Step] = [
          _hash_outs(A2_RECORDS + A5_RECORDS, "A2 and A5 locked 2026-11-14 by post_phase3.py (pull, frozen pre-run checks, "
                                              "single frozen analyses) from shard files kept on the cluster; verified by hash, "
                                              "cannot be rerun from public inputs")),
+    Step("hash_a7_records", None, minutes=0.0, outputs=
+         _hash_outs(A7_RECORDS, "A7 Stage 1 locked 2026-11-14 by post_phase3.py (pull, frozen pre-run check, single frozen "
+                                "analysis) from shard files kept on the cluster; verified by hash, cannot be rerun from public inputs")),
     Step("hash_a9_records", None, minutes=0.0, outputs=
          _hash_outs(A9_RECORDS, "A9 locked 2026-11-14 by post_phase3.py (pull, frozen pre-run check, single "
                                 "frozen analysis) from shard files kept on the cluster; verified by hash, cannot be "
@@ -834,8 +852,8 @@ UNCOVERED: Dict[str, str] = {}
 # Outputs of analyses that have not run. Listed by path only: nothing here is run, opened or
 # stat-ed, so a pending result cannot be read early. Each moves into STEPS when it is locked.
 PENDING: List[Tuple[str, Tuple[str, ...], str]] = [
-    ("A7 Stage 1 route arm", (R + "a7_analysis.json",),
-     "python -m scripts.a7_analyse (frozen, tag a7-freeze); runs only where Gate B and the sham pass"),
+    ("A8 larger models, A4 on the A8 models", ("results/a8/a4/summary.json",),
+     "research/scripts/a8_* and the frozen pipelines; needs the A8 runs, which wait on the A8 code pins"),
 ]
 
 

@@ -93,14 +93,11 @@ A scoped limit in every branch (DECISIONS 2026-11-07). Stage 0 is locked (RESULT
 
 On both eligible models the only complete cut of the vision path was the whole path, at its exit into the language model, and the contrast of a whole-path cut is zero by construction. No site inside the language model was shown to be a complete cut, so whether a cue's effect is carried through the language model is not testable here beyond the interface. The tokens at a cue's location did not hold its effect on Gemma 4, where it leaked past them, and could not be located reliably on Qwen3-VL, so cue-level mediation is not testable by a token cut on either model.
 
-Then one sentence for the route arm, a secondary split of the complete exit cut reported in the supplement, which has no human reading and never answers RQ3:
+<!-- 2026-11-14, step 4.3: the "Carried by one block, or Both blocks" branch, which matches the locked route arm. The other branches are in the git history at e0466c9. -->
 
-- **Carried by one block, or Both blocks.** On this edit and readout, [model]'s change was carried by [block]. The interaction rider, [rider], is descriptive and is given with its recovery rates. This is about which tensor carries the effect of one eyes-and-mouth edit, not about how the model reads faces.
-- **No effect to carry.** The joint eyes-and-mouth edit did not move [model]'s option-free judgement enough to trace; a statement about the edit, reported with its recovery reach (.62 to .65 at the null).
-- **Not tested.** The route arm's preconditions (Gate B, the sham or the gates) failed for [model], applied by code as recorded before any A2 output existed.
-- **Inconclusive.** [reason code].
+**The route arm: carried by one block, or both blocks.** The route arm, a secondary split of the complete exit cut reported in the Supplementary Information, has no human reading and never answers RQ3. On this edit and readout, Gemma 4's change was carried by its per-layer input at image positions, and Qwen3-VL's by both its main visual tokens and its DeepStack injections. The interaction riders, Additive and Synergic, are descriptive, and are given with their recovery rates in the Supplementary Information. This is about which tensor carries the effect of one eyes-and-mouth edit, not about how the model reads faces.
 
-Never "the model does not use route R" without "on this edit"; never "blocking route R"; no depth statement about the language model.
+<!-- Wording rule kept from the draft: never "the model does not use route R" without "on this edit"; never "blocking route R"; no depth statement about the language model. -->
 
 ## RQ5
 
