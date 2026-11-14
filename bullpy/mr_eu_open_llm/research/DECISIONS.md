@@ -886,3 +886,16 @@ An independent reader (ROADMAP step 4.6) checked the text written on 2026-11-14 
   - The locked per-model detail of Results 6b, 7 and 9 moves word for word to the Supplementary Information, as A4's did under cut 2. The main text keeps each headline, the values the decisions rest on, and the exceptions.
   - The Discussion's opening and RQ1 sections drop what repeats the Results.
   - As with cuts 1 to 5, no claim, number or disclosure leaves the paper, and every value keeps its registry marker.
+
+## 2026-11-14: A8's GPU equivalence test asks for a whole node's four GPUs (scheduling only, before any A8 output)
+
+The test is the one in the entry "A8's GPU equivalence test runs as one intr job" above. Only the job's request for resources changes.
+- **Why.** At 20:27 the `intr` job 40969184, which asks for two GPUs on one node, had waited 6 h 33 min. It was 12th of 15 pending `intr` jobs, with no start estimate.
+  - Every job running on `ampere` at 20:27 held all four GPUs of each of its nodes.
+  - Jobs that ask for one or two GPUs have waited for days. The oldest pending `intr` job, another user's request for two GPUs for 10 minutes, has waited since 2026-11-11 20:32 with the reason "Resources". On 2026-11-13 this project recorded that no one-GPU `intr` job had started on the A100s since 2026-11-12 13:26 (STATE, hand-off of 2026-11-13).
+  - Jobs that ask for every GPU of a node start within minutes. All 24 of this project's `intr` jobs from 2026-11-13 18:17 to 2026-11-14 12:38 (the A4, A2, A9 and A7 slices, one to three nodes each) started 0.3 to 8.5 minutes after submission (`sacct`). Another user's two-node job of this shape, submitted at 19:52, started at 19:59.
+  - The cause is not known. Of the 74 `ampere` nodes, 31 were powered down at 20:27 and in no reservation before the shutdown of 2026-12-07.
+- **What changes.** `slurm_jobs/a8_equiv_intr.sh` asks for the node's four GPUs, four tasks and 500 GB, the shape of the A4 slices (`study3_intr_slices.sh`), instead of two GPUs, two tasks and 250 GB. Its sha256 goes from `75929945...` to `b180e6b1...`.
+- **What stays the same.** The two steps run as before, one GPU each, so two GPUs stay idle. The driver, commands, environment, items, outputs, 59-minute caps and the reading rule (`a1_gpu_rule`) are unchanged, as are the safeguards. The job costs at most four GPU-hours of the free allocation, against two.
+- **How.** 40969184 is cancelled before the new job is submitted, so only one `intr` job exists at a time. 40399722 stays held. The wrapper is copied to the scratch copy and checked against the commit before submission.
+- **Disclosure.** Decisions table row 94. Row 93, added with it, is the go-ahead entry above, which had no row.
