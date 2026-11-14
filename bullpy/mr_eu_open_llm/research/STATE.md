@@ -2,9 +2,9 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-11-14 06:37 Europe/London
+**Updated:** 2026-11-14 13:22 Europe/London
 
-## Hand-off, 2026-11-14 (written 01:38, last refreshed 06:37)
+## Hand-off, 2026-11-14 (written 01:38, last refreshed 13:22)
 
 **A4 is done and analysed, once, by its frozen code** (RESULTS_REGISTRY, "A4 confirmatory analysis (2026-11-14)"; Results, Sections 5 and 6; Figure 5).
 - **Gemma 4: Aligned on basic labels, Mixed on conversational states.**
@@ -28,15 +28,40 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
   - The local pre-freeze copy of A9's manifest was byte-identical to the pin. It was moved to `results/a9_local_premanifest/` so that the pull could write the cluster's copy.
 - Written into the paper: Results 6b and 8, the Discussion (A9 branches), Table 1 (A9 column) and `reproduce.py` (A9 records hash-pinned).
 
-**Running now: A2 and A9, in combined `intr` slices** (chain started automatically at 01:03 when A4 finished; DECISIONS 2026-11-13, A2 and A9 entries).
-- Slice 1 (40945403, from 01:06, two nodes) carries A2's six shards and both A9 timing smokes. Both smokes were complete (40 cells each) by 01:35.
-- From slice 2, A9's scored shards fill the spare GPUs. Gemma 4 and Qwen3-VL are both eligible under RQ0 and A4's gates, which were locked on 2026-11-12.
-- A2 is slower than its sizing (4 to 6 GPU-hours a shard). Measured over the first slice: Gemma 4 about 5.8 s per cell, so about five slices (done around 06:00); Qwen3-VL about 13 s per cell, so about eleven slices (done around midday).
-- A2's Gemma shards were complete at 05:35. Its three Qwen shards now run alone, on one node, about 190 cells a slice, so complete around 12:30. Then: pull, `analyse a2`, then A5, then A7 (ROADMAP Part 3).
+**A2 is done and analysed (12:26 to 12:28), and A5 after it (12:32)** (RESULTS_REGISTRY, "A2 confirmatory analysis (2026-11-14)" and "A5 confirmatory analysis (2026-11-14)"; Results, Sections 7 and 10; Figure 6).
+- **A2:** every gate passed on both routes for both models.
+  - On a single face, masks and frequency filters matched the human-derived predictions on 5 of 10 contrasts for Gemma 4 and 4 of 10 for Qwen3-VL, three per model at *P* < .01.
+  - Frame-order changes matched nothing, and Gemma 4 had one Opposes (P12, not at .01). No Null.
+  - Sensitivity: only P1 (the mouth mask on Happy) holds on both models in every sensitivity.
+- **A5:** the evidence class (the only confirmatory claim) is Shown on all four model-and-route cells. Balance, descriptive, is Even for Gemma 4 and Face for Qwen3-VL.
+- **Written into the paper:**
+  - Results 7, 8 and 10;
+  - Figure 6 (checked by eye) and Table 1 (complete);
+  - the Discussion: opening paragraph assembled, RQ2 and RQ4 branches picked;
+  - the Abstract, complete at 149 words;
+  - Supplementary Methods S8, "A2 results in full";
+  - `reproduce.py`, where A2's and A5's records are hash-pinned and Figure 6 is a rebuild step.
+- The frozen A2 run printed a numerical warning from its fill check. Traced with the frozen functions, it changes no verdict (registry note).
 
-**Not done, and why.** A7 Stage 1 (40795186, 40795187) is still on `gpu2`. Its runner skips an item once the item's first row is written, so a budget stop in the middle of an item could leave that item incomplete for good, and A7 has no repair rule for that. It needs either whole one-hour `intr` jobs of up to 59 minutes, between slices, or a pre-data ruling. I left that for you to see.
+**A7 Stage 1 is done and analysed, once, by its frozen code (13:13)** (RESULTS_REGISTRY, "A7 Stage 1 route arm (2026-11-14)"; Results, Section 9; Supplementary Methods, Section S10).
+- **How it ran.** Your option (a), one whole `intr` job.
+  - The first run (40966325, 12:28 to 12:33) wrote 400 rows, all "failed: video_unreadable". A7's runner defaults its data root to the project root, its pinned job script passes none, and the clips are under `data/eu_emotions`. No clip was loaded, so no model output existed.
+  - This was documented before the rerun as a deviation (DECISIONS 2026-11-14; PREREG_A7 dated note; decisions table row 90): a copy of the pinned job script that adds only `--data_root data/eu_emotions`. The failed rows are kept unchanged in `results/a7_path_fault/` on the cluster.
+  - The rerun (40966694, 12:41 to 13:12) wrote 1,640 rows, all ok. The four `gpu2` tasks were cancelled without running and waived in the pull. Pulled at 13:13; pre-run check and analysis 13:13.
+  - A7's cells agree with A2's on the same 200 items to within .00005 in every word log-probability, so the rerun read the clips A2 read.
+- **Result.** Every precondition passed on both models, and the joint eyes-and-mouth edit had an effect (TE -3.36 and -3.07 nats).
+  - Route-arm verdicts (confirmatory, a secondary split of the complete exit cut): Gemma 4 **Carried by B** (the per-layer input at image positions); Qwen3-VL **Both blocks** (main visual tokens and DeepStack injections).
+  - The interaction riders, Additive and Synergic, are descriptive.
+  - The same verdicts held in six of seven sensitivities. The seventh, the whole-judgement RMS readout, is Inconclusive on both, because the RMS cannot be negative and the frozen effect rule needs the (negative) mask fills to share its sign.
+  - The token arm and RQ3 are not testable, as Stage 0 had already shown.
+- **Written into the paper:** Results 9, the Discussion's RQ3 branch, the Methods clause "A7 Stage 1 runs", Supplementary Methods S10 (the route arm in full), registry rows, and `reproduce.py` (A7's five records hash-pinned; A8 is now the only pending output).
 
-**Only you can do these:** unchanged from yesterday (items below): the ethics confirmation; at submission, the Zenodo DOI and authors; optionally, the GitHub Support purge; the A8 note review; and the length plan's structural choice (item 5).
+**What is left.**
+- **A8** only. Its GPU equivalence test (40399722, 4 h on `gpu2`) is still queued, and its code pins (Freeze checklist item 2) come next. The A8 note review is yours (below). Every GPU node is reserved from 2026-12-07 07:00.
+- **Storage, watch item (13:22):** `/rds-d7/user/eb2007` holds 1,067.6 GB (soft quota 1,099.5, hard 1,209.5) and 991,396 files (limit 1,048,576). The file count is close to where another project's job filled it on 2026-11-09 (DECISIONS 2026-11-09). Nothing of this project is writing now.
+
+**Only you can do these:**
+- Unchanged from yesterday (items below): the ethics confirmation; at submission, the Zenodo DOI and authors; optionally, the GitHub Support purge; the A8 note review.
 
 ## Earlier hand-off, 2026-11-13 (written 05:35, last refreshed 23:13; kept for reference)
 
@@ -252,6 +277,25 @@ With cuts 4 and 5, the main text is about 490 words shorter. What remains waits 
 - `analyse a9`: pre-run check and frozen analysis 06:33 to 06:34 (run note; summary sha256 `1d1a9995...`).
 - Commits `453d69e` (records and registry) and `39ef296` (Results 6b and 8, Discussion, Table 1, `reproduce.py`).
 
+**2026-11-14 08:44:** You chose option (a) for A7 Stage 1 (NEEDS_INPUT 12, now resolved).
+- Wrapper written and stub-tested on the login node (11 of 11 checks), then copied to the cluster (sha256 `241bfa74...`).
+- The four A7 `gpu2` tasks are held. No A7 Stage 1 cell existed.
+- `seq_a7.sh` waits for A2's chain to end DONE, then submits the job.
+- Records: DECISIONS 2026-11-14 entry, decisions table row 89, and the ROADMAP A7 step with its pull and waivers.
+
+**2026-11-14 11:37:** You approved length plan cut 1 (item 5) and said to proceed with all other jobs.
+- The Discussion's 26-item Limitations list moved word for word to Supplementary Methods, Section S12, and the decisions table's 40 citations now point there.
+- The Discussion keeps a 207-word paragraph on the five limits that bear on the claims.
+- A2's last Qwen cells are finishing, and A7 follows on its own.
+
+**2026-11-14 12:41:** A2 complete at 12:25.
+- 13 combined slices; six shards of 2,349 cells, with no A2-2 repair.
+- Pulled at 12:26 and analysed once, 12:26 to 12:28. A5 analysed once at 12:32.
+- A7's whole job ran 12:28 to 12:33 and every row failed on a path fault. The deviation was documented, then rerun job 40966694 was submitted at 12:38.
+- Paper: Results 7, 8 and 10; Figure 6; Table 1; Discussion opening, RQ2 and RQ4; Abstract complete; S8 full account; `reproduce.py`.
+- Commits `e36fd7a`, `6d01d23`, `1666513`, `3f718bb` and later.
+- Full suite at `d21f2f0`: 1,123 passed, 26 skipped, 0 failed. Clean-checkout reproduction of the changed steps: Table 1 and Figure 5 byte-identical, A4's and A9's eight records verified by hash, 0 failed. Merged into `main` as PR #121, true merge commit `96a1ce4` (06:50).
+
 **2026-11-13 11:47:** Supplementary decisions table brought up to date: rows 81 to 83 for today's three new decision-log entries, and a superseded-entries row (75 to 83). It again has one row per entry, 83, checked in order against DECISIONS. ROADMAP Phase 4 status refreshed: every step that needs no new GPU output is done. The node counts in the 11:20 correction now include the node that was powering up. Full suite at `62a8b79` with these record edits: 1,096 passed, 26 skipped, 0 failed. Merged into `main` as PR #115, true merge commit `da95a75` (11:48).
 
 **2026-11-13 11:20:** Queue unchanged at 11:16: nothing started or failed. Oldest jobs at priority 208. Correction: the 32-GPU limit of `gpu2` is per user (`MaxTRESPU`), not shared by all SL3 users as written from 03:15 on; at 11:12 `gpu2` had 36 GPUs in use, 32 of them one user's. Our jobs wait because the A100 partition is full (46 of 74 nodes busy, 17 in maintenance, 1 down, 1 powering up, 9 powered down) and 381 jobs rank above ours, 233 of them paid-tier. No decision changes. Corrected in the hand-off and the ROADMAP risk row; a new DECISIONS entry, with a pointer from the A9 entry; a dated note in the A9 prereg, outside its hashed block. Entries below keep their "of 32" counts: the GPUs in use were counted right, only the limit was misread. RDS 1,067.5 GB, 991,118 files.
@@ -361,7 +405,7 @@ Do not cancel A1/A2/CAS jobs. `cas_*` jobs belong to the separate CASCADE projec
 
 SSH: `ssh -o ControlPath=/Users/eb2007/.ssh/cm-%r@%h:%p -o ControlMaster=no -o BatchMode=yes eb2007@login.hpc.cam.ac.uk`
 
-Master (the user runs it, TOTP): `ssh -fN -o ControlMaster=yes -o ControlPath=/Users/eb2007/.ssh/cm-%r@%h:%p -o ControlPersist=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=10 eb2007@login.hpc.cam.ac.uk`. Do not use the `intr` QoS: the user gave it to another project's agent on 2026-11-12.
+Master (the user runs it, TOTP): `ssh -fN -o ControlMaster=yes -o ControlPath=/Users/eb2007/.ssh/cm-%r@%h:%p -o ControlPersist=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=10 eb2007@login.hpc.cam.ac.uk`. The `intr` QoS: the user gave it to another project's agent on 2026-11-12, then allowed it again for this project at 17:50 on 2026-11-13, one job at a time.
 
 ## Decoder
 

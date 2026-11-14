@@ -95,3 +95,18 @@ These only matter at submission. Nothing waits on them.
 **Meanwhile.** Nothing waits on it.
 
 **Resolved 2026-11-13, on your instruction: recoded to "no".** The table, registry row, pinned counts, Results paragraph and Figure 1e legend were updated, and Figure 1 was rebuilt (DECISIONS 2026-11-13).
+
+## 12. How to run A7 Stage 1 (decision, 2026-11-14) — RESOLVED 2026-11-14
+
+**Context.** A7 Stage 1's route arm (Gemma 4 40795186, Qwen3-VL 40795187; two 59-minute tasks each) is still queued on `gpu2`, where it would wait days. A2, A4 and A9 ran through one-hour `intr` slices that resume a shard where it stopped. A7 cannot run that way as it stands. Its runner (`scripts/a7_run.py`) skips an item once that item's first row is written and flushes an item's rows together. So a time-budget stop in the middle of writing an item could leave that item incomplete for good, and A7's pre-run check would then refuse the shard. A7 has no repair rule for this, as A2 has in A2-2. A7's analysis also needs A2's analysis first (about 12:30 today, once A2's Qwen shards finish).
+
+**Exact question.** Which way should A7 Stage 1 run?
+- (a) As one whole `intr` job of four steps, one per task. Each step keeps its 59-minute cap with no slicing, which matches the gpu2 tasks as submitted. It would go in after the last A2 slice, or between slices. This needs only a scheduling DECISIONS note.
+- (b) Inside the slices, with a pre-data ruling, like A2-2, to drop an incomplete last item before each resumed run. This needs a dated note in PREREG_A7 and new wrapper code.
+- (c) Leave it on `gpu2`.
+
+**Recommended default.** (a): no change to frozen code and no new ruling, and the same cap and settings as submitted (`ARMS=route DECISION_DATE=2026-11-10 N_SHARDS=2 A7_FROZEN=1 STEP=run`). If you agree, I will write the note and submit it after the last A2 slice, so A7's cells are ready when A2's analysis is.
+
+**Meanwhile.** Nothing else waits on it. A7 is the optional route-arm supplement (PREREG_A7, Recommendation).
+
+**Resolved 2026-11-14, about 08:40, on your instruction: option (a).** The wrapper `slurm_jobs/study3_intr_a7_stage1.sh` passed 11 stub checks and is on the cluster. The four `gpu2` tasks are held. A sequencer submits the job once A2's last slice ends (DECISIONS 2026-11-14).

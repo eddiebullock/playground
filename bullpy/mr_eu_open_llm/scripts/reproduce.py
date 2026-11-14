@@ -290,13 +290,16 @@ STEPS: List[Step] = [
          minutes=0.1, pre="committed_figure_inputs",
          note="Figures 1 and 3 from the committed copies of their inputs, so SOURCES.md records the committed "
               "sha256 (prompt_confound_audit.json is rebuilt above only within tolerance: its Monte Carlo p-values, "
-              "which no panel plots, differ in the last digits); Figure 6 is pending (PENDING)"),
+              "which no panel plots, differ in the last digits)"),
     Step("paper_figure_2", _py("research/scripts/make_figures.py", "--fig", "2", "--real"),
          [Out("research/paper/v2/figures/fig2.png"), Out("research/paper/v2/figures/fig2.pdf")],
          minutes=0.1, note="Figure 2 from the locked A1 and A3 summaries, which are hash-verified records"),
     Step("paper_figure_4", _py("research/scripts/make_figures.py", "--fig", "4", "--real"),
          [Out("research/paper/v2/figures/fig4.png"), Out("research/paper/v2/figures/fig4.pdf")],
          minutes=0.1, note="Figure 4 from the locked natural-clip files (hash-verified) and the route recovery files"),
+    Step("paper_figure_6", _py("research/scripts/make_figures.py", "--fig", "6", "--real"),
+         [Out("research/paper/v2/figures/fig6.png"), Out("research/paper/v2/figures/fig6.pdf")],
+         minutes=0.1, note="Figure 6 from the locked A2 outputs and declared extras (hash-verified)"),
     Step("paper_figure_5", _py("research/scripts/make_figures.py", "--fig", "5", "--real"),
          [Out("research/paper/v2/figures/fig5.png"), Out("research/paper/v2/figures/fig5.pdf")],
          minutes=0.1, note="Figure 5 from the locked A4 summary (hash-verified)"),
@@ -656,6 +659,40 @@ PINS: Dict[str, str] = {
         "b93cc7749411ded1b502927c4143ca9928365bb8ba25b62f44ac050f34784f69",
     "results/a4/summary.json":
         "08148303f2eb6bc98b694fdc4776da2fd0f800b634cfcc1d5584c66714ee36af",
+    # Added 2026-11-14: A7 Stage 1 route arm locked (pull and single analysis by research/scripts/post_phase3.py).
+    "research/reproduction/a7_pull_manifest.json":
+        "e188e0b79679cbd48a05f216af36d0e1075430003074dac8a0ce7b7149073e1a",
+    "research/reproduction/a7_prerun.json":
+        "fb06a7efb01ba5a6b8afe856a6a4ef77620a08380e597b6fd14d776c5dd75ef2",
+    "research/reproduction/a7_inputs.json":
+        "dcd59e94bc858562a49f69a3bf6dc753415b9713574978aa5ce71949a4583af3",
+    "research/reproduction/a7_run_note.json":
+        "1ee61c4b52d56a3eecc1399c69d1c16cd1914d8dd81bf1544de0d7731774d7bd",
+    "research/reproduction/a7_analysis.json":
+        "e9c6dcab081ed623dd5e5b338a6ab6e86cd7ae18b6b86d2c597abbc2f8e25255",
+    # Added 2026-11-14: A2 and A5 locked (pull and single analyses by research/scripts/post_phase3.py).
+    "research/reproduction/a2_pull_manifest.json":
+        "ccaddf0b8c77b33f4df3ae68d997ef81feaff44db601c837d3045752c85e91e2",
+    "research/reproduction/a2_prerun_gemma4.json":
+        "77b2af0ef2da942023c043e02da05e9eb8a4aaddf3ee2d5c354c13951e367fae",
+    "research/reproduction/a2_prerun_qwen3vl.json":
+        "07a7a83d5f393efb50cebf2ec1f7e3153b59d348a8911e1116c781e5d7c079ef",
+    "research/reproduction/a2_run_note.json":
+        "3dd50b3762c507a4a8d608419ffdd800ba1ff22ba22680f6b4ff4a08f7a63b98",
+    "research/reproduction/stimulus_interventions_gemma4.json":
+        "4ceb8840aa98d0b8980e565eb32ecda455d14689549e3dde2a9dbf9fdf655c0c",
+    "research/reproduction/stimulus_interventions_qwen3vl.json":
+        "ff6a7741f610f3950501b9cc6ca02268ad1b579d4569230ea203a19df831bf07",
+    "research/reproduction/a2_extras_gemma4.json":
+        "792ee9adabb9e232c795a1dee0f5254d6fb71aa6d5621f1bfd0f680307e915b4",
+    "research/reproduction/a2_extras_qwen3vl.json":
+        "0d2e8d0d0efb3c60e5a6656eb98a71acf97cd28eee27a882c2c100a6538725ca",
+    "research/reproduction/a5_prerun.json":
+        "764c441905598b25b992a57a87659c59871095a2a749ad5f93f319e4e8b67a7b",
+    "research/reproduction/a5_run_note.json":
+        "3f980c9fabf7aeb08512d4fc33687ffa5b31f4d32f940f5bf4341deaac1cee1d",
+    "results/a5/a5_analysis.json":
+        "3fb4f5dea3450cc6eb126c0d132bbdc785c6aa00abf381e7e89df2b4b8471a07",
     # Added 2026-11-14: A9 locked (pull and single analysis by research/scripts/post_phase3.py).
     "research/reproduction/a9_pull_manifest.json":
         "44ba0e2aeee91c8594235a724d4deef3e5a244332b2a139479eab846f60bb294",
@@ -714,6 +751,18 @@ A1_RECORDS = [R + f for f in (
 A4_RECORDS = [R + f for f in ("a4_pull_manifest.json", "a4_prerun.json", "a4_run_note.json")] + [
     "results/a4/summary.json"]
 
+# A2 and A5, locked 2026-11-14: A2's pull manifest, pre-run records, run note, per-model outputs and declared extras,
+# made by post_phase3.py from six shard files kept on the cluster; A5's pre-run record, run note and output, made from
+# A2's cells.
+A2_RECORDS = [R + f for f in ("a2_pull_manifest.json", "a2_prerun_gemma4.json", "a2_prerun_qwen3vl.json", "a2_run_note.json",
+                              "stimulus_interventions_gemma4.json", "stimulus_interventions_qwen3vl.json",
+                              "a2_extras_gemma4.json", "a2_extras_qwen3vl.json")]
+A5_RECORDS = [R + f for f in ("a5_prerun.json", "a5_run_note.json")] + ["results/a5/a5_analysis.json"]
+
+# A7 Stage 1, locked 2026-11-14: its pull manifest, pre-run record, inputs, run note and analysis, made by post_phase3.py from
+# four shard files kept on the cluster.
+A7_RECORDS = [R + f for f in ("a7_pull_manifest.json", "a7_prerun.json", "a7_inputs.json", "a7_run_note.json", "a7_analysis.json")]
+
 # A9, locked 2026-11-14: the same four records, made by post_phase3.py from 24 shard files kept on the cluster.
 A9_RECORDS = [R + f for f in ("a9_pull_manifest.json", "a9_prerun.json", "a9_run_note.json")] + [
     "results/a9/summary.json"]
@@ -764,6 +813,13 @@ HASH_STEPS: List[Step] = [
          _hash_outs(A4_RECORDS, "A4 locked 2026-11-14 by post_phase3.py (pull, frozen pre-run check, single "
                                 "frozen analysis) from shard files kept on the cluster; verified by hash, cannot be "
                                 "rerun from public inputs")),
+    Step("hash_a2_a5_records", None, minutes=0.0, outputs=
+         _hash_outs(A2_RECORDS + A5_RECORDS, "A2 and A5 locked 2026-11-14 by post_phase3.py (pull, frozen pre-run checks, "
+                                             "single frozen analyses) from shard files kept on the cluster; verified by hash, "
+                                             "cannot be rerun from public inputs")),
+    Step("hash_a7_records", None, minutes=0.0, outputs=
+         _hash_outs(A7_RECORDS, "A7 Stage 1 locked 2026-11-14 by post_phase3.py (pull, frozen pre-run check, single frozen "
+                                "analysis) from shard files kept on the cluster; verified by hash, cannot be rerun from public inputs")),
     Step("hash_a9_records", None, minutes=0.0, outputs=
          _hash_outs(A9_RECORDS, "A9 locked 2026-11-14 by post_phase3.py (pull, frozen pre-run check, single "
                                 "frozen analysis) from shard files kept on the cluster; verified by hash, cannot be "
@@ -796,15 +852,8 @@ UNCOVERED: Dict[str, str] = {}
 # Outputs of analyses that have not run. Listed by path only: nothing here is run, opened or
 # stat-ed, so a pending result cannot be read early. Each moves into STEPS when it is locked.
 PENDING: List[Tuple[str, Tuple[str, ...], str]] = [
-    ("A2 stimulus interventions (Figure 6)",
-     tuple(R + f"stimulus_interventions_{m}.json" for m in ("gemma4", "qwen3vl")),
-     "scripts/analyse_stimulus_interventions.py; needs cluster cells"),
-    ("A5 analysis", ("results/a5/a5_analysis.json",), "python -m scripts.a5_analyse (frozen, tag a5-freeze); needs A2 cells"),
-    ("A7 Stage 1 route arm", (R + "a7_analysis.json",),
-     "python -m scripts.a7_analyse (frozen, tag a7-freeze); runs only where Gate B and the sham pass"),
-    ("Figure 6",
-     tuple(f"research/paper/v2/figures/fig6.{e}" for e in ("pdf", "png")),
-     "research/scripts/make_figures.py --fig N --real, which refuses until its LOCKED inputs exist"),
+    ("A8 larger models, A4 on the A8 models", ("results/a8/a4/summary.json",),
+     "research/scripts/a8_* and the frozen pipelines; needs the A8 runs, which wait on the A8 code pins"),
 ]
 
 

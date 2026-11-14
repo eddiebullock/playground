@@ -1,0 +1,3955 @@
+{
+ "amendment": "A7",
+ "design_sha256": "9e40cfcfbe8761703da22cf2400c3af6cc7f05019df8b186f91e421dce50bb09",
+ "target": "acted",
+ "n_excluded": 0,
+ "rq3": {
+  "gemma4": {
+   "model": "gemma4",
+   "rq3": "not testable",
+   "scope": "beyond the interface",
+   "complete_cuts": [
+    "exit"
+   ],
+   "complete_cut_contrast": "zero by construction (validity, not a finding)",
+   "stage0_status": "complete",
+   "a5_w_caveat": false
+  },
+  "qwen3vl": {
+   "model": "qwen3vl",
+   "rq3": "not testable",
+   "scope": "beyond the interface",
+   "complete_cuts": [
+    "exit"
+   ],
+   "complete_cut_contrast": "zero by construction (validity, not a finding)",
+   "stage0_status": "complete",
+   "a5_w_caveat": false
+  }
+ },
+ "family": {
+  "columns": [
+   "gemma4/endpoints/TE",
+   "gemma4/route/phi_A",
+   "gemma4/route/phi_B",
+   "gemma4/route/I",
+   "qwen3vl/endpoints/TE",
+   "qwen3vl/route/phi_A",
+   "qwen3vl/route/phi_B",
+   "qwen3vl/route/I"
+  ],
+  "n_flips": 131072,
+  "exact": true
+ },
+ "models": {
+  "gemma4": {
+   "stage0_arms_admitted": {
+    "route": true,
+    "token": false
+   },
+   "dead_blocks_stage0": [],
+   "preconditions": {
+    "rq0": true,
+    "g2_g4": true,
+    "gate_b": true,
+    "delivery": true,
+    "sham": true
+   },
+   "te": {
+    "mean": -3.3555151046203617,
+    "p_maxt": 1.52587890625e-05,
+    "ci95": [
+     -4.152059804723789,
+     -2.575322764046784
+    ],
+    "ci90": [
+     -4.015122864617164,
+     -2.7115588519287694
+    ],
+    "n_actors": 17,
+    "n_items": 200
+   },
+   "te_margin": 0.7245717244757987,
+   "fills": {
+    "mask_eyesmouth_first": -2.1946144318100202,
+    "mask_eyesmouth_blur": -2.7946530888454837
+   },
+   "effect_class": "Present",
+   "share_margin": 0.6711030209240724,
+   "arms": {
+    "route": {
+     "model": "gemma4",
+     "arm": "route",
+     "kind": "block",
+     "label": "decomposition",
+     "heading": "decomposition of the complete exit cut",
+     "verdict": "Carried by B",
+     "reason": null,
+     "riders": [
+      "Additive"
+     ],
+     "reading": null,
+     "decision": {
+      "run": true,
+      "date": "2026-11-10",
+      "reason": "DECISIONS 2026-11-10, A7 Stage 1 scope: route arm run on Gemma 4 and Qwen3-VL, conditional on the preconditions, applied by code (DECISIONS 2026-11-12)"
+     },
+     "sentinel": {
+      "n": 20,
+      "worst_abs_nats": 0.0,
+      "failed": [],
+      "pass": true
+     },
+     "n_items_complete": 200,
+     "n_items": 200,
+     "terms": {
+      "phi_A": {
+       "mean": -0.3172788262513788,
+       "p_maxt": 9.1552734375e-05,
+       "ci95": [
+        -0.41535333732932206,
+        -0.21856427174709464
+       ],
+       "ci90": [
+        -0.4001106046276125,
+        -0.23530805367148938
+       ],
+       "n_actors": 17
+      },
+      "phi_B": {
+       "mean": -3.038236278368982,
+       "p_maxt": 1.52587890625e-05,
+       "ci95": [
+        -3.7539327685708885,
+        -2.3348761314252044
+       ],
+       "ci90": [
+        -3.6387501788697496,
+        -2.4577801326043525
+       ],
+       "n_actors": 17
+      },
+      "I": {
+       "mean": -0.2575756175522272,
+       "p_maxt": 0.000244140625,
+       "ci95": [
+        -0.35181627524536263,
+        -0.15955670108411157
+       ],
+       "ci90": [
+        -0.3363046691145378,
+        -0.1783018630218214
+       ],
+       "n_actors": 17
+      }
+     },
+     "riders_descriptive": {
+      "TE": {
+       "mean": -3.3555151046203617,
+       "ci95": [
+        -4.152059804723789,
+        -2.575322764046784
+       ]
+      },
+      "PE_A": {
+       "mean": -0.1884910174752652,
+       "ci95": [
+        -0.2662167895445529,
+        -0.10506281914112256
+       ]
+      },
+      "PE_B": {
+       "mean": -2.9094484695928684,
+       "ci95": [
+        -3.6116783126712866,
+        -2.2028740836920986
+       ]
+      },
+      "N_A": {
+       "mean": -0.44606663502749244,
+       "ci95": [
+        -0.5771382206476429,
+        -0.3152591769547467
+       ]
+      },
+      "N_B": {
+       "mean": -3.1670240871450956,
+       "ci95": [
+        -3.892067753472783,
+        -2.46308077301212
+       ]
+      },
+      "block_relative_change": {
+       "A": {
+        "min": 0.1684423327261647,
+        "median": 0.32339621868026197,
+        "n": 200
+       },
+       "B": {
+        "min": 0.07817643414276426,
+        "median": 0.153053356052955,
+        "n": 200
+       }
+      }
+     },
+     "carrying_class": "B only",
+     "verdict_confirmatory": true,
+     "interaction_rider_confirmatory": false,
+     "confirmatory": {
+      "verdict": "Carried by B",
+      "reason": null,
+      "reading": null,
+      "not_local": false,
+      "scope": "secondary decomposition, not an RQ3 result",
+      "recovery_reach_observers": []
+     },
+     "descriptive": {
+      "interaction_rider": [
+       "Additive"
+      ],
+      "carrying_class": "B only",
+      "riders_descriptive": true,
+      "confirmatory": false,
+      "note": "The interaction rider (Additive, Redundant, Synergic, Interaction unresolved), the carrying class behind a non-carrying verdict, and the PE, N and block-change riders are descriptive: no confirmatory claim rests on them (recovery: the Additive rider reached .758 to .792 against .80). No effect to carry is confirmatory with its recovery reach (.622 and .652 at the null) reported beside it; a null edit that ends Inconclusive is read as Inconclusive. The whole arm is a secondary decomposition of the complete exit cut, never an RQ3 result."
+     }
+    },
+    "token": {
+     "model": "gemma4",
+     "arm": "token",
+     "kind": "block",
+     "label": "decomposition",
+     "heading": "decomposition of the complete exit cut",
+     "verdict": "Not testable",
+     "reason": "stage0_not_shown",
+     "riders": [],
+     "reading": null,
+     "decision": {
+      "run": false,
+      "date": "2026-11-10",
+      "reason": "DECISIONS 2026-11-10, A7 Stage 1 scope: token arm not run; Stage 0 did not admit it"
+     },
+     "sentinel": null,
+     "verdict_confirmatory": true,
+     "interaction_rider_confirmatory": false,
+     "confirmatory": {
+      "verdict": "Not testable",
+      "reason": "stage0_not_shown",
+      "reading": null,
+      "not_local": false,
+      "scope": "secondary decomposition, not an RQ3 result",
+      "recovery_reach_observers": []
+     },
+     "descriptive": {
+      "interaction_rider": [],
+      "carrying_class": null,
+      "riders_descriptive": false,
+      "confirmatory": false,
+      "note": "The interaction rider (Additive, Redundant, Synergic, Interaction unresolved), the carrying class behind a non-carrying verdict, and the PE, N and block-change riders are descriptive: no confirmatory claim rests on them (recovery: the Additive rider reached .758 to .792 against .80). No effect to carry is confirmatory with its recovery reach (.622 and .652 at the null) reported beside it; a null edit that ends Inconclusive is read as Inconclusive. The whole arm is a secondary decomposition of the complete exit cut, never an RQ3 result."
+     }
+    }
+   },
+   "a2_crosscheck": {
+    "descriptive": true,
+    "original": {
+     "max_abs_word_logprob": 4.997558593800022e-05,
+     "n_items": 200
+    },
+    "mask_eyesmouth_neutral": {
+     "max_abs_word_logprob": 4.999752044554384e-05,
+     "n_items": 200
+    }
+   }
+  },
+  "qwen3vl": {
+   "stage0_arms_admitted": {
+    "route": true,
+    "token": false
+   },
+   "dead_blocks_stage0": [],
+   "preconditions": {
+    "rq0": true,
+    "g2_g4": true,
+    "gate_b": true,
+    "delivery": true,
+    "sham": true
+   },
+   "te": {
+    "mean": -3.074019258383502,
+    "p_maxt": 1.52587890625e-05,
+    "ci95": [
+     -3.7209738548594404,
+     -2.450774809837519
+    ],
+    "ci90": [
+     -3.614756625260219,
+     -2.5445555774956263
+    ],
+    "n_actors": 17,
+    "n_items": 200
+   },
+   "te_margin": 0.6679781834215168,
+   "fills": {
+    "mask_eyesmouth_first": -2.0984436521943666,
+    "mask_eyesmouth_blur": -3.160086059409
+   },
+   "effect_class": "Present",
+   "share_margin": 0.6148038516767005,
+   "arms": {
+    "route": {
+     "model": "qwen3vl",
+     "arm": "route",
+     "kind": "block",
+     "label": "decomposition",
+     "heading": "decomposition of the complete exit cut",
+     "verdict": "Both blocks",
+     "reason": null,
+     "riders": [
+      "Synergic"
+     ],
+     "reading": null,
+     "decision": {
+      "run": true,
+      "date": "2026-11-10",
+      "reason": "DECISIONS 2026-11-10, A7 Stage 1 scope: route arm run on Gemma 4 and Qwen3-VL, conditional on the preconditions, applied by code (DECISIONS 2026-11-12)"
+     },
+     "sentinel": {
+      "n": 20,
+      "worst_abs_nats": 0.0,
+      "failed": [],
+      "pass": true
+     },
+     "n_items_complete": 200,
+     "n_items": 200,
+     "terms": {
+      "phi_A": {
+       "mean": -2.2740753306677126,
+       "p_maxt": 1.52587890625e-05,
+       "ci95": [
+        -2.756610619325524,
+        -1.8155840883260375
+       ],
+       "ci90": [
+        -2.676120093280847,
+        -1.8826147092043168
+       ],
+       "n_actors": 17
+      },
+      "phi_B": {
+       "mean": -0.7999439277157889,
+       "p_maxt": 1.52587890625e-05,
+       "ci95": [
+        -0.9870586635894151,
+        -0.6158634906028821
+       ],
+       "ci90": [
+        -0.9567246342347091,
+        -0.6469366339498168
+       ],
+       "n_actors": 17
+      },
+      "I": {
+       "mean": -0.6782152364821801,
+       "p_maxt": 6.103515625e-05,
+       "ci95": [
+        -0.8722533406667756,
+        -0.49245169947118234
+       ],
+       "ci90": [
+        -0.840097671505271,
+        -0.5198122313479552
+       ],
+       "n_actors": 17
+      }
+     },
+     "riders_descriptive": {
+      "TE": {
+       "mean": -3.074019258383502,
+       "ci95": [
+        -3.7209738548594404,
+        -2.450774809837519
+       ]
+      },
+      "PE_A": {
+       "mean": -1.9349677124266222,
+       "ci95": [
+        -2.3799344813268206,
+        -1.526868349286472
+       ]
+      },
+      "PE_B": {
+       "mean": -0.46083630947469895,
+       "ci95": [
+        -0.5973031213912746,
+        -0.3331615341730411
+       ]
+      },
+      "N_A": {
+       "mean": -2.6131829489088023,
+       "ci95": [
+        -3.146303116747031,
+        -2.0885714035919496
+       ]
+      },
+      "N_B": {
+       "mean": -1.139051545956879,
+       "ci95": [
+        -1.400019328101639,
+        -0.8750587619053313
+       ]
+      },
+      "block_relative_change": {
+       "A": {
+        "min": 0.2753290243924149,
+        "median": 0.49122567004914774,
+        "n": 200
+       },
+       "B": {
+        "min": 0.2079944076473754,
+        "median": 0.3790756610902377,
+        "n": 200
+       }
+      }
+     },
+     "carrying_class": "Both",
+     "verdict_confirmatory": true,
+     "interaction_rider_confirmatory": false,
+     "confirmatory": {
+      "verdict": "Both blocks",
+      "reason": null,
+      "reading": null,
+      "not_local": false,
+      "scope": "secondary decomposition, not an RQ3 result",
+      "recovery_reach_observers": []
+     },
+     "descriptive": {
+      "interaction_rider": [
+       "Synergic"
+      ],
+      "carrying_class": "Both",
+      "riders_descriptive": true,
+      "confirmatory": false,
+      "note": "The interaction rider (Additive, Redundant, Synergic, Interaction unresolved), the carrying class behind a non-carrying verdict, and the PE, N and block-change riders are descriptive: no confirmatory claim rests on them (recovery: the Additive rider reached .758 to .792 against .80). No effect to carry is confirmatory with its recovery reach (.622 and .652 at the null) reported beside it; a null edit that ends Inconclusive is read as Inconclusive. The whole arm is a secondary decomposition of the complete exit cut, never an RQ3 result."
+     }
+    },
+    "token": {
+     "model": "qwen3vl",
+     "arm": "token",
+     "kind": "block",
+     "label": "decomposition",
+     "heading": "decomposition of the complete exit cut",
+     "verdict": "Not testable",
+     "reason": "stage0_not_shown",
+     "riders": [],
+     "reading": null,
+     "decision": {
+      "run": false,
+      "date": "2026-11-10",
+      "reason": "DECISIONS 2026-11-10, A7 Stage 1 scope: token arm not run; Stage 0 did not admit it"
+     },
+     "sentinel": null,
+     "verdict_confirmatory": true,
+     "interaction_rider_confirmatory": false,
+     "confirmatory": {
+      "verdict": "Not testable",
+      "reason": "stage0_not_shown",
+      "reading": null,
+      "not_local": false,
+      "scope": "secondary decomposition, not an RQ3 result",
+      "recovery_reach_observers": []
+     },
+     "descriptive": {
+      "interaction_rider": [],
+      "carrying_class": null,
+      "riders_descriptive": false,
+      "confirmatory": false,
+      "note": "The interaction rider (Additive, Redundant, Synergic, Interaction unresolved), the carrying class behind a non-carrying verdict, and the PE, N and block-change riders are descriptive: no confirmatory claim rests on them (recovery: the Additive rider reached .758 to .792 against .80). No effect to carry is confirmatory with its recovery reach (.622 and .652 at the null) reported beside it; a null edit that ends Inconclusive is read as Inconclusive. The whole arm is a secondary decomposition of the complete exit cut, never an RQ3 result."
+     }
+    }
+   },
+   "a2_crosscheck": {
+    "descriptive": true,
+    "original": {
+     "max_abs_word_logprob": 4.999845183917273e-05,
+     "n_items": 200
+    },
+    "mask_eyesmouth_neutral": {
+     "max_abs_word_logprob": 4.999694824192602e-05,
+     "n_items": 200
+    }
+   }
+  }
+ },
+ "claim_scope": {
+  "confirmatory": [
+   "verdict",
+   "reason",
+   "reading",
+   "not_local"
+  ],
+  "descriptive": [
+   "interaction rider",
+   "carrying_class behind a non-carrying verdict",
+   "riders_descriptive"
+  ],
+  "note": "The interaction rider (Additive, Redundant, Synergic, Interaction unresolved), the carrying class behind a non-carrying verdict, and the PE, N and block-change riders are descriptive: no confirmatory claim rests on them (recovery: the Additive rider reached .758 to .792 against .80). No effect to carry is confirmatory with its recovery reach (.622 and .652 at the null) reported beside it; a null edit that ends Inconclusive is read as Inconclusive. The whole arm is a secondary decomposition of the complete exit cut, never an RQ3 result.",
+  "recovery_reach": {
+   "file": "research/reproduction/a7_recovery.json",
+   "code_sha256": {
+    "scripts/a7_design.py": "d25c0cb78f6771450eac9c6127690029cd72e6034079cbc51062be324a74ddba",
+    "scripts/a7_cuts.py": "15837f87e46a433fdb97b50e362fdbaefab937f10a147aa1d68fd355f9889db2",
+    "scripts/a7_stage0.py": "a4c46d7111b4f93b9c2d35c706636befa9756ac7cad89259512490b57cd48d5a",
+    "scripts/a7_run.py": "5bfb1a74e21596c944df2b946aea835e00a33244a50fd5917c2c52136bcbb665",
+    "scripts/a7_analyse.py": "00350c9a182090943294efb602f46a31e2c4263240cbb8bb764de26476daaae9",
+    "scripts/a7_recovery.py": "485832ac1678e2379f442d000a1139abd30ae053e4f48dd51d6e6d9a2727fe79",
+    "scripts/a7_toy.py": "b2d39459024046df848d8ca0bb8079cfb13ba08cde1da7a5214547aa1fa10d8c"
+   },
+   "observers": {
+    "prior_only": {
+     "expected": [
+      "No effect to carry",
+      null,
+      null
+     ],
+     "expected_rate": 1.0,
+     "expected_verdict_rate": 1.0,
+     "inconclusive_rate": 0.0,
+     "riders": {
+      "none": 500
+     }
+    },
+    "edit_does_nothing": {
+     "expected": [
+      "No effect to carry",
+      null,
+      null
+     ],
+     "expected_rate": 0.622,
+     "expected_verdict_rate": 0.622,
+     "inconclusive_rate": 0.378,
+     "riders": {
+      "none": 499,
+      "Interaction unresolved": 1
+     }
+    },
+    "edit_null_dead_block": {
+     "expected": [
+      "No effect to carry",
+      null,
+      null
+     ],
+     "expected_rate": 0.652,
+     "expected_verdict_rate": 0.652,
+     "inconclusive_rate": 0.348,
+     "riders": {
+      "none": 500
+     }
+    },
+    "a_only": {
+     "expected": [
+      "Carried by A",
+      null,
+      "Additive"
+     ],
+     "expected_rate": 0.758,
+     "expected_verdict_rate": 1.0,
+     "inconclusive_rate": 0.0,
+     "riders": {
+      "Additive": 379,
+      "Interaction unresolved": 120,
+      "Redundant": 1
+     }
+    },
+    "b_only": {
+     "expected": [
+      "Carried by B",
+      null,
+      "Additive"
+     ],
+     "expected_rate": 0.792,
+     "expected_verdict_rate": 1.0,
+     "inconclusive_rate": 0.0,
+     "riders": {
+      "Additive": 396,
+      "Interaction unresolved": 102,
+      "Synergic": 2
+     }
+    },
+    "additive": {
+     "expected": [
+      "Both blocks",
+      null,
+      "Additive"
+     ],
+     "expected_rate": 0.76,
+     "expected_verdict_rate": 1.0,
+     "inconclusive_rate": 0.0,
+     "riders": {
+      "Additive": 380,
+      "Interaction unresolved": 120
+     }
+    },
+    "redundant": {
+     "expected": [
+      "Both blocks",
+      null,
+      "Redundant"
+     ],
+     "expected_rate": 1.0,
+     "expected_verdict_rate": 1.0,
+     "inconclusive_rate": 0.0,
+     "riders": {
+      "Redundant": 500
+     }
+    },
+    "synergic": {
+     "expected": [
+      "Both blocks",
+      null,
+      "Synergic"
+     ],
+     "expected_rate": 1.0,
+     "expected_verdict_rate": 1.0,
+     "inconclusive_rate": 0.0,
+     "riders": {
+      "Synergic": 500
+     }
+    },
+    "opposed": {
+     "expected": [
+      "Opposed blocks",
+      null,
+      null
+     ],
+     "expected_rate": 1.0,
+     "expected_verdict_rate": 1.0,
+     "inconclusive_rate": 0.0,
+     "riders": {
+      "Additive": 391,
+      "Interaction unresolved": 108,
+      "Redundant": 1
+     }
+    }
+   }
+  }
+ },
+ "sensitivities": {
+  "without_smoke_items": {
+   "amendment": "A7",
+   "design_sha256": "9e40cfcfbe8761703da22cf2400c3af6cc7f05019df8b186f91e421dce50bb09",
+   "target": "acted",
+   "n_excluded": 3,
+   "rq3": {
+    "gemma4": {
+     "model": "gemma4",
+     "rq3": "not testable",
+     "scope": "beyond the interface",
+     "complete_cuts": [
+      "exit"
+     ],
+     "complete_cut_contrast": "zero by construction (validity, not a finding)",
+     "stage0_status": "complete",
+     "a5_w_caveat": false
+    },
+    "qwen3vl": {
+     "model": "qwen3vl",
+     "rq3": "not testable",
+     "scope": "beyond the interface",
+     "complete_cuts": [
+      "exit"
+     ],
+     "complete_cut_contrast": "zero by construction (validity, not a finding)",
+     "stage0_status": "complete",
+     "a5_w_caveat": false
+    }
+   },
+   "family": {
+    "columns": [
+     "gemma4/endpoints/TE",
+     "gemma4/route/phi_A",
+     "gemma4/route/phi_B",
+     "gemma4/route/I",
+     "qwen3vl/endpoints/TE",
+     "qwen3vl/route/phi_A",
+     "qwen3vl/route/phi_B",
+     "qwen3vl/route/I"
+    ],
+    "n_flips": 131072,
+    "exact": true
+   },
+   "models": {
+    "gemma4": {
+     "stage0_arms_admitted": {
+      "route": true,
+      "token": false
+     },
+     "dead_blocks_stage0": [],
+     "preconditions": {
+      "rq0": true,
+      "g2_g4": true,
+      "gate_b": true,
+      "delivery": true,
+      "sham": true
+     },
+     "te": {
+      "mean": -3.4051218544391246,
+      "p_maxt": 1.52587890625e-05,
+      "ci95": [
+       -4.192829093194258,
+       -2.625800320140813
+      ],
+      "ci90": [
+       -4.061537088473068,
+       -2.760631825451973
+      ],
+      "n_actors": 17,
+      "n_items": 197
+     },
+     "te_margin": 0.7245717244757987,
+     "fills": {
+      "mask_eyesmouth_first": -2.238755000340463,
+      "mask_eyesmouth_blur": -2.831605263533541
+     },
+     "effect_class": "Present",
+     "share_margin": 0.681024370887825,
+     "arms": {
+      "route": {
+       "model": "gemma4",
+       "arm": "route",
+       "kind": "block",
+       "label": "decomposition",
+       "heading": "decomposition of the complete exit cut",
+       "verdict": "Carried by B",
+       "reason": null,
+       "riders": [
+        "Additive"
+       ],
+       "reading": null,
+       "decision": {
+        "run": true,
+        "date": "2026-11-10",
+        "reason": "DECISIONS 2026-11-10, A7 Stage 1 scope: route arm run on Gemma 4 and Qwen3-VL, conditional on the preconditions, applied by code (DECISIONS 2026-11-12)"
+       },
+       "sentinel": {
+        "n": 20,
+        "worst_abs_nats": 0.0,
+        "failed": [],
+        "pass": true
+       },
+       "n_items_complete": 197,
+       "n_items": 197,
+       "terms": {
+        "phi_A": {
+         "mean": -0.32093526231781055,
+         "p_maxt": 0.0001068115234375,
+         "ci95": [
+          -0.4194746038862766,
+          -0.2218529791618256
+         ],
+         "ci90": [
+          -0.4038960867894265,
+          -0.23852965730940695
+         ],
+         "n_actors": 17
+        },
+        "phi_B": {
+         "mean": -3.0841865921213136,
+         "p_maxt": 1.52587890625e-05,
+         "ci95": [
+          -3.7921323197119987,
+          -2.376634994425165
+         ],
+         "ci90": [
+          -3.6835060295921864,
+          -2.5005354759019918
+         ],
+         "n_actors": 17
+        },
+        "I": {
+         "mean": -0.2621964925703909,
+         "p_maxt": 0.0003509521484375,
+         "ci95": [
+          -0.357740081797739,
+          -0.15981507164912712
+         ],
+         "ci90": [
+          -0.34225117611021433,
+          -0.17927722264031076
+         ],
+         "n_actors": 17
+        }
+       },
+       "riders_descriptive": {
+        "TE": {
+         "mean": -3.4051218544391246,
+         "ci95": [
+          -4.192829093194258,
+          -2.625800320140813
+         ]
+        },
+        "PE_A": {
+         "mean": -0.18983701603261507,
+         "ci95": [
+          -0.2689430396709588,
+          -0.10462152034423278
+         ]
+        },
+        "PE_B": {
+         "mean": -2.953088345836118,
+         "ci95": [
+          -3.6593816178871896,
+          -2.2397667800197363
+         ]
+        },
+        "N_A": {
+         "mean": -0.452033508603006,
+         "ci95": [
+          -0.5840821207333609,
+          -0.3208495283589278
+         ]
+        },
+        "N_B": {
+         "mean": -3.2152848384065082,
+         "ci95": [
+          -3.9356064424553074,
+          -2.511758600655127
+         ]
+        },
+        "block_relative_change": {
+         "A": {
+          "min": 0.1684423327261647,
+          "median": 0.32388737913769894,
+          "n": 197
+         },
+         "B": {
+          "min": 0.07817643414276426,
+          "median": 0.1530535237515037,
+          "n": 197
+         }
+        }
+       },
+       "carrying_class": "B only",
+       "verdict_confirmatory": true,
+       "interaction_rider_confirmatory": false,
+       "confirmatory": {
+        "verdict": "Carried by B",
+        "reason": null,
+        "reading": null,
+        "not_local": false,
+        "scope": "secondary decomposition, not an RQ3 result",
+        "recovery_reach_observers": []
+       },
+       "descriptive": {
+        "interaction_rider": [
+         "Additive"
+        ],
+        "carrying_class": "B only",
+        "riders_descriptive": true,
+        "confirmatory": false,
+        "note": "The interaction rider (Additive, Redundant, Synergic, Interaction unresolved), the carrying class behind a non-carrying verdict, and the PE, N and block-change riders are descriptive: no confirmatory claim rests on them (recovery: the Additive rider reached .758 to .792 against .80). No effect to carry is confirmatory with its recovery reach (.622 and .652 at the null) reported beside it; a null edit that ends Inconclusive is read as Inconclusive. The whole arm is a secondary decomposition of the complete exit cut, never an RQ3 result."
+       }
+      },
+      "token": {
+       "model": "gemma4",
+       "arm": "token",
+       "kind": "block",
+       "label": "decomposition",
+       "heading": "decomposition of the complete exit cut",
+       "verdict": "Not testable",
+       "reason": "stage0_not_shown",
+       "riders": [],
+       "reading": null,
+       "decision": {
+        "run": false,
+        "date": "2026-11-10",
+        "reason": "DECISIONS 2026-11-10, A7 Stage 1 scope: token arm not run; Stage 0 did not admit it"
+       },
+       "sentinel": null,
+       "verdict_confirmatory": true,
+       "interaction_rider_confirmatory": false,
+       "confirmatory": {
+        "verdict": "Not testable",
+        "reason": "stage0_not_shown",
+        "reading": null,
+        "not_local": false,
+        "scope": "secondary decomposition, not an RQ3 result",
+        "recovery_reach_observers": []
+       },
+       "descriptive": {
+        "interaction_rider": [],
+        "carrying_class": null,
+        "riders_descriptive": false,
+        "confirmatory": false,
+        "note": "The interaction rider (Additive, Redundant, Synergic, Interaction unresolved), the carrying class behind a non-carrying verdict, and the PE, N and block-change riders are descriptive: no confirmatory claim rests on them (recovery: the Additive rider reached .758 to .792 against .80). No effect to carry is confirmatory with its recovery reach (.622 and .652 at the null) reported beside it; a null edit that ends Inconclusive is read as Inconclusive. The whole arm is a secondary decomposition of the complete exit cut, never an RQ3 result."
+       }
+      }
+     }
+    },
+    "qwen3vl": {
+     "stage0_arms_admitted": {
+      "route": true,
+      "token": false
+     },
+     "dead_blocks_stage0": [],
+     "preconditions": {
+      "rq0": true,
+      "g2_g4": true,
+      "gate_b": true,
+      "delivery": true,
+      "sham": true
+     },
+     "te": {
+      "mean": -3.1547845807632906,
+      "p_maxt": 1.52587890625e-05,
+      "ci95": [
+       -3.7933623569145754,
+       -2.5324250718124537
+      ],
+      "ci90": [
+       -3.677976720861712,
+       -2.6256401656640977
+      ],
+      "n_actors": 17,
+      "n_items": 197
+     },
+     "te_margin": 0.6679781834215168,
+     "fills": {
+      "mask_eyesmouth_first": -2.15272209987647,
+      "mask_eyesmouth_blur": -3.216361422705834
+     },
+     "effect_class": "Present",
+     "share_margin": 0.6309569161526581,
+     "arms": {
+      "route": {
+       "model": "qwen3vl",
+       "arm": "route",
+       "kind": "block",
+       "label": "decomposition",
+       "heading": "decomposition of the complete exit cut",
+       "verdict": "Both blocks",
+       "reason": null,
+       "riders": [
+        "Synergic"
+       ],
+       "reading": null,
+       "decision": {
+        "run": true,
+        "date": "2026-11-10",
+        "reason": "DECISIONS 2026-11-10, A7 Stage 1 scope: route arm run on Gemma 4 and Qwen3-VL, conditional on the preconditions, applied by code (DECISIONS 2026-11-12)"
+       },
+       "sentinel": {
+        "n": 20,
+        "worst_abs_nats": 0.0,
+        "failed": [],
+        "pass": true
+       },
+       "n_items_complete": 197,
+       "n_items": 197,
+       "terms": {
+        "phi_A": {
+         "mean": -2.336494210090754,
+         "p_maxt": 1.52587890625e-05,
+         "ci95": [
+          -2.8053796656964853,
+          -1.875858064196176
+         ],
+         "ci90": [
+          -2.7270234912674614,
+          -1.9489143838610172
+         ],
+         "n_actors": 17
+        },
+        "phi_B": {
+         "mean": -0.8182903706725364,
+         "p_maxt": 1.52587890625e-05,
+         "ci95": [
+          -1.0025396159629403,
+          -0.6366857979149234
+         ],
+         "ci90": [
+          -0.9718283967782718,
+          -0.6661512291073718
+         ],
+         "n_actors": 17
+        },
+        "I": {
+         "mean": -0.6882034308524442,
+         "p_maxt": 6.103515625e-05,
+         "ci95": [
+          -0.8784179117638837,
+          -0.5033445493306524
+         ],
+         "ci90": [
+          -0.8482503610432076,
+          -0.5324359530028447
+         ],
+         "n_actors": 17
+        }
+       },
+       "riders_descriptive": {
+        "TE": {
+         "mean": -3.1547845807632906,
+         "ci95": [
+          -3.7933623569145754,
+          -2.5324250718124537
+         ]
+        },
+        "PE_A": {
+         "mean": -1.992392494664532,
+         "ci95": [
+          -2.427103897700415,
+          -1.5822281296593979
+         ]
+        },
+        "PE_B": {
+         "mean": -0.47418865524631426,
+         "ci95": [
+          -0.6104045288284081,
+          -0.3455100293726352
+         ]
+        },
+        "N_A": {
+         "mean": -2.6805959255169762,
+         "ci95": [
+          -3.20206657402429,
+          -2.156154888078776
+         ]
+        },
+        "N_B": {
+         "mean": -1.1623920860987584,
+         "ci95": [
+          -1.4168064211021625,
+          -0.9009039049222696
+         ]
+        },
+        "block_relative_change": {
+         "A": {
+          "min": 0.2753290243924149,
+          "median": 0.49079848961747957,
+          "n": 197
+         },
+         "B": {
+          "min": 0.2079944076473754,
+          "median": 0.37950692305184097,
+          "n": 197
+         }
+        }
+       },
+       "carrying_class": "Both",
+       "verdict_confirmatory": true,
+       "interaction_rider_confirmatory": false,
+       "confirmatory": {
+        "verdict": "Both blocks",
+        "reason": null,
+        "reading": null,
+        "not_local": false,
+        "scope": "secondary decomposition, not an RQ3 result",
+        "recovery_reach_observers": []
+       },
+       "descriptive": {
+        "interaction_rider": [
+         "Synergic"
+        ],
+        "carrying_class": "Both",
+        "riders_descriptive": true,
+        "confirmatory": false,
+        "note": "The interaction rider (Additive, Redundant, Synergic, Interaction unresolved), the carrying class behind a non-carrying verdict, and the PE, N and block-change riders are descriptive: no confirmatory claim rests on them (recovery: the Additive rider reached .758 to .792 against .80). No effect to carry is confirmatory with its recovery reach (.622 and .652 at the null) reported beside it; a null edit that ends Inconclusive is read as Inconclusive. The whole arm is a secondary decomposition of the complete exit cut, never an RQ3 result."
+       }
+      },
+      "token": {
+       "model": "qwen3vl",
+       "arm": "token",
+       "kind": "block",
+       "label": "decomposition",
+       "heading": "decomposition of the complete exit cut",
+       "verdict": "Not testable",
+       "reason": "stage0_not_shown",
+       "riders": [],
+       "reading": null,
+       "decision": {
+        "run": false,
+        "date": "2026-11-10",
+        "reason": "DECISIONS 2026-11-10, A7 Stage 1 scope: token arm not run; Stage 0 did not admit it"
+       },
+       "sentinel": null,
+       "verdict_confirmatory": true,
+       "interaction_rider_confirmatory": false,
+       "confirmatory": {
+        "verdict": "Not testable",
+        "reason": "stage0_not_shown",
+        "reading": null,
+        "not_local": false,
+        "scope": "secondary decomposition, not an RQ3 result",
+        "recovery_reach_observers": []
+       },
+       "descriptive": {
+        "interaction_rider": [],
+        "carrying_class": null,
+        "riders_descriptive": false,
+        "confirmatory": false,
+        "note": "The interaction rider (Additive, Redundant, Synergic, Interaction unresolved), the carrying class behind a non-carrying verdict, and the PE, N and block-change riders are descriptive: no confirmatory claim rests on them (recovery: the Additive rider reached .758 to .792 against .80). No effect to carry is confirmatory with its recovery reach (.622 and .652 at the null) reported beside it; a null edit that ends Inconclusive is read as Inconclusive. The whole arm is a secondary decomposition of the complete exit cut, never an RQ3 result."
+       }
+      }
+     }
+    }
+   },
+   "claim_scope": {
+    "confirmatory": [
+     "verdict",
+     "reason",
+     "reading",
+     "not_local"
+    ],
+    "descriptive": [
+     "interaction rider",
+     "carrying_class behind a non-carrying verdict",
+     "riders_descriptive"
+    ],
+    "note": "The interaction rider (Additive, Redundant, Synergic, Interaction unresolved), the carrying class behind a non-carrying verdict, and the PE, N and block-change riders are descriptive: no confirmatory claim rests on them (recovery: the Additive rider reached .758 to .792 against .80). No effect to carry is confirmatory with its recovery reach (.622 and .652 at the null) reported beside it; a null edit that ends Inconclusive is read as Inconclusive. The whole arm is a secondary decomposition of the complete exit cut, never an RQ3 result."
+   }
+  },
+  "without_align_flagged": {
+   "amendment": "A7",
+   "design_sha256": "9e40cfcfbe8761703da22cf2400c3af6cc7f05019df8b186f91e421dce50bb09",
+   "target": "acted",
+   "n_excluded": 117,
+   "rq3": {
+    "gemma4": {
+     "model": "gemma4",
+     "rq3": "not testable",
+     "scope": "beyond the interface",
+     "complete_cuts": [
+      "exit"
+     ],
+     "complete_cut_contrast": "zero by construction (validity, not a finding)",
+     "stage0_status": "complete",
+     "a5_w_caveat": false
+    },
+    "qwen3vl": {
+     "model": "qwen3vl",
+     "rq3": "not testable",
+     "scope": "beyond the interface",
+     "complete_cuts": [
+      "exit"
+     ],
+     "complete_cut_contrast": "zero by construction (validity, not a finding)",
+     "stage0_status": "complete",
+     "a5_w_caveat": false
+    }
+   },
+   "family": {
+    "columns": [
+     "gemma4/endpoints/TE",
+     "gemma4/route/phi_A",
+     "gemma4/route/phi_B",
+     "gemma4/route/I",
+     "qwen3vl/endpoints/TE",
+     "qwen3vl/route/phi_A",
+     "qwen3vl/route/phi_B",
+     "qwen3vl/route/I"
+    ],
+    "n_flips": 131072,
+    "exact": true
+   },
+   "models": {
+    "gemma4": {
+     "stage0_arms_admitted": {
+      "route": true,
+      "token": false
+     },
+     "dead_blocks_stage0": [],
+     "preconditions": {
+      "rq0": true,
+      "g2_g4": true,
+      "gate_b": true,
+      "delivery": true,
+      "sham": true
+     },
+     "te": {
+      "mean": -4.8696190722167,
+      "p_maxt": 0.001251220703125,
+      "ci95": [
+       -7.5456615986637905,
+       -2.5303406394664387
+      ],
+      "ci90": [
+       -7.1078681901954255,
+       -2.8620834094013814
+      ],
+      "n_actors": 17,
+      "n_items": 83
+     },
+     "te_margin": 0.7245717244757987,
+     "fills": {
+      "mask_eyesmouth_first": -3.4230977319816813,
+      "mask_eyesmouth_blur": -4.219539427215331
+     },
+     "effect_class": "Present",
+     "share_margin": 0.9739238144433401,
+     "arms": {
+      "route": {
+       "model": "gemma4",
+       "arm": "route",
+       "kind": "block",
+       "label": "decomposition",
+       "heading": "decomposition of the complete exit cut",
+       "verdict": "Carried by B",
+       "reason": null,
+       "riders": [
+        "Additive"
+       ],
+       "reading": null,
+       "decision": {
+        "run": true,
+        "date": "2026-11-10",
+        "reason": "DECISIONS 2026-11-10, A7 Stage 1 scope: route arm run on Gemma 4 and Qwen3-VL, conditional on the preconditions, applied by code (DECISIONS 2026-11-12)"
+       },
+       "sentinel": {
+        "n": 20,
+        "worst_abs_nats": 0.0,
+        "failed": [],
+        "pass": true
+       },
+       "n_items_complete": 83,
+       "n_items": 83,
+       "terms": {
+        "phi_A": {
+         "mean": -0.3994578740363037,
+         "p_maxt": 0.0206298828125,
+         "ci95": [
+          -0.7190445644095855,
+          -0.09839308777331197
+         ],
+         "ci90": [
+          -0.662495053565868,
+          -0.1494778896657251
+         ],
+         "n_actors": 17
+        },
+        "phi_B": {
+         "mean": -4.470161198180397,
+         "p_maxt": 0.0008392333984375,
+         "ci95": [
+          -6.8473745788152485,
+          -2.380651497922278
+         ],
+         "ci90": [
+          -6.46024053077438,
+          -2.6656964512642976
+         ],
+         "n_actors": 17
+        },
+        "I": {
+         "mean": -0.32528268374384717,
+         "p_maxt": 0.0076751708984375,
+         "ci95": [
+          -0.5296517016464622,
+          -0.13741697425101726
+         ],
+         "ci90": [
+          -0.4950584678349398,
+          -0.16478032627066952
+         ],
+         "n_actors": 17
+        }
+       },
+       "riders_descriptive": {
+        "TE": {
+         "mean": -4.8696190722167,
+         "ci95": [
+          -7.5456615986637905,
+          -2.5303406394664387
+         ]
+        },
+        "PE_A": {
+         "mean": -0.23681653216438003,
+         "ci95": [
+          -0.5003702991496193,
+          0.03551496394702032
+         ]
+        },
+        "PE_B": {
+         "mean": -4.307519856308472,
+         "ci95": [
+          -6.627281428147801,
+          -2.240083482487748
+         ]
+        },
+        "N_A": {
+         "mean": -0.5620992159082272,
+         "ci95": [
+          -0.9562424852704741,
+          -0.21307434505756173
+         ]
+        },
+        "N_B": {
+         "mean": -4.632802540052319,
+         "ci95": [
+          -7.075223026007067,
+          -2.5381274906889417
+         ]
+        },
+        "block_relative_change": {
+         "A": {
+          "min": 0.1684423327261647,
+          "median": 0.33040207809011507,
+          "n": 83
+         },
+         "B": {
+          "min": 0.07817643414276426,
+          "median": 0.15833994796723297,
+          "n": 83
+         }
+        }
+       },
+       "carrying_class": "B only",
+       "verdict_confirmatory": true,
+       "interaction_rider_confirmatory": false,
+       "confirmatory": {
+        "verdict": "Carried by B",
+        "reason": null,
+        "reading": null,
+        "not_local": false,
+        "scope": "secondary decomposition, not an RQ3 result",
+        "recovery_reach_observers": []
+       },
+       "descriptive": {
+        "interaction_rider": [
+         "Additive"
+        ],
+        "carrying_class": "B only",
+        "riders_descriptive": true,
+        "confirmatory": false,
+        "note": "The interaction rider (Additive, Redundant, Synergic, Interaction unresolved), the carrying class behind a non-carrying verdict, and the PE, N and block-change riders are descriptive: no confirmatory claim rests on them (recovery: the Additive rider reached .758 to .792 against .80). No effect to carry is confirmatory with its recovery reach (.622 and .652 at the null) reported beside it; a null edit that ends Inconclusive is read as Inconclusive. The whole arm is a secondary decomposition of the complete exit cut, never an RQ3 result."
+       }
+      },
+      "token": {
+       "model": "gemma4",
+       "arm": "token",
+       "kind": "block",
+       "label": "decomposition",
+       "heading": "decomposition of the complete exit cut",
+       "verdict": "Not testable",
+       "reason": "stage0_not_shown",
+       "riders": [],
+       "reading": null,
+       "decision": {
+        "run": false,
+        "date": "2026-11-10",
+        "reason": "DECISIONS 2026-11-10, A7 Stage 1 scope: token arm not run; Stage 0 did not admit it"
+       },
+       "sentinel": null,
+       "verdict_confirmatory": true,
+       "interaction_rider_confirmatory": false,
+       "confirmatory": {
+        "verdict": "Not testable",
+        "reason": "stage0_not_shown",
+        "reading": null,
+        "not_local": false,
+        "scope": "secondary decomposition, not an RQ3 result",
+        "recovery_reach_observers": []
+       },
+       "descriptive": {
+        "interaction_rider": [],
+        "carrying_class": null,
+        "riders_descriptive": false,
+        "confirmatory": false,
+        "note": "The interaction rider (Additive, Redundant, Synergic, Interaction unresolved), the carrying class behind a non-carrying verdict, and the PE, N and block-change riders are descriptive: no confirmatory claim rests on them (recovery: the Additive rider reached .758 to .792 against .80). No effect to carry is confirmatory with its recovery reach (.622 and .652 at the null) reported beside it; a null edit that ends Inconclusive is read as Inconclusive. The whole arm is a secondary decomposition of the complete exit cut, never an RQ3 result."
+       }
+      }
+     }
+    },
+    "qwen3vl": {
+     "stage0_arms_admitted": {
+      "route": true,
+      "token": false
+     },
+     "dead_blocks_stage0": [],
+     "preconditions": {
+      "rq0": true,
+      "g2_g4": true,
+      "gate_b": true,
+      "delivery": true,
+      "sham": true
+     },
+     "te": {
+      "mean": -4.44775461288364,
+      "p_maxt": 0.0002593994140625,
+      "ci95": [
+       -6.553826207998485,
+       -2.6854983942814457
+      ],
+      "ci90": [
+       -6.204669492675069,
+       -2.9104385644779014
+      ],
+      "n_actors": 17,
+      "n_items": 83
+     },
+     "te_margin": 0.6679781834215168,
+     "fills": {
+      "mask_eyesmouth_first": -3.08518649081855,
+      "mask_eyesmouth_blur": -4.032391665666267
+     },
+     "effect_class": "Present",
+     "share_margin": 0.889550922576728,
+     "arms": {
+      "route": {
+       "model": "qwen3vl",
+       "arm": "route",
+       "kind": "block",
+       "label": "decomposition",
+       "heading": "decomposition of the complete exit cut",
+       "verdict": "Both blocks",
+       "reason": null,
+       "riders": [
+        "Synergic"
+       ],
+       "reading": null,
+       "decision": {
+        "run": true,
+        "date": "2026-11-10",
+        "reason": "DECISIONS 2026-11-10, A7 Stage 1 scope: route arm run on Gemma 4 and Qwen3-VL, conditional on the preconditions, applied by code (DECISIONS 2026-11-12)"
+       },
+       "sentinel": {
+        "n": 20,
+        "worst_abs_nats": 0.0,
+        "failed": [],
+        "pass": true
+       },
+       "n_items_complete": 83,
+       "n_items": 83,
+       "terms": {
+        "phi_A": {
+         "mean": -3.2973799420245635,
+         "p_maxt": 0.00042724609375,
+         "ci95": [
+          -4.9290764987245215,
+          -1.9416242552220158
+         ],
+         "ci90": [
+          -4.6657946276933115,
+          -2.117461252028616
+         ],
+         "n_actors": 17
+        },
+        "phi_B": {
+         "mean": -1.1503746708590756,
+         "p_maxt": 7.62939453125e-05,
+         "ci95": [
+          -1.645300942844427,
+          -0.716234053920194
+         ],
+         "ci90": [
+          -1.5614316376564867,
+          -0.7758060016706874
+         ],
+         "n_actors": 17
+        },
+        "I": {
+         "mean": -0.9200475256269403,
+         "p_maxt": 0.00042724609375,
+         "ci95": [
+          -1.3620156873115012,
+          -0.5196297917303591
+         ],
+         "ci90": [
+          -1.286891806559322,
+          -0.5778443799777335
+         ],
+         "n_actors": 17
+        }
+       },
+       "riders_descriptive": {
+        "TE": {
+         "mean": -4.44775461288364,
+         "ci95": [
+          -6.553826207998485,
+          -2.6854983942814457
+         ]
+        },
+        "PE_A": {
+         "mean": -2.837356179211094,
+         "ci95": [
+          -4.325745613325958,
+          -1.6098406575836428
+         ]
+        },
+        "PE_B": {
+         "mean": -0.6903509080456056,
+         "ci95": [
+          -1.0381924385288308,
+          -0.377848302663987
+         ]
+        },
+        "N_A": {
+         "mean": -3.7574037048380333,
+         "ci95": [
+          -5.549328458563898,
+          -2.259569820347046
+         ]
+        },
+        "N_B": {
+         "mean": -1.610398433672546,
+         "ci95": [
+          -2.2875053544560737,
+          -1.0065922575594035
+         ]
+        },
+        "block_relative_change": {
+         "A": {
+          "min": 0.30146371782359066,
+          "median": 0.4878109863080873,
+          "n": 83
+         },
+         "B": {
+          "min": 0.2079944076473754,
+          "median": 0.36620809248958625,
+          "n": 83
+         }
+        }
+       },
+       "carrying_class": "Both",
+       "verdict_confirmatory": true,
+       "interaction_rider_confirmatory": false,
+       "confirmatory": {
+        "verdict": "Both blocks",
+        "reason": null,
+        "reading": null,
+        "not_local": false,
+        "scope": "secondary decomposition, not an RQ3 result",
+        "recovery_reach_observers": []
+       },
+       "descriptive": {
+        "interaction_rider": [
+         "Synergic"
+        ],
+        "carrying_class": "Both",
+        "riders_descriptive": true,
+        "confirmatory": false,
+        "note": "The interaction rider (Additive, Redundant, Synergic, Interaction unresolved), the carrying class behind a non-carrying verdict, and the PE, N and block-change riders are descriptive: no confirmatory claim rests on them (recovery: the Additive rider reached .758 to .792 against .80). No effect to carry is confirmatory with its recovery reach (.622 and .652 at the null) reported beside it; a null edit that ends Inconclusive is read as Inconclusive. The whole arm is a secondary decomposition of the complete exit cut, never an RQ3 result."
+       }
+      },
+      "token": {
+       "model": "qwen3vl",
+       "arm": "token",
+       "kind": "block",
+       "label": "decomposition",
+       "heading": "decomposition of the complete exit cut",
+       "verdict": "Not testable",
+       "reason": "stage0_not_shown",
+       "riders": [],
+       "reading": null,
+       "decision": {
+        "run": false,
+        "date": "2026-11-10",
+        "reason": "DECISIONS 2026-11-10, A7 Stage 1 scope: token arm not run; Stage 0 did not admit it"
+       },
+       "sentinel": null,
+       "verdict_confirmatory": true,
+       "interaction_rider_confirmatory": false,
+       "confirmatory": {
+        "verdict": "Not testable",
+        "reason": "stage0_not_shown",
+        "reading": null,
+        "not_local": false,
+        "scope": "secondary decomposition, not an RQ3 result",
+        "recovery_reach_observers": []
+       },
+       "descriptive": {
+        "interaction_rider": [],
+        "carrying_class": null,
+        "riders_descriptive": false,
+        "confirmatory": false,
+        "note": "The interaction rider (Additive, Redundant, Synergic, Interaction unresolved), the carrying class behind a non-carrying verdict, and the PE, N and block-change riders are descriptive: no confirmatory claim rests on them (recovery: the Additive rider reached .758 to .792 against .80). No effect to carry is confirmatory with its recovery reach (.622 and .652 at the null) reported beside it; a null edit that ends Inconclusive is read as Inconclusive. The whole arm is a secondary decomposition of the complete exit cut, never an RQ3 result."
+       }
+      }
+     }
+    }
+   },
+   "claim_scope": {
+    "confirmatory": [
+     "verdict",
+     "reason",
+     "reading",
+     "not_local"
+    ],
+    "descriptive": [
+     "interaction rider",
+     "carrying_class behind a non-carrying verdict",
+     "riders_descriptive"
+    ],
+    "note": "The interaction rider (Additive, Redundant, Synergic, Interaction unresolved), the carrying class behind a non-carrying verdict, and the PE, N and block-change riders are descriptive: no confirmatory claim rests on them (recovery: the Additive rider reached .758 to .792 against .80). No effect to carry is confirmatory with its recovery reach (.622 and .652 at the null) reported beside it; a null edit that ends Inconclusive is read as Inconclusive. The whole arm is a secondary decomposition of the complete exit cut, never an RQ3 result."
+   }
+  },
+  "items_whose_human_mode_is_the_target": {
+   "amendment": "A7",
+   "design_sha256": "9e40cfcfbe8761703da22cf2400c3af6cc7f05019df8b186f91e421dce50bb09",
+   "target": "acted",
+   "n_excluded": 8,
+   "rq3": {
+    "gemma4": {
+     "model": "gemma4",
+     "rq3": "not testable",
+     "scope": "beyond the interface",
+     "complete_cuts": [
+      "exit"
+     ],
+     "complete_cut_contrast": "zero by construction (validity, not a finding)",
+     "stage0_status": "complete",
+     "a5_w_caveat": false
+    },
+    "qwen3vl": {
+     "model": "qwen3vl",
+     "rq3": "not testable",
+     "scope": "beyond the interface",
+     "complete_cuts": [
+      "exit"
+     ],
+     "complete_cut_contrast": "zero by construction (validity, not a finding)",
+     "stage0_status": "complete",
+     "a5_w_caveat": false
+    }
+   },
+   "family": {
+    "columns": [
+     "gemma4/endpoints/TE",
+     "gemma4/route/phi_A",
+     "gemma4/route/phi_B",
+     "gemma4/route/I",
+     "qwen3vl/endpoints/TE",
+     "qwen3vl/route/phi_A",
+     "qwen3vl/route/phi_B",
+     "qwen3vl/route/I"
+    ],
+    "n_flips": 131072,
+    "exact": true
+   },
+   "models": {
+    "gemma4": {
+     "stage0_arms_admitted": {
+      "route": true,
+      "token": false
+     },
+     "dead_blocks_stage0": [],
+     "preconditions": {
+      "rq0": true,
+      "g2_g4": true,
+      "gate_b": true,
+      "delivery": true,
+      "sham": true
+     },
+     "te": {
+      "mean": -3.352382115816476,
+      "p_maxt": 1.52587890625e-05,
+      "ci95": [
+       -4.148637643430146,
+       -2.5543480412294604
+      ],
+      "ci90": [
+       -4.0151761022627745,
+       -2.6876920311497123
+      ],
+      "n_actors": 17,
+      "n_items": 192
+     },
+     "te_margin": 0.7245717244757987,
+     "fills": {
+      "mask_eyesmouth_first": -2.233455784507276,
+      "mask_eyesmouth_blur": -3.0023460836751177
+     },
+     "effect_class": "Present",
+     "share_margin": 0.6704764231632953,
+     "arms": {
+      "route": {
+       "model": "gemma4",
+       "arm": "route",
+       "kind": "block",
+       "label": "decomposition",
+       "heading": "decomposition of the complete exit cut",
+       "verdict": "Carried by B",
+       "reason": null,
+       "riders": [
+        "Additive"
+       ],
+       "reading": null,
+       "decision": {
+        "run": true,
+        "date": "2026-11-10",
+        "reason": "DECISIONS 2026-11-10, A7 Stage 1 scope: route arm run on Gemma 4 and Qwen3-VL, conditional on the preconditions, applied by code (DECISIONS 2026-11-12)"
+       },
+       "sentinel": {
+        "n": 20,
+        "worst_abs_nats": 0.0,
+        "failed": [],
+        "pass": true
+       },
+       "n_items_complete": 192,
+       "n_items": 192,
+       "terms": {
+        "phi_A": {
+         "mean": -0.32547776216227325,
+         "p_maxt": 0.0001220703125,
+         "ci95": [
+          -0.4286687188234127,
+          -0.22134777597516964
+         ],
+         "ci90": [
+          -0.41164024228235346,
+          -0.23955104862484974
+         ],
+         "n_actors": 17
+        },
+        "phi_B": {
+         "mean": -3.0269043536542024,
+         "p_maxt": 1.52587890625e-05,
+         "ci95": [
+          -3.739024488225072,
+          -2.30957268147127
+         ],
+         "ci90": [
+          -3.6224725843634205,
+          -2.430900411531782
+         ],
+         "n_actors": 17
+        },
+        "I": {
+         "mean": -0.2505799234853643,
+         "p_maxt": 0.000396728515625,
+         "ci95": [
+          -0.34971769118935675,
+          -0.14895294581953833
+         ],
+         "ci90": [
+          -0.3335610895890275,
+          -0.16659760524560185
+         ],
+         "n_actors": 17
+        }
+       },
+       "riders_descriptive": {
+        "TE": {
+         "mean": -3.352382115816476,
+         "ci95": [
+          -4.148637643430146,
+          -2.5543480412294604
+         ]
+        },
+        "PE_A": {
+         "mean": -0.20018780041959108,
+         "ci95": [
+          -0.2914206124316661,
+          -0.10579225136406346
+         ]
+        },
+        "PE_B": {
+         "mean": -2.90161439191152,
+         "ci95": [
+          -3.6146569864893023,
+          -2.1747124246957874
+         ]
+        },
+        "N_A": {
+         "mean": -0.4507677239049554,
+         "ci95": [
+          -0.5846175862285768,
+          -0.31798161855203266
+         ]
+        },
+        "N_B": {
+         "mean": -3.1521943153968848,
+         "ci95": [
+          -3.868064442095364,
+          -2.4410468450822016
+         ]
+        },
+        "block_relative_change": {
+         "A": {
+          "min": 0.1684423327261647,
+          "median": 0.32118115038246464,
+          "n": 192
+         },
+         "B": {
+          "min": 0.07817643414276426,
+          "median": 0.15265002929600308,
+          "n": 192
+         }
+        }
+       },
+       "carrying_class": "B only",
+       "verdict_confirmatory": true,
+       "interaction_rider_confirmatory": false,
+       "confirmatory": {
+        "verdict": "Carried by B",
+        "reason": null,
+        "reading": null,
+        "not_local": false,
+        "scope": "secondary decomposition, not an RQ3 result",
+        "recovery_reach_observers": []
+       },
+       "descriptive": {
+        "interaction_rider": [
+         "Additive"
+        ],
+        "carrying_class": "B only",
+        "riders_descriptive": true,
+        "confirmatory": false,
+        "note": "The interaction rider (Additive, Redundant, Synergic, Interaction unresolved), the carrying class behind a non-carrying verdict, and the PE, N and block-change riders are descriptive: no confirmatory claim rests on them (recovery: the Additive rider reached .758 to .792 against .80). No effect to carry is confirmatory with its recovery reach (.622 and .652 at the null) reported beside it; a null edit that ends Inconclusive is read as Inconclusive. The whole arm is a secondary decomposition of the complete exit cut, never an RQ3 result."
+       }
+      },
+      "token": {
+       "model": "gemma4",
+       "arm": "token",
+       "kind": "block",
+       "label": "decomposition",
+       "heading": "decomposition of the complete exit cut",
+       "verdict": "Not testable",
+       "reason": "stage0_not_shown",
+       "riders": [],
+       "reading": null,
+       "decision": {
+        "run": false,
+        "date": "2026-11-10",
+        "reason": "DECISIONS 2026-11-10, A7 Stage 1 scope: token arm not run; Stage 0 did not admit it"
+       },
+       "sentinel": null,
+       "verdict_confirmatory": true,
+       "interaction_rider_confirmatory": false,
+       "confirmatory": {
+        "verdict": "Not testable",
+        "reason": "stage0_not_shown",
+        "reading": null,
+        "not_local": false,
+        "scope": "secondary decomposition, not an RQ3 result",
+        "recovery_reach_observers": []
+       },
+       "descriptive": {
+        "interaction_rider": [],
+        "carrying_class": null,
+        "riders_descriptive": false,
+        "confirmatory": false,
+        "note": "The interaction rider (Additive, Redundant, Synergic, Interaction unresolved), the carrying class behind a non-carrying verdict, and the PE, N and block-change riders are descriptive: no confirmatory claim rests on them (recovery: the Additive rider reached .758 to .792 against .80). No effect to carry is confirmatory with its recovery reach (.622 and .652 at the null) reported beside it; a null edit that ends Inconclusive is read as Inconclusive. The whole arm is a secondary decomposition of the complete exit cut, never an RQ3 result."
+       }
+      }
+     }
+    },
+    "qwen3vl": {
+     "stage0_arms_admitted": {
+      "route": true,
+      "token": false
+     },
+     "dead_blocks_stage0": [],
+     "preconditions": {
+      "rq0": true,
+      "g2_g4": true,
+      "gate_b": true,
+      "delivery": true,
+      "sham": true
+     },
+     "te": {
+      "mean": -3.1575811342782787,
+      "p_maxt": 1.52587890625e-05,
+      "ci95": [
+       -3.8460042369797613,
+       -2.47293599131263
+      ],
+      "ci90": [
+       -3.7321813622381677,
+       -2.5825254579533095
+      ],
+      "n_actors": 17,
+      "n_items": 192
+     },
+     "te_margin": 0.6679781834215168,
+     "fills": {
+      "mask_eyesmouth_first": -2.138610731217118,
+      "mask_eyesmouth_blur": -3.3176507647503444
+     },
+     "effect_class": "Present",
+     "share_margin": 0.6315162268556558,
+     "arms": {
+      "route": {
+       "model": "qwen3vl",
+       "arm": "route",
+       "kind": "block",
+       "label": "decomposition",
+       "heading": "decomposition of the complete exit cut",
+       "verdict": "Both blocks",
+       "reason": null,
+       "riders": [
+        "Synergic"
+       ],
+       "reading": null,
+       "decision": {
+        "run": true,
+        "date": "2026-11-10",
+        "reason": "DECISIONS 2026-11-10, A7 Stage 1 scope: route arm run on Gemma 4 and Qwen3-VL, conditional on the preconditions, applied by code (DECISIONS 2026-11-12)"
+       },
+       "sentinel": {
+        "n": 20,
+        "worst_abs_nats": 0.0,
+        "failed": [],
+        "pass": true
+       },
+       "n_items_complete": 192,
+       "n_items": 192,
+       "terms": {
+        "phi_A": {
+         "mean": -2.343025630835207,
+         "p_maxt": 1.52587890625e-05,
+         "ci95": [
+          -2.8503149687361464,
+          -1.8457288471251174
+         ],
+         "ci90": [
+          -2.76990364773061,
+          -1.923723716624341
+         ],
+         "n_actors": 17
+        },
+        "phi_B": {
+         "mean": -0.8145555034430716,
+         "p_maxt": 1.52587890625e-05,
+         "ci95": [
+          -1.011042755741092,
+          -0.6190575808555828
+         ],
+         "ci90": [
+          -0.9785200740045299,
+          -0.6512473646804384
+         ],
+         "n_actors": 17
+        },
+        "I": {
+         "mean": -0.6823202792435128,
+         "p_maxt": 1.52587890625e-05,
+         "ci95": [
+          -0.8583536284021877,
+          -0.5106713598979703
+         ],
+         "ci90": [
+          -0.8300461035393223,
+          -0.5363300250500623
+         ],
+         "n_actors": 17
+        }
+       },
+       "riders_descriptive": {
+        "TE": {
+         "mean": -3.1575811342782787,
+         "ci95": [
+          -3.8460042369797613,
+          -2.47293599131263
+         ]
+        },
+        "PE_A": {
+         "mean": -2.001865491213451,
+         "ci95": [
+          -2.4754720654457976,
+          -1.5553857288099142
+         ]
+        },
+        "PE_B": {
+         "mean": -0.47339536382131503,
+         "ci95": [
+          -0.622714203862028,
+          -0.3300541652638878
+         ]
+        },
+        "N_A": {
+         "mean": -2.6841857704569634,
+         "ci95": [
+          -3.2424795447404606,
+          -2.1250662277336225
+         ]
+        },
+        "N_B": {
+         "mean": -1.1557156430648279,
+         "ci95": [
+          -1.4168512330023484,
+          -0.8881004889740255
+         ]
+        },
+        "block_relative_change": {
+         "A": {
+          "min": 0.2753290243924149,
+          "median": 0.4896778514892519,
+          "n": 192
+         },
+         "B": {
+          "min": 0.2079944076473754,
+          "median": 0.37672940906904495,
+          "n": 192
+         }
+        }
+       },
+       "carrying_class": "Both",
+       "verdict_confirmatory": true,
+       "interaction_rider_confirmatory": false,
+       "confirmatory": {
+        "verdict": "Both blocks",
+        "reason": null,
+        "reading": null,
+        "not_local": false,
+        "scope": "secondary decomposition, not an RQ3 result",
+        "recovery_reach_observers": []
+       },
+       "descriptive": {
+        "interaction_rider": [
+         "Synergic"
+        ],
+        "carrying_class": "Both",
+        "riders_descriptive": true,
+        "confirmatory": false,
+        "note": "The interaction rider (Additive, Redundant, Synergic, Interaction unresolved), the carrying class behind a non-carrying verdict, and the PE, N and block-change riders are descriptive: no confirmatory claim rests on them (recovery: the Additive rider reached .758 to .792 against .80). No effect to carry is confirmatory with its recovery reach (.622 and .652 at the null) reported beside it; a null edit that ends Inconclusive is read as Inconclusive. The whole arm is a secondary decomposition of the complete exit cut, never an RQ3 result."
+       }
+      },
+      "token": {
+       "model": "qwen3vl",
+       "arm": "token",
+       "kind": "block",
+       "label": "decomposition",
+       "heading": "decomposition of the complete exit cut",
+       "verdict": "Not testable",
+       "reason": "stage0_not_shown",
+       "riders": [],
+       "reading": null,
+       "decision": {
+        "run": false,
+        "date": "2026-11-10",
+        "reason": "DECISIONS 2026-11-10, A7 Stage 1 scope: token arm not run; Stage 0 did not admit it"
+       },
+       "sentinel": null,
+       "verdict_confirmatory": true,
+       "interaction_rider_confirmatory": false,
+       "confirmatory": {
+        "verdict": "Not testable",
+        "reason": "stage0_not_shown",
+        "reading": null,
+        "not_local": false,
+        "scope": "secondary decomposition, not an RQ3 result",
+        "recovery_reach_observers": []
+       },
+       "descriptive": {
+        "interaction_rider": [],
+        "carrying_class": null,
+        "riders_descriptive": false,
+        "confirmatory": false,
+        "note": "The interaction rider (Additive, Redundant, Synergic, Interaction unresolved), the carrying class behind a non-carrying verdict, and the PE, N and block-change riders are descriptive: no confirmatory claim rests on them (recovery: the Additive rider reached .758 to .792 against .80). No effect to carry is confirmatory with its recovery reach (.622 and .652 at the null) reported beside it; a null edit that ends Inconclusive is read as Inconclusive. The whole arm is a secondary decomposition of the complete exit cut, never an RQ3 result."
+       }
+      }
+     }
+    }
+   },
+   "claim_scope": {
+    "confirmatory": [
+     "verdict",
+     "reason",
+     "reading",
+     "not_local"
+    ],
+    "descriptive": [
+     "interaction rider",
+     "carrying_class behind a non-carrying verdict",
+     "riders_descriptive"
+    ],
+    "note": "The interaction rider (Additive, Redundant, Synergic, Interaction unresolved), the carrying class behind a non-carrying verdict, and the PE, N and block-change riders are descriptive: no confirmatory claim rests on them (recovery: the Additive rider reached .758 to .792 against .80). No effect to carry is confirmatory with its recovery reach (.622 and .652 at the null) reported beside it; a null edit that ends Inconclusive is read as Inconclusive. The whole arm is a secondary decomposition of the complete exit cut, never an RQ3 result."
+   }
+  },
+  "outcome_against_human_modal_label": {
+   "amendment": "A7",
+   "design_sha256": "9e40cfcfbe8761703da22cf2400c3af6cc7f05019df8b186f91e421dce50bb09",
+   "target": "human_mode",
+   "n_excluded": 0,
+   "rq3": {
+    "gemma4": {
+     "model": "gemma4",
+     "rq3": "not testable",
+     "scope": "beyond the interface",
+     "complete_cuts": [
+      "exit"
+     ],
+     "complete_cut_contrast": "zero by construction (validity, not a finding)",
+     "stage0_status": "complete",
+     "a5_w_caveat": false
+    },
+    "qwen3vl": {
+     "model": "qwen3vl",
+     "rq3": "not testable",
+     "scope": "beyond the interface",
+     "complete_cuts": [
+      "exit"
+     ],
+     "complete_cut_contrast": "zero by construction (validity, not a finding)",
+     "stage0_status": "complete",
+     "a5_w_caveat": false
+    }
+   },
+   "family": {
+    "columns": [
+     "gemma4/endpoints/TE",
+     "gemma4/route/phi_A",
+     "gemma4/route/phi_B",
+     "gemma4/route/I",
+     "qwen3vl/endpoints/TE",
+     "qwen3vl/route/phi_A",
+     "qwen3vl/route/phi_B",
+     "qwen3vl/route/I"
+    ],
+    "n_flips": 131072,
+    "exact": true
+   },
+   "models": {
+    "gemma4": {
+     "stage0_arms_admitted": {
+      "route": true,
+      "token": false
+     },
+     "dead_blocks_stage0": [],
+     "preconditions": {
+      "rq0": true,
+      "g2_g4": true,
+      "gate_b": true,
+      "delivery": true,
+      "sham": true
+     },
+     "te": {
+      "mean": -3.376268843716492,
+      "p_maxt": 1.52587890625e-05,
+      "ci95": [
+       -4.142388449039979,
+       -2.6721436572378368
+      ],
+      "ci90": [
+       -4.006928270975602,
+       -2.781811496408457
+      ],
+      "n_actors": 17,
+      "n_items": 200
+     },
+     "te_margin": 0.7245717244757987,
+     "fills": {
+      "mask_eyesmouth_first": -2.1946144318100202,
+      "mask_eyesmouth_blur": -2.7946530888454837
+     },
+     "effect_class": "Present",
+     "share_margin": 0.6752537687432985,
+     "arms": {
+      "route": {
+       "model": "gemma4",
+       "arm": "route",
+       "kind": "block",
+       "label": "decomposition",
+       "heading": "decomposition of the complete exit cut",
+       "verdict": "Carried by B",
+       "reason": null,
+       "riders": [
+        "Additive"
+       ],
+       "reading": null,
+       "decision": {
+        "run": true,
+        "date": "2026-11-10",
+        "reason": "DECISIONS 2026-11-10, A7 Stage 1 scope: route arm run on Gemma 4 and Qwen3-VL, conditional on the preconditions, applied by code (DECISIONS 2026-11-12)"
+       },
+       "sentinel": {
+        "n": 20,
+        "worst_abs_nats": 0.0,
+        "failed": [],
+        "pass": true
+       },
+       "n_items_complete": 200,
+       "n_items": 200,
+       "terms": {
+        "phi_A": {
+         "mean": -0.33849857607786166,
+         "p_maxt": 4.57763671875e-05,
+         "ci95": [
+          -0.44380778035181145,
+          -0.2404248914050332
+         ],
+         "ci90": [
+          -0.425797548007271,
+          -0.2553814336840922
+         ],
+         "n_actors": 17
+        },
+        "phi_B": {
+         "mean": -3.0377702676386305,
+         "p_maxt": 1.52587890625e-05,
+         "ci95": [
+          -3.7220354171252565,
+          -2.4035806349700173
+         ],
+         "ci90": [
+          -3.6022756544246515,
+          -2.5036287207196186
+         ],
+         "n_actors": 17
+        },
+        "I": {
+         "mean": -0.24392448822437404,
+         "p_maxt": 0.0003509521484375,
+         "ci95": [
+          -0.34199240418704707,
+          -0.1449506549520895
+         ],
+         "ci90": [
+          -0.3259169862156512,
+          -0.16204056909145548
+         ],
+         "n_actors": 17
+        }
+       },
+       "riders_descriptive": {
+        "TE": {
+         "mean": -3.376268843716492,
+         "ci95": [
+          -4.142388449039979,
+          -2.6721436572378368
+         ]
+        },
+        "PE_A": {
+         "mean": -0.21653633196567454,
+         "ci95": [
+          -0.3089293481002297,
+          -0.133256774361112
+         ]
+        },
+        "PE_B": {
+         "mean": -2.9158080235264427,
+         "ci95": [
+          -3.6003872035764264,
+          -2.2704309398919786
+         ]
+        },
+        "N_A": {
+         "mean": -0.4604608201900487,
+         "ci95": [
+          -0.5938608117964361,
+          -0.3283132239718868
+         ]
+        },
+        "N_B": {
+         "mean": -3.1597325117508173,
+         "ci95": [
+          -3.845744873977417,
+          -2.5286380384703278
+         ]
+        },
+        "block_relative_change": {
+         "A": {
+          "min": 0.1684423327261647,
+          "median": 0.32339621868026197,
+          "n": 200
+         },
+         "B": {
+          "min": 0.07817643414276426,
+          "median": 0.153053356052955,
+          "n": 200
+         }
+        }
+       },
+       "carrying_class": "B only",
+       "verdict_confirmatory": true,
+       "interaction_rider_confirmatory": false,
+       "confirmatory": {
+        "verdict": "Carried by B",
+        "reason": null,
+        "reading": null,
+        "not_local": false,
+        "scope": "secondary decomposition, not an RQ3 result",
+        "recovery_reach_observers": []
+       },
+       "descriptive": {
+        "interaction_rider": [
+         "Additive"
+        ],
+        "carrying_class": "B only",
+        "riders_descriptive": true,
+        "confirmatory": false,
+        "note": "The interaction rider (Additive, Redundant, Synergic, Interaction unresolved), the carrying class behind a non-carrying verdict, and the PE, N and block-change riders are descriptive: no confirmatory claim rests on them (recovery: the Additive rider reached .758 to .792 against .80). No effect to carry is confirmatory with its recovery reach (.622 and .652 at the null) reported beside it; a null edit that ends Inconclusive is read as Inconclusive. The whole arm is a secondary decomposition of the complete exit cut, never an RQ3 result."
+       }
+      },
+      "token": {
+       "model": "gemma4",
+       "arm": "token",
+       "kind": "block",
+       "label": "decomposition",
+       "heading": "decomposition of the complete exit cut",
+       "verdict": "Not testable",
+       "reason": "stage0_not_shown",
+       "riders": [],
+       "reading": null,
+       "decision": {
+        "run": false,
+        "date": "2026-11-10",
+        "reason": "DECISIONS 2026-11-10, A7 Stage 1 scope: token arm not run; Stage 0 did not admit it"
+       },
+       "sentinel": null,
+       "verdict_confirmatory": true,
+       "interaction_rider_confirmatory": false,
+       "confirmatory": {
+        "verdict": "Not testable",
+        "reason": "stage0_not_shown",
+        "reading": null,
+        "not_local": false,
+        "scope": "secondary decomposition, not an RQ3 result",
+        "recovery_reach_observers": []
+       },
+       "descriptive": {
+        "interaction_rider": [],
+        "carrying_class": null,
+        "riders_descriptive": false,
+        "confirmatory": false,
+        "note": "The interaction rider (Additive, Redundant, Synergic, Interaction unresolved), the carrying class behind a non-carrying verdict, and the PE, N and block-change riders are descriptive: no confirmatory claim rests on them (recovery: the Additive rider reached .758 to .792 against .80). No effect to carry is confirmatory with its recovery reach (.622 and .652 at the null) reported beside it; a null edit that ends Inconclusive is read as Inconclusive. The whole arm is a secondary decomposition of the complete exit cut, never an RQ3 result."
+       }
+      }
+     }
+    },
+    "qwen3vl": {
+     "stage0_arms_admitted": {
+      "route": true,
+      "token": false
+     },
+     "dead_blocks_stage0": [],
+     "preconditions": {
+      "rq0": true,
+      "g2_g4": true,
+      "gate_b": true,
+      "delivery": true,
+      "sham": true
+     },
+     "te": {
+      "mean": -3.1667026349156466,
+      "p_maxt": 1.52587890625e-05,
+      "ci95": [
+       -3.7896935472087603,
+       -2.5640892816282648
+      ],
+      "ci90": [
+       -3.6897432888489496,
+       -2.6540960561641955
+      ],
+      "n_actors": 17,
+      "n_items": 200
+     },
+     "te_margin": 0.6679781834215168,
+     "fills": {
+      "mask_eyesmouth_first": -2.0984436521943666,
+      "mask_eyesmouth_blur": -3.160086059409
+     },
+     "effect_class": "Present",
+     "share_margin": 0.6333405269831294,
+     "arms": {
+      "route": {
+       "model": "qwen3vl",
+       "arm": "route",
+       "kind": "block",
+       "label": "decomposition",
+       "heading": "decomposition of the complete exit cut",
+       "verdict": "Both blocks",
+       "reason": null,
+       "riders": [
+        "Synergic"
+       ],
+       "reading": null,
+       "decision": {
+        "run": true,
+        "date": "2026-11-10",
+        "reason": "DECISIONS 2026-11-10, A7 Stage 1 scope: route arm run on Gemma 4 and Qwen3-VL, conditional on the preconditions, applied by code (DECISIONS 2026-11-12)"
+       },
+       "sentinel": {
+        "n": 20,
+        "worst_abs_nats": 0.0,
+        "failed": [],
+        "pass": true
+       },
+       "n_items_complete": 200,
+       "n_items": 200,
+       "terms": {
+        "phi_A": {
+         "mean": -2.3456204981101836,
+         "p_maxt": 1.52587890625e-05,
+         "ci95": [
+          -2.8086299325769986,
+          -1.9010575520414459
+         ],
+         "ci90": [
+          -2.7322442113904915,
+          -1.9700859013946257
+         ],
+         "n_actors": 17
+        },
+        "phi_B": {
+         "mean": -0.8210821368054627,
+         "p_maxt": 1.52587890625e-05,
+         "ci95": [
+          -1.0005714680821673,
+          -0.648246095207328
+         ],
+         "ci90": [
+          -0.97171443458772,
+          -0.6745523724275335
+         ],
+         "n_actors": 17
+        },
+        "I": {
+         "mean": -0.649664868892053,
+         "p_maxt": 3.0517578125e-05,
+         "ci95": [
+          -0.8149376600632291,
+          -0.4773000479769803
+         ],
+         "ci90": [
+          -0.7875114609709729,
+          -0.5053166770305052
+         ],
+         "n_actors": 17
+        }
+       },
+       "riders_descriptive": {
+        "TE": {
+         "mean": -3.1667026349156466,
+         "ci95": [
+          -3.7896935472087603,
+          -2.5640892816282648
+         ]
+        },
+        "PE_A": {
+         "mean": -2.020788063664157,
+         "ci95": [
+          -2.444967508612945,
+          -1.6183511540363857
+         ]
+        },
+        "PE_B": {
+         "mean": -0.4962497023594363,
+         "ci95": [
+          -0.6249413935898354,
+          -0.3714871948389501
+         ]
+        },
+        "N_A": {
+         "mean": -2.67045293255621,
+         "ci95": [
+          -3.186540116679352,
+          -2.1716233191307284
+         ]
+        },
+        "N_B": {
+         "mean": -1.1459145712514895,
+         "ci95": [
+          -1.3920044459780931,
+          -0.9003936793701844
+         ]
+        },
+        "block_relative_change": {
+         "A": {
+          "min": 0.2753290243924149,
+          "median": 0.49122567004914774,
+          "n": 200
+         },
+         "B": {
+          "min": 0.2079944076473754,
+          "median": 0.3790756610902377,
+          "n": 200
+         }
+        }
+       },
+       "carrying_class": "Both",
+       "verdict_confirmatory": true,
+       "interaction_rider_confirmatory": false,
+       "confirmatory": {
+        "verdict": "Both blocks",
+        "reason": null,
+        "reading": null,
+        "not_local": false,
+        "scope": "secondary decomposition, not an RQ3 result",
+        "recovery_reach_observers": []
+       },
+       "descriptive": {
+        "interaction_rider": [
+         "Synergic"
+        ],
+        "carrying_class": "Both",
+        "riders_descriptive": true,
+        "confirmatory": false,
+        "note": "The interaction rider (Additive, Redundant, Synergic, Interaction unresolved), the carrying class behind a non-carrying verdict, and the PE, N and block-change riders are descriptive: no confirmatory claim rests on them (recovery: the Additive rider reached .758 to .792 against .80). No effect to carry is confirmatory with its recovery reach (.622 and .652 at the null) reported beside it; a null edit that ends Inconclusive is read as Inconclusive. The whole arm is a secondary decomposition of the complete exit cut, never an RQ3 result."
+       }
+      },
+      "token": {
+       "model": "qwen3vl",
+       "arm": "token",
+       "kind": "block",
+       "label": "decomposition",
+       "heading": "decomposition of the complete exit cut",
+       "verdict": "Not testable",
+       "reason": "stage0_not_shown",
+       "riders": [],
+       "reading": null,
+       "decision": {
+        "run": false,
+        "date": "2026-11-10",
+        "reason": "DECISIONS 2026-11-10, A7 Stage 1 scope: token arm not run; Stage 0 did not admit it"
+       },
+       "sentinel": null,
+       "verdict_confirmatory": true,
+       "interaction_rider_confirmatory": false,
+       "confirmatory": {
+        "verdict": "Not testable",
+        "reason": "stage0_not_shown",
+        "reading": null,
+        "not_local": false,
+        "scope": "secondary decomposition, not an RQ3 result",
+        "recovery_reach_observers": []
+       },
+       "descriptive": {
+        "interaction_rider": [],
+        "carrying_class": null,
+        "riders_descriptive": false,
+        "confirmatory": false,
+        "note": "The interaction rider (Additive, Redundant, Synergic, Interaction unresolved), the carrying class behind a non-carrying verdict, and the PE, N and block-change riders are descriptive: no confirmatory claim rests on them (recovery: the Additive rider reached .758 to .792 against .80). No effect to carry is confirmatory with its recovery reach (.622 and .652 at the null) reported beside it; a null edit that ends Inconclusive is read as Inconclusive. The whole arm is a secondary decomposition of the complete exit cut, never an RQ3 result."
+       }
+      }
+     }
+    }
+   },
+   "claim_scope": {
+    "confirmatory": [
+     "verdict",
+     "reason",
+     "reading",
+     "not_local"
+    ],
+    "descriptive": [
+     "interaction rider",
+     "carrying_class behind a non-carrying verdict",
+     "riders_descriptive"
+    ],
+    "note": "The interaction rider (Additive, Redundant, Synergic, Interaction unresolved), the carrying class behind a non-carrying verdict, and the PE, N and block-change riders are descriptive: no confirmatory claim rests on them (recovery: the Additive rider reached .758 to .792 against .80). No effect to carry is confirmatory with its recovery reach (.622 and .652 at the null) reported beside it; a null edit that ends Inconclusive is read as Inconclusive. The whole arm is a secondary decomposition of the complete exit cut, never an RQ3 result."
+   }
+  },
+  "canonical_word_only": {
+   "amendment": "A7",
+   "design_sha256": "9e40cfcfbe8761703da22cf2400c3af6cc7f05019df8b186f91e421dce50bb09",
+   "target": "acted",
+   "n_excluded": 0,
+   "rq3": {
+    "gemma4": {
+     "model": "gemma4",
+     "rq3": "not testable",
+     "scope": "beyond the interface",
+     "complete_cuts": [
+      "exit"
+     ],
+     "complete_cut_contrast": "zero by construction (validity, not a finding)",
+     "stage0_status": "complete",
+     "a5_w_caveat": false
+    },
+    "qwen3vl": {
+     "model": "qwen3vl",
+     "rq3": "not testable",
+     "scope": "beyond the interface",
+     "complete_cuts": [
+      "exit"
+     ],
+     "complete_cut_contrast": "zero by construction (validity, not a finding)",
+     "stage0_status": "complete",
+     "a5_w_caveat": false
+    }
+   },
+   "family": {
+    "columns": [
+     "gemma4/endpoints/TE",
+     "gemma4/route/phi_A",
+     "gemma4/route/phi_B",
+     "gemma4/route/I",
+     "qwen3vl/endpoints/TE",
+     "qwen3vl/route/phi_A",
+     "qwen3vl/route/phi_B",
+     "qwen3vl/route/I"
+    ],
+    "n_flips": 131072,
+    "exact": true
+   },
+   "models": {
+    "gemma4": {
+     "stage0_arms_admitted": {
+      "route": true,
+      "token": false
+     },
+     "dead_blocks_stage0": [],
+     "preconditions": {
+      "rq0": true,
+      "g2_g4": true,
+      "gate_b": true,
+      "delivery": true,
+      "sham": true
+     },
+     "te": {
+      "mean": -3.401153668792817,
+      "p_maxt": 1.52587890625e-05,
+      "ci95": [
+       -4.25403310629373,
+       -2.529881432260546
+      ],
+      "ci90": [
+       -4.109949873058294,
+       -2.675522201650439
+      ],
+      "n_actors": 17,
+      "n_items": 200
+     },
+     "te_margin": 0.7245717244757987,
+     "fills": {
+      "mask_eyesmouth_first": -2.1946144318100202,
+      "mask_eyesmouth_blur": -2.7946530888454837
+     },
+     "effect_class": "Present",
+     "share_margin": 0.6802307337585635,
+     "arms": {
+      "route": {
+       "model": "gemma4",
+       "arm": "route",
+       "kind": "block",
+       "label": "decomposition",
+       "heading": "decomposition of the complete exit cut",
+       "verdict": "Carried by B",
+       "reason": null,
+       "riders": [
+        "Additive"
+       ],
+       "reading": null,
+       "decision": {
+        "run": true,
+        "date": "2026-11-10",
+        "reason": "DECISIONS 2026-11-10, A7 Stage 1 scope: route arm run on Gemma 4 and Qwen3-VL, conditional on the preconditions, applied by code (DECISIONS 2026-11-12)"
+       },
+       "sentinel": {
+        "n": 20,
+        "worst_abs_nats": 0.0,
+        "failed": [],
+        "pass": true
+       },
+       "n_items_complete": 200,
+       "n_items": 200,
+       "terms": {
+        "phi_A": {
+         "mean": -0.3368368988982135,
+         "p_maxt": 9.1552734375e-05,
+         "ci95": [
+          -0.4511524939400281,
+          -0.2277047841238609
+         ],
+         "ci90": [
+          -0.4324255575694895,
+          -0.24463235017505333
+         ],
+         "n_actors": 17
+        },
+        "phi_B": {
+         "mean": -3.064316769894604,
+         "p_maxt": 1.52587890625e-05,
+         "ci95": [
+          -3.8314869156624254,
+          -2.28356643798361
+         ],
+         "ci90": [
+          -3.6970633749293063,
+          -2.4143108658804846
+         ],
+         "n_actors": 17
+        },
+        "I": {
+         "mean": -0.2513182112390386,
+         "p_maxt": 0.002655029296875,
+         "ci95": [
+          -0.3806044869135536,
+          -0.11941000551179173
+         ],
+         "ci90": [
+          -0.3602034299395653,
+          -0.14418143612713197
+         ],
+         "n_actors": 17
+        }
+       },
+       "riders_descriptive": {
+        "TE": {
+         "mean": -3.401153668792817,
+         "ci95": [
+          -4.25403310629373,
+          -2.529881432260546
+         ]
+        },
+        "PE_A": {
+         "mean": -0.2111777932786942,
+         "ci95": [
+          -0.314843657826532,
+          -0.10352336561403325
+         ]
+        },
+        "PE_B": {
+         "mean": -2.938657664275084,
+         "ci95": [
+          -3.693873754676872,
+          -2.1595352747454073
+         ]
+        },
+        "N_A": {
+         "mean": -0.46249600451773276,
+         "ci95": [
+          -0.6145523781019784,
+          -0.31670428276156937
+         ]
+        },
+        "N_B": {
+         "mean": -3.189975875514123,
+         "ci95": [
+          -3.9633572125755174,
+          -2.4055450139666266
+         ]
+        },
+        "block_relative_change": {
+         "A": {
+          "min": 0.1684423327261647,
+          "median": 0.32339621868026197,
+          "n": 200
+         },
+         "B": {
+          "min": 0.07817643414276426,
+          "median": 0.153053356052955,
+          "n": 200
+         }
+        }
+       },
+       "carrying_class": "B only",
+       "verdict_confirmatory": true,
+       "interaction_rider_confirmatory": false,
+       "confirmatory": {
+        "verdict": "Carried by B",
+        "reason": null,
+        "reading": null,
+        "not_local": false,
+        "scope": "secondary decomposition, not an RQ3 result",
+        "recovery_reach_observers": []
+       },
+       "descriptive": {
+        "interaction_rider": [
+         "Additive"
+        ],
+        "carrying_class": "B only",
+        "riders_descriptive": true,
+        "confirmatory": false,
+        "note": "The interaction rider (Additive, Redundant, Synergic, Interaction unresolved), the carrying class behind a non-carrying verdict, and the PE, N and block-change riders are descriptive: no confirmatory claim rests on them (recovery: the Additive rider reached .758 to .792 against .80). No effect to carry is confirmatory with its recovery reach (.622 and .652 at the null) reported beside it; a null edit that ends Inconclusive is read as Inconclusive. The whole arm is a secondary decomposition of the complete exit cut, never an RQ3 result."
+       }
+      },
+      "token": {
+       "model": "gemma4",
+       "arm": "token",
+       "kind": "block",
+       "label": "decomposition",
+       "heading": "decomposition of the complete exit cut",
+       "verdict": "Not testable",
+       "reason": "stage0_not_shown",
+       "riders": [],
+       "reading": null,
+       "decision": {
+        "run": false,
+        "date": "2026-11-10",
+        "reason": "DECISIONS 2026-11-10, A7 Stage 1 scope: token arm not run; Stage 0 did not admit it"
+       },
+       "sentinel": null,
+       "verdict_confirmatory": true,
+       "interaction_rider_confirmatory": false,
+       "confirmatory": {
+        "verdict": "Not testable",
+        "reason": "stage0_not_shown",
+        "reading": null,
+        "not_local": false,
+        "scope": "secondary decomposition, not an RQ3 result",
+        "recovery_reach_observers": []
+       },
+       "descriptive": {
+        "interaction_rider": [],
+        "carrying_class": null,
+        "riders_descriptive": false,
+        "confirmatory": false,
+        "note": "The interaction rider (Additive, Redundant, Synergic, Interaction unresolved), the carrying class behind a non-carrying verdict, and the PE, N and block-change riders are descriptive: no confirmatory claim rests on them (recovery: the Additive rider reached .758 to .792 against .80). No effect to carry is confirmatory with its recovery reach (.622 and .652 at the null) reported beside it; a null edit that ends Inconclusive is read as Inconclusive. The whole arm is a secondary decomposition of the complete exit cut, never an RQ3 result."
+       }
+      }
+     }
+    },
+    "qwen3vl": {
+     "stage0_arms_admitted": {
+      "route": true,
+      "token": false
+     },
+     "dead_blocks_stage0": [],
+     "preconditions": {
+      "rq0": true,
+      "g2_g4": true,
+      "gate_b": true,
+      "delivery": true,
+      "sham": true
+     },
+     "te": {
+      "mean": -3.2892973572963795,
+      "p_maxt": 1.52587890625e-05,
+      "ci95": [
+       -3.91322152206143,
+       -2.6927033836998504
+      ],
+      "ci90": [
+       -3.806340461030839,
+       -2.7900797229488368
+      ],
+      "n_actors": 17,
+      "n_items": 200
+     },
+     "te_margin": 0.6679781834215168,
+     "fills": {
+      "mask_eyesmouth_first": -2.0984436521943666,
+      "mask_eyesmouth_blur": -3.160086059409
+     },
+     "effect_class": "Present",
+     "share_margin": 0.6578594714592759,
+     "arms": {
+      "route": {
+       "model": "qwen3vl",
+       "arm": "route",
+       "kind": "block",
+       "label": "decomposition",
+       "heading": "decomposition of the complete exit cut",
+       "verdict": "Both blocks",
+       "reason": null,
+       "riders": [
+        "Synergic"
+       ],
+       "reading": null,
+       "decision": {
+        "run": true,
+        "date": "2026-11-10",
+        "reason": "DECISIONS 2026-11-10, A7 Stage 1 scope: route arm run on Gemma 4 and Qwen3-VL, conditional on the preconditions, applied by code (DECISIONS 2026-11-12)"
+       },
+       "sentinel": {
+        "n": 20,
+        "worst_abs_nats": 0.0,
+        "failed": [],
+        "pass": true
+       },
+       "n_items_complete": 200,
+       "n_items": 200,
+       "terms": {
+        "phi_A": {
+         "mean": -2.446666985875467,
+         "p_maxt": 1.52587890625e-05,
+         "ci95": [
+          -2.904656288140289,
+          -2.017534717475144
+         ],
+         "ci90": [
+          -2.8237980383290604,
+          -2.086001504769381
+         ],
+         "n_actors": 17
+        },
+        "phi_B": {
+         "mean": -0.8426303714209125,
+         "p_maxt": 1.52587890625e-05,
+         "ci95": [
+          -1.0318817481034968,
+          -0.6549742430767758
+         ],
+         "ci90": [
+          -1.0024087349283928,
+          -0.6869322680011087
+         ],
+         "n_actors": 17
+        },
+        "I": {
+         "mean": -0.70729519659956,
+         "p_maxt": 1.52587890625e-05,
+         "ci95": [
+          -0.8775755936096619,
+          -0.5510777318150784
+         ],
+         "ci90": [
+          -0.849373541594465,
+          -0.5723072911150063
+         ],
+         "n_actors": 17
+        }
+       },
+       "riders_descriptive": {
+        "TE": {
+         "mean": -3.2892973572963795,
+         "ci95": [
+          -3.91322152206143,
+          -2.6927033836998504
+         ]
+        },
+        "PE_A": {
+         "mean": -2.0930193875756866,
+         "ci95": [
+          -2.5304368270487028,
+          -1.6976585157414497
+         ]
+        },
+        "PE_B": {
+         "mean": -0.48898277312113253,
+         "ci95": [
+          -0.6434993551034348,
+          -0.3369411076940571
+         ]
+        },
+        "N_A": {
+         "mean": -2.800314584175247,
+         "ci95": [
+          -3.290673077167059,
+          -2.3333985371264476
+         ]
+        },
+        "N_B": {
+         "mean": -1.1962779697206922,
+         "ci95": [
+          -1.4425988564055863,
+          -0.9501579503811661
+         ]
+        },
+        "block_relative_change": {
+         "A": {
+          "min": 0.2753290243924149,
+          "median": 0.49122567004914774,
+          "n": 200
+         },
+         "B": {
+          "min": 0.2079944076473754,
+          "median": 0.3790756610902377,
+          "n": 200
+         }
+        }
+       },
+       "carrying_class": "Both",
+       "verdict_confirmatory": true,
+       "interaction_rider_confirmatory": false,
+       "confirmatory": {
+        "verdict": "Both blocks",
+        "reason": null,
+        "reading": null,
+        "not_local": false,
+        "scope": "secondary decomposition, not an RQ3 result",
+        "recovery_reach_observers": []
+       },
+       "descriptive": {
+        "interaction_rider": [
+         "Synergic"
+        ],
+        "carrying_class": "Both",
+        "riders_descriptive": true,
+        "confirmatory": false,
+        "note": "The interaction rider (Additive, Redundant, Synergic, Interaction unresolved), the carrying class behind a non-carrying verdict, and the PE, N and block-change riders are descriptive: no confirmatory claim rests on them (recovery: the Additive rider reached .758 to .792 against .80). No effect to carry is confirmatory with its recovery reach (.622 and .652 at the null) reported beside it; a null edit that ends Inconclusive is read as Inconclusive. The whole arm is a secondary decomposition of the complete exit cut, never an RQ3 result."
+       }
+      },
+      "token": {
+       "model": "qwen3vl",
+       "arm": "token",
+       "kind": "block",
+       "label": "decomposition",
+       "heading": "decomposition of the complete exit cut",
+       "verdict": "Not testable",
+       "reason": "stage0_not_shown",
+       "riders": [],
+       "reading": null,
+       "decision": {
+        "run": false,
+        "date": "2026-11-10",
+        "reason": "DECISIONS 2026-11-10, A7 Stage 1 scope: token arm not run; Stage 0 did not admit it"
+       },
+       "sentinel": null,
+       "verdict_confirmatory": true,
+       "interaction_rider_confirmatory": false,
+       "confirmatory": {
+        "verdict": "Not testable",
+        "reason": "stage0_not_shown",
+        "reading": null,
+        "not_local": false,
+        "scope": "secondary decomposition, not an RQ3 result",
+        "recovery_reach_observers": []
+       },
+       "descriptive": {
+        "interaction_rider": [],
+        "carrying_class": null,
+        "riders_descriptive": false,
+        "confirmatory": false,
+        "note": "The interaction rider (Additive, Redundant, Synergic, Interaction unresolved), the carrying class behind a non-carrying verdict, and the PE, N and block-change riders are descriptive: no confirmatory claim rests on them (recovery: the Additive rider reached .758 to .792 against .80). No effect to carry is confirmatory with its recovery reach (.622 and .652 at the null) reported beside it; a null edit that ends Inconclusive is read as Inconclusive. The whole arm is a secondary decomposition of the complete exit cut, never an RQ3 result."
+       }
+      }
+     }
+    }
+   },
+   "claim_scope": {
+    "confirmatory": [
+     "verdict",
+     "reason",
+     "reading",
+     "not_local"
+    ],
+    "descriptive": [
+     "interaction rider",
+     "carrying_class behind a non-carrying verdict",
+     "riders_descriptive"
+    ],
+    "note": "The interaction rider (Additive, Redundant, Synergic, Interaction unresolved), the carrying class behind a non-carrying verdict, and the PE, N and block-change riders are descriptive: no confirmatory claim rests on them (recovery: the Additive rider reached .758 to .792 against .80). No effect to carry is confirmatory with its recovery reach (.622 and .652 at the null) reported beside it; a null edit that ends Inconclusive is read as Inconclusive. The whole arm is a secondary decomposition of the complete exit cut, never an RQ3 result."
+   }
+  },
+  "whole_judgement_rms": {
+   "amendment": "A7",
+   "design_sha256": "9e40cfcfbe8761703da22cf2400c3af6cc7f05019df8b186f91e421dce50bb09",
+   "target": "whole",
+   "n_excluded": 0,
+   "rq3": {
+    "gemma4": {
+     "model": "gemma4",
+     "rq3": "not testable",
+     "scope": "beyond the interface",
+     "complete_cuts": [
+      "exit"
+     ],
+     "complete_cut_contrast": "zero by construction (validity, not a finding)",
+     "stage0_status": "complete",
+     "a5_w_caveat": false
+    },
+    "qwen3vl": {
+     "model": "qwen3vl",
+     "rq3": "not testable",
+     "scope": "beyond the interface",
+     "complete_cuts": [
+      "exit"
+     ],
+     "complete_cut_contrast": "zero by construction (validity, not a finding)",
+     "stage0_status": "complete",
+     "a5_w_caveat": false
+    }
+   },
+   "family": {
+    "columns": [
+     "gemma4/endpoints/TE",
+     "gemma4/route/phi_A",
+     "gemma4/route/phi_B",
+     "gemma4/route/I",
+     "qwen3vl/endpoints/TE",
+     "qwen3vl/route/phi_A",
+     "qwen3vl/route/phi_B",
+     "qwen3vl/route/I"
+    ],
+    "n_flips": 131072,
+    "exact": true
+   },
+   "models": {
+    "gemma4": {
+     "stage0_arms_admitted": {
+      "route": true,
+      "token": false
+     },
+     "dead_blocks_stage0": [],
+     "preconditions": {
+      "rq0": true,
+      "g2_g4": true,
+      "gate_b": true,
+      "delivery": true,
+      "sham": true
+     },
+     "te": {
+      "mean": 3.7601625513777837,
+      "p_maxt": 1.52587890625e-05,
+      "ci95": [
+       3.457941119233696,
+       4.080592285420453
+      ],
+      "ci90": [
+       3.5060919248336737,
+       4.02827860886723
+      ],
+      "n_actors": 17,
+      "n_items": 200
+     },
+     "te_margin": 0.7245717244757987,
+     "fills": {
+      "mask_eyesmouth_first": -2.1946144318100202,
+      "mask_eyesmouth_blur": -2.7946530888454837
+     },
+     "effect_class": "Unresolved",
+     "share_margin": 0.7520325102755567,
+     "arms": {
+      "route": {
+       "model": "gemma4",
+       "arm": "route",
+       "kind": "block",
+       "label": "decomposition",
+       "heading": "decomposition of the complete exit cut",
+       "verdict": "Inconclusive",
+       "reason": "te_unresolved",
+       "riders": [],
+       "reading": null,
+       "decision": {
+        "run": true,
+        "date": "2026-11-10",
+        "reason": "DECISIONS 2026-11-10, A7 Stage 1 scope: route arm run on Gemma 4 and Qwen3-VL, conditional on the preconditions, applied by code (DECISIONS 2026-11-12)"
+       },
+       "sentinel": {
+        "n": 20,
+        "worst_abs_nats": 0.0,
+        "failed": [],
+        "pass": true
+       },
+       "n_items_complete": 200,
+       "n_items": 200,
+       "terms": {
+        "phi_A": {
+         "mean": 0.5811382616592856,
+         "p_maxt": 1.52587890625e-05,
+         "ci95": [
+          0.5372779824432432,
+          0.6268875330906372
+         ],
+         "ci90": [
+          0.543612302513977,
+          0.6195433043301528
+         ],
+         "n_actors": 17
+        },
+        "phi_B": {
+         "mean": 3.3610763176935845,
+         "p_maxt": 1.52587890625e-05,
+         "ci95": [
+          3.0903259313308897,
+          3.646091133039253
+         ],
+         "ci90": [
+          3.1345053308149375,
+          3.5989196008315534
+         ],
+         "n_actors": 17
+        },
+        "I": {
+         "mean": 0.8214803655525539,
+         "p_maxt": 1.52587890625e-05,
+         "ci95": [
+          0.7654740137386892,
+          0.8750825698093456
+         ],
+         "ci90": [
+          0.7748537788278042,
+          0.8662032634520078
+         ],
+         "n_actors": 17
+        }
+       },
+       "riders_descriptive": {
+        "TE": {
+         "mean": 3.7601625513777837,
+         "ci95": [
+          3.457941119233696,
+          4.080592285420453
+         ]
+        },
+        "PE_A": {
+         "mean": 0.7313605309420952,
+         "ci95": [
+          0.6693710207905404,
+          0.7933945137054544
+         ]
+        },
+        "PE_B": {
+         "mean": 3.4199679164727392,
+         "ci95": [
+          3.154446276720823,
+          3.700846104392969
+         ]
+        },
+        "N_A": {
+         "mean": 0.662034862275483,
+         "ci95": [
+          0.6082061165982995,
+          0.7172975113026134
+         ]
+        },
+        "N_B": {
+         "mean": 3.350249544031997,
+         "ci95": [
+          3.0737809263152442,
+          3.6424660323759386
+         ]
+        },
+        "block_relative_change": {
+         "A": {
+          "min": 0.1684423327261647,
+          "median": 0.32339621868026197,
+          "n": 200
+         },
+         "B": {
+          "min": 0.07817643414276426,
+          "median": 0.153053356052955,
+          "n": 200
+         }
+        }
+       },
+       "verdict_confirmatory": true,
+       "interaction_rider_confirmatory": false,
+       "confirmatory": {
+        "verdict": "Inconclusive",
+        "reason": "te_unresolved",
+        "reading": null,
+        "not_local": false,
+        "scope": "secondary decomposition, not an RQ3 result",
+        "recovery_reach_observers": []
+       },
+       "descriptive": {
+        "interaction_rider": [],
+        "carrying_class": null,
+        "riders_descriptive": true,
+        "confirmatory": false,
+        "note": "The interaction rider (Additive, Redundant, Synergic, Interaction unresolved), the carrying class behind a non-carrying verdict, and the PE, N and block-change riders are descriptive: no confirmatory claim rests on them (recovery: the Additive rider reached .758 to .792 against .80). No effect to carry is confirmatory with its recovery reach (.622 and .652 at the null) reported beside it; a null edit that ends Inconclusive is read as Inconclusive. The whole arm is a secondary decomposition of the complete exit cut, never an RQ3 result."
+       }
+      },
+      "token": {
+       "model": "gemma4",
+       "arm": "token",
+       "kind": "block",
+       "label": "decomposition",
+       "heading": "decomposition of the complete exit cut",
+       "verdict": "Not testable",
+       "reason": "stage0_not_shown",
+       "riders": [],
+       "reading": null,
+       "decision": {
+        "run": false,
+        "date": "2026-11-10",
+        "reason": "DECISIONS 2026-11-10, A7 Stage 1 scope: token arm not run; Stage 0 did not admit it"
+       },
+       "sentinel": null,
+       "verdict_confirmatory": true,
+       "interaction_rider_confirmatory": false,
+       "confirmatory": {
+        "verdict": "Not testable",
+        "reason": "stage0_not_shown",
+        "reading": null,
+        "not_local": false,
+        "scope": "secondary decomposition, not an RQ3 result",
+        "recovery_reach_observers": []
+       },
+       "descriptive": {
+        "interaction_rider": [],
+        "carrying_class": null,
+        "riders_descriptive": false,
+        "confirmatory": false,
+        "note": "The interaction rider (Additive, Redundant, Synergic, Interaction unresolved), the carrying class behind a non-carrying verdict, and the PE, N and block-change riders are descriptive: no confirmatory claim rests on them (recovery: the Additive rider reached .758 to .792 against .80). No effect to carry is confirmatory with its recovery reach (.622 and .652 at the null) reported beside it; a null edit that ends Inconclusive is read as Inconclusive. The whole arm is a secondary decomposition of the complete exit cut, never an RQ3 result."
+       }
+      }
+     }
+    },
+    "qwen3vl": {
+     "stage0_arms_admitted": {
+      "route": true,
+      "token": false
+     },
+     "dead_blocks_stage0": [],
+     "preconditions": {
+      "rq0": true,
+      "g2_g4": true,
+      "gate_b": true,
+      "delivery": true,
+      "sham": true
+     },
+     "te": {
+      "mean": 3.354740125495335,
+      "p_maxt": 1.52587890625e-05,
+      "ci95": [
+       3.142481098777308,
+       3.564448010388458
+      ],
+      "ci90": [
+       3.1772726249305014,
+       3.532329046830898
+      ],
+      "n_actors": 17,
+      "n_items": 200
+     },
+     "te_margin": 0.6679781834215168,
+     "fills": {
+      "mask_eyesmouth_first": -2.0984436521943666,
+      "mask_eyesmouth_blur": -3.160086059409
+     },
+     "effect_class": "Unresolved",
+     "share_margin": 0.670948025099067,
+     "arms": {
+      "route": {
+       "model": "qwen3vl",
+       "arm": "route",
+       "kind": "block",
+       "label": "decomposition",
+       "heading": "decomposition of the complete exit cut",
+       "verdict": "Inconclusive",
+       "reason": "te_unresolved",
+       "riders": [],
+       "reading": null,
+       "decision": {
+        "run": true,
+        "date": "2026-11-10",
+        "reason": "DECISIONS 2026-11-10, A7 Stage 1 scope: route arm run on Gemma 4 and Qwen3-VL, conditional on the preconditions, applied by code (DECISIONS 2026-11-12)"
+       },
+       "sentinel": {
+        "n": 20,
+        "worst_abs_nats": 0.0,
+        "failed": [],
+        "pass": true
+       },
+       "n_items_complete": 200,
+       "n_items": 200,
+       "terms": {
+        "phi_A": {
+         "mean": 2.6055848506385826,
+         "p_maxt": 1.52587890625e-05,
+         "ci95": [
+          2.451213784949712,
+          2.7651643762571863
+         ],
+         "ci90": [
+          2.476424147398956,
+          2.7382653936033527
+         ],
+         "n_actors": 17
+        },
+        "phi_B": {
+         "mean": 0.8250996710391635,
+         "p_maxt": 1.52587890625e-05,
+         "ci95": [
+          0.7557479679623055,
+          0.8906669008709045
+         ],
+         "ci90": [
+          0.7679523061027989,
+          0.8809055985559943
+         ],
+         "n_actors": 17
+        },
+        "I": {
+         "mean": 0.880055197942339,
+         "p_maxt": 1.52587890625e-05,
+         "ci95": [
+          0.7922285342279926,
+          0.9750844086503812
+         ],
+         "ci90": [
+          0.8068217974280253,
+          0.9587388279379302
+         ],
+         "n_actors": 17
+        }
+       },
+       "riders_descriptive": {
+        "TE": {
+         "mean": 3.354740125495335,
+         "ci95": [
+          3.142481098777308,
+          3.564448010388458
+         ]
+        },
+        "PE_A": {
+         "mean": 2.5210749475503986,
+         "ci95": [
+          2.373926005490392,
+          2.675218877551413
+         ]
+        },
+        "PE_B": {
+         "mean": 0.7871721473218637,
+         "ci95": [
+          0.732340614096488,
+          0.8407504076547254
+         ]
+        },
+        "N_A": {
+         "mean": 2.7547377689961765,
+         "ci95": [
+          2.5785296743973776,
+          2.933875154852236
+         ]
+        },
+        "N_B": {
+         "mean": 1.0342278427160225,
+         "ci95": [
+          0.9233167205238475,
+          1.142456365889175
+         ]
+        },
+        "block_relative_change": {
+         "A": {
+          "min": 0.2753290243924149,
+          "median": 0.49122567004914774,
+          "n": 200
+         },
+         "B": {
+          "min": 0.2079944076473754,
+          "median": 0.3790756610902377,
+          "n": 200
+         }
+        }
+       },
+       "verdict_confirmatory": true,
+       "interaction_rider_confirmatory": false,
+       "confirmatory": {
+        "verdict": "Inconclusive",
+        "reason": "te_unresolved",
+        "reading": null,
+        "not_local": false,
+        "scope": "secondary decomposition, not an RQ3 result",
+        "recovery_reach_observers": []
+       },
+       "descriptive": {
+        "interaction_rider": [],
+        "carrying_class": null,
+        "riders_descriptive": true,
+        "confirmatory": false,
+        "note": "The interaction rider (Additive, Redundant, Synergic, Interaction unresolved), the carrying class behind a non-carrying verdict, and the PE, N and block-change riders are descriptive: no confirmatory claim rests on them (recovery: the Additive rider reached .758 to .792 against .80). No effect to carry is confirmatory with its recovery reach (.622 and .652 at the null) reported beside it; a null edit that ends Inconclusive is read as Inconclusive. The whole arm is a secondary decomposition of the complete exit cut, never an RQ3 result."
+       }
+      },
+      "token": {
+       "model": "qwen3vl",
+       "arm": "token",
+       "kind": "block",
+       "label": "decomposition",
+       "heading": "decomposition of the complete exit cut",
+       "verdict": "Not testable",
+       "reason": "stage0_not_shown",
+       "riders": [],
+       "reading": null,
+       "decision": {
+        "run": false,
+        "date": "2026-11-10",
+        "reason": "DECISIONS 2026-11-10, A7 Stage 1 scope: token arm not run; Stage 0 did not admit it"
+       },
+       "sentinel": null,
+       "verdict_confirmatory": true,
+       "interaction_rider_confirmatory": false,
+       "confirmatory": {
+        "verdict": "Not testable",
+        "reason": "stage0_not_shown",
+        "reading": null,
+        "not_local": false,
+        "scope": "secondary decomposition, not an RQ3 result",
+        "recovery_reach_observers": []
+       },
+       "descriptive": {
+        "interaction_rider": [],
+        "carrying_class": null,
+        "riders_descriptive": false,
+        "confirmatory": false,
+        "note": "The interaction rider (Additive, Redundant, Synergic, Interaction unresolved), the carrying class behind a non-carrying verdict, and the PE, N and block-change riders are descriptive: no confirmatory claim rests on them (recovery: the Additive rider reached .758 to .792 against .80). No effect to carry is confirmatory with its recovery reach (.622 and .652 at the null) reported beside it; a null edit that ends Inconclusive is read as Inconclusive. The whole arm is a secondary decomposition of the complete exit cut, never an RQ3 result."
+       }
+      }
+     }
+    }
+   },
+   "claim_scope": {
+    "confirmatory": [
+     "verdict",
+     "reason",
+     "reading",
+     "not_local"
+    ],
+    "descriptive": [
+     "interaction rider",
+     "carrying_class behind a non-carrying verdict",
+     "riders_descriptive"
+    ],
+    "note": "The interaction rider (Additive, Redundant, Synergic, Interaction unresolved), the carrying class behind a non-carrying verdict, and the PE, N and block-change riders are descriptive: no confirmatory claim rests on them (recovery: the Additive rider reached .758 to .792 against .80). No effect to carry is confirmatory with its recovery reach (.622 and .652 at the null) reported beside it; a null edit that ends Inconclusive is read as Inconclusive. The whole arm is a secondary decomposition of the complete exit cut, never an RQ3 result."
+   }
+  },
+  "clips_at_8_tokens_or_more": {
+   "amendment": "A7",
+   "design_sha256": "9e40cfcfbe8761703da22cf2400c3af6cc7f05019df8b186f91e421dce50bb09",
+   "target": "acted",
+   "n_excluded": 19,
+   "rq3": {
+    "gemma4": {
+     "model": "gemma4",
+     "rq3": "not testable",
+     "scope": "beyond the interface",
+     "complete_cuts": [
+      "exit"
+     ],
+     "complete_cut_contrast": "zero by construction (validity, not a finding)",
+     "stage0_status": "complete",
+     "a5_w_caveat": false
+    },
+    "qwen3vl": {
+     "model": "qwen3vl",
+     "rq3": "not testable",
+     "scope": "beyond the interface",
+     "complete_cuts": [
+      "exit"
+     ],
+     "complete_cut_contrast": "zero by construction (validity, not a finding)",
+     "stage0_status": "complete",
+     "a5_w_caveat": false
+    }
+   },
+   "family": {
+    "columns": [
+     "gemma4/endpoints/TE",
+     "gemma4/route/phi_A",
+     "gemma4/route/phi_B",
+     "gemma4/route/I",
+     "qwen3vl/endpoints/TE",
+     "qwen3vl/route/phi_A",
+     "qwen3vl/route/phi_B",
+     "qwen3vl/route/I"
+    ],
+    "n_flips": 131072,
+    "exact": true
+   },
+   "models": {
+    "gemma4": {
+     "stage0_arms_admitted": {
+      "route": true,
+      "token": false
+     },
+     "dead_blocks_stage0": [],
+     "preconditions": {
+      "rq0": true,
+      "g2_g4": true,
+      "gate_b": true,
+      "delivery": true,
+      "sham": true
+     },
+     "te": {
+      "mean": -3.6552293973518486,
+      "p_maxt": 1.52587890625e-05,
+      "ci95": [
+       -4.438996390766247,
+       -2.86241277471094
+      ],
+      "ci90": [
+       -4.323116128699946,
+       -2.988094418828285
+      ],
+      "n_actors": 17,
+      "n_items": 181
+     },
+     "te_margin": 0.7245717244757987,
+     "fills": {
+      "mask_eyesmouth_first": -2.2997781465383356,
+      "mask_eyesmouth_blur": -2.9691426310360973
+     },
+     "effect_class": "Present",
+     "share_margin": 0.7310458794703698,
+     "arms": {
+      "route": {
+       "model": "gemma4",
+       "arm": "route",
+       "kind": "block",
+       "label": "decomposition",
+       "heading": "decomposition of the complete exit cut",
+       "verdict": "Carried by B",
+       "reason": null,
+       "riders": [
+        "Additive"
+       ],
+       "reading": null,
+       "decision": {
+        "run": true,
+        "date": "2026-11-10",
+        "reason": "DECISIONS 2026-11-10, A7 Stage 1 scope: route arm run on Gemma 4 and Qwen3-VL, conditional on the preconditions, applied by code (DECISIONS 2026-11-12)"
+       },
+       "sentinel": {
+        "n": 20,
+        "worst_abs_nats": 0.0,
+        "failed": [],
+        "pass": true
+       },
+       "n_items_complete": 181,
+       "n_items": 181,
+       "terms": {
+        "phi_A": {
+         "mean": -0.34689123107377096,
+         "p_maxt": 7.62939453125e-05,
+         "ci95": [
+          -0.45747217438337046,
+          -0.2392368201182228
+         ],
+         "ci90": [
+          -0.4397265990747686,
+          -0.2557519089935259
+         ],
+         "n_actors": 17
+        },
+        "phi_B": {
+         "mean": -3.3083381662780775,
+         "p_maxt": 1.52587890625e-05,
+         "ci95": [
+          -4.009817170127867,
+          -2.607371612401132
+         ],
+         "ci90": [
+          -3.9042500978602326,
+          -2.7117191585502116
+         ],
+         "n_actors": 17
+        },
+        "I": {
+         "mean": -0.29552314784198985,
+         "p_maxt": 0.000152587890625,
+         "ci95": [
+          -0.4224968037421871,
+          -0.18124597094385783
+         ],
+         "ci90": [
+          -0.3998907583764487,
+          -0.19890970039223516
+         ],
+         "n_actors": 17
+        }
+       },
+       "riders_descriptive": {
+        "TE": {
+         "mean": -3.6552293973518486,
+         "ci95": [
+          -4.438996390766247,
+          -2.86241277471094
+         ]
+        },
+        "PE_A": {
+         "mean": -0.19912965715277606,
+         "ci95": [
+          -0.28644823898644656,
+          -0.10653631830529765
+         ]
+        },
+        "PE_B": {
+         "mean": -3.1605765923570823,
+         "ci95": [
+          -3.8665464692027727,
+          -2.4478843250344804
+         ]
+        },
+        "N_A": {
+         "mean": -0.4946528049947658,
+         "ci95": [
+          -0.6510241086972516,
+          -0.3456995214112037
+         ]
+        },
+        "N_B": {
+         "mean": -3.456099740199072,
+         "ci95": [
+          -4.167119520680041,
+          -2.749853912434942
+         ]
+        },
+        "block_relative_change": {
+         "A": {
+          "min": 0.1684423327261647,
+          "median": 0.32689540822258906,
+          "n": 181
+         },
+         "B": {
+          "min": 0.07817643414276426,
+          "median": 0.15488998696508463,
+          "n": 181
+         }
+        }
+       },
+       "carrying_class": "B only",
+       "verdict_confirmatory": true,
+       "interaction_rider_confirmatory": false,
+       "confirmatory": {
+        "verdict": "Carried by B",
+        "reason": null,
+        "reading": null,
+        "not_local": false,
+        "scope": "secondary decomposition, not an RQ3 result",
+        "recovery_reach_observers": []
+       },
+       "descriptive": {
+        "interaction_rider": [
+         "Additive"
+        ],
+        "carrying_class": "B only",
+        "riders_descriptive": true,
+        "confirmatory": false,
+        "note": "The interaction rider (Additive, Redundant, Synergic, Interaction unresolved), the carrying class behind a non-carrying verdict, and the PE, N and block-change riders are descriptive: no confirmatory claim rests on them (recovery: the Additive rider reached .758 to .792 against .80). No effect to carry is confirmatory with its recovery reach (.622 and .652 at the null) reported beside it; a null edit that ends Inconclusive is read as Inconclusive. The whole arm is a secondary decomposition of the complete exit cut, never an RQ3 result."
+       }
+      },
+      "token": {
+       "model": "gemma4",
+       "arm": "token",
+       "kind": "block",
+       "label": "decomposition",
+       "heading": "decomposition of the complete exit cut",
+       "verdict": "Not testable",
+       "reason": "stage0_not_shown",
+       "riders": [],
+       "reading": null,
+       "decision": {
+        "run": false,
+        "date": "2026-11-10",
+        "reason": "DECISIONS 2026-11-10, A7 Stage 1 scope: token arm not run; Stage 0 did not admit it"
+       },
+       "sentinel": null,
+       "verdict_confirmatory": true,
+       "interaction_rider_confirmatory": false,
+       "confirmatory": {
+        "verdict": "Not testable",
+        "reason": "stage0_not_shown",
+        "reading": null,
+        "not_local": false,
+        "scope": "secondary decomposition, not an RQ3 result",
+        "recovery_reach_observers": []
+       },
+       "descriptive": {
+        "interaction_rider": [],
+        "carrying_class": null,
+        "riders_descriptive": false,
+        "confirmatory": false,
+        "note": "The interaction rider (Additive, Redundant, Synergic, Interaction unresolved), the carrying class behind a non-carrying verdict, and the PE, N and block-change riders are descriptive: no confirmatory claim rests on them (recovery: the Additive rider reached .758 to .792 against .80). No effect to carry is confirmatory with its recovery reach (.622 and .652 at the null) reported beside it; a null edit that ends Inconclusive is read as Inconclusive. The whole arm is a secondary decomposition of the complete exit cut, never an RQ3 result."
+       }
+      }
+     }
+    },
+    "qwen3vl": {
+     "stage0_arms_admitted": {
+      "route": true,
+      "token": false
+     },
+     "dead_blocks_stage0": [],
+     "preconditions": {
+      "rq0": true,
+      "g2_g4": true,
+      "gate_b": true,
+      "delivery": true,
+      "sham": true
+     },
+     "te": {
+      "mean": -3.3629036988258294,
+      "p_maxt": 1.52587890625e-05,
+      "ci95": [
+       -4.017288813668723,
+       -2.7030019964670413
+      ],
+      "ci90": [
+       -3.920858255012635,
+       -2.8004342621873626
+      ],
+      "n_actors": 17,
+      "n_items": 181
+     },
+     "te_margin": 0.6679781834215168,
+     "fills": {
+      "mask_eyesmouth_first": -2.3720851533503846,
+      "mask_eyesmouth_blur": -3.383205306602828
+     },
+     "effect_class": "Present",
+     "share_margin": 0.672580739765166,
+     "arms": {
+      "route": {
+       "model": "qwen3vl",
+       "arm": "route",
+       "kind": "block",
+       "label": "decomposition",
+       "heading": "decomposition of the complete exit cut",
+       "verdict": "Both blocks",
+       "reason": null,
+       "riders": [
+        "Synergic"
+       ],
+       "reading": null,
+       "decision": {
+        "run": true,
+        "date": "2026-11-10",
+        "reason": "DECISIONS 2026-11-10, A7 Stage 1 scope: route arm run on Gemma 4 and Qwen3-VL, conditional on the preconditions, applied by code (DECISIONS 2026-11-12)"
+       },
+       "sentinel": {
+        "n": 20,
+        "worst_abs_nats": 0.0,
+        "failed": [],
+        "pass": true
+       },
+       "n_items_complete": 181,
+       "n_items": 181,
+       "terms": {
+        "phi_A": {
+         "mean": -2.4883061258509676,
+         "p_maxt": 1.52587890625e-05,
+         "ci95": [
+          -2.972574044842257,
+          -1.9974652625440084
+         ],
+         "ci90": [
+          -2.89638651575087,
+          -2.072876420277628
+         ],
+         "n_actors": 17
+        },
+        "phi_B": {
+         "mean": -0.8745975729748617,
+         "p_maxt": 1.52587890625e-05,
+         "ci95": [
+          -1.0758582258153289,
+          -0.6787937601760767
+         ],
+         "ci90": [
+          -1.0418186631998532,
+          -0.7092974747981681
+         ],
+         "n_actors": 17
+        },
+        "I": {
+         "mean": -0.7075260571647002,
+         "p_maxt": 1.52587890625e-05,
+         "ci95": [
+          -0.9006907026237211,
+          -0.5206007634979216
+         ],
+         "ci90": [
+          -0.868652175540873,
+          -0.5522432565972245
+         ],
+         "n_actors": 17
+        }
+       },
+       "riders_descriptive": {
+        "TE": {
+         "mean": -3.3629036988258294,
+         "ci95": [
+          -4.017288813668723,
+          -2.7030019964670413
+         ]
+        },
+        "PE_A": {
+         "mean": -2.1345430972686166,
+         "ci95": [
+          -2.5774333021921656,
+          -1.702076307770613
+         ]
+        },
+        "PE_B": {
+         "mean": -0.5208345443925118,
+         "ci95": [
+          -0.6846640237009848,
+          -0.373814950217795
+         ]
+        },
+        "N_A": {
+         "mean": -2.842069154433317,
+         "ci95": [
+          -3.377085847761315,
+          -2.286043220734314
+         ]
+        },
+        "N_B": {
+         "mean": -1.2283606015572122,
+         "ci95": [
+          -1.4931476572823363,
+          -0.9591568817281088
+         ]
+        },
+        "block_relative_change": {
+         "A": {
+          "min": 0.2753290243924149,
+          "median": 0.49298933046398596,
+          "n": 181
+         },
+         "B": {
+          "min": 0.2079944076473754,
+          "median": 0.3799252242640862,
+          "n": 181
+         }
+        }
+       },
+       "carrying_class": "Both",
+       "verdict_confirmatory": true,
+       "interaction_rider_confirmatory": false,
+       "confirmatory": {
+        "verdict": "Both blocks",
+        "reason": null,
+        "reading": null,
+        "not_local": false,
+        "scope": "secondary decomposition, not an RQ3 result",
+        "recovery_reach_observers": []
+       },
+       "descriptive": {
+        "interaction_rider": [
+         "Synergic"
+        ],
+        "carrying_class": "Both",
+        "riders_descriptive": true,
+        "confirmatory": false,
+        "note": "The interaction rider (Additive, Redundant, Synergic, Interaction unresolved), the carrying class behind a non-carrying verdict, and the PE, N and block-change riders are descriptive: no confirmatory claim rests on them (recovery: the Additive rider reached .758 to .792 against .80). No effect to carry is confirmatory with its recovery reach (.622 and .652 at the null) reported beside it; a null edit that ends Inconclusive is read as Inconclusive. The whole arm is a secondary decomposition of the complete exit cut, never an RQ3 result."
+       }
+      },
+      "token": {
+       "model": "qwen3vl",
+       "arm": "token",
+       "kind": "block",
+       "label": "decomposition",
+       "heading": "decomposition of the complete exit cut",
+       "verdict": "Not testable",
+       "reason": "stage0_not_shown",
+       "riders": [],
+       "reading": null,
+       "decision": {
+        "run": false,
+        "date": "2026-11-10",
+        "reason": "DECISIONS 2026-11-10, A7 Stage 1 scope: token arm not run; Stage 0 did not admit it"
+       },
+       "sentinel": null,
+       "verdict_confirmatory": true,
+       "interaction_rider_confirmatory": false,
+       "confirmatory": {
+        "verdict": "Not testable",
+        "reason": "stage0_not_shown",
+        "reading": null,
+        "not_local": false,
+        "scope": "secondary decomposition, not an RQ3 result",
+        "recovery_reach_observers": []
+       },
+       "descriptive": {
+        "interaction_rider": [],
+        "carrying_class": null,
+        "riders_descriptive": false,
+        "confirmatory": false,
+        "note": "The interaction rider (Additive, Redundant, Synergic, Interaction unresolved), the carrying class behind a non-carrying verdict, and the PE, N and block-change riders are descriptive: no confirmatory claim rests on them (recovery: the Additive rider reached .758 to .792 against .80). No effect to carry is confirmatory with its recovery reach (.622 and .652 at the null) reported beside it; a null edit that ends Inconclusive is read as Inconclusive. The whole arm is a secondary decomposition of the complete exit cut, never an RQ3 result."
+       }
+      }
+     }
+    }
+   },
+   "claim_scope": {
+    "confirmatory": [
+     "verdict",
+     "reason",
+     "reading",
+     "not_local"
+    ],
+    "descriptive": [
+     "interaction rider",
+     "carrying_class behind a non-carrying verdict",
+     "riders_descriptive"
+    ],
+    "note": "The interaction rider (Additive, Redundant, Synergic, Interaction unresolved), the carrying class behind a non-carrying verdict, and the PE, N and block-change riders are descriptive: no confirmatory claim rests on them (recovery: the Additive rider reached .758 to .792 against .80). No effect to carry is confirmatory with its recovery reach (.622 and .652 at the null) reported beside it; a null edit that ends Inconclusive is read as Inconclusive. The whole arm is a secondary decomposition of the complete exit cut, never an RQ3 result."
+   },
+   "share_excluded": 0.125
+  }
+ },
+ "code_sha256": {
+  "scripts/a7_design.py": "d25c0cb78f6771450eac9c6127690029cd72e6034079cbc51062be324a74ddba",
+  "scripts/a7_cuts.py": "15837f87e46a433fdb97b50e362fdbaefab937f10a147aa1d68fd355f9889db2",
+  "scripts/a7_stage0.py": "a4c46d7111b4f93b9c2d35c706636befa9756ac7cad89259512490b57cd48d5a",
+  "scripts/a7_run.py": "5bfb1a74e21596c944df2b946aea835e00a33244a50fd5917c2c52136bcbb665",
+  "scripts/a7_analyse.py": "00350c9a182090943294efb602f46a31e2c4263240cbb8bb764de26476daaae9",
+  "scripts/a7_recovery.py": "485832ac1678e2379f442d000a1139abd30ae053e4f48dd51d6e6d9a2727fe79",
+  "scripts/a7_toy.py": "b2d39459024046df848d8ca0bb8079cfb13ba08cde1da7a5214547aa1fa10d8c"
+ }
+}

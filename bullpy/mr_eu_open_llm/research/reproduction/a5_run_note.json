@@ -1,0 +1,43 @@
+{
+ "amendment": "a5",
+ "git_commit": "e36fd7aa2aabcae17aba957226606144bfe020a3",
+ "python": "/opt/anaconda3/bin/python3",
+ "threads": {
+  "OMP_NUM_THREADS": "1",
+  "OPENBLAS_NUM_THREADS": "1",
+  "MKL_NUM_THREADS": "1",
+  "VECLIB_MAXIMUM_THREADS": "1"
+ },
+ "cells_dir_used": null,
+ "steps": [
+  {
+   "command": [
+    "python3",
+    "research/scripts/a5_prerun_check.py",
+    "--record",
+    "research/reproduction/a5_prerun.json"
+   ],
+   "started": "2026-11-14T12:32:21Z",
+   "finished": "2026-11-14T12:32:22Z",
+   "exit": 0
+  },
+  {
+   "command": [
+    "python3",
+    "-m",
+    "scripts.a5_analyse",
+    "--output",
+    "results/a5/a5_analysis.json",
+    "--a5_frozen",
+    "--a2_frozen"
+   ],
+   "started": "2026-11-14T12:32:22Z",
+   "finished": "2026-11-14T12:32:53Z",
+   "exit": 0
+  }
+ ],
+ "outputs": {
+  "results/a5/a5_analysis.json": "3fb4f5dea3450cc6eb126c0d132bbdc785c6aa00abf381e7e89df2b4b8471a07"
+ },
+ "status": "complete"
+}

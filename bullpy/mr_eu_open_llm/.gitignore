@@ -96,6 +96,7 @@ Thumbs.db
 # Locked Phase 3 summaries (small JSON; the cells stay on the cluster, their sha256 in the pull manifests).
 !results/a4/summary.json
 !results/a9/summary.json
+!results/a5/a5_analysis.json
 # Phase 3 cells pulled from the cluster: large, never committed (sha256 in research/reproduction/*_pull_manifest.json).
 results/a4/cells_*.jsonl
 results/a9/cells_*.jsonl

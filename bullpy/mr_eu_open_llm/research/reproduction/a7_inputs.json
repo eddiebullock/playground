@@ -1,0 +1,82 @@
+{
+ "gemma4": {
+  "stage0": "research/reproduction/a7_stage0_gemma4.json",
+  "stage1_cells": [
+   "results/a7/a7_cells_gemma4_shard0.jsonl",
+   "results/a7/a7_cells_gemma4_shard1.jsonl"
+  ],
+  "a2_output": "research/reproduction/stimulus_interventions_gemma4.json",
+  "a2_cells": [
+   "results/stimulus_interventions/cells_gemma4_shard0.jsonl",
+   "results/stimulus_interventions/cells_gemma4_shard1.jsonl",
+   "results/stimulus_interventions/cells_gemma4_shard2.jsonl"
+  ],
+  "decisions": {
+   "route": {
+    "run": true,
+    "date": "2026-11-10",
+    "reason": "DECISIONS 2026-11-10, A7 Stage 1 scope: route arm run on Gemma 4 and Qwen3-VL, conditional on the preconditions, applied by code (DECISIONS 2026-11-12)"
+   },
+   "token": {
+    "run": false,
+    "date": "2026-11-10",
+    "reason": "DECISIONS 2026-11-10, A7 Stage 1 scope: token arm not run; Stage 0 did not admit it"
+   }
+  }
+ },
+ "qwen3vl": {
+  "stage0": "research/reproduction/a7_stage0_qwen3vl.json",
+  "stage1_cells": [
+   "results/a7/a7_cells_qwen3vl_shard0.jsonl",
+   "results/a7/a7_cells_qwen3vl_shard1.jsonl"
+  ],
+  "a2_output": "research/reproduction/stimulus_interventions_qwen3vl.json",
+  "a2_cells": [
+   "results/stimulus_interventions/cells_qwen3vl_shard0.jsonl",
+   "results/stimulus_interventions/cells_qwen3vl_shard1.jsonl",
+   "results/stimulus_interventions/cells_qwen3vl_shard2.jsonl"
+  ],
+  "decisions": {
+   "route": {
+    "run": true,
+    "date": "2026-11-10",
+    "reason": "DECISIONS 2026-11-10, A7 Stage 1 scope: route arm run on Gemma 4 and Qwen3-VL, conditional on the preconditions, applied by code (DECISIONS 2026-11-12)"
+   },
+   "token": {
+    "run": false,
+    "date": "2026-11-10",
+    "reason": "DECISIONS 2026-11-10, A7 Stage 1 scope: token arm not run; Stage 0 did not admit it"
+   }
+  }
+ },
+ "below_token_floor": {
+  "gemma4": [
+   "emotions/EDITED/Worried/DF22_cut.mp4",
+   "emotions/EDITED/Worried/FF22_cut.mp4",
+   "emotions_11/EDITED/Frustrated/DF23_cut.mp4",
+   "emotions_11/EDITED/Frustrated/FF23_cut.mp4",
+   "emotions_13/EDITED/Bored/CF8_cut(1).mp4",
+   "emotions_18/EDITED/Disappointed/EF9_cut.mp4",
+   "emotions_21/EDITED/Bored/EF8_cut.mp4",
+   "emotions_23/EDITED/Bored/CF8_cut.mp4",
+   "emotions_29/EDITED/Unfriendly/DF25_cut.mp4",
+   "emotions_31/EDITED/Jealous/CF11_cut.mp4",
+   "emotions_32/EDITED/Neutral/DF28_cut.mp4",
+   "emotions_33/EDITED/Neutral/CF14_cut.mp4",
+   "emotions_33/EDITED/Neutral/EF14_cut.mp4",
+   "emotions_33/EDITED/Neutral/FF28_cut.mp4",
+   "emotions_36/EDITED/Joking/EF12_cut.mp4",
+   "emotions_37/EDITED/Sneaky/Df26_cut.mp4",
+   "emotions_38/EDITED/Joking/CF12_cut.mp4",
+   "emotions_39/EDITED/Hurt/CF10v1_cut.mp4",
+   "emotions_39/EDITED/Hurt/CF10v2_cut.mp4",
+   "emotions_39/EDITED/Hurt/EF10_cut.mp4",
+   "emotions_4/EDITED/Sneaky/FF26_cut.mp4",
+   "emotions_46/EDITED/Disappointed/CF9v1_cut.mp4",
+   "emotions_54/EDITED/Disappointed/CF9v2_cut.mp4",
+   "emotions_6/EDITED/Excited/CF7_cut.mp4",
+   "emotions_6/EDITED/Excited/EF7_cut.mp4"
+  ],
+  "qwen3vl": []
+ }
+}

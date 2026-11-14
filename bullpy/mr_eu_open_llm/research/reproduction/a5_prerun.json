@@ -1,0 +1,67 @@
+{
+ "models": {
+  "gemma4": {
+   "cell_shards": [
+    0,
+    1,
+    2
+   ],
+   "report_shards": [
+    0,
+    1,
+    2
+   ],
+   "n_shards": [
+    "3"
+   ],
+   "unparseable_lines": {},
+   "ok_original_cells": {
+    "single_face": 243,
+    "video_face": 243
+   }
+  },
+  "qwen3vl": {
+   "cell_shards": [
+    0,
+    1,
+    2
+   ],
+   "report_shards": [
+    0,
+    1,
+    2
+   ],
+   "n_shards": [
+    "3"
+   ],
+   "unparseable_lines": {},
+   "ok_original_cells": {
+    "single_face": 243,
+    "video_face": 243
+   }
+  }
+ },
+ "sha256": {
+  "results/stimulus_interventions/cells_gemma4_shard0.jsonl": "f7ae6e2f77e1c97224cadb415c0668eb225effc16feb4b71b4d48e6fa4a53b2d",
+  "results/stimulus_interventions/cells_gemma4_shard1.jsonl": "356bf08edef77e52cac9582eab760d0ae49592701db6404706a0820910917958",
+  "results/stimulus_interventions/cells_gemma4_shard2.jsonl": "ab63a429a6c17a6cbf2c593867cd529d1788d1546a36d04a7621068baa6f0f65",
+  "results/stimulus_interventions/run_gemma4_shard0.json": "f2d3f6d85da27a74907f30443d97f4e4315e913df9572753d827c6a4c4a92a9c",
+  "results/stimulus_interventions/run_gemma4_shard1.json": "fb86e46298de962fca3653af41f61f0803468a30d1f25d02fb8f568fce969359",
+  "results/stimulus_interventions/run_gemma4_shard2.json": "8abcf37ba13a3db0d4027e681eea4743776331353d24fb8bce1591be9f3199b0",
+  "results/stimulus_interventions/cells_qwen3vl_shard0.jsonl": "6bfc57f34879475dcf4a2c1cb5d680618d3b0d3e06edd1af67762c6ebfbfbf63",
+  "results/stimulus_interventions/cells_qwen3vl_shard1.jsonl": "34e56b3e2cba30ab02217ee2723671818477bd8ab9caf85d2a4505142714d43c",
+  "results/stimulus_interventions/cells_qwen3vl_shard2.jsonl": "cc23ff31dc60007012d0e97baaba5e77e67fbefd444cedd0b9f9824c26a8176b",
+  "results/stimulus_interventions/run_qwen3vl_shard0.json": "703461c1cc0f7ccfafece57dac0a2d2b6278da58b261a6a8185b533ae10ee551",
+  "results/stimulus_interventions/run_qwen3vl_shard1.json": "730430d6d8c00ddba43ab27bb232bd270a94f2460dc89d2b29a210f04ed4807a",
+  "results/stimulus_interventions/run_qwen3vl_shard2.json": "483e80d1070cc27c081793f75b3737b54d70d97ee6a60c56ca2ba43286546c4c",
+  "research/reproduction/rotation_summary.json": "81500bdd229f88c5aa4038736d4ccc0eb2e04080613dc95380cc8c3dd067072a",
+  "data/eu_emotions_human_entropy.json": "f9d91b4e47816fd01b773f0a63f8fff39c7e0cfa2c56a2136b1f52ba5cc33744",
+  "research/reproduction/face_input_validity_summary.json": "c1c64e6975b32356a3314268c054f0dee483ddf74b11cd66d03b2faf972e64a4",
+  "research/reproduction/vision_gates_gemma4.json": "b9e5743f72c9a9271aa79d2fa0d2f446030793b4e0959a2acec7bbaa7057d764",
+  "research/reproduction/vision_gates_qwen3vl.json": "2f38aafb41c93505b792bd355c72d2a2b30e841a0e29be067a1d7c5ba01ede8d",
+  "research/reproduction/input_delivery_gemma4.json": "94f55b9fd96767e0c19c0bbeb34eebd5a47dbbbf5b14058d53d6f15a8b40a8ca",
+  "research/reproduction/input_delivery_qwen3vl.json": "802f3231db29f2b27d67e8a6cfd70c78a9ea72c9e3fb4b1cadf7f8c966f1f801"
+ },
+ "failures": [],
+ "script_sha256": "1a9da78b5a03366b96c28b7e9b96d4c7fcdfb31dd567ae131b8dd0d4c4143ad3"
+}

@@ -1,0 +1,31 @@
+{
+ "amendment": "a7",
+ "pulled_at": "2026-11-14T13:13:23Z",
+ "jobs": {
+  "40795186": [
+   "40795186_0:CANCELLED by 45710",
+   "40795186_[1]:CANCELLED by 45710"
+  ],
+  "40795187": [
+   "40795187_0:CANCELLED by 45710",
+   "40795187_[1]:CANCELLED by 45710"
+  ],
+  "40966694": [
+   "40966694:COMPLETED"
+  ]
+ },
+ "waived_tasks": [
+  "40795186_0",
+  "40795186_[1]",
+  "40795187_0",
+  "40795187_[1]"
+ ],
+ "waiver_reason": "DECISIONS 2026-11-14: A7 Stage 1 as one whole intr job; rerun 40966694 after the path fault of 40966325",
+ "files": {
+  "results/a7/a7_cells_gemma4_shard0.jsonl": "5cab28de1f539b51d8a90f913e7487e6a61a5e9f911bf06ab34c40145a5864fd",
+  "results/a7/a7_cells_gemma4_shard1.jsonl": "9250f045826f56d5effedb16ea75bec47ae1173b2b63e4f6a15b903ee9856013",
+  "results/a7/a7_cells_qwen3vl_shard0.jsonl": "04c420b86c5a4e6bd2904df9e4b9fd74adac317d1d8e531029c959b9d30472cd",
+  "results/a7/a7_cells_qwen3vl_shard1.jsonl": "bb556a0dddadfe1538076863bfe8e2117f1bce447b49aed180b6580e266901d8"
+ },
+ "contents_read": false
+}
