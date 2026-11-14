@@ -2,9 +2,9 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-11-14 06:37 Europe/London
+**Updated:** 2026-11-14 07:22 Europe/London
 
-## Hand-off, 2026-11-14 (written 01:38, last refreshed 06:37)
+## Hand-off, 2026-11-14 (written 01:38, last refreshed 07:22)
 
 **A4 is done and analysed, once, by its frozen code** (RESULTS_REGISTRY, "A4 confirmatory analysis (2026-11-14)"; Results, Sections 5 and 6; Figure 5).
 - **Gemma 4: Aligned on basic labels, Mixed on conversational states.**
@@ -28,15 +28,18 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
   - The local pre-freeze copy of A9's manifest was byte-identical to the pin. It was moved to `results/a9_local_premanifest/` so that the pull could write the cluster's copy.
 - Written into the paper: Results 6b and 8, the Discussion (A9 branches), Table 1 (A9 column) and `reproduce.py` (A9 records hash-pinned).
 
-**Running now: A2 and A9, in combined `intr` slices** (chain started automatically at 01:03 when A4 finished; DECISIONS 2026-11-13, A2 and A9 entries).
-- Slice 1 (40945403, from 01:06, two nodes) carries A2's six shards and both A9 timing smokes. Both smokes were complete (40 cells each) by 01:35.
-- From slice 2, A9's scored shards fill the spare GPUs. Gemma 4 and Qwen3-VL are both eligible under RQ0 and A4's gates, which were locked on 2026-11-12.
-- A2 is slower than its sizing (4 to 6 GPU-hours a shard). Measured over the first slice: Gemma 4 about 5.8 s per cell, so about five slices (done around 06:00); Qwen3-VL about 13 s per cell, so about eleven slices (done around midday).
-- A2's Gemma shards were complete at 05:35. Its three Qwen shards now run alone, on one node, about 190 cells a slice, so complete around 12:30. Then: pull, `analyse a2`, then A5, then A7 (ROADMAP Part 3).
+**Running now: A2's three Qwen shards, in `intr` slices** (the combined chain started on its own at 01:03 when A4 finished; DECISIONS 2026-11-13, A2 entry).
+- A2 Gemma 4: all three shards complete at 05:35 (2,349 cells each; 28, 20 and 42 "failed" with reasons, as A2's design writes them).
+- A2 Qwen3-VL: 1,355 to 1,388 of 2,349 per shard at 07:22, at about 13.5 s per cell, about 190 cells a slice on one node. Complete around 12:30.
+- No line has needed A2's repair rule (A2-2) so far.
+- Then: pull, `analyse a2`, then A5 (ROADMAP Part 3), then the A2 parts of the paper: Results 7, Figure 6, the Abstract's last two sentences and the Discussion's opening paragraph.
 
 **Not done, and why.** A7 Stage 1 (40795186, 40795187) is still on `gpu2`. Its runner skips an item once the item's first row is written, so a budget stop in the middle of an item could leave that item incomplete for good, and A7 has no repair rule for that. The choice is NEEDS_INPUT 12. My recommendation is one whole `intr` job with its 59-minute caps, after the last A2 slice.
 
-**Only you can do these:** unchanged from yesterday (items below): the ethics confirmation; at submission, the Zenodo DOI and authors; optionally, the GitHub Support purge; the A8 note review; and the length plan's structural choice (item 5).
+**Only you can do these:**
+- New: **how to run A7 Stage 1** (NEEDS_INPUT 12; I recommend one whole `intr` job after A2).
+- **The length plan's structural choice** (item 5 below). A recount with A4 and A9 filled puts the main text at about 6,600 to 7,100 words against 5,000. Moving the Limitations list to the Supplementary Information is the cut that matters (`paper/v2/outline.md`, "Length check").
+- Unchanged from yesterday (items below): the ethics confirmation; at submission, the Zenodo DOI and authors; optionally, the GitHub Support purge; the A8 note review.
 
 ## Earlier hand-off, 2026-11-13 (written 05:35, last refreshed 23:13; kept for reference)
 
