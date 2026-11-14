@@ -2,9 +2,9 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-11-14 05:43 Europe/London
+**Updated:** 2026-11-14 06:37 Europe/London
 
-## Hand-off, 2026-11-14 (written 01:38)
+## Hand-off, 2026-11-14 (written 01:38, last refreshed 06:37)
 
 **A4 is done and analysed, once, by its frozen code** (RESULTS_REGISTRY, "A4 confirmatory analysis (2026-11-14)"; Results, Sections 5 and 6; Figure 5).
 - **Gemma 4: Aligned on basic labels, Mixed on conversational states.**
@@ -21,11 +21,18 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
   - All 24 `gpu2` tasks were held, then cancelled without running, and are waived in the pull with the DECISIONS entry as the reason.
   - Pulled at 01:07; pre-run check and analysis 01:07 to 01:26 (`research/reproduction/a4_run_note.json`).
 
+**A9 is done and analysed too, once, by its frozen code** (RESULTS_REGISTRY, "A9 confirmatory analysis (2026-11-14)"; Results, Section 6b).
+- **Gemma 4: Aligned** on Liu et al.'s second human sample: residual CEA .483 (.469 to .496). In the wording fixed before data, it "replicated on a second human sample (same lab and generator)". It is not human-level by the Liu against Snoek reference (.690).
+- **Qwen3-VL: Not aligned on these renders.** Residual CEA was .230 (.189 to .269) and the corrected upper bound .273. It is above chance (Holm *P* = .037) but below the smallest value of interest. Every gate passed here, including the domain gate it failed in A4. Replication is "not testable", because its A4 basic WC decision was Inconclusive.
+- How it ran: two timing smokes and 24 scored shards, in five combined slices beside A2's (02:01 to 06:30). It was pulled at 06:33; the pre-run check and analysis ran 06:33 to 06:34.
+  - The local pre-freeze copy of A9's manifest was byte-identical to the pin. It was moved to `results/a9_local_premanifest/` so that the pull could write the cluster's copy.
+- Written into the paper: Results 6b and 8, the Discussion (A9 branches), Table 1 (A9 column) and `reproduce.py` (A9 records hash-pinned).
+
 **Running now: A2 and A9, in combined `intr` slices** (chain started automatically at 01:03 when A4 finished; DECISIONS 2026-11-13, A2 and A9 entries).
 - Slice 1 (40945403, from 01:06, two nodes) carries A2's six shards and both A9 timing smokes. Both smokes were complete (40 cells each) by 01:35.
 - From slice 2, A9's scored shards fill the spare GPUs. Gemma 4 and Qwen3-VL are both eligible under RQ0 and A4's gates, which were locked on 2026-11-12.
 - A2 is slower than its sizing (4 to 6 GPU-hours a shard). Measured over the first slice: Gemma 4 about 5.8 s per cell, so about five slices (done around 06:00); Qwen3-VL about 13 s per cell, so about eleven slices (done around midday).
-- When A2 completes: pull, `analyse a2`, then A5, then A7 (ROADMAP Part 3). When A9 completes: pull, `analyse a9` (A4's run note now exists, as its pre-run check requires).
+- A2's Gemma shards were complete at 05:35. Its three Qwen shards now run alone, on one node, about 190 cells a slice, so complete around 12:30. Then: pull, `analyse a2`, then A5, then A7 (ROADMAP Part 3).
 
 **Not done, and why.** A7 Stage 1 (40795186, 40795187) is still on `gpu2`. Its runner skips an item once the item's first row is written, so a budget stop in the middle of an item could leave that item incomplete for good, and A7 has no repair rule for that. It needs either whole one-hour `intr` jobs of up to 59 minutes, between slices, or a pre-data ruling. I left that for you to see.
 
@@ -238,6 +245,12 @@ With cuts 4 and 5, the main text is about 490 words shorter. What remains waits 
   - The Abstract's RQ1 sentence is filled from the A4 headlines; it is at 127 words with A2's two slots open (`bddf0aa`).
   - Methods has "Runs" paragraphs for A9 and A2 (`94116b2`).
 - No failures; RDS 1,067.6 GB, 991,326 files.
+
+**2026-11-14 06:37:** A9 complete, pulled and analysed (see the hand-off).
+- Slice 40955884 (05:38 to 06:30) finished A9 Qwen shards 9 to 11. The planner cancelled the last held A9 tasks and submitted 40957298 for A2's three Qwen shards on one node.
+- `pull a9` at 06:33 copied 25 files with their sha256. The first try was refused before copying, because a byte-identical local manifest existed; it was moved aside unchanged.
+- `analyse a9`: pre-run check and frozen analysis 06:33 to 06:34 (run note; summary sha256 `1d1a9995...`).
+- Commits `453d69e` (records and registry) and `39ef296` (Results 6b and 8, Discussion, Table 1, `reproduce.py`).
 
 **2026-11-13 11:47:** Supplementary decisions table brought up to date: rows 81 to 83 for today's three new decision-log entries, and a superseded-entries row (75 to 83). It again has one row per entry, 83, checked in order against DECISIONS. ROADMAP Phase 4 status refreshed: every step that needs no new GPU output is done. The node counts in the 11:20 correction now include the node that was powering up. Full suite at `62a8b79` with these record edits: 1,096 passed, 26 skipped, 0 failed. Merged into `main` as PR #115, true merge commit `da95a75` (11:48).
 
