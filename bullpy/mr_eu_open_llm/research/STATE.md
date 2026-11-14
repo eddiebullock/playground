@@ -2,9 +2,9 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-11-14 21:47 Europe/London
+**Updated:** 2026-11-14 21:45 Europe/London
 
-## Hand-off, 2026-11-14 (written 01:38, last refreshed 21:47)
+## Hand-off, 2026-11-14 (written 01:38, last refreshed 21:45)
 
 **New at 21:45: A8's equivalence test finishes in a second job** (DECISIONS 2026-11-14, "A8's GPU equivalence test finishes in a second job after the first hit its time limit"; decisions table row 95).
 - The whole-node job 40986052 started at 20:42 on gpu-q-41. In both conditions both frozen runs ended with exit 0 (by 21:36). It then reached its one-hour limit at 21:42:59, during the shard runs. No merge or comparison ran, so there is no verdict yet.

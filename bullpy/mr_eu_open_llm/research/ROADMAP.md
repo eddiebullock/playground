@@ -116,7 +116,7 @@ Watch storage at each step. The file count runs at about 996k of 1,048,576. Cell
 | 4.6 | An independent review agent reads the full draft against the registry and the preregistrations; fixes applied. |
 | 4.7 | Submission pack complete. NEEDS_INPUT lists what the user must do: submission, authorship, Zenodo DOI, any email. |
 
-**Status 2026-11-14 21:47.** Every Phase 3 analysis is locked except A8, which has not run. Every Phase 4 step that needs neither A8 nor the author is done.
+**Status 2026-11-14 21:45.** Every Phase 3 analysis is locked except A8, which has not run. Every Phase 4 step that needs neither A8 nor the author is done.
 - 3.1 to 3.3 and 3.5: A2, A4, A5 and A7 Stage 1 were each analysed once by frozen code on 2026-11-14, as was A9. A6 (3.4) was closed as a limit on 2026-11-10.
 - 4.1: Results sections 1 to 10 hold locked text, each value with a registry marker. Only section 8b (A8) keeps every drafted branch.
 - 4.2: Figures 1 to 6 are built from locked outputs and checked by eye.
