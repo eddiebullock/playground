@@ -108,7 +108,7 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
    - An independent review of the night's A8 code then found real problems, all now fixed. One was a regression I had introduced. The addendum at the end of the A8 prereg lists them.
    - A8's next step is its code pins (Freeze checklist item 2). That step also needs the GPU equivalence test (40399722), which is still queued.
    - You said to proceed, so I will take the step when that job has run, unless you object to the note first. If you object after the pins, the change is still possible as a dated pre-data deviation.
-5. To review, not urgent: the paper is too long. Once one branch per outcome is kept, the main text should come to about 6,700 to 7,700 words, against the journal's limit of 5,000.
+5. To review, not urgent: the paper is too long. Recount at 13:56 on 2026-11-14, with every result but A8 filled and cut 1 applied: about 7,975 words, against the journal's limit of 5,000 (outline, "Length check").
    - The cut plan is in `research/paper/v2/outline.md` ("Length check"). No cut changes a claim, a number or a disclosure.
    - Its biggest choice: the numbered Limitations list (963 words) moves to the Supplementary Information, and the Discussion keeps a paragraph of about 250 words.
    - I will apply the plan when the text is assembled after the results, unless you would rather keep the list in the main text. The cuts would then have to come from elsewhere.
