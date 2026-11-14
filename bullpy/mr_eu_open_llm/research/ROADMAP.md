@@ -120,7 +120,7 @@ Watch storage at each step. The file count runs at about 996k of 1,048,576. Cell
 - 4.1: every Results and Methods slot that a locked output answers is filled, with registry rows. A4 and A9 were locked on 2026-11-14, and Results 5, 6, 6b and 8 now hold their branches (registry "A4 confirmatory analysis (2026-11-14)", "A9 confirmatory analysis (2026-11-14)"). Results sections 7, 9 and 10 still carry drafted text for every outcome, with values as slots.
 - 4.2: Figures 1 to 5 built from locked outputs and checked by eye (Figure 5 on 2026-11-14); Figure 6 waits on A2.
 - 4.3: Discussion drafted for every open branch, before the data; A4's and A9's branches picked on 2026-11-14, and the opening paragraph waits on A2.
-- 4.4: Supplementary tables for A7 Stage 0 and for all 89 dated decisions built; the rest wait on the runs.
+- 4.4: Supplementary tables for A7 Stage 0 and for all 90 dated decisions built; the rest wait on the runs.
 - 4.5: `reproduce.py` covers every locked output; clean-checkout check passed at `f4306cb`.
 - 4.6: independent review of the draft done and applied, except citation renumbering, left for the final text.
 - 4.7: submission pack drafted; the user's items are in NEEDS_INPUT (ethics confirmation, Zenodo DOI, authors).

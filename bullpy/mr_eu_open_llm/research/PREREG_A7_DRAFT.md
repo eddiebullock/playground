@@ -774,3 +774,9 @@ scripts/a7_analyse.py 00350c9a182090943294efb602f46a31e2c4263240cbb8bb764de26476
 scripts/a7_recovery.py 485832ac1678e2379f442d000a1139abd30ae053e4f48dd51d6e6d9a2727fe79
 scripts/a7_toy.py b2d39459024046df848d8ca0bb8079cfb13ba08cde1da7a5214547aa1fa10d8c
 ```
+
+## Dated notes after the freeze
+
+### 2026-11-14, before any A7 Stage 1 model output: a path fault, and the rerun
+
+The first Stage 1 run wrote 400 failed rows, all `video_unreadable`, because `scripts/a7_run.py` defaults `--data_root` to `.` and the pinned job script passes none. All 243 clips are under `data/eu_emotions`, where A2 read them. No clip was loaded, so no model output on any analysis item exists. Stage 1 reruns through a copy of the pinned job script that adds only `--data_root data/eu_emotions`. The failed rows are kept unchanged outside the cells folder, because the runner's resume would otherwise skip every item. Settings, caps, code pins and the design hash are unchanged (DECISIONS 2026-11-14).

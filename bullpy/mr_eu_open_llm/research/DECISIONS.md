@@ -815,3 +815,19 @@ At about 08:40 the user chose option (a) of NEEDS_INPUT 12: "go with option a fo
 - **Safeguards.** The four `gpu2` tasks were held at 08:43, so no task runs twice. They are cancelled once the cells are pulled, and waived in `pull a7` with this entry as the reason. No A7 Stage 1 cell existed at 08:43 (`results/a7/` held only the Stage 0 files). A7's frozen pre-run check and analysis decide completeness.
 - **What stays the same.** No design, code, threshold or analysis change. Hardware (A100 on `ampere`), weights, precision, inputs and the per-task cap are as for the `gpu2` arrays.
 - **Testing.** The wrapper passed 11 stub checks on the login node. They covered: four steps with the arrays' settings, the 59-minute cap and one GPU on each step, a failing step named, and the wrapper exiting 1.
+
+## 2026-11-14: A7 Stage 1 reruns with the clips' data root after a path fault (deviation from the frozen job script; before any A7 Stage 1 model output)
+
+- **What happened.** The whole-job run (40966325, 12:28 to 12:33, entry above) ended COMPLETED with every step at exit 0. But all 400 rows it wrote, 100 per shard, are `"status": "failed"`, and every one has the reason `video_unreadable`.
+  - `scripts/a7_run.py` (pinned) defaults `--data_root` to `.`. The pinned `slurm_jobs/study3_a7.sh` passes no `--data_root`.
+  - Every clip path was therefore read from the project root. None of the 243 clips exists there, and all 243 exist under `data/eu_emotions`. That is the A2 runner's default, where A2 read the same clips (checked on the cluster at about 12:36).
+  - So no clip was loaded and no model saw any analysis item. A failed row carries only the item, the reason and the hashes. Only line counts, statuses and reasons were read.
+- **Why it needs a rerun, and why the cells move aside.** The runner's resume skips an item once its first row exists, and the failed rows are first rows. So a rerun on the same files would skip every item.
+  - The four files were moved unchanged to `results/a7_path_fault/` on the cluster, with their sha256 recorded there. They are kept and never read by the analysis.
+- **The change.**
+  - `slurm_jobs/study3_a7_dataroot.sh` (sha256 `be71714e...`) is a copy of the pinned `study3_a7.sh` (sha256 `fcebaaa6...`). It differs only by `--data_root data/eu_emotions` on the Stage 1 run command, plus a header comment (diff in the commit).
+  - The whole-job wrapper gains a `JOB_SCRIPT` setting, whose default is the pinned script, and the rerun names the copy. The wrapper's sha256 is now `1289dcbc...`; both files were copied to the cluster and checked.
+  - Everything else is as in the entry above: the same four tasks, settings (A7_FROZEN=1, STEP=run, ARMS=route, DECISION_DATE=2026-11-10, N_SHARDS=2), 59-minute caps, hardware and pinned runner. No design, threshold or analysis change.
+- **Timing against the data.** No A7 Stage 1 model output existed before the rerun, so this is a pre-data deviation for Stage 1. A7's Stage 0, which read its clips through `--records`, is unaffected. A2's analysis ran at 12:26 to 12:28, before this rerun. A7's analysis reads A2's run note, as its pre-run check requires.
+- **Testing.** The wrapper passed 14 stub checks on the login node, including that `JOB_SCRIPT` reaches all four steps.
+- **Disclosure.** Decisions table row 90; a dated note at the end of `research/PREREG_A7_DRAFT.md`, outside the code hashes; Methods, A7, at assembly.
