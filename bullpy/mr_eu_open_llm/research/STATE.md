@@ -2,7 +2,7 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-11-14 01:38 Europe/London
+**Updated:** 2026-11-14 03:08 Europe/London
 
 ## Hand-off, 2026-11-14 (written 01:38)
 
@@ -218,6 +218,15 @@ With cuts 4 and 5, the main text is about 490 words shorter. What remains waits 
   - Qwen3-VL: 202 to 223, at about 13 s per cell, so about eleven slices, ending around midday.
   - 2 to 6 cells per shard are "failed" with a reason, as A2's design writes them.
 - Slice 40947922 was submitted at 01:59 for A2's six shards and A9 Gemma shards 0 to 5, on three nodes. A9 Gemma tasks 40863756_0 to _5 are held.
+
+**2026-11-14 03:08:** Slice 40947922 (02:01 to 02:53) completed A9 Gemma shards 0 to 5, each at its planned count. The planner cancelled their held `gpu2` tasks.
+- A2 after two slices: Gemma 4 979 to 1,008 cells per shard, with 8 to 14 failed; Qwen3-VL 405 to 411.
+- Slice 40950433 started at 02:55 on gpu-q-[3-4,13], carrying A2's six shards and A9 Gemma shards 6 to 11.
+- Local work:
+  - Length plan cut 2 applied to A4: the per-dataset account is in Supplementary Methods S6 (`66d8c05`).
+  - Figure legends 2, 4 and 5 checked against the built figures (`e3a2868`, `20f42f7`).
+  - `registry_tables.py a9`, written on A9's frozen schema before any A9 output (`aa5200c`).
+- No failures; RDS 1,067.6 GB, 991,289 files.
 
 **2026-11-13 11:47:** Supplementary decisions table brought up to date: rows 81 to 83 for today's three new decision-log entries, and a superseded-entries row (75 to 83). It again has one row per entry, 83, checked in order against DECISIONS. ROADMAP Phase 4 status refreshed: every step that needs no new GPU output is done. The node counts in the 11:20 correction now include the node that was powering up. Full suite at `62a8b79` with these record edits: 1,096 passed, 26 skipped, 0 failed. Merged into `main` as PR #115, true merge commit `da95a75` (11:48).
 
