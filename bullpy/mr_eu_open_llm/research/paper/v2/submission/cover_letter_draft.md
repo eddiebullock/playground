@@ -1,5 +1,5 @@
 <!--
-Draft, 2026-11-08 (ROADMAP step 0.9). Claims are limited to what is locked in RESULTS_REGISTRY or proved in Supplementary Note 1. Results are PENDING.
+Draft, 2026-11-08 (ROADMAP step 0.9); results filled on 2026-11-14 from the locked outputs (A8 has not run). Claims are limited to what is locked in RESULTS_REGISTRY or proved in Supplementary Note 1.
 Submission and authorship belong to the user. Nothing here has been sent.
 -->
 
@@ -10,7 +10,7 @@ Nature Human Behaviour
 
 Dear [USER: editor],
 
-We submit "[PENDING: title]" for consideration as an Article in Nature Human Behaviour.
+We submit "[USER: title; a working candidate is in outline.md]" for consideration as an Article in Nature Human Behaviour.
 
 Some vision-language models are reported to match people at reading mental states from faces. We ask how similar these models are to humans in how they read faces, not only in the answers they give. The manuscript makes three contributions.
 
@@ -18,7 +18,7 @@ First, a validity audit. Our own earlier task placed the correct option first on
 
 Second, an identifiability result. We prove that agreement on natural items does not in general determine which facial cues a system uses: two systems can agree on every natural item and still differ in every cue effect. We define Cue Effect Alignment, a comparison of a model's cue effects with human effects estimated under randomised cue presentation.
 
-Third, a cue-level test. We compare model cue effects on rendered faces with randomised human cue effects from public data, against a noise ceiling and a between-group reference. [PENDING: one sentence on A4.] We also test preregistered human predictions under stimulus interventions. [PENDING: one sentence on A2.]
+Third, a cue-level test. We compare model cue effects on rendered faces with randomised human cue effects from public data, against a noise ceiling and a between-group reference. On these renders, Gemma 4's cue effects aligned with human effects on basic labels in both observer groups, and again on a second human sample from the same lab and generator, though below the agreement between the two human groups; on conversational states the result was mixed, and Qwen3-VL's test did not reach a decision, because its answers failed validity gates on three of four datasets. We also test preregistered human predictions under stimulus interventions. On basic labels, masks and frequency filters on single faces moved the models' option-free judgements as the preregistered predictions state on five of ten contrasts for Gemma 4 and four for Qwen3-VL, while shuffled frames and clips cut to a third matched no prediction.
 
 Every confirmatory analysis was fixed in a dated amendment or decision-log entry before its data were analysed, and the rules of the cue-level and intervention tests can each return a match, a mismatch or an inconclusive result. Amendments, frozen hashes and every dated deviation are listed in the manuscript. The paper is written to stand whatever the results are, and nulls are reported as results. Code and derived outputs are public, and a reproduction script rebuilds every output that needs only public inputs and checks the rest against pinned hashes.
 

@@ -95,7 +95,10 @@ def build(root: Path = ROOT) -> str:
                 a9_cell = "pending"
             else:
                 e = a9.get("models", {}).get(m) or {}
-                a9_cell = f"{e.get('decision')}; {((e.get('replication') or {}).get('reading'))}"
+                decision = e.get("decision")
+                # "Not aligned" is always written "on these renders" (outline, Outcomes by question).
+                decision = "Not aligned on these renders" if decision == "Not aligned" else decision
+                a9_cell = f"{decision}; {((e.get('replication') or {}).get('reading'))}"
             if a2[m] is None:
                 a2_cell = "pending"
             else:
@@ -116,7 +119,7 @@ def build(root: Path = ROOT) -> str:
             "<!-- Built by research/scripts/make_table1.py from locked outputs only; do not edit by hand. -->\n\n"
             "Each cell copies a class or value from a locked output; no rule is added (Results, section 8). Models are never pooled. "
             "\"Pending\" means the analysis has not run. RQ1 on natural clips supports alignment with the human pattern, not use of the same cues. "
-            "A4 headlines need WC and EA to agree; \"Not aligned\" is always on these renders. A2 counts are of the 16 confirmatory contrasts per route.\n\n"
+            "A4 headlines need WC and EA to agree; \"Not aligned\" is always on these renders. A2 counts are of the 16 confirmatory contrasts per model, 10 on `single_face` and 6 on `video_face`.\n\n"
             + "\n".join(rows) + "\n\nInputs:\n\n" + sources + "\n")
 
 

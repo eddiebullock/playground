@@ -2,9 +2,9 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-11-14 13:22 Europe/London
+**Updated:** 2026-11-14 14:52 Europe/London
 
-## Hand-off, 2026-11-14 (written 01:38, last refreshed 13:22)
+## Hand-off, 2026-11-14 (written 01:38, last refreshed 14:52)
 
 **A4 is done and analysed, once, by its frozen code** (RESULTS_REGISTRY, "A4 confirmatory analysis (2026-11-14)"; Results, Sections 5 and 6; Figure 5).
 - **Gemma 4: Aligned on basic labels, Mixed on conversational states.**
@@ -56,8 +56,19 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
   - The token arm and RQ3 are not testable, as Stage 0 had already shown.
 - **Written into the paper:** Results 9, the Discussion's RQ3 branch, the Methods clause "A7 Stage 1 runs", Supplementary Methods S10 (the route arm in full), registry rows, and `reproduce.py` (A7's five records hash-pinned; A8 is now the only pending output).
 
+**Merged into main at 13:45:** PR #122, true merge commit `c281bec`, head `0e7df74`. Full suite at `8f1fe7c`: 1,123 passed, 26 skipped, 0 failed; the one later commit changes a sentence of Supplementary Methods only. Clean-checkout reproduction at `8f1fe7c`: 5 rebuilt and matched, 26 verified by hash, 0 failed.
+
+**Independent check of today's text, done (14:52).** A separate reader checked Results 7 to 10, the new Discussion branches, the Abstract, S8, S10, Table 1 and the Figure 6 legend against the registry, the locked outputs and the preregistrations. Every number matched. It found wrong claims, rule breaches and omissions; each was checked against its source and corrected (commit `dcf6dc9`; DECISIONS 2026-11-14, "Independent check"). The main ones:
+- Qwen3-VL's P5 also survives every sensitivity.
+- The sentence on shuffling overstated a human result; it now gives the licensed reason.
+- "Not robust to this null" is now attached to every A2 verdict that holds only at .05.
+- The Abstract's A2 sentence now carries its scope (basic labels, single faces); the Abstract is 147 words.
+- A2's option-bridge and human-modal readouts, and A5's intervals, E*/D, H1 and H2, are now reported, as the preregistrations require.
+- A7's route-arm verdict moved to the supplement, where A7's reporting table puts it.
+- One gap in A7's frozen code is disclosed: a descriptive rider (hybrid distance) the design names was never written by the runner (decisions table row 92). No verdict depends on it.
+
 **What is left.**
-- **A8** only. Its GPU equivalence test (40399722, 4 h on `gpu2`) is still queued, and its code pins (Freeze checklist item 2) come next. The A8 note review is yours (below). Every GPU node is reserved from 2026-12-07 07:00.
+- **A8** only. Its GPU equivalence test now waits as one `intr` job (40969184, submitted 13:53; DECISIONS 2026-11-14, row 91), with the `gpu2` job 40399722 held. At 14:52, 14 `intr` jobs of other users were ahead and one `intr` job ran at a time, so it may start only tonight. The code pins (Freeze checklist item 2) follow it. The A8 note review is yours (below). Every GPU node is reserved from 2026-12-07 07:00.
 - **Storage, watch item (13:22):** `/rds-d7/user/eb2007` holds 1,067.6 GB (soft quota 1,099.5, hard 1,209.5) and 991,396 files (limit 1,048,576). The file count is close to where another project's job filled it on 2026-11-09 (DECISIONS 2026-11-09). Nothing of this project is writing now.
 
 **Only you can do these:**
@@ -106,7 +117,7 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
    - An independent review of the night's A8 code then found real problems, all now fixed. One was a regression I had introduced. The addendum at the end of the A8 prereg lists them.
    - A8's next step is its code pins (Freeze checklist item 2). That step also needs the GPU equivalence test (40399722), which is still queued.
    - You said to proceed, so I will take the step when that job has run, unless you object to the note first. If you object after the pins, the change is still possible as a dated pre-data deviation.
-5. To review, not urgent: the paper is too long. Once one branch per outcome is kept, the main text should come to about 6,700 to 7,700 words, against the journal's limit of 5,000.
+5. To review, not urgent: the paper is too long. Recount at 13:56 on 2026-11-14, with every result but A8 filled and cut 1 applied: about 7,975 words, against the journal's limit of 5,000 (outline, "Length check").
    - The cut plan is in `research/paper/v2/outline.md` ("Length check"). No cut changes a claim, a number or a disclosure.
    - Its biggest choice: the numbered Limitations list (963 words) moves to the Supplementary Information, and the Discussion keeps a paragraph of about 250 words.
    - I will apply the plan when the text is assembled after the results, unless you would rather keep the list in the main text. The cuts would then have to come from elsewhere.

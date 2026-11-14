@@ -2,11 +2,11 @@
 
 <!-- Built by research/scripts/make_table1.py from locked outputs only; do not edit by hand. -->
 
-Each cell copies a class or value from a locked output; no rule is added (Results, section 8). Models are never pooled. "Pending" means the analysis has not run. RQ1 on natural clips supports alignment with the human pattern, not use of the same cues. A4 headlines need WC and EA to agree; "Not aligned" is always on these renders. A2 counts are of the 16 confirmatory contrasts per route.
+Each cell copies a class or value from a locked output; no rule is added (Results, section 8). Models are never pooled. "Pending" means the analysis has not run. RQ1 on natural clips supports alignment with the human pattern, not use of the same cues. A4 headlines need WC and EA to agree; "Not aligned" is always on these renders. A2 counts are of the 16 confirmatory contrasts per model, 10 on `single_face` and 6 on `video_face`.
 
 | Model | RQ0: A1 delta (Holm *P*) | RQ0: A3 delta (Holm *P*) | RQ0 reading | RQ1, natural clips: pattern score (*P*) | RQ1, randomised (A4): basic; conversational | A4 on a second sample (A9) | RQ2 (A2), after the fill rule: Gate B; Matches, Opposes, Null, Inconclusive |
 |---|---|---|---|---|---|---|---|
-| Qwen3-VL | .402 (.00009) | .244 (.00009) | Face use on both inputs | .549 (.0002), confirmatory | Inconclusive; Inconclusive | Not aligned; replication not testable | single_face: Gate B pass; 4, 0, 0, 6<br>video_face: Gate B pass; 0, 0, 0, 6 |
+| Qwen3-VL | .402 (.00009) | .244 (.00009) | Face use on both inputs | .549 (.0002), confirmatory | Inconclusive; Inconclusive | Not aligned on these renders; replication not testable | single_face: Gate B pass; 4, 0, 0, 6<br>video_face: Gate B pass; 0, 0, 0, 6 |
 | Gemma 4 | .228 (.00009) | .216 (.00014) | Face use on both inputs | .418 (.0006), confirmatory | Aligned; Mixed | Aligned; replicated on a second human sample (same lab and generator) | single_face: Gate B pass; 5, 0, 0, 5<br>video_face: Gate B pass; 0, 1, 0, 5 |
 | Molmo2 | .071 (.00009) | .063 (.0001) | Face use on both inputs | .543 (.0002), confirmatory | not eligible (vision gates) | not eligible (vision gates) | not eligible (vision gates) |
 
