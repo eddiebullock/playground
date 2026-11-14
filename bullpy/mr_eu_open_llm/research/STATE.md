@@ -4,7 +4,7 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
 
 **Updated:** 2026-11-14 15:12 Europe/London
 
-## Hand-off, 2026-11-14 (written 01:38, last refreshed 19:18)
+## Hand-off, 2026-11-14 (written 01:38, last refreshed 19:16)
 
 **Your go-ahead at about 18:45** ("proceed with all"; DECISIONS 2026-11-14, "The author's go-ahead for all of A8 and for the next length cut").
 - **A8** now runs through all its phases under its own budget and stop rules, with no further go-ahead after Phase A. I took the go-ahead to cover the A8 reading decision of 2026-11-13 that was left for your review; you can still overrule it before A8's freeze.
@@ -67,7 +67,7 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
   - The token arm and RQ3 are not testable, as Stage 0 had already shown.
 - **Written into the paper:** Results 9, the Discussion's RQ3 branch, the Methods clause "A7 Stage 1 runs", Supplementary Methods S10 (the route arm in full), registry rows, and `reproduce.py` (A7's five records hash-pinned; A8 is now the only pending output).
 
-**Merged into main:** PR #122 (`c281bec`, 13:45) with A2, A5 and A7 Stage 1; then PR #123 (`62fc542`, 15:12) with the corrections after the independent check and the refreshed submission pack. Then PR #124 (`1b3829c`, 19:17) with your go-ahead's record and length cut 6; full suite at `d98266d`, its head: 1,123 passed, 26 skipped, 0 failed. Full suite at `ee4dd83`, the head of #123: 1,123 passed, 26 skipped, 0 failed. Clean-checkout reproduction at `ee4dd83`: 5 rebuilt and matched, 26 verified by hash, 0 failed.
+**Merged into main:** PR #122 (`c281bec`, 13:45) with A2, A5 and A7 Stage 1; then PR #123 (`62fc542`, 15:12) with the corrections after the independent check and the refreshed submission pack. Then PR #124 (`1b3829c`, 19:16) with your go-ahead's record and length cut 6; full suite at `d98266d`, its head: 1,123 passed, 26 skipped, 0 failed. Full suite at `ee4dd83`, the head of #123: 1,123 passed, 26 skipped, 0 failed. Clean-checkout reproduction at `ee4dd83`: 5 rebuilt and matched, 26 verified by hash, 0 failed.
 
 **Independent check of today's text, done (14:52).** A separate reader checked Results 7 to 10, the new Discussion branches, the Abstract, S8, S10, Table 1 and the Figure 6 legend against the registry, the locked outputs and the preregistrations. Every number matched. It found wrong claims, rule breaches and omissions; each was checked against its source and corrected (commit `dcf6dc9`; DECISIONS 2026-11-14, "Independent check"). The main ones:
 - Qwen3-VL's P5 also survives every sensitivity.
