@@ -2,11 +2,17 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-11-14 20:40 Europe/London
+**Updated:** 2026-11-14 21:47 Europe/London
 
-## Hand-off, 2026-11-14 (written 01:38, last refreshed 20:40)
+## Hand-off, 2026-11-14 (written 01:38, last refreshed 21:47)
 
-**New at 20:35: A8's equivalence test was resubmitted as a whole-node job** (DECISIONS 2026-11-14, "A8's GPU equivalence test asks for a whole node's four GPUs"; decisions table row 94).
+**New at 21:45: A8's equivalence test finishes in a second job** (DECISIONS 2026-11-14, "A8's GPU equivalence test finishes in a second job after the first hit its time limit"; decisions table row 95).
+- The whole-node job 40986052 started at 20:42 on gpu-q-41. In both conditions both frozen runs ended with exit 0 (by 21:36). It then reached its one-hour limit at 21:42:59, during the shard runs. No merge or comparison ran, so there is no verdict yet.
+- My time estimate was wrong: a frozen run took 19 to 27 minutes, not about 10, so a condition needs about an hour of steps.
+- Job 40990285 (submitted 21:45, whole node) runs what had not finished in each condition: both shard runs, the merge, the comparisons and the report. The driver issues the first driver's last three commands unchanged (checked with stubs; commit `5909d15`). The frozen runs are kept. All of the first job's shard folders, including one finished shard, were moved unread to `results/a8/equivalence_timeout_40986052/` on the cluster. Expected: about 25 minutes of steps.
+- 40399722 stays held. A watcher reports when the job ends; then the reports are read, `a1_gpu_rule` is applied, and the code-pin step follows.
+
+**At 20:35: A8's equivalence test was resubmitted as a whole-node job** (DECISIONS 2026-11-14, "A8's GPU equivalence test asks for a whole node's four GPUs"; decisions table row 94).
 - **Why.** The two-GPU job 40969184 had waited 6 h 33 min and was 12th of 15 in `intr` at 20:27. Every job running on `ampere` held all four GPUs of its nodes. Jobs asking for one or two GPUs have waited for days; the oldest has waited since 2026-11-11. All 24 of this project's `intr` jobs on 2026-11-13 and 14 asked for four GPUs per node and started 0.3 to 8.5 minutes after submission.
 - **What changed.** Only the request: four GPUs, four tasks and 500 GB, the A4 slices' shape. The two one-GPU steps, driver, items and reading rule are unchanged, and two GPUs stay idle. It costs at most 4 GPU-hours against 2.
 - **Now.** 40969184 was cancelled while pending; the new job is 40986052, submitted 20:35. The wrapper on the cluster matches the commit (`58a98fd`, sha256 `b180e6b1...`). 40399722 stays held. A watcher reports when the job ends.
@@ -85,7 +91,7 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
 - One gap in A7's frozen code is disclosed: a descriptive rider (hybrid distance) the design names was never written by the runner (decisions table row 92). No verdict depends on it.
 
 **What is left.**
-- **A8** only. Its GPU equivalence test waits as one whole-node `intr` job (40986052, submitted 20:35; DECISIONS 2026-11-14, rows 91 and 94), with the `gpu2` job 40399722 held. The two-GPU job it replaced (40969184, submitted 13:53) never started. The code pins (Freeze checklist item 2) follow the test. Every GPU node is reserved from 2026-12-07 07:00.
+- **A8** only. Its GPU equivalence test finishes in the whole-node `intr` job 40990285 (submitted 21:45; DECISIONS 2026-11-14, rows 91, 94 and 95), with the `gpu2` job 40399722 held. The first whole-node job (40986052) ran the frozen runs and timed out in the shard runs; the two-GPU job before it (40969184, submitted 13:53) never started. The code pins (Freeze checklist item 2) follow the test. Every GPU node is reserved from 2026-12-07 07:00.
 - **Storage, watch item (20:27):** `/rds-d7/user/eb2007` holds 1,067.6 GB (soft quota 1,099.5, hard 1,209.5) and 991,398 files (limit 1,048,576). The file count is close to where another project's job filled it on 2026-11-09 (DECISIONS 2026-11-09). Nothing of this project is writing now.
 
 **Only you can do these:**
