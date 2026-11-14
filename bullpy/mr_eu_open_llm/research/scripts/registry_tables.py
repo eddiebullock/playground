@@ -11,6 +11,7 @@ ruling (`a2_extras_<model>.json`, DECISIONS 2026-11-12) and the .01 reading side
 Usage (project root):
     python research/scripts/registry_tables.py a2
     python research/scripts/registry_tables.py a4
+    python research/scripts/registry_tables.py a9   (added 2026-11-14, before any A9 output, on A9's frozen schema)
 """
 from __future__ import annotations
 
@@ -124,14 +125,46 @@ def table_a4(summary_path: Path = ROOT / "results" / "a4" / "summary.json") -> s
     return "\n".join(lines)
 
 
+def table_a9(summary_path: Path = ROOT / "results" / "a9" / "summary.json") -> str:
+    """A9's per-model decision, gates and replication reading (scripts/a9_analyse.py output, `models.<model>`)."""
+    s = json.loads(summary_path.read_text(encoding="utf-8"))
+    lines = [header(summary_path), "", f"Statistic: {s.get('statistic')}; design {s.get('design')}.", "",
+             "| Model | Signal P | Residual CEA | 95% CI | R_S | Alignment Holm P (within A9) | Raw CEA (secondary) | "
+             "Configurations (share lost) | Decision |",
+             "|---|---|---|---|---|---|---|---|---|"]
+    models = s.get("models", {})
+    for m, e in models.items():
+        res, raw = e.get("residual") or {}, e.get("raw") or {}
+        lines.append(f"| {NAMES.get(m, m)} | {p5(e.get('p_signal'))} | {r3(res.get('cfa'))} | {interval(res.get('ci'))} | "
+                     f"{r3(res.get('r_s'))} | {p5(e.get('p_holm'))} | {r3(raw.get('cfa'))} | "
+                     f"{e.get('n_configurations', '-')} ({r3(e.get('share_lost'))}) | {e.get('decision')} |")
+    lines += ["", "| Model | Gates not passed | Replication reading | A9 decision | A4 basic WC decision (comparator) | "
+                  "A4 basic headline (beside) | Reason |",
+              "|---|---|---|---|---|---|---|"]
+    for m, e in models.items():
+        failed = [k for k, v in (e.get("gates") or {}).items() if v is not True] or ["none"]
+        rep = e.get("replication") or {}
+        lines.append(f"| {NAMES.get(m, m)} | {', '.join(failed)} | {rep.get('reading')} | {rep.get('a9_decision')} | "
+                     f"{rep.get('a4_basic_WC_decision')} | {rep.get('a4_basic_headline_beside')} | {rep.get('reason') or '-'} |")
+    lines += ["", "| Model | Over ceiling (descriptive) | Residual correlation across faces (descriptive) | "
+                  "Earlier operationalisation of lead decision 2 (descriptive) |",
+              "|---|---|---|---|"]
+    for m, e in models.items():
+        res = e.get("residual") or {}
+        bound = " (lower bound only)" if res.get("lower_bound_only") else ""
+        lines.append(f"| {NAMES.get(m, m)} | {r3(res.get('over_ceiling'))}{bound} | "
+                     f"{r3(e.get('face_shared_residual_correlation'))} | {e.get('earlier_rule_reading_descriptive')} |")
+    return "\n".join(lines)
+
+
 def main(argv: Optional[Sequence[str]] = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    ap.add_argument("amendment", choices=("a2", "a4"))
+    ap.add_argument("amendment", choices=("a2", "a4", "a9"))
     args = ap.parse_args(argv)
     note = REPRO / f"{args.amendment}_run_note.json"
     if not note.exists() or json.loads(note.read_text(encoding="utf-8")).get("status") != "complete":
         raise SystemExit(f"{note.name} is missing or not complete: the analysis has not run, so nothing is printed.")
-    print(table_a2() if args.amendment == "a2" else table_a4())
+    print({"a2": table_a2, "a4": table_a4, "a9": table_a9}[args.amendment]())
     return 0
 
 
