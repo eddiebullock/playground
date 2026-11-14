@@ -1,0 +1,545 @@
+{
+ "model": "gemma4",
+ "design_sha256": "0ae22118d3b2690c581595890b9bb8b904e1f7860f37be9ac909f925b7058de7",
+ "a2_output_sha256": "4ceb8840aa98d0b8980e565eb32ecda455d14689549e3dde2a9dbf9fdf655c0c",
+ "script_sha256": "1e55ddab560a66ab9489ead8556676c2dd7b8ffc7d5c3ca9db5393672683a537",
+ "single_face": {
+  "contrasts": {
+   "P1": {
+    "frozen_verdict": "matches_prediction",
+    "fill_rule": {
+     "neutral_fill_mean": -9.983493452380953,
+     "other_fills": [
+      {
+       "a": [
+        "mask_mouth_first"
+       ],
+       "b": [
+        "original"
+       ],
+       "mean": -4.73719375
+      },
+      {
+       "a": [
+        "mask_mouth_blur"
+       ],
+       "b": [
+        "original"
+       ],
+       "mean": -6.2108767857142855
+      }
+     ],
+     "fills_share_neutral_sign": true
+    },
+    "verdict_after_fill_rule": "matches_prediction",
+    "equivalence_interval_90": [
+     -11.97565505952381,
+     -7.9995795386904796
+    ],
+    "margin": 0.7245717244757987
+   },
+   "P2": {
+    "frozen_verdict": "inconclusive",
+    "fill_rule": {
+     "neutral_fill_mean": -1.070116170634921,
+     "other_fills": [
+      {
+       "a": [
+        "mask_mouth_first"
+       ],
+       "b": [
+        "original"
+       ],
+       "mean": -2.2405873015873023
+      },
+      {
+       "a": [
+        "mask_mouth_blur"
+       ],
+       "b": [
+        "original"
+       ],
+       "mean": 0.8566794642857134
+      }
+     ],
+     "fills_share_neutral_sign": false
+    },
+    "verdict_after_fill_rule": "inconclusive",
+    "equivalence_interval_90": [
+     -2.067678373015873,
+     -0.04717986111111211
+    ],
+    "margin": 0.7245717244757987
+   },
+   "P3": {
+    "frozen_verdict": "inconclusive",
+    "fill_rule": {
+     "neutral_fill_mean": -0.4507514880952382,
+     "other_fills": [
+      {
+       "a": [
+        "mask_eyes_first"
+       ],
+       "b": [
+        "original"
+       ],
+       "mean": -1.2556043650793653
+      },
+      {
+       "a": [
+        "mask_eyes_blur"
+       ],
+       "b": [
+        "original"
+       ],
+       "mean": -4.606794444444446
+      }
+     ],
+     "fills_share_neutral_sign": true
+    },
+    "verdict_after_fill_rule": "inconclusive",
+    "equivalence_interval_90": [
+     -1.159915967261905,
+     0.25451104166666727
+    ],
+    "margin": 0.7245717244757987
+   },
+   "P4": {
+    "frozen_verdict": "inconclusive",
+    "fill_rule": {
+     "neutral_fill_mean": -2.2822202380952397,
+     "other_fills": [
+      {
+       "a": [
+        "mask_eyes_first"
+       ],
+       "b": [
+        "original"
+       ],
+       "mean": -2.1035245039682544
+      },
+      {
+       "a": [
+        "mask_eyes_blur"
+       ],
+       "b": [
+        "original"
+       ],
+       "mean": -0.7212956349206355
+      }
+     ],
+     "fills_share_neutral_sign": true
+    },
+    "verdict_after_fill_rule": "inconclusive",
+    "equivalence_interval_90": [
+     -3.8628535714285728,
+     -0.7169694494047655
+    ],
+    "margin": 0.7245717244757987
+   },
+   "P5": {
+    "frozen_verdict": "matches_prediction",
+    "fill_rule": {
+     "neutral_fill_mean": -2.9351862433862417,
+     "other_fills": [
+      {
+       "a": [
+        "mask_brows_first"
+       ],
+       "b": [
+        "original"
+       ],
+       "mean": -1.3879923280423279
+      },
+      {
+       "a": [
+        "mask_brows_blur"
+       ],
+       "b": [
+        "original"
+       ],
+       "mean": -1.4365542328042318
+      }
+     ],
+     "fills_share_neutral_sign": true
+    },
+    "verdict_after_fill_rule": "matches_prediction",
+    "equivalence_interval_90": [
+     -4.448187116402115,
+     -1.4729494576719582
+    ],
+    "margin": 0.7245717244757987
+   },
+   "P6": {
+    "frozen_verdict": "matches_prediction",
+    "fill_rule": {
+     "neutral_fill_mean": -4.199615753968254,
+     "other_fills": [
+      {
+       "a": [
+        "mask_mouth_first"
+       ],
+       "b": [
+        "mask_eyes_first"
+       ],
+       "mean": -3.3413186111111117
+      },
+      {
+       "a": [
+        "mask_mouth_blur"
+       ],
+       "b": [
+        "mask_eyes_blur"
+       ],
+       "mean": -4.820472003968254
+      }
+     ],
+     "fills_share_neutral_sign": true
+    },
+    "verdict_after_fill_rule": "matches_prediction",
+    "equivalence_interval_90": [
+     -5.0491391468253966,
+     -3.2207050595238096
+    ],
+    "margin": 0.7245717244757987
+   },
+   "P7": {
+    "frozen_verdict": "inconclusive",
+    "fill_rule": {
+     "neutral_fill_mean": 3.6539185784313726,
+     "other_fills": [
+      {
+       "a": [
+        "mask_mouth_first"
+       ],
+       "b": [
+        "original"
+       ],
+       "mean": 2.9104706372549023
+      },
+      {
+       "a": [
+        "mask_mouth_blur"
+       ],
+       "b": [
+        "original"
+       ],
+       "mean": -1.5165821078431367
+      }
+     ],
+     "fills_share_neutral_sign": false
+    },
+    "verdict_after_fill_rule": "inconclusive",
+    "equivalence_interval_90": [
+     1.6421742573529416,
+     5.767719658088235
+    ],
+    "margin": 0.7245717244757987
+   },
+   "P8": {
+    "frozen_verdict": "inconclusive",
+    "fill_rule": {
+     "neutral_fill_mean": -0.5772594791666664,
+     "other_fills": [
+      {
+       "a": [
+        "mask_mouth_first"
+       ],
+       "b": [
+        "original"
+       ],
+       "mean": -1.6748124999999994
+      },
+      {
+       "a": [
+        "mask_mouth_blur"
+       ],
+       "b": [
+        "original"
+       ],
+       "mean": -1.2781761458333332
+      }
+     ],
+     "fills_share_neutral_sign": true
+    },
+    "verdict_after_fill_rule": "inconclusive",
+    "equivalence_interval_90": [
+     -1.4881455156250005,
+     0.41265312500000084
+    ],
+    "margin": 0.7245717244757987
+   },
+   "P9": {
+    "frozen_verdict": "matches_prediction",
+    "fill_rule": null,
+    "verdict_after_fill_rule": "matches_prediction",
+    "equivalence_interval_90": [
+     1.294205357142857,
+     3.886698214285716
+    ],
+    "margin": 0.7245717244757987
+   },
+   "P10": {
+    "frozen_verdict": "matches_prediction",
+    "fill_rule": null,
+    "verdict_after_fill_rule": "matches_prediction",
+    "equivalence_interval_90": [
+     -6.077502678571429,
+     -2.969505654761903
+    ],
+    "margin": 0.7245717244757987
+   }
+  },
+  "shuffles_overall": null
+ },
+ "video_face": {
+  "contrasts": {
+   "P12": {
+    "frozen_verdict": "opposes_prediction",
+    "fill_rule": null,
+    "verdict_after_fill_rule": "opposes_prediction",
+    "equivalence_interval_90": [
+     1.1787870763305306,
+     2.77723362745098
+    ],
+    "margin": 0.5956225436018029
+   },
+   "P13": {
+    "frozen_verdict": "inconclusive",
+    "fill_rule": null,
+    "verdict_after_fill_rule": "inconclusive",
+    "equivalence_interval_90": [
+     0.3661912896825394,
+     1.0513171831232488
+    ],
+    "margin": 0.5956225436018029
+   },
+   "P14a": {
+    "frozen_verdict": "inconclusive",
+    "fill_rule": null,
+    "verdict_after_fill_rule": "inconclusive",
+    "equivalence_interval_90": [
+     -1.9538761927083337,
+     -0.1860098958333331
+    ],
+    "margin": 0.5956225436018029
+   },
+   "P14b": {
+    "frozen_verdict": "inconclusive",
+    "fill_rule": null,
+    "verdict_after_fill_rule": "inconclusive",
+    "equivalence_interval_90": [
+     1.029166203703704,
+     3.2021156689814805
+    ],
+    "margin": 0.5956225436018029
+   },
+   "P15a": {
+    "frozen_verdict": "inconclusive",
+    "fill_rule": null,
+    "verdict_after_fill_rule": "inconclusive",
+    "equivalence_interval_90": [
+     -2.850777291666667,
+     -0.20814466666666837
+    ],
+    "margin": 0.5956225436018029
+   },
+   "P15b": {
+    "frozen_verdict": "inconclusive",
+    "fill_rule": null,
+    "verdict_after_fill_rule": "inconclusive",
+    "equivalence_interval_90": [
+     -1.6318962499999996,
+     0.3797387500000009
+    ],
+    "margin": 0.5956225436018029
+   }
+  },
+  "shuffles_overall": {
+   "Afraid": {
+    "n_actors": 8,
+    "mean_change": -0.04077822420634905,
+    "ci95": [
+     -0.5163422544642852,
+     0.5101900855654761
+    ]
+   },
+   "Angry": {
+    "n_actors": 9,
+    "mean_change": 0.15834404761904736,
+    "ci95": [
+     -0.41613544973545036,
+     0.7343412103174607
+    ]
+   },
+   "Ashamed": {
+    "n_actors": 8,
+    "mean_change": 0.4008800595238097,
+    "ci95": [
+     -0.30075059523809533,
+     1.0783672693452373
+    ]
+   },
+   "Bored": {
+    "n_actors": 8,
+    "mean_change": 0.11210461309523895,
+    "ci95": [
+     -0.42927501488095177,
+     0.6724766369047628
+    ]
+   },
+   "Disappointed": {
+    "n_actors": 8,
+    "mean_change": 0.17165252976190498,
+    "ci95": [
+     -0.3511535714285706,
+     0.643966517857143
+    ]
+   },
+   "Disgusted": {
+    "n_actors": 8,
+    "mean_change": 0.39035248015872914,
+    "ci95": [
+     0.07520014880952192,
+     0.6789224702380944
+    ]
+   },
+   "Excited": {
+    "n_actors": 8,
+    "mean_change": 1.0781305059523807,
+    "ci95": [
+     0.6282292522321443,
+     1.4662451488095234
+    ]
+   },
+   "Frustrated": {
+    "n_actors": 9,
+    "mean_change": 0.6846735449735442,
+    "ci95": [
+     0.33706808201058086,
+     0.9922287433862426
+    ]
+   },
+   "Happy": {
+    "n_actors": 8,
+    "mean_change": 2.0383419642857126,
+    "ci95": [
+     0.3142136941964267,
+     4.0729016145833326
+    ]
+   },
+   "Hurt": {
+    "n_actors": 8,
+    "mean_change": 0.32957127976190514,
+    "ci95": [
+     -0.09072641369047485,
+     0.7987072916666665
+    ]
+   },
+   "Interested": {
+    "n_actors": 9,
+    "mean_change": -0.3919591269841272,
+    "ci95": [
+     -0.8983555423280422,
+     0.20189790674603225
+    ]
+   },
+   "Jealous": {
+    "n_actors": 7,
+    "mean_change": 0.004001700680271217,
+    "ci95": [
+     -0.35613163265306114,
+     0.25730884353741434
+    ]
+   },
+   "Joking": {
+    "n_actors": 8,
+    "mean_change": 1.4111186011904766,
+    "ci95": [
+     0.46904419642857176,
+     2.3825264880952393
+    ]
+   },
+   "Kind": {
+    "n_actors": 9,
+    "mean_change": 1.067743121693123,
+    "ci95": [
+     -0.35264708994708693,
+     2.524162023809525
+    ]
+   },
+   "Neutral": {
+    "n_actors": 17,
+    "mean_change": -0.022618347338936803,
+    "ci95": [
+     -0.3378484698879552,
+     0.25096814425770136
+    ]
+   },
+   "Proud": {
+    "n_actors": 9,
+    "mean_change": -0.13224550264550208,
+    "ci95": [
+     -0.7983595238095227,
+     0.4002108994708992
+    ]
+   },
+   "Sad": {
+    "n_actors": 8,
+    "mean_change": 0.19127901785714316,
+    "ci95": [
+     -0.2762062499999995,
+     0.6659492559523809
+    ]
+   },
+   "Sneaky": {
+    "n_actors": 9,
+    "mean_change": 0.40373981481481397,
+    "ci95": [
+     0.08660676917989339,
+     0.7253201058201049
+    ]
+   },
+   "Surprised": {
+    "n_actors": 9,
+    "mean_change": 1.8378813492063486,
+    "ci95": [
+     1.292634391534391,
+     2.3931776554232798
+    ]
+   },
+   "Unfriendly": {
+    "n_actors": 9,
+    "mean_change": 0.03092539682539646,
+    "ci95": [
+     -0.3615670502645507,
+     0.4288826322751325
+    ]
+   },
+   "Worried": {
+    "n_actors": 8,
+    "mean_change": 0.011971726190475651,
+    "ci95": [
+     -0.7395894717261912,
+     0.8000473214285713
+    ]
+   },
+   "basic": {
+    "n_actors": 17,
+    "mean_change": 0.8296791151460581,
+    "ci95": [
+     0.42105844355658867,
+     1.2591857782904825
+    ]
+   },
+   "complex": {
+    "n_actors": 17,
+    "mean_change": 0.32850476973617715,
+    "ci95": [
+     0.1524760262056842,
+     0.5022005933070197
+    ]
+   }
+  }
+ }
+}

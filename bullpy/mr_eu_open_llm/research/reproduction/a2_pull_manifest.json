@@ -1,0 +1,80 @@
+{
+ "amendment": "a2",
+ "pulled_at": "2026-11-14T12:26:33Z",
+ "jobs": {
+  "40468625": [
+   "40468625_0:CANCELLED by 45710",
+   "40468625_1:CANCELLED by 45710",
+   "40468625_[2]:CANCELLED by 45710"
+  ],
+  "40468626": [
+   "40468626_0:CANCELLED by 45710",
+   "40468626_1:CANCELLED by 45710",
+   "40468626_[2]:CANCELLED by 45710"
+  ],
+  "40945403": [
+   "40945403:COMPLETED"
+  ],
+  "40947922": [
+   "40947922:COMPLETED"
+  ],
+  "40950433": [
+   "40950433:COMPLETED"
+  ],
+  "40952562": [
+   "40952562:COMPLETED"
+  ],
+  "40954249": [
+   "40954249:COMPLETED"
+  ],
+  "40955884": [
+   "40955884:COMPLETED"
+  ],
+  "40957298": [
+   "40957298:COMPLETED"
+  ],
+  "40959873": [
+   "40959873:COMPLETED"
+  ],
+  "40961445": [
+   "40961445:COMPLETED"
+  ],
+  "40962334": [
+   "40962334:COMPLETED"
+  ],
+  "40963214": [
+   "40963214:COMPLETED"
+  ],
+  "40964022": [
+   "40964022:COMPLETED"
+  ],
+  "40965632": [
+   "40965632:COMPLETED"
+  ]
+ },
+ "waived_tasks": [
+  "40468625_0",
+  "40468625_1",
+  "40468625_[2]",
+  "40468626_0",
+  "40468626_1",
+  "40468626_[2]"
+ ],
+ "waiver_reason": "DECISIONS 2026-11-13: A2 full-run shards in one-hour slices under intr",
+ "files": {
+  "results/stimulus_interventions/geometry.json": "2bc76dd60be233ee6072ba5b2049721899c5febcd953ec49bff1dcc2f2c72383",
+  "results/stimulus_interventions/cells_gemma4_shard0.jsonl": "f7ae6e2f77e1c97224cadb415c0668eb225effc16feb4b71b4d48e6fa4a53b2d",
+  "results/stimulus_interventions/cells_gemma4_shard1.jsonl": "356bf08edef77e52cac9582eab760d0ae49592701db6404706a0820910917958",
+  "results/stimulus_interventions/cells_gemma4_shard2.jsonl": "ab63a429a6c17a6cbf2c593867cd529d1788d1546a36d04a7621068baa6f0f65",
+  "results/stimulus_interventions/run_gemma4_shard0.json": "f2d3f6d85da27a74907f30443d97f4e4315e913df9572753d827c6a4c4a92a9c",
+  "results/stimulus_interventions/run_gemma4_shard1.json": "fb86e46298de962fca3653af41f61f0803468a30d1f25d02fb8f568fce969359",
+  "results/stimulus_interventions/run_gemma4_shard2.json": "8abcf37ba13a3db0d4027e681eea4743776331353d24fb8bce1591be9f3199b0",
+  "results/stimulus_interventions/cells_qwen3vl_shard0.jsonl": "6bfc57f34879475dcf4a2c1cb5d680618d3b0d3e06edd1af67762c6ebfbfbf63",
+  "results/stimulus_interventions/cells_qwen3vl_shard1.jsonl": "34e56b3e2cba30ab02217ee2723671818477bd8ab9caf85d2a4505142714d43c",
+  "results/stimulus_interventions/cells_qwen3vl_shard2.jsonl": "cc23ff31dc60007012d0e97baaba5e77e67fbefd444cedd0b9f9824c26a8176b",
+  "results/stimulus_interventions/run_qwen3vl_shard0.json": "703461c1cc0f7ccfafece57dac0a2d2b6278da58b261a6a8185b533ae10ee551",
+  "results/stimulus_interventions/run_qwen3vl_shard1.json": "730430d6d8c00ddba43ab27bb232bd270a94f2460dc89d2b29a210f04ed4807a",
+  "results/stimulus_interventions/run_qwen3vl_shard2.json": "483e80d1070cc27c081793f75b3737b54d70d97ee6a60c56ca2ba43286546c4c"
+ },
+ "contents_read": false
+}

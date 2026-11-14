@@ -1,0 +1,41 @@
+{
+ "model": "qwen3vl",
+ "shards": [
+  0,
+  1,
+  2
+ ],
+ "unparseable_lines": {},
+ "allowed_pixel_last_dims": [
+  1536
+ ],
+ "rows_not_matching_model": [],
+ "n_rows_not_matching_model": 0,
+ "sha256": {
+  "scripts/stimulus_design.py": "89d256c1072e0768fc747294553c5710adaf42184a175866d7bd75bcc6104978",
+  "scripts/stimulus_interventions.py": "93c601eb42d6700d4f0fc8ba72317ed5c2e354105d57fcac611c59660125deb3",
+  "scripts/run_stimulus_interventions.py": "f7880c94e9671cc294cd4eaeece2108d7cd1d7a4c7e6f9e30a1c495964e6cd82",
+  "scripts/analyse_stimulus_interventions.py": "aba4f533daad6210e87f7bb4e68fc4627805cb4dfd9d9308df734fada4edc8b1",
+  "scripts/recovery_stimulus_interventions.py": "d0c8bf0d634101179c5feacb33cbacc341f998295b820214c008355285ed382b",
+  "slurm_jobs/study3_stimulus_interventions.sh": "1c8d22ea637abedd3a3c2332331639c7e33a7e7ed9cb2e741335d17ce138eec5",
+  "scripts/human_response_predictor.py": "0223b4931a2e7aa9eaedf6c532bc5d6879df0d8d4ba27263b79f4c65137e7ab0",
+  "research/scripts/analyse_rotation.py": "98890c5bff65f13abeb0549b61fe414dc9fa30082b84bcb564671683ec12e24f",
+  "src/paper_v2/option_score.py": "ae949e4c1c3abc6a775a535c4e0a5042bce59ba14f7ac1afeefd476f032a5a2b",
+  "scripts/prompts.py": "871272d4aa6c86ff809f7631a4db81aeeb41564ba7f0a31809ea08e6dcf64ba7",
+  "scripts/vision_gates.py": "6327b6f88e99409cba5c63d5aca0fe97348fbce4f3b08522158a8d9ba3ce8194",
+  "research/scripts/a2_declared_extras.py": "1e55ddab560a66ab9489ead8556676c2dd7b8ffc7d5c3ca9db5393672683a537",
+  "research/reproduction/rotation_summary.json": "81500bdd229f88c5aa4038736d4ccc0eb2e04080613dc95380cc8c3dd067072a",
+  "research/reproduction/vision_gates_qwen3vl.json": "2f38aafb41c93505b792bd355c72d2a2b30e841a0e29be067a1d7c5ba01ede8d",
+  "research/reproduction/input_delivery_qwen3vl.json": "802f3231db29f2b27d67e8a6cfd70c78a9ea72c9e3fb4b1cadf7f8c966f1f801",
+  "research/reproduction/face_input_validity_summary.json": "c1c64e6975b32356a3314268c054f0dee483ddf74b11cd66d03b2faf972e64a4",
+  "results/stimulus_interventions/geometry.json": "2bc76dd60be233ee6072ba5b2049721899c5febcd953ec49bff1dcc2f2c72383",
+  "results/stimulus_interventions/cells_qwen3vl_shard0.jsonl": "6bfc57f34879475dcf4a2c1cb5d680618d3b0d3e06edd1af67762c6ebfbfbf63",
+  "results/stimulus_interventions/cells_qwen3vl_shard1.jsonl": "34e56b3e2cba30ab02217ee2723671818477bd8ab9caf85d2a4505142714d43c",
+  "results/stimulus_interventions/cells_qwen3vl_shard2.jsonl": "cc23ff31dc60007012d0e97baaba5e77e67fbefd444cedd0b9f9824c26a8176b",
+  "results/stimulus_interventions/run_qwen3vl_shard0.json": "703461c1cc0f7ccfafece57dac0a2d2b6278da58b261a6a8185b533ae10ee551",
+  "results/stimulus_interventions/run_qwen3vl_shard1.json": "730430d6d8c00ddba43ab27bb232bd270a94f2460dc89d2b29a210f04ed4807a",
+  "results/stimulus_interventions/run_qwen3vl_shard2.json": "483e80d1070cc27c081793f75b3737b54d70d97ee6a60c56ca2ba43286546c4c"
+ },
+ "failures": [],
+ "script_sha256": "49ead3b2076fc7d67f7eac598a42075df323886697d7f3664ef7a73e00915bf1"
+}

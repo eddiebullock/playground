@@ -1,0 +1,155 @@
+{
+ "amendment": "a2",
+ "git_commit": "59641b04b7d06b57d7ddcb8624acfb4c7f952e49",
+ "python": "/opt/anaconda3/bin/python3",
+ "threads": {
+  "OMP_NUM_THREADS": "1",
+  "OPENBLAS_NUM_THREADS": "1",
+  "MKL_NUM_THREADS": "1",
+  "VECLIB_MAXIMUM_THREADS": "1"
+ },
+ "cells_dir_used": null,
+ "steps": [
+  {
+   "command": [
+    "python3",
+    "research/scripts/a2_prerun_check.py",
+    "--model",
+    "gemma4",
+    "--cells",
+    "results/stimulus_interventions/cells_gemma4_shard0.jsonl",
+    "results/stimulus_interventions/cells_gemma4_shard1.jsonl",
+    "results/stimulus_interventions/cells_gemma4_shard2.jsonl",
+    "--run_report",
+    "results/stimulus_interventions/run_gemma4_shard0.json",
+    "results/stimulus_interventions/run_gemma4_shard1.json",
+    "results/stimulus_interventions/run_gemma4_shard2.json",
+    "--record",
+    "research/reproduction/a2_prerun_gemma4.json"
+   ],
+   "started": "2026-11-14T12:26:43Z",
+   "finished": "2026-11-14T12:26:46Z",
+   "exit": 0
+  },
+  {
+   "command": [
+    "python3",
+    "research/scripts/a2_prerun_check.py",
+    "--model",
+    "qwen3vl",
+    "--cells",
+    "results/stimulus_interventions/cells_qwen3vl_shard0.jsonl",
+    "results/stimulus_interventions/cells_qwen3vl_shard1.jsonl",
+    "results/stimulus_interventions/cells_qwen3vl_shard2.jsonl",
+    "--run_report",
+    "results/stimulus_interventions/run_qwen3vl_shard0.json",
+    "results/stimulus_interventions/run_qwen3vl_shard1.json",
+    "results/stimulus_interventions/run_qwen3vl_shard2.json",
+    "--record",
+    "research/reproduction/a2_prerun_qwen3vl.json"
+   ],
+   "started": "2026-11-14T12:26:46Z",
+   "finished": "2026-11-14T12:26:46Z",
+   "exit": 0
+  },
+  {
+   "command": [
+    "python3",
+    "-m",
+    "scripts.analyse_stimulus_interventions",
+    "--model",
+    "gemma4",
+    "--cells",
+    "results/stimulus_interventions/cells_gemma4_shard0.jsonl",
+    "results/stimulus_interventions/cells_gemma4_shard1.jsonl",
+    "results/stimulus_interventions/cells_gemma4_shard2.jsonl",
+    "--run_report",
+    "results/stimulus_interventions/run_gemma4_shard0.json",
+    "results/stimulus_interventions/run_gemma4_shard1.json",
+    "results/stimulus_interventions/run_gemma4_shard2.json",
+    "--output",
+    "research/reproduction/stimulus_interventions_gemma4.json",
+    "--a2_frozen"
+   ],
+   "started": "2026-11-14T12:26:46Z",
+   "finished": "2026-11-14T12:27:28Z",
+   "exit": 0
+  },
+  {
+   "command": [
+    "python3",
+    "research/scripts/a2_declared_extras.py",
+    "--model",
+    "gemma4",
+    "--cells",
+    "results/stimulus_interventions/cells_gemma4_shard0.jsonl",
+    "results/stimulus_interventions/cells_gemma4_shard1.jsonl",
+    "results/stimulus_interventions/cells_gemma4_shard2.jsonl",
+    "--run_report",
+    "results/stimulus_interventions/run_gemma4_shard0.json",
+    "results/stimulus_interventions/run_gemma4_shard1.json",
+    "results/stimulus_interventions/run_gemma4_shard2.json",
+    "--a2_output",
+    "research/reproduction/stimulus_interventions_gemma4.json",
+    "--output",
+    "research/reproduction/a2_extras_gemma4.json"
+   ],
+   "started": "2026-11-14T12:27:28Z",
+   "finished": "2026-11-14T12:27:30Z",
+   "exit": 0
+  },
+  {
+   "command": [
+    "python3",
+    "-m",
+    "scripts.analyse_stimulus_interventions",
+    "--model",
+    "qwen3vl",
+    "--cells",
+    "results/stimulus_interventions/cells_qwen3vl_shard0.jsonl",
+    "results/stimulus_interventions/cells_qwen3vl_shard1.jsonl",
+    "results/stimulus_interventions/cells_qwen3vl_shard2.jsonl",
+    "--run_report",
+    "results/stimulus_interventions/run_qwen3vl_shard0.json",
+    "results/stimulus_interventions/run_qwen3vl_shard1.json",
+    "results/stimulus_interventions/run_qwen3vl_shard2.json",
+    "--output",
+    "research/reproduction/stimulus_interventions_qwen3vl.json",
+    "--a2_frozen"
+   ],
+   "started": "2026-11-14T12:27:30Z",
+   "finished": "2026-11-14T12:28:09Z",
+   "exit": 0
+  },
+  {
+   "command": [
+    "python3",
+    "research/scripts/a2_declared_extras.py",
+    "--model",
+    "qwen3vl",
+    "--cells",
+    "results/stimulus_interventions/cells_qwen3vl_shard0.jsonl",
+    "results/stimulus_interventions/cells_qwen3vl_shard1.jsonl",
+    "results/stimulus_interventions/cells_qwen3vl_shard2.jsonl",
+    "--run_report",
+    "results/stimulus_interventions/run_qwen3vl_shard0.json",
+    "results/stimulus_interventions/run_qwen3vl_shard1.json",
+    "results/stimulus_interventions/run_qwen3vl_shard2.json",
+    "--a2_output",
+    "research/reproduction/stimulus_interventions_qwen3vl.json",
+    "--output",
+    "research/reproduction/a2_extras_qwen3vl.json"
+   ],
+   "started": "2026-11-14T12:28:09Z",
+   "finished": "2026-11-14T12:28:10Z",
+   "exit": 0
+  }
+ ],
+ "outputs": {
+  "research/reproduction/stimulus_interventions_gemma4.json": "4ceb8840aa98d0b8980e565eb32ecda455d14689549e3dde2a9dbf9fdf655c0c",
+  "research/reproduction/stimulus_interventions_qwen3vl.json": "ff6a7741f610f3950501b9cc6ca02268ad1b579d4569230ea203a19df831bf07",
+  "research/reproduction/a2_extras_gemma4.json": "792ee9adabb9e232c795a1dee0f5254d6fb71aa6d5621f1bfd0f680307e915b4",
+  "research/reproduction/a2_extras_qwen3vl.json": "0d2e8d0d0efb3c60e5a6656eb98a71acf97cd28eee27a882c2c100a6538725ca"
+ },
+ "status": "complete"
+}
