@@ -24,7 +24,7 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
 **Running now: A2 and A9, in combined `intr` slices** (chain started automatically at 01:03 when A4 finished; DECISIONS 2026-11-13, A2 and A9 entries).
 - Slice 1 (40945403, from 01:06, two nodes) carries A2's six shards and both A9 timing smokes. Both smokes were complete (40 cells each) by 01:35.
 - From slice 2, A9's scored shards fill the spare GPUs. Gemma 4 and Qwen3-VL are both eligible under RQ0 and A4's gates, which were locked on 2026-11-12.
-- A2 is slower than its sizing. In the first half hour Gemma's shards wrote about 280 cells each and Qwen's about 110. At that rate Gemma's A2 shards need about five slices and Qwen's about ten (rates to be confirmed at the first handover).
+- A2 is slower than its sizing (4 to 6 GPU-hours a shard). Measured over the first slice: Gemma 4 about 5.8 s per cell, so about five slices (done around 06:00); Qwen3-VL about 13 s per cell, so about eleven slices (done around midday).
 - When A2 completes: pull, `analyse a2`, then A5, then A7 (ROADMAP Part 3). When A9 completes: pull, `analyse a9` (A4's run note now exists, as its pre-run check requires).
 
 **Not done, and why.** A7 Stage 1 (40795186, 40795187) is still on `gpu2`. Its runner skips an item once the item's first row is written, so a budget stop in the middle of an item could leave that item incomplete for good, and A7 has no repair rule for that. It needs either whole one-hour `intr` jobs of up to 59 minutes, between slices, or a pre-data ruling. I left that for you to see.
@@ -206,6 +206,18 @@ With cuts 4 and 5, the main text is about 490 words shorter. What remains waits 
 - Commits `3ced4a5` (records and registry), `be63deb` (Results 5 and 6, Figure 5, Table 1, `reproduce.py`) and `3d4c232` (Discussion step 4.3, Results 8, Methods "Runs").
 - The combined A2 and A9 chain started on its own at 01:03, and its first slice 40945403 at 01:06.
 - Full suite at `64f79da`: 1,122 passed, 26 skipped, 0 failed. Merged into `main` as PR #120, true merge commit `182a2eb` (01:50).
+
+**2026-11-14 02:00:** First combined slice 40945403 (01:06 to 01:58) ended COMPLETED.
+- **A9 timing smokes:** both ended by themselves at 01:07, each with 40 of 40 cells "ok". Read as fixed (status, elapsed time, memory, `seconds` only):
+  - step elapsed 1:02 and 1:01;
+  - MaxRSS 11.0 and 1.6 GB;
+  - mean `seconds` .668 for Gemma 4 and .985 for Qwen3-VL. At those rates an A9 scored shard of about 3,000 cells takes about 35 and 50 minutes, so one slice each, or two for Qwen.
+  - The planner cancelled the held smoke jobs 40843619 and 40843620.
+- **A2:** all six shards stopped at the budget, none partial.
+  - Gemma 4: 503 to 515 of 2,349 cells, at about 5.8 s per cell, so about five slices.
+  - Qwen3-VL: 202 to 223, at about 13 s per cell, so about eleven slices, ending around midday.
+  - 2 to 6 cells per shard are "failed" with a reason, as A2's design writes them.
+- Slice 40947922 was submitted at 01:59 for A2's six shards and A9 Gemma shards 0 to 5, on three nodes. A9 Gemma tasks 40863756_0 to _5 are held.
 
 **2026-11-13 11:47:** Supplementary decisions table brought up to date: rows 81 to 83 for today's three new decision-log entries, and a superseded-entries row (75 to 83). It again has one row per entry, 83, checked in order against DECISIONS. ROADMAP Phase 4 status refreshed: every step that needs no new GPU output is done. The node counts in the 11:20 correction now include the node that was powering up. Full suite at `62a8b79` with these record edits: 1,096 passed, 26 skipped, 0 failed. Merged into `main` as PR #115, true merge commit `da95a75` (11:48).
 
