@@ -2,9 +2,36 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-11-13 23:13 Europe/London
+**Updated:** 2026-11-14 01:38 Europe/London
 
-## Hand-off, 2026-11-13 (written 05:35, last refreshed 23:13)
+## Hand-off, 2026-11-14 (written 01:38)
+
+**A4 is done and analysed, once, by its frozen code** (RESULTS_REGISTRY, "A4 confirmatory analysis (2026-11-14)"; Results, Sections 5 and 6; Figure 5).
+- **Gemma 4: Aligned on basic labels, Mixed on conversational states.**
+  - Residual CEA on basic labels: WC .386 (95% CI .372 to .397) and EA .516 (.497 to .535).
+  - Conversational states: EA Aligned at .369 (.348 to .385); WC not aligned on these renders, at .025 (upper bound .053 after correction for reliability).
+  - All gates passed. No interval reaches the human WC to EA reference (.780 basic, .732 conversational), so Gemma 4 is not human-level.
+  - Weak point: conversational EA falls below .30 on the detector-confirmed families (.158) and on the amplitude sets (.170 at 0.75 times, .297 at 1 times). This is reported beside the primary, which it does not replace.
+- **Qwen3-VL: Inconclusive on both tasks.** It failed the domain gate V4 on basic WC, conversational WC and conversational EA, and also the configuration gate V3 on conversational WC. Basic EA passed every gate but spans both floors (.264; corrected upper bound .306).
+- **Behaviour against cue effects:** they come apart in size, not in sign. Where Gemma 4 is aligned, its output correlation with people (.14 to .23) is less than half its residual CEA.
+- **Written into the paper:** Results 5, 6 and 8; Discussion "RQ1 under randomisation" (step 4.3); Methods "Runs"; Figure 5 (checked by eye); Table 1; registry rows; and `reproduce.py`, where the four A4 records are hash-pinned and Figure 5 is a rebuild step. The clean-checkout check of those steps passed: 12 rebuilt and matched, 4 verified by hash.
+- **How it ran.** Nine one-hour `intr` slices from 18:22 to 01:02, which you allowed at 17:50.
+  - From 22:46 the slices took up to three nodes, `intr`'s per-user limit, which cut about three hours.
+  - All 24 shard files hold exactly their planned cells (157,892), all ok.
+  - All 24 `gpu2` tasks were held, then cancelled without running, and are waived in the pull with the DECISIONS entry as the reason.
+  - Pulled at 01:07; pre-run check and analysis 01:07 to 01:26 (`research/reproduction/a4_run_note.json`).
+
+**Running now: A2 and A9, in combined `intr` slices** (chain started automatically at 01:03 when A4 finished; DECISIONS 2026-11-13, A2 and A9 entries).
+- Slice 1 (40945403, from 01:06, two nodes) carries A2's six shards and both A9 timing smokes. Both smokes were complete (40 cells each) by 01:35.
+- From slice 2, A9's scored shards fill the spare GPUs. Gemma 4 and Qwen3-VL are both eligible under RQ0 and A4's gates, which were locked on 2026-11-12.
+- A2 is slower than its sizing. In the first half hour Gemma's shards wrote about 280 cells each and Qwen's about 110. At that rate Gemma's A2 shards need about five slices and Qwen's about ten (rates to be confirmed at the first handover).
+- When A2 completes: pull, `analyse a2`, then A5, then A7 (ROADMAP Part 3). When A9 completes: pull, `analyse a9` (A4's run note now exists, as its pre-run check requires).
+
+**Not done, and why.** A7 Stage 1 (40795186, 40795187) is still on `gpu2`. Its runner skips an item once the item's first row is written, so a budget stop in the middle of an item could leave that item incomplete for good, and A7 has no repair rule for that. It needs either whole one-hour `intr` jobs of up to 59 minutes, between slices, or a pre-data ruling. I left that for you to see.
+
+**Only you can do these:** unchanged from yesterday (items below): the ethics confirmation; at submission, the Zenodo DOI and authors; optionally, the GitHub Support purge; the A8 note review; and the length plan's structural choice (item 5).
+
+## Earlier hand-off, 2026-11-13 (written 05:35, last refreshed 23:13; kept for reference)
 
 **New at 17:50: you allowed the `intr` QoS for this project** (DECISIONS 2026-11-13).
 - Its limits, read with each field named: jobs of at most 1 h, and one job per user at a time, pending or running, of up to 3 nodes. It adds 10,000 priority points, against 100 for `gpu2`.
@@ -171,6 +198,13 @@ With cuts 4 and 5, the main text is about 490 words shorter. What remains waits 
 - Slice 40941357 continues them on three nodes. It was submitted at 23:39 and started at 23:48, after gpu-q-9 powered up.
 - A9's eligible models were written to `results/a9/scored_slices_models.txt`: Gemma 4 and Qwen3-VL, from the locked A4 gates at 23:49 (DECISIONS, A9 slices, update 23:49).
 - No failures; RDS 1,067.5 GB, 991,196 files.
+
+**2026-11-14 01:38:** A4 complete, pulled and analysed once (see the hand-off at the top).
+- Slices 40941357 (23:48 to 00:40) and 40944406 (00:44 to 01:02) finished the Qwen shards. The chain ended DONE at 01:03 after cancelling the last twelve held `gpu2` tasks.
+- `pull a4` at 01:07 copied 25 files with their sha256 (`a4_pull_manifest.json`). The first attempt was refused before copying anything, for two reasons: zsh passed the waiver list as one argument, and `sacct` names each array's last task `_[11]`. Waivers are named exactly as `sacct` reports them.
+- `analyse a4`: pre-run check 01:07, frozen analysis 01:07 to 01:26 (run note; summary sha256 `08148303...`).
+- Commits `3ced4a5` (records and registry), `be63deb` (Results 5 and 6, Figure 5, Table 1, `reproduce.py`) and `3d4c232` (Discussion step 4.3, Results 8, Methods "Runs").
+- The combined A2 and A9 chain started on its own at 01:03, and its first slice 40945403 at 01:06.
 
 **2026-11-13 11:47:** Supplementary decisions table brought up to date: rows 81 to 83 for today's three new decision-log entries, and a superseded-entries row (75 to 83). It again has one row per entry, 83, checked in order against DECISIONS. ROADMAP Phase 4 status refreshed: every step that needs no new GPU output is done. The node counts in the 11:20 correction now include the node that was powering up. Full suite at `62a8b79` with these record edits: 1,096 passed, 26 skipped, 0 failed. Merged into `main` as PR #115, true merge commit `da95a75` (11:48).
 
