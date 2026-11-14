@@ -210,22 +210,19 @@ Gate B is B1 to B5 (`research/PREREG_A2_DRAFT.md:109-117`). A model and route th
 
 **Locked text (recovery).** All five synthetic observers passed recovery, 100 replicates each, with expected contrasts recovered at 1.0 [REG: A2 recovery]. Recovery used large effects and independent noise, so it shows that the pipeline works, not its power. Under a skewed zero-mean null with its tail opposite the prediction, the frozen test is liberal, and the .01 reading holds familywise error under .05 (DECISIONS 2026-11-08). Per route (`single_face` and `video_face`), with the long tail opposite the prediction, familywise error was .091 and .098 at portrayal-gain SD .3 and .137 and .130 at SD .5, and at most .046 and .044 at step-down *P* < .01 [REG: "A2 sign-flip FWER under skewed gain nulls"].
 
-**Slots.** Per eligible model and route, from the A2 analysis output (`scripts/analyse_stimulus_interventions.py --output <path>`; path set at run time: [PENDING: path]):
-- Gate B, B1 to B5: [PENDING: gate block, `pass`]
-- per prediction P1 to P15 (16 contrasts): effect, actor-bootstrap CI, step-down *P*, verdict: [PENDING: rows, `verdict`], with an Opposes verdict on a masked cue read through the fill rule as ruled pre-data (`research/scripts/a2_declared_extras.py`, `verdict_after_fill_rule`; PREREG_A2 deviation of 2026-11-12, ruling 1)
-- the .01 reading for each Matches or Opposes verdict: [PENDING: `p_maxt` on Matches rows, `p_maxt_two_sided` on Opposes rows]
-- equivalence intervals for capped contrasts: [PENDING: `a2_declared_extras.py`, `equivalence_interval_90`]
-- shuffle against `static_apex`, descriptive: [PENDING: `a2_declared_extras.py`, `shuffles_overall`, beside `descriptive_changes.static_apex`]
-- sensitivities (without smoke items, canonical words, clips at 8 tokens or more, human modal label): [PENDING]
+<!-- 2026-11-14, step 4.1: the slots and the per-outcome text drafted on 2026-11-13, before any A2 output existed, are replaced by the branches that match the locked outputs (`research/reproduction/stimulus_interventions_{gemma4,qwen3vl}.json` and `a2_extras_*.json`; run note `a2_run_note.json`). The drafts are in the git history at e36fd7a. Length plan cut 2: the per-contrast account is in Supplementary Methods, Section S8, "A2 results in full". -->
 
-**Drafted text per outcome** (written 2026-11-13, before any A2, A4, A5 or A7 Stage 1 output existed; values are slots filled from `research/scripts/registry_tables.py`, and the branch that matches is kept at step 4.1):
+**Locked text (read 14 November 2026).** For both models on both routes every gate passed: RQ0, the vision gates, Gate B (B1 to B5), route delivery and the sham [REG: "A2 gates"]. Each model's three shards held their 2,349 cells, 90 of them written as failed with a reason, and no repair was needed [REG: "A2 confirmatory analysis (2026-11-14)"].
 
-- *Gates.* On [route], Gate B [passed / failed on B[k]] for [model]; RQ0, the vision gates, delivery and the sham [passed / name the failure]. Where Gate B failed, no RQ2 claim is made on that route.
-- *Classes.* Of the 16 confirmatory contrasts on [route], [n] matched the stated human prediction, [n] opposed it, [n] met every condition of the null rule and [n] were inconclusive, after the fill rule, which turned [n] frozen Opposes into Inconclusive. Of the Matches, [n] also hold at step-down *P* < .01, and of the Opposes, [n].
-- *Capped contrasts.* The [n] contrasts that cannot reach Null by design gave 90% equivalence intervals of [range]; they are reported as intervals, not as nulls.
-- *Scope.* Every class is on basic labels in this stimulus set (BASIC ONLY) and concerns the model's option-free judgement, not how people would respond to these edits.
+On a single face (`single_face`), masks and spatial-frequency filters moved the option-free judgement as the stated human predictions say on 5 of 10 contrasts for Gemma 4 (P1, P5, P6, P9 and P10) and on 4 of 10 for Qwen3-VL (P1, P4, P5 and P6). The rest were Inconclusive (Figure 6) [REG: A2 tables; "A2 classes after the fill rule"]. Three Matches per model also hold at step-down *P* < .01. For Gemma 4 these are the mouth mask on Happy (P1), the mouth-minus-eye contrast (P6) and the low- minus high-pass filter on Sad (P10). For Qwen3-VL they are P1, the brow mask on Angry (P5) and P6.
 
-**Figure.** Figure 6: effect and decision class per prediction, by model and route. [PENDING: drawn by `research/scripts/make_figures.py --fig 6 --real` from A2's outputs and declared extras (verdicts after the fill-rule ruling) once A2's single analysis is locked. The function exists and is tested on synthetic data (`tests/test_make_figures.py`).]
+On the video input (`video_face`), shuffling or reordering frames matched no prediction. For Gemma 4, shuffling frames on Happy and Surprised raised the acted label, against the prediction (P12, Opposes, two-sided step-down *P* = .024, not at .01), and the other five contrasts were Inconclusive. For Qwen3-VL all six were Inconclusive. No contrast met every condition of the null rule, and the fill rule changed no verdict. The contrasts that cannot reach Null by design are reported as 90% equivalence intervals in Section S8 [REG: "A2 capped contrasts"].
+
+*Sensitivity.* Only P1, the mouth mask on Happy, stayed Matches for both models under every sensitivity. Without the items flagged by the alignment check, four of Gemma 4's five single-face Matches (P5, P6, P9 and P10) and two of Qwen3-VL's (P4 and P6) became Inconclusive. Other sensitivities moved a few verdicts the other way (Section S8) [REG: "A2 sensitivities"]. These sit beside the primary verdicts and do not replace them, but beyond P1 the single-face Matches depend on which items are included.
+
+*Scope.* Every class is on basic labels in this stimulus set (BASIC ONLY). It concerns the model's option-free judgement, not how people would respond to these edits.
+
+**Figure.** Figure 6 (`research/paper/v2/figures/fig6.pdf`), drawn by `research/scripts/make_figures.py --fig 6 --real` from A2's locked outputs and declared extras: the change in the predicted direction per contrast, with its actor 95% interval and its class after the fill rule, by model and route.
 
 ## 8. What each model has shown
 
@@ -237,9 +234,9 @@ Gate B is B1 to B5 (`research/PREREG_A2_DRAFT.md:109-117`). A model and route th
 
 **Locked cells (A4, read 14 November 2026).** Under randomisation (Section 5), Gemma 4's headline is Aligned for basic labels and Mixed for conversational states, and Qwen3-VL's is Inconclusive for both [REG: A4 table, headlines]. On the second human sample (A9, Section 6b), Gemma 4 is Aligned, replicated on a second human sample (same lab and generator), and Qwen3-VL is Not aligned on these renders, with replication not testable [REG: A9 table].
 
-**Slots.** Gemma 4 and Qwen3-VL: [PENDING: A2 classes per route].
+**Locked cells (A2, read 14 November 2026).** Stimulus interventions (Section 7), as Matches, Opposes, Null and Inconclusive after the fill rule: Gemma 4 5, 0, 0, 5 on `single_face` and 0, 1, 0, 5 on `video_face`; Qwen3-VL 4, 0, 0, 6 and 0, 0, 0, 6 [REG: "A2 classes after the fill rule"].
 
-**Figure.** Table 1 (`research/paper/v2/table1.md`), built by `research/scripts/make_table1.py` from locked outputs only; its A2 cells read pending until A2's run note is complete (A4's and A9's are, since 14 November 2026), and its A2 classes are the verdicts after the fill-rule ruling.
+**Figure.** Table 1 (`research/paper/v2/table1.md`), built by `research/scripts/make_table1.py` from locked outputs only; every cell is read from a locked output (A2's, A4's and A9's run notes are complete, since 14 November 2026), and its A2 classes are the verdicts after the fill-rule ruling.
 
 ## 8b. Larger models in the same families (A8)
 

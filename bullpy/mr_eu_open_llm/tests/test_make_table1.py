@@ -19,15 +19,17 @@ t1 = _load("make_table1_under_test", ROOT / "research/scripts/make_table1.py")
 
 
 def test_table1_on_the_locked_outputs_reads_nothing_unlocked():
-    # A4 and A9 are locked (run notes 2026-11-14), so they are read; A2 is not yet.
+    # A2, A4 and A9 are locked (run notes 2026-11-14), so every cell is read from a locked output.
     text = t1.build(ROOT)
     assert ("| Qwen3-VL | .402 (.00009) | .244 (.00009) | Face use on both inputs | .549 (.0002), confirmatory | "
-            "Inconclusive; Inconclusive | Not aligned; replication not testable | pending |") in text
+            "Inconclusive; Inconclusive | Not aligned; replication not testable | single_face: Gate B pass; 4, 0, 0, 6<br>"
+            "video_face: Gate B pass; 0, 0, 0, 6 |") in text
     assert ("| Gemma 4 | .228 (.00009) | .216 (.00014) | Face use on both inputs | .418 (.0006), confirmatory | "
-            "Aligned; Mixed | Aligned; replicated on a second human sample (same lab and generator) | pending |") in text
+            "Aligned; Mixed | Aligned; replicated on a second human sample (same lab and generator) | single_face: Gate B pass; "
+            "5, 0, 0, 5<br>video_face: Gate B pass; 0, 1, 0, 5 |") in text
     assert "| Molmo2 |" in text and "not eligible (vision gates)" in text
     assert "results/a4/summary.json" in text and "results/a9/summary.json" in text
-    assert "stimulus_interventions_" not in text  # A2 is not read before its run note exists
+    assert "stimulus_interventions_gemma4.json" in text and "a2_extras_qwen3vl.json" in text
 
 
 def test_table1_fills_a2_a4_a9_once_their_run_notes_exist(tmp_path):

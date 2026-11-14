@@ -103,8 +103,8 @@ def test_inventory_covers_every_committed_output(rp):
 
 # A1 and the natural-clip model files left this list when they were locked (2026-11-09) and are now
 # hash-verified records; A6 left it when it was closed as a limit without running (2026-11-10); A4's
-# summary and Figure 5 left it when A4 was locked, and A9's summary when A9 was (both 2026-11-14).
-PENDING_TOKENS = ("stimulus_interventions_{m}", "a5_analysis", "a7_analysis")
+# summary and Figure 5 left it when A4 was locked, and A9's, A2's (with Figure 6) and A5's when they were (all 2026-11-14).
+PENDING_TOKENS = ("a7_analysis",)
 
 
 def test_pending_never_in_a_step(rp):
@@ -131,7 +131,7 @@ def test_pending_paths_only_named_in_pending_block(rp):
 def test_list_shows_pending(rp, capsys):
     assert rp.main(["--list"]) == 0
     out = capsys.readouterr().out
-    assert "[pending] A2 stimulus interventions" in out and "hash_long_recoveries" in out
+    assert "[pending] A7 Stage 1 route arm" in out and "hash_long_recoveries" in out
 
 
 # ----------------------------------------------------------------------------- comparison rules

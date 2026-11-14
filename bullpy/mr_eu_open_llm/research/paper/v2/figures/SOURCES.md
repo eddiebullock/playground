@@ -51,3 +51,12 @@ Figures 2, 4, 5 and 6 get a section only when built with `--real`, which refuses
 | Panel | Input file | sha256 | Script line |
 |---|---|---|---|
 | a to c, A4 summary | `results/a4/summary.json` | `08148303f2eb6bc98b694fdc4776da2fd0f800b634cfcc1d5584c66714ee36af` | `research/scripts/make_figures.py:1041` |
+
+## Figure 6
+
+| Panel | Input file | sha256 | Script line |
+|---|---|---|---|
+| A2 output, Gemma 4 | `research/reproduction/stimulus_interventions_gemma4.json` | `4ceb8840aa98d0b8980e565eb32ecda455d14689549e3dde2a9dbf9fdf655c0c` | `research/scripts/make_figures.py:1196` |
+| A2 declared extras, Gemma 4 | `research/reproduction/a2_extras_gemma4.json` | `792ee9adabb9e232c795a1dee0f5254d6fb71aa6d5621f1bfd0f680307e915b4` | `research/scripts/make_figures.py:1197` |
+| A2 output, Qwen3-VL | `research/reproduction/stimulus_interventions_qwen3vl.json` | `ff6a7741f610f3950501b9cc6ca02268ad1b579d4569230ea203a19df831bf07` | `research/scripts/make_figures.py:1196` |
+| A2 declared extras, Qwen3-VL | `research/reproduction/a2_extras_qwen3vl.json` | `0d2e8d0d0efb3c60e5a6656eb98a71acf97cd28eee27a882c2c100a6538725ca` | `research/scripts/make_figures.py:1197` |
