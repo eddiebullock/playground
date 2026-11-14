@@ -19,16 +19,15 @@ t1 = _load("make_table1_under_test", ROOT / "research/scripts/make_table1.py")
 
 
 def test_table1_on_the_locked_outputs_reads_nothing_unlocked():
-    # A4 is locked (run note 2026-11-14), so its headlines are read; A2 and A9 are not yet.
+    # A4 and A9 are locked (run notes 2026-11-14), so they are read; A2 is not yet.
     text = t1.build(ROOT)
     assert ("| Qwen3-VL | .402 (.00009) | .244 (.00009) | Face use on both inputs | .549 (.0002), confirmatory | "
-            "Inconclusive; Inconclusive | pending | pending |") in text
+            "Inconclusive; Inconclusive | Not aligned; replication not testable | pending |") in text
     assert ("| Gemma 4 | .228 (.00009) | .216 (.00014) | Face use on both inputs | .418 (.0006), confirmatory | "
-            "Aligned; Mixed | pending | pending |") in text
+            "Aligned; Mixed | Aligned; replicated on a second human sample (same lab and generator) | pending |") in text
     assert "| Molmo2 |" in text and "not eligible (vision gates)" in text
-    assert "results/a4/summary.json" in text
-    assert "results/a9/summary.json" not in text  # not read before its run note exists
-    assert "stimulus_interventions_" not in text
+    assert "results/a4/summary.json" in text and "results/a9/summary.json" in text
+    assert "stimulus_interventions_" not in text  # A2 is not read before its run note exists
 
 
 def test_table1_fills_a2_a4_a9_once_their_run_notes_exist(tmp_path):

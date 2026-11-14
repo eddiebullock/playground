@@ -211,6 +211,8 @@ Design B was therefore selected, with residual CEA confirmatory (`a9_recovery.js
 
 **Disclosures and limits.** A4's limits apply, with these added. One culture and 20 observers. Four faces against the 1,200 humans saw. The human fit has no gender column. The suffix mapping is inferred. Some stimuli carry more AUs than the article states. The peak frame combines AUs at their own peaks. AU16 is active on only 58 stimuli (`a9_human_target.json`, `family_active_count_min_max`). "Other" included blends in Liu's instructions, which may not be what None of the above means to a model. All of A9's thresholds are A4's, set by the authors with no external source.
 
+**Runs.** The timing smoke, then the 24 scored shards, ran on A100 GPUs in bfloat16 through the frozen runner. For queue reasons they ran in one-hour slices beside A2's, and the runner resumed each shard where it stopped, skipping cells already written. Completeness was decided only by the frozen pre-run check (supplementary table of dated decisions and deviations, row 88).
+
 Full details: Supplementary Methods, Section S7.
 
 ### RQ2: stimulus interventions (A2)
@@ -233,6 +235,8 @@ A2 tests a narrower thing, its stimulus arm: whether region masks, spatial-frequ
 | Inconclusive | Anything else, including a gate with no result |
 
 **Null rule.** A null needs delivery to pass, a positive control showing that the cue type can move this model on this route, a null joint ablation of eyes and mouth where one exists, and equivalence: the 90% actor-bootstrap interval lies inside a margin of 10% of that model's mean absolute CLR change under the full image mismatch of B4 on that route. By design, P5, P6, P9, P10, P14 and P15 cannot reach Null, which is 8 of the 16 contrasts, or 10 of 16 on Qwen3-VL, whose P12 and P13 are also capped because frame order cannot be verified there.
+
+**Runs.** The six full-run shards ran on A100 GPUs in bfloat16 through the frozen runner, with the full run's settings. For queue reasons they ran in one-hour slices, and the runner resumed each shard, skipping cells already written. Before each slice, A2's own rule for unparseable lines (ruling A2-2) was applied, with a log [PENDING: lines removed, from `results/stimulus_interventions_torn/repairs.jsonl`, at A2's lock]. Completeness was decided only by the frozen pre-run check (supplementary table of dated decisions and deviations, rows 86 and 87).
 
 Full details: Supplementary Methods, Section S8.
 

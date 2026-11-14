@@ -656,6 +656,15 @@ PINS: Dict[str, str] = {
         "b93cc7749411ded1b502927c4143ca9928365bb8ba25b62f44ac050f34784f69",
     "results/a4/summary.json":
         "08148303f2eb6bc98b694fdc4776da2fd0f800b634cfcc1d5584c66714ee36af",
+    # Added 2026-11-14: A9 locked (pull and single analysis by research/scripts/post_phase3.py).
+    "research/reproduction/a9_pull_manifest.json":
+        "44ba0e2aeee91c8594235a724d4deef3e5a244332b2a139479eab846f60bb294",
+    "research/reproduction/a9_prerun.json":
+        "11a53051e3047ffefb2a4a16256a8859ebf30c87459e5b84bdb298d51ceed5df",
+    "research/reproduction/a9_run_note.json":
+        "49bd17277279c8716c8eb5f5026c4a1b2faed7d99a0a07a53ea08393af2dbab1",
+    "results/a9/summary.json":
+        "1d1a99959e79f58c52a36284819cce13c317cb54d1a27184273bce07cb3e4a7f",
 }
 
 R = "research/reproduction/"
@@ -705,6 +714,10 @@ A1_RECORDS = [R + f for f in (
 A4_RECORDS = [R + f for f in ("a4_pull_manifest.json", "a4_prerun.json", "a4_run_note.json")] + [
     "results/a4/summary.json"]
 
+# A9, locked 2026-11-14: the same four records, made by post_phase3.py from 24 shard files kept on the cluster.
+A9_RECORDS = [R + f for f in ("a9_pull_manifest.json", "a9_prerun.json", "a9_run_note.json")] + [
+    "results/a9/summary.json"]
+
 # Later cluster checks made from videos, AU frames, model forwards or the cluster's file tree.
 CLUSTER_CHECKS = [R + f for f in (
     "a6_human_cue_check.json", "a7_stage0_gemma4.json", "a7_stage0_qwen3vl.json", "phase2_hash_check.json",
@@ -751,6 +764,10 @@ HASH_STEPS: List[Step] = [
          _hash_outs(A4_RECORDS, "A4 locked 2026-11-14 by post_phase3.py (pull, frozen pre-run check, single "
                                 "frozen analysis) from shard files kept on the cluster; verified by hash, cannot be "
                                 "rerun from public inputs")),
+    Step("hash_a9_records", None, minutes=0.0, outputs=
+         _hash_outs(A9_RECORDS, "A9 locked 2026-11-14 by post_phase3.py (pull, frozen pre-run check, single "
+                                "frozen analysis) from shard files kept on the cluster; verified by hash, cannot be "
+                                "rerun from public inputs")),
     Step("hash_cluster_checks", None, minutes=0.0, outputs=
          _hash_outs(CLUSTER_CHECKS, "cluster checks on videos, AU frames, model forwards or the cluster tree; "
                                     "verified by hash, cannot be rerun from public inputs")),
@@ -785,7 +802,6 @@ PENDING: List[Tuple[str, Tuple[str, ...], str]] = [
     ("A5 analysis", ("results/a5/a5_analysis.json",), "python -m scripts.a5_analyse (frozen, tag a5-freeze); needs A2 cells"),
     ("A7 Stage 1 route arm", (R + "a7_analysis.json",),
      "python -m scripts.a7_analyse (frozen, tag a7-freeze); runs only where Gate B and the sham pass"),
-    ("A9 summary", ("results/a9/summary.json",), "python -m scripts.a9_analyse (frozen, tag a9-freeze); needs cluster cells"),
     ("Figure 6",
      tuple(f"research/paper/v2/figures/fig6.{e}" for e in ("pdf", "png")),
      "research/scripts/make_figures.py --fig N --real, which refuses until its LOCKED inputs exist"),

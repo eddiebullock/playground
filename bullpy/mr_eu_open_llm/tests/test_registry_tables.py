@@ -67,3 +67,42 @@ def test_a4_table_and_refusal_before_the_run_note(tmp_path, monkeypatch):
     monkeypatch.setattr(rt, "REPRO", tmp_path)
     with pytest.raises(SystemExit):
         rt.main(["a4"])
+
+
+def _synthetic_a9():
+    """A summary in A9's output schema (scripts/a9_analyse.py), with made-up values."""
+    def block(cfa, lo, hi, rs):
+        return {"cfa": cfa, "p_cue": 0.5, "null_q95": 0.1, "ci": [lo, hi], "r_s": rs, "over_ceiling": cfa / 0.98,
+                "lower_bound_only": rs < 0.85}
+    gates = {"rq0": True, "g2_g4": True, "v1_detector": True, "v2_image_dependence": True, "v3_config_carries": True,
+             "v4_domain": True, "clips_kept": True}
+    models = {
+        "gemma4": {"p_signal": 0.001, "raw": block(0.21, 0.18, 0.24, 0.99), "residual": block(0.35, 0.31, 0.39, 0.98),
+                   "design": "B", "n_configurations": 1200, "share_lost": 0.0, "lost_ok": True,
+                   "face_shared_residual_correlation": 0.9, "p_holm": 0.0002, "gates": dict(gates),
+                   "decision": "Aligned", "earlier_rule_reading_descriptive": "outside the recovery-validated conditions",
+                   "replication": {"a9_decision": "Aligned", "a4_basic_WC_decision": "Aligned",
+                                   "a4_basic_headline_beside": "Aligned",
+                                   "reading": "replicated on a second human sample (same lab and generator)", "reason": None}},
+        "qwen3vl": {"p_signal": 0.001, "raw": block(0.05, 0.01, 0.09, 0.98), "residual": block(0.04, -0.02, 0.1, 0.6),
+                    "design": "B", "n_configurations": 1200, "share_lost": 0.0, "lost_ok": True,
+                    "face_shared_residual_correlation": 0.9, "p_holm": 0.4, "gates": dict(gates, v4_domain=False),
+                    "decision": "Inconclusive", "earlier_rule_reading_descriptive": "outside the recovery-validated conditions",
+                    "replication": {"a9_decision": "Inconclusive", "a4_basic_WC_decision": "Inconclusive",
+                                    "a4_basic_headline_beside": "Inconclusive", "reading": "replication not testable",
+                                    "reason": "gate v4_domain"}},
+    }
+    return {"amendment": "A9", "statistic": "residual", "design": "B", "models": models}
+
+
+def test_a9_table_and_refusal_before_the_run_note(tmp_path, monkeypatch):
+    path = tmp_path / "summary.json"
+    path.write_text(json.dumps(_synthetic_a9()), encoding="utf-8")
+    text = rt.table_a9(path)
+    assert "| Gemma 4 | .001 | .350 | .310 to .390 | .980 | .00020 | .210 | 1200 (.000) | Aligned |" in text
+    assert "| Qwen3-VL | v4_domain | replication not testable | Inconclusive | Inconclusive | Inconclusive | gate v4_domain |" in text
+    assert "(lower bound only)" in text  # Qwen's R_S below .85
+    monkeypatch.setattr(rt, "REPRO", tmp_path)
+    with pytest.raises(SystemExit):
+        rt.main(["a9"])
+

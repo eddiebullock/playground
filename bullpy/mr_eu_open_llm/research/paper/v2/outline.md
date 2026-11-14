@@ -45,6 +45,8 @@ The main text is set to run about 1,700 to 2,700 words over. None of the cuts be
 
 The plan's estimate assumed recovery detail in section 2, which holds none, and it counted section 5's thin detector pass, which stays because the Results structure above requires it. Each cut is noted in place in results.md, and the registry's literature row names both places. With cuts 4 and 5, the main text is about 490 words shorter than the estimate above. The rest waits on cut 1 (the user's view, STATE hand-off item 5), on cut 2 (after the results) and on writing each branch to its budget.
 
+*Applied 2026-11-14, cut 2 for A4 (A4 locked; the first result section filled).* The per-dataset account of A4 moved word for word to Supplementary Methods, Section S6, "A4 results in full". The main text keeps each model's headline, the values the decisions rest on, and the exceptions: Qwen3-VL's failed gates, and Gemma 4's weak conversational EA sensitivities. Results 5 went from 588 to 352 words, Results 6 from 188 to 147, and the Discussion's A4 section from 678 to 385, counted as above. No claim, number or disclosure left the paper, and every value keeps its registry marker. A2 and A9 follow the same pattern when they are locked.
+
 Together these save about 1,850 to 2,350 words; the rest comes from writing each chosen branch to its budget at steps 4.1 and 4.3. Methods (7,402 words) and the figure legends (1,017) fall outside the limit, but check both against the journal's formatting guide before submission.
 
 ## Abstract template (150 words at most)
