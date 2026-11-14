@@ -2,7 +2,7 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-11-14 08:44 Europe/London
+**Updated:** 2026-11-14 11:37 Europe/London
 
 ## Hand-off, 2026-11-14 (written 01:38, last refreshed 07:22)
 
@@ -40,7 +40,6 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
 - A sequencer on the Mac (scratchpad `seq_a7.sh`) submits it when the combined chain ends with A2 complete, around 12:20, so A7's cells should be ready around 13:30, after A2's analysis.
 
 **Only you can do these:**
-- **The length plan's structural choice** (item 5 below). A recount with A4 and A9 filled puts the main text at about 6,600 to 7,100 words against 5,000. Moving the Limitations list to the Supplementary Information is the cut that matters (`paper/v2/outline.md`, "Length check").
 - Unchanged from yesterday (items below): the ethics confirmation; at submission, the Zenodo DOI and authors; optionally, the GitHub Support purge; the A8 note review.
 
 ## Earlier hand-off, 2026-11-13 (written 05:35, last refreshed 23:13; kept for reference)
@@ -262,6 +261,11 @@ With cuts 4 and 5, the main text is about 490 words shorter. What remains waits 
 - The four A7 `gpu2` tasks are held. No A7 Stage 1 cell existed.
 - `seq_a7.sh` waits for A2's chain to end DONE, then submits the job.
 - Records: DECISIONS 2026-11-14 entry, decisions table row 89, and the ROADMAP A7 step with its pull and waivers.
+
+**2026-11-14 11:37:** You approved length plan cut 1 (item 5) and said to proceed with all other jobs.
+- The Discussion's 26-item Limitations list moved word for word to Supplementary Methods, Section S12, and the decisions table's 40 citations now point there.
+- The Discussion keeps a 207-word paragraph on the five limits that bear on the claims.
+- A2's last Qwen cells are finishing, and A7 follows on its own.
 - Full suite at `d21f2f0`: 1,123 passed, 26 skipped, 0 failed. Clean-checkout reproduction of the changed steps: Table 1 and Figure 5 byte-identical, A4's and A9's eight records verified by hash, 0 failed. Merged into `main` as PR #121, true merge commit `96a1ce4` (06:50).
 
 **2026-11-13 11:47:** Supplementary decisions table brought up to date: rows 81 to 83 for today's three new decision-log entries, and a superseded-entries row (75 to 83). It again has one row per entry, 83, checked in order against DECISIONS. ROADMAP Phase 4 status refreshed: every step that needs no new GPU output is done. The node counts in the 11:20 correction now include the node that was powering up. Full suite at `62a8b79` with these record edits: 1,096 passed, 26 skipped, 0 failed. Merged into `main` as PR #115, true merge commit `da95a75` (11:48).
