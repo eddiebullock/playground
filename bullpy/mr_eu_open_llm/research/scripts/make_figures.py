@@ -1022,11 +1022,13 @@ def fig5_from(summary, synthetic=False):
     axc.set_xlabel("Output correlation with humans")
     handles = [plt.Line2D([], [], marker=_model_style(m)[1], color=_model_style(m)[0],
                           linestyle="none", markersize=5) for m in dict.fromkeys(r[1] for r in rows)]
-    handles += [plt.Line2D([], [], marker="o", color=INK2, markerfacecolor=SURFACE,
-                           linestyle="none", markersize=5),
-                plt.Line2D([], [], color=INK, linewidth=1.4)]
     names = [_model_name(m) for m in dict.fromkeys(r[1] for r in rows)]
-    names += ["Descriptive model (open)", "Human WC to EA reference"]
+    if any(e["decision"] == "Descriptive" for _, _, e in rows):  # the open marker only when a row uses it
+        handles.append(plt.Line2D([], [], marker="o", color=INK2, markerfacecolor=SURFACE,
+                                  linestyle="none", markersize=5))
+        names.append("Descriptive model (open)")
+    handles.append(plt.Line2D([], [], color=INK, linewidth=1.4))
+    names.append("Human WC to EA reference")
     fig.legend(handles, names, loc="lower center", ncol=len(names), bbox_to_anchor=(0.58, 0.0),
                handlelength=1.8, handletextpad=0.5, columnspacing=1.2)
     for ax, letter in zip((axa, axb, axc), "abc"):

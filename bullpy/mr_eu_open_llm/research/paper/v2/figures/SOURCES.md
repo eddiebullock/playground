@@ -45,3 +45,9 @@ Figures 2, 4, 5 and 6 get a section only when built with `--real`, which refuses
 | pattern score, Molmo2 | `research/reproduction/same_clip_family_model_molmo2.json` | `9ad3d59dd71b8c2a4f897ac8f05d1c9ed805f9e566c75ceb3651d2eafaf66e3f` | `research/scripts/make_figures.py:897` |
 | reference band, route recovery 1x | `research/reproduction/same_clip_family_route_pattern_within_category.json` | `2bed8ba2dea187d48bd968c2048cb9ec49945ed0e22bb68e0a9946d1209cba8a` | `research/scripts/make_figures.py:889` |
 | reference band, route recovery 0.75x | `research/reproduction/same_clip_family_route_pattern_075x_within_category.json` | `3cec1cf52258446df5ad7d917a048af0866fc61c43753add164362b168b56762` | `research/scripts/make_figures.py:889` |
+
+## Figure 5
+
+| Panel | Input file | sha256 | Script line |
+|---|---|---|---|
+| a to c, A4 summary | `results/a4/summary.json` | `08148303f2eb6bc98b694fdc4776da2fd0f800b634cfcc1d5584c66714ee36af` | `research/scripts/make_figures.py:1041` |

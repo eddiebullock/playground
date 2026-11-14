@@ -118,31 +118,19 @@ Residual CEA passed recovery on 66 of 66 checks and raw CEA on 62 of 66, so resi
 
 The detector check passed thinly: 113 of 144 covered pairs rose, .785 against .70 [REG: A4 V1 pilot, "V1 share rising"]. Only 22 of 96 intensity pairs gained at least .5, all in AU01, 05, 25 and 26 [REG: "Intensity pairs with reading at amplitude 1 minus .25 of at least .5"]. Those four families hold .14, .13, .09 and .20 of residual human energy [REG: "Detector-confirmed share of residual energy"].
 
-**Before the run.** `research/scripts/a4_prerun_check.py` must pass and its record is cited with the result (PREREG_A4 deviation of 2026-11-12): 12 complete shards per family model, inputs at their pinned bytes, the scripted gates file, single-threaded BLAS, and any rows with non-finite log probabilities removed and listed.
+**Before the run (done).** The frozen pre-run check passed: 12 complete shards per model, inputs at their pinned bytes, the scripted gates file, single-threaded BLAS, and no rows with non-finite log probabilities, so none was removed [REG: "A4 confirmatory analysis (2026-11-14)"]. The cells were written by one-hour slices of the unchanged runner, which resumes a shard where it stopped (Methods; DECISIONS 2026-11-13).
 
-**Slots.** From `results/a4/summary.json` (written by `scripts/a4_analyse.py`), per model and dataset (`datasets.<dataset>.<model>`):
-- residual CEA, CI, R_S: [PENDING: `residual.cfa`, `residual.ci`, `residual.r_s`]
-- alignment Holm *P*: [PENDING: `p_holm`]
-- signal *P*: [PENDING: `p_signal`]
-- gates V1 to V4 and RQ0: [PENDING: `gates`]
-- decision: [PENDING: `decision`], reported as Inconclusive (conflicting interval) where both the Aligned and the Not aligned conditions hold, with the frozen value beside it (ruling 6)
-- ratio to ceiling, descriptive: [PENDING: `residual.over_ceiling`, `residual.lower_bound_only`], reported as undefined where R_S is not positive
-- raw CEA, secondary: [PENDING: `raw.cfa`, `raw.ci`]
-- sensitivities (without AU22 and AU27, without abstain row, flagged against confirmed families, amplitude sets, direct contrast): [PENDING: sensitivity blocks and `models.<model>.scale`, `direct_cfa_residual`]
-- headline per model per task: [PENDING: `models.<model>.headline`]
-- blind readout, secondary, only if its gate passes: [PENDING: `models.<model>.blind`] (raw CEA)
-- Molmo2, descriptive if run at all (no scored run is planned): [PENDING]; its written headline is not quoted
+<!-- 2026-11-14, step 4.1: the slots and the per-outcome text drafted on 2026-11-13, before any A4 output existed, are replaced by the branches that match the locked summary (`results/a4/summary.json`, sha256 08148303...). The drafts are in the git history at 3ced4a5. -->
 
-**Drafted text per outcome** (written 2026-11-13, before any A2, A4, A5 or A7 Stage 1 output existed; values are slots filled from `research/scripts/registry_tables.py`, and the branch that matches is kept at step 4.1):
+**Locked text (models, read 14 November 2026).** For both models on all four datasets, every main stimulus entered with a complete rotation set (none lost, against a limit of 5%), and the rendered action units moved the responses (signal *P* = .001 in each case, the floor at 999 permutations) [REG: "A4 share of main stimuli lost"; A4 table].
 
-- *Each dataset.* For [model] on [dataset], [n] main stimuli entered with a complete rotation set ([share] lost, against a limit of 5%). The rendered action units moved its responses (signal *P* = [p]). Residual CEA was [v] (95% CI [lo] to [hi]; *R_S* = [r]), with alignment Holm *P* = [p].
-  - Aligned: so [model] is aligned with the human cue effects on [dataset]. [Its interval reaches / Its interval does not reach] the agreement between the two human groups ([.780 or .732]), so it [is / is not] human-level by that descriptive standard.
-  - Not aligned: its upper bound, corrected for reliability ([v]), is below .30, so it is not aligned on these renders.
-  - Inconclusive: no decision, because [no signal / gate [name] failed / the interval spans the floor / both conditions held (conflicting interval; frozen value [class])].
-- *Headline.* With WC and EA read together, [model]'s headline is [class] for basic labels and [class] for conversational states. The two sets share most configurations within each culture (Methods), so they are separate claims but not independent tests.
-- *Secondary.* Raw CEA was [v] ([lo] to [hi]). [Sensitivity that changes the reading, if any; otherwise: no sensitivity changed a decision.]
+Gemma 4 passed every gate on every dataset [REG: "A4 gates, Gemma 4"]. On basic labels it is aligned with the human cue effects in both cultures: residual CEA was .386 on WC (95% CI .372 to .397; *R_S* = .994) and .516 on EA (.497 to .535; *R_S* = .994), each with alignment Holm *P* = .00020, the floor at 9,999 permutations over two models. On conversational states it is aligned on EA, at .369 (.348 to .385; *R_S* = .989; Holm *P* = .00020). On WC it is not aligned on these renders: .025 (-.007 to .052; *R_S* = .980; Holm *P* = .789), whose upper bound corrected for reliability, .053, is below .30 [REG: A4 table; "A4 residual CI upper bound over the square root of R_S"]. No interval reaches the agreement between the two human groups (.780 for basic labels, .732 for conversational states), so none is human-level by that descriptive standard. As a share of the human ceiling, also descriptive, the three aligned values were .399, .527 and .387 [REG: "A4 residual CEA over ceiling"]. With WC and EA read together, Gemma 4's headline is Aligned for basic labels and Mixed for conversational states. The two sets share most configurations within each culture (Methods), so they are separate claims but not independent tests.
 
-**Figure.** Figure 5: residual CEA per model and dataset with its between-group reference, raw CEA as secondary. [PENDING: drawn by `research/scripts/make_figures.py --fig 5 --real` from `results/a4/summary.json` once A4's single analysis is locked. The function exists, is tested on synthetic data (`tests/test_make_figures.py`), and read the real-schema summary in the Phase 3 rehearsal (2026-11-13).]
+Qwen3-VL is Inconclusive on all four datasets, so its headline is Inconclusive for both tasks [REG: A4 table, headlines]. On three datasets a gate failed, so no decision is made there, whatever the interval. On basic WC and conversational EA it failed V4, the domain limit (mean mass on None of the above at most .90, and on any option at most .95). On conversational WC it failed V4 and V3: the same configuration on two faces was no closer than a mismatch (replicate *P* = .185, against .01) [REG: "A4 gates, Qwen3-VL"; "A4 V3 replicate configurations"]. On basic EA every gate passed, but the interval spans the floor. Residual CEA was .264 (.219 to .299; *R_S* = .952; Holm *P* = .00080), below .30 for Aligned, while its upper bound corrected for reliability, .306, is above .30 for Not aligned.
+
+*Secondary.* Raw CEA, secondary, was .382 (.371 to .389) and .369 (.357 to .379) for Gemma 4 on basic WC and EA, -.077 (-.096 to -.060) on conversational WC and .241 (.228 to .253) on conversational EA; Qwen3-VL's raw values are in Figure 5b [REG: "A4 raw CEA with 95% CI"]. For Gemma 4, no sensitivity changed the reading on basic labels or on conversational WC: without AU22 and AU27, without the abstain row, and on the flagged or the detector-confirmed families alone, residual CEA ranged from .353 to .440 on basic WC, .458 to .701 on basic EA and -.172 to .102 on conversational WC [REG: "A4 sensitivities"]. Conversational EA is the exception. Restricted to the detector-confirmed families, its residual CEA was .158, and on the configurations of the amplitude sets it was .170 at 0.75 times amplitude, .297 at 1 times and .364 at 1.25 times [REG: "A4 amplitude sets"]. These sit beside the primary and do not replace it (`research/PREREG_A4_DRAFT.md:173`), but they make conversational EA the least secure of Gemma 4's three Aligned results. The direct contrast on the one-AU set, descriptive, read .279, .421, .063 and .210 for Gemma 4 [REG: "A4 direct contrast"]. The blind readout, secondary and in different units, passed its gate on both models, with raw CEA on its six families .445 for Gemma 4 and .542 for Qwen3-VL; it is not compared with the multiple-choice values (`:86`) [REG: "A4 blind readout"]. Molmo2 was not run, as planned.
+
+**Figure.** Figure 5 (`research/paper/v2/figures/fig5.pdf`), drawn by `research/scripts/make_figures.py --fig 5 --real` from the locked `results/a4/summary.json`: residual CEA per model and dataset with its 95% CI, the .30 bound and the human WC to EA reference, with the decision (a); raw CEA, secondary (b); and output correlation with the mean human response (c).
 
 ## 6. Do behaviour and cue effects disagree?
 
@@ -150,17 +138,13 @@ The detector check passed thinly: 113 of 144 covered pairs rose, .785 against .7
 
 **Rule.** Descriptive, no decision (`research/PREREG_A4_DRAFT.md:162-169`). Output similarity is Pearson *r* between model and mean human response, option means removed. Modal agreement is reported with chance-corrected kappa. "Whether these disagree with CEA is an empirical result" (`:169`).
 
-**Slots.** From `results/a4/summary.json`, `datasets.<dataset>.<model>.behaviour`:
-- output similarity: [PENDING: `behaviour.output_r`]
-- modal agreement and kappa: [PENDING: keys as written by `behaviour_metrics`]
-
 **Writing rule.** Agreement is not a failure of the theory, nor proof of use (outline.md, section 6).
 
-**Drafted text per outcome** (written 2026-11-13, before any A2, A4, A5 or A7 Stage 1 output existed; values are slots filled from `research/scripts/registry_tables.py`, and the branch that matches is kept at step 4.1):
+<!-- 2026-11-14, step 4.1: the slots and the per-outcome text drafted on 2026-11-13, before any A4 output existed, are replaced by the branch that matches the locked summary. The drafts are in the git history at 3ced4a5. -->
 
-- On [dataset], [model]'s responses correlated r = [v] with the mean human response once option means were removed, and its modal answer agreed with the human mode on [v] of stimuli (kappa [v]), beside residual CEA of [v].
-  - They disagree: behaviour and cue effects point different ways on the same stimuli, which is the case the identifiability result allows ([which is higher]).
-  - They agree: on these models and stimuli the two measures do not come apart; the proposition remains a limit of logic, not a forecast.
+**Locked text (read 14 November 2026).** Behaviour on the same renders was weak for both models [REG: "A4 behaviour on the same renders"]. With option means removed, Gemma 4's responses correlated with the mean human response at r = .140 and .229 on basic WC and EA and .138 on conversational EA, beside residual CEA of .386, .516 and .369. On conversational WC, r = -.030 beside .025. Its modal answer agreed with the human mode on .096 to .152 of stimuli (kappa -.021 to .096). Qwen3-VL's correlations ran from -.025 to .084, and its modal agreement from .019 to .093 (kappa .000 to .021).
+
+The two measures came apart in size, not in sign. Where Gemma 4's cue effects are aligned, its output correlation was positive but less than half its residual CEA. On conversational WC both were near zero. So on these stimuli behaviour and cue effects say different things: outputs that barely track the human responses, beside cue effects that meet the alignment bound. The identifiability result allows this, and here CEA is the higher of the two. An aligned CEA still means a shared pattern of cue effects, not the same strategy (Methods).
 
 **Figure.** Part of Figure 5.
 

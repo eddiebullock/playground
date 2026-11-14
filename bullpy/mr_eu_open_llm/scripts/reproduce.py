@@ -290,13 +290,16 @@ STEPS: List[Step] = [
          minutes=0.1, pre="committed_figure_inputs",
          note="Figures 1 and 3 from the committed copies of their inputs, so SOURCES.md records the committed "
               "sha256 (prompt_confound_audit.json is rebuilt above only within tolerance: its Monte Carlo p-values, "
-              "which no panel plots, differ in the last digits); Figures 5 and 6 are pending (PENDING)"),
+              "which no panel plots, differ in the last digits); Figure 6 is pending (PENDING)"),
     Step("paper_figure_2", _py("research/scripts/make_figures.py", "--fig", "2", "--real"),
          [Out("research/paper/v2/figures/fig2.png"), Out("research/paper/v2/figures/fig2.pdf")],
          minutes=0.1, note="Figure 2 from the locked A1 and A3 summaries, which are hash-verified records"),
     Step("paper_figure_4", _py("research/scripts/make_figures.py", "--fig", "4", "--real"),
          [Out("research/paper/v2/figures/fig4.png"), Out("research/paper/v2/figures/fig4.pdf")],
          minutes=0.1, note="Figure 4 from the locked natural-clip files (hash-verified) and the route recovery files"),
+    Step("paper_figure_5", _py("research/scripts/make_figures.py", "--fig", "5", "--real"),
+         [Out("research/paper/v2/figures/fig5.png"), Out("research/paper/v2/figures/fig5.pdf")],
+         minutes=0.1, note="Figure 5 from the locked A4 summary (hash-verified)"),
     # ---------------------------------------------------------------- long recoveries, full mode
     Step("same_clip_cue_recovery",
          _py("research/scripts/same_clip_cue_analysis.py", "--recovery", "--au-csv",
@@ -644,6 +647,15 @@ PINS: Dict[str, str] = {
         "79229b70c4a7d21cfcf9bd957669a899c9b503082932e77cddf94d4aced56e84",
     "research/reproduction/a9_recovery_run3.json":
         "01958263f95c6a2fb614d7e66093eb6ed61e11ede33415d14bc8fab8d076dd85",
+    # Added 2026-11-14: A4 locked (pull and single analysis by research/scripts/post_phase3.py).
+    "research/reproduction/a4_pull_manifest.json":
+        "1d44021e6288a01bb59f56315173755e1f4d2880af2175a92fb0126aa016af8a",
+    "research/reproduction/a4_prerun.json":
+        "3fd4cc1d8144252daa79b040b4792511c90b0b3c0ab58f202b819adcb92bf191",
+    "research/reproduction/a4_run_note.json":
+        "b93cc7749411ded1b502927c4143ca9928365bb8ba25b62f44ac050f34784f69",
+    "results/a4/summary.json":
+        "08148303f2eb6bc98b694fdc4776da2fd0f800b634cfcc1d5584c66714ee36af",
 }
 
 R = "research/reproduction/"
@@ -687,6 +699,12 @@ A1_RECORDS = [R + f for f in (
     "rotation_summary.json", "rotation_errored_trials.json", "a1_pull_manifest.json",
     "same_clip_family_model_gemma4.json", "same_clip_family_model_qwen3vl.json", "same_clip_family_model_molmo2.json")]
 
+# A4, locked 2026-11-14: the pull manifest, the pre-run record, the run note and the single analysis's
+# summary, made by research/scripts/post_phase3.py from the 24 shard files, which are model outputs on
+# rendered faces and stay on the cluster (their sha256 are in the pull manifest).
+A4_RECORDS = [R + f for f in ("a4_pull_manifest.json", "a4_prerun.json", "a4_run_note.json")] + [
+    "results/a4/summary.json"]
+
 # Later cluster checks made from videos, AU frames, model forwards or the cluster's file tree.
 CLUSTER_CHECKS = [R + f for f in (
     "a6_human_cue_check.json", "a7_stage0_gemma4.json", "a7_stage0_qwen3vl.json", "phase2_hash_check.json",
@@ -729,6 +747,10 @@ HASH_STEPS: List[Step] = [
     Step("hash_a1_records", None, minutes=0.0, outputs=
          _hash_outs(A1_RECORDS, "A1 locked 2026-11-09 by post_a1.sh from rotation cells kept on the cluster; "
                                 "verified by hash, cannot be rerun from public inputs")),
+    Step("hash_a4_records", None, minutes=0.0, outputs=
+         _hash_outs(A4_RECORDS, "A4 locked 2026-11-14 by post_phase3.py (pull, frozen pre-run check, single "
+                                "frozen analysis) from shard files kept on the cluster; verified by hash, cannot be "
+                                "rerun from public inputs")),
     Step("hash_cluster_checks", None, minutes=0.0, outputs=
          _hash_outs(CLUSTER_CHECKS, "cluster checks on videos, AU frames, model forwards or the cluster tree; "
                                     "verified by hash, cannot be rerun from public inputs")),
@@ -760,13 +782,12 @@ PENDING: List[Tuple[str, Tuple[str, ...], str]] = [
     ("A2 stimulus interventions (Figure 6)",
      tuple(R + f"stimulus_interventions_{m}.json" for m in ("gemma4", "qwen3vl")),
      "scripts/analyse_stimulus_interventions.py; needs cluster cells"),
-    ("A4 summary (Figure 5)", ("results/a4/summary.json",), "python -m scripts.a4_analyse; needs cluster cells"),
     ("A5 analysis", ("results/a5/a5_analysis.json",), "python -m scripts.a5_analyse (frozen, tag a5-freeze); needs A2 cells"),
     ("A7 Stage 1 route arm", (R + "a7_analysis.json",),
      "python -m scripts.a7_analyse (frozen, tag a7-freeze); runs only where Gate B and the sham pass"),
     ("A9 summary", ("results/a9/summary.json",), "python -m scripts.a9_analyse (frozen, tag a9-freeze); needs cluster cells"),
-    ("Figures 5, 6",
-     tuple(f"research/paper/v2/figures/fig{n}.{e}" for n in (5, 6) for e in ("pdf", "png")),
+    ("Figure 6",
+     tuple(f"research/paper/v2/figures/fig6.{e}" for e in ("pdf", "png")),
      "research/scripts/make_figures.py --fig N --real, which refuses until its LOCKED inputs exist"),
 ]
 
