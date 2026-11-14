@@ -2,7 +2,7 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-11-14 07:22 Europe/London
+**Updated:** 2026-11-14 08:44 Europe/London
 
 ## Hand-off, 2026-11-14 (written 01:38, last refreshed 07:22)
 
@@ -34,10 +34,12 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
 - No line has needed A2's repair rule (A2-2) so far.
 - Then: pull, `analyse a2`, then A5 (ROADMAP Part 3), then the A2 parts of the paper: Results 7, Figure 6, the Abstract's last two sentences and the Discussion's opening paragraph.
 
-**Not done, and why.** A7 Stage 1 (40795186, 40795187) is still on `gpu2`. Its runner skips an item once the item's first row is written, so a budget stop in the middle of an item could leave that item incomplete for good, and A7 has no repair rule for that. The choice is NEEDS_INPUT 12. My recommendation is one whole `intr` job with its 59-minute caps, after the last A2 slice.
+**A7 Stage 1 (your choice at about 08:40, option (a)):** one whole `intr` job after A2's last slice (DECISIONS 2026-11-14).
+- Four one-GPU steps with the arrays' settings and 59-minute caps, through the pinned `study3_a7.sh`.
+- The wrapper `slurm_jobs/study3_intr_a7_stage1.sh` passed 11 stub checks and is on the cluster. The four `gpu2` tasks are held.
+- A sequencer on the Mac (scratchpad `seq_a7.sh`) submits it when the combined chain ends with A2 complete, around 12:20, so A7's cells should be ready around 13:30, after A2's analysis.
 
 **Only you can do these:**
-- New: **how to run A7 Stage 1** (NEEDS_INPUT 12; I recommend one whole `intr` job after A2).
 - **The length plan's structural choice** (item 5 below). A recount with A4 and A9 filled puts the main text at about 6,600 to 7,100 words against 5,000. Moving the Limitations list to the Supplementary Information is the cut that matters (`paper/v2/outline.md`, "Length check").
 - Unchanged from yesterday (items below): the ethics confirmation; at submission, the Zenodo DOI and authors; optionally, the GitHub Support purge; the A8 note review.
 
@@ -254,6 +256,12 @@ With cuts 4 and 5, the main text is about 490 words shorter. What remains waits 
 - `pull a9` at 06:33 copied 25 files with their sha256. The first try was refused before copying, because a byte-identical local manifest existed; it was moved aside unchanged.
 - `analyse a9`: pre-run check and frozen analysis 06:33 to 06:34 (run note; summary sha256 `1d1a9995...`).
 - Commits `453d69e` (records and registry) and `39ef296` (Results 6b and 8, Discussion, Table 1, `reproduce.py`).
+
+**2026-11-14 08:44:** You chose option (a) for A7 Stage 1 (NEEDS_INPUT 12, now resolved).
+- Wrapper written and stub-tested on the login node (11 of 11 checks), then copied to the cluster (sha256 `241bfa74...`).
+- The four A7 `gpu2` tasks are held. No A7 Stage 1 cell existed.
+- `seq_a7.sh` waits for A2's chain to end DONE, then submits the job.
+- Records: DECISIONS 2026-11-14 entry, decisions table row 89, and the ROADMAP A7 step with its pull and waivers.
 - Full suite at `d21f2f0`: 1,123 passed, 26 skipped, 0 failed. Clean-checkout reproduction of the changed steps: Table 1 and Figure 5 byte-identical, A4's and A9's eight records verified by hash, 0 failed. Merged into `main` as PR #121, true merge commit `96a1ce4` (06:50).
 
 **2026-11-13 11:47:** Supplementary decisions table brought up to date: rows 81 to 83 for today's three new decision-log entries, and a superseded-entries row (75 to 83). It again has one row per entry, 83, checked in order against DECISIONS. ROADMAP Phase 4 status refreshed: every step that needs no new GPU output is done. The node counts in the 11:20 correction now include the node that was powering up. Full suite at `62a8b79` with these record edits: 1,096 passed, 26 skipped, 0 failed. Merged into `main` as PR #115, true merge commit `da95a75` (11:48).
