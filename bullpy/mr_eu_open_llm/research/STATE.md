@@ -2,9 +2,20 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-11-14 14:52 Europe/London
+**Updated:** 2026-11-14 15:12 Europe/London
 
-## Hand-off, 2026-11-14 (written 01:38, last refreshed 14:52)
+## Hand-off, 2026-11-14 (written 01:38, last refreshed 18:56)
+
+**Your go-ahead at about 18:45** ("proceed with all"; DECISIONS 2026-11-14, "The author's go-ahead for all of A8 and for the next length cut").
+- **A8** now runs through all its phases under its own budget and stop rules, with no further go-ahead after Phase A. I took the go-ahead to cover the A8 reading decision of 2026-11-13 that was left for your review; you can still overrule it before A8's freeze.
+- **Length cut 6 is applied.** Results 6b, 7 and 9 keep their headlines, decisive values and exceptions, and their per-model detail moved word for word to Supplementary Methods S7, S8 and S10. The Discussion's opening and RQ1 sections lost their restatements of the Results. No claim, number or disclosure left the paper.
+  - Prose only, the main text is now about 7,080 words, against about 7,430 before the cut (the 13:56 script, which also counts rule notes, gives 7,875 against 8,229).
+  - That leaves about 2,100 words over 5,000. Further cuts are yours to choose; the candidates and their sizes are in `paper/v2/outline.md` ("Recount 2026-11-14, after cut 6").
+- **The queue, as you asked (18:44).** Our only jobs are A8's equivalence test (40969184, `intr`, waiting) and its held `gpu2` copy (40399722). Ahead of the test: 11 GPU jobs of other users in `intr`, some waiting since 2026-11-12.
+  - The scheduler ranks `intr` jobs by age and by the user's past usage. This cluster never decays usage (`PriorityDecayHalfLife` 0, no reset), our fair-share factor is 0 after the A4, A2 and A9 runs, and our test is the newest job, so it ranks last.
+  - Of the 74 `ampere` nodes, 23 were running jobs, 32 were powered down and 17 in maintenance; 788 jobs were waiting for them.
+  - So each A8 job may wait a day or more, and A8 may not finish before the shutdown. The group's GPU account has 2,478 GPU-hours left (`mybalance`), and A8 would use roughly 700 to 1,200.
+
 
 **A4 is done and analysed, once, by its frozen code** (RESULTS_REGISTRY, "A4 confirmatory analysis (2026-11-14)"; Results, Sections 5 and 6; Figure 5).
 - **Gemma 4: Aligned on basic labels, Mixed on conversational states.**
@@ -56,7 +67,7 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
   - The token arm and RQ3 are not testable, as Stage 0 had already shown.
 - **Written into the paper:** Results 9, the Discussion's RQ3 branch, the Methods clause "A7 Stage 1 runs", Supplementary Methods S10 (the route arm in full), registry rows, and `reproduce.py` (A7's five records hash-pinned; A8 is now the only pending output).
 
-**Merged into main at 13:45:** PR #122, true merge commit `c281bec`, head `0e7df74`. Full suite at `8f1fe7c`: 1,123 passed, 26 skipped, 0 failed; the one later commit changes a sentence of Supplementary Methods only. Clean-checkout reproduction at `8f1fe7c`: 5 rebuilt and matched, 26 verified by hash, 0 failed.
+**Merged into main:** PR #122 (`c281bec`, 13:45) with A2, A5 and A7 Stage 1; then PR #123 (`62fc542`, 15:12) with the corrections after the independent check and the refreshed submission pack. Full suite at `ee4dd83`, the head of #123: 1,123 passed, 26 skipped, 0 failed. Clean-checkout reproduction at `ee4dd83`: 5 rebuilt and matched, 26 verified by hash, 0 failed.
 
 **Independent check of today's text, done (14:52).** A separate reader checked Results 7 to 10, the new Discussion branches, the Abstract, S8, S10, Table 1 and the Figure 6 legend against the registry, the locked outputs and the preregistrations. Every number matched. It found wrong claims, rule breaches and omissions; each was checked against its source and corrected (commit `dcf6dc9`; DECISIONS 2026-11-14, "Independent check"). The main ones:
 - Qwen3-VL's P5 also survives every sensitivity.
@@ -68,11 +79,12 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
 - One gap in A7's frozen code is disclosed: a descriptive rider (hybrid distance) the design names was never written by the runner (decisions table row 92). No verdict depends on it.
 
 **What is left.**
-- **A8** only. Its GPU equivalence test now waits as one `intr` job (40969184, submitted 13:53; DECISIONS 2026-11-14, row 91), with the `gpu2` job 40399722 held. At 14:52, 14 `intr` jobs of other users were ahead and one `intr` job ran at a time, so it may start only tonight. The code pins (Freeze checklist item 2) follow it. The A8 note review is yours (below). Every GPU node is reserved from 2026-12-07 07:00.
+- **A8** only. Its GPU equivalence test waits as one `intr` job (40969184, submitted 13:53; DECISIONS 2026-11-14, row 91), with the `gpu2` job 40399722 held. At 18:44 it ranked last of 12 GPU jobs waiting in `intr` (above). The code pins (Freeze checklist item 2) follow it. Every GPU node is reserved from 2026-12-07 07:00.
 - **Storage, watch item (13:22):** `/rds-d7/user/eb2007` holds 1,067.6 GB (soft quota 1,099.5, hard 1,209.5) and 991,396 files (limit 1,048,576). The file count is close to where another project's job filled it on 2026-11-09 (DECISIONS 2026-11-09). Nothing of this project is writing now.
 
 **Only you can do these:**
-- Unchanged from yesterday (items below): the ethics confirmation; at submission, the Zenodo DOI and authors; optionally, the GitHub Support purge; the A8 note review.
+- Unchanged from yesterday (items below): the ethics confirmation; at submission, the Zenodo DOI and authors; optionally, the GitHub Support purge.
+- New: any length cut beyond cut 6 (outline, "Recount 2026-11-14, after cut 6").
 
 ## Earlier hand-off, 2026-11-13 (written 05:35, last refreshed 23:13; kept for reference)
 

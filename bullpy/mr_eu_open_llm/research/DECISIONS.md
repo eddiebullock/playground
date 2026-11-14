@@ -872,3 +872,17 @@ An independent reader (ROADMAP step 4.6) checked the text written on 2026-11-14 
   - The failed A2 cells are named: eye-aperture edits on closed eyes, outside the family.
 - **One gap in A7's frozen code.** The design names, among the riders, the relative L2 of each hybrid from its nearest native state. The frozen runner never wrote it: the hybrid cells carry no such field, and the frozen analysis reports only each block's relative change. It is a descriptive rider and no verdict depends on it. It is disclosed in Supplementary Methods S10 and in decisions table row 92, and it is not computed after the fact, which would need a new GPU run outside the frozen code.
 - **Values.** Every added statement's values are in RESULTS_REGISTRY, "Rows added after the independent check of the text (2026-11-14)".
+
+## 2026-11-14: The author's go-ahead for all of A8 and for the next length cut (18:45; before any A8 output)
+
+- **What the author said.** At about 18:45, after a progress update that gave A8's full compute (about 700 to 1,200 GPU-hours), the GPU shutdown from 2026-12-07 07:00 and the next suggested length cut, the author wrote: "proceed with all but what else is in the quueueu". It is read as a go-ahead for everything proposed, with a question about the queue.
+- **A8.** A8 goes on through its phases after Phase A without a further go-ahead, under its own budget and stop rules (PREREG_A8_DRAFT, design item 8 and "Compute"), which do not change. The reading decision of 2026-11-13 left for the author's review (dated note at the end of PREREG_A8_DRAFT) is taken as accepted under the same go-ahead; the author can still overrule it before A8's freeze. Nothing in A8's design, rules or thresholds changes.
+- **Facts given to the author with this go-ahead (checked 18:44).**
+  - The group's GPU account has 2,478 GPU-hours left (`mybalance`), against 2,859 on 2026-11-09.
+  - This project's jobs now rank last among the `intr` jobs waiting for GPUs. The scheduler ranks by job age and by the user's past usage, this cluster does not decay usage (`PriorityDecayHalfLife` 0, no reset period), and our fair-share factor is 0.
+  - Eleven GPU jobs of other users were ahead of the equivalence test (40969184), some waiting since 2026-11-12. Of the 74 `ampere` nodes, 23 were running jobs, 32 were powered down and 17 were in maintenance.
+  - At that pace each A8 job may wait a day or more, so A8 may not finish before the shutdown. If it does not, the paper reports the A8 steps that did not run as not run for want of compute, by a dated note.
+- **Length.** The author approved the cut suggested in the outline's recount of 2026-11-14 at 13:56:
+  - The locked per-model detail of Results 6b, 7 and 9 moves word for word to the Supplementary Information, as A4's did under cut 2. The main text keeps each headline, the values the decisions rest on, and the exceptions.
+  - The Discussion's opening and RQ1 sections drop what repeats the Results.
+  - As with cuts 1 to 5, no claim, number or disclosure leaves the paper, and every value keeps its registry marker.
