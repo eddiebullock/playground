@@ -243,9 +243,11 @@ Gate B is B1 to B5 (`research/PREREG_A2_DRAFT.md:109-117`). A model and route th
 
 **Locked cells.** A1 Pass and A3 Pass for all three models, so face use on both inputs (Section 2). Natural clips: aligned with the human pattern, confirmatory, for all three (Section 4). Molmo2 is not eligible for A2 or A4, on its gate failures (Section 1), so its row ends there.
 
-**Slots.** Gemma 4 and Qwen3-VL: [PENDING: A4 headline per task], [PENDING: A2 classes per route].
+**Locked cells (A4, read 14 November 2026).** Under randomisation (Section 5), Gemma 4's headline is Aligned for basic labels and Mixed for conversational states, and Qwen3-VL's is Inconclusive for both [REG: A4 table, headlines].
 
-**Figure.** Table 1 (`research/paper/v2/table1.md`), built by `research/scripts/make_table1.py` from locked outputs only; its A2, A4 and A9 cells read pending until each analysis's run note is complete, and its A2 classes are the verdicts after the fill-rule ruling.
+**Slots.** Gemma 4 and Qwen3-VL: [PENDING: A2 classes per route].
+
+**Figure.** Table 1 (`research/paper/v2/table1.md`), built by `research/scripts/make_table1.py` from locked outputs only; its A2 and A9 cells read pending until each analysis's run note is complete (A4's is, since 14 November 2026), and its A2 classes are the verdicts after the fill-rule ruling.
 
 ## 8b. Larger models in the same families (A8)
 
