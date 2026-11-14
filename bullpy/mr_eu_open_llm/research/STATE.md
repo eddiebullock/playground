@@ -34,7 +34,7 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
 - A2 is slower than its sizing (4 to 6 GPU-hours a shard). Measured over the first slice: Gemma 4 about 5.8 s per cell, so about five slices (done around 06:00); Qwen3-VL about 13 s per cell, so about eleven slices (done around midday).
 - A2's Gemma shards were complete at 05:35. Its three Qwen shards now run alone, on one node, about 190 cells a slice, so complete around 12:30. Then: pull, `analyse a2`, then A5, then A7 (ROADMAP Part 3).
 
-**Not done, and why.** A7 Stage 1 (40795186, 40795187) is still on `gpu2`. Its runner skips an item once the item's first row is written, so a budget stop in the middle of an item could leave that item incomplete for good, and A7 has no repair rule for that. It needs either whole one-hour `intr` jobs of up to 59 minutes, between slices, or a pre-data ruling. I left that for you to see.
+**Not done, and why.** A7 Stage 1 (40795186, 40795187) is still on `gpu2`. Its runner skips an item once the item's first row is written, so a budget stop in the middle of an item could leave that item incomplete for good, and A7 has no repair rule for that. The choice is NEEDS_INPUT 12. My recommendation is one whole `intr` job with its 59-minute caps, after the last A2 slice.
 
 **Only you can do these:** unchanged from yesterday (items below): the ethics confirmation; at submission, the Zenodo DOI and authors; optionally, the GitHub Support purge; the A8 note review; and the length plan's structural choice (item 5).
 
