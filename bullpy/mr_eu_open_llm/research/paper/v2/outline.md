@@ -53,6 +53,26 @@ The plan's estimate assumed recovery detail in section 2, which holds none, and 
 
 *Recount 2026-11-14, 13:56 (A2, A5 and A7 Stage 1 filled; only A8 still drafted with every branch).* Same rules, by script, with the scaffold labels Status, Relation to A4, Replication wording, Withdrawn claim and Comparator now also left out. Introduction 1,440. Results 4,204, of which A8's drafted section is 148; by section, 5 is 648, 6b 658, 7 537 and 9 383. Discussion 2,331, of which A8's drafted section is 102, and Limitations is 207 after cut 1. Main text about 7,975 as drafted. Some rule notes beside tables are still counted, so the prose itself is a little shorter. Against 5,000 the text runs about 2,500 to 2,900 over, with cuts 1 to 5 applied. Closing that needs new cuts, which are the author's to choose (hand-off item 5). The obvious one repeats cut 2: the locked per-model detail of sections 6b, 7 and 9 moves word for word to the Supplementary Information, as A4's did, and the main text keeps each headline and the exceptions. The Discussion's RQ1 and opening sections overlap with Results and could shorten too.
 
+*Applied 2026-11-14, cut 6 (the author's go-ahead, about 18:45; DECISIONS 2026-11-14).* The cut suggested in the recount above.
+- **Results 6b, 7 and 9.** The per-model detail moved word for word to the Supplementary Information: to Section S7 ("A9 results in full", new), Section S8 ("Recovery" and "A2 results in full") and Section S10 ("A7 Stage 0 (continued)").
+  - The main text keeps each headline, the values the decisions rest on, and the exceptions.
+  - The fields PREREG_A9 fixes beside each decision stay in Results 6b.
+  - Results 9 no longer carries the route arm's path-fault sentence; Methods ("A7 Stage 1 runs"), Section S10 and decisions table row 90 give the full account.
+- **Discussion.** The opening and the two RQ1 sections lost their restatements of Results 4 and 5 and of the opening's limit on cues.
+- No claim, number or disclosure left the paper, and every value keeps its registry marker.
+
+*Recount 2026-11-14, after cut 6.* Two counts.
+- **By the script used at 13:56.** Introduction 1,440; Results 4,209, of which A8's drafted section is 148; Discussion 2,226, of which A8's drafted section is 102. Main text 7,875, against 8,229 just before the cut; the independent check of 2026-11-14 had added about 250 words of required readouts after the 13:56 count.
+- **Prose only.** This count also leaves out the rule notes beside tables and the other drafting scaffold that the first count keeps, so it is close to what a final text would hold. Results 3,413 (A8 has no locked text yet), so the main text is about 7,080 words, against about 7,430 before the cut.
+- **Gap.** About 2,100 words over the 5,000 limit, before A8's locked text. Closing it needs cuts beyond this plan, and those are the author's to choose. The main candidates, with their prose counts now:
+  - Results 2 (521 words) and 4 (332): per-model detail to Sections S3 and S5, as cut 2 did for A4.
+  - Results 5 (453) and 10 (263): further detail to Sections S6 and S10.
+  - The Discussion's RQ0 section (168), which restates Results 2 and the opening.
+  - The benchmark-audit recommendation (190): to the Supplementary Information, leaving one sentence.
+  - The Introduction (1,440): back to its planned 1,401 or well below.
+  - Results 1 (370), and the Discussion's RQ2 (263) and RQ3 (151) sections.
+  - Alternatively, ask the editor for more space, or use the fallback venue (TMLR), which sets no word limit.
+
 Together these save about 1,850 to 2,350 words; the rest comes from writing each chosen branch to its budget at steps 4.1 and 4.3. Methods (7,402 words) and the figure legends (1,017) fall outside the limit, but check both against the journal's formatting guide before submission.
 
 ## Abstract template (150 words at most)
