@@ -205,6 +205,7 @@ With cuts 4 and 5, the main text is about 490 words shorter. What remains waits 
 - `analyse a4`: pre-run check 01:07, frozen analysis 01:07 to 01:26 (run note; summary sha256 `08148303...`).
 - Commits `3ced4a5` (records and registry), `be63deb` (Results 5 and 6, Figure 5, Table 1, `reproduce.py`) and `3d4c232` (Discussion step 4.3, Results 8, Methods "Runs").
 - The combined A2 and A9 chain started on its own at 01:03, and its first slice 40945403 at 01:06.
+- Full suite at `64f79da`: 1,122 passed, 26 skipped, 0 failed. Merged into `main` as PR #120, true merge commit `182a2eb` (01:50).
 
 **2026-11-13 11:47:** Supplementary decisions table brought up to date: rows 81 to 83 for today's three new decision-log entries, and a superseded-entries row (75 to 83). It again has one row per entry, 83, checked in order against DECISIONS. ROADMAP Phase 4 status refreshed: every step that needs no new GPU output is done. The node counts in the 11:20 correction now include the node that was powering up. Full suite at `62a8b79` with these record edits: 1,096 passed, 26 skipped, 0 failed. Merged into `main` as PR #115, true merge commit `da95a75` (11:48).
 
