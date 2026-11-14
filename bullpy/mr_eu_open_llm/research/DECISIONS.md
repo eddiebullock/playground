@@ -899,3 +899,22 @@ The test is the one in the entry "A8's GPU equivalence test runs as one intr job
 - **What stays the same.** The two steps run as before, one GPU each, so two GPUs stay idle. The driver, commands, environment, items, outputs, 59-minute caps and the reading rule (`a1_gpu_rule`) are unchanged, as are the safeguards. The job costs at most four GPU-hours of the free allocation, against two.
 - **How.** 40969184 is cancelled before the new job is submitted, so only one `intr` job exists at a time. 40399722 stays held. The wrapper is copied to the scratch copy and checked against the commit before submission.
 - **Disclosure.** Decisions table row 94. Row 93, added with it, is the go-ahead entry above, which had no row.
+
+## 2026-11-14: A8's GPU equivalence test finishes in a second job after the first hit its time limit (scheduling only, before any A8 output)
+
+- **What happened.** The whole-node job 40986052 (entry above) started at 20:42:39 on gpu-q-41, about seven minutes after submission, and its two steps started at 20:47:13.
+  - In both conditions both frozen runs ended with exit 0. Their outputs were written at 21:14:12 and 21:35:52 (real) and at 21:12:20 and 21:31:10 (mismatch).
+  - The job reached its one-hour limit at 21:42:59 and was ended (TIMEOUT). By then the real condition was in its first shard run, which had written nothing. The mismatch condition had finished its first shard run (21:39:32) and begun its second, which had written nothing.
+  - No merge or comparison ran, so no verdict exists. Only file names, sizes and times were looked at.
+- **Why it did not fit.** The entry "A8's GPU equivalence test runs as one intr job" estimated about 40 minutes per condition. In fact a frozen run took about 19 to 27 minutes, the first in each step the longest, and a shard run about 8. A condition needs about an hour of step time, and the job spends 4.5 minutes on set-up before its steps start.
+- **What runs now.** A second whole-node `intr` job runs, in each condition, the commands that had not finished: the shard runner for shard 0 and for shard 1, the merge, then the two comparisons and the report.
+  - The driver is `research/scripts/a8_equiv_driver_condition_rest.py` (sha256 `acafd465...`). It issues the condition driver's last three commands unchanged, in the same order, in one process on one GPU.
+  - Run with `subprocess.run` stubbed, the two drivers issue the same commands, with the same arguments and output paths, and write the same report, in both conditions.
+  - It stops before any command unless both frozen outputs exist and no shard, merged or report output exists.
+  - The wrapper is `slurm_jobs/a8_equiv_rest_intr.sh` (sha256 `0fa74528...`). It is `a8_equiv_intr.sh` line for line except for the job name, the log names and the driver.
+- **The frozen runs are kept, not rerun.** They ended with exit 0 before the limit, and the rule compares them as they are.
+- **Both shards are rerun in both conditions.** All shard folders of job 40986052 move, unread, to `results/a8/equivalence_timeout_40986052/` on the cluster. That includes the mismatch condition's finished first shard, so that each condition's two shards come from one job, one after the other, as the driver orders them.
+- **Where it runs.** The shards may run on another A100 node than the frozen runs did. The rule asks whether sharded runs reproduce the frozen run record for record, and A8's own shards run on whichever nodes the scheduler gives.
+- **Time.** About 20 minutes of steps per condition (two shard runs of about 8 minutes, then the merge), with the two conditions at once, against the one-hour limit.
+- **What stays the same.** The rule (`a1_gpu_rule`), the items, commands, environment, weights and hardware type. No design, threshold or analysis change. 40399722 stays held, and it is cancelled once both reports exist.
+- **Disclosure.** Decisions table row 95; the result goes into PREREG_A8's dated notes.
