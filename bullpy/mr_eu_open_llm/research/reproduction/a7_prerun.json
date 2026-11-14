@@ -1,0 +1,81 @@
+{
+ "decision_date": "2026-11-10",
+ "n_shards": 2,
+ "models": {
+  "gemma4": {
+   "a2_cells": [
+    "results/stimulus_interventions/cells_gemma4_shard0.jsonl",
+    "results/stimulus_interventions/cells_gemma4_shard1.jsonl",
+    "results/stimulus_interventions/cells_gemma4_shard2.jsonl"
+   ],
+   "a2_reports": [
+    "results/stimulus_interventions/run_gemma4_shard0.json",
+    "results/stimulus_interventions/run_gemma4_shard1.json",
+    "results/stimulus_interventions/run_gemma4_shard2.json"
+   ],
+   "a2_output": "research/reproduction/stimulus_interventions_gemma4.json",
+   "stage1_cells": [
+    "results/a7/a7_cells_gemma4_shard0.jsonl",
+    "results/a7/a7_cells_gemma4_shard1.jsonl"
+   ],
+   "n_rows": 820,
+   "n_failed_rows": 0,
+   "n_items_seen": 200,
+   "tokens_across_median": 16.0,
+   "n_below_token_floor": 25
+  },
+  "qwen3vl": {
+   "a2_cells": [
+    "results/stimulus_interventions/cells_qwen3vl_shard0.jsonl",
+    "results/stimulus_interventions/cells_qwen3vl_shard1.jsonl",
+    "results/stimulus_interventions/cells_qwen3vl_shard2.jsonl"
+   ],
+   "a2_reports": [
+    "results/stimulus_interventions/run_qwen3vl_shard0.json",
+    "results/stimulus_interventions/run_qwen3vl_shard1.json",
+    "results/stimulus_interventions/run_qwen3vl_shard2.json"
+   ],
+   "a2_output": "research/reproduction/stimulus_interventions_qwen3vl.json",
+   "stage1_cells": [
+    "results/a7/a7_cells_qwen3vl_shard0.jsonl",
+    "results/a7/a7_cells_qwen3vl_shard1.jsonl"
+   ],
+   "n_rows": 820,
+   "n_failed_rows": 0,
+   "n_items_seen": 200,
+   "tokens_across_median": 24.0,
+   "n_below_token_floor": 0
+  }
+ },
+ "sha256": {
+  "results/stimulus_interventions/cells_gemma4_shard0.jsonl": "f7ae6e2f77e1c97224cadb415c0668eb225effc16feb4b71b4d48e6fa4a53b2d",
+  "results/stimulus_interventions/cells_gemma4_shard1.jsonl": "356bf08edef77e52cac9582eab760d0ae49592701db6404706a0820910917958",
+  "results/stimulus_interventions/cells_gemma4_shard2.jsonl": "ab63a429a6c17a6cbf2c593867cd529d1788d1546a36d04a7621068baa6f0f65",
+  "results/stimulus_interventions/run_gemma4_shard0.json": "f2d3f6d85da27a74907f30443d97f4e4315e913df9572753d827c6a4c4a92a9c",
+  "results/stimulus_interventions/run_gemma4_shard1.json": "fb86e46298de962fca3653af41f61f0803468a30d1f25d02fb8f568fce969359",
+  "results/stimulus_interventions/run_gemma4_shard2.json": "8abcf37ba13a3db0d4027e681eea4743776331353d24fb8bce1591be9f3199b0",
+  "research/reproduction/a7_stage0_gemma4.json": "fff021f80af84864592300357228adb2875eaadc52b711964c723ed62b0b12b4",
+  "results/a7/a7_cells_gemma4_shard0.jsonl": "5cab28de1f539b51d8a90f913e7487e6a61a5e9f911bf06ab34c40145a5864fd",
+  "results/a7/a7_cells_gemma4_shard1.jsonl": "9250f045826f56d5effedb16ea75bec47ae1173b2b63e4f6a15b903ee9856013",
+  "results/stimulus_interventions/geometry.json": "2bc76dd60be233ee6072ba5b2049721899c5febcd953ec49bff1dcc2f2c72383",
+  "research/reproduction/stimulus_interventions_gemma4.json": "4ceb8840aa98d0b8980e565eb32ecda455d14689549e3dde2a9dbf9fdf655c0c",
+  "results/stimulus_interventions/cells_qwen3vl_shard0.jsonl": "6bfc57f34879475dcf4a2c1cb5d680618d3b0d3e06edd1af67762c6ebfbfbf63",
+  "results/stimulus_interventions/cells_qwen3vl_shard1.jsonl": "34e56b3e2cba30ab02217ee2723671818477bd8ab9caf85d2a4505142714d43c",
+  "results/stimulus_interventions/cells_qwen3vl_shard2.jsonl": "cc23ff31dc60007012d0e97baaba5e77e67fbefd444cedd0b9f9824c26a8176b",
+  "results/stimulus_interventions/run_qwen3vl_shard0.json": "703461c1cc0f7ccfafece57dac0a2d2b6278da58b261a6a8185b533ae10ee551",
+  "results/stimulus_interventions/run_qwen3vl_shard1.json": "730430d6d8c00ddba43ab27bb232bd270a94f2460dc89d2b29a210f04ed4807a",
+  "results/stimulus_interventions/run_qwen3vl_shard2.json": "483e80d1070cc27c081793f75b3737b54d70d97ee6a60c56ca2ba43286546c4c",
+  "research/reproduction/a7_stage0_qwen3vl.json": "3762c7bdb48c6a0b153d13a8f2d076a6b82a8d4a948bcec70be7d08e0da8a215",
+  "results/a7/a7_cells_qwen3vl_shard0.jsonl": "04c420b86c5a4e6bd2904df9e4b9fd74adac317d1d8e531029c959b9d30472cd",
+  "results/a7/a7_cells_qwen3vl_shard1.jsonl": "bb556a0dddadfe1538076863bfe8e2117f1bce447b49aed180b6580e266901d8",
+  "research/reproduction/stimulus_interventions_qwen3vl.json": "ff6a7741f610f3950501b9cc6ca02268ad1b579d4569230ea203a19df831bf07",
+  "scripts/a7_analyse.py": "00350c9a182090943294efb602f46a31e2c4263240cbb8bb764de26476daaae9",
+  "scripts/a7_design.py": "d25c0cb78f6771450eac9c6127690029cd72e6034079cbc51062be324a74ddba",
+  "scripts/a7_stage0.py": "a4c46d7111b4f93b9c2d35c706636befa9756ac7cad89259512490b57cd48d5a",
+  "scripts/analyse_stimulus_interventions.py": "aba4f533daad6210e87f7bb4e68fc4627805cb4dfd9d9308df734fada4edc8b1",
+  "research/PREREG_A7_DRAFT.md": "b0e383bfed15d8ce2399cfaeaef364a09011cf327bad9ae3dca82e3d1a607169"
+ },
+ "failures": [],
+ "script_sha256": "ef31a57cfb506eb0592f6faf05481c653dd1b24442561519df1401ff516aa5bb",
+ "inputs_sha256": "dcd59e94bc858562a49f69a3bf6dc753415b9713574978aa5ce71949a4583af3"
+}

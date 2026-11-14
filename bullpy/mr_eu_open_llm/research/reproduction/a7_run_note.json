@@ -1,0 +1,47 @@
+{
+ "amendment": "a7",
+ "git_commit": "b492513cc919e35ee34889b4395fa3c53f627a8a",
+ "python": "/opt/anaconda3/bin/python3",
+ "threads": {
+  "OMP_NUM_THREADS": "1",
+  "OPENBLAS_NUM_THREADS": "1",
+  "MKL_NUM_THREADS": "1",
+  "VECLIB_MAXIMUM_THREADS": "1"
+ },
+ "cells_dir_used": null,
+ "steps": [
+  {
+   "command": [
+    "python3",
+    "research/scripts/a7_prerun_check.py",
+    "--record",
+    "research/reproduction/a7_prerun.json",
+    "--inputs",
+    "research/reproduction/a7_inputs.json"
+   ],
+   "started": "2026-11-14T13:13:32Z",
+   "finished": "2026-11-14T13:13:38Z",
+   "exit": 0
+  },
+  {
+   "command": [
+    "python3",
+    "-m",
+    "scripts.a7_analyse",
+    "--inputs",
+    "research/reproduction/a7_inputs.json",
+    "--output",
+    "research/reproduction/a7_analysis.json",
+    "--a7_frozen",
+    "--a2_frozen"
+   ],
+   "started": "2026-11-14T13:13:38Z",
+   "finished": "2026-11-14T13:13:51Z",
+   "exit": 0
+  }
+ ],
+ "outputs": {
+  "research/reproduction/a7_analysis.json": "e9c6dcab081ed623dd5e5b338a6ab6e86cd7ae18b6b86d2c597abbc2f8e25255"
+ },
+ "status": "complete"
+}
