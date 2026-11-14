@@ -116,6 +116,19 @@ Watch storage at each step. The file count runs at about 996k of 1,048,576. Cell
 | 4.6 | An independent review agent reads the full draft against the registry and the preregistrations; fixes applied. |
 | 4.7 | Submission pack complete. NEEDS_INPUT lists what the user must do: submission, authorship, Zenodo DOI, any email. |
 
+**Status 2026-11-14 14:28.** Every Phase 3 analysis is locked except A8, which has not run.
+- 3.1 to 3.3 and 3.5: A2, A4, A5 and A7 Stage 1 were each analysed once by frozen code on 2026-11-14, as was A9. A6 (3.4) was closed as a limit on 2026-11-10.
+- 4.1: Results sections 1 to 10 hold locked text, each value with a registry marker. Only section 8b (A8) keeps every drafted branch.
+- 4.2: Figures 1 to 6 are built from locked outputs and checked by eye.
+- 4.3: the Discussion's branches are picked for every result but A8. The opening paragraph is assembled, and Limitations is a paragraph after cut 1, with the list in Supplementary Methods S12.
+- The Abstract is complete at 149 words.
+- 4.4: Supplementary Methods S6 holds A4 in full, S8 A2 in full, S10 the A7 route arm in full and S12 the Limitations list. The decisions table has 91 rows.
+- 4.5: `reproduce.py` pins every locked output; only A8 is pending. A clean-checkout check at `8f1fe7c` passed (5 rebuilt, 26 verified by hash, 0 failed), and the full suite at `8f1fe7c` passed (1,123 passed, 26 skipped). Merged into `main` as PR #122.
+- 4.6: an independent check of the text written on 2026-11-14 against the registry and the locked outputs is running.
+- 4.7: the submission pack still carries pre-result placeholders, to be refreshed after 4.6.
+- Length: about 7,975 words against 5,000 (outline, recount of 2026-11-14). New cuts are the author's to choose.
+- A8: the GPU equivalence test runs as one `intr` job, 40969184 (DECISIONS 2026-11-14, row 91), with the `gpu2` job 40399722 held. The code-pin step follows it (runbook step 0).
+
 **Status 2026-11-13.** Every Phase 4 step that needs no new GPU output is done; the rest waits on the queued runs.
 - 4.1: every Results and Methods slot that a locked output answers is filled, with registry rows. A4 and A9 were locked on 2026-11-14, and Results 5, 6, 6b and 8 now hold their branches (registry "A4 confirmatory analysis (2026-11-14)", "A9 confirmatory analysis (2026-11-14)"). Results sections 7, 9 and 10 still carry drafted text for every outcome, with values as slots.
 - 4.2: Figures 1 to 5 built from locked outputs and checked by eye (Figure 5 on 2026-11-14); Figure 6 waits on A2.
