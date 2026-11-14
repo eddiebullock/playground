@@ -2,16 +2,22 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-11-14 15:12 Europe/London
+**Updated:** 2026-11-14 20:40 Europe/London
 
-## Hand-off, 2026-11-14 (written 01:38, last refreshed 19:16)
+## Hand-off, 2026-11-14 (written 01:38, last refreshed 20:40)
+
+**New at 20:35: A8's equivalence test was resubmitted as a whole-node job** (DECISIONS 2026-11-14, "A8's GPU equivalence test asks for a whole node's four GPUs"; decisions table row 94).
+- **Why.** The two-GPU job 40969184 had waited 6 h 33 min and was 12th of 15 in `intr` at 20:27. Every job running on `ampere` held all four GPUs of its nodes. Jobs asking for one or two GPUs have waited for days; the oldest has waited since 2026-11-11. All 24 of this project's `intr` jobs on 2026-11-13 and 14 asked for four GPUs per node and started 0.3 to 8.5 minutes after submission.
+- **What changed.** Only the request: four GPUs, four tasks and 500 GB, the A4 slices' shape. The two one-GPU steps, driver, items and reading rule are unchanged, and two GPUs stay idle. It costs at most 4 GPU-hours against 2.
+- **Now.** 40969184 was cancelled while pending; the new job is 40986052, submitted 20:35. The wrapper on the cluster matches the commit (`58a98fd`, sha256 `b180e6b1...`). 40399722 stays held. A watcher reports when the job ends.
+- Row 93, also new, gives your 18:45 go-ahead its row in the decisions table, which it lacked.
 
 **Your go-ahead at about 18:45** ("proceed with all"; DECISIONS 2026-11-14, "The author's go-ahead for all of A8 and for the next length cut").
 - **A8** now runs through all its phases under its own budget and stop rules, with no further go-ahead after Phase A. I took the go-ahead to cover the A8 reading decision of 2026-11-13 that was left for your review; you can still overrule it before A8's freeze.
 - **Length cut 6 is applied.** Results 6b, 7 and 9 keep their headlines, decisive values and exceptions, and their per-model detail moved word for word to Supplementary Methods S7, S8 and S10. The Discussion's opening and RQ1 sections lost their restatements of the Results. No claim, number or disclosure left the paper.
   - Prose only, the main text is now about 7,080 words, against about 7,430 before the cut (the 13:56 script, which also counts rule notes, gives 7,875 against 8,229).
   - That leaves about 2,100 words over 5,000. Further cuts are yours to choose; the candidates and their sizes are in `paper/v2/outline.md` ("Recount 2026-11-14, after cut 6").
-- **The queue, as you asked (18:44).** Our only jobs are A8's equivalence test (40969184, `intr`, waiting) and its held `gpu2` copy (40399722). Ahead of the test: 11 GPU jobs of other users in `intr`, some waiting since 2026-11-12.
+- **The queue, as you asked (18:44).** Our only jobs are A8's equivalence test (40969184, `intr`, waiting; replaced at 20:35 by the whole-node job 40986052, above) and its held `gpu2` copy (40399722). Ahead of the test: 11 GPU jobs of other users in `intr`, some waiting since 2026-11-12.
   - The scheduler ranks `intr` jobs by age and by the user's past usage. This cluster never decays usage (`PriorityDecayHalfLife` 0, no reset), our fair-share factor is 0 after the A4, A2 and A9 runs, and our test is the newest job, so it ranks last.
   - Of the 74 `ampere` nodes, 23 were running jobs, 32 were powered down and 17 in maintenance; 788 jobs were waiting for them.
   - So each A8 job may wait a day or more, and A8 may not finish before the shutdown. The group's GPU account has 2,478 GPU-hours left (`mybalance`), and A8 would use roughly 700 to 1,200.
@@ -79,8 +85,8 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
 - One gap in A7's frozen code is disclosed: a descriptive rider (hybrid distance) the design names was never written by the runner (decisions table row 92). No verdict depends on it.
 
 **What is left.**
-- **A8** only. Its GPU equivalence test waits as one `intr` job (40969184, submitted 13:53; DECISIONS 2026-11-14, row 91), with the `gpu2` job 40399722 held. At 18:44 it ranked last of 12 GPU jobs waiting in `intr` (above). The code pins (Freeze checklist item 2) follow it. Every GPU node is reserved from 2026-12-07 07:00.
-- **Storage, watch item (13:22):** `/rds-d7/user/eb2007` holds 1,067.6 GB (soft quota 1,099.5, hard 1,209.5) and 991,396 files (limit 1,048,576). The file count is close to where another project's job filled it on 2026-11-09 (DECISIONS 2026-11-09). Nothing of this project is writing now.
+- **A8** only. Its GPU equivalence test waits as one whole-node `intr` job (40986052, submitted 20:35; DECISIONS 2026-11-14, rows 91 and 94), with the `gpu2` job 40399722 held. The two-GPU job it replaced (40969184, submitted 13:53) never started. The code pins (Freeze checklist item 2) follow the test. Every GPU node is reserved from 2026-12-07 07:00.
+- **Storage, watch item (20:27):** `/rds-d7/user/eb2007` holds 1,067.6 GB (soft quota 1,099.5, hard 1,209.5) and 991,398 files (limit 1,048,576). The file count is close to where another project's job filled it on 2026-11-09 (DECISIONS 2026-11-09). Nothing of this project is writing now.
 
 **Only you can do these:**
 - Unchanged from yesterday (items below): the ethics confirmation; at submission, the Zenodo DOI and authors; optionally, the GitHub Support purge.
