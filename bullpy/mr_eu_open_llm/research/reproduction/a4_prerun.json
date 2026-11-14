@@ -1,0 +1,94 @@
+{
+ "command": [
+  "research/scripts/a4_prerun_check.py",
+  "--record",
+  "research/reproduction/a4_prerun.json",
+  "--clean_dir",
+  "results/a4_clean"
+ ],
+ "versions": {
+  "numpy": "2.1.3",
+  "scipy": "1.15.3",
+  "pandas": "2.2.3",
+  "python": "3.13.5"
+ },
+ "threads": {
+  "OMP_NUM_THREADS": "1",
+  "OPENBLAS_NUM_THREADS": "1",
+  "MKL_NUM_THREADS": "1",
+  "VECLIB_MAXIMUM_THREADS": "1"
+ },
+ "design_sha256": "12c454da512bfe4c239e6c3ef3610d80df6fd7c2e9119a9ff8df913a3c1a3e94",
+ "models": {
+  "gemma4": {
+   "shards": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+   ],
+   "n_non_finite_rows": 0
+  },
+  "qwen3vl": {
+   "shards": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+   ],
+   "n_non_finite_rows": 0
+  }
+ },
+ "non_finite_rows": [],
+ "sha256": {
+  "results/a4/manifest.csv": "2ef1161e895224d499b360144690a07c5440bb018105e9c2ffc762f68badd2d1",
+  "research/reproduction/human_au_effects.json": "58c0f082cbf6aa4827054188ac2fc47da58a254c38da2c7ac202e8f52399310c",
+  "research/reproduction/a4_human_ceiling.json": "21fe4f8441532992ecb22b60fba4afc59c38e70aed5407b2d0e8ab48b76cd2eb",
+  "research/reproduction/a4_recovery.json": "1ebfc8ea00da4261e3a05e6de09b3fbe7bd259ce0a5d840fe4c7ab03894bedca",
+  "research/reproduction/a4_v1_pilot.csv": "c735615a034c281909c96894c700d224638e281f55f995a0959eeef8a6fb3994",
+  "research/reproduction/a4_gates.json": "02b026ea5ffed38ab612a9fb620a2e1a78f6feab90cb404ee62234997a3febe3",
+  "data/external/snoek_au/au_emotion_data.zip": "6542ef31530545135f9572609a194d34c80566078b82fea0490266e6f015d706",
+  "results/a4/cells_gemma4_0.jsonl": "dbac42772f825d51594cd7f0bf80419b1f97a008b150e1a2988995972d154880",
+  "results/a4/cells_gemma4_1.jsonl": "ad405fb28f68c177a92b3e38f8a58b6d2f84f6f839c19409b01b4a004e58f8c0",
+  "results/a4/cells_gemma4_10.jsonl": "446116f6ca4399dd902dd82a31ebf800f73e1641ca3d7999185a8b6c8ca18153",
+  "results/a4/cells_gemma4_11.jsonl": "dccbfa77e73ebf9991619320042a0773296540aa68a21aa44ce0ee2c85af373e",
+  "results/a4/cells_gemma4_2.jsonl": "ab5addeac996e234f6d26a083602e300c27952298f97d18ea99ef1379ad6ce39",
+  "results/a4/cells_gemma4_3.jsonl": "bedebf07a6a6b9c09d914ec7e2e2c3ba8bf4149bebee3dff9420078eb7aeb9ad",
+  "results/a4/cells_gemma4_4.jsonl": "aa95766b469bcd949e80524a0af8157468e023c854cd8055197498e7d1a818b4",
+  "results/a4/cells_gemma4_5.jsonl": "70d06743ed00bdd0d7407fb2c4595adcc7d3058ae74ce5efd06c345c741d5dc2",
+  "results/a4/cells_gemma4_6.jsonl": "7baffc58350d89ae26d7e8d5daeb715b503e4186df2c742713a9c8ab8cc2326c",
+  "results/a4/cells_gemma4_7.jsonl": "f377c7e7506d0ac9966a529a41b2929f2f5a86912793e1169cce296c1bc40073",
+  "results/a4/cells_gemma4_8.jsonl": "7d3275f1600b3c1f4e02355d81f05ec04aef71fe7f128c0e5a9473ce0560a9a9",
+  "results/a4/cells_gemma4_9.jsonl": "2ee1533fbdfa4969b85c0c633a0436c79bf072b87ebadbb8ed4a030ffe56b63a",
+  "results/a4/cells_qwen3vl_0.jsonl": "99e38b620934689bbde03b5e2474bcf04e83055324bf50a00663a0841528a93d",
+  "results/a4/cells_qwen3vl_1.jsonl": "4ab71fbf0a16c3d689553f253b5090a5d4c6619327e56b03da5f20263d93016e",
+  "results/a4/cells_qwen3vl_10.jsonl": "5908fa0191b569ba3e6debf6d7a00f034c5f2634ebdc557ecf173626f3c68d4a",
+  "results/a4/cells_qwen3vl_11.jsonl": "bfbb55e152d666b0c92802a14696c9a2e0667dba320475e70115e033464f3170",
+  "results/a4/cells_qwen3vl_2.jsonl": "e64e84f891d51edb2476f156a2900ceb93f348b65cd5f35ce5887f2e73a6011c",
+  "results/a4/cells_qwen3vl_3.jsonl": "93b0cd8a9033b2f13409e814a236c309b067d3208d7c81cd99f0cd17940e63ca",
+  "results/a4/cells_qwen3vl_4.jsonl": "57842a37abd6e5b35eda84409a2a55862c57c201f3bc611abafa97b837fa492a",
+  "results/a4/cells_qwen3vl_5.jsonl": "ed45b0dc24340413309eba293220cd5cefd0baccdf51ee9507069f16f4a1ab20",
+  "results/a4/cells_qwen3vl_6.jsonl": "5576331c864020f712b7af2eb0efdb270725c0b2e6785e9b5fcfcbc46a0fa169",
+  "results/a4/cells_qwen3vl_7.jsonl": "19bd1a41aec024fbf8fd6c852bb8559500a770c0b83c931894c480be9a3d19cc",
+  "results/a4/cells_qwen3vl_8.jsonl": "764eb8c451115b20aced2550aed7d5d52648b98c9196087c690ad3dfe0d2b306",
+  "results/a4/cells_qwen3vl_9.jsonl": "d5a2e5ad0485447d80c382fae4024300514567d388e0acf65f7614739949bb15"
+ },
+ "failures": [],
+ "script_sha256": "3faca4a1409f96072e63a7841ce21aed2f0c03e27b6a5a3498f70e18c586a29a"
+}

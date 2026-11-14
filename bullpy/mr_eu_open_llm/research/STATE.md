@@ -2,9 +2,36 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-11-13 22:25 Europe/London
+**Updated:** 2026-11-14 01:38 Europe/London
 
-## Hand-off, 2026-11-13 (written 05:35, last refreshed 22:25)
+## Hand-off, 2026-11-14 (written 01:38)
+
+**A4 is done and analysed, once, by its frozen code** (RESULTS_REGISTRY, "A4 confirmatory analysis (2026-11-14)"; Results, Sections 5 and 6; Figure 5).
+- **Gemma 4: Aligned on basic labels, Mixed on conversational states.**
+  - Residual CEA on basic labels: WC .386 (95% CI .372 to .397) and EA .516 (.497 to .535).
+  - Conversational states: EA Aligned at .369 (.348 to .385); WC not aligned on these renders, at .025 (upper bound .053 after correction for reliability).
+  - All gates passed. No interval reaches the human WC to EA reference (.780 basic, .732 conversational), so Gemma 4 is not human-level.
+  - Weak point: conversational EA falls below .30 on the detector-confirmed families (.158) and on the amplitude sets (.170 at 0.75 times, .297 at 1 times). This is reported beside the primary, which it does not replace.
+- **Qwen3-VL: Inconclusive on both tasks.** It failed the domain gate V4 on basic WC, conversational WC and conversational EA, and also the configuration gate V3 on conversational WC. Basic EA passed every gate but spans both floors (.264; corrected upper bound .306).
+- **Behaviour against cue effects:** they come apart in size, not in sign. Where Gemma 4 is aligned, its output correlation with people (.14 to .23) is less than half its residual CEA.
+- **Written into the paper:** Results 5, 6 and 8; Discussion "RQ1 under randomisation" (step 4.3); Methods "Runs"; Figure 5 (checked by eye); Table 1; registry rows; and `reproduce.py`, where the four A4 records are hash-pinned and Figure 5 is a rebuild step. The clean-checkout check of those steps passed: 12 rebuilt and matched, 4 verified by hash.
+- **How it ran.** Nine one-hour `intr` slices from 18:22 to 01:02, which you allowed at 17:50.
+  - From 22:46 the slices took up to three nodes, `intr`'s per-user limit, which cut about three hours.
+  - All 24 shard files hold exactly their planned cells (157,892), all ok.
+  - All 24 `gpu2` tasks were held, then cancelled without running, and are waived in the pull with the DECISIONS entry as the reason.
+  - Pulled at 01:07; pre-run check and analysis 01:07 to 01:26 (`research/reproduction/a4_run_note.json`).
+
+**Running now: A2 and A9, in combined `intr` slices** (chain started automatically at 01:03 when A4 finished; DECISIONS 2026-11-13, A2 and A9 entries).
+- Slice 1 (40945403, from 01:06, two nodes) carries A2's six shards and both A9 timing smokes. Both smokes were complete (40 cells each) by 01:35.
+- From slice 2, A9's scored shards fill the spare GPUs. Gemma 4 and Qwen3-VL are both eligible under RQ0 and A4's gates, which were locked on 2026-11-12.
+- A2 is slower than its sizing. In the first half hour Gemma's shards wrote about 280 cells each and Qwen's about 110. At that rate Gemma's A2 shards need about five slices and Qwen's about ten (rates to be confirmed at the first handover).
+- When A2 completes: pull, `analyse a2`, then A5, then A7 (ROADMAP Part 3). When A9 completes: pull, `analyse a9` (A4's run note now exists, as its pre-run check requires).
+
+**Not done, and why.** A7 Stage 1 (40795186, 40795187) is still on `gpu2`. Its runner skips an item once the item's first row is written, so a budget stop in the middle of an item could leave that item incomplete for good, and A7 has no repair rule for that. It needs either whole one-hour `intr` jobs of up to 59 minutes, between slices, or a pre-data ruling. I left that for you to see.
+
+**Only you can do these:** unchanged from yesterday (items below): the ethics confirmation; at submission, the Zenodo DOI and authors; optionally, the GitHub Support purge; the A8 note review; and the length plan's structural choice (item 5).
+
+## Earlier hand-off, 2026-11-13 (written 05:35, last refreshed 23:13; kept for reference)
 
 **New at 17:50: you allowed the `intr` QoS for this project** (DECISIONS 2026-11-13).
 - Its limits, read with each field named: jobs of at most 1 h, and one job per user at a time, pending or running, of up to 3 nodes. It adds 10,000 priority points, against 100 for `gpu2`.
@@ -17,12 +44,14 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
   - The loop stops and tells me on: a slice not ending COMPLETED, a planner STOP, fewer than 1,000 new lines in a slice, SSH failures, or no new job ID.
   - By hand, from the Mac: `ssh <host> 'DRY_RUN=0 bash -l -s' < research/scripts/a4_intr_next_slice.sh`. Only one `intr` job may exist at a time.
   - **Rate (measured over the first full slice):** about 1.6 cells per second per shard, after about 6 minutes of model loading. Shards hold 6,281 to 6,899 cells, so each takes two slices, the second about half-length.
-  - **New at 22:19: a slice may take up to three nodes** (DECISIONS 2026-11-13, "A4's and A2's slices may take up to three nodes"). That is `intr`'s per-user limit, and the planner takes only nodes that are idle when it plans. Only the planners changed; each shard still runs as its own one-GPU step, exactly as before. Gemma's last four shards finish on one node in slice 40937285 (started 22:18). The next slice should then run all twelve Qwen shards at once. If Qwen runs at Gemma's rate, A4 is done around 00:30 to 01:00, not 03:30 to 04:00. `MAX_NODES=1` in front of a planner run restores one-node slices.
+  - **New at 22:19: a slice may take up to three nodes** (DECISIONS 2026-11-13, "A4's and A2's slices may take up to three nodes"). That is `intr`'s per-user limit, and the planner takes only nodes that are idle when it plans. Only the planners changed; each shard still runs as its own one-GPU step, exactly as before. All twelve Gemma shards were complete by 22:44. At 22:46, slice 40938356 started all twelve Qwen shards on three nodes (gpu-q-3, gpu-q-4, gpu-q-47), four one-GPU steps per node, about a minute after submission. Qwen runs at about 1.0 cell per second per shard, against Gemma's 1.6, so its shards need three slices: A4 should be done around 01:00, against 03:30 to 04:00 on one node. `MAX_NODES=1` in front of a planner run restores one-node slices.
   - **Risk:** the loop needs this Mac awake and the SSH connection up. `caffeinate` stops idle sleep, not a closed lid.
-- **A2 follows A4 on `intr`** (DECISIONS 2026-11-13, "A2's full-run shards may run in one-hour slices"):
-  - `slurm_jobs/study3_intr_slices_a2.sh` runs up to four A2 shards per node, and since 22:19 up to three nodes per slice (all six shards on two nodes), through the pinned `study3_stimulus_interventions.sh` (sha256 `1c8d22ea...`) with the full run's settings. Before each slice it applies A2's torn-line rule (A2-2), with a log.
-  - `research/scripts/a2_intr_next_slice.sh` plans each slice. A2 has six shards of 2,349 cells, 4 to 6 GPU-hours each, so about 6 to 8 slices with all six shards running at once.
-  - A sequencer on the Mac waits for the A4 chain to end. If A4 ends with every shard complete, it starts the A2 chain (scratchpad `intr_chain.sh`). If A4 stops for any other reason, A2 does not start.
+- **A2 and A9 follow A4 on `intr`, in the same slices** (DECISIONS 2026-11-13: "A2's full-run shards may run in one-hour slices" and "A9's smoke and scored shards may run in one-hour slices beside A2's"):
+  - `slurm_jobs/study3_intr_slices_mixed.sh` runs one slice. Its A2 slots go, unchanged, to A2's own wrapper (`study3_intr_slices_a2.sh`), which applies A2's torn-line rule (A2-2), with a log, and runs the pinned `study3_stimulus_interventions.sh` (sha256 `1c8d22ea...`) with the full run's settings. Its A9 slots run the pinned `study3_a9.sh` with the queued arrays' settings.
+  - `research/scripts/mixed_intr_next_slice.sh` plans each slice: A2's six shards first, then A9's two timing smokes, then A9's scored shards.
+  - A9's scored shards run only for models listed in `results/a9/scored_slices_models.txt` on the cluster, and only after that model's smoke is complete and ok. Since 23:49 the list holds Gemma 4 and Qwen3-VL. Both are eligible under RQ0 and A4's gates, which were locked on 2026-11-12 in `research/reproduction/a4_gates.json` and need nothing from A4's own analysis (DECISIONS, A9 slices, update 23:49). So the first slice after A4 carries A2 and the smokes, and later slices carry A2 and A9's scored shards.
+  - A2 has six shards of 2,349 cells, 4 to 6 GPU-hours each, so about 6 to 8 slices. A9 has 24 shards of about 3,000 cells; at A4's rates each should take one or two slices, beside A2's.
+  - A sequencer on the Mac waits for the A4 chain to end. If A4 ends with every shard complete, it starts the mixed chain (scratchpad `intr_chain.sh` with the mixed planner). If A4 stops for any other reason, nothing starts.
 
 **Done this morning on your instructions (about 09:15):**
 - **Item 10: your notes file is off the public branch.**
@@ -149,6 +178,33 @@ With cuts 4 and 5, the main text is about 490 words shorter. What remains waits 
   - They were tested with stand-ins for Slurm (`tests/test_intr_planners.py`, 17 tests), dry-run on the login node, and installed at 22:19.
   - The unchanged A4 wrapper ran 12 stub slots on the login node.
 - No failures; RDS 1,067.5 GB, 991,163 files.
+
+**2026-11-13 23:05:** All twelve Gemma A4 shards are complete, each at exactly its planned count, with none partial and every cell "ok".
+- Slice 40937285 finished shards 8 to 11 by 22:44; all four runs ended by themselves.
+- The planner cancelled 40589226_8 to _11. All twelve Gemma `gpu2` tasks are now cancelled, as the slice plan intends (they are waived at the pull).
+- The new planner saw 13 idle nodes and submitted slice 40938356 for Qwen shards 0 to 11 on three nodes, after holding all twelve Qwen `gpu2` tasks.
+  - It started at 22:46:22 on gpu-q-[3-4,47], with steps 0 to 11 placed four per node, each with 1 GPU, 16 CPUs and 120 GB.
+  - Model loading took about 3.5 minutes. At 23:03 every Qwen shard file held 788 to 856 lines, growing at about 1.0 a second each.
+- Full suite at `8bc1e52`: 1,113 passed, 26 skipped, 0 failed. Merged into `main` as PR #119, true merge commit `dd67a11` (22:41).
+
+**2026-11-13 23:13:** A9 prepared to run beside A2 after A4, before any A9 cell exists (DECISIONS 2026-11-13, "A9's smoke and scored shards may run in one-hour slices beside A2's"; decisions table row 88).
+- `slurm_jobs/study3_intr_slices_mixed.sh` passed 28 stub checks on the login node, with the real A2 wrapper as its child.
+- `research/scripts/mixed_intr_next_slice.sh` has 9 new tests in `tests/test_intr_planners.py`, which now has 26.
+- A dry run gave, for the first slice after A4: A2's six shards and both A9 smokes, on two nodes.
+- The ROADMAP triggers for A2 and A9 now name the slice jobs and the waivers, plus the step that allows A9's scored shards after A4's analysis.
+- The Mac sequencer that starts the next chain after A4 was replaced (scratchpad `seq_mixed.sh`, started 23:14). The old one would never have started A2: its process check (`pgrep -f "bash a4_chain.sh"`) also matched its own command line. The new one waits on the A4 chain's process ID. If the A4 chain ends with every shard complete, it starts the mixed chain.
+
+**2026-11-13 23:50:** Qwen A4 slice 40938356 ran 22:46 to 23:38. All twelve shards stopped at the budget at 2,968 to 3,079 lines each, none partial, at about 0.95 s of model time per cell.
+- Slice 40941357 continues them on three nodes. It was submitted at 23:39 and started at 23:48, after gpu-q-9 powered up.
+- A9's eligible models were written to `results/a9/scored_slices_models.txt`: Gemma 4 and Qwen3-VL, from the locked A4 gates at 23:49 (DECISIONS, A9 slices, update 23:49).
+- No failures; RDS 1,067.5 GB, 991,196 files.
+
+**2026-11-14 01:38:** A4 complete, pulled and analysed once (see the hand-off at the top).
+- Slices 40941357 (23:48 to 00:40) and 40944406 (00:44 to 01:02) finished the Qwen shards. The chain ended DONE at 01:03 after cancelling the last twelve held `gpu2` tasks.
+- `pull a4` at 01:07 copied 25 files with their sha256 (`a4_pull_manifest.json`). The first attempt was refused before copying anything, for two reasons: zsh passed the waiver list as one argument, and `sacct` names each array's last task `_[11]`. Waivers are named exactly as `sacct` reports them.
+- `analyse a4`: pre-run check 01:07, frozen analysis 01:07 to 01:26 (run note; summary sha256 `08148303...`).
+- Commits `3ced4a5` (records and registry), `be63deb` (Results 5 and 6, Figure 5, Table 1, `reproduce.py`) and `3d4c232` (Discussion step 4.3, Results 8, Methods "Runs").
+- The combined A2 and A9 chain started on its own at 01:03, and its first slice 40945403 at 01:06.
 
 **2026-11-13 11:47:** Supplementary decisions table brought up to date: rows 81 to 83 for today's three new decision-log entries, and a superseded-entries row (75 to 83). It again has one row per entry, 83, checked in order against DECISIONS. ROADMAP Phase 4 status refreshed: every step that needs no new GPU output is done. The node counts in the 11:20 correction now include the node that was powering up. Full suite at `62a8b79` with these record edits: 1,096 passed, 26 skipped, 0 failed. Merged into `main` as PR #115, true merge commit `da95a75` (11:48).
 

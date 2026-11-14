@@ -17,8 +17,10 @@ import pytest
 ROOT = Path(__file__).resolve().parents[1]
 A4 = ROOT / "research/scripts/a4_intr_next_slice.sh"
 A2 = ROOT / "research/scripts/a2_intr_next_slice.sh"
+MIXED = ROOT / "research/scripts/mixed_intr_next_slice.sh"
 A4_PLANNED = [6281, 6407, 6603, 6847, 6899, 6290, 6457, 6715, 6618, 6523, 6841, 6465]
 A2_PLANNED = 81 * 29
+A9_PLANNED = [3164, 2889, 2904, 2951, 3202, 2728, 2774, 3086, 3111, 3106, 3019, 3068]
 
 FAKES = {
     "squeue": """#!/usr/bin/env bash
@@ -27,6 +29,10 @@ case "$*" in
   *"-j 40589226"*|*"-j 40468625"*) printf '%s' "${FAKE_G:-}" ;;
   *"-j 40593824"*|*"-j 40468626"*) printf '%s' "${FAKE_Q:-}" ;;
 esac
+prev=""; job=""
+for a in "$@"; do [ "$prev" = "-j" ] && job="$a"; prev="$a"; done
+var="FAKE_J${job}"
+printf '%s' "${!var:-}"
 """,
     "sinfo": """#!/usr/bin/env bash
 printf '%s' "${FAKE_SINFO:-}"
@@ -262,3 +268,117 @@ def test_a2_done_and_stop_lines(sim):
     out, calls = sim.run(A2, DRY_RUN=0, FAKE_G="", FAKE_Q="", FAKE_SINFO="idle 9\n")
     assert re.search(r"^STOP:", out, re.M)
     assert not [c for c in calls if c.startswith("sbatch")]
+
+
+# The mixed planner: A2 shards, then A9's timing smokes, then A9's scored shards for allowed models.
+
+def write_a9(root, gemma, qwen, smokes=(0, 0), smoke_status="ok"):
+    folder = root / "results/a9"
+    folder.mkdir(parents=True, exist_ok=True)
+    for model, counts, smoke in (("gemma4", gemma, smokes[0]), ("qwen3vl", qwen, smokes[1])):
+        for k, n in enumerate(counts):
+            path = folder / f"cells_{model}_{k}.jsonl"
+            if path.exists():
+                path.unlink()
+            if n:
+                path.write_text('{"status": "ok", "seconds": 0.6}\n' * n)
+        path = folder / f"cells_{model}_smoke_0.jsonl"
+        if path.exists():
+            path.unlink()
+        if smoke:
+            path.write_text(('{"status": "%s", "seconds": 0.6}\n' % smoke_status) * smoke)
+
+
+def allow(root, *models):
+    (root / "results/a9").mkdir(parents=True, exist_ok=True)
+    (root / "results/a9/scored_slices_models.txt").write_text("".join(m + "\n" for m in models))
+
+
+def gpu2(**held):
+    """Fake squeue rows for every gpu2 task the mixed planner looks at; JobHeldUser where named."""
+    jobs = {"40468625": range(3), "40468626": range(3), "40843619": [0], "40843620": [0],
+            "40863756": range(12), "40863757": range(12)}
+    env = {}
+    for job, ks in jobs.items():
+        reason = "JobHeldUser" if held.get(job) else "Priority"
+        env[f"FAKE_J{job}"] = tasks(job, ks, "PENDING", reason)
+    return env
+
+
+def test_mixed_first_slice_runs_a2_and_both_smokes_on_two_nodes(sim):
+    write_a2(sim.root, [0] * 6)
+    write_a9(sim.root, [0] * 12, [0] * 12)
+    out, calls = sim.run(MIXED, DRY_RUN=0, FAKE_SINFO="idle 9\n", **gpu2())
+    slots, nodes, ntasks, line = sbatch_of(calls)
+    assert (nodes, ntasks) == (2, 8)
+    assert slots == [f"a2:gemma4:{k}" for k in range(3)] + [f"a2:qwen3vl:{k}" for k in range(3)] + [
+        "a9smoke:gemma4:0", "a9smoke:qwen3vl:0"]
+    assert line.endswith("slurm_jobs/study3_intr_slices_mixed.sh")
+    assert [c for c in calls if c.startswith("scontrol")] == ["scontrol hold " + " ".join(
+        [f"40468625_{k}" for k in range(3)] + [f"40468626_{k}" for k in range(3)] + ["40843619_0", "40843620_0"])]
+
+
+def test_mixed_scored_a9_waits_for_the_allow_list_and_the_smoke(sim):
+    write_a2(sim.root, [1000] * 6)
+    write_a9(sim.root, [0] * 12, [0] * 12, smokes=(40, 10))
+    allow(sim.root, "gemma4", "qwen3vl")
+    out, calls = sim.run(MIXED, DRY_RUN=0, FAKE_SINFO="idle 9\n", **gpu2(**{"40468625": 1, "40468626": 1}))
+    slots, nodes, _, _ = sbatch_of(calls)
+    # Qwen's smoke is not complete, so only Gemma's scored shards may run, after A2 and Qwen's smoke.
+    assert slots[:7] == [f"a2:gemma4:{k}" for k in range(3)] + [f"a2:qwen3vl:{k}" for k in range(3)] + [
+        "a9smoke:qwen3vl:0"]
+    assert slots[7:] == [f"a9:gemma4:{k}" for k in range(5)]
+    assert nodes == 3
+    assert "scancel 40843619_0" in calls  # Gemma's smoke is complete; its held gpu2 job is cancelled
+
+
+def test_mixed_scored_a9_only_for_listed_models_partial_first(sim):
+    write_a2(sim.root, [A2_PLANNED] * 4 + [2000, 2100])
+    write_a9(sim.root, [0, 0, 500] + [0] * 9, [100] + [0] * 11, smokes=(40, 40))
+    allow(sim.root, "qwen3vl")
+    out, calls = sim.run(MIXED, DRY_RUN=0, FAKE_SINFO="idle 9\n", **gpu2())
+    slots, nodes, _, _ = sbatch_of(calls)
+    assert slots == ["a2:qwen3vl:1", "a2:qwen3vl:2", "a9:qwen3vl:0"] + [f"a9:qwen3vl:{k}" for k in range(1, 10)]
+    assert not [s for s in slots if s.startswith("a9:gemma4")]
+    assert nodes == 3
+
+
+def test_mixed_stops_when_only_unallowed_a9_shards_are_left(sim):
+    write_a2(sim.root, [A2_PLANNED] * 6)
+    write_a9(sim.root, [0] * 12, [0] * 12, smokes=(40, 40))
+    out, calls = sim.run(MIXED, DRY_RUN=0, FAKE_SINFO="idle 9\n", **gpu2())
+    assert re.search(r"^STOP: only A9 scored shards are left", out, re.M)
+    assert not [c for c in calls if c.startswith("sbatch")]
+
+
+def test_mixed_done_when_everything_is_complete(sim):
+    write_a2(sim.root, [A2_PLANNED] * 6)
+    write_a9(sim.root, A9_PLANNED, A9_PLANNED, smokes=(40, 40))
+    allow(sim.root, "gemma4", "qwen3vl")
+    out, calls = sim.run(MIXED, DRY_RUN=0, FAKE_SINFO="idle 9\n")
+    assert re.search(r"^No shard left to slice\.$", out, re.M)
+    assert not [c for c in calls if c.startswith("sbatch")]
+    assert chain_total(out) == 6 * A2_PLANNED + 2 * sum(A9_PLANNED) + 80
+
+
+@pytest.mark.parametrize("case", ["smoke not ok", "a9 over-full", "a2 odd status"])
+def test_mixed_stops(sim, case):
+    write_a2(sim.root, [10] * 6)
+    write_a9(sim.root, [0] * 12, [0] * 12, smokes=(40, 40), smoke_status="error" if case == "smoke not ok" else "ok")
+    if case == "a9 over-full":
+        (sim.root / "results/a9/cells_gemma4_5.jsonl").write_text('{"status": "ok", "seconds": 1}\n' * (A9_PLANNED[5] + 1))
+    if case == "a2 odd status":
+        with open(sim.root / "results/stimulus_interventions/cells_qwen3vl_shard1.jsonl", "a") as handle:
+            handle.write('{"status": "weird", "seconds": 1}\n')
+    allow(sim.root, "gemma4", "qwen3vl")
+    out, calls = sim.run(MIXED, DRY_RUN=0, FAKE_SINFO="idle 9\n", **gpu2())
+    assert re.search(r"^STOP:", out, re.M)
+    assert not [c for c in calls if c.startswith("sbatch")]
+
+
+def test_mixed_dry_run_changes_nothing(sim):
+    write_a2(sim.root, [0] * 6)
+    write_a9(sim.root, [0] * 12, [0] * 12)
+    out, calls = sim.run(MIXED, DRY_RUN=1, FAKE_SINFO="idle 9\n", **gpu2())
+    assert calls == []
+    assert re.search(r"^DRY RUN: nothing changed\.$", out, re.M)

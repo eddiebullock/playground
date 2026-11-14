@@ -93,6 +93,14 @@ Thumbs.db
 !results/baseline/eu_emotions/gemma4/eval_v2_eu_emotions_gemma4_video_only_seed42.json
 !results/baseline/eu_emotions/molmo2/eval_v2_eu_emotions_molmo2_video_only_seed42.json
 
+# Locked Phase 3 summaries (small JSON; the cells stay on the cluster, their sha256 in the pull manifests).
+!results/a4/summary.json
+# Phase 3 cells pulled from the cluster: large, never committed (sha256 in research/reproduction/*_pull_manifest.json).
+results/a4/cells_*.jsonl
+results/a9/cells_*.jsonl
+results/stimulus_interventions/cells_*.jsonl
+results/a7/a7_cells_*.jsonl
+
 !results/figures/study3/*.png
 !results/figures/study3/*.pdf
 !results/README.md
