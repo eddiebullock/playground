@@ -54,10 +54,11 @@ Rule: `research/PREREG_A4_DRAFT.md:121-137`. Each dataset alone, then one headli
 
 Rule and wording fixed before any model data (`research/PREREG_A9_DRAFT.md`, "Relation to A4" and block `replication`). Comparator: the same model's A4 decision on basic WC; A4's basic headline beside it. A9 is a second sample on the same platform (lab, generator, protocol, culture) and the same renders, not a second method, and is never called independent of the GFG platform. Never "A9 confirms A4" or "A9 overturns A4".
 
-- **Both Aligned.** The basic-label alignment for [model] replicated on a second human sample (same lab and generator), Liu et al.'s 20 observers, with residual alignment [value] ([CI]).
-- **Both Not aligned on these renders.** For [model], the Not aligned result replicated on Liu et al.'s observers.
-- **One of each.** For [model] the result did not replicate: A4 basic WC was [class], A9 was [class]. Both are reported and no pooled claim is made. The two samples differ in observers and in configurations (Liu's faces carry 1 to 6 actions).
-- **Either Inconclusive, or A4 basic WC not run for the model.** Replication not testable for [model], because [gate or test].
+<!-- 2026-11-14, step 4.3: branches picked for the locked A9 summary (RESULTS_REGISTRY, "A9 confirmatory analysis (2026-11-14)"; Results, Section 6b). The drafted branches are in the git history at 453d69e. -->
+
+**Gemma 4: both Aligned.** Gemma 4's basic-label alignment replicated on a second human sample (same lab and generator), Liu et al.'s 20 observers, with residual alignment .483 (.469 to .496). That is a second sample on the same platform and the same renders, not a second method, so it strengthens the claim about these renders and no more.
+
+**Qwen3-VL: replication not testable.** Qwen3-VL was Not aligned on Liu's renders, but its A4 basic WC decision was Inconclusive because a validity gate failed, so the replication is not testable. The A9 result stands on its own terms: on the second sample, every gate passed, and its cue effects were above chance but below the smallest value of interest.
 
 An A9 Inconclusive is never a failure to replicate. A9 cannot change an A4 verdict.
 

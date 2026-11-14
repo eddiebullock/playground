@@ -103,8 +103,8 @@ def test_inventory_covers_every_committed_output(rp):
 
 # A1 and the natural-clip model files left this list when they were locked (2026-11-09) and are now
 # hash-verified records; A6 left it when it was closed as a limit without running (2026-11-10); A4's
-# summary and Figure 5 left it when A4 was locked (2026-11-14).
-PENDING_TOKENS = ("stimulus_interventions_{m}", "a5_analysis", "a7_analysis", "results/a9/summary")
+# summary and Figure 5 left it when A4 was locked, and A9's summary when A9 was (both 2026-11-14).
+PENDING_TOKENS = ("stimulus_interventions_{m}", "a5_analysis", "a7_analysis")
 
 
 def test_pending_never_in_a_step(rp):

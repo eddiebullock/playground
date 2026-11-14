@@ -166,21 +166,15 @@ Qwen3-VL is Inconclusive on both tasks [REG: A4 table, headlines]. On three data
 
 Not aligned is written "not aligned on these renders". With one dataset there is no WC and EA headline, so the per-model decision is A9's result (same section). Human-level only if the interval reaches the residual Liu against Snoek basic WC reference, which is descriptive (`PREREG_A9_DRAFT.md`, "Human target", "Human reference, descriptive"; value .690, `research/reproduction/a9_human_ceiling.json`, `human_reference_cfa.basic_WC.residual` [REG: "Rows added 2026-11-12, late", A9 human ceiling and reference]). Gates: RQ0 at `single_face`, G2 to G4, V1 inherited from A4's pilot, V2 to V4 recomputed on Liu renders (`PREREG_A9_DRAFT.md`, Validity gate). Design B, by recovery. Decisions stay confirmatory whatever a model's correlation across faces. The accuracy claim for residual CEA on weak effects (0.25 times) is withdrawn under correlated face noise (lead decision 8; block `withdrawn_under_correlated_face_noise`).
 
-**Slots.** From `results/a9/summary.json` (written by `scripts/a9_analyse.py`), per model (`models.<model>`):
-- residual CEA, CI, R_S: [PENDING: `residual.cfa`, `residual.ci`, `residual.r_s`]
-- alignment Holm *P* within A9, signal *P*: [PENDING: keys as written by `a4_analyse.apply_rule`]
-- gates (RQ0, G2 to G4, V1 to V4): [PENDING: gates block]
-- decision: [PENDING: `decision`]
-- configurations kept and share lost under design B: [PENDING: `n_configurations`, `share_lost`, `lost_ok`]
-- residual correlation across faces, descriptive, with no label on the decision: [PENDING: `face_shared_residual_correlation`]
-- the reading the replaced first operationalisation of lead decision 2 would have given, descriptive, reported beside the decision so readers have both: [PENDING: `earlier_rule_reading_descriptive`]
-- replication reading against the same model's A4 basic WC decision, with A4's basic headline beside it: [PENDING: `replication.reading`, `replication.reason`, `replication.a4_basic_WC_decision`, `replication.a4_basic_headline_beside`]
-- ratio to ceiling, descriptive: [PENDING: `residual.over_ceiling`, `residual.lower_bound_only`]
-- raw CEA, secondary: [PENDING: `raw.cfa`, `raw.ci`]
-- sensitivities (presence coding, without AU22 and AU27, without the abstain row, flagged against confirmed families, `frame_max`): [PENDING: `sensitivities`]
-- behaviour beside CEA, per configuration: [PENDING: `behaviour`]
-- Molmo2, descriptive if run: [PENDING]
-- side-by-side with A4, labelled as separate tests, descriptive only: [PENDING]
+<!-- 2026-11-14, step 4.1: the slot list is replaced by the locked text (`results/a9/summary.json`, sha256 1d1a9995...; run note `research/reproduction/a9_run_note.json`). The slot list is in the git history at 453d69e. -->
+
+**Locked text (read 14 November 2026).** Both models passed every gate on Liu's renders. For both, all 1,200 configurations entered under design B (none lost), and the rendered action units moved the responses (signal *P* = .001) [REG: "A9 gates"; "A9 configurations and share lost"; A9 table].
+
+Gemma 4 is aligned with the second sample's cue effects: residual CEA .483 (95% CI .469 to .496; *R_S* = .993; alignment Holm *P* within A9 = .00020) [REG: A9 table]. Its A4 decision on basic WC was Aligned, so, in the words fixed before data, the result "replicated on a second human sample (same lab and generator)" [REG: A9 table, replication]. Its interval does not reach the residual Liu against Snoek basic WC reference (.690), so it is not human-level by that descriptive standard [REG: "A9 human references"]. No sensitivity changed the reading: residual CEA stayed between .445 and .523 [REG: "A9 sensitivities"].
+
+Qwen3-VL is not aligned on these renders. Its residual CEA was .230 (.189 to .269; *R_S* = .973), and its upper bound after correction for reliability, .273, is below .30 [REG: A9 table; "A9 residual CI upper bound over the square root of R_S"]. Its cue effects line up with people's above chance (Holm *P* = .037), but by less than the smallest value of interest. Its A4 decision on basic WC was Inconclusive, because the domain gate failed there, so replication is "not testable" [REG: A9 table, replication]. On the flagged families alone its residual CEA was .321, and on the detector-confirmed families -.224. These sit beside the primary and do not replace it [REG: "A9 sensitivities"].
+
+*Descriptive.* Beside each decision, as fixed before data: the estimated correlation across faces was .192 for Gemma 4 and .338 for Qwen3-VL, both within the range recovery tested (up to .5). Under the replaced first operationalisation, both decisions would have been labelled "outside the recovery-validated conditions" (Methods, "The narrowing") [REG: "A9 descriptive fields"]. Raw CEA, secondary, was .450 (.438 to .458) and .102 (.078 to .124) [REG: "A9 raw CEA with 95% CI"]. Behaviour on the same renders was weaker than the cue effects, as in A4: output r = .290 for Gemma 4 and .083 for Qwen3-VL [REG: "A9 behaviour on the same renders"]. Side by side with A4, as separate tests that are never pooled, Gemma 4's residual CEA was .483 here and .386 on A4's basic WC. Molmo2 was not run.
 
 **Replication wording, fixed before data** (`PREREG_A9_DRAFT.md`, Relation to A4; block `replication`). Comparator: the same model's A4 decision on basic WC. A4's basic headline is reported beside it, never used as the comparator.
 
@@ -241,11 +235,11 @@ Gate B is B1 to B5 (`research/PREREG_A2_DRAFT.md:109-117`). A model and route th
 
 **Locked cells.** A1 Pass and A3 Pass for all three models, so face use on both inputs (Section 2). Natural clips: aligned with the human pattern, confirmatory, for all three (Section 4). Molmo2 is not eligible for A2 or A4, on its gate failures (Section 1), so its row ends there.
 
-**Locked cells (A4, read 14 November 2026).** Under randomisation (Section 5), Gemma 4's headline is Aligned for basic labels and Mixed for conversational states, and Qwen3-VL's is Inconclusive for both [REG: A4 table, headlines].
+**Locked cells (A4, read 14 November 2026).** Under randomisation (Section 5), Gemma 4's headline is Aligned for basic labels and Mixed for conversational states, and Qwen3-VL's is Inconclusive for both [REG: A4 table, headlines]. On the second human sample (A9, Section 6b), Gemma 4 is Aligned, replicated on a second human sample (same lab and generator), and Qwen3-VL is Not aligned on these renders, with replication not testable [REG: A9 table].
 
 **Slots.** Gemma 4 and Qwen3-VL: [PENDING: A2 classes per route].
 
-**Figure.** Table 1 (`research/paper/v2/table1.md`), built by `research/scripts/make_table1.py` from locked outputs only; its A2 and A9 cells read pending until each analysis's run note is complete (A4's is, since 14 November 2026), and its A2 classes are the verdicts after the fill-rule ruling.
+**Figure.** Table 1 (`research/paper/v2/table1.md`), built by `research/scripts/make_table1.py` from locked outputs only; its A2 cells read pending until A2's run note is complete (A4's and A9's are, since 14 November 2026), and its A2 classes are the verdicts after the fill-rule ruling.
 
 ## 8b. Larger models in the same families (A8)
 
