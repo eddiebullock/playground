@@ -2,9 +2,9 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-11-14 11:37 Europe/London
+**Updated:** 2026-11-14 12:41 Europe/London
 
-## Hand-off, 2026-11-14 (written 01:38, last refreshed 07:22)
+## Hand-off, 2026-11-14 (written 01:38, last refreshed 12:41)
 
 **A4 is done and analysed, once, by its frozen code** (RESULTS_REGISTRY, "A4 confirmatory analysis (2026-11-14)"; Results, Sections 5 and 6; Figure 5).
 - **Gemma 4: Aligned on basic labels, Mixed on conversational states.**
@@ -28,16 +28,25 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
   - The local pre-freeze copy of A9's manifest was byte-identical to the pin. It was moved to `results/a9_local_premanifest/` so that the pull could write the cluster's copy.
 - Written into the paper: Results 6b and 8, the Discussion (A9 branches), Table 1 (A9 column) and `reproduce.py` (A9 records hash-pinned).
 
-**Running now: A2's three Qwen shards, in `intr` slices** (the combined chain started on its own at 01:03 when A4 finished; DECISIONS 2026-11-13, A2 entry).
-- A2 Gemma 4: all three shards complete at 05:35 (2,349 cells each; 28, 20 and 42 "failed" with reasons, as A2's design writes them).
-- A2 Qwen3-VL: 1,355 to 1,388 of 2,349 per shard at 07:22, at about 13.5 s per cell, about 190 cells a slice on one node. Complete around 12:30.
-- No line has needed A2's repair rule (A2-2) so far.
-- Then: pull, `analyse a2`, then A5 (ROADMAP Part 3), then the A2 parts of the paper: Results 7, Figure 6, the Abstract's last two sentences and the Discussion's opening paragraph.
+**A2 is done and analysed (12:26 to 12:28), and A5 after it (12:32)** (RESULTS_REGISTRY, "A2 confirmatory analysis (2026-11-14)" and "A5 confirmatory analysis (2026-11-14)"; Results, Sections 7 and 10; Figure 6).
+- **A2:** every gate passed on both routes for both models.
+  - On a single face, masks and frequency filters matched the human-derived predictions on 5 of 10 contrasts for Gemma 4 and 4 of 10 for Qwen3-VL, three per model at *P* < .01.
+  - Frame-order changes matched nothing, and Gemma 4 had one Opposes (P12, not at .01). No Null.
+  - Sensitivity: only P1 (the mouth mask on Happy) holds on both models in every sensitivity.
+- **A5:** the evidence class (the only confirmatory claim) is Shown on all four model-and-route cells. Balance, descriptive, is Even for Gemma 4 and Face for Qwen3-VL.
+- **Written into the paper:**
+  - Results 7, 8 and 10;
+  - Figure 6 (checked by eye) and Table 1 (complete);
+  - the Discussion: opening paragraph assembled, RQ2 and RQ4 branches picked;
+  - the Abstract, complete at 149 words;
+  - Supplementary Methods S8, "A2 results in full";
+  - `reproduce.py`, where A2's and A5's records are hash-pinned and Figure 6 is a rebuild step.
+- The frozen A2 run printed a numerical warning from its fill check. Traced with the frozen functions, it changes no verdict (registry note).
 
-**A7 Stage 1 (your choice at about 08:40, option (a)):** one whole `intr` job after A2's last slice (DECISIONS 2026-11-14).
-- Four one-GPU steps with the arrays' settings and 59-minute caps, through the pinned `study3_a7.sh`.
-- The wrapper `slurm_jobs/study3_intr_a7_stage1.sh` passed 11 stub checks and is on the cluster. The four `gpu2` tasks are held.
-- A sequencer on the Mac (scratchpad `seq_a7.sh`) submits it when the combined chain ends with A2 complete, around 12:20, so A7's cells should be ready around 13:30, after A2's analysis.
+**A7 Stage 1 (your choice at about 08:40, option (a)): the first run hit a path fault, and the rerun is running.**
+- The whole job (40966325, 12:28 to 12:33) wrote 400 rows, all "failed: video_unreadable". A7's runner defaults its data root to the project root and its pinned job script passes none, while the clips are under `data/eu_emotions`. No clip was loaded, so there is no model output.
+- Documented before the rerun as a deviation (DECISIONS 2026-11-14; PREREG_A7 dated note; decisions table row 90): a copy of the pinned job script that adds only `--data_root data/eu_emotions`. The failed rows were moved unchanged to `results/a7_path_fault/`.
+- Rerun job 40966694 was submitted at 12:38. Then: pull, `analyse a7` (its pre-run check needs A2's run note, which exists), and Results 9.
 
 **Only you can do these:**
 - Unchanged from yesterday (items below): the ethics confirmation; at submission, the Zenodo DOI and authors; optionally, the GitHub Support purge; the A8 note review.
@@ -266,6 +275,13 @@ With cuts 4 and 5, the main text is about 490 words shorter. What remains waits 
 - The Discussion's 26-item Limitations list moved word for word to Supplementary Methods, Section S12, and the decisions table's 40 citations now point there.
 - The Discussion keeps a 207-word paragraph on the five limits that bear on the claims.
 - A2's last Qwen cells are finishing, and A7 follows on its own.
+
+**2026-11-14 12:41:** A2 complete at 12:25.
+- 13 combined slices; six shards of 2,349 cells, with no A2-2 repair.
+- Pulled at 12:26 and analysed once, 12:26 to 12:28. A5 analysed once at 12:32.
+- A7's whole job ran 12:28 to 12:33 and every row failed on a path fault. The deviation was documented, then rerun job 40966694 was submitted at 12:38.
+- Paper: Results 7, 8 and 10; Figure 6; Table 1; Discussion opening, RQ2 and RQ4; Abstract complete; S8 full account; `reproduce.py`.
+- Commits `e36fd7a`, `6d01d23`, `1666513`, `3f718bb` and later.
 - Full suite at `d21f2f0`: 1,123 passed, 26 skipped, 0 failed. Clean-checkout reproduction of the changed steps: Table 1 and Figure 5 byte-identical, A4's and A9's eight records verified by hash, 0 failed. Merged into `main` as PR #121, true merge commit `96a1ce4` (06:50).
 
 **2026-11-13 11:47:** Supplementary decisions table brought up to date: rows 81 to 83 for today's three new decision-log entries, and a superseded-entries row (75 to 83). It again has one row per entry, 83, checked in order against DECISIONS. ROADMAP Phase 4 status refreshed: every step that needs no new GPU output is done. The node counts in the 11:20 correction now include the node that was powering up. Full suite at `62a8b79` with these record edits: 1,096 passed, 26 skipped, 0 failed. Merged into `main` as PR #115, true merge commit `da95a75` (11:48).

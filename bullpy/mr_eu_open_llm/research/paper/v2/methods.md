@@ -236,7 +236,7 @@ A2 tests a narrower thing, its stimulus arm: whether region masks, spatial-frequ
 
 **Null rule.** A null needs delivery to pass, a positive control showing that the cue type can move this model on this route, a null joint ablation of eyes and mouth where one exists, and equivalence: the 90% actor-bootstrap interval lies inside a margin of 10% of that model's mean absolute CLR change under the full image mismatch of B4 on that route. By design, P5, P6, P9, P10, P14 and P15 cannot reach Null, which is 8 of the 16 contrasts, or 10 of 16 on Qwen3-VL, whose P12 and P13 are also capped because frame order cannot be verified there.
 
-**Runs.** The six full-run shards ran on A100 GPUs in bfloat16 through the frozen runner, with the full run's settings. For queue reasons they ran in one-hour slices, and the runner resumed each shard, skipping cells already written. Before each slice, A2's own rule for unparseable lines (ruling A2-2) was applied, with a log [PENDING: lines removed, from `results/stimulus_interventions_torn/repairs.jsonl`, at A2's lock]. Completeness was decided only by the frozen pre-run check (supplementary table of dated decisions and deviations, rows 86 and 87).
+**Runs.** The six full-run shards ran on A100 GPUs in bfloat16 through the frozen runner, with the full run's settings. For queue reasons they ran in one-hour slices, and the runner resumed each shard, skipping cells already written. Before each slice, A2's own rule for unparseable lines (ruling A2-2) was applied, with a log and no line needed it. Completeness was decided only by the frozen pre-run check (supplementary table of dated decisions and deviations, rows 86 and 87).
 
 Full details: Supplementary Methods, Section S8.
 

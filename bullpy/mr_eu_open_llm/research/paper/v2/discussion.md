@@ -10,19 +10,9 @@ Classes are taken from the amendments and DECISIONS, with no class added. The Di
 
 ## Opening paragraph
 
-Built from three parts: a fixed opening, one A4 sentence group from the live scenario, and one A2 sentence. Scenarios from outline.md, "How the whole paper reads". [PENDING: scenario, once A4 and A2 are locked.]
+<!-- 2026-11-14, step 4.3: assembled from the fixed opening, the live scenario (S6, the models differ, with S1 for Gemma 4 on basic labels and S5 for Qwen3-VL) and the A2 sentences R2-b and R2-c, all drafted before the data. The scaffold is in the git history at 3f718bb. -->
 
-**Fixed opening (locked parts only).** We asked how similar vision-language models are to people in how they read emotion from faces, beyond giving the same answers. Three findings hold whatever the later tests showed. The design we used before, and several published designs, let option position or prompt text identify the answer, so accuracy on such designs is not evidence that a model read the face (Results, Section 1). Once option position was rotated and the prompt held fixed, the answers of all three models depended on the face shown (Section 2), and on natural clips their graded responses lined up with the human pattern over four families of facial actions (Section 4). And alignment of that kind cannot show which cues a model uses, because a model that responds to unmeasured cues correlated with the measured ones produces the same score (Section 3; Supplementary Note 1). The randomised test was built to reach past that limit.
-
-**S1 (A4 Aligned on a task for [models]).** When facial actions were randomised on rendered faces, so that no cue could stand in for another, the cue effects of [models] lined up with those measured in people on [task] labels, beyond what chance and measurement noise allow. That is a shared pattern of cue effects on these renders, at a peak frame; it is not evidence that the models follow the same strategy, and no test here reaches computation.
-
-**S3 (A4 Not aligned on these renders for [models]).** When facial actions were randomised on rendered faces, the cue effects of [models] stayed below the floor we set for alignment, even after correction for measurement noise: not aligned on these renders. Agreement on natural clips therefore did not carry over to randomised cue effects on rendered faces. The identifiability result allows exactly this, since a model can match the human pattern on natural clips through cues that are correlated with the ones people use. It does not show that this is what happened, because rendered faces differ from natural ones in domain, in motion and in how intensity maps to amplitude.
-
-**S5 (A4 Inconclusive for [models]).** The randomised test did not reach a decision for [models], because [gate or test]. The audit and the identifiability results stand without it, and the cue-level question stays open with its requirements stated: [a render validated by a detector for the failing families, or the original stimuli].
-
-**S6 (the models differ).** The two eligible models reached different degrees of similarity: [model] [degree], [model] [degree]. We report them as profiles and make no pooled statement.
-
-**A2 sentence, one of.** (R2-a or b) Region masks, frequency filters and changes of frame order moved the option-free judgement in the direction people's data predict for [n of 16] contrasts, on basic labels in this stimulus set. (R2-c) For [contrasts], the edits moved the judgement against the stated human prediction. (R2-d) Most stimulus edits were not decided, and capped contrasts cannot reach a null by design. (R2-f) The option-free readout carried no usable face signal for [model and route], so the stimulus edits could not be tested there.
+We asked how similar vision-language models are to people in how they read emotion from faces, beyond giving the same answers. Three findings hold whatever the later tests showed. The design we used before, and several published designs, let option position or prompt text identify the answer, so accuracy on such designs is not evidence that a model read the face (Results, Section 1). Once option position was rotated and the prompt held fixed, the answers of all three models depended on the face shown (Section 2), and on natural clips their graded responses lined up with the human pattern over four families of facial actions (Section 4). And alignment of that kind cannot show which cues a model uses, because a model that responds to unmeasured cues correlated with the measured ones produces the same score (Section 3; Supplementary Note 1). The randomised test was built to reach past that limit. The two eligible models reached different degrees of similarity there, and we report them as profiles with no pooled statement. When facial actions were randomised on rendered faces, so that no cue could stand in for another, Gemma 4's cue effects lined up with those measured in people on basic labels, in two observer groups and again in a second human sample, beyond what chance and measurement noise allow. That is a shared pattern of cue effects on these renders, at a peak frame. It is not evidence that the model follows the same strategy, it falls short of the agreement between the two human groups, and no test here reaches computation. For Qwen3-VL the randomised test did not reach a decision, because its answers failed a validity gate on three of four datasets. On the second sample its cue effects were above chance but below the bound we set. Region masks and frequency filters moved the option-free judgement in the direction people's data predict for five of 16 contrasts on Gemma 4 and four on Qwen3-VL, on basic labels in this stimulus set. Changes of frame order matched no prediction, and on Gemma 4 shuffling frames moved the judgement against the stated prediction on one contrast.
 
 ## RQ0: dependence on the face
 
@@ -66,23 +56,28 @@ An A9 Inconclusive is never a failure to replicate. A9 cannot change an A4 verdi
 
 Rule: `research/PREREG_A2_DRAFT.md:188-206`, the deviation at `:332-353`, the .01 reading (DECISIONS 2026-11-08) and the pre-data rulings of 2026-11-12 (the fill rule also governs Opposes). BASIC ONLY scope on every result. RQ2 here is A2's stimulus arm, which says nothing on necessity or sufficiency of an AU, and nothing about how people would respond to these edits, which nobody has measured.
 
-- **Most predictions Match, Gate B passed (R2-a).** On basic labels, masking regions, filtering spatial frequencies and changing frame order moved [model]'s option-free judgement in the direction human studies predict for [n] of 16 contrasts on [route]. [n] of these also hold at *P* < .01, the level that keeps the familywise error under .05 under the skewed nulls we simulated (Methods). The predictions come from other stimuli, so a Match is agreement with a stated prediction, not with human data on these clips. A Match on P12 or P13 is a match to a weakly sourced prediction, against which the closest human test found no cost of shuffling.
-- **Mixed classes (R2-b).** Report by cue type. [Regions] matched, [frequency bands] [class], [temporal order] [class]. Say which hold at *P* < .01.
-- **Several Oppose (R2-c).** For [contrasts], the edits moved [model]'s judgement against the stated prediction, with the other two fills agreeing in sign with the neutral fill, as the fill rule requires. An Opposes on P12 or P13 says nothing against human alignment, since the closest human test found no cost of shuffling.
-- **Mostly Inconclusive (R2-d).** Most contrasts were not decided. Eight of 16 contrasts, and 10 of 16 on Qwen3-VL, cannot reach Null by design, because their predictions are capped; we give their 90% equivalence intervals ([range]) and do not call them nulls.
-- **Null on eligible contrasts (R2-e).** For [contrasts] on [model and route], the edit left the option-free judgement unchanged within the margin. Null is hard to reach under A2's rules, so this is a real result, for that cue, model and route only.
-- **Gate B fails (R2-f).** For [model and route], the option-free readout carried no usable face signal (failed [B-check]), so no RQ2 claim is made there. This is also a finding for RQ4 (A5).
-- **No model eligible (R2-g).** Report the gates and stop; RQ2 is not tested.
+<!-- 2026-11-14, step 4.3: R2-b (mixed classes, by cue type) with R2-c for Gemma 4's P12 and the R2-d note on capped contrasts, for the locked A2 outputs (RESULTS_REGISTRY, "A2 confirmatory analysis (2026-11-14)"; Results, Section 7). The other drafted branches are in the git history at 3f718bb. -->
+
+**Mixed classes, by cue type (R2-b).**
+- *Region masks.* These matched where the predictions are strongest: the mouth mask on Happy (P1, both models), the mouth-minus-eye contrast (P6, both models) and the brow mask on Angry (P5, both). Qwen3-VL also matched the eye mask on Sad (P4).
+- *Frequency filters.* These matched on Gemma 4 (P9 and P10) and were not decided on Qwen3-VL.
+- *Frame order.* This matched nothing.
+- *The stricter level.* At *P* < .01, which keeps the familywise error under .05 under the skewed nulls we simulated (Methods), three Matches hold per model: P1, P6 and P10 on Gemma 4, and P1, P5 and P6 on Qwen3-VL.
+- *Robustness.* Only P1 stayed Matches on both models under every sensitivity, so beyond the mouth mask on Happy these agreements depend on which items are included.
+
+The predictions come from other stimuli, so a Match is agreement with a stated prediction, not with human data on these clips.
+
+**One Opposes (R2-c).** For Gemma 4, shuffling frames on Happy and Surprised raised the acted label, against the stated prediction (P12; not at *P* < .01). An Opposes on P12 says nothing against human alignment, since the closest human test found no cost of shuffling.
+
+The contrasts that cannot reach Null by design are given as 90% equivalence intervals, not as nulls (Section S8). No contrast met every condition of the null rule.
 
 ## RQ4: prior and evidence (A5)
 
 Rule: `research/PREREG_A5_DRAFT.md:226-231`, with balance descriptive (`:574-576`), and the pre-data rulings of 2026-11-12 (input errors void a run; Absent reported with E*'s interval, "below the margin" where it excludes 0). A5 is a reanalysis of A2's cells, so it exists only where A2 ran.
 
-- **Shown.** On [route], evidence from the face moved [model]'s option-free judgement towards the portrayed word, with Gate B passed, so the judgement is not word knowledge alone. Balance between prior and evidence ([class]) and the share carried by words ([value]) are description, not claims.
-- **Unmapped.** Portrayals moved [model]'s judgement consistently, but not towards the acted word. [If only B3 failed: the shift is too small on the image scale to be called mapped.]
-- **Absent.** On [route], we found no face evidence in [model]'s option-free judgement, with E* at [value] ([interval]), even though face information was shown to reach the output. The word-knowledge reading needs Absent together with Default balance, and balance is descriptive here, so we state it as absent evidence with the balance beside it ([class]).
-- **Unresolved.** Not decided, [reason code].
-- **A2 not run for a model and route.** A5 has nothing to classify there; not tested.
+<!-- 2026-11-14, step 4.3: the Shown branch, which matches the locked A5 output on every model and route (RESULTS_REGISTRY, "A5 confirmatory analysis (2026-11-14)"; Results, Section 10). The other drafted branches are in the git history at 3f718bb. -->
+
+**Shown, on both models and both routes.** Evidence from the face moved each model's option-free judgement towards the portrayed word, with Gate B passed, so the judgement is not word knowledge alone. The balance between prior and evidence (Even for Gemma 4, Face for Qwen3-VL) and the share carried by words are description, not claims.
 
 ## Larger models (A8)
 
