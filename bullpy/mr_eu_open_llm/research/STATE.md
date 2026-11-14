@@ -251,6 +251,7 @@ With cuts 4 and 5, the main text is about 490 words shorter. What remains waits 
 - `pull a9` at 06:33 copied 25 files with their sha256. The first try was refused before copying, because a byte-identical local manifest existed; it was moved aside unchanged.
 - `analyse a9`: pre-run check and frozen analysis 06:33 to 06:34 (run note; summary sha256 `1d1a9995...`).
 - Commits `453d69e` (records and registry) and `39ef296` (Results 6b and 8, Discussion, Table 1, `reproduce.py`).
+- Full suite at `d21f2f0`: 1,123 passed, 26 skipped, 0 failed. Clean-checkout reproduction of the changed steps: Table 1 and Figure 5 byte-identical, A4's and A9's eight records verified by hash, 0 failed. Merged into `main` as PR #121, true merge commit `96a1ce4` (06:50).
 
 **2026-11-13 11:47:** Supplementary decisions table brought up to date: rows 81 to 83 for today's three new decision-log entries, and a superseded-entries row (75 to 83). It again has one row per entry, 83, checked in order against DECISIONS. ROADMAP Phase 4 status refreshed: every step that needs no new GPU output is done. The node counts in the 11:20 correction now include the node that was powering up. Full suite at `62a8b79` with these record edits: 1,096 passed, 26 skipped, 0 failed. Merged into `main` as PR #115, true merge commit `da95a75` (11:48).
 
