@@ -2,7 +2,7 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-11-14 03:08 Europe/London
+**Updated:** 2026-11-14 05:43 Europe/London
 
 ## Hand-off, 2026-11-14 (written 01:38)
 
@@ -227,6 +227,17 @@ With cuts 4 and 5, the main text is about 490 words shorter. What remains waits 
   - Figure legends 2, 4 and 5 checked against the built figures (`e3a2868`, `20f42f7`).
   - `registry_tables.py a9`, written on A9's frozen schema before any A9 output (`aa5200c`).
 - No failures; RDS 1,067.6 GB, 991,289 files.
+
+**2026-11-14 05:43:** Slices 40950433 (02:55 to 03:47), 40952562 (03:48 to 04:41) and 40954249 (04:41 to 05:35) all ended COMPLETED.
+- **A2 Gemma 4:** all three shards complete at 2,349 cells each. 28, 20 and 42 cells are "failed", with reasons, as A2's design writes them. The held `gpu2` tasks 40468625_0 to _2 are cancelled.
+- **A9:** all twelve Gemma shards and Qwen shards 0 to 8 are complete, each at its planned count, all ok. Their held tasks are cancelled.
+- **A2 Qwen3-VL:** 980 to 1,008 of 2,349 per shard, about 190 a slice, so complete around 12:30.
+- Slice 40955884 (from 05:36, two nodes) carries A2's three Qwen shards and A9 Qwen shards 9 to 11. A9 should be complete when it ends, around 06:30. I then pull and analyse A9 (its pre-run check needs A4's run note, which exists).
+- No A2 line has needed the A2-2 repair so far.
+- Local work:
+  - The Abstract's RQ1 sentence is filled from the A4 headlines; it is at 127 words with A2's two slots open (`bddf0aa`).
+  - Methods has "Runs" paragraphs for A9 and A2 (`94116b2`).
+- No failures; RDS 1,067.6 GB, 991,326 files.
 
 **2026-11-13 11:47:** Supplementary decisions table brought up to date: rows 81 to 83 for today's three new decision-log entries, and a superseded-entries row (75 to 83). It again has one row per entry, 83, checked in order against DECISIONS. ROADMAP Phase 4 status refreshed: every step that needs no new GPU output is done. The node counts in the 11:20 correction now include the node that was powering up. Full suite at `62a8b79` with these record edits: 1,096 passed, 26 skipped, 0 failed. Merged into `main` as PR #115, true merge commit `da95a75` (11:48).
 
