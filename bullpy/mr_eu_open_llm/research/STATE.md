@@ -2,9 +2,18 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-11-15 22:13 Europe/London
+**Updated:** 2026-11-15 22:45 Europe/London
 
-## Hand-off, 2026-11-14 (written 01:38, last refreshed 2026-11-15 22:13)
+## Hand-off, 2026-11-14 (written 01:38, last refreshed 2026-11-15 22:45)
+
+**Needs you now (22:30): a decision on A8** (NEEDS_INPUT item 14). Neither large model can run the frozen gate script on CSD3's A100s.
+- **Gemma 4 31B:** its adapter assumes per-layer inputs the model lacks. This case was preregistered (lead decision 5).
+- **Qwen3-VL-32B:** on two GPUs the script's hooks fail across devices, and on one GPU it ran out of memory (rows 99 to 101).
+- **Under the rules as they stand,** A8 ends after Phase A.
+- **The alternative** is a device-only deviation for Qwen3-VL-32B, checked first on the 8B sibling. I recommend it, but it is your call.
+- **Meanwhile,** nothing beyond Phase A is submitted. A3 for both models and Qwen's ladder are running.
+
+**New at 22:44: PR #128 merged into `main`** (`944f2ce`, a true merge commit): Phase A's first outcomes and rulings (rows 99 and 100). The full suite passed at `5aadea6`, the head merged: 1,154 passed, 26 skipped, 0 failed.
 
 **New at 22:12: Phase A, first outcomes (mechanics only; DECISIONS 2026-11-15, row 100).**
 - **Delivery ran for both models** (job 41048789): both launcher records say ok. The outputs are not read yet.
@@ -148,7 +157,7 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
 - One gap in A7's frozen code is disclosed: a descriptive rider (hybrid distance) the design names was never written by the runner (decisions table row 92). No verdict depends on it.
 
 **What is left.**
-- **A8** only. Its Freeze checklist is complete (2026-11-15, rows 96 to 98). Phase A runs in whole-node jobs (41048787, 41048788, 41048790 running; delivery done). Gemma 4 31B's gates are not tested (row 99), and Qwen3-VL-32B's gates are retried on one GPU (41051063; row 100). Then come A3's summary, the eligibility rules, and A1, A2 and A4, with settings set by dated note. Every GPU node is reserved from 2026-12-07 07:00.
+- **A8** only. Its Freeze checklist is complete (2026-11-15, rows 96 to 98). Phase A runs in whole-node jobs (41048787, 41048788, 41048790 running; delivery done). Gemma 4 31B's gates are not tested (row 99). Qwen3-VL-32B's gates failed on two GPUs (hooks) and on one (out of memory), so they are not tested too (rows 100 and 101). Under the rules as they stand, A8 ends after Phase A; a device-only deviation for Qwen3-VL-32B is your choice (NEEDS_INPUT item 14). Then come A3's summary, the eligibility rules, and A1, A2 and A4, with settings set by dated note. Every GPU node is reserved from 2026-12-07 07:00.
 - **Storage, watch item (20:27):** `/rds-d7/user/eb2007` holds 1,067.6 GB (soft quota 1,099.5, hard 1,209.5) and 991,398 files (limit 1,048,576). The file count is close to where another project's job filled it on 2026-11-09 (DECISIONS 2026-11-09). Nothing of this project is writing now.
 
 **Only you can do these:**

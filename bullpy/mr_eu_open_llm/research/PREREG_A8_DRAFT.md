@@ -993,3 +993,12 @@ Recorded in DECISIONS 2026-11-15.
 - **No other A8 script is affected.** The frozen scripts for A3, delivery, ladder, A1 (`scripts/evaluate.py`), A2 and A4 register no layer hooks, so two GPUs stay their setting.
 
 Recorded in DECISIONS 2026-11-15.
+
+**2026-11-15, about 22:30, Qwen3-VL-32B's gates on one GPU ran out of memory; by the rule of row 100 they count as not tested (no gate result exists).**
+- Job 41051063 (one GPU, 240 GB of host memory) loaded the model, then stopped on the first G2 forward pass after 6 minutes. The error was CUDA out of memory: 77.8 of the A100's 79.3 GiB were allocated, and only 167 MB were reserved but unused, so the cause was not fragmentation. The launcher's status is `out_of_memory`.
+- So the frozen gate script cannot run Qwen3-VL-32B on this hardware: on one GPU it runs out of memory, and on two its layer hooks fail across devices.
+- By the rule set before this retry (DECISIONS 2026-11-15, row 100), Qwen3-VL-32B's gates count as not tested: no gate result.
+- With Gemma 4 31B's gates also not tested (lead decision 5), no A8 model is eligible for A1, A2 or A4 under the rules as they stand. A8 then ends after Phase A.
+- A narrow deviation that would let the frozen gate script run on two GPUs (the position index moved to each layer's device in the hooks) is put to the author (NEEDS_INPUT item 14). Nothing beyond Phase A is submitted meanwhile. The second attempt's gate file has no verdict and stays where it is.
+
+Recorded in DECISIONS 2026-11-15.
