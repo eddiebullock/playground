@@ -111,6 +111,34 @@ These only matter at submission. Nothing waits on them.
 
 **Resolved 2026-11-14, about 08:40, on your instruction: option (a).** The wrapper `slurm_jobs/study3_intr_a7_stage1.sh` passed 11 stub checks and is on the cluster. The four `gpu2` tasks are held. A sequencer submits the job once A2's last slice ends (DECISIONS 2026-11-14).
 
+## 14. A8: neither large model can run the frozen gate script on CSD3's A100s. Should Qwen3-VL-32B continue under a device-only deviation? (decision, 2026-11-15, about 22:30)
+
+**What happened.**
+- **Gemma 4 31B stopped twice** in the frozen `gemma4` gate adapter. That adapter assumes the per-layer inputs of Gemma 4 E4B, and 31B has none.
+  - A8's lead decision 5 foresaw this case: no gate result, so no A1, A2 or A4.
+  - Its A3, delivery and ladder steps still run.
+- **Qwen3-VL-32B stopped twice too,** for a reason the design did not foresee:
+  - On two GPUs (my setting, row 97), the frozen script's layer hooks index each layer's output with positions held on the first GPU, so the layers on the second GPU fail.
+  - On one GPU, as the frozen sibling runs used, 67 GB of weights plus the first forward pass need more than the A100's 80 GB. The run stopped with CUDA out of memory.
+- By the rule I set before the one-GPU retry (row 100), Qwen3-VL-32B's gates now count as not tested.
+- So no A8 model can enter A1, A2 or A4, and A8 ends after Phase A (DECISIONS 2026-11-15, rows 99 to 101).
+
+**The choice.**
+- **(a) Keep the rule.** A8 ends after Phase A, with A3, delivery and ladder for both models.
+  - The paper reports A8's scored arms as not tested, with these two reasons, as a scoped limit.
+  - No GPU time is spent beyond Phase A.
+- **(b) A dated deviation for Qwen3-VL-32B only.** Run the frozen gate script on two GPUs with one change: in its hooks, the position index moves to each layer's own device before indexing. That changes where an index is held, not any value computed.
+  - The frozen file stays byte-identical. A small wrapper in A8's code applies the change at run time, so A8's code pins change, by dated deviation.
+  - Check first, on the frozen sibling Qwen3-VL-8B: the frozen gates command twice on one GPU, and the patched one once on two GPUs. The patched file must equal the frozen ones wherever the two frozen runs agree, which is the rule of A8's A1 equivalence test. About 7 GPU-hours.
+  - Then Qwen3-VL-32B's gates (about 7 hours on two GPUs). If they pass, A1, A2 and A4 follow under A8's unchanged rules: about 500 to 600 GPU-hours, against about 2,400 left, before the GPU reservation of 2026-12-07.
+  - Gemma 4 31B stays not tested, since lead decision 5 is explicit about its adapter.
+
+**Recommended default.** (b): the change is mechanical, it is shown not to change any output before it is used, and it is decided before any gate result exists.
+- Against it: it overrides a rule I set an hour earlier, and a reviewer may weigh any change to frozen code after a failure.
+- (a) is the strict reading. It is clean and costs nothing.
+
+**Meanwhile.** Nothing beyond Phase A is submitted. A3 for both models and Qwen3-VL-32B's ladder keep running.
+
 ## 13. CSD3 SSH: please log in again (2026-11-14, 22:36)
 
 **Context.** The Mac went into lid-closed sleep at 21:51:47 and woke at 22:34:52. The SSH master connection exited during the sleep: its keepalives give up after five minutes without an answer. New logins without it are refused (`Permission denied (publickey,keyboard-interactive,hostbased)`), because CSD3 asks for a one-time code. Cluster work has stopped; local work goes on.

@@ -1008,3 +1008,16 @@ The test is the one in the entry "A8's GPU equivalence test runs as one intr job
   - Gemma 4 31B's gates retry (job 41048790) stopped as the first attempt did, so its gates count as not tested (rule `not_tested_after_retry`; entry above, row 99). By lead decision 5 it is ineligible for A1, A2 and A4.
 - **What stays the same.** The design, rules, thresholds and frozen code. No gate result exists, and no A8 output was read beyond launcher status and errors.
 - **Disclosure.** Decisions table row 100; PREREG_A8, dated notes.
+
+## 2026-11-15: Qwen3-VL-32B's gates count as not tested after the one-GPU retry ran out of memory (rule of row 100; no gate result exists)
+
+- **Result.** The one-GPU retry (job 41051063, entry above) stopped on its first forward pass with CUDA out of memory. 77.8 of the A100's 79.3 GiB were allocated, and only 167 MB were reserved but unused. The launcher's status is `out_of_memory`.
+- **Rule applied.** Row 100: if the one-GPU retry failed, Qwen3-VL-32B's gates count as not tested, since two or more GPUs fail in the frozen hooks and one GPU is the only other setting. There is no gate result. By the stop rule, Qwen3-VL-32B does not run A1, and it is ineligible for A2 and A4.
+- **Consequence.** Gemma 4 31B's gates are also not tested (row 99, lead decision 5). So under the rules as they stand, no A8 model enters A1, A2 or A4, and A8 ends after Phase A (A3, delivery and ladder for both models). The reason is that the frozen gate script cannot run either model on an 80 GB A100.
+- **Put to the author.** A dated deviation for Qwen3-VL-32B only (NEEDS_INPUT item 14).
+  - In the gate hooks, the position index would move to each layer's own device. Nothing else would change.
+  - It would be checked first on the frozen sibling: the frozen script on one GPU twice, the patched script on two GPUs once.
+  - It would override this entry's consequence for Qwen3-VL-32B and needs a change to A8's pinned code.
+  - Until the author decides, nothing beyond Phase A is submitted.
+- **What stays the same.** The design, rules, thresholds and frozen code. No gate result exists.
+- **Disclosure.** Decisions table row 101; PREREG_A8, dated notes.
