@@ -2,11 +2,13 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-11-14 22:36 Europe/London
+**Updated:** 2026-11-15 00:16 Europe/London
 
-## Hand-off, 2026-11-14 (written 01:38, last refreshed 22:36)
+## Hand-off, 2026-11-14 (written 01:38, last refreshed 2026-11-15 00:16)
 
-**Needs you now (22:36): log in to CSD3 again** (NEEDS_INPUT item 13). The Mac slept with the lid closed from 21:51 to 22:34, and the SSH master exited. A8's second test job (40990285) started at 21:46 on gpu-q-14 and should have ended by about 22:15; its outcome is unread until the connection is back. The line to type is in NEEDS_INPUT item 13.
+**Needs you now (22:36, still at 00:16): log in to CSD3 again** (NEEDS_INPUT item 13). The Mac slept with the lid closed from 21:51 to 22:34, and the SSH master exited. A8's second test job (40990285) started at 21:46 on gpu-q-14 and should have ended by about 22:15; its outcome is unread until the connection is back. The line to type is in NEEDS_INPUT item 13.
+
+**New at 00:15 (2026-11-15): PR #125 merged into `main`** (`76bf636`, a true merge commit). It carries the two scheduling changes to A8's equivalence test (rows 94 and 95) and the records to 22:36. The full suite passed at `6bd4cd7`, the head merged: 1,123 passed, 26 skipped, 0 failed.
 
 **New at 21:45: A8's equivalence test finishes in a second job** (DECISIONS 2026-11-14, "A8's GPU equivalence test finishes in a second job after the first hit its time limit"; decisions table row 95).
 - The whole-node job 40986052 started at 20:42 on gpu-q-41. In both conditions both frozen runs ended with exit 0 (by 21:36). It then reached its one-hour limit at 21:42:59, during the shard runs. No merge or comparison ran, so there is no verdict yet.
