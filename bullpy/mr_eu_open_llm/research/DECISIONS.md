@@ -952,3 +952,17 @@ The test is the one in the entry "A8's GPU equivalence test runs as one intr job
 - **What changes.** Only where the run settings come from, and when: Phase A's from the compute table and the frozen siblings' run reports, the other steps' from Phase A, instead of all from separate smokes.
 - **What stays the same.** The design, the commands, the rules and the thresholds. Nothing of A8 is read beyond mechanics before its analysis runs.
 - **Disclosure.** Decisions table row 97; PREREG_A8, dated notes.
+
+## 2026-11-15: A8's GPU equivalence test passed: sharded A1 runs reproduce the frozen run record for record (Freeze checklist item 2; before any A8 output)
+
+- **Result.** Job 40990285 (entry of 2026-11-14, "A8's GPU equivalence test finishes in a second job") ended COMPLETED, exit 0, at 22:02 on 2026-11-14. Its reports were read on 2026-11-15 at 21:25, once the SSH connection was back.
+  - In both conditions, real and mismatch, the two frozen runs were identical: 6 of 6 records, the same ids in the same order, 0 differing.
+  - In both conditions, the merged shards were identical to the frozen run: 6 of 6 records, 0 differing.
+- **Rule applied.** `a1_gpu_rule` is met. A1 on A8's models therefore runs through the sharded runner, as the design plans (PREREG_A8, "Lead decisions, 2026-11-09", item 3). The shard counts are set after Phase A by dated note (entry "A8's timing smokes are its first launcher runs").
+- **Also done.**
+  - The held `gpu2` copy of the test, 40399722, was cancelled.
+  - The 17 pinned files were synced to `~/rds/hpc-work/study3`, and `sha256sum -c` there gave 17 OK.
+  - The two model symlinks that PREREG_A8's "Storage" section names were created. `a8_preflight.py` passed for both models.
+  - With that, item 2 of the Freeze checklist is complete. The first A8 job, Gemma 4 31B's gates (41047243), started at 21:29:36. Details are in PREREG_A8's dated note.
+- **What stays the same.** The design, rules, thresholds and code. No A8 output had been read.
+- **Disclosure.** Decisions table row 98; PREREG_A8, dated notes.

@@ -122,3 +122,5 @@ These only matter at submission. Nothing waits on them.
 `! ssh -fN -o ControlMaster=yes -o ControlPath=~/.ssh/cm-%r@%h:%p -o ControlPersist=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=10 eb2007@login.hpc.cam.ac.uk`
 
 **To keep it alive.** The connection survives only while the Mac is awake. On battery, closing the lid puts it to sleep whatever `caffeinate` says; on power with the lid open, `caffeinate -i` keeps it awake.
+
+**Resolved 2026-11-15, 21:25: you logged in again.** The equivalence test had passed (DECISIONS 2026-11-15, row 98), 40399722 was cancelled, the code-pin step was completed on the cluster, and A8's first job started at 21:29.

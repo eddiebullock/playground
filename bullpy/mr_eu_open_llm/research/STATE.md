@@ -2,11 +2,20 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-11-15 00:24 Europe/London
+**Updated:** 2026-11-15 21:35 Europe/London
 
-## Hand-off, 2026-11-14 (written 01:38, last refreshed 2026-11-15 00:24)
+## Hand-off, 2026-11-14 (written 01:38, last refreshed 2026-11-15 21:35)
 
-**Needs you now (22:36, still at 00:24): log in to CSD3 again** (NEEDS_INPUT item 13). The Mac slept with the lid closed from 21:51 to 22:34, and the SSH master exited. A8's second test job (40990285) started at 21:46 on gpu-q-14 and should have ended by about 22:15; its outcome is unread until the connection is back. The line to type is in NEEDS_INPUT item 13.
+**New at 21:30 (2026-11-15): A8's equivalence test passed, its code-pin step is complete, and its first job is running** (DECISIONS 2026-11-15, row 98; PREREG_A8, dated note).
+- **The CSD3 connection was back at 21:25**, after your login (NEEDS_INPUT item 13, resolved). It had been down since the Mac slept at 21:51 on 2026-11-14.
+- **The equivalence test passed in both conditions.** Job 40990285 had ended COMPLETED at 22:02 on 2026-11-14. In real and in mismatch, the two frozen runs were identical (6 of 6 records), and the merged shards were identical to them (6 of 6). Rule `a1_gpu_rule` is met, so A1 on A8's models runs in shards, as planned. The held copy 40399722 is cancelled.
+- **The code in `study3` now matches the pins.** 13 files were copied (old copies archived in `logs/a8_pre_sync_2026-11-15.tar`), and `sha256sum -c` gave 17 of 17 OK.
+- **The two model symlinks that the design names were created** (`a8_models/qwen3vl`, `a8_models_gemma/gemma4`). The preflight passed for both models.
+- **First A8 job: 41047243**, Gemma 4 31B's gates alone, two GPUs, 240 GB, budget 700 minutes. It was submitted at 21:28 and started at 21:29:36 on gpu-q-16: whole-node `gpu2` jobs start as fast as the `intr` ones did. Only its mechanics are read (status, seconds, memory, GPU count). If its status is ok, the rest of Phase A goes in, two steps per whole-node job.
+- **Not copied to the cluster:** today's dated note in `PREREG_A8_DRAFT.md`, since the launcher reads that file while A8 jobs run. The design block and code hashes are the same in both copies.
+- **Storage at 21:26:** 1,067.6 GB and 991,453 files, under the stop lines (1,080 GB; 1,040,000 files).
+
+**New at 02:07: PR #126 merged into `main`** (`a15b77a`, a true merge commit): A8's code pins, the whole-node wrapper and Phase A's run settings (rows 96 and 97). The full suite passed at `86c6c30`, the head merged: 1,154 passed, 26 skipped, 0 failed.
 
 **New at 01:25: A8's run settings for Phase A** (DECISIONS 2026-11-15, row 97). The launcher has no smoke mode, so A8's timing smokes are its first launcher runs, read for mechanics only. First job: Gemma 4 31B's gates alone. Then every Phase A step of both models with two GPUs, in whole-node `gpu2` jobs through `a8_node.sh` (gates with 240 GB of host memory): on one GPU the 32B model's weights leave about 13 GB, and a step that runs out of memory loses one of its two attempts. About 55 GPU-hours against 28. A1's, A2's and A4's settings follow Phase A by dated note.
 
@@ -109,7 +118,7 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
 - One gap in A7's frozen code is disclosed: a descriptive rider (hybrid distance) the design names was never written by the runner (decisions table row 92). No verdict depends on it.
 
 **What is left.**
-- **A8** only. Its GPU equivalence test finishes in the whole-node `intr` job 40990285 (submitted 21:45; DECISIONS 2026-11-14, rows 91, 94 and 95), with the `gpu2` job 40399722 held. The first whole-node job (40986052) ran the frozen runs and timed out in the shard runs; the two-GPU job before it (40969184, submitted 13:53) never started. The code pins (Freeze checklist item 2) follow the test. Every GPU node is reserved from 2026-12-07 07:00.
+- **A8** only. Its Freeze checklist is complete (2026-11-15, rows 96 to 98), and its first job, Gemma 4 31B's gates (41047243), is running. Phase A's other steps follow once that job's record is read for mechanics; then A3's summary, the eligibility rules, and A1, A2 and A4 with settings set by dated note. Every GPU node is reserved from 2026-12-07 07:00.
 - **Storage, watch item (20:27):** `/rds-d7/user/eb2007` holds 1,067.6 GB (soft quota 1,099.5, hard 1,209.5) and 991,398 files (limit 1,048,576). The file count is close to where another project's job filled it on 2026-11-09 (DECISIONS 2026-11-09). Nothing of this project is writing now.
 
 **Only you can do these:**
