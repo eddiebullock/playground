@@ -937,3 +937,23 @@ Recorded in DECISIONS 2026-11-15.
 - Every Phase A step of both models then runs with two GPUs, in whole-node `gpu2` jobs (`slurm_jobs/a8_node.sh`), with 240 GB of host memory for gates.
 - A1's, A2's and A4's shard and GPU counts are set by a dated note after Phase A, from its mechanics only.
 - Reasons and cost: DECISIONS 2026-11-15, "A8's timing smokes are its first launcher runs".
+
+**2026-11-15, about 21:30, Freeze checklist item 2 completed: the GPU equivalence result, the code on the cluster, and the first job (before any A8 output).**
+- **The A1 GPU equivalence test passed in both conditions.** Job 40990285 (whole node, `intr`, gpu-q-14) ran from 21:46 to 22:02 on 2026-11-14 and ended COMPLETED, exit 0, both steps exit 0. The reports were read on 2026-11-15 at 21:25, after the SSH connection was restored.
+  - Real: the two frozen runs were identical (6 of 6 records, the same ids in the same order, 0 differing), and the merged shards were identical to the frozen run (6 of 6, 0 differing).
+  - Mismatch: the same, 6 of 6 and 0 differing in both comparisons.
+  - Rule `a1_gpu_rule` is met, so A1 on A8's models runs through the sharded runner, as the design plans. Its shard counts follow Phase A by dated note.
+  - The reports are in the scratch copy `~/rds/hpc-work/a8_check`, `results/a8/equivalence/{real,mismatch}/equivalence_report.json` (sha256 `109341df...` and `123d7ab3...`).
+  - The held `gpu2` copy of the test, 40399722, was cancelled, as the entry of 2026-11-14 said.
+- **The pinned code in `~/rds/hpc-work/study3`.** Before the sync, 7 of the 17 pinned files differed there and 6 were missing. The cluster copy predated the fixes of 2026-11-14 and the pins.
+  - No job of this project was running. The old copies were archived (`logs/a8_pre_sync_2026-11-15.tar`), and the 13 files and this draft were copied from commit `c1f5b34`.
+  - `sha256sum -c` against the 17 pins: 17 OK. The draft's sha256 matched the local copy.
+- **The model folders.** The two symlinks named under "Storage" did not exist yet and were created: `a8_models/qwen3vl` and `a8_models_gemma/gemma4` in `study3`, pointing to the two weight copies in the project store.
+  - `a8_preflight.py` without `--full_hash` passed for both models: names, sizes, resolved paths, config and storage. The full hash was item 4, done on 2026-11-09.
+  - On the login node, in the frozen conda env, the design hash recomputed equal (`95dd41b5...`), the frozen code matched, the 17 code pins held, and the gates step's two data files matched their pins.
+- **The first job.** Job 41047243 was submitted at 21:28: Gemma 4 31B's gates alone, two GPUs, 240 GB of host memory, a budget of 700 minutes, through `slurm_jobs/a8_node.sh` in `gpu2` (DECISIONS 2026-11-15, "A8's timing smokes are its first launcher runs"). It is read for mechanics only.
+  - It started at 21:29:36 on gpu-q-16, a minute after submission.
+  - Storage at submission: 1,067.6 GB and 991,453 files, under the project's stop lines (1,080 GB; 1,040,000 files).
+- This note is not copied to the cluster while A8 jobs run there, since the launcher reads this file. It changes neither the design block nor the code hashes, which are the same in both copies.
+
+Recorded in DECISIONS 2026-11-15.
