@@ -2,11 +2,27 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-11-14 22:36 Europe/London
+**Updated:** 2026-11-15 00:24 Europe/London
 
-## Hand-off, 2026-11-14 (written 01:38, last refreshed 22:36)
+## Hand-off, 2026-11-14 (written 01:38, last refreshed 2026-11-15 00:24)
 
-**Needs you now (22:36): log in to CSD3 again** (NEEDS_INPUT item 13). The Mac slept with the lid closed from 21:51 to 22:34, and the SSH master exited. A8's second test job (40990285) started at 21:46 on gpu-q-14 and should have ended by about 22:15; its outcome is unread until the connection is back. The line to type is in NEEDS_INPUT item 13.
+**Needs you now (22:36, still at 00:24): log in to CSD3 again** (NEEDS_INPUT item 13). The Mac slept with the lid closed from 21:51 to 22:34, and the SSH master exited. A8's second test job (40990285) started at 21:46 on gpu-q-14 and should have ended by about 22:15; its outcome is unread until the connection is back. The line to type is in NEEDS_INPUT item 13.
+
+**New at 01:25: A8's run settings for Phase A** (DECISIONS 2026-11-15, row 97). The launcher has no smoke mode, so A8's timing smokes are its first launcher runs, read for mechanics only. First job: Gemma 4 31B's gates alone. Then every Phase A step of both models with two GPUs, in whole-node `gpu2` jobs through `a8_node.sh` (gates with 240 GB of host memory): on one GPU the 32B model's weights leave about 13 GB, and a step that runs out of memory loses one of its two attempts. About 55 GPU-hours against 28. A1's, A2's and A4's settings follow Phase A by dated note.
+
+**New at 01:20: A8's code is pinned, locally** (DECISIONS 2026-11-15, row 96; PREREG_A8 dated note). "Code hashes" holds the 17 files of A8's Code table, with the whole-node wrapper and its tests added. Three tests in `tests/test_a8.py` that asserted the section was pending now check the pins instead. 105 passed, 1 skipped. Still to come on the cluster: sync and `sha256sum -c` in `study3`, the equivalence result, then the timing smokes and run settings.
+
+**Prepared at 00:24, not used yet: whole-node A8 jobs** (`slurm_jobs/a8_node.sh`, tests in `tests/test_a8_node.py`, 29 passed after per-slot memory was added).
+- **What.** One Slurm job on a whole node runs up to four A8 launcher steps at once, each on its own GPU, through the unchanged `a8_job.sh`. The launcher's checks, commands, outputs and records do not change.
+- **Why.** `a8_job.sh` asks for one GPU, and one-GPU jobs have waited for days. Each Phase A step must also finish inside one job: a step stopped part-way counts as a failed attempt, and two make it "not tested" (rule `not_tested_after_retry`). The 32B model's gates take about 6.6 h, so they need a 12-hour `gpu2` job, not a one-hour `intr` one.
+- **Gap found.** The launcher has no smoke mode, so A8's timing smokes are not set up. The plan is to read the first launcher runs for mechanics only, and to set A1's, A2's and A4's shard and GPU counts by dated note after Phase A. That needs its own dated note at the code-pin step.
+- **Next, once the cluster is back:**
+  1. Read the equivalence test.
+  2. The code-pin step. It must also change the three tests in `tests/test_a8.py` that expect the pins to be empty, and it adds the new wrapper and its tests to A8's pinned code.
+  3. A one-off probe of whether a whole-node `gpu2` job starts as fast as the `intr` ones did (a job that runs `nvidia-smi` and ends; under 0.5 GPU-hours).
+  4. The first launcher run, Gemma 4 31B's gates alone, read for mechanics.
+
+**New at 00:15 (2026-11-15): PR #125 merged into `main`** (`76bf636`, a true merge commit). It carries the two scheduling changes to A8's equivalence test (rows 94 and 95) and the records to 22:36. The full suite passed at `6bd4cd7`, the head merged: 1,123 passed, 26 skipped, 0 failed.
 
 **New at 21:45: A8's equivalence test finishes in a second job** (DECISIONS 2026-11-14, "A8's GPU equivalence test finishes in a second job after the first hit its time limit"; decisions table row 95).
 - The whole-node job 40986052 started at 20:42 on gpu-q-41. In both conditions both frozen runs ended with exit 0 (by 21:36). It then reached its one-hour limit at 21:42:59, during the shard runs. No merge or comparison ran, so there is no verdict yet.

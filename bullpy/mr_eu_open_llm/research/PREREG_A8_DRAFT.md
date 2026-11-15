@@ -761,11 +761,29 @@ No existing file is edited. New files, written 2026-11-09, to be pinned in "Code
 | `slurm_jobs/a8_job.sh` | Environment per step, then the launcher |
 | `tests/test_a8.py` | Unit tests and the three equivalence tests; GPU and frozen-file tests skip without them |
 | `research/scripts/a8_prerun_check.py` | Added 2026-11-13, before any A8 output (dated note of that day): the A2 and A4 pre-run checks on A8's own inputs. It loads `research/scripts/a2_prerun_check.py` and `research/scripts/a4_prerun_check.py`, and the A2 step runs `research/scripts/a2_declared_extras.py`; those three are pinned with A8's code |
+| `slurm_jobs/a8_node.sh` | Added 2026-11-15, before any A8 output (dated note of that day): up to four launcher steps in one whole-node job, each as its own job step on its own GPU, through `slurm_jobs/a8_job.sh` unchanged |
+| `tests/test_a8_node.py` | Added 2026-11-15 with it: the wrapper run with stand-ins for `srun` and `timeout` |
 
 ## Code hashes
 
 ```text
-pending: pinned by a dated, pre-data step before any A8 output exists
+dba592be47726ea5fb39f89c4662be236eb40a9e175d85e69cf612f79c8e13ae  research/scripts/a8_design.py
+d375bf18955e74205b10f3e64434c761d9fd60519e71b329da5bd59c97678dad  research/scripts/a8_family.py
+9c9ec944be4dbef30f8cd09488f57c54ad33c1de0d1f48fb20270eff27db9160  research/scripts/a8_preflight.py
+2d2f9b718640316dbb5d9cad82133c787ad94b098ae95190a79eea47d75e62b1  research/scripts/a8_launch.py
+fa41866902facb76832beca1dd270d2397d425c434e3b974eba119d03709dbd7  research/scripts/a8_rotation_shard.py
+3dd613c74ddae8fe325edcb737a105f7c9a100115e7febe1d9dba66deeb13e52  research/scripts/a8_face_input_validity_summary.py
+b5609c4c1422e3c38bc76d346ea59cf7c340f0b3c347896b4bfa0e1ea6711be5  research/scripts/a8_analyse_rotation.py
+ba06e005359d203ac15e89b39075c14fc25c38d76cbfe0cdf7cd5dfefd141fd5  research/scripts/a8_analyse_a2.py
+a96dea8fb7d381c90ee058fcf1e11a7ba8e65c202574717bb2a336f836c23401  research/scripts/a8_a4_gates.py
+92e70ce845a9aef984dc817d13d3364fc98530f0a9aef4a6d3b84261c1d36974  slurm_jobs/a8_job.sh
+9c6d3ff2b9d0050496d5d86cf024ab34bcbf326e58b205036ecb1e2508334e8a  tests/test_a8.py
+f0d68544061807458fb83ff0373ba4bfcc8d565540ba932a8bd09d6e8a336c2f  research/scripts/a8_prerun_check.py
+49ead3b2076fc7d67f7eac598a42075df323886697d7f3664ef7a73e00915bf1  research/scripts/a2_prerun_check.py
+3faca4a1409f96072e63a7841ce21aed2f0c03e27b6a5a3498f70e18c586a29a  research/scripts/a4_prerun_check.py
+1e55ddab560a66ab9489ead8556676c2dd7b8ffc7d5c3ca9db5393672683a537  research/scripts/a2_declared_extras.py
+4d5dbedc0efc0760ce40d88349552bb193f7219f3bdca50d96975afffa0a038a  slurm_jobs/a8_node.sh
+3c3a5263f7308a5e2ff558669fde8ea56886ba5f5e346a107ceee41cfdf83d43  tests/test_a8_node.py
 ```
 
 ## Recovery
@@ -905,3 +923,17 @@ Nothing in the block changes; thresholds, families and hashes are as frozen. Rec
    - An attempt whose Slurm job is still queued or running has not ended. The launcher now records the job id, and the family code waits while the job is listed.
 
 Recorded in DECISIONS 2026-11-13.
+
+**2026-11-15, about 01:20, Freeze checklist item 2, first part: A8's code pinned (before any A8 output).**
+- "Code hashes" now holds the sha256 of the 17 files in the Code table. Two were added today: `slurm_jobs/a8_node.sh`, which runs up to four launcher steps in one whole-node job through `slurm_jobs/a8_job.sh` unchanged, and its tests, `tests/test_a8_node.py`.
+- `tests/test_a8.py` changed only in the three tests that asserted this section was pending. The pending case now runs on a copy of this draft with the section pending, and two new tests check that the pins hold and that a changed or missing file is refused. The other 14 files are as checked on 2026-11-14.
+- Locally the pins hold and the design hash is unchanged. `tests/test_a8.py` and `tests/test_a8_node.py`: 105 passed, 1 skipped (the GPU equivalence test).
+- Still to come in item 2: the pinned files synced to `~/rds/hpc-work/study3` and checked there with `sha256sum -c`; the GPU equivalence result recorded; the timing smokes and run settings.
+
+Recorded in DECISIONS 2026-11-15.
+
+**2026-11-15, about 01:25, Freeze checklist item 2, timing smokes and run settings (before any A8 output).** The launcher has no smoke mode, so A8's timing smokes are its first launcher runs, read for mechanics only.
+- The first job runs Gemma 4 31B's gates alone (the mechanics run under "Known limits before code pins").
+- Every Phase A step of both models then runs with two GPUs, in whole-node `gpu2` jobs (`slurm_jobs/a8_node.sh`), with 240 GB of host memory for gates.
+- A1's, A2's and A4's shard and GPU counts are set by a dated note after Phase A, from its mechanics only.
+- Reasons and cost: DECISIONS 2026-11-15, "A8's timing smokes are its first launcher runs".
