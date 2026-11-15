@@ -32,6 +32,10 @@
 # same count across the shards of a rotation and condition, and across real and mismatch. The slots times
 # GPUS_PER_SLOT must be at most 4.
 #
+# Host memory per slot is STEP_MEM (default 120G), or the slot's own MEM key, which is a run setting and
+# does not reach a8_job.sh (for example MEM=240G for the gates of a large model, whose float32 stage the
+# frozen loader may place partly in host memory). The slots' memory together must fit the job's memory.
+#
 # BUDGET (required, in minutes) is how long each slot may run, through `timeout`; it must end before the
 # job's limit. A resumable step (a3, a2_run, a4_run) stopped by the budget resumes in a later job. A
 # non-resumable step (gates, delivery, ladder, a1_shard) stopped by the budget is a failed attempt, and
@@ -66,6 +70,12 @@ if ! [[ "${GPUS_PER_SLOT}" =~ ^[1-4]$ ]]; then
   echo "GPUS_PER_SLOT is 1 to 4." >&2
   exit 2
 fi
+if ! [[ "${STEP_MEM}" =~ ^[1-9][0-9]*G$ ]]; then
+  echo "STEP_MEM is a whole number of gigabytes, for example 120G." >&2
+  exit 2
+fi
+# The job's memory in GB: Slurm gives SLURM_MEM_PER_NODE in MB; 500G is this file's request.
+JOB_MEM_G=$(( ${SLURM_MEM_PER_NODE:-512000} / 1024 ))
 
 read -r -a slots <<< "${SLOTS}"
 if [ "${#slots[@]}" -eq 0 ] || [ $(( ${#slots[@]} * GPUS_PER_SLOT )) -gt "${NODE_GPUS}" ]; then
@@ -80,7 +90,7 @@ resumable() { case "$1" in a3|a2_run|a4_run) return 0 ;; *) return 1 ;; esac; }
 # Parses one slot into the variables below; refuses anything A8's launcher would not take from a8_job.sh.
 parse_slot() {
   local slot="$1" pair key value
-  step="" a8_id="" rotation="" condition="" n_shards="" shard=""
+  step="" a8_id="" rotation="" condition="" n_shards="" shard="" mem="${STEP_MEM}"
   IFS=, read -r -a pairs <<< "${slot}"
   for pair in "${pairs[@]}"; do
     key="${pair%%=*}"
@@ -96,9 +106,14 @@ parse_slot() {
       CONDITION) condition="${value}" ;;
       N_SHARDS) n_shards="${value}" ;;
       SHARD) shard="${value}" ;;
+      MEM) mem="${value}" ;;
       *) echo "Slot ${slot}: unknown key ${key}." >&2; return 2 ;;
     esac
   done
+  if ! [[ "${mem}" =~ ^[1-9][0-9]*G$ ]]; then
+    echo "Slot ${slot}: MEM is a whole number of gigabytes, for example 240G." >&2
+    return 2
+  fi
   case "${a8_id}" in
     qwen3vl_32b|gemma4_31b) ;;
     *) echo "Slot ${slot}: A8_ID must be qwen3vl_32b or gemma4_31b." >&2; return 2 ;;
@@ -133,6 +148,7 @@ parse_slot() {
 }
 
 seen=" "
+total_mem_g=0
 for slot in "${slots[@]}"; do
   parse_slot "${slot}" || exit 2
   identity="${step}:${a8_id}:${rotation}:${condition}:${shard}"
@@ -140,7 +156,12 @@ for slot in "${slots[@]}"; do
     *" ${identity} "*) echo "Slot ${slot} repeats a step already in this job." >&2; exit 2 ;;
   esac
   seen="${seen}${identity} "
+  total_mem_g=$(( total_mem_g + ${mem%G} ))
 done
+if [ "${total_mem_g}" -gt "${JOB_MEM_G}" ]; then
+  echo "The slots ask for ${total_mem_g}G of host memory together; the job has ${JOB_MEM_G}G." >&2
+  exit 2
+fi
 
 cd "${PROJECT_ROOT}"
 mkdir -p logs
@@ -154,10 +175,10 @@ for i in "${!slots[@]}"; do
   [ -n "${n_shards}" ] && vars+=(N_SHARDS="${n_shards}")
   [ -n "${shard}" ] && vars+=(SLURM_ARRAY_TASK_ID="${shard}")
   log="logs/a8_node_${SLURM_JOB_ID:-local}_${i}.out"
-  echo "$(date -Is) start slot ${i} (${slots[$i]}), ${GPUS_PER_SLOT} GPU(s), budget ${BUDGET}, log ${log}"
+  echo "$(date -Is) start slot ${i} (${slots[$i]}), ${GPUS_PER_SLOT} GPU(s), ${mem}, budget ${BUDGET}, log ${log}"
   timeout --signal=TERM --kill-after=90s "${BUDGET}" \
     "${SRUN}" --exact --nodes=1 --ntasks=1 --gres=gpu:"${GPUS_PER_SLOT}" \
-      --cpus-per-task="${SLURM_CPUS_PER_TASK:-16}" --mem="${STEP_MEM}" \
+      --cpus-per-task="${SLURM_CPUS_PER_TASK:-16}" --mem="${mem}" \
       env "${vars[@]}" bash slurm_jobs/a8_job.sh > "${log}" 2>&1 &
   pids+=("$!")
 done

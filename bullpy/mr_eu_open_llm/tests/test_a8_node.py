@@ -124,6 +124,30 @@ def test_refused_before_anything_starts(node, env, message):
     assert rc == 2 and message in out and calls == []
 
 
+def test_a_slot_may_ask_for_more_host_memory_within_the_job(node):
+    slots = "STEP=gates,A8_ID=qwen3vl_32b,MEM=240G STEP=a3,A8_ID=qwen3vl_32b STEP=a3,A8_ID=gemma4_31b"
+    rc, out, calls = node(SLOTS=slots, BUDGET="700m")
+    assert rc == 0, out
+    lines = srun_lines(calls)
+    assert [line for line in lines if "STEP=gates" in line][0].count("--mem=240G ") == 1
+    assert sum("--mem=120G " in line for line in lines) == 2
+    assert all("MEM=" not in line.split(" env ", 1)[1] for line in lines)  # a run setting, not a job variable
+    rc, out, calls = node(SLOTS=slots + " STEP=ladder,A8_ID=gemma4_31b", BUDGET="700m")
+    assert rc == 2 and calls == [] and "600G of host memory together; the job has 500G" in out
+    rc, out, calls = node(SLOTS=slots, BUDGET="700m", SLURM_MEM_PER_NODE=400 * 1024)
+    assert rc == 2 and calls == [] and "the job has 400G" in out
+
+
+@pytest.mark.parametrize("env, message", [
+    ({"SLOTS": "STEP=gates,A8_ID=qwen3vl_32b,MEM=240GB", "BUDGET": "52m"}, "MEM is a whole number"),
+    ({"SLOTS": "STEP=gates,A8_ID=qwen3vl_32b,MEM=", "BUDGET": "52m"}, "is not KEY=value"),
+    ({"SLOTS": "STEP=gates,A8_ID=qwen3vl_32b", "BUDGET": "52m", "STEP_MEM": "120"}, "STEP_MEM is a whole number"),
+])
+def test_memory_settings_are_checked(node, env, message):
+    rc, out, calls = node(**env)
+    assert rc == 2 and message in out and calls == []
+
+
 def test_one_bad_slot_stops_the_whole_job(node):
     rc, out, calls = node(SLOTS="STEP=gates,A8_ID=qwen3vl_32b STEP=a3,A8_ID=gemma4_31b,SHARD=0", BUDGET="52m")
     assert rc == 2 and calls == []
