@@ -137,7 +137,9 @@ These only matter at submission. Nothing waits on them.
 - Against it: it overrides a rule I set an hour earlier, and a reviewer may weigh any change to frozen code after a failure.
 - (a) is the strict reading. It is clean and costs nothing.
 
-**Meanwhile.** Nothing beyond Phase A is submitted. A3 for both models and Qwen3-VL-32B's ladder keep running.
+**Meanwhile.** Nothing beyond Phase A is submitted.
+- Phase A finished at 23:57: delivery, ladder and A3 ended ok for both models.
+- A8's A3 summary, its first scored result, waits on this decision, so that the decision is made before any A8 result is known.
 
 ## 13. CSD3 SSH: please log in again (2026-11-14, 22:36)
 

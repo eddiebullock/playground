@@ -2,9 +2,15 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-11-15 23:17 Europe/London
+**Updated:** 2026-11-16 23:58 Europe/London
 
-## Hand-off, 2026-11-14 (written 01:38, last refreshed 2026-11-15 23:17)
+## Hand-off, 2026-11-14 (written 01:38, last refreshed 2026-11-16 23:58)
+
+**New at 23:57: A8's Phase A is complete** (launcher status only; no A8 output read).
+- **Qwen3-VL-32B's A3 ended ok** after 1 h 58 min on two GPUs (job 41048788).
+- **Both models:** delivery, ladder and A3 ended ok. Gates are not tested (rows 99 to 101).
+- **The A3 summary (`a8_face_input_validity_summary.py`) waits on your decision in item 14.** It is A8's first scored result, so it stays unrun and unread until the gates deviation is decided, keeping that decision blind to any A8 result.
+- No A8 job is queued or running.
 
 **Needs you now (22:30): a decision on A8** (NEEDS_INPUT item 14). Neither large model can run the frozen gate script on CSD3's A100s.
 - **Gemma 4 31B:** its adapter assumes per-layer inputs the model lacks. This case was preregistered (lead decision 5).
