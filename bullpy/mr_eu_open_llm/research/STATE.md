@@ -2,16 +2,46 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-11-15 21:35 Europe/London
+**Updated:** 2026-11-15 22:13 Europe/London
 
-## Hand-off, 2026-11-14 (written 01:38, last refreshed 2026-11-15 21:35)
+## Hand-off, 2026-11-14 (written 01:38, last refreshed 2026-11-15 22:13)
+
+**New at 22:12: Phase A, first outcomes (mechanics only; DECISIONS 2026-11-15, row 100).**
+- **Delivery ran for both models** (job 41048789): both launcher records say ok. The outputs are not read yet.
+- **Gemma 4 31B's gates are closed as not tested.** The retry stopped exactly as the first attempt did. Two attempts, none ok: no gate result. By lead decision 5, Gemma 4 31B does not run A1, A2 or A4. Its A3 and ladder are running.
+- **Qwen3-VL-32B's gates stopped too, but because of my two-GPU setting** (row 97), not the model. The frozen gate script's layer hooks index each layer's output with positions held on the first GPU, and with the model split over two GPUs the second GPU's layers fail.
+  - The frozen siblings ran this script on one GPU, so the retry runs on one GPU with 240 GB of host memory (job 41051063, submitted 22:12).
+  - If it fails too, the frozen gate script has no setting on this hardware that runs Qwen3-VL-32B, and its gates count as not tested. A8 would then have no model for A1, A2 and A4.
+- **Two GPUs stay for the other steps.** A3, delivery, ladder, A1, A2 and A4 run frozen scripts with no layer hooks.
+- **Running:**
+  - 41048787: Gemma's A3;
+  - 41048788: Qwen's A3 and ladder;
+  - 41048790: Gemma's ladder;
+  - 41051063: Qwen's gates retry, queued.
+
+  A watcher reports each job's end.
+
+**New at 22:05: PR #127 merged into `main`** (`3d7fdd2`, a true merge commit): A8's equivalence result and the end of its Freeze checklist (row 98). The full suite passed at `4cb7d7a`, the head merged: 1,154 passed, 26 skipped, 0 failed. The ruling below (row 99) goes into the next PR.
+
+**New at 21:50: Gemma 4 31B's gates stopped in the frozen gate script; one retry and the rest of Phase A are queued** (DECISIONS 2026-11-15, row 99; PREREG_A8, dated note).
+- **What happened.** The first job (41047243) passed all the launcher's checks and loaded Gemma 4 31B on two GPUs, then stopped on its first forward pass, after 443 seconds. The frozen gate adapter for `gemma4` assumes per-layer inputs. Gemma 4 E4B has them; Gemma 4 31B does not (`hidden_size_per_layer_input` is 0).
+- **What the design says.** Lead decision 5: if the frozen `gemma4` gate adapter cannot run on 31B, there is no gate result, and the model is ineligible for A2 and A4 (and, by the stop rule, for A1). No code changes.
+- **One retry, as the rules require.** A step counts as not tested only after two attempts. The retry runs at the same settings in job 41048790 and is expected to stop the same way. The first attempt's gate file, which has no verdict, was moved aside unread.
+- **The rest of Phase A was submitted at 21:47**, as four whole-node `gpu2` jobs with two steps each:
+  - 41048787: Qwen's gates and Gemma's A3;
+  - 41048788: Qwen's A3 and ladder;
+  - 41048789: both models' delivery;
+  - 41048790: Gemma's ladder and its gates retry.
+
+  A watcher reports when any of them ends.
+- **What it means for the paper.** If the retry stops the same way, A8 tests one new model end to end, Qwen3-VL-32B. Gemma 4 31B then contributes A3, delivery and ladder only. A8's report states this under lead decision 5.
 
 **New at 21:30 (2026-11-15): A8's equivalence test passed, its code-pin step is complete, and its first job is running** (DECISIONS 2026-11-15, row 98; PREREG_A8, dated note).
 - **The CSD3 connection was back at 21:25**, after your login (NEEDS_INPUT item 13, resolved). It had been down since the Mac slept at 21:51 on 2026-11-14.
 - **The equivalence test passed in both conditions.** Job 40990285 had ended COMPLETED at 22:02 on 2026-11-14. In real and in mismatch, the two frozen runs were identical (6 of 6 records), and the merged shards were identical to them (6 of 6). Rule `a1_gpu_rule` is met, so A1 on A8's models runs in shards, as planned. The held copy 40399722 is cancelled.
 - **The code in `study3` now matches the pins.** 13 files were copied (old copies archived in `logs/a8_pre_sync_2026-11-15.tar`), and `sha256sum -c` gave 17 of 17 OK.
 - **The two model symlinks that the design names were created** (`a8_models/qwen3vl`, `a8_models_gemma/gemma4`). The preflight passed for both models.
-- **First A8 job: 41047243**, Gemma 4 31B's gates alone, two GPUs, 240 GB, budget 700 minutes. It was submitted at 21:28 and started at 21:29:36 on gpu-q-16: whole-node `gpu2` jobs start as fast as the `intr` ones did. Only its mechanics are read (status, seconds, memory, GPU count). If its status is ok, the rest of Phase A goes in, two steps per whole-node job.
+- **First A8 job: 41047243**, Gemma 4 31B's gates alone, two GPUs, 240 GB, budget 700 minutes. It was submitted at 21:28, given gpu-q-16 at 21:29:36, and began running at 21:35:04, once the node was configured. So whole-node `gpu2` jobs start as fast as the `intr` ones did. It stopped at 21:42 (block above).
 - **Not copied to the cluster:** today's dated note in `PREREG_A8_DRAFT.md`, since the launcher reads that file while A8 jobs run. The design block and code hashes are the same in both copies.
 - **Storage at 21:26:** 1,067.6 GB and 991,453 files, under the stop lines (1,080 GB; 1,040,000 files).
 
@@ -118,7 +148,7 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
 - One gap in A7's frozen code is disclosed: a descriptive rider (hybrid distance) the design names was never written by the runner (decisions table row 92). No verdict depends on it.
 
 **What is left.**
-- **A8** only. Its Freeze checklist is complete (2026-11-15, rows 96 to 98), and its first job, Gemma 4 31B's gates (41047243), is running. Phase A's other steps follow once that job's record is read for mechanics; then A3's summary, the eligibility rules, and A1, A2 and A4 with settings set by dated note. Every GPU node is reserved from 2026-12-07 07:00.
+- **A8** only. Its Freeze checklist is complete (2026-11-15, rows 96 to 98). Phase A runs in whole-node jobs (41048787, 41048788, 41048790 running; delivery done). Gemma 4 31B's gates are not tested (row 99), and Qwen3-VL-32B's gates are retried on one GPU (41051063; row 100). Then come A3's summary, the eligibility rules, and A1, A2 and A4, with settings set by dated note. Every GPU node is reserved from 2026-12-07 07:00.
 - **Storage, watch item (20:27):** `/rds-d7/user/eb2007` holds 1,067.6 GB (soft quota 1,099.5, hard 1,209.5) and 991,398 files (limit 1,048,576). The file count is close to where another project's job filled it on 2026-11-09 (DECISIONS 2026-11-09). Nothing of this project is writing now.
 
 **Only you can do these:**

@@ -952,8 +952,44 @@ Recorded in DECISIONS 2026-11-15.
   - `a8_preflight.py` without `--full_hash` passed for both models: names, sizes, resolved paths, config and storage. The full hash was item 4, done on 2026-11-09.
   - On the login node, in the frozen conda env, the design hash recomputed equal (`95dd41b5...`), the frozen code matched, the 17 code pins held, and the gates step's two data files matched their pins.
 - **The first job.** Job 41047243 was submitted at 21:28: Gemma 4 31B's gates alone, two GPUs, 240 GB of host memory, a budget of 700 minutes, through `slurm_jobs/a8_node.sh` in `gpu2` (DECISIONS 2026-11-15, "A8's timing smokes are its first launcher runs"). It is read for mechanics only.
-  - It started at 21:29:36 on gpu-q-16, a minute after submission.
+  - It was given gpu-q-16 at 21:29:36, a minute after submission, and began running at 21:35:04, once the node was configured.
   - Storage at submission: 1,067.6 GB and 991,453 files, under the project's stop lines (1,080 GB; 1,040,000 files).
 - This note is not copied to the cluster while A8 jobs run there, since the launcher reads this file. It changes neither the design block nor the code hashes, which are the same in both copies.
+
+Recorded in DECISIONS 2026-11-15.
+
+**2026-11-15, about 21:50, the mechanics run: Gemma 4 31B's gates stopped in the frozen gate adapter; one retry and the rest of Phase A submitted (no A8 result exists).**
+- **What the run showed.** Job 41047243 ran the launcher once, on two GPUs. Its record says `failed` after 443 seconds (21:35:18 to 21:42:41), and the step's host memory peaked at 30.9 GB (Slurm MaxRSS).
+  - The launcher's checks passed: design, code pins, data, weights, loader path and versions. The model loaded on the two GPUs.
+  - The frozen gate script then stopped on its first G2 forward pass, in its layer hook: `TypeError: 'NoneType' object is not subscriptable` (`scripts/vision_gates.py`, line 539). Only the record's status and error fields and the traceback were read.
+- **Why.** The frozen adapter for the code key `gemma4` sets `has_per_layer=True`, since Gemma 4 E4B has per-layer inputs. Gemma 4 31B has none (`hidden_size_per_layer_input` is 0 in its config), so its decoder layers receive `per_layer_input` as None.
+  - This is the case of lead decision 5 and block rule `gemma4_31b_gates`. If the frozen `gemma4` gate adapter cannot run on 31B, there is no gate result, and the model is ineligible for A2 and A4. By the stop rule it does not run A1.
+  - No frozen code changes.
+- **One retry, as rule `not_tested_after_retry` requires.**
+  - The step counts as not tested only after two attempts, none ok and none in flight, with no output file. A8's pinned family code applies the rule from the launch records and waits until then.
+  - The retry runs at the same settings, in job 41048790. It is expected to stop the same way, at about half a GPU-hour.
+  - The launcher never overwrites an output, so the file the first attempt left was moved, unread, to `research/reproduction/a8/gemma4_31b/crashed_attempts/vision_gates_gemma4_job41047243.json` (sha256 `2fba3420...`).
+  - Only its top-level keys were listed: it has no verdict, and a gate file without a verdict counts as no output file (dated note of 2026-11-13). No rule reads that folder.
+- **The rest of Phase A was submitted at 21:47,** as four whole-node `gpu2` jobs with two GPUs per step (DECISIONS 2026-11-15, row 99):
+  - 41048787: Qwen3-VL-32B's gates (240 GB) and Gemma 4 31B's A3;
+  - 41048788: Qwen3-VL-32B's A3 and ladder;
+  - 41048789: both models' delivery;
+  - 41048790: Gemma 4 31B's ladder and its gates retry (240 GB).
+
+Recorded in DECISIONS 2026-11-15.
+
+**2026-11-15, about 22:12, Phase A's first results in mechanics: delivery ran for both models; Gemma 4 31B's gates closed as not tested; Qwen3-VL-32B's gates stopped on two GPUs and are retried on one (no A8 result read).**
+- **Delivery.** Job 41048789 ran both models' delivery steps, two GPUs each. Both launcher records say `ok`: Qwen3-VL-32B after 9 minutes, Gemma 4 31B after 5. Their outputs are not read here.
+- **Gemma 4 31B's gates: not tested.** The retry (job 41048790, same settings) stopped after 4 minutes with the same `TypeError` in the frozen gate adapter.
+  - Two attempts, none ok and none in flight, and no gate file with a verdict: rule `not_tested_after_retry` applies.
+  - So there is no gate result, and by lead decision 5 Gemma 4 31B is ineligible for A2 and A4. By the stop rule it does not run A1.
+  - Its A3, delivery and ladder steps go on.
+- **Qwen3-VL-32B's gates stopped on two GPUs.** Job 41048787 stopped after 6 minutes, on its first G2 forward pass, in the frozen script's layer-output hook (`scripts/vision_gates.py`, line 555): `RuntimeError: indices should be either on cpu or on the same device as the indexed tensor (cuda:1)`.
+  - The hooks index each layer's output with image positions held on the first GPU. With `device_map="auto"` the 32B model is split over the two GPUs, so the first layer on the second GPU fails.
+  - This is a property of the two-GPU setting of 2026-11-15 (row 97), not of the model. The frozen siblings ran this script on one GPU.
+- **The retry runs on one GPU** (job 41051063, 240 GB of host memory, budget 700 minutes; DECISIONS 2026-11-15, row 100).
+  - On one GPU, any layer that does not fit is held in host memory and runs on the same GPU, so every hook sees one device.
+  - The first attempt's gate file had no verdict. It was moved unread to `research/reproduction/a8/qwen3vl_32b/crashed_attempts/vision_gates_qwen3vl_job41048787.json` (sha256 `47703e33...`).
+- **No other A8 script is affected.** The frozen scripts for A3, delivery, ladder, A1 (`scripts/evaluate.py`), A2 and A4 register no layer hooks, so two GPUs stay their setting.
 
 Recorded in DECISIONS 2026-11-15.
