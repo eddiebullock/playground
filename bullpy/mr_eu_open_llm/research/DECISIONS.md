@@ -886,3 +886,35 @@ An independent reader (ROADMAP step 4.6) checked the text written on 2026-11-14 
   - The locked per-model detail of Results 6b, 7 and 9 moves word for word to the Supplementary Information, as A4's did under cut 2. The main text keeps each headline, the values the decisions rest on, and the exceptions.
   - The Discussion's opening and RQ1 sections drop what repeats the Results.
   - As with cuts 1 to 5, no claim, number or disclosure leaves the paper, and every value keeps its registry marker.
+
+## 2026-11-14: A8's GPU equivalence test asks for a whole node's four GPUs (scheduling only, before any A8 output)
+
+The test is the one in the entry "A8's GPU equivalence test runs as one intr job" above. Only the job's request for resources changes.
+- **Why.** At 20:27 the `intr` job 40969184, which asks for two GPUs on one node, had waited 6 h 33 min. It was 12th of 15 pending `intr` jobs, with no start estimate.
+  - Every job running on `ampere` at 20:27 held all four GPUs of each of its nodes.
+  - Jobs that ask for one or two GPUs have waited for days. The oldest pending `intr` job, another user's request for two GPUs for 10 minutes, has waited since 2026-11-11 20:32 with the reason "Resources". On 2026-11-13 this project recorded that no one-GPU `intr` job had started on the A100s since 2026-11-12 13:26 (STATE, hand-off of 2026-11-13).
+  - Jobs that ask for every GPU of a node start within minutes. All 24 of this project's `intr` jobs from 2026-11-13 18:17 to 2026-11-14 12:38 (the A4, A2, A9 and A7 slices, one to three nodes each) started 0.3 to 8.5 minutes after submission (`sacct`). Another user's two-node job of this shape, submitted at 19:52, started at 19:59.
+  - The cause is not known. Of the 74 `ampere` nodes, 31 were powered down at 20:27 and in no reservation before the shutdown of 2026-12-07.
+- **What changes.** `slurm_jobs/a8_equiv_intr.sh` asks for the node's four GPUs, four tasks and 500 GB, the shape of the A4 slices (`study3_intr_slices.sh`), instead of two GPUs, two tasks and 250 GB. Its sha256 goes from `75929945...` to `b180e6b1...`.
+- **What stays the same.** The two steps run as before, one GPU each, so two GPUs stay idle. The driver, commands, environment, items, outputs, 59-minute caps and the reading rule (`a1_gpu_rule`) are unchanged, as are the safeguards. The job costs at most four GPU-hours of the free allocation, against two.
+- **How.** 40969184 is cancelled before the new job is submitted, so only one `intr` job exists at a time. 40399722 stays held. The wrapper is copied to the scratch copy and checked against the commit before submission.
+- **Disclosure.** Decisions table row 94. Row 93, added with it, is the go-ahead entry above, which had no row.
+
+## 2026-11-14: A8's GPU equivalence test finishes in a second job after the first hit its time limit (scheduling only, before any A8 output)
+
+- **What happened.** The whole-node job 40986052 (entry above) started at 20:42:39 on gpu-q-41, about seven minutes after submission, and its two steps started at 20:47:13.
+  - In both conditions both frozen runs ended with exit 0. Their outputs were written at 21:14:12 and 21:35:52 (real) and at 21:12:20 and 21:31:10 (mismatch).
+  - The job reached its one-hour limit at 21:42:59 and was ended (TIMEOUT). By then the real condition was in its first shard run, which had written nothing. The mismatch condition had finished its first shard run (21:39:32) and begun its second, which had written nothing.
+  - No merge or comparison ran, so no verdict exists. Only file names, sizes and times were looked at.
+- **Why it did not fit.** The entry "A8's GPU equivalence test runs as one intr job" estimated about 40 minutes per condition. In fact a frozen run took about 19 to 27 minutes, the first in each step the longest, and a shard run about 8. A condition needs about an hour of step time, and the job spends 4.5 minutes on set-up before its steps start.
+- **What runs now.** A second whole-node `intr` job runs, in each condition, the commands that had not finished: the shard runner for shard 0 and for shard 1, the merge, then the two comparisons and the report.
+  - The driver is `research/scripts/a8_equiv_driver_condition_rest.py` (sha256 `acafd465...`). It issues the condition driver's last three commands unchanged, in the same order, in one process on one GPU.
+  - Run with `subprocess.run` stubbed, the two drivers issue the same commands, with the same arguments and output paths, and write the same report, in both conditions.
+  - It stops before any command unless both frozen outputs exist and no shard, merged or report output exists.
+  - The wrapper is `slurm_jobs/a8_equiv_rest_intr.sh` (sha256 `0fa74528...`). It is `a8_equiv_intr.sh` line for line except for the job name, the log names and the driver.
+- **The frozen runs are kept, not rerun.** They ended with exit 0 before the limit, and the rule compares them as they are.
+- **Both shards are rerun in both conditions.** All shard folders of job 40986052 move, unread, to `results/a8/equivalence_timeout_40986052/` on the cluster. That includes the mismatch condition's finished first shard, so that each condition's two shards come from one job, one after the other, as the driver orders them.
+- **Where it runs.** The shards may run on another A100 node than the frozen runs did. The rule asks whether sharded runs reproduce the frozen run record for record, and A8's own shards run on whichever nodes the scheduler gives.
+- **Time.** About 20 minutes of steps per condition (two shard runs of about 8 minutes, then the merge), with the two conditions at once, against the one-hour limit.
+- **What stays the same.** The rule (`a1_gpu_rule`), the items, commands, environment, weights and hardware type. No design, threshold or analysis change. 40399722 stays held, and it is cancelled once both reports exist.
+- **Disclosure.** Decisions table row 95; the result goes into PREREG_A8's dated notes.

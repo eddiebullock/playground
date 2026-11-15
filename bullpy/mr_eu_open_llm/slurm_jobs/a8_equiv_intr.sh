@@ -4,10 +4,10 @@
 #SBATCH -p ampere
 #SBATCH --qos=intr
 #SBATCH --nodes=1
-#SBATCH --ntasks=2
-#SBATCH --gres=gpu:2
+#SBATCH --ntasks=4
+#SBATCH --gres=gpu:4
 #SBATCH --cpus-per-task=16
-#SBATCH --mem=250G
+#SBATCH --mem=500G
 #SBATCH --time=01:00:00
 #SBATCH -o logs/a8_equiv_intr_%j.out
 #SBATCH -e logs/a8_equiv_intr_%j.err
@@ -17,6 +17,11 @@
 # while this runs. The environment below is that job's, line for line. The two conditions run at once, as two job steps
 # on one GPU each, through `a8_equiv_driver_condition.py` (the queued job's driver restricted to one condition; same
 # commands, order and outputs). Each step is capped at 59 minutes.
+#
+# The job asks for the node's four GPUs, four tasks and 500 GB, the shape of the A4 slices (`study3_intr_slices.sh`),
+# though only two steps run and two GPUs stay idle: on `ampere`, jobs that ask for every GPU of a node have started
+# within minutes, and jobs that ask for one or two have waited for days (DECISIONS 2026-11-14, "A8's GPU equivalence
+# test asks for a whole node's four GPUs"). The steps are unchanged.
 #
 # Run from the scratch copy, so that no file in the project tree changes:
 #   cd ~/rds/hpc-work/a8_check && sbatch a8_equiv_intr.sh

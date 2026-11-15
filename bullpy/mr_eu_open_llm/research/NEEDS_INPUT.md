@@ -110,3 +110,15 @@ These only matter at submission. Nothing waits on them.
 **Meanwhile.** Nothing else waits on it. A7 is the optional route-arm supplement (PREREG_A7, Recommendation).
 
 **Resolved 2026-11-14, about 08:40, on your instruction: option (a).** The wrapper `slurm_jobs/study3_intr_a7_stage1.sh` passed 11 stub checks and is on the cluster. The four `gpu2` tasks are held. A sequencer submits the job once A2's last slice ends (DECISIONS 2026-11-14).
+
+## 13. CSD3 SSH: please log in again (2026-11-14, 22:36)
+
+**Context.** The Mac went into lid-closed sleep at 21:51:47 and woke at 22:34:52. The SSH master connection exited during the sleep: its keepalives give up after five minutes without an answer. New logins without it are refused (`Permission denied (publickey,keyboard-interactive,hostbased)`), because CSD3 asks for a one-time code. Cluster work has stopped; local work goes on.
+
+**What waits on it.** A8's GPU equivalence test, job 40990285. It started at 21:46 on gpu-q-14 and was expected to end by about 22:15; its outcome is unread. After it come the reading by `a1_gpu_rule`, the cancellation of the held `gpu2` job 40399722, and A8's code-pin step.
+
+**What to do.** In this session, type the line below, then give the password and the one-time code when asked. A master started from your own terminal works just as well, since the socket path is the same.
+
+`! ssh -fN -o ControlMaster=yes -o ControlPath=~/.ssh/cm-%r@%h:%p -o ControlPersist=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=10 eb2007@login.hpc.cam.ac.uk`
+
+**To keep it alive.** The connection survives only while the Mac is awake. On battery, closing the lid puts it to sleep whatever `caffeinate` says; on power with the lid open, `caffeinate -i` keeps it awake.
