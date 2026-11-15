@@ -2,11 +2,13 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-11-15 00:24 Europe/London
+**Updated:** 2026-11-15 02:07 Europe/London
 
-## Hand-off, 2026-11-14 (written 01:38, last refreshed 2026-11-15 00:24)
+## Hand-off, 2026-11-14 (written 01:38, last refreshed 2026-11-15 02:07)
 
-**Needs you now (22:36, still at 00:24): log in to CSD3 again** (NEEDS_INPUT item 13). The Mac slept with the lid closed from 21:51 to 22:34, and the SSH master exited. A8's second test job (40990285) started at 21:46 on gpu-q-14 and should have ended by about 22:15; its outcome is unread until the connection is back. The line to type is in NEEDS_INPUT item 13.
+**Needs you now (22:36, still at 02:07): log in to CSD3 again** (NEEDS_INPUT item 13). The Mac slept with the lid closed from 21:51 to 22:34, and the SSH master exited. A8's second test job (40990285) started at 21:46 on gpu-q-14 and should have ended by about 22:15; its outcome is unread until the connection is back. The line to type is in NEEDS_INPUT item 13.
+
+**New at 02:07: PR #126 merged into `main`** (`a15b77a`, a true merge commit): A8's code pins, the whole-node wrapper and Phase A's run settings (rows 96 and 97). The full suite passed at `86c6c30`, the head merged: 1,154 passed, 26 skipped, 0 failed.
 
 **New at 01:25: A8's run settings for Phase A** (DECISIONS 2026-11-15, row 97). The launcher has no smoke mode, so A8's timing smokes are its first launcher runs, read for mechanics only. First job: Gemma 4 31B's gates alone. Then every Phase A step of both models with two GPUs, in whole-node `gpu2` jobs through `a8_node.sh` (gates with 240 GB of host memory): on one GPU the 32B model's weights leave about 13 GB, and a step that runs out of memory loses one of its two attempts. About 55 GPU-hours against 28. A1's, A2's and A4's settings follow Phase A by dated note.
 
