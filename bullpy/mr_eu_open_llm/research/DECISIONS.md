@@ -936,3 +936,19 @@ The test is the one in the entry "A8's GPU equivalence test runs as one intr job
 - **Still to come in item 2.** On the cluster: the pinned files synced to `~/rds/hpc-work/study3` and checked there with `sha256sum -c`; the GPU equivalence result recorded (jobs 40986052 and 40990285); then the timing smokes and run settings, by dated note.
 - **What stays the same.** The design block and its hash, every frozen file and data pin, and the launcher's checks and commands. No A8 output exists.
 - **Disclosure.** Decisions table row 96; PREREG_A8, dated notes.
+
+## 2026-11-15: A8's timing smokes are its first launcher runs, and Phase A runs with two GPUs per step (pre-data ruling on run settings; before any A8 output)
+
+- **Why.** Item 2 of A8's Freeze checklist asks for timing smokes, read for mechanics only, and for run settings set, before any A8 output. The launcher has no smoke mode: it builds each step's full frozen command from the block (`max_trials` is always None), so a separate smoke would need new code. Run settings (GPU and shard counts) cannot change a successfully scored cell (PREREG_A8, "Errors, memory and run settings").
+- **Ruling.**
+  1. **The mechanics run.** The first A8 job runs one step alone: Gemma 4 31B's gates, through `slurm_jobs/a8_node.sh`. Its launcher record and Slurm accounting are read for status, seconds, memory and GPU count only. The gate verdicts are read only by the rules that use them. If it ends with status ok, the rest of Phase A follows.
+  2. **Phase A's settings.** Every Phase A step (gates, delivery, ladder, a3) of both models runs with two GPUs, as two-GPU slots in whole-node `gpu2` jobs with a budget of 700 minutes, since the 32B gates (about 7 h) and A3 (about 4.3 h) cannot be split. Gates slots get 240 GB of host memory.
+  3. **Later settings.** A1's, A2's and A4's shard and GPU counts are set by a dated note after Phase A, from Phase A's launcher records and run reports read for mechanics only (status, seconds, peak GPU memory, forwards), before any A1, A2 or A4 output exists.
+- **Why two GPUs.**
+  - On one 80 GB A100, Qwen3-VL-32B's bfloat16 weights (about 67 GB) leave about 13 GB. Qwen3-VL-8B's A2 run reports show a peak of 23.5 GB in its last slices, about 6 GB above its weights, and the 32B model has twice the attention heads.
+  - A step that runs out of memory is a failed attempt, and a Phase A step has two (rule `not_tested_after_retry`; dated note of 2026-11-09).
+  - Gemma 4 31B (about 62 GB) has more room. It also runs with two GPUs, so that both models' Phase A share one setting and the float32 gate stage (about 124 to 133 GB) fits on the GPUs instead of partly in host memory.
+- **Cost.** Phase A at two GPUs per step is about 55 GPU-hours, against about 28 at one (compute table), of about 2,472 left.
+- **What changes.** Only where the run settings come from, and when: Phase A's from the compute table and the frozen siblings' run reports, the other steps' from Phase A, instead of all from separate smokes.
+- **What stays the same.** The design, the commands, the rules and the thresholds. Nothing of A8 is read beyond mechanics before its analysis runs.
+- **Disclosure.** Decisions table row 97; PREREG_A8, dated notes.

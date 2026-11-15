@@ -8,6 +8,8 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
 
 **Needs you now (22:36, still at 00:24): log in to CSD3 again** (NEEDS_INPUT item 13). The Mac slept with the lid closed from 21:51 to 22:34, and the SSH master exited. A8's second test job (40990285) started at 21:46 on gpu-q-14 and should have ended by about 22:15; its outcome is unread until the connection is back. The line to type is in NEEDS_INPUT item 13.
 
+**New at 01:25: A8's run settings for Phase A** (DECISIONS 2026-11-15, row 97). The launcher has no smoke mode, so A8's timing smokes are its first launcher runs, read for mechanics only. First job: Gemma 4 31B's gates alone. Then every Phase A step of both models with two GPUs, in whole-node `gpu2` jobs through `a8_node.sh` (gates with 240 GB of host memory): on one GPU the 32B model's weights leave about 13 GB, and a step that runs out of memory loses one of its two attempts. About 55 GPU-hours against 28. A1's, A2's and A4's settings follow Phase A by dated note.
+
 **New at 01:20: A8's code is pinned, locally** (DECISIONS 2026-11-15, row 96; PREREG_A8 dated note). "Code hashes" holds the 17 files of A8's Code table, with the whole-node wrapper and its tests added. Three tests in `tests/test_a8.py` that asserted the section was pending now check the pins instead. 105 passed, 1 skipped. Still to come on the cluster: sync and `sha256sum -c` in `study3`, the equivalence result, then the timing smokes and run settings.
 
 **Prepared at 00:24, not used yet: whole-node A8 jobs** (`slurm_jobs/a8_node.sh`, tests in `tests/test_a8_node.py`, 29 passed after per-slot memory was added).

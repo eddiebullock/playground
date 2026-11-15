@@ -931,3 +931,9 @@ Recorded in DECISIONS 2026-11-13.
 - Still to come in item 2: the pinned files synced to `~/rds/hpc-work/study3` and checked there with `sha256sum -c`; the GPU equivalence result recorded; the timing smokes and run settings.
 
 Recorded in DECISIONS 2026-11-15.
+
+**2026-11-15, about 01:25, Freeze checklist item 2, timing smokes and run settings (before any A8 output).** The launcher has no smoke mode, so A8's timing smokes are its first launcher runs, read for mechanics only.
+- The first job runs Gemma 4 31B's gates alone (the mechanics run under "Known limits before code pins").
+- Every Phase A step of both models then runs with two GPUs, in whole-node `gpu2` jobs (`slurm_jobs/a8_node.sh`), with 240 GB of host memory for gates.
+- A1's, A2's and A4's shard and GPU counts are set by a dated note after Phase A, from its mechanics only.
+- Reasons and cost: DECISIONS 2026-11-15, "A8's timing smokes are its first launcher runs".
