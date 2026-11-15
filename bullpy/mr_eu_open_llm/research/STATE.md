@@ -2,9 +2,9 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-11-16 23:58 Europe/London
+**Updated:** 2026-11-15 23:58 Europe/London
 
-## Hand-off, 2026-11-14 (written 01:38, last refreshed 2026-11-16 23:58)
+## Hand-off, 2026-11-14 (written 01:38, last refreshed 2026-11-15 23:58)
 
 **New at 23:57: A8's Phase A is complete** (launcher status only; no A8 output read).
 - **Qwen3-VL-32B's A3 ended ok** after 1 h 58 min on two GPUs (job 41048788).
