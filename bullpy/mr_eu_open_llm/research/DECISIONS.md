@@ -918,3 +918,21 @@ The test is the one in the entry "A8's GPU equivalence test runs as one intr job
 - **Time.** About 20 minutes of steps per condition (two shard runs of about 8 minutes, then the merge), with the two conditions at once, against the one-hour limit.
 - **What stays the same.** The rule (`a1_gpu_rule`), the items, commands, environment, weights and hardware type. No design, threshold or analysis change. 40399722 stays held, and it is cancelled once both reports exist.
 - **Disclosure.** Decisions table row 95; the result goes into PREREG_A8's dated notes.
+
+## 2026-11-15: A8's code pinned, with a whole-node wrapper added to it (Freeze checklist item 2, first part; before any A8 output)
+
+- **What.** "Code hashes" in `PREREG_A8_DRAFT.md` now holds the sha256 of the 17 files in A8's Code table. Every A8 entry point checks them (`check_own_code(require=True)`) and refuses to run if a file differs or is missing.
+- **Two files added before the pins.**
+  - `slurm_jobs/a8_node.sh` runs up to four launcher steps in one whole-node job, each as its own job step on its own GPU(s), through `slurm_jobs/a8_job.sh` unchanged. `tests/test_a8_node.py` runs it with stand-ins for `srun` and `timeout`.
+  - Why: on `ampere`, jobs that ask for one or two GPUs have waited for days, while whole-node jobs started within minutes (entry of 2026-11-14, "A8's GPU equivalence test asks for a whole node's four GPUs"). `a8_job.sh` asks for one GPU.
+  - Each Phase A step must also finish inside one job: a step stopped part-way is a failed attempt, and two make it "not tested" (rule `not_tested_after_retry`). The wrapper's time budget is therefore set per job, and a non-resumable step stopped by it fails the job.
+  - A slot may ask for more host memory than the default 120 GB. The frozen loader uses `device_map="auto"` with no memory cap, so a large model's float32 gate stage may be placed partly in host memory rather than fail on the GPU.
+- **One test file changed.** Three tests in `tests/test_a8.py` asserted that the section was still pending.
+  - The pending case now runs on a copy of the draft with the section pending.
+  - The launcher and the A8 pre-run check are shown to refuse while the section is pending.
+  - Two new tests check that the pins hold for exactly the Code table's files, and that a changed or missing file is refused.
+  - No other test or file changed. The other 14 files are as checked on 2026-11-14.
+- **Checks.** Locally the 17 pins hold and the design hash is unchanged (`95dd41b5...`). The A8 tests pass (counts in PREREG_A8's dated note).
+- **Still to come in item 2.** On the cluster: the pinned files synced to `~/rds/hpc-work/study3` and checked there with `sha256sum -c`; the GPU equivalence result recorded (jobs 40986052 and 40990285); then the timing smokes and run settings, by dated note.
+- **What stays the same.** The design block and its hash, every frozen file and data pin, and the launcher's checks and commands. No A8 output exists.
+- **Disclosure.** Decisions table row 96; PREREG_A8, dated notes.

@@ -98,10 +98,47 @@ def test_both_models_are_active_by_the_block_alone():
     assert not a8_design.is_active(entry)
 
 
-def test_code_pins_are_pending_and_scored_runs_wait_on_them():
-    assert a8_design.code_pins() == {}
+# A8's own code, as the draft's "Code" table lists it, pinned by the dated pre-data step of 2026-11-15.
+A8_CODE = (
+    "research/scripts/a8_design.py", "research/scripts/a8_family.py", "research/scripts/a8_preflight.py",
+    "research/scripts/a8_launch.py", "research/scripts/a8_rotation_shard.py",
+    "research/scripts/a8_face_input_validity_summary.py", "research/scripts/a8_analyse_rotation.py",
+    "research/scripts/a8_analyse_a2.py", "research/scripts/a8_a4_gates.py", "slurm_jobs/a8_job.sh",
+    "tests/test_a8.py", "research/scripts/a8_prerun_check.py", "research/scripts/a2_prerun_check.py",
+    "research/scripts/a4_prerun_check.py", "research/scripts/a2_declared_extras.py", "slurm_jobs/a8_node.sh",
+    "tests/test_a8_node.py",
+)
+
+
+def test_a8_code_matches_its_pins():
+    pins = a8_design.check_own_code(require=True)
+    assert sorted(pins) == sorted(A8_CODE)
+
+
+def test_pending_code_pins_stop_scored_runs(tmp_path):
+    """The section read "pending" until the pin step; with no pins, scored A8 runs wait on them."""
+    pending = tmp_path / "draft.md"
+    head = a8_design.DRAFT.read_text(encoding="utf-8").split("## Code hashes")[0]
+    pending.write_text(head + "## Code hashes\n\n```text\npending: pinned by a dated, pre-data step before any A8 "
+                       "output exists\n```\n", encoding="utf-8")
+    assert a8_design.code_pins(pending) == {}
+    assert a8_design.check_own_code(pending, require=False) == {}
     with pytest.raises(SystemExit, match="not pinned"):
-        a8_design.check_own_code(require=True)
+        a8_design.check_own_code(pending, require=True)
+
+
+def test_a_changed_file_is_refused_by_the_pins(tmp_path):
+    pins = a8_design.code_pins()
+    for name in pins:
+        (tmp_path / name).parent.mkdir(parents=True, exist_ok=True)
+        (tmp_path / name).write_bytes((ROOT / name).read_bytes())
+    assert a8_design.check_own_code(root=tmp_path, require=True) == pins
+    (tmp_path / "slurm_jobs/a8_node.sh").write_bytes(b"#!/usr/bin/env bash\n")
+    with pytest.raises(SystemExit, match="differs from its pins"):
+        a8_design.check_own_code(root=tmp_path, require=True)
+    (tmp_path / "slurm_jobs/a8_node.sh").unlink()
+    with pytest.raises((SystemExit, FileNotFoundError)):  # a missing pinned file stops the caller as well
+        a8_design.check_own_code(root=tmp_path, require=True)
 
 
 # Preflight ------------------------------------------------------------------
@@ -294,6 +331,7 @@ def test_models_dir_variable_is_set_from_the_design_and_a_different_value_refuse
 def test_launcher_refuses_before_phase2_and_before_code_pins(monkeypatch):
     with pytest.raises(SystemExit, match="Phase 2"):
         a8_launch.main(["--a8_id", "qwen3vl_32b", "--step", "gates"])
+    monkeypatch.setattr(a8_design, "code_pins", lambda path=None: {})  # the section as it was before the pin step
     with pytest.raises(SystemExit, match="not pinned"):
         a8_launch.main(["--a8_id", "qwen3vl_32b", "--step", "gates", "--confirm_phase2_completed"])
 
@@ -1400,7 +1438,8 @@ def test_a8_a2_prerun_reads_the_a8_models_own_inputs(tmp_path):
     assert "gemma4_31" in a8pre.check_a2("gemma4_31", base)["failures"][0]  # an unknown id is a failure, not a traceback
 
 
-def test_a8_prerun_check_waits_for_the_code_pins_like_every_a8_entry_point():
+def test_a8_prerun_check_waits_for_the_code_pins_like_every_a8_entry_point(monkeypatch):
+    monkeypatch.setattr(a8_design, "code_pins", lambda path=None: {})  # the section as it was before the pin step
     with pytest.raises(SystemExit, match="not pinned"):
         a8pre.main(["a4"])
     with pytest.raises(SystemExit, match="not pinned"):
