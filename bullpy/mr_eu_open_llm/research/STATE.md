@@ -2,9 +2,9 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-11-16 02:46 Europe/London
+**Updated:** 2026-11-16 02:44 Europe/London
 
-## Hand-off, 2026-11-14 (written 01:38, last refreshed 2026-11-16 02:46)
+## Hand-off, 2026-11-14 (written 01:38, last refreshed 2026-11-16 02:44)
 
 **New at 02:43 (2026-11-16): PR #131 merged into `main`** (`06aa9d9`, a true merge commit): the overnight check of option (b) in item 14, below. The full suite passed at `267e146`, the head merged: 1,154 passed, 26 skipped, 0 failed.
 
