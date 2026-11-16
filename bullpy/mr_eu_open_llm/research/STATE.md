@@ -2,9 +2,9 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-11-16 03:03 Europe/London
+**Updated:** 2026-11-16 05:03 Europe/London
 
-## Hand-off, 2026-11-14 (written 01:38, last refreshed 2026-11-16 03:03)
+## Hand-off, 2026-11-14 (written 01:38, last refreshed 2026-11-16 05:03)
 
 **New at 02:43 (2026-11-16): PR #131 merged into `main`** (`06aa9d9`, a true merge commit): the overnight check of option (b) in item 14, below. The full suite passed at `267e146`, the head merged: 1,154 passed, 26 skipped, 0 failed.
 
@@ -187,8 +187,8 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
 
 **What is left.**
 - **A8** only. Its Freeze checklist is complete (2026-11-15, rows 96 to 98). Phase A is complete (2026-11-15, 23:57): delivery, ladder and A3 ended ok for both models. Neither model's gates were tested: Gemma 4 31B's because of its frozen adapter (row 99), Qwen3-VL-32B's because the frozen hooks failed on two GPUs and memory ran out on one (rows 100 and 101). So under the rules as they stand, A8 ends after Phase A. A device-only deviation for Qwen3-VL-32B is your choice (NEEDS_INPUT item 14), and its code is ready (02:30). Whatever you decide, A3's summary runs next; it is held until then. Under (b), the 8B check follows, then Qwen3-VL-32B's gates, then A1, A2 and A4, with settings set by dated note. Every GPU node is reserved from 2026-12-07 07:00.
-- **Storage, watch item (2026-11-16, 02:19):** `/rds-d7/user/eb2007` holds 1,068.3 GB (soft quota 1,099.5, hard 1,209.5) and 991,641 files (limit 1,048,576). This project's stop line is 1,080 GB or 1,040,000 files. The file count is close to where another project's job filled it on 2026-11-09 (DECISIONS 2026-11-09). Nothing of this project is writing now, and your other project's `hel-t25` jobs are queued. Unchanged at 03:03.
-- **The Mac's disk, watch item (03:03):** 7.2 GiB free of 460 GiB (99% used). My scratch folder holds 168 MB, so the space is used elsewhere. The full suite and the clean-checkout check need some room. I have not deleted anything outside my scratch folder.
+- **Storage, watch item (2026-11-16, 02:19):** `/rds-d7/user/eb2007` holds 1,068.3 GB (soft quota 1,099.5, hard 1,209.5) and 991,641 files (limit 1,048,576). This project's stop line is 1,080 GB or 1,040,000 files. The file count is close to where another project's job filled it on 2026-11-09 (DECISIONS 2026-11-09). Nothing of this project is writing now. Unchanged at 05:03. Your other project's seven `hel-t25` jobs, queued until then, were cancelled at 04:49 by your own account (uid 45710, which all your agents share); this project did not cancel them. Nothing of yours is queued now.
+- **The Mac's disk, watch item (05:03):** 8.1 GiB free of 460 GiB (99% used; 7.2 GiB at 03:03). My scratch folder holds 168 MB, so the space is used elsewhere. The full suite and the clean-checkout check need some room. I have not deleted anything outside my scratch folder.
 
 **Only you can do these:**
 - Unchanged from yesterday (items below): the ethics confirmation; at submission, the Zenodo DOI and authors; optionally, the GitHub Support purge.
