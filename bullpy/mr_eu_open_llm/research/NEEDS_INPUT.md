@@ -129,7 +129,7 @@ These only matter at submission. Nothing waits on them.
   - No GPU time is spent beyond Phase A.
 - **(b) A dated deviation for Qwen3-VL-32B only.** Run the frozen gate script on two GPUs with one change: in its hooks, the position index moves to each layer's own device before indexing. That changes where an index is held, not any value computed.
   - The frozen file stays byte-identical. A small wrapper in A8's code, with a launcher flag for the gates step, applies the change at run time. So A8's code pins change, by dated deviation; the design block does not.
-  - Check first, on the frozen sibling Qwen3-VL-8B, at bfloat16: the frozen gates command twice on one GPU, and the patched one once on two GPUs. The patched file must equal the frozen ones wherever the two frozen runs agree, which is the rule of A8's A1 equivalence test. About 3.5 GPU-hours.
+  - Check first, on the frozen sibling Qwen3-VL-8B, at bfloat16: the frozen gates command twice on one GPU, and the patched one once on two GPUs. The patched file must equal the frozen ones wherever the two frozen runs agree, which is the rule of A8's A1 equivalence test. About 7 GPU-hours: each run takes about 1 h 45 min, as the frozen 8B run's bfloat16 stage did (6,258 s), and the three together use one whole node for about 2 hours.
   - Then Qwen3-VL-32B's gates (about 7 hours on two GPUs). If they pass, A1, A2 and A4 follow under A8's unchanged rules: about 500 to 600 GPU-hours, against about 2,400 left, before the GPU reservation of 2026-12-07.
   - Gemma 4 31B stays not tested, since lead decision 5 is explicit about its adapter.
 
@@ -142,6 +142,7 @@ These only matter at submission. Nothing waits on them.
   - 8 new tests pass, and so do the gate script's 44.
 - **(b) also needs a launcher change.** The launcher runs the frozen script inside its own process, as a fresh copy, so a wrapper cannot reach it from outside. Under (b), the launcher gets a flag, for the gates step only, that runs the frozen script through the wrapper and records that it did. The design block and its hash stay the same. The two files are pinned in PREREG_A8's "Code hashes" by dated deviation.
 - **Why the 8B check runs bfloat16 only.** With more free memory per GPU, the float32 stage may run on two GPUs where it ran out of memory on one. The files would then differ for a reason unrelated to the hooks. bfloat16 runs every hook path.
+  - Correction (02:46): this saves almost no time, because the frozen 8B run's float32 stage ran out of memory as soon as it loaded. The check stays at about 7 GPU-hours, not the 3.5 I wrote at 02:30.
 - **Qwen3-VL-32B's own float32 stage** may run, or run out of memory, on two GPUs. The frozen rule decides either way: out of memory keeps the bfloat16 verdict (DECISIONS 2026-11-05), and a float32 stage that completes must pass too.
 - **A stop rule, set before anything runs.** The deviation ends if:
   - the 8B check fails to run;

@@ -2,9 +2,9 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-11-16 02:44 Europe/London
+**Updated:** 2026-11-16 02:47 Europe/London
 
-## Hand-off, 2026-11-14 (written 01:38, last refreshed 2026-11-16 02:44)
+## Hand-off, 2026-11-14 (written 01:38, last refreshed 2026-11-16 02:47)
 
 **New at 02:43 (2026-11-16): PR #131 merged into `main`** (`06aa9d9`, a true merge commit): the overnight check of option (b) in item 14, below. The full suite passed at `267e146`, the head merged: 1,154 passed, 26 skipped, 0 failed.
 
@@ -15,7 +15,7 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
   - 8 new tests pass, and so do the gate script's 44.
 - **Two things item 14 now says that it did not before:**
   - (b) also needs a launcher flag for the gates step. The design block and its hash stay unchanged.
-  - The 8B check would run bfloat16 only, about 3.5 GPU-hours rather than 7.
+  - The 8B check would run bfloat16 only. Correction (02:46): it stays at about 7 GPU-hours, not the 3.5 I wrote at 02:30, because the frozen 8B run's float32 stage had stopped at once, so dropping it saves almost nothing.
 - **A stop rule, set before anything runs:** if the 8B check fails or differs, or the 32B run stops on another device error, the deviation ends, with no second change.
 - **Cluster at 02:19:** nothing of this project is queued. Your other project's seven `hel-t25` jobs are pending, untouched. Storage is 1,068.3 GB and 991,641 files, 11.7 GB under this project's stop line of 1,080 GB.
 
