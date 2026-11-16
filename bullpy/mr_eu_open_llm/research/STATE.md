@@ -2,9 +2,11 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-11-16 21:14 Europe/London
+**Updated:** 2026-11-16 21:29 Europe/London
 
-## Hand-off, 2026-11-14 (written 01:38, last refreshed 2026-11-16 21:14)
+## Hand-off, 2026-11-14 (written 01:38, last refreshed 2026-11-16 21:29)
+
+**New at 21:28 (2026-11-16): PR #132 merged into `main`** (`2a145cc`, a true merge commit): the night's records and item 15. The full suite passed at `2b3725b`, the head merged: 1,154 passed, 26 skipped, 0 failed. Three PRs reached `main` on 2026-11-16 (#130 to #132). My hourly checks have stopped, since everything left needs you: the answer to item 14 and the login in item 15. When you answer, I resume from item 14's plan.
 
 **New at 21:12 (2026-11-16): the cluster connection has ended, so please log in again when you answer item 14** (NEEDS_INPUT item 15).
 - The master connection ended this morning, apparently while the Mac slept. The last good check was at 06:03.
