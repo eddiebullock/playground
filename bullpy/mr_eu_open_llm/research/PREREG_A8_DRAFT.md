@@ -763,6 +763,8 @@ No existing file is edited. New files, written 2026-11-09, to be pinned in "Code
 | `research/scripts/a8_prerun_check.py` | Added 2026-11-13, before any A8 output (dated note of that day): the A2 and A4 pre-run checks on A8's own inputs. It loads `research/scripts/a2_prerun_check.py` and `research/scripts/a4_prerun_check.py`, and the A2 step runs `research/scripts/a2_declared_extras.py`; those three are pinned with A8's code |
 | `slurm_jobs/a8_node.sh` | Added 2026-11-15, before any A8 output (dated note of that day): up to four launcher steps in one whole-node job, each as its own job step on its own GPU, through `slurm_jobs/a8_job.sh` unchanged |
 | `tests/test_a8_node.py` | Added 2026-11-15 with it: the wrapper run with stand-ins for `srun` and `timeout` |
+| `research/scripts/a8_gates_device.py` | Added 2026-11-16 by dated deviation (DECISIONS 2026-11-16, row 102), before any gate result of Qwen3-VL-32B existed: runs the frozen gate script, byte-identical, with its layer hooks made to work on a model split over GPUs. The launcher uses it for Qwen3-VL-32B's gates only (`DEVICE_HOOKS`) |
+| `tests/test_a8_gates_device.py` | Added 2026-11-16 with it: the hooks on the gate tests' tiny model split over two devices, the 8B check's rule (`research/scripts/a8_gates_device_check.py`) and the launcher's use of the hooks |
 
 ## Code hashes
 
@@ -770,20 +772,22 @@ No existing file is edited. New files, written 2026-11-09, to be pinned in "Code
 dba592be47726ea5fb39f89c4662be236eb40a9e175d85e69cf612f79c8e13ae  research/scripts/a8_design.py
 d375bf18955e74205b10f3e64434c761d9fd60519e71b329da5bd59c97678dad  research/scripts/a8_family.py
 9c9ec944be4dbef30f8cd09488f57c54ad33c1de0d1f48fb20270eff27db9160  research/scripts/a8_preflight.py
-2d2f9b718640316dbb5d9cad82133c787ad94b098ae95190a79eea47d75e62b1  research/scripts/a8_launch.py
+f01ad691820f67f22a4861cb1d4be6a69e09466964497fc547f5699f3507673a  research/scripts/a8_launch.py
 fa41866902facb76832beca1dd270d2397d425c434e3b974eba119d03709dbd7  research/scripts/a8_rotation_shard.py
 3dd613c74ddae8fe325edcb737a105f7c9a100115e7febe1d9dba66deeb13e52  research/scripts/a8_face_input_validity_summary.py
 b5609c4c1422e3c38bc76d346ea59cf7c340f0b3c347896b4bfa0e1ea6711be5  research/scripts/a8_analyse_rotation.py
 ba06e005359d203ac15e89b39075c14fc25c38d76cbfe0cdf7cd5dfefd141fd5  research/scripts/a8_analyse_a2.py
 a96dea8fb7d381c90ee058fcf1e11a7ba8e65c202574717bb2a336f836c23401  research/scripts/a8_a4_gates.py
 92e70ce845a9aef984dc817d13d3364fc98530f0a9aef4a6d3b84261c1d36974  slurm_jobs/a8_job.sh
-9c6d3ff2b9d0050496d5d86cf024ab34bcbf326e58b205036ecb1e2508334e8a  tests/test_a8.py
+e7313cc0821918f06fc2e35da01e4417e07e0cbc0ce65f62ad0db7f82722580b  tests/test_a8.py
 f0d68544061807458fb83ff0373ba4bfcc8d565540ba932a8bd09d6e8a336c2f  research/scripts/a8_prerun_check.py
 49ead3b2076fc7d67f7eac598a42075df323886697d7f3664ef7a73e00915bf1  research/scripts/a2_prerun_check.py
 3faca4a1409f96072e63a7841ce21aed2f0c03e27b6a5a3498f70e18c586a29a  research/scripts/a4_prerun_check.py
 1e55ddab560a66ab9489ead8556676c2dd7b8ffc7d5c3ca9db5393672683a537  research/scripts/a2_declared_extras.py
 4d5dbedc0efc0760ce40d88349552bb193f7219f3bdca50d96975afffa0a038a  slurm_jobs/a8_node.sh
 3c3a5263f7308a5e2ff558669fde8ea56886ba5f5e346a107ceee41cfdf83d43  tests/test_a8_node.py
+76ec1696c896d3c36def03ca099e247635ed76d6f9abd18dbfb8981308583e7e  research/scripts/a8_gates_device.py
+f46083ea6b84a623b19e422e54510107a32c25cfd4ae79ccf89c457cbc8afbe4  tests/test_a8_gates_device.py
 ```
 
 ## Recovery
