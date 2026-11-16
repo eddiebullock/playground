@@ -2,21 +2,22 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-11-16 02:47 Europe/London
+**Updated:** 2026-11-16 02:59 Europe/London
 
-## Hand-off, 2026-11-14 (written 01:38, last refreshed 2026-11-16 02:47)
+## Hand-off, 2026-11-14 (written 01:38, last refreshed 2026-11-16 02:59)
 
 **New at 02:43 (2026-11-16): PR #131 merged into `main`** (`06aa9d9`, a true merge commit): the overnight check of option (b) in item 14, below. The full suite passed at `267e146`, the head merged: 1,154 passed, 26 skipped, 0 failed.
 
 **New at 02:30 (2026-11-16): if you choose (b) in item 14, its code is ready** (NEEDS_INPUT item 14, "Checked overnight"). Nothing is committed or submitted, and no A8 output was read.
-- **The wrapper is written and tested on the Mac, in my scratch folder.** It runs the frozen gate hooks unchanged, each with the positions moved to the device of the tensor it indexes, and keeps what they capture on the first GPU.
+- **The wrapper is written and tested on the Mac, in my scratch folder.** It runs the frozen gate hooks unchanged, each with the positions moved to the device of the tensor it indexes. Revised at 02:59: what they capture now stays where the frozen hooks put it, not all on the first GPU, which could have run out of memory on Qwen3-VL-32B's longest G3 clip.
   - On the gate tests' tiny fake Qwen model, split over two devices, the frozen hooks fail with the cluster's error.
   - The wrapper gives the frozen hooks' values to the bit: all 188 values of G2, G3 and G4.
   - 8 new tests pass, and so do the gate script's 44.
 - **Two things item 14 now says that it did not before:**
-  - (b) also needs a launcher flag for the gates step. The design block and its hash stay unchanged.
+  - (b) also needs a launcher setting for Qwen3-VL-32B's gates. The design block and its hash stay unchanged.
   - The 8B check would run bfloat16 only. Correction (02:46): it stays at about 7 GPU-hours, not the 3.5 I wrote at 02:30, because the frozen 8B run's float32 stage had stopped at once, so dropping it saves almost nothing.
 - **A stop rule, set before anything runs:** if the 8B check fails or differs, or the 32B run stops on another device error, the deviation ends, with no second change.
+- **The whole change is on a local branch, `prep/a8-gates-device`** (02:59; not pushed, not merged). It holds the wrapper, the launcher setting, the 8B check's job and its rule, 16 tests, and the re-pinned code hashes, with the design hash unchanged. A8's tests pass there.
 - **Cluster at 02:19:** nothing of this project is queued. Your other project's seven `hel-t25` jobs are pending, untouched. Storage is 1,068.3 GB and 991,641 files, 11.7 GB under this project's stop line of 1,080 GB.
 
 **New at 00:41 (2026-11-16): PR #130 merged into `main`** (`012bd25`, a true merge commit): Phase A complete, and the A3 summary held for your decision. The full suite passed at `90c9b4c`, the head merged: 1,154 passed, 26 skipped, 0 failed.
