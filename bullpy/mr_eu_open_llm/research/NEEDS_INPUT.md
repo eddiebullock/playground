@@ -128,20 +128,23 @@ These only matter at submission. Nothing waits on them.
   - The paper reports A8's scored arms as not tested, with these two reasons, as a scoped limit.
   - No GPU time is spent beyond Phase A.
 - **(b) A dated deviation for Qwen3-VL-32B only.** Run the frozen gate script on two GPUs with one change: in its hooks, the position index moves to each layer's own device before indexing. That changes where an index is held, not any value computed.
-  - The frozen file stays byte-identical. A small wrapper in A8's code, with a launcher flag for the gates step, applies the change at run time. So A8's code pins change, by dated deviation; the design block does not.
-  - Check first, on the frozen sibling Qwen3-VL-8B, at bfloat16: the frozen gates command twice on one GPU, and the patched one once on two GPUs. The patched file must equal the frozen ones wherever the two frozen runs agree, which is the rule of A8's A1 equivalence test. About 3.5 GPU-hours.
+  - The frozen file stays byte-identical. A small wrapper in A8's code, with a launcher setting for Qwen3-VL-32B's gates, applies the change at run time. So A8's code pins change, by dated deviation; the design block does not.
+  - Check first, on the frozen sibling Qwen3-VL-8B, at bfloat16: the frozen gates command twice on one GPU, and the patched one once on two GPUs. The patched file must equal the frozen ones wherever the two frozen runs agree, which is the rule of A8's A1 equivalence test. About 7 GPU-hours: each run takes about 1 h 45 min, as the frozen 8B run's bfloat16 stage did (6,258 s), and the three together use one whole node for about 2 hours.
   - Then Qwen3-VL-32B's gates (about 7 hours on two GPUs). If they pass, A1, A2 and A4 follow under A8's unchanged rules: about 500 to 600 GPU-hours, against about 2,400 left, before the GPU reservation of 2026-12-07.
   - Gemma 4 31B stays not tested, since lead decision 5 is explicit about its adapter.
 
 **Checked overnight (2026-11-16, 02:30), in my scratch folder: nothing committed, nothing submitted.**
-- **The wrapper for (b) is written and passes its tests on the Mac.** It reuses the frozen hooks unchanged. Each runs with the positions moved to the device of the tensor it indexes, and what it captures goes back to the first GPU, where a one-GPU run holds it.
+- **The wrapper for (b) is written and passes its tests on the Mac.** It reuses the frozen hooks unchanged. Each runs with the positions moved to the device of the tensor it indexes. What it captures stays where the frozen hook puts it, spread over the GPUs as the layers are.
+  - Revised at 02:59: my first draft moved every capture to the first GPU. On Qwen3-VL-32B's longest G3 clip (22,440 image tokens), G3's two all-layer captures come to about 29 GB. Beside about 34 GB of weights and the logits, that is close to the A100's 80 GB, so now only the index's device changes.
   - The tests split the gate tests' tiny fake Qwen model over two devices (Apple's GPU and the CPU), as `device_map="auto"` splits a model over GPUs.
   - On that split, the frozen hooks fail with the cluster's error.
   - On one device, the wrapper changes nothing.
-  - On the split model, every captured tensor and all 188 values of G2, G3 and G4 equal the frozen hooks' to the bit.
+  - On the split model, every captured tensor and all 188 values of G2, G3 and G4 equal the frozen hooks' to the bit. Every capture is held on the same device as with the frozen hooks.
   - 8 new tests pass, and so do the gate script's 44.
-- **(b) also needs a launcher change.** The launcher runs the frozen script inside its own process, as a fresh copy, so a wrapper cannot reach it from outside. Under (b), the launcher gets a flag, for the gates step only, that runs the frozen script through the wrapper and records that it did. The design block and its hash stay the same. The two files are pinned in PREREG_A8's "Code hashes" by dated deviation.
+- **(b) also needs a launcher change.** The launcher runs the frozen script inside its own process, as a fresh copy, so a wrapper cannot reach it from outside. Under (b), a setting in the launcher (`DEVICE_HOOKS`, Qwen3-VL-32B only) runs that model's gates through the wrapper, and the record says so. The design block and its hash stay the same. The files are pinned in PREREG_A8's "Code hashes" by dated deviation.
+- **The whole change is ready on a local branch, `prep/a8-gates-device`** (02:59; two commits, not pushed, not merged). It holds the wrapper, the launcher setting, the 8B check's job script and comparison script with its rule, 16 tests, and the re-pinned "Code hashes". The design hash is unchanged. A8's, the gates' and the wrapper's tests pass there: 164 passed, 2 skipped (one needs local data files that a fresh checkout lacks). If you choose (b), I add the dated records, run the full suite, merge, sync the cluster and submit the 8B check (one whole node, about 2 hours).
 - **Why the 8B check runs bfloat16 only.** With more free memory per GPU, the float32 stage may run on two GPUs where it ran out of memory on one. The files would then differ for a reason unrelated to the hooks. bfloat16 runs every hook path.
+  - Correction (02:46): this saves almost no time, because the frozen 8B run's float32 stage ran out of memory as soon as it loaded. The check stays at about 7 GPU-hours, not the 3.5 I wrote at 02:30.
 - **Qwen3-VL-32B's own float32 stage** may run, or run out of memory, on two GPUs. The frozen rule decides either way: out of memory keeps the bfloat16 verdict (DECISIONS 2026-11-05), and a float32 stage that completes must pass too.
 - **A stop rule, set before anything runs.** The deviation ends if:
   - the 8B check fails to run;
@@ -157,6 +160,21 @@ These only matter at submission. Nothing waits on them.
 **Meanwhile.** Nothing beyond Phase A is submitted.
 - Phase A finished at 23:57: delivery, ladder and A3 ended ok for both models.
 - A8's A3 summary, its first scored result, waits on this decision, so that the decision is made before any A8 result is known.
+
+## 15. CSD3 SSH: please log in again (2026-11-16, found at 21:12)
+
+**Context.** The SSH master connection you started at 21:25 on 2026-11-15 has ended. The checks at 04:03, 05:03 and 06:03 used it. The next check, due at 07:03, began at 09:19 and found the master gone (`read from master failed: Broken pipe`). That check then stalled until 21:12, when this session resumed; the delays suggest the Mac was asleep. New logins need your one-time code, so cluster work has stopped; local work goes on. The Mac's clock now shows Helsinki time; the times here are London times.
+
+**What waits on it.** Nothing is at risk.
+- This project has had nothing queued or running since Phase A ended at 23:57 on 2026-11-15.
+- At 06:03, the last check, storage was 1,068.3 GB and 991,641 files, unchanged since 02:19.
+- The next cluster steps wait on item 14 anyway: the A3 summary, then, under (b), the 8B check. So log in when you answer item 14.
+
+**What to do.** As in item 13: in this session, type the line below, then give the password and the one-time code when asked.
+
+`! ssh -fN -o ControlMaster=yes -o ControlPath=~/.ssh/cm-%r@%h:%p -o ControlPersist=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=10 eb2007@login.hpc.cam.ac.uk`
+
+The 12-hour `caffeinate` I started on 2026-11-15 has also ended. I have not restarted it, since there is no connection to keep alive.
 
 ## 13. CSD3 SSH: please log in again (2026-11-14, 22:36)
 
