@@ -161,6 +161,21 @@ These only matter at submission. Nothing waits on them.
 - Phase A finished at 23:57: delivery, ladder and A3 ended ok for both models.
 - A8's A3 summary, its first scored result, waits on this decision, so that the decision is made before any A8 result is known.
 
+## 15. CSD3 SSH: please log in again (2026-11-16, found at 21:12)
+
+**Context.** The SSH master connection you started at 21:25 on 2026-11-15 has ended. The checks at 04:03, 05:03 and 06:03 used it. The next check, due at 07:03, began at 09:19 and found the master gone (`read from master failed: Broken pipe`). That check then stalled until 21:12, when this session resumed; the delays suggest the Mac was asleep. New logins need your one-time code, so cluster work has stopped; local work goes on. The Mac's clock now shows Helsinki time; the times here are London times.
+
+**What waits on it.** Nothing is at risk.
+- This project has had nothing queued or running since Phase A ended at 23:57 on 2026-11-15.
+- At 06:03, the last check, storage was 1,068.3 GB and 991,641 files, unchanged since 02:19.
+- The next cluster steps wait on item 14 anyway: the A3 summary, then, under (b), the 8B check. So log in when you answer item 14.
+
+**What to do.** As in item 13: in this session, type the line below, then give the password and the one-time code when asked.
+
+`! ssh -fN -o ControlMaster=yes -o ControlPath=~/.ssh/cm-%r@%h:%p -o ControlPersist=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=10 eb2007@login.hpc.cam.ac.uk`
+
+The 12-hour `caffeinate` I started on 2026-11-15 has also ended. I have not restarted it, since there is no connection to keep alive.
+
 ## 13. CSD3 SSH: please log in again (2026-11-14, 22:36)
 
 **Context.** The Mac went into lid-closed sleep at 21:51:47 and woke at 22:34:52. The SSH master connection exited during the sleep: its keepalives give up after five minutes without an answer. New logins without it are refused (`Permission denied (publickey,keyboard-interactive,hostbased)`), because CSD3 asks for a one-time code. Cluster work has stopped; local work goes on.
