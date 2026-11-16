@@ -106,7 +106,7 @@ def test_on_one_device_the_device_hooks_change_nothing(device):
 
 
 @needs_two
-def test_on_a_split_model_the_captures_are_the_frozen_hooks_values_held_on_the_first_device():
+def test_on_a_split_model_the_captures_are_the_frozen_hooks_values_held_where_they_hold_them():
     model = qwen(HOME, SPLIT)
     ctx = Context(model, HOME)
     inputs = ctx.encode("clip", tvg.OPTIONS, [])
@@ -121,13 +121,12 @@ def test_on_a_split_model_the_captures_are_the_frozen_hooks_values_held_on_the_f
     with lab:
         logits = vg.forward_logits(model, inputs)
     assert torch.equal(logits.cpu(), ref_logits.cpu())
-    assert ref.outputs[SPLIT].device.type == "cpu"
-    held = {t.device.type for store in (lab.inputs, lab.outputs, lab.last) for t in store.values()}
-    assert held == {HOME.type}
+    assert lab.outputs[SPLIT].device.type == "cpu" and lab.outputs[0].device.type == HOME.type
     for name in ("inputs", "outputs", "last"):
         mine, theirs = getattr(lab, name), getattr(ref, name)
         assert sorted(mine) == sorted(theirs) == list(range(tvg.N_LAYERS))
         for k in mine:
+            assert mine[k].device == theirs[k].device, (name, k)
             assert torch.equal(mine[k].cpu(), theirs[k].cpu()), (name, k)
     assert lab.positions is positions
 
@@ -158,8 +157,7 @@ def test_on_a_split_model_a_replacement_gives_the_frozen_hooks_logits():
 def test_on_a_split_model_the_gates_give_the_frozen_hooks_results():
     model = qwen(HOME, SPLIT)
     # Frozen hooks, with the inputs (so the positions) on the CPU; the model moves them to the first device.
-    # Every value is equal, not just close: the captures are exact copies, and the distances do not
-    # depend on the device they are computed on.
+    # Every value is equal, not just close: the same tensors, on the same devices, give the same values.
     want = gates(Context(model, CPU))
     with gd.device_hooks():
         got = gates(Context(model, HOME))
