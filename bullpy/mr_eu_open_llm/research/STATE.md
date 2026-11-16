@@ -2,9 +2,22 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-11-15 23:58 Europe/London
+**Updated:** 2026-11-16 02:32 Europe/London
 
-## Hand-off, 2026-11-14 (written 01:38, last refreshed 2026-11-15 23:58)
+## Hand-off, 2026-11-14 (written 01:38, last refreshed 2026-11-16 02:32)
+
+**New at 02:30 (2026-11-16): if you choose (b) in item 14, its code is ready** (NEEDS_INPUT item 14, "Checked overnight"). Nothing is committed or submitted, and no A8 output was read.
+- **The wrapper is written and tested on the Mac, in my scratch folder.** It runs the frozen gate hooks unchanged, each with the positions moved to the device of the tensor it indexes, and keeps what they capture on the first GPU.
+  - On the gate tests' tiny fake Qwen model, split over two devices, the frozen hooks fail with the cluster's error.
+  - The wrapper gives the frozen hooks' values to the bit: all 188 values of G2, G3 and G4.
+  - 8 new tests pass, and so do the gate script's 44.
+- **Two things item 14 now says that it did not before:**
+  - (b) also needs a launcher flag for the gates step. The design block and its hash stay unchanged.
+  - The 8B check would run bfloat16 only, about 3.5 GPU-hours rather than 7.
+- **A stop rule, set before anything runs:** if the 8B check fails or differs, or the 32B run stops on another device error, the deviation ends, with no second change.
+- **Cluster at 02:19:** nothing of this project is queued. Your other project's seven `hel-t25` jobs are pending, untouched. Storage is 1,068.3 GB and 991,641 files, 11.7 GB under this project's stop line of 1,080 GB.
+
+**New at 00:41 (2026-11-16): PR #130 merged into `main`** (`012bd25`, a true merge commit): Phase A complete, and the A3 summary held for your decision. The full suite passed at `90c9b4c`, the head merged: 1,154 passed, 26 skipped, 0 failed.
 
 **New at 23:57: A8's Phase A is complete** (launcher status only; no A8 output read).
 - **Qwen3-VL-32B's A3 ended ok** after 1 h 58 min on two GPUs (job 41048788).
@@ -170,8 +183,8 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
 - One gap in A7's frozen code is disclosed: a descriptive rider (hybrid distance) the design names was never written by the runner (decisions table row 92). No verdict depends on it.
 
 **What is left.**
-- **A8** only. Its Freeze checklist is complete (2026-11-15, rows 96 to 98). Phase A runs in whole-node jobs (41048787, 41048788, 41048790 running; delivery done). Gemma 4 31B's gates are not tested (row 99). Qwen3-VL-32B's gates failed on two GPUs (hooks) and on one (out of memory), so they are not tested too (rows 100 and 101). Under the rules as they stand, A8 ends after Phase A; a device-only deviation for Qwen3-VL-32B is your choice (NEEDS_INPUT item 14). Then come A3's summary, the eligibility rules, and A1, A2 and A4, with settings set by dated note. Every GPU node is reserved from 2026-12-07 07:00.
-- **Storage, watch item (20:27):** `/rds-d7/user/eb2007` holds 1,067.6 GB (soft quota 1,099.5, hard 1,209.5) and 991,398 files (limit 1,048,576). The file count is close to where another project's job filled it on 2026-11-09 (DECISIONS 2026-11-09). Nothing of this project is writing now.
+- **A8** only. Its Freeze checklist is complete (2026-11-15, rows 96 to 98). Phase A is complete (2026-11-15, 23:57): delivery, ladder and A3 ended ok for both models. Neither model's gates were tested: Gemma 4 31B's because of its frozen adapter (row 99), Qwen3-VL-32B's because the frozen hooks failed on two GPUs and memory ran out on one (rows 100 and 101). So under the rules as they stand, A8 ends after Phase A. A device-only deviation for Qwen3-VL-32B is your choice (NEEDS_INPUT item 14), and its code is ready (02:30). Whatever you decide, A3's summary runs next; it is held until then. Under (b), the 8B check follows, then Qwen3-VL-32B's gates, then A1, A2 and A4, with settings set by dated note. Every GPU node is reserved from 2026-12-07 07:00.
+- **Storage, watch item (2026-11-16, 02:19):** `/rds-d7/user/eb2007` holds 1,068.3 GB (soft quota 1,099.5, hard 1,209.5) and 991,641 files (limit 1,048,576). This project's stop line is 1,080 GB or 1,040,000 files. The file count is close to where another project's job filled it on 2026-11-09 (DECISIONS 2026-11-09). Nothing of this project is writing now, and your other project's `hel-t25` jobs are queued.
 
 **Only you can do these:**
 - Unchanged from yesterday (items below): the ethics confirmation; at submission, the Zenodo DOI and authors; optionally, the GitHub Support purge.
