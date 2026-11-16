@@ -2,9 +2,11 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-11-15 23:58 Europe/London
+**Updated:** 2026-11-16 00:41 Europe/London
 
-## Hand-off, 2026-11-14 (written 01:38, last refreshed 2026-11-15 23:58)
+## Hand-off, 2026-11-14 (written 01:38, last refreshed 2026-11-16 00:41)
+
+**New at 00:41 (2026-11-16): PR #130 merged into `main`** (`012bd25`, a true merge commit): Phase A complete, and the A3 summary held for your decision. The full suite passed at `90c9b4c`, the head merged: 1,154 passed, 26 skipped, 0 failed.
 
 **New at 23:57: A8's Phase A is complete** (launcher status only; no A8 output read).
 - **Qwen3-VL-32B's A3 ended ok** after 1 h 58 min on two GPUs (job 41048788).
