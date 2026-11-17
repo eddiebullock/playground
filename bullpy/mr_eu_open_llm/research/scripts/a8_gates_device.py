@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""A8, proposed dated deviation (NEEDS_INPUT item 14): the frozen gate script on a model split over GPUs.
+"""A8, dated deviation (DECISIONS 2026-11-17, row 102): the frozen gate script on a model split over GPUs.
 
 The frozen `scripts/vision_gates.py` hooks every decoder layer (`LayerLab`). The hooks index each
 layer's hidden state with the image positions, which are held on the device of the inputs, the first

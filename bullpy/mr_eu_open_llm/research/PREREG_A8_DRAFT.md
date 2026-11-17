@@ -763,8 +763,10 @@ No existing file is edited. New files, written 2026-11-09, to be pinned in "Code
 | `research/scripts/a8_prerun_check.py` | Added 2026-11-13, before any A8 output (dated note of that day): the A2 and A4 pre-run checks on A8's own inputs. It loads `research/scripts/a2_prerun_check.py` and `research/scripts/a4_prerun_check.py`, and the A2 step runs `research/scripts/a2_declared_extras.py`; those three are pinned with A8's code |
 | `slurm_jobs/a8_node.sh` | Added 2026-11-15, before any A8 output (dated note of that day): up to four launcher steps in one whole-node job, each as its own job step on its own GPU, through `slurm_jobs/a8_job.sh` unchanged |
 | `tests/test_a8_node.py` | Added 2026-11-15 with it: the wrapper run with stand-ins for `srun` and `timeout` |
-| `research/scripts/a8_gates_device.py` | Added 2026-11-16 by dated deviation (DECISIONS 2026-11-16, row 102), before any gate result of Qwen3-VL-32B existed: runs the frozen gate script, byte-identical, with its layer hooks made to work on a model split over GPUs. The launcher uses it for Qwen3-VL-32B's gates only (`DEVICE_HOOKS`) |
-| `tests/test_a8_gates_device.py` | Added 2026-11-16 with it: the hooks on the gate tests' tiny model split over two devices, the 8B check's rule (`research/scripts/a8_gates_device_check.py`) and the launcher's use of the hooks |
+| `research/scripts/a8_gates_device.py` | Written 2026-11-16 and added 2026-11-17 by dated deviation (DECISIONS 2026-11-17, row 102), before any gate result of Qwen3-VL-32B existed and before any A8 output was read: runs the frozen gate script, byte-identical, with its layer hooks made to work on a model split over GPUs. The launcher uses it for Qwen3-VL-32B's gates only (`DEVICE_HOOKS`) |
+| `tests/test_a8_gates_device.py` | Added 2026-11-17 with it: the hooks on the gate tests' tiny model split over two devices, the 8B check's rule (`research/scripts/a8_gates_device_check.py`) and the launcher's use of the hooks |
+| `research/scripts/a8_gates_device_check.py` | Added 2026-11-17 with it: the 8B check's rule, set before the check runs. The deviation goes on only if the check passes |
+| `slurm_jobs/a8_gates_device_check.sh` | Added 2026-11-17 with it: the 8B check in one whole-node job, the frozen gate command twice on one GPU each and once through the hooks on two GPUs, then the rule |
 
 ## Code hashes
 
@@ -772,22 +774,24 @@ No existing file is edited. New files, written 2026-11-09, to be pinned in "Code
 dba592be47726ea5fb39f89c4662be236eb40a9e175d85e69cf612f79c8e13ae  research/scripts/a8_design.py
 d375bf18955e74205b10f3e64434c761d9fd60519e71b329da5bd59c97678dad  research/scripts/a8_family.py
 9c9ec944be4dbef30f8cd09488f57c54ad33c1de0d1f48fb20270eff27db9160  research/scripts/a8_preflight.py
-f01ad691820f67f22a4861cb1d4be6a69e09466964497fc547f5699f3507673a  research/scripts/a8_launch.py
+c07b5de9c89df9c7ad5adde6c2a1ca3d1eb9e86d496ad8c6cbb3b9cb0333cb77  research/scripts/a8_launch.py
 fa41866902facb76832beca1dd270d2397d425c434e3b974eba119d03709dbd7  research/scripts/a8_rotation_shard.py
 3dd613c74ddae8fe325edcb737a105f7c9a100115e7febe1d9dba66deeb13e52  research/scripts/a8_face_input_validity_summary.py
 b5609c4c1422e3c38bc76d346ea59cf7c340f0b3c347896b4bfa0e1ea6711be5  research/scripts/a8_analyse_rotation.py
 ba06e005359d203ac15e89b39075c14fc25c38d76cbfe0cdf7cd5dfefd141fd5  research/scripts/a8_analyse_a2.py
 a96dea8fb7d381c90ee058fcf1e11a7ba8e65c202574717bb2a336f836c23401  research/scripts/a8_a4_gates.py
 92e70ce845a9aef984dc817d13d3364fc98530f0a9aef4a6d3b84261c1d36974  slurm_jobs/a8_job.sh
-e7313cc0821918f06fc2e35da01e4417e07e0cbc0ce65f62ad0db7f82722580b  tests/test_a8.py
+b8688beff12af19e7f2de41aa4b64f5b2c5b5c86928fd33d3e00ec5917e78e3d  tests/test_a8.py
 f0d68544061807458fb83ff0373ba4bfcc8d565540ba932a8bd09d6e8a336c2f  research/scripts/a8_prerun_check.py
 49ead3b2076fc7d67f7eac598a42075df323886697d7f3664ef7a73e00915bf1  research/scripts/a2_prerun_check.py
 3faca4a1409f96072e63a7841ce21aed2f0c03e27b6a5a3498f70e18c586a29a  research/scripts/a4_prerun_check.py
 1e55ddab560a66ab9489ead8556676c2dd7b8ffc7d5c3ca9db5393672683a537  research/scripts/a2_declared_extras.py
 4d5dbedc0efc0760ce40d88349552bb193f7219f3bdca50d96975afffa0a038a  slurm_jobs/a8_node.sh
 3c3a5263f7308a5e2ff558669fde8ea56886ba5f5e346a107ceee41cfdf83d43  tests/test_a8_node.py
-cc00d12e3be2f91f8dff5c43f530a8dacbcf23019cb00f6dc87435787e74a0f1  research/scripts/a8_gates_device.py
-91b7a9fe73545f380e9e7177e07f8c462fb9df4046a7ded4f1c9ca7ebcf4fad9  tests/test_a8_gates_device.py
+53fcc9ab1b5e5902b4f214c51368c6b09d6cb56f564fc58949853a8e74e01c80  research/scripts/a8_gates_device.py
+451bb85784539e615eb42cfaf17f95e83cea1e528f44b8957a03bb0a1c996017  tests/test_a8_gates_device.py
+c7a7c8437e71447ddf6e4e21b9d009f6bf6e2192997b9fd57f69088e96bc3c77  research/scripts/a8_gates_device_check.py
+92be956c9cf861bdb88d5c07e6a308df4e915c6c0de79005544ebe6b4d687318  slurm_jobs/a8_gates_device_check.sh
 ```
 
 ## Recovery

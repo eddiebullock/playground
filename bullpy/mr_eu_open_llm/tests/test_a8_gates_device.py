@@ -288,7 +288,7 @@ import a8_launch  # noqa: E402
 
 
 def test_the_launcher_uses_the_device_hooks_for_qwen3vl_32b_gates_only():
-    assert a8_launch.DEVICE_HOOKS == {"qwen3vl_32b": "DECISIONS 2026-11-16, row 102"}
+    assert a8_launch.DEVICE_HOOKS == {"qwen3vl_32b": "DECISIONS 2026-11-17, row 102"}
     source = (ROOT / "research/scripts/a8_launch.py").read_text(encoding="utf-8")
     assert 'if args.step == "gates" and args.a8_id in DEVICE_HOOKS:' in source
     # The record says so before the attempt starts, so a killed attempt is on record with it.

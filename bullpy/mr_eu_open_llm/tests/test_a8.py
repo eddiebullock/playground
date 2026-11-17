@@ -99,7 +99,8 @@ def test_both_models_are_active_by_the_block_alone():
 
 
 # A8's own code, as the draft's "Code" table lists it, pinned by the dated pre-data step of 2026-11-15; the device
-# hooks for Qwen3-VL-32B's gates and their tests were added by the dated deviation of 2026-11-16 (DECISIONS row 102).
+# hooks for Qwen3-VL-32B's gates, their tests, and the 8B check's rule and job were added by the dated deviation of
+# 2026-11-17 (DECISIONS row 102).
 A8_CODE = (
     "research/scripts/a8_design.py", "research/scripts/a8_family.py", "research/scripts/a8_preflight.py",
     "research/scripts/a8_launch.py", "research/scripts/a8_rotation_shard.py",
@@ -108,6 +109,7 @@ A8_CODE = (
     "tests/test_a8.py", "research/scripts/a8_prerun_check.py", "research/scripts/a2_prerun_check.py",
     "research/scripts/a4_prerun_check.py", "research/scripts/a2_declared_extras.py", "slurm_jobs/a8_node.sh",
     "tests/test_a8_node.py", "research/scripts/a8_gates_device.py", "tests/test_a8_gates_device.py",
+    "research/scripts/a8_gates_device_check.py", "slurm_jobs/a8_gates_device_check.sh",
 )
 
 

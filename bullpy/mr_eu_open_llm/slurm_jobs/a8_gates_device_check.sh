@@ -11,7 +11,7 @@
 #SBATCH -o logs/a8_gdev_check_%j.out
 #SBATCH -e logs/a8_gdev_check_%j.err
 #
-# A8, proposed dated deviation (NEEDS_INPUT item 14): the check of the device-aware gate hooks on the frozen
+# A8, dated deviation (DECISIONS 2026-11-17, row 102): the check of the device-aware gate hooks on the frozen
 # Qwen3-VL-8B, before Qwen3-VL-32B's gates run through them. Three runs of the frozen gate command at
 # bfloat16 start together, as steps of one whole-node job:
 #   frozen_a, frozen_b: the frozen script (python -m scripts.vision_gates), one GPU each;
@@ -66,9 +66,11 @@ if [ -e "${OUT}" ]; then
   echo "${OUT} exists; the check runs once." >&2
   exit 2
 fi
+# A8's code pins, as every A8 entry point checks them. They cover the hooks, this job and the check's rule.
+python -c "import sys; sys.path.insert(0, 'research/scripts'); import a8_design; print(len(a8_design.check_own_code(require=True)), 'A8 code pins hold')"
+python research/scripts/decoder_preflight.py
 mkdir -p "${OUT}/frozen_a" "${OUT}/frozen_b" "${OUT}/patched"
 before="$(sha256sum "${FROZEN_FILE}")"
-python research/scripts/decoder_preflight.py
 
 # The frozen command's arguments (A8 design, commands.gates, for qwen3vl), at bfloat16 only.
 ARGS=(--model qwen3vl --gates "g2,g3,g4" --dtypes bfloat16 --n_g3 12)

@@ -21,7 +21,7 @@ For one step and one model it does, in this order, in one process:
    fails the job if a trial, cell or delivery-row error field records an out-of-memory error
    (design rule `oom`; the gate file is not scanned). The gates of a model in DEVICE_HOOKS run
    the same frozen module and arguments through a8_gates_device.py, whose hooks work on a model
-   split over GPUs (dated deviation, DECISIONS 2026-11-16, row 102); the record says so.
+   split over GPUs (dated deviation, DECISIONS 2026-11-17, row 102); the record says so.
 8. Writes a provenance JSON under research/reproduction/a8/<a8_id>/launch/.
 
     python research/scripts/a8_launch.py --a8_id qwen3vl_32b --step gates --confirm_phase2_completed
@@ -57,9 +57,9 @@ for _p in (str(ROOT / "src"), str(ROOT)):
     if _p not in sys.path:
         sys.path.insert(0, _p)
 BIG = 100 * 1024 * 1024
-# Dated deviation (DECISIONS 2026-11-16, row 102): Qwen3-VL-32B's gates run the frozen gate script through
+# Dated deviation (DECISIONS 2026-11-17, row 102): Qwen3-VL-32B's gates run the frozen gate script through
 # research/scripts/a8_gates_device.py. No other model or step.
-DEVICE_HOOKS = {"qwen3vl_32b": "DECISIONS 2026-11-16, row 102"}
+DEVICE_HOOKS = {"qwen3vl_32b": "DECISIONS 2026-11-17, row 102"}
 
 
 def fill(value: str, ctx: Mapping[str, Any]) -> str:

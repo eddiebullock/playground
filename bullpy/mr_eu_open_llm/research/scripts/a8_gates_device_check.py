@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""A8, proposed dated deviation (NEEDS_INPUT item 14): the check of the device-aware gate hooks on the frozen 8B.
+"""A8, dated deviation (DECISIONS 2026-11-17, row 102): the check of the device-aware gate hooks on the frozen 8B.
 
 Three gate files of Qwen3-VL-8B, the frozen sibling, from the frozen gate command at bfloat16: the frozen
 script twice on one GPU each (frozen_a, frozen_b), and the same command through
