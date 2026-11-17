@@ -19,7 +19,9 @@ For one step and one model it does, in this order, in one process:
    the job if any changed.
 7. Writes a "started" record, runs the frozen module (runpy) or the A8 shard runner, then
    fails the job if a trial, cell or delivery-row error field records an out-of-memory error
-   (design rule `oom`; the gate file is not scanned).
+   (design rule `oom`; the gate file is not scanned). The gates of a model in DEVICE_HOOKS run
+   the same frozen module and arguments through a8_gates_device.py, whose hooks work on a model
+   split over GPUs (dated deviation, DECISIONS 2026-11-16, row 102); the record says so.
 8. Writes a provenance JSON under research/reproduction/a8/<a8_id>/launch/.
 
     python research/scripts/a8_launch.py --a8_id qwen3vl_32b --step gates --confirm_phase2_completed
@@ -55,6 +57,9 @@ for _p in (str(ROOT / "src"), str(ROOT)):
     if _p not in sys.path:
         sys.path.insert(0, _p)
 BIG = 100 * 1024 * 1024
+# Dated deviation (DECISIONS 2026-11-16, row 102): Qwen3-VL-32B's gates run the frozen gate script through
+# research/scripts/a8_gates_device.py. No other model or step.
+DEVICE_HOOKS = {"qwen3vl_32b": "DECISIONS 2026-11-16, row 102"}
 
 
 def fill(value: str, ctx: Mapping[str, Any]) -> str:
@@ -212,6 +217,20 @@ def run_frozen_step(spec: Mapping[str, Any], declared: Optional[str] = None) -> 
         os.replace(ROOT / declared, target)
 
 
+def run_device_hooks(spec: Mapping[str, Any]) -> None:
+    """The frozen gate module and arguments through a8_gates_device.py. As in run_frozen, a clean exit,
+    code None or 0, counts as the script finishing; any other code fails the job."""
+    import a8_gates_device
+
+    if spec.get("module") != "scripts.vision_gates":
+        raise SystemExit(f"Device hooks run the frozen gate script only, not {spec.get('module') or spec.get('path')}.")
+    try:
+        a8_gates_device.run(spec["argv"])
+    except SystemExit as exc:
+        if exc.code not in (None, 0):
+            raise
+
+
 def final_status(finished: bool, moved: Sequence[str], oom_files: Sequence[str], error: Optional[str]) -> str:
     """A job's status. A changed frozen output overrides everything. Design rule `oom` reads the
     structured error fields of the outputs; a job that crashed with an out-of-memory error (for
@@ -312,6 +331,10 @@ def main(argv: Optional[Sequence[str]] = None) -> Dict[str, Any]:
     guard = frozen_output_files(design["frozen_outputs_guard"], keys)
     before = snapshot(guard)
     record["frozen_outputs_hashed"] = len(before)
+    if args.step == "gates" and args.a8_id in DEVICE_HOOKS:
+        hooks = ROOT / "research/scripts/a8_gates_device.py"
+        record["gates_device_hooks"] = {"decision": DEVICE_HOOKS[args.a8_id],
+                                        "module": str(hooks.relative_to(ROOT)), "sha256": a8_design.file_sha256(hooks)}
 
     folder = ROOT / "research/reproduction/a8" / (args.a8_id or "all") / "launch"
     folder.mkdir(parents=True, exist_ok=True)
@@ -331,6 +354,8 @@ def main(argv: Optional[Sequence[str]] = None) -> Dict[str, Any]:
             record["shard_report"] = {k: v for k, v in shard.cmd_run(ns).items() if k != "shard_trial_ids"}
         elif args.step == "a1_merge":
             shard.merge(a1_shard_files(design, ctx), ROOT / spec["outputs"][0])
+        elif "gates_device_hooks" in record:
+            run_device_hooks(spec)
         else:
             run_frozen_step(spec, declared)
         finished = True
