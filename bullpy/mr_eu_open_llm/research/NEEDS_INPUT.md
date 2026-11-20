@@ -111,7 +111,9 @@ These only matter at submission. Nothing waits on them.
 
 **Resolved 2026-11-14, about 08:40, on your instruction: option (a).** The wrapper `slurm_jobs/study3_intr_a7_stage1.sh` passed 11 stub checks and is on the cluster. The four `gpu2` tasks are held. A sequencer submits the job once A2's last slice ends (DECISIONS 2026-11-14).
 
-## 14. A8: neither large model can run the frozen gate script on CSD3's A100s. Should Qwen3-VL-32B continue under a device-only deviation? (decision, 2026-11-15, about 22:30)
+## 14. A8: neither large model can run the frozen gate script on CSD3's A100s. Should Qwen3-VL-32B continue under a device-only deviation? (decision, 2026-11-15, about 22:30) — RESOLVED 2026-11-17: option (b)
+
+**Resolved 2026-11-17: you chose (b).** The prepared branch was merged into `p1-pipeline` (`d93228d`, `3b814ab`; PR #133) and recorded in DECISIONS 2026-11-17, row 102 (written 2026-11-20). Next: the 8B check on the cluster, which waits on item 16.
 
 **What happened.**
 - **Gemma 4 31B stopped twice** in the frozen `gemma4` gate adapter. That adapter assumes the per-layer inputs of Gemma 4 E4B, and 31B has none.
@@ -161,7 +163,19 @@ These only matter at submission. Nothing waits on them.
 - Phase A finished at 23:57: delivery, ladder and A3 ended ok for both models.
 - A8's A3 summary, its first scored result, waits on this decision, so that the decision is made before any A8 result is known.
 
-## 15. CSD3 SSH: please log in again (2026-11-16, found at 21:12)
+## 16. CSD3 SSH: please log in again (2026-11-20)
+
+**Context.** Item 15's login was not renewed before the session of 2026-11-17 ended, and no master connection exists now (checked 2026-11-20: `Permission denied (publickey,keyboard-interactive,hostbased)`). Nothing of this project is queued or running.
+
+**What waits on it.** Under option (b) (item 14): sync the cluster's `study3` copy to the 21 pins and check them with `sha256sum -c`, then submit the 8B check (`BUDGET=240m sbatch slurm_jobs/a8_gates_device_check.sh`, one whole node, about 2 hours). Then, if it passes, Qwen3-VL-32B's gates; and A8's A3 summary on CPU.
+
+**What to do.** In this session, type:
+
+`! ssh -fN -o ControlMaster=yes -o ControlPath=~/.ssh/cm-%r@%h:%p -o ControlPersist=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=10 eb2007@login.hpc.cam.ac.uk`
+
+then give the password and the one-time code when asked. Keep the Mac awake and on power while the jobs run.
+
+## 15. CSD3 SSH: please log in again (2026-11-16, found at 21:12) — superseded by item 16
 
 **Context.** The SSH master connection you started at 21:25 on 2026-11-15 has ended. The checks at 04:03, 05:03 and 06:03 used it. The next check, due at 07:03, began at 09:19 and found the master gone (`read from master failed: Broken pipe`). That check then stalled until 21:12, when this session resumed; the delays suggest the Mac was asleep. New logins need your one-time code, so cluster work has stopped; local work goes on. The Mac's clock now shows Helsinki time; the times here are London times.
 

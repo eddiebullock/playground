@@ -2,9 +2,18 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-11-16 21:14 Europe/London
+**Updated:** 2026-11-20 Europe/London
 
-## Hand-off, 2026-11-14 (written 01:38, last refreshed 2026-11-16 21:14)
+## Hand-off, 2026-11-20 (new session)
+
+- **Option (b) of NEEDS_INPUT item 14 was adopted on 2026-11-17** (DECISIONS row 102). The device hooks, the launcher setting `DEVICE_HOOKS`, the 8B check's rule and job are merged into `p1-pipeline` (`d93228d`, `3b814ab`) and pinned (21 pins; design hash unchanged). PR #133 carries them to `main`.
+- **Gap closed today.** The 2026-11-17 commits cited DECISIONS row 102, but the session ended before the entry, the supplementary decisions table row and the PREREG_A8 dated note were written. They are written now, with nothing decided after 2026-11-17.
+- **Blocked on the cluster login** (NEEDS_INPUT item 16). Nothing of this project is queued or running. Next, in order: sync `study3` to the pins and `sha256sum -c`; submit the 8B check (`BUDGET=240m sbatch slurm_jobs/a8_gates_device_check.sh`); read it by its rule; if it passes, Qwen3-VL-32B's gates; A8's A3 summary on CPU.
+- **Budget clock.** NEEDS_INPUT item 14 plans A8 to finish before the GPU reservation of 2026-12-07, 17 days from today. A1, A2 and A4 for Qwen3-VL-32B need about 500 to 600 GPU-hours after the gates.
+
+## Hand-off, 2026-11-14 (written 01:38, last refreshed 2026-11-16 21:29)
+
+**New at 21:28 (2026-11-16): PR #132 merged into `main`** (`2a145cc`, a true merge commit): the night's records and item 15. The full suite passed at `2b3725b`, the head merged: 1,154 passed, 26 skipped, 0 failed. Three PRs reached `main` on 2026-11-16 (#130 to #132). My hourly checks have stopped, since everything left needs you: the answer to item 14 and the login in item 15. When you answer, I resume from item 14's plan.
 
 **New at 21:12 (2026-11-16): the cluster connection has ended, so please log in again when you answer item 14** (NEEDS_INPUT item 15).
 - The master connection ended this morning, apparently while the Mac slept. The last good check was at 06:03.

@@ -1021,3 +1021,16 @@ The test is the one in the entry "A8's GPU equivalence test runs as one intr job
   - Until the author decides, nothing beyond Phase A is submitted.
 - **What stays the same.** The design, rules, thresholds and frozen code. No gate result exists.
 - **Disclosure.** Decisions table row 101; PREREG_A8, dated notes.
+
+## 2026-11-17: Qwen3-VL-32B's gates run through device-aware hooks, checked first on the frozen 8B (dated deviation, option (b) of NEEDS_INPUT item 14; before any gate result of Qwen3-VL-32B and before any A8 output was read)
+
+- **The author's instruction (2026-11-17).** Adopt option (b) of NEEDS_INPUT item 14. This entry overrides, for Qwen3-VL-32B only, the consequence of row 101.
+- **What changes.**
+  - `research/scripts/a8_gates_device.py` runs the frozen gate script (`scripts/vision_gates.py`), byte-identical, with each frozen layer hook given its position index on the device of the tensor it indexes. Captures stay where the frozen hooks put them.
+  - The launcher (`research/scripts/a8_launch.py`) runs Qwen3-VL-32B's gates through it (`DEVICE_HOOKS`, that model and step only), and its record says so.
+  - The new files and the changed launcher are pinned in PREREG_A8's "Code hashes" (21 pins). The design block and its hash are unchanged.
+- **The check, before Qwen3-VL-32B's gates run.** `slurm_jobs/a8_gates_device_check.sh`, one whole-node job: the frozen gate command on the frozen Qwen3-VL-8B at bfloat16, twice on one GPU each, and once through the hooks on two GPUs. Then `research/scripts/a8_gates_device_check.py` applies the rule of `a1_gpu_rule`, leaf for leaf: each file complete with a verdict; the same leaves in all three; apart from timings, the two frozen files equal; and the patched file equal to them. The job checks the code pins before it runs anything, and the frozen 8B gate file must not change.
+- **Stop rule, set before anything runs.** The deviation ends, with no second change, if the 8B check fails to run, the patched file differs from the frozen pair, or Qwen3-VL-32B's patched gates stop on any other device error. A8 then ends after Phase A, as under option (a).
+- **If Qwen3-VL-32B's gates pass,** A1, A2 and A4 follow for it under A8's unchanged rules. A3's summary, A8's first scored result, may now run, since the deviation was decided without it.
+- **What stays the same.** The design, rules, thresholds and the frozen gate script. Gemma 4 31B stays not tested (lead decision 5). No gate result of Qwen3-VL-32B exists, and no A8 output was read.
+- **Disclosure.** Decisions table row 102; PREREG_A8, dated notes and "Code hashes". Written on 2026-11-20: the commits of 2026-11-17 (`d93228d`, `3b814ab`) cited this entry, but the session that made them ended before it was written. The content is that of NEEDS_INPUT item 14 and those commits; nothing was decided after 2026-11-17.
