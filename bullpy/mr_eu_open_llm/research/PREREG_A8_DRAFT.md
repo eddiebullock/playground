@@ -1010,3 +1010,10 @@ Recorded in DECISIONS 2026-11-15.
 - A narrow deviation that would let the frozen gate script run on two GPUs (the position index moved to each layer's device in the hooks) is put to the author (NEEDS_INPUT item 14). Nothing beyond Phase A is submitted meanwhile. The second attempt's gate file has no verdict and stays where it is.
 
 Recorded in DECISIONS 2026-11-15.
+
+**2026-11-17, dated deviation: Qwen3-VL-32B's gates run through device-aware hooks, after a check on the frozen 8B (option (b) of NEEDS_INPUT item 14; no gate result of Qwen3-VL-32B exists and no A8 output was read).**
+- On the author's instruction, the frozen gate script runs on two GPUs for Qwen3-VL-32B through `research/scripts/a8_gates_device.py`, which moves each hook's position index to the device of the tensor it indexes. The frozen script is unchanged; the launcher's `DEVICE_HOOKS` setting names this model's gates only. Pinned in "Code hashes"; the design hash is unchanged.
+- First, `slurm_jobs/a8_gates_device_check.sh` runs the frozen 8B gate command twice on one GPU and once through the hooks on two, and `research/scripts/a8_gates_device_check.py` applies `a1_gpu_rule` leaf for leaf. If the check fails, or Qwen3-VL-32B's patched gates stop on another device error, the deviation ends with no second change and A8 ends after Phase A.
+- Gemma 4 31B stays not tested (lead decision 5).
+
+Recorded in DECISIONS 2026-11-17 (row 102), written on 2026-11-20.
