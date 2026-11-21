@@ -1034,3 +1034,36 @@ The test is the one in the entry "A8's GPU equivalence test runs as one intr job
 - **If Qwen3-VL-32B's gates pass,** A1, A2 and A4 follow for it under A8's unchanged rules. A3's summary, A8's first scored result, may now run, since the deviation was decided without it.
 - **What stays the same.** The design, rules, thresholds and the frozen gate script. Gemma 4 31B stays not tested (lead decision 5). No gate result of Qwen3-VL-32B exists, and no A8 output was read.
 - **Disclosure.** Decisions table row 102; PREREG_A8, dated notes and "Code hashes". Written on 2026-11-20: the commits of 2026-11-17 (`d93228d`, `3b814ab`) cited this entry, but the session that made them ended before it was written. The content is that of NEEDS_INPUT item 14 and those commits; nothing was decided after 2026-11-17.
+
+## 2026-11-21: The main text is reframed around answers against cues, with length cut 7 (the author's instruction; after every analysis but A8 was locked; no A8 output read)
+
+- **The author's instruction (2026-11-21).** "Construct a comprehensive plan for how this paper's impact and headline can be improved and implement it." The plan, with its diagnosis and what remains, is `research/paper/v2/IMPACT_PLAN.md`.
+- **What changes.**
+  - Title (a working title; the choice is the author's) and abstract: the abstract now leads with the question the paper answers, gives Gemma 4's cue-level result with its size against human agreement, and closes on the take-home ("Human-like face reading must be tested on cues, not answers"). It no longer uses outline.md's scenario sentence S6, a drafting aid that no amendment fixes.
+  - Introduction: four passages moved to Supplementary Methods, Section S2, and one to S11, word for word. A new paragraph states what was done and found, from the locked Results only.
+  - Results: reordered, merged and retitled as findings (nine sections). The drafting scaffold is kept in comments beside each section. Amendment labels are replaced in the visible text by plain names, with the labels kept in Methods. Old Section 8 is replaced by a pointer to Table 1, which holds every cell.
+  - Discussion: continuous prose with no subheadings, as the journal asks. The A8 branches drafted before data are kept in a comment for the fill.
+  - Figure legend titles state each finding. Table 1's header and note use plain names (`research/scripts/make_table1.py`, rebuilt; cells unchanged). The cover letter follows the new frame.
+  - Supplementary Methods: 33 Results paragraphs, 5 Introduction passages and 17 Discussion paragraphs moved in word for word, copied by script from commit `bb3f90b`, with pointers renumbered and a note mapping old section numbers to new.
+  - `research/scripts/manuscript_words.py` (with `tests/test_manuscript_words.py`) now counts words against the limits, so the count no longer depends on a session's ad hoc script.
+- **What stays the same.** Every class, number, threshold, rule, eligibility and disclosure. Every value in the main text keeps its registry marker. An automated comparison found every number of the old Introduction, Results and Discussion still visible in the paper. It flagged only file:line references from the scaffold, which is kept in comments. The wording rules of outline.md and the amendments hold. No A8 output was read.
+- **Counts** (by `manuscript_words.py`). Abstract 150 words, against 147 before (limit 150). Main text 4,863 words, against 9,420 as a reader saw it before, or 7,080 of prose without the scaffold (limit 5,000). That leaves about 140 words for A8.
+- **Why.** The draft's headline was a list of per-model classes, the citeable cue-level result came late and without its size, and the text read as a preregistration log at nearly twice the length limit. An independent editor-style read, given the paper files only, put the chance of being sent out for review at about 15% as drafted.
+- **Disclosure.** Decisions table row 103. The corrections made at the same time are the next entry.
+
+## 2026-11-21: Seven statements corrected, each narrower than before (found by the independent read of 2026-11-21; checked against the locked text)
+
+- **Withdrawn: the behaviour gap as the theory's demonstration.** The Discussion said: "Behaviour and cue effects came apart in size on the same stimuli (Section 6). Judged by its outputs alone, Gemma 4 would have looked only weakly similar where its cue effects were aligned, the opposite direction to Proposition 2's example. That is the case the theory needs, observed. It is not proof of cue use." Results, Section 6 said: "The identifiability result allows this, and here CEA is the higher of the two."
+  - Both are withdrawn. The comparison has no noise ceiling. Each configuration's human response rests on that configuration's own trials, far fewer than the trials behind each cue effect, so the gap may be noise. And on a randomised design, Proposition 3 says behaviour does constrain cue effects for linear observers.
+  - Results, Section 5 now says all of this. The Discussion reports the gap as a descriptive observation that a noise ceiling would settle (IMPACT_PLAN.md, step 11).
+- **Narrowed: published designs.** The Discussion's opening said that "the design we used before, and several published designs, let option position or prompt text identify the answer". Results, Section 1 shows that only for our design. The published designs could not rule it out, which the text now says.
+- **Narrowed: Molmo2 at chance.** "Though one stayed at chance" (abstract) became "although one never exceeded chance". Molmo2 was at chance on the composite input (.163) and below it on the single crop (.072). Results, Section 2 now gives both.
+- **Narrowed: what the models saw.** "On rendered faces" (abstract) became "faces rendered from randomised facial-action recipes people had judged". Results, Section 4 now says that the models saw the same AU configurations, not the same stimuli, as Methods states.
+- **Withdrawn: the abstract's closing sentence**, "Models differ in which degree of human similarity they reach". The randomised test approximates Schyns' second degree and does not meet it as framed (Methods), and an inconclusive result is not a degree.
+- **Corrected: model size.** "Mid-sized" in the limits paragraph became "small", as Methods says.
+- **Narrowed: the cover letter.**
+  - "Five of ten contrasts" became the matches that hold under every sensitivity, with the rest described as depending on the items included.
+  - "Matched no prediction" became "inconclusive, one moving against its prediction".
+  - "Written to stand whatever the results are" was removed.
+- **Class.** Claims narrowed or withdrawn, after every analysis but A8 was read. Each correction only narrows a statement. No class, number or threshold changes.
+- **Disclosure.** Decisions table row 104. The withdrawn sentences are quoted here and are not moved to the Supplementary Information.

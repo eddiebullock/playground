@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Table 1: the profile of each model across RQ0, RQ1 and RQ2, built from locked outputs only (2026-11-13).
 
-Every cell copies a class or a value from a locked output; the table adds no rule of its own (results.md,
-section 8). An output counts as locked when its analysis has run: A1, A3 and the natural-clip scores are locked
+Every cell copies a class or a value from a locked output; the table adds no rule of its own (results.md).
+Since 2026-11-21 the header and the note above the table name each test in plain words, with the amendment
+labels given once in the note; the cells are unchanged. An output counts as locked when its analysis has run: A1, A3 and the natural-clip scores are locked
 (2026-11-09); A2, A4 and A9 count only once `research/reproduction/<amendment>_run_note.json` reads complete,
 and until then their cells read "pending". Molmo2 is outside the A2 and A4 families on its gate failures, so its
 cells there read "not eligible". A2 classes are the verdicts after the fill-rule ruling (DECISIONS 2026-11-12),
@@ -75,8 +76,8 @@ def build(root: Path = ROOT) -> str:
                 raise SystemExit(f"{ext_path.name} was not computed from {out_path.name}.")
             a2[m] = {"out": out, "ext": ext}
 
-    rows: List[str] = ["| Model | RQ0: A1 delta (Holm *P*) | RQ0: A3 delta (Holm *P*) | RQ0 reading | RQ1, natural clips: pattern score (*P*) | "
-                       "RQ1, randomised (A4): basic; conversational | A4 on a second sample (A9) | RQ2 (A2), after the fill rule: Gate B; Matches, Opposes, Null, Inconclusive |",
+    rows: List[str] = ["| Model | Face dependence, composite input: delta (Holm *P*) | Face dependence, single face: delta (Holm *P*) | Reading | Natural clips: pattern score (*P*) | "
+                       "Randomised cues: basic; conversational | Second human sample | Stimulus edits, after the fill rule: Gate B; Matches, Opposes, Null, Inconclusive |",
                        "|---|---|---|---|---|---|---|---|"]
     for m in MODELS:
         r0 = (bool(a1[m]["vision_dependent"]), bool(a3[m]["vision_dependent"]))
@@ -117,9 +118,12 @@ def build(root: Path = ROOT) -> str:
     sources = "\n".join(f"- `{k}` (sha256 `{v[:8]}...`)" for k, v in sorted(used.items()))
     return ("# Table 1 | What each model has shown\n\n"
             "<!-- Built by research/scripts/make_table1.py from locked outputs only; do not edit by hand. -->\n\n"
-            "Each cell copies a class or value from a locked output; no rule is added (Results, section 8). Models are never pooled. "
-            "\"Pending\" means the analysis has not run. RQ1 on natural clips supports alignment with the human pattern, not use of the same cues. "
-            "A4 headlines need WC and EA to agree; \"Not aligned\" is always on these renders. A2 counts are of the 16 confirmatory contrasts per model, 10 on `single_face` and 6 on `video_face`.\n\n"
+            "Each cell copies a class or value from a locked output; no rule is added (Results). Models are never pooled. "
+            "\"Pending\" means the analysis has not run. The natural-clip score supports alignment with the human pattern, not use of the same cues; "
+            "whether it is confirmatory follows the face-dependence tests, not the vision gates (Methods). "
+            "Randomised-cue headlines need the Western Caucasian (WC) and East Asian (EA) results to agree; \"Not aligned\" is always on these renders. "
+            "Stimulus-edit counts are of the 16 confirmatory contrasts per model, 10 on the single face (`single_face`) and 6 on video (`video_face`). "
+            "Methods labels the columns A1, A3, the RQ0 reading, natural-clip RQ1, A4, A9 and A2.\n\n"
             + "\n".join(rows) + "\n\nInputs:\n\n" + sources + "\n")
 
 

@@ -1017,3 +1017,11 @@ Recorded in DECISIONS 2026-11-15.
 - Gemma 4 31B stays not tested (lead decision 5).
 
 Recorded in DECISIONS 2026-11-17 (row 102), written on 2026-11-20.
+
+**2026-11-21, about 08:02, the 8B check of the device-only deviation was submitted (row 102; no gate result of Qwen3-VL-32B exists and no A8 output was read).**
+- The CSD3 connection was back after the author's login (NEEDS_INPUT item 16). Nothing of this project was queued or running.
+- In `~/rds/hpc-work/study3`, 2 of the 21 pinned files differed from their pins (`research/scripts/a8_launch.py`, `tests/test_a8.py`) and 4 were missing (`research/scripts/a8_gates_device.py`, `tests/test_a8_gates_device.py`, `research/scripts/a8_gates_device_check.py`, `slurm_jobs/a8_gates_device_check.sh`). The old copies of the two changed files and of this draft were archived (`logs/a8_pre_sync_2026-11-21.tar`), and the 6 files and this draft were copied from commit `bb3f90b`.
+- `sha256sum -c` against the 21 pins: 21 OK. The draft's sha256 on the cluster (`fbd85ecc...`) matched the local copy. The frozen 8B gate file `research/reproduction/vision_gates_qwen3vl.json`, which the job hashes before and after, is `2f38aafb...` on the cluster and locally.
+- Storage at 08:00: 1,068.3 GB and 991,653 files, under the stop lines (1,080 GB; 1,040,000 files). The group's GPU account had 2,438 GPU-hours left.
+- `BUDGET=240m sbatch slurm_jobs/a8_gates_device_check.sh` was submitted at 08:02:23 UTC as job 41575304, one whole `ampere` node. At 08:39 it was pending on priority. A watcher reports its end, and the check is read once, by the rule set on 2026-11-17.
+- This note is not copied to the cluster while the job runs, since A8's entry points read this file. The design block and the code hashes are the same in both copies.

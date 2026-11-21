@@ -605,3 +605,29 @@ An independent read of the text written on 2026-11-14 against this registry and 
 | A5 E*/D, chain and human comparisons, Qwen3-VL, single_face | verdict name Evidence-led; E*/D .533; chain W -1.681, E .333, R 1.293, G .565, F 2.063; H2 r .316 (.199 to .431), without flagged .322 (.199 to .444), against the human mode .243 (.157 to .324); Delta J without flagged .148 (.120 to .178), against the modal point mass .170 (.135 to .207); gain heterogeneity estimable False, pooled family gain log SD .000 | verified | `python -m scripts.a5_analyse --a5_frozen --a2_frozen` (frozen; run once) | `results/a5/a5_analysis.json` `cells[]` (E_star_over_D, chain, human, gain_heterogeneity, family_gain_log_sd) | descriptive |
 | A5 E*/D, chain and human comparisons, Qwen3-VL, video_face | verdict name Evidence-led; E*/D .683; chain W -1.601, E .638, R .897, G .352, F 2.068; H2 r .302 (.169 to .442), without flagged .313 (.176 to .458), against the human mode .247 (.154 to .344); Delta J without flagged .170 (.142 to .199), against the modal point mass .189 (.158 to .218); gain heterogeneity estimable True, pooled family gain log SD .000 | verified | `python -m scripts.a5_analyse --a5_frozen --a2_frozen` (frozen; run once) | `results/a5/a5_analysis.json` `cells[]` (E_star_over_D, chain, human, gain_heterogeneity, family_gain_log_sd) | descriptive |
 | A7 hybrid distance rider | not produced: the design names the relative L2 of each hybrid from its nearest native state among the riders (PREREG_A7, Estimands, riders), but the frozen runner writes no such field (the hybrid cells carry none) and the frozen analysis reports only each block's relative change | verified (scan of the cells and the frozen code) | `scripts/a7_run.py`, `scripts/a7_analyse.py` (frozen, tag `a7-freeze`) | `results/a7/a7_cells_*.jsonl` (sha256 in `research/reproduction/a7_pull_manifest.json`) | descriptive rider; no verdict depends on it; disclosed (DECISIONS 2026-11-14) |
+
+## A8 A3 face input validity, `single_face` (2026-11-21)
+
+A8's frozen A3 summary over its own family (`research/scripts/a8_face_input_validity_summary.py`, pinned `3dd613c7...`), run once on 2026-11-21 as CPU job 41578333 (`intr`, icelake, 1 min 31 s, COMPLETED, exit 0). Its inputs are the two A3 cell files written by Phase A (launcher records ok: `a3_20261115T215947855995.json` for Qwen3-VL-32B, `a3_20261115T215552371299.json` for Gemma 4 31B). The family is Qwen3-VL-32B and Gemma 4 31B. The A8 design hash is `95dd41b5...`, and the provenance checks on the cluster.
+- **Location.** The output stays on the cluster at `~/rds/hpc-work/study3/research/reproduction/a8/face_input_validity_summary_a8.json` (sha256 `c2f87b9f...`; provenance `5e47304d...`). It was read there, not copied, because `post_phase3.py pull a8` runs once at the end of A8 and refuses to overwrite a local copy. That pull will copy it.
+- **Holm family.** It has two models. Per model this is less strict than the frozen three-model family (PREREG_A8, Families).
+- **Scope.** These are A8 rows, placed under the frozen rows, and may support a statement of scope only. They change no frozen verdict.
+
+| Model | Accuracy real | Accuracy mismatch | delta (actor bootstrap 95% CI) | Holm p | Spearman with human p_target | Decision |
+|---|---|---|---|---|---|---|
+| Qwen3-VL-32B (A8) | .472 | .142 | .329 (.273 to .388) | .00006 | .477 | Pass |
+| Gemma 4 31B (A8) | .408 | .092 | .316 (.243 to .393) | .00006 | .460 | Pass |
+
+243 of 243 items on both models, none lost, no partial lines.
+
+Secondary fields, as the frozen summary writes them:
+- Accuracy by target position, 0 to 4: Qwen3-VL-32B .486, .477, .477, .440, .477; Gemma 4 31B .374, .420, .424, .412, .412.
+- Delta against the human modal label: .322 and .327.
+- Delta without Kind, Unfriendly and Jealous: .353 (.297 to .411) and .346 (.263 to .429).
+- Within-category r with human p_target: .261 and .290.
+
+**Reading.** By A8's rule, the A3 reading is that of the A1 and A3 table, and the A1 cell waits on A1.
+- Gemma 4 31B does not run A1, A2 or A4: its gates were not tested (lead decision 5; DECISIONS 2026-11-15, row 99). Its A3 Pass is reported with Phase A's delivery and ladder.
+- Qwen3-VL-32B is eligible for A1 if its gates pass, under the device-only deviation of row 102, after the 8B check.
+
+Descriptive, beside the frozen rows: both A8 models' A3 deltas are larger than their small siblings' (Qwen3-VL-8B .244, Gemma 4 E4B .216). No comparison is tested, and A8 is never pooled with the frozen models.

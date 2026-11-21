@@ -163,7 +163,18 @@ These only matter at submission. Nothing waits on them.
 - Phase A finished at 23:57: delivery, ladder and A3 ended ok for both models.
 - A8's A3 summary, its first scored result, waits on this decision, so that the decision is made before any A8 result is known.
 
-## 16. CSD3 SSH: please log in again (2026-11-20)
+## 17. The reframed paper: your review, the title, and one optional analysis (2026-11-21)
+
+**Context.** On your instruction, the paper was reframed around one headline: matching answers cannot show that a vision-language model reads faces as people do, and randomised cues can (`research/paper/v2/IMPACT_PLAN.md`; DECISIONS 2026-11-21). The changes are committed locally on `p1-pipeline` and not pushed.
+
+**What only you can decide.**
+1. **Review.** Is the reframe acceptable? Use `git diff bb3f90b -- research/paper/v2`, or read the clean copy from `python research/scripts/manuscript_words.py --out /tmp/manuscript.md`. Once you approve, it goes to `main` through a pull request.
+2. **Title.** The working title is "Beyond matching answers: testing whether vision-language models use facial cues as people do", and three alternatives are in `abstract.md`.
+3. **An optional exploratory analysis.** Results, Section 5 reports that Gemma 4's answers track people's only weakly where its cue effects align, but that comparison has no noise ceiling. A split-half ceiling from the human data would settle whether the gap is real. It needs CPU only, runs post hoc and would be labelled exploratory. If the gap survives, it becomes a second finding; if not, the text says so (IMPACT_PLAN.md, step 11). Recommendation: run it.
+
+## 16. CSD3 SSH: please log in again (2026-11-20) — RESOLVED 2026-11-21
+
+**Resolved 2026-11-21, about 08:00: you logged in again.** The cluster copy was synced to the 21 pins, and the 8B check was submitted as job 41575304 (STATE, hand-off of 2026-11-21).
 
 **Context.** Item 15's login was not renewed before the session of 2026-11-17 ended, and no master connection exists now (checked 2026-11-20: `Permission denied (publickey,keyboard-interactive,hostbased)`). Nothing of this project is queued or running.
 

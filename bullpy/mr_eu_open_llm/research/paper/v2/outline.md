@@ -2,7 +2,9 @@
 
 Drafted 2026-11-07, updated the same day after the A4 freeze. No A1 result has been read, and nothing below predicts one. Each branch uses the preregistered outcome classes and adds none. Results text is written only from locked output. A5 was frozen on 2026-11-08 (evidence classes confirmatory, balance descriptive). A6 and A7 are not frozen, so anything resting on them is marked provisional. **Updated 2026-11-12:** A1 and A3 read (R0-a on all three models) and natural-clip RQ1 confirmatory on all three, both on 2026-11-09; A7 frozen 2026-11-08 and its Stage 0 run 2026-11-10 (R3-b on both eligible models); A6 closed as a limit 2026-11-10; A9 frozen 2026-11-09. Sections below that predate these are marked where they changed.
 
-**Working title:** [PENDING: title]. Candidate: "Vision-language models against randomised human cue effects on faces".
+**Working title (2026-11-21):** "Beyond matching answers: testing whether vision-language models use facial cues as people do". Three alternatives are in `abstract.md`; the choice is the author's. Earlier candidate: "Vision-language models against randomised human cue effects on faces".
+
+**Reframe, 2026-11-21.** The headline, structure and length plan of the paper are now in `IMPACT_PLAN.md` (DECISIONS 2026-11-21). Where this outline's drafting plans below differ from it (abstract template, Results structure, scenario sentences, Discussion structure), the plan and the text govern; the outcome tables and wording rules below still hold.
 
 ## Journal limits
 
@@ -73,13 +75,19 @@ The plan's estimate assumed recovery detail in section 2, which holds none, and 
   - Results 1 (370), and the Discussion's RQ2 (263) and RQ3 (151) sections.
   - Alternatively, ask the editor for more space, or use the fallback venue (TMLR), which sets no word limit.
 
+*Applied 2026-11-21, cut 7 and the reframe (the author's instruction; IMPACT_PLAN.md; DECISIONS 2026-11-21).* Counted by `research/scripts/manuscript_words.py`. The Results were reordered and retitled as findings, with the scaffold moved into comments. The Discussion became continuous prose, and the Introduction gained a paragraph on what was found and lost five passages. Main text 4,863 words (Introduction 1,223, Results 2,405, Discussion 1,235), against 9,420 as a reader saw it before (7,080 of prose). The abstract is 150 words. About 140 words remain for A8. Every passage that left the main text moved word for word to Supplementary Methods, except the corrected sentences that DECISIONS 2026-11-21 quotes.
+
 Together these save about 1,850 to 2,350 words; the rest comes from writing each chosen branch to its budget at steps 4.1 and 4.3. Methods (7,402 words) and the figure legends (1,017) fall outside the limit, but check both against the journal's formatting guide before submission.
 
 ## Abstract template (150 words at most)
 
+*Superseded 2026-11-21: the abstract in `abstract.md` follows IMPACT_PLAN.md, Section 2.*
+
 > Some vision-language models are reported to match people at reading mental states from faces, but several claims we located cannot rule out option order or prompt text. We audited [PENDING: n] models on 243 acted clips, with option position controlled and faces swapped under fixed prompts. [PENDING: RQ0 sentence.] We prove that agreement on natural items does not in general determine which cues a system uses. We therefore compared model cue effects with human effects from randomised facial action units. [PENDING: RQ1 sentence.] Stimulus interventions tested preregistered human predictions. [PENDING: RQ2 sentence.] [PENDING: closing sentence from the scenario table.]
 
 ## Results structure
+
+*Superseded 2026-11-21: the Results now run 1 Accuracy alone cannot show face use; 2 Answers depend on the face; 3 Agreement on natural faces cannot identify cue use (old 3 and 4); 4 Randomised cues, with the second human sample (old 5 and 6b); 5 Answers on the same faces (old 6); 6 Stimulus edits (old 7); 7 Face evidence and word knowledge (old 10, A5); 8 Larger models (old 8b); 9 What could not be tested (old 9 and old 10, RQ5). Old 8 is Table 1. The list below is the drafting plan.*
 
 Subheadings are provisional. Sections 1 and 3 hold whatever the outcomes are.
 
@@ -185,9 +193,13 @@ A5 (RQ4, prior and evidence on the blind readout, largely a reanalysis of A2's c
 | S5 | A4 Inconclusive, R2-f or d | Audit and theory stand, and the cue-level question stays open with stated requirements | The tools for a cue-level test now exist, and these models did not yet meet its gates |
 | S6 | Models differ | Report as profiles, with no pooled statement | Models differ in which degree of similarity they reach |
 
+*2026-11-21: the abstract no longer closes on a scenario sentence. S6's ("Models differ in which degree of similarity they reach") was withdrawn as inaccurate (DECISIONS 2026-11-21, second entry), and the headline is IMPACT_PLAN.md, Section 2. The table stays as the record of what was drafted before data.*
+
 The audit, the theorem and the estimand stand in every scenario. A Mixed headline for a task is reported as such and adds no scenario. No scenario claims a mechanism, or a route through the model: RQ3 is a scoped limit, and RQ4 and RQ5 stay out unless their amendments freeze and finish (`GOALS.md`, goals G6 to G8; DECISIONS 2026-11-07).
 
 ## Discussion structure (no subheadings)
+
+*Superseded 2026-11-21 by the prose in `discussion.md` (IMPACT_PLAN.md, Section 4).*
 
 1. What was found, in one paragraph, from the scenario table.
 2. What the audit means for existing claims. Which published results need repeating, stated without judging papers we read only in part.
