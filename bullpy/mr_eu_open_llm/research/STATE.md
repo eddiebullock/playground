@@ -10,6 +10,14 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
   - `study3` was synced to the 21 pins, and `sha256sum -c` gave 21 OK. The old copies are in `logs/a8_pre_sync_2026-11-21.tar`.
   - The 8B check was submitted at 08:02 as job 41575304 (one whole node, budget 240 minutes). At 08:39 it was pending on priority, and this session's watcher reports its end.
   - Next, in order: read the check by its rule (DECISIONS 2026-11-17); if it passes, run Qwen3-VL-32B's gates; then A8's A3 summary on CPU. See PREREG_A8's dated note of 2026-11-21.
+- **A8's A3 summary ran and was read (09:03): both larger models pass A3** (RESULTS_REGISTRY, "A8 A3 face input validity").
+  - It ran on CPU under `intr` as job 41578333 in 1 min 31 s, after a plain `icelake` copy waited on priority and was cancelled unstarted.
+  - Qwen3-VL-32B: delta .329 (.273 to .388), Holm *P* = .00006. Gemma 4 31B: delta .316 (.243 to .393), Holm *P* = .00006. The Holm family has two models.
+  - The output stays on the cluster until the single end-of-A8 pull.
+  - Gemma 4 31B stops here (gates not tested). Qwen3-VL-32B waits on the 8B check, then its gates.
+- **`intr` cannot run the 8B check or the 32B gates.** The frozen 8B gate run at bfloat16 took 6,258 s on one GPU (G4 alone 5,266 s), beyond `intr`'s 1-hour limit. A timeout would count as "the check fails to run", which ends the deviation under row 102's stop rule, and splitting the gates would be the "second change" that rule forbids. So 41575304 stays in `ampere`. `intr` slices suit A8's later sharded A1, A2 and A4 runs, which resume.
+- **Deadline.** Every GPU node is reserved from 2026-12-07 07:00 to 2027-01-10 (`Dec2026-shutdown`).
+- **PR #134** (the reframe and today's records) is open. Its merge was blocked by this session's permission settings, so the author merges it.
 - **The paper is reframed, on the author's instruction** (`research/paper/v2/IMPACT_PLAN.md`; DECISIONS 2026-11-21; decisions table rows 103 and 104).
   - Headline: matching answers cannot show that a vision-language model reads faces as people do. Randomised cues can, and Gemma 4 shares people's cue effects for basic emotions, replicated on a second sample from the same lab, below human agreement. Qwen3-VL was not shown to.
   - Length: main text 4,863 words (limit 5,000), abstract 150.
