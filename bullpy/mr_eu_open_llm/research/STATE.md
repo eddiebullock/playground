@@ -2,7 +2,23 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-11-20 Europe/London
+**Updated:** 2026-11-21 Europe/London
+
+## Hand-off, 2026-11-21
+
+- **The cluster login is back** (NEEDS_INPUT item 16, resolved about 08:00).
+  - `study3` was synced to the 21 pins, and `sha256sum -c` gave 21 OK. The old copies are in `logs/a8_pre_sync_2026-11-21.tar`.
+  - The 8B check was submitted at 08:02 as job 41575304 (one whole node, budget 240 minutes). At 08:39 it was pending on priority, and this session's watcher reports its end.
+  - Next, in order: read the check by its rule (DECISIONS 2026-11-17); if it passes, run Qwen3-VL-32B's gates; then A8's A3 summary on CPU. See PREREG_A8's dated note of 2026-11-21.
+- **The paper is reframed, on the author's instruction** (`research/paper/v2/IMPACT_PLAN.md`; DECISIONS 2026-11-21; decisions table rows 103 and 104).
+  - Headline: matching answers cannot show that a vision-language model reads faces as people do. Randomised cues can, and Gemma 4 shares people's cue effects for basic emotions, replicated on a second sample from the same lab, below human agreement. Qwen3-VL was not shown to.
+  - Length: main text 4,863 words (limit 5,000), abstract 150.
+  - Seven statements were corrected, each narrower. Nothing else left the paper: every trimmed passage moved word for word to Supplementary Methods.
+  - Committed locally on `p1-pipeline` and not pushed. The author reviews it first (NEEDS_INPUT item 17).
+- **Next for the paper** (IMPACT_PLAN.md, Section 6):
+  - the author's review and choice of title, and whether to compute an exploratory noise ceiling for Results, Section 5 (item 17);
+  - relabel the figures;
+  - fill A8 within 120 words in Results and 50 in the Discussion.
 
 ## Hand-off, 2026-11-20 (new session)
 
