@@ -2,7 +2,21 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-11-21 Europe/London
+**Updated:** 2026-11-23 Europe/London
+
+## Hand-off, 2026-11-23
+
+- **PR #134 is merged into `main`.** The author merged it on 2026-11-21 at 09:10 UTC (`3678113`, a true merge commit). Its three commits (`f6df4a6`, `88353f9`, `9e6776f`) are authored by `eddiebullock`. The entry of 2026-11-21 below, which says it is open, is superseded.
+- **The cluster connection ended at about 22:05 on 2026-11-21, so please log in again** (NEEDS_INPUT item 18).
+  - The watcher on job 41575304 (the 8B check) stalled at a fresh login prompt, and on 2026-11-23 it was stopped.
+  - At its last good check, about 22:00 on 2026-11-21, the job was still in the queue. Its state now is unknown.
+  - A new watcher waits for the login. It reports the job's state as soon as you log in. Nothing else of this project was queued or running.
+- **Next on the cluster, unchanged.** Read the 8B check by its rule (DECISIONS 2026-11-17). If it passes, submit Qwen3-VL-32B's gates (whole `ampere` node, about 7 hours). Then A1, A2 and A4 by dated note, with `intr` slices for the sharded runs. The GPU reservation begins on 2026-12-07 at 07:00, 14 days from today.
+- **The figures are relabelled** (IMPACT_PLAN.md, step 9; Section 5, item 9).
+  - Figures 2, 4, 5 and 6 print plain names in place of A1, A3, RQ0, RQ1, SESOI, do-effects and route identifiers. Figure 6 names each contrast by its edit and items, beside its ID.
+  - They were rebuilt with `--real` from the same locked inputs, and every input sha256 in `SOURCES.md` is unchanged. The legends follow.
+  - Two new tests: one checks Figure 6's names against the frozen design, the other fails if a code is printed.
+  - The main text is unchanged at 4,863 words.
 
 ## Hand-off, 2026-11-21
 
@@ -17,7 +31,7 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
   - Gemma 4 31B stops here (gates not tested). Qwen3-VL-32B waits on the 8B check, then its gates.
 - **`intr` cannot run the 8B check or the 32B gates.** The frozen 8B gate run at bfloat16 took 6,258 s on one GPU (G4 alone 5,266 s), beyond `intr`'s 1-hour limit. A timeout would count as "the check fails to run", which ends the deviation under row 102's stop rule, and splitting the gates would be the "second change" that rule forbids. So 41575304 stays in `ampere`. `intr` slices suit A8's later sharded A1, A2 and A4 runs, which resume.
 - **Deadline.** Every GPU node is reserved from 2026-12-07 07:00 to 2027-01-10 (`Dec2026-shutdown`).
-- **PR #134** (the reframe and today's records) is open. Its merge was blocked by this session's permission settings, so the author merges it.
+- **PR #134** (the reframe and today's records) is open. Its merge was blocked by this session's permission settings, so the author merges it. (Merged by the author at 09:10 UTC; see the hand-off of 2026-11-23.)
 - **The paper is reframed, on the author's instruction** (`research/paper/v2/IMPACT_PLAN.md`; DECISIONS 2026-11-21; decisions table rows 103 and 104).
   - Headline: matching answers cannot show that a vision-language model reads faces as people do. Randomised cues can, and Gemma 4 shares people's cue effects for basic emotions, replicated on a second sample from the same lab, below human agreement. Qwen3-VL was not shown to.
   - Length: main text 4,863 words (limit 5,000), abstract 150.

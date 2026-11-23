@@ -163,7 +163,19 @@ These only matter at submission. Nothing waits on them.
 - Phase A finished at 23:57: delivery, ladder and A3 ended ok for both models.
 - A8's A3 summary, its first scored result, waits on this decision, so that the decision is made before any A8 result is known.
 
+## 18. CSD3 SSH: please log in again (2026-11-23)
+
+**Context.** The master connection you opened on 2026-11-21 ended at about 22:05 that evening. This session's watcher on job 41575304 then stalled at a fresh login prompt, and on 2026-11-23 it was stopped. Job 41575304, the 8B check, was still in the queue at the watcher's last good check, about 22:00 on 2026-11-21. The watcher checked only that, not whether the job was pending or running. Its state now is unknown: it may have run, and it may still be waiting. Nothing else of this project was queued or running.
+
+**What waits on it.** Read the 8B check by its rule (DECISIONS 2026-11-17). If it passes, submit Qwen3-VL-32B's gates (one whole `ampere` node, about 7 hours; not `intr`, per row 102's stop rule). Then A1, A2 and A4 for that model by dated note, before the GPU reservation of 2026-12-07 07:00. That is 14 days from 2026-11-23.
+
+**What to do.** In this session, type the line below, then give the password and the one-time code when asked. A watcher in this session is already waiting for the connection, and it reports the job's state as soon as you log in. Keep the Mac awake and on power while jobs run.
+
+`! ssh -fN -o ControlMaster=yes -o ControlPath=~/.ssh/cm-%r@%h:%p -o ControlPersist=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=10 eb2007@login.hpc.cam.ac.uk`
+
 ## 17. The reframed paper: your review, the title, and one optional analysis (2026-11-21)
+
+**2026-11-23.** The reframe reached `main` in PR #134, which you merged on 2026-11-21 (`3678113`), and the figures were relabelled on 2026-11-23 (IMPACT_PLAN.md, step 9). The questions below are still open.
 
 **Context.** On your instruction, the paper was reframed around one headline: matching answers cannot show that a vision-language model reads faces as people do, and randomised cues can (`research/paper/v2/IMPACT_PLAN.md`; DECISIONS 2026-11-21). The changes are committed locally on `p1-pipeline` and not pushed.
 

@@ -1,6 +1,6 @@
 # Plan: the paper's headline and impact
 
-**Written:** 2026-11-21, at the author's request: "construct a comprehensive plan for how this paper's impact and headline can be improved and implement it". Steps 1 to 8 were implemented the same day (Section 5). Steps 9 to 16 are next (Section 6). Decisions: DECISIONS 2026-11-21 (two entries); supplementary decisions table rows 103 and 104.
+**Written:** 2026-11-21, at the author's request: "construct a comprehensive plan for how this paper's impact and headline can be improved and implement it". Steps 1 to 8 were implemented the same day, and step 9 on 2026-11-23 (Section 5). Steps 10 to 16 are next (Section 6). Decisions: DECISIONS 2026-11-21 (two entries); supplementary decisions table rows 103 and 104.
 
 Word counts in this file come from `research/scripts/manuscript_words.py`, which removes comments, registry markers, slots, citations, headings and table rows before counting.
 
@@ -92,18 +92,23 @@ The supporting results are face evidence beyond word knowledge (Results 7) and s
    - Table 1's header and note use plain names. Changed in `research/scripts/make_table1.py` and rebuilt, with the cells unchanged.
    - Cover letter rewritten to the new frame (`submission/cover_letter_draft.md`).
 8. **Tooling.** `research/scripts/manuscript_words.py` counts words against the limits and writes a clean reading copy (`--out`), with tests in `tests/test_manuscript_words.py`.
+9. **Figures relabelled (2026-11-23).** `research/scripts/make_figures.py` now prints plain names, and Figures 2, 4, 5 and 6 were rebuilt with `--real` from the same locked inputs (every input sha256 in `figures/SOURCES.md` unchanged; Figures 1 and 3 untouched).
+   - Figure 2: "composite input" and "single face" for A1 and A3, "Real minus mismatched face" for RQ0, "Face dependent by the rule" in the key.
+   - Figure 4: no RQ1 tag. Figure 5: "bound .30" for the SESOI and "cue effects" for do-effects.
+   - Figure 6: each contrast by its edit and items beside its ID ("P1 Mouth mask on Happy"), the inputs named once beside the line that separates them, and "option-free judgement" for the blind readout. The names are checked against the frozen design (`scripts/stimulus_design.py`) by a new test.
+   - A second new test builds the four figures from the locked outputs and fails if any amendment code, SESOI, do-effects or route identifier is printed. It catches all 28 such labels in the previous script.
+   - The legends follow (`figure_legends.md`). No encoding, value, marker or decision changed. `SOURCES.md` line numbers are current again: Figures 2 and 4 had been one line stale since 2026-11-14.
 
 ## 6. Next steps, in order
 
 | # | Step | Who | Why it matters |
 |---|---|---|---|
-| 9 | Relabel the figures in `make_figures.py`: plain panel titles in place of A1, A3, RQ0, SESOI and do-effects. Then rebuild with `--real`, update `SOURCES.md` and the reproduction pins, and rerun the clean-checkout check | agent | Editors look at Figure 1 and the main figure first |
 | 10 | Read the reframe (`git diff`) and choose the title | author | Authorship is the author's |
 | 11 | Decide whether to compute a noise ceiling for the answer agreement of Results 5: split-half of each configuration's human responses, labelled exploratory and post hoc, CPU only. If the gap survives the ceiling, it becomes a second finding (answers can understate shared cue effects). If not, Results 5 says so, and the Discussion's second observation goes | author decides, agent runs | It is the most interesting secondary result and the one most open to attack |
 | 12 | Fill A8 within a budget of 120 words in Results and 50 in the Discussion, with detail to S9, keeping the main text under 5,000 | agent, after A8 locks | Model size is the first scope question a reviewer will ask |
 | 13 | Optionally, a schematic Figure 1, the eighth display item. One row per model: answers, face dependence, natural-pattern alignment, randomised cue effects and the human reference, from locked outputs, built by `make_figures.py` | agent, if the author wants it | It shows the paper's argument at a glance |
 | 14 | Optionally, human accuracy beside model accuracy. Report the human item-norm accuracy on the 243 items as a descriptive design fact, with its caveat that the procedure differed | author decides | The independent read asked for it; the paper never sets model accuracy (at most .469) beside people's |
-| 15 | At final formatting: name Results headings instead of "Section N"; give references cited only in the Supplement ([14], [16], [21], [23]) their own Supplementary reference list; check Methods (6,653 words) against the formatting guide | agent | The journal's format |
+| 15 | At final formatting: name Results headings instead of "Section N"; give references cited only in the Supplement ([14], [16], [21], [23]) their own Supplementary reference list; check Methods (6,653 words) against the formatting guide; check Figure 1's legend (374 words) against the journal's legend limit, which this repository has not verified | agent | The journal's format |
 | 16 | Send a presubmission enquiry to Nature Human Behaviour with the new abstract and cover letter. If declined, go to Nature Communications or Nature Machine Intelligence, with TMLR as the planned fallback. Post a preprint at submission, after checking the journal's preprint policy, which the repository has not verified | author | A fast, cheap signal on fit before a full submission |
 
 **For the why-this-journal sentence (step 16).** A candidate, for the author to edit: "How far AI systems share human social perception is a question for psychology, cognitive science and AI alike, and the cue-level test we propose speaks to all three." A precedent would help: we recall that Nature Human Behaviour published Strachan et al. (2024) on theory of mind in large language models and humans. That has not been checked here, so do not cite it until it is.

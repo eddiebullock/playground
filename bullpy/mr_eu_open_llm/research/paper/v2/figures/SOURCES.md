@@ -23,8 +23,8 @@ Figures 2, 4, 5 and 6 get a section only when built with `--real`, which refuses
 
 | Panel | Input file | sha256 | Script line |
 |---|---|---|---|
-| a to c, A1 rotation summary | `research/reproduction/rotation_summary.json` | `81500bdd229f88c5aa4038736d4ccc0eb2e04080613dc95380cc8c3dd067072a` | `research/scripts/make_figures.py:714` |
-| a, b, d, A3 face input validity summary | `research/reproduction/face_input_validity_summary.json` | `c1c64e6975b32356a3314268c054f0dee483ddf74b11cd66d03b2faf972e64a4` | `research/scripts/make_figures.py:715` |
+| a to c, A1 rotation summary | `research/reproduction/rotation_summary.json` | `81500bdd229f88c5aa4038736d4ccc0eb2e04080613dc95380cc8c3dd067072a` | `research/scripts/make_figures.py:715` |
+| a, b, d, A3 face input validity summary | `research/reproduction/face_input_validity_summary.json` | `c1c64e6975b32356a3314268c054f0dee483ddf74b11cd66d03b2faf972e64a4` | `research/scripts/make_figures.py:716` |
 
 ## Figure 3
 
@@ -40,11 +40,11 @@ Figures 2, 4, 5 and 6 get a section only when built with `--real`, which refuses
 
 | Panel | Input file | sha256 | Script line |
 |---|---|---|---|
-| pattern score, Gemma 4 | `research/reproduction/same_clip_family_model_gemma4.json` | `0f9c0a2658cb15c4ac5e0ec03d87fa1f4a521a71ba5e758d54993e96ac37519d` | `research/scripts/make_figures.py:897` |
-| pattern score, Qwen3-VL | `research/reproduction/same_clip_family_model_qwen3vl.json` | `bc0d67951cad79abb28cae1697f96946ec87e6f83eb6096d9cd772ad5cedb810` | `research/scripts/make_figures.py:897` |
-| pattern score, Molmo2 | `research/reproduction/same_clip_family_model_molmo2.json` | `9ad3d59dd71b8c2a4f897ac8f05d1c9ed805f9e566c75ceb3651d2eafaf66e3f` | `research/scripts/make_figures.py:897` |
-| reference band, route recovery 1x | `research/reproduction/same_clip_family_route_pattern_within_category.json` | `2bed8ba2dea187d48bd968c2048cb9ec49945ed0e22bb68e0a9946d1209cba8a` | `research/scripts/make_figures.py:889` |
-| reference band, route recovery 0.75x | `research/reproduction/same_clip_family_route_pattern_075x_within_category.json` | `3cec1cf52258446df5ad7d917a048af0866fc61c43753add164362b168b56762` | `research/scripts/make_figures.py:889` |
+| pattern score, Gemma 4 | `research/reproduction/same_clip_family_model_gemma4.json` | `0f9c0a2658cb15c4ac5e0ec03d87fa1f4a521a71ba5e758d54993e96ac37519d` | `research/scripts/make_figures.py:898` |
+| pattern score, Qwen3-VL | `research/reproduction/same_clip_family_model_qwen3vl.json` | `bc0d67951cad79abb28cae1697f96946ec87e6f83eb6096d9cd772ad5cedb810` | `research/scripts/make_figures.py:898` |
+| pattern score, Molmo2 | `research/reproduction/same_clip_family_model_molmo2.json` | `9ad3d59dd71b8c2a4f897ac8f05d1c9ed805f9e566c75ceb3651d2eafaf66e3f` | `research/scripts/make_figures.py:898` |
+| reference band, route recovery 1x | `research/reproduction/same_clip_family_route_pattern_within_category.json` | `2bed8ba2dea187d48bd968c2048cb9ec49945ed0e22bb68e0a9946d1209cba8a` | `research/scripts/make_figures.py:890` |
+| reference band, route recovery 0.75x | `research/reproduction/same_clip_family_route_pattern_075x_within_category.json` | `3cec1cf52258446df5ad7d917a048af0866fc61c43753add164362b168b56762` | `research/scripts/make_figures.py:890` |
 
 ## Figure 5
 
@@ -56,7 +56,7 @@ Figures 2, 4, 5 and 6 get a section only when built with `--real`, which refuses
 
 | Panel | Input file | sha256 | Script line |
 |---|---|---|---|
-| A2 output, Gemma 4 | `research/reproduction/stimulus_interventions_gemma4.json` | `4ceb8840aa98d0b8980e565eb32ecda455d14689549e3dde2a9dbf9fdf655c0c` | `research/scripts/make_figures.py:1196` |
-| A2 declared extras, Gemma 4 | `research/reproduction/a2_extras_gemma4.json` | `792ee9adabb9e232c795a1dee0f5254d6fb71aa6d5621f1bfd0f680307e915b4` | `research/scripts/make_figures.py:1197` |
-| A2 output, Qwen3-VL | `research/reproduction/stimulus_interventions_qwen3vl.json` | `ff6a7741f610f3950501b9cc6ca02268ad1b579d4569230ea203a19df831bf07` | `research/scripts/make_figures.py:1196` |
-| A2 declared extras, Qwen3-VL | `research/reproduction/a2_extras_qwen3vl.json` | `0d2e8d0d0efb3c60e5a6656eb98a71acf97cd28eee27a882c2c100a6538725ca` | `research/scripts/make_figures.py:1197` |
+| A2 output, Gemma 4 | `research/reproduction/stimulus_interventions_gemma4.json` | `4ceb8840aa98d0b8980e565eb32ecda455d14689549e3dde2a9dbf9fdf655c0c` | `research/scripts/make_figures.py:1222` |
+| A2 declared extras, Gemma 4 | `research/reproduction/a2_extras_gemma4.json` | `792ee9adabb9e232c795a1dee0f5254d6fb71aa6d5621f1bfd0f680307e915b4` | `research/scripts/make_figures.py:1223` |
+| A2 output, Qwen3-VL | `research/reproduction/stimulus_interventions_qwen3vl.json` | `ff6a7741f610f3950501b9cc6ca02268ad1b579d4569230ea203a19df831bf07` | `research/scripts/make_figures.py:1222` |
+| A2 declared extras, Qwen3-VL | `research/reproduction/a2_extras_qwen3vl.json` | `0d2e8d0d0efb3c60e5a6656eb98a71acf97cd28eee27a882c2c100a6538725ca` | `research/scripts/make_figures.py:1223` |
