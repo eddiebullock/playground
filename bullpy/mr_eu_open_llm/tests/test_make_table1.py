@@ -30,6 +30,11 @@ def test_table1_on_the_locked_outputs_reads_nothing_unlocked():
     assert "| Molmo2 |" in text and "not eligible (vision gates)" in text
     assert "results/a4/summary.json" in text and "results/a9/summary.json" in text
     assert "stimulus_interventions_gemma4.json" in text and "a2_extras_qwen3vl.json" in text
+    # A8 ended for this paper after Phase A (DECISIONS 2026-11-23, row 105): its rows sit below the frozen rows.
+    assert ("| Qwen3-VL-32B (A8) | not run (A8 stop rule: no gate result) | .329 (.00006) | Single face: Pass; A1 not run | "
+            "not run (needs A1) | not run (A8 stop rule: no gate result) | not part of A8 | not run (A8 stop rule: no gate result) |") in text
+    assert "| Gemma 4 31B (A8) | not run (A8 stop rule: no gate result) | .316 (.00006) |" in text
+    assert text.index("| Molmo2 |") < text.index("| Qwen3-VL-32B (A8) |") < text.index("| Gemma 4 31B (A8) |")
 
 
 def test_table1_fills_a2_a4_a9_once_their_run_notes_exist(tmp_path):
@@ -63,3 +68,47 @@ def test_table1_fills_a2_a4_a9_once_their_run_notes_exist(tmp_path):
     text = t1.build(tmp_path)
     assert "Aligned; Mixed" in text and "replicated on a second human sample" in text
     assert "single_face: Gate B pass;" in text and "pending |" not in text
+
+
+def _a8_tree(tmp_path, gate_statuses):
+    """A tree with the frozen inputs and synthetic A8 files: the frozen A3 entries copied under the A8 ids
+    (stand-ins, not A8 values), a pull manifest and gates launcher records with the given statuses."""
+    import pytest  # noqa: F401
+    repro = tmp_path / "research" / "reproduction"
+    repro.mkdir(parents=True)
+    for name in ("rotation_summary.json", "face_input_validity_summary.json",
+                 *[f"same_clip_family_model_{m}.json" for m in t1.MODELS]):
+        shutil.copy(ROOT / "research/reproduction" / name, repro / name)
+    frozen = json.loads((repro / "face_input_validity_summary.json").read_text())
+    (repro / "a8").mkdir()
+    (repro / "a8" / "face_input_validity_summary_a8.json").write_text(
+        json.dumps({"qwen3vl_32b": frozen["qwen3vl"], "gemma4_31b": frozen["gemma4"]}))
+    (repro / "a8_pull_manifest.json").write_text(json.dumps({"amendment": "a8", "contents_read": False}))
+    for m in t1.A8_MODELS:
+        launch = repro / "a8" / m / "launch"
+        launch.mkdir(parents=True)
+        for i, s in enumerate(gate_statuses):
+            (launch / f"gates_2026111{i}.json").write_text(json.dumps({"step": "gates", "a8_id": m, "status": s}))
+    return frozen
+
+
+def test_table1_a8_rows_below_the_frozen_rows_once_pulled(tmp_path):
+    frozen = _a8_tree(tmp_path, ["failed", "out_of_memory"])
+    text = t1.build(tmp_path)
+    lines = [l for l in text.splitlines() if l.startswith("| ")]
+    names = [l.split(" | ")[0][2:] for l in lines[1:]]
+    assert names == ["Qwen3-VL", "Gemma 4", "Molmo2", "Qwen3-VL-32B (A8)", "Gemma 4 31B (A8)"]
+    row = lines[-2]
+    want = f"{t1.r3(frozen['qwen3vl']['delta_real_minus_mismatch'])} ({t1.p(frozen['qwen3vl']['p_delta_holm'])})"
+    assert row.split(" | ")[2] == want
+    assert row.count(t1.A8_NOT_RUN) == 3 and "Single face: Pass; A1 not run" in row and "not part of A8" in row
+    assert "Rows marked A8" in text and "a8_pull_manifest.json" in text
+
+
+def test_table1_no_a8_rows_before_the_pull_and_no_guess_after_a_gate_result(tmp_path):
+    import pytest
+    _a8_tree(tmp_path, ["failed", "ok"])
+    with pytest.raises(SystemExit, match="no rule yet"):
+        t1.build(tmp_path)
+    (tmp_path / "research/reproduction/a8_pull_manifest.json").unlink()
+    assert "(A8)" not in t1.build(tmp_path)

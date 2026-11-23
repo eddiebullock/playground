@@ -1,5 +1,5 @@
 <!--
-Draft, 2026-11-08 (ROADMAP step 0.9); results filled on 2026-11-14 from the locked outputs (A8 has not run). Claims are limited to what is locked in RESULTS_REGISTRY or proved in Supplementary Note 1.
+Draft, 2026-11-08 (ROADMAP step 0.9); results filled on 2026-11-14 from the locked outputs (A8 has not run). 2026-11-23: A8 ended for this paper after Phase A (DECISIONS 2026-11-23, row 105); the letter's claims do not rest on it. Claims are limited to what is locked in RESULTS_REGISTRY or proved in Supplementary Note 1.
 Submission and authorship belong to the user. Nothing here has been sent.
 2026-11-21, reframed with the paper (IMPACT_PLAN.md; DECISIONS 2026-11-21). Changes against bb3f90b, from the editor-style read of 2026-11-21: the stimulus edits are stated with their robust part, not as "five of ten"; "matched no prediction" now says the contrasts were inconclusive, one against its prediction; "written to stand whatever the results are" is gone, since it reads as a paper with no finding; "first" is not claimed (outline.md, inconsistency 1: "located no earlier example"). The why-this-journal sentence stays the author's; IMPACT_PLAN.md suggests one, with a precedent still to verify.
 -->

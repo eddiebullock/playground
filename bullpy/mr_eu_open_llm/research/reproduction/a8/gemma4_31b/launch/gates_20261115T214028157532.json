@@ -1,0 +1,117 @@
+{
+  "a8_code_pins": {
+    "research/scripts/a2_declared_extras.py": "1e55ddab560a66ab9489ead8556676c2dd7b8ffc7d5c3ca9db5393672683a537",
+    "research/scripts/a2_prerun_check.py": "49ead3b2076fc7d67f7eac598a42075df323886697d7f3664ef7a73e00915bf1",
+    "research/scripts/a4_prerun_check.py": "3faca4a1409f96072e63a7841ce21aed2f0c03e27b6a5a3498f70e18c586a29a",
+    "research/scripts/a8_a4_gates.py": "a96dea8fb7d381c90ee058fcf1e11a7ba8e65c202574717bb2a336f836c23401",
+    "research/scripts/a8_analyse_a2.py": "ba06e005359d203ac15e89b39075c14fc25c38d76cbfe0cdf7cd5dfefd141fd5",
+    "research/scripts/a8_analyse_rotation.py": "b5609c4c1422e3c38bc76d346ea59cf7c340f0b3c347896b4bfa0e1ea6711be5",
+    "research/scripts/a8_design.py": "dba592be47726ea5fb39f89c4662be236eb40a9e175d85e69cf612f79c8e13ae",
+    "research/scripts/a8_face_input_validity_summary.py": "3dd613c74ddae8fe325edcb737a105f7c9a100115e7febe1d9dba66deeb13e52",
+    "research/scripts/a8_family.py": "d375bf18955e74205b10f3e64434c761d9fd60519e71b329da5bd59c97678dad",
+    "research/scripts/a8_launch.py": "2d2f9b718640316dbb5d9cad82133c787ad94b098ae95190a79eea47d75e62b1",
+    "research/scripts/a8_preflight.py": "9c9ec944be4dbef30f8cd09488f57c54ad33c1de0d1f48fb20270eff27db9160",
+    "research/scripts/a8_prerun_check.py": "f0d68544061807458fb83ff0373ba4bfcc8d565540ba932a8bd09d6e8a336c2f",
+    "research/scripts/a8_rotation_shard.py": "fa41866902facb76832beca1dd270d2397d425c434e3b974eba119d03709dbd7",
+    "slurm_jobs/a8_job.sh": "92e70ce845a9aef984dc817d13d3364fc98530f0a9aef4a6d3b84261c1d36974",
+    "slurm_jobs/a8_node.sh": "4d5dbedc0efc0760ce40d88349552bb193f7219f3bdca50d96975afffa0a038a",
+    "tests/test_a8.py": "9c6d3ff2b9d0050496d5d86cf024ab34bcbf326e58b205036ecb1e2508334e8a",
+    "tests/test_a8_node.py": "3c3a5263f7308a5e2ff558669fde8ea56886ba5f5e346a107ceee41cfdf83d43"
+  },
+  "a8_id": "gemma4_31b",
+  "command": {
+    "argv": [
+      "--model",
+      "gemma4",
+      "--gates",
+      "g2,g3,g4",
+      "--dtypes",
+      "bfloat16,float32",
+      "--n_g3",
+      "12",
+      "--output",
+      "research/reproduction/a8/gemma4_31b/vision_gates_gemma4.json"
+    ],
+    "argv_extra_by_key": {
+      "gemma4": [],
+      "qwen3vl": [
+        "--float32_max_frames",
+        "6"
+      ]
+    },
+    "argv_note": "as slurm_jobs/study3_vision_gates.sh: --float32_max_frames 6 for qwen3vl only, after --output",
+    "decoder_preflight": true,
+    "env": "conda_cv411",
+    "module": "scripts.vision_gates",
+    "outputs": [
+      "research/reproduction/a8/gemma4_31b/vision_gates_gemma4.json"
+    ],
+    "resumable": false,
+    "uses_model": true
+  },
+  "config": {
+    "architectures": [
+      "Gemma4ForConditionalGeneration"
+    ],
+    "model_type": "gemma4",
+    "text_hidden_size": 5376,
+    "text_num_hidden_layers": 60
+  },
+  "context": {
+    "a8_id": "gemma4_31b",
+    "condition": null,
+    "key": "gemma4",
+    "n_shards": null,
+    "rotation": null,
+    "shard": null
+  },
+  "data_sha256": {
+    "data/eu_emotions_full_manifest.json": "54e9976f1a05557b487a3965ba254656bc3b62ce34ba4449eb4e387518b5df7d",
+    "data/eu_emotions_human_entropy.json": "f9d91b4e47816fd01b773f0a63f8fff39c7e0cfa2c56a2136b1f52ba5cc33744"
+  },
+  "design_sha256": "95dd41b5d3c33b79ee9e54a20d34ea1e18b6c9156fcabd719ebfb084709b7b50",
+  "error": "TypeError: 'NoneType' object is not subscriptable",
+  "finished_at_utc": "2026-11-15T21:42:41.487009+00:00",
+  "frozen_outputs_changed": [],
+  "frozen_outputs_hashed": 42,
+  "launcher_sha256": "2d2f9b718640316dbb5d9cad82133c787ad94b098ae95190a79eea47d75e62b1",
+  "loader": {
+    "config_hpc_path": "/rds/project/rds-ePtR33Nsgi4/eb2007/models/gemma-4-31B-it",
+    "resolve_model_path": "/rds/project/rds-ePtR33Nsgi4/eb2007/models/gemma-4-31B-it"
+  },
+  "models_dir_env": "/rds/user/eb2007/hpc-work/study3/a8_models_gemma",
+  "oom_files": [],
+  "rds_usage": {
+    "files": 991475,
+    "gb": 1067.6
+  },
+  "slurm_job_id": "41047243",
+  "started_at_utc": "2026-11-15T21:35:18.117766+00:00",
+  "status": "failed",
+  "step": "gates",
+  "test_mode": false,
+  "threads": {
+    "MKL_NUM_THREADS": null,
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": null,
+    "VECLIB_MAXIMUM_THREADS": null
+  },
+  "versions": {
+    "cv2": "4.11.0",
+    "numpy": "2.2.6",
+    "python": "3.10.4",
+    "torch": "2.10.0+cu128",
+    "transformers": "5.10.1"
+  },
+  "visible_gpus": 2,
+  "weight_files": {
+    "model-00001-of-00002.safetensors": {
+      "mtime": 1794217091.0,
+      "size": 49784788364
+    },
+    "model-00002-of-00002.safetensors": {
+      "mtime": 1794216831.0,
+      "size": 12761549884
+    }
+  }
+}

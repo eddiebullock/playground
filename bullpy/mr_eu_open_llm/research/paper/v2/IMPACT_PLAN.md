@@ -1,6 +1,6 @@
 # Plan: the paper's headline and impact
 
-**Written:** 2026-11-21, at the author's request: "construct a comprehensive plan for how this paper's impact and headline can be improved and implement it". Steps 1 to 8 were implemented the same day, and step 9 on 2026-11-23 (Section 5). Steps 10 to 16 are next (Section 6). Decisions: DECISIONS 2026-11-21 (two entries); supplementary decisions table rows 103 and 104.
+**Written:** 2026-11-21, at the author's request: "construct a comprehensive plan for how this paper's impact and headline can be improved and implement it". Steps 1 to 8 were implemented the same day, and steps 9 and 12 on 2026-11-23 (Section 5). Steps 10, 11 and 13 to 16 are next (Section 6). Decisions: DECISIONS 2026-11-21 (two entries); supplementary decisions table rows 103 and 104.
 
 Word counts in this file come from `research/scripts/manuscript_words.py`, which removes comments, registry markers, slots, citations, headings and table rows before counting.
 
@@ -67,9 +67,9 @@ The supporting results are face evidence beyond word knowledge (Results 7) and s
 | Title | Working title "Beyond matching answers: testing whether vision-language models use facial cues as people do"; three alternatives in `abstract.md` | 13 |
 | Abstract | Question, audit, face dependence, theorem, randomised result with its size against human agreement, take-home | 150 (limit 150) |
 | Introduction | Claims and Schyns' three degrees; validity; our earlier task; the eight-paper check; identifiability; CEA; novelty; what we did and found; preregistration and scope | 1,223 |
-| Results | 1 Accuracy alone cannot show face use. 2 Answers depend on the face. 3 Agreement on natural faces cannot identify cue use. 4 With cues randomised, Gemma 4 aligns for basic emotions. 5 Answers on the same faces track people's only weakly (descriptive). 6 Masks and filters, about half the single-face contrasts. 7 Face evidence, not word knowledge alone. 8 Larger models (pending). 9 What could not be tested | 2,405 |
-| Discussion | Continuous prose: answers against cues; the cue-level result and its limits; two descriptive observations; edits and priors; A8 (pending); five limits; two lessons | 1,235 |
-| Main text | | 4,863 (limit 5,000), leaving about 140 words for A8 |
+| Results | 1 Accuracy alone cannot show face use. 2 Answers depend on the face. 3 Agreement on natural faces cannot identify cue use. 4 With cues randomised, Gemma 4 aligns for basic emotions. 5 Answers on the same faces track people's only weakly (descriptive). 6 Masks and filters, about half the single-face contrasts. 7 Face evidence, not word knowledge alone. 8 Larger models. 9 What could not be tested | 2,487 |
+| Discussion | Continuous prose: answers against cues; the cue-level result and its limits; two descriptive observations; edits and priors; A8; five limits; two lessons | 1,287 |
+| Main text | | 4,997 (limit 5,000), with A8 filled on 2026-11-23 |
 
 ## 5. Implemented on 2026-11-21
 
@@ -98,6 +98,11 @@ The supporting results are face evidence beyond word knowledge (Results 7) and s
    - Figure 6: each contrast by its edit and items beside its ID ("P1 Mouth mask on Happy"), the inputs named once beside the line that separates them, and "option-free judgement" for the blind readout. The names are checked against the frozen design (`scripts/stimulus_design.py`) by a new test.
    - A second new test builds the four figures from the locked outputs and fails if any amendment code, SESOI, do-effects or route identifier is printed. It catches all 28 such labels in the previous script.
    - The legends follow (`figure_legends.md`). No encoding, value, marker or decision changed. `SOURCES.md` line numbers are current again: Figures 2 and 4 had been one line stale since 2026-11-14.
+10. **A8 filled (2026-11-23; step 12).** On the author's choice of option (a) in NEEDS_INPUT item 19, A8's scored steps were deferred past the December GPU shutdown, and A8 ended for this paper after Phase A (DECISIONS 2026-11-23, row 105).
+   - A8's final checks ran in the runbook's order: the full weights hash (both copies match their pins), the single pull, and delivery and the ladder read by their frozen rules.
+   - Results, Section 8 (82 words) and the Discussion (52 words) were filled from the branches drafted before data. Methods and Supplementary Methods, Section S9 carry the detail. Table 1 has two A8 rows, built from the pulled records, and `scripts/reproduce.py` pins the 23 pulled files.
+   - Main text 4,997 words (limit 5,000).
+   - Figure 2 does not carry the A8 rows. The Results scaffold planned that when A8 was expected to run A1, A2 and A4. With A3 alone, Table 1 and Section 8 report it; adding the rows to Figure 2 is a display choice for the author.
 
 ## 6. Next steps, in order
 
@@ -105,7 +110,6 @@ The supporting results are face evidence beyond word knowledge (Results 7) and s
 |---|---|---|---|
 | 10 | Read the reframe (`git diff`) and choose the title | author | Authorship is the author's |
 | 11 | Decide whether to compute a noise ceiling for the answer agreement of Results 5: split-half of each configuration's human responses, labelled exploratory and post hoc, CPU only. If the gap survives the ceiling, it becomes a second finding (answers can understate shared cue effects). If not, Results 5 says so, and the Discussion's second observation goes | author decides, agent runs | It is the most interesting secondary result and the one most open to attack |
-| 12 | Fill A8 within a budget of 120 words in Results and 50 in the Discussion, with detail to S9, keeping the main text under 5,000 | agent, after A8 locks | Model size is the first scope question a reviewer will ask |
 | 13 | Optionally, a schematic Figure 1, the eighth display item. One row per model: answers, face dependence, natural-pattern alignment, randomised cue effects and the human reference, from locked outputs, built by `make_figures.py` | agent, if the author wants it | It shows the paper's argument at a glance |
 | 14 | Optionally, human accuracy beside model accuracy. Report the human item-norm accuracy on the 243 items as a descriptive design fact, with its caveat that the procedure differed | author decides | The independent read asked for it; the paper never sets model accuracy (at most .469) beside people's |
 | 15 | At final formatting: name Results headings instead of "Section N"; give references cited only in the Supplement ([14], [16], [21], [23]) their own Supplementary reference list; check Methods (6,653 words) against the formatting guide; check Figure 1's legend (374 words) against the journal's legend limit, which this repository has not verified | agent | The journal's format |
@@ -115,7 +119,7 @@ The supporting results are face evidence beyond word knowledge (Results 7) and s
 
 ## 7. Risks and how the text meets them
 
-- **"One small model, on avatars."** The limits paragraph states this first. Larger models (A8) bound the scope, and Gemma 4 31B's gates were preregistered as possibly untestable.
+- **"One small model, on avatars."** The limits paragraph states this first. Two larger models in the same families also depend on the face (A8, Results, Section 8), which bounds the scope of that result. Their cue-level tests did not run (DECISIONS 2026-11-23, row 105), so the cue-level result stays a result for small models, and A8 can resume in revision if a reviewer asks.
 - **"The replication is from the same lab."** Every mention says "same lab and generator", and the limits paragraph calls it a second sample, not a second method.
 - **"The behaviour gap is noise."** The text now says it may be, and step 11 can settle it.
 - **"Is it preregistered?"** The cover letter asks the editors. The abstract avoids the word until they answer.

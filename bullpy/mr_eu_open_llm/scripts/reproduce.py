@@ -702,6 +702,53 @@ PINS: Dict[str, str] = {
         "49bd17277279c8716c8eb5f5026c4a1b2faed7d99a0a07a53ea08393af2dbab1",
     "results/a9/summary.json":
         "1d1a99959e79f58c52a36284819cce13c317cb54d1a27184273bce07cb3e4a7f",
+    # Added 2026-11-23: A8 ended for this paper after Phase A (DECISIONS 2026-11-23, row 105); its single pull.
+    "research/reproduction/a8_pull_manifest.json":
+        "a581b6b003853d2b7ed20dcbd95405f9966fa52909667caaecbea72cab601e3f",
+    "research/reproduction/a8/face_input_validity_summary_a8.json":
+        "c2f87b9f6b9cf88cb7807c124c14be346a1dab74f11d088c979cea39daaf60ca",
+    "research/reproduction/a8/face_input_validity_summary_a8.json.provenance.json":
+        "5e47304daf14a6a7dd3da4a17c3c5b402ee2fb65209d4226fdba61b76f8d742c",
+    "research/reproduction/a8/gemma4_31b/crashed_attempts/vision_gates_gemma4_job41047243.json":
+        "2fba34205f06f7bf7ee6825f5930a98f3dad0949f569455a9b76353f1d08f517",
+    "research/reproduction/a8/gemma4_31b/input_delivery_gemma4.json":
+        "c0a77850263c37c0bf523b94b4e5ab797122ba9c7ca49075e49ae231cf930299",
+    "research/reproduction/a8/gemma4_31b/launch/a3_20261115T215552371299.json":
+        "536edb5109c07eb15ffce09a4e18664f80f57bcf7e2a5e60055077638896af3c",
+    "research/reproduction/a8/gemma4_31b/launch/delivery_20261115T215947225844.json":
+        "81ba14c00e6fe5933f8c66b5032e1f34c9fcaf6bbea20a46a058245b89df577d",
+    "research/reproduction/a8/gemma4_31b/launch/gates_20261115T214028157532.json":
+        "8958eda041943a16a4eff825d9fe1bdd851315425cbea5f4baf7e6f445012623",
+    "research/reproduction/a8/gemma4_31b/launch/gates_20261115T215947243769.json":
+        "d1d2653bb75f952b6bf5efd1f260668b15ebd6ea928bf99fdc2f3f9af611688a",
+    "research/reproduction/a8/gemma4_31b/launch/ladder_20261115T215947243786.json":
+        "2a357fd0780b12ea7c26fc75b775cab46f3d3b697a9ef4159223adda06eb62ee",
+    "research/reproduction/a8/gemma4_31b/preflight_full_hash_final.json":
+        "2811054d0a1cc064a2f07c81685682adc43492876cb9901143032290449e144c",
+    "research/reproduction/a8/gemma4_31b/readout_ladder_gemma4.json":
+        "47436fe985966b275ebf004feb04646851567a3fa9e98ff425441e9a23ff060c",
+    "research/reproduction/a8/gemma4_31b/vision_gates_gemma4.json":
+        "1710071a63c92c1571f6e97ead855130818496f16a498bf7d02015a2f5d3678d",
+    "research/reproduction/a8/qwen3vl_32b/crashed_attempts/vision_gates_qwen3vl_job41048787.json":
+        "47703e3346453875954ee1c2cfa00427a72b182c39126b45f71b59e68255089e",
+    "research/reproduction/a8/qwen3vl_32b/input_delivery_qwen3vl.json":
+        "a1330a0f6fb6e58d8eb5e8141794118b81a79f0a7de85ff0a21e6cbf48618ed5",
+    "research/reproduction/a8/qwen3vl_32b/launch/a3_20261115T215947855995.json":
+        "797131fe337c5bfb3762c6246a150a2119f227ff81e3869381534ddb351e1ea7",
+    "research/reproduction/a8/qwen3vl_32b/launch/delivery_20261115T215947038588.json":
+        "d60d32b67c4da82f45fe7d45934b22afae3ff75d53d3c3fa290a22f9cce48a4f",
+    "research/reproduction/a8/qwen3vl_32b/launch/gates_20261115T215552729585.json":
+        "7773117a4845aebcd1992b69368b4755bfb2a7bc218dea2c7bb95f0231c1c83a",
+    "research/reproduction/a8/qwen3vl_32b/launch/gates_20261115T222059262199.json":
+        "29d007eca27414ae2cb663729e5b2c72d0f63e05b310c7e05aa2c3af6d7d2969",
+    "research/reproduction/a8/qwen3vl_32b/launch/ladder_20261115T215947856006.json":
+        "ecc7e2e01288d3ab89e26cfca23e92e1f3cd2b0c82619248e4f3951a24b40b58",
+    "research/reproduction/a8/qwen3vl_32b/preflight_full_hash_final.json":
+        "3f324911430a19b1a51777a2d55d5154dfdc8398b56552bcb96026545d693d44",
+    "research/reproduction/a8/qwen3vl_32b/readout_ladder_qwen3vl.json":
+        "7714672e89b509ec34049dbb7948dbeea4f145249fba2de7c414487ff020092c",
+    "research/reproduction/a8/qwen3vl_32b/vision_gates_qwen3vl.json":
+        "e289cdfcaa4314122633e5c5babd2a3de08d1fcf40efe450c6270a91f207367b",
 }
 
 R = "research/reproduction/"
@@ -767,6 +814,35 @@ A7_RECORDS = [R + f for f in ("a7_pull_manifest.json", "a7_prerun.json", "a7_inp
 A9_RECORDS = [R + f for f in ("a9_pull_manifest.json", "a9_prerun.json", "a9_run_note.json")] + [
     "results/a9/summary.json"]
 
+# A8, ended for this paper after Phase A on 2026-11-23 (DECISIONS 2026-11-23, row 105): the single pull's manifest and every
+# file it copied (A3 summary and provenance, delivery, ladder, gate files without a verdict, launcher records, the final
+# full weights hash). The A3 cells stay on the cluster, with their sha256 in the manifest.
+A8_RECORDS = [
+    "research/reproduction/a8_pull_manifest.json",
+    "research/reproduction/a8/face_input_validity_summary_a8.json",
+    "research/reproduction/a8/face_input_validity_summary_a8.json.provenance.json",
+    "research/reproduction/a8/gemma4_31b/crashed_attempts/vision_gates_gemma4_job41047243.json",
+    "research/reproduction/a8/gemma4_31b/input_delivery_gemma4.json",
+    "research/reproduction/a8/gemma4_31b/launch/a3_20261115T215552371299.json",
+    "research/reproduction/a8/gemma4_31b/launch/delivery_20261115T215947225844.json",
+    "research/reproduction/a8/gemma4_31b/launch/gates_20261115T214028157532.json",
+    "research/reproduction/a8/gemma4_31b/launch/gates_20261115T215947243769.json",
+    "research/reproduction/a8/gemma4_31b/launch/ladder_20261115T215947243786.json",
+    "research/reproduction/a8/gemma4_31b/preflight_full_hash_final.json",
+    "research/reproduction/a8/gemma4_31b/readout_ladder_gemma4.json",
+    "research/reproduction/a8/gemma4_31b/vision_gates_gemma4.json",
+    "research/reproduction/a8/qwen3vl_32b/crashed_attempts/vision_gates_qwen3vl_job41048787.json",
+    "research/reproduction/a8/qwen3vl_32b/input_delivery_qwen3vl.json",
+    "research/reproduction/a8/qwen3vl_32b/launch/a3_20261115T215947855995.json",
+    "research/reproduction/a8/qwen3vl_32b/launch/delivery_20261115T215947038588.json",
+    "research/reproduction/a8/qwen3vl_32b/launch/gates_20261115T215552729585.json",
+    "research/reproduction/a8/qwen3vl_32b/launch/gates_20261115T222059262199.json",
+    "research/reproduction/a8/qwen3vl_32b/launch/ladder_20261115T215947856006.json",
+    "research/reproduction/a8/qwen3vl_32b/preflight_full_hash_final.json",
+    "research/reproduction/a8/qwen3vl_32b/readout_ladder_qwen3vl.json",
+    "research/reproduction/a8/qwen3vl_32b/vision_gates_qwen3vl.json",
+]
+
 # Later cluster checks made from videos, AU frames, model forwards or the cluster's file tree.
 CLUSTER_CHECKS = [R + f for f in (
     "a6_human_cue_check.json", "a7_stage0_gemma4.json", "a7_stage0_qwen3vl.json", "phase2_hash_check.json",
@@ -820,6 +896,10 @@ HASH_STEPS: List[Step] = [
     Step("hash_a7_records", None, minutes=0.0, outputs=
          _hash_outs(A7_RECORDS, "A7 Stage 1 locked 2026-11-14 by post_phase3.py (pull, frozen pre-run check, single frozen "
                                 "analysis) from shard files kept on the cluster; verified by hash, cannot be rerun from public inputs")),
+    Step("hash_a8_records", None, minutes=0.0, outputs=
+         _hash_outs(A8_RECORDS, "A8 ended for this paper after Phase A (2026-11-23): its single pull by post_phase3.py, "
+                                "made on the cluster from model outputs that stay there; verified by hash, cannot be "
+                                "rerun from public inputs")),
     Step("hash_a9_records", None, minutes=0.0, outputs=
          _hash_outs(A9_RECORDS, "A9 locked 2026-11-14 by post_phase3.py (pull, frozen pre-run check, single "
                                 "frozen analysis) from shard files kept on the cluster; verified by hash, cannot be "
@@ -853,7 +933,8 @@ UNCOVERED: Dict[str, str] = {}
 # stat-ed, so a pending result cannot be read early. Each moves into STEPS when it is locked.
 PENDING: List[Tuple[str, Tuple[str, ...], str]] = [
     ("A8 larger models, A4 on the A8 models", ("results/a8/a4/summary.json",),
-     "research/scripts/a8_* and the frozen pipelines; needs the A8 runs, which wait on the A8 code pins"),
+     "research/scripts/a8_* and the frozen pipelines; deferred past the December 2026 GPU shutdown by dated note "
+     "(DECISIONS 2026-11-23, row 105); produced only if A8 resumes"),
 ]
 
 

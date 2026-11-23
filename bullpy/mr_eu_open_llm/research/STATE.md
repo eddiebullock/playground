@@ -6,6 +6,18 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
 
 ## Hand-off, 2026-11-23
 
+- **New at about 11:00: A8 has ended for this paper after Phase A, on your choice of option (a)** ("great proceed with all jobs"; DECISIONS 2026-11-23, row 105; NEEDS_INPUT item 19 resolved).
+  - **The deferral was recorded and pushed first** (`88ed58b`), before any delivery or ladder output was read. Qwen3-VL-32B's gates, and its A1, A2 and A4, are deferred past the shutdown by dated note. Gemma 4 31B stays not tested.
+  - **Final checks, in the runbook's order:**
+    1. Full weights hash: both copies equal their pins (14 of 14, 2 of 2), in jobs 41726553 and 41727362 (`intr`, icelake). The Gemma part of 41726553 never started, because of a shell error in my job command, so it ran alone in 41727362.
+    2. Single pull: 22 files copied with sha256 checks. The four gates jobs that ended without a verdict are waived, with the reason, in `a8_pull_manifest.json`.
+    3. Delivery and ladder, read by their frozen rules.
+  - **What A8 found:**
+    - Both models pass A3 (.329 and .316).
+    - Qwen3-VL-32B passes delivery on all four routes. Gemma 4 31B passes on `single_face` and `video_face` and fails the token gate on the full frame and the composite grid, as E4B does. Both delivery records equal their siblings' on every field.
+    - The frozen readout passes ladder rung 1 on both models (descriptive).
+  - **The paper.** Results, Section 8 and the Discussion are filled from the branches drafted before data (main text 4,997 of 5,000 words). Methods and S9 give the detail, and Table 1 has two A8 rows. The enquiry, cover letter, reporting summary and deviation list are updated. `reproduce.py` pins the 23 pulled files.
+  - **Still queued:** the 8B check, job 41575304, at no cost. If it runs, I read it once on the cluster by its rule and record it, and nothing else follows in this paper.
 - **PR #134 is merged into `main`.** The author merged it on 2026-11-21 at 09:10 UTC (`3678113`, a true merge commit). Its three commits (`f6df4a6`, `88353f9`, `9e6776f`) are authored by `eddiebullock`. The entry of 2026-11-21 below, which says it is open, is superseded.
 - **New at 09:35: the 8B check has waited 49 hours, and A8's scored steps cannot run before the shutdown on the free tier. Decision needed** (NEEDS_INPUT item 19; recommended: defer them by dated note and finish the paper with what A8 has).
   - You logged in again at 09:33. Job 41575304 is pending on priority: 173 (age 74, QOS 100, fair-share 0), behind 391 A100 jobs, with no planned start.
@@ -18,7 +30,7 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
   - The watcher on job 41575304 (the 8B check) stalled at a fresh login prompt, and on 2026-11-23 it was stopped.
   - At its last good check, about 22:00 on 2026-11-21, the job was still in the queue. Its state now is unknown.
   - A new watcher waits for the login. It reports the job's state as soon as you log in. Nothing else of this project was queued or running.
-- **Next on the cluster.** When the 8B check ends, read it by its rule (DECISIONS 2026-11-17) and record it. What follows depends on item 19. The GPU reservation begins on 2026-12-07 at 07:00, 14 days from today.
+- **Next on the cluster.** Only the 8B check is queued. When it ends, read it by its rule (DECISIONS 2026-11-17) and record it. Under item 19's option (a), nothing else is submitted for A8 before the shutdown of 2026-12-07 07:00.
 - **The figures are relabelled** (IMPACT_PLAN.md, step 9; Section 5, item 9).
   - Figures 2, 4, 5 and 6 print plain names in place of A1, A3, RQ0, RQ1, SESOI, do-effects and route identifiers. Figure 6 names each contrast by its edit and items, beside its ID.
   - They were rebuilt with `--real` from the same locked inputs, and every input sha256 in `SOURCES.md` is unchanged. The legends follow.

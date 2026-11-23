@@ -32,6 +32,10 @@ ROUTES = ("single_face", "video_face")
 SHORT = {"matches_prediction": "Matches", "opposes_prediction": "Opposes", "null": "Null", "inconclusive": "Inconclusive"}
 READING = {(True, True): "Face use on both inputs", (False, True): "The grid limited A1; single_face from here",
            (True, False): "A1 evidence needs inspection", (False, False): "No demonstrated face use"}
+# A8, the larger models (PREREG_A8): rows below the frozen rows once its single pull exists (2026-11-23).
+A8_MODELS = ("qwen3vl_32b", "gemma4_31b")
+A8_NAMES = {"qwen3vl_32b": "Qwen3-VL-32B (A8)", "gemma4_31b": "Gemma 4 31B (A8)"}
+A8_NOT_RUN = "not run (A8 stop rule: no gate result)"
 
 
 def sha256(path: Path) -> str:
@@ -52,6 +56,33 @@ def p(x: float) -> str:
 def locked(repro: Path, amendment: str) -> bool:
     note = repro / f"{amendment}_run_note.json"
     return note.exists() and json.loads(note.read_text(encoding="utf-8")).get("status") == "complete"
+
+
+def a8_rows(root: Path, load) -> List[str]:
+    """A8 rows, below the frozen rows and never pooled with them (PREREG_A8, Statistics, Reporting), once A8's
+    single pull has written `a8_pull_manifest.json`. The single-face cell copies A8's A3 summary. The other cells
+    are statuses from A8's launcher records: a model with no gates record ending ok has no gate result, and by
+    A8's stop rule it runs neither A1 nor A2 nor A4 (DECISIONS 2026-11-15, rows 99 to 101; 2026-11-23, row 105).
+    A gate result would need rules this table does not have yet, so it stops instead of guessing."""
+    repro = root / "research" / "reproduction"
+    if not (repro / "a8_pull_manifest.json").exists():
+        return []
+    load(repro / "a8_pull_manifest.json")
+    a3 = load(repro / "a8" / "face_input_validity_summary_a8.json")
+    out = []
+    for m in A8_MODELS:
+        if m not in a3:
+            raise SystemExit(f"A8 A3 summary has no entry for {m}.")
+        statuses = [load(path)["status"] for path in sorted((repro / "a8" / m / "launch").glob("gates_*.json"))]
+        if not statuses:
+            raise SystemExit(f"{m}: no gates launcher record pulled.")
+        if "ok" in statuses:
+            raise SystemExit(f"{m}: a gates record ended ok; Table 1 has no rule yet for A8's later steps.")
+        e = a3[m]
+        verdict = "Pass" if e["vision_dependent"] else "Fail"
+        out.append(f"| {A8_NAMES[m]} | {A8_NOT_RUN} | {r3(e['delta_real_minus_mismatch'])} ({p(e['p_delta_holm'])}) | "
+                   f"Single face: {verdict}; A1 not run | not run (needs A1) | {A8_NOT_RUN} | not part of A8 | {A8_NOT_RUN} |")
+    return out
 
 
 def build(root: Path = ROOT) -> str:
@@ -115,6 +146,13 @@ def build(root: Path = ROOT) -> str:
                 a2_cell = "<br>".join(parts) or "no route"
         rows.append(f"| {NAMES[m]} | {r3(a1[m]['delta_real_minus_mismatch'])} ({p(a1[m]['p_delta_holm'])}) | "
                     f"{r3(a3[m]['delta_real_minus_mismatch'])} ({p(a3[m]['p_delta_holm'])}) | {READING[r0]} | {nat_cell} | {a4_cell} | {a9_cell} | {a2_cell} |")
+    larger = a8_rows(root, load)
+    rows.extend(larger)
+    a8_note = (" Rows marked A8 are the larger models of the preregistered extension A8, below the frozen rows and never pooled "
+               "with them; their single-face Holm family has two models, which is less strict per model than the frozen "
+               "three-model family. Neither has a gate result: the frozen gate code cannot run on Gemma 4 31B, and "
+               "Qwen3-VL-32B's gates, under a dated device-only deviation, were deferred past a GPU shutdown by dated note. "
+               "So by A8's stop rule neither ran the other tests. The second human sample is not part of A8.") if larger else ""
     sources = "\n".join(f"- `{k}` (sha256 `{v[:8]}...`)" for k, v in sorted(used.items()))
     return ("# Table 1 | What each model has shown\n\n"
             "<!-- Built by research/scripts/make_table1.py from locked outputs only; do not edit by hand. -->\n\n"
@@ -123,7 +161,7 @@ def build(root: Path = ROOT) -> str:
             "whether it is confirmatory follows the face-dependence tests, not the vision gates (Methods). "
             "Randomised-cue headlines need the Western Caucasian (WC) and East Asian (EA) results to agree; \"Not aligned\" is always on these renders. "
             "Stimulus-edit counts are of the 16 confirmatory contrasts per model, 10 on the single face (`single_face`) and 6 on video (`video_face`). "
-            "Methods labels the columns A1, A3, the RQ0 reading, natural-clip RQ1, A4, A9 and A2.\n\n"
+            "Methods labels the columns A1, A3, the RQ0 reading, natural-clip RQ1, A4, A9 and A2." + a8_note + "\n\n"
             + "\n".join(rows) + "\n\nInputs:\n\n" + sources + "\n")
 
 

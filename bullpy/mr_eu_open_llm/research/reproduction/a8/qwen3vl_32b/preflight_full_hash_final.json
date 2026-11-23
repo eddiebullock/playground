@@ -1,0 +1,96 @@
+{
+  "a8_id": "qwen3vl_32b",
+  "checked_at_utc": "2026-11-23T10:12:53.323017+00:00",
+  "code_key": "qwen3vl",
+  "config": {
+    "architectures": [
+      "Qwen3VLForConditionalGeneration"
+    ],
+    "model_type": "qwen3_vl",
+    "text_hidden_size": 5120,
+    "text_num_hidden_layers": 64
+  },
+  "design_sha256": "95dd41b5d3c33b79ee9e54a20d34ea1e18b6c9156fcabd719ebfb084709b7b50",
+  "full_hash": true,
+  "outputs": [],
+  "preflight_sha256": "9c9ec944be4dbef30f8cd09488f57c54ad33c1de0d1f48fb20270eff27db9160",
+  "rds_usage": {
+    "files": 991658,
+    "gb": 1068.3
+  },
+  "repo": "Qwen/Qwen3-VL-32B-Instruct",
+  "revision": "0cfaf48183f594c314753d30a4c4974bc75f3ccb",
+  "weight_files": {
+    "model-00001-of-00014.safetensors": {
+      "mtime": 1793129801.0,
+      "sha256": "6b9dfbc930e505402ae9d7e5091a9d7d656cda5f34614f01cfe70bfb0cca27cb",
+      "size": 4932328944
+    },
+    "model-00002-of-00014.safetensors": {
+      "mtime": 1793129799.0,
+      "sha256": "d8bb44b4ff303fe76fe9e894022fb3dc71b15a2e716592790fe0e3c3e60478fa",
+      "size": 4875990528
+    },
+    "model-00003-of-00014.safetensors": {
+      "mtime": 1793129802.0,
+      "sha256": "54f22e8b3168f8dc962fac0d313607ebf52a12b433d4cf3098a0d82d9f042940",
+      "size": 4875990552
+    },
+    "model-00004-of-00014.safetensors": {
+      "mtime": 1793129799.0,
+      "sha256": "ad09c74d3c13ee29b5d0d84548fd8a3424a651564eaccd519946c296e59c557f",
+      "size": 4875990584
+    },
+    "model-00005-of-00014.safetensors": {
+      "mtime": 1793129803.0,
+      "sha256": "fc993c8a0e2a5b0570f383e1a95dc3a1281d1b224b6f3ee908f4827941e1dfc2",
+      "size": 4875990584
+    },
+    "model-00006-of-00014.safetensors": {
+      "mtime": 1793129800.0,
+      "sha256": "82f05620d1f718a90c362b221d6a184ff1a0f53301d706882d3df49695fa1974",
+      "size": 4875990584
+    },
+    "model-00007-of-00014.safetensors": {
+      "mtime": 1793129799.0,
+      "sha256": "fb91da8cb01ff4de3eef0eab1c3e769a734b3a1aafc61734068638a0d6c86934",
+      "size": 4875990584
+    },
+    "model-00008-of-00014.safetensors": {
+      "mtime": 1793129803.0,
+      "sha256": "431ca56535c8781944ce3801f5eb61c45531e853ecc5846d936ebaf4761b764f",
+      "size": 4875990584
+    },
+    "model-00009-of-00014.safetensors": {
+      "mtime": 1793129977.0,
+      "sha256": "3825e3f4302f4d2f7d76aa7430d2ce0864fde6b9e540a5806bf0d8e38e4d9f47",
+      "size": 4875990584
+    },
+    "model-00010-of-00014.safetensors": {
+      "mtime": 1793129993.0,
+      "sha256": "aded5a4d1d5e22dbd8b6f79266b6eb88c840411b09527c53917a1419ace22e2f",
+      "size": 4875990584
+    },
+    "model-00011-of-00014.safetensors": {
+      "mtime": 1793130001.0,
+      "sha256": "3820ffe8d8d6477f6fe8d614ef3c87abb264ee39accebf43a1507b970d80946f",
+      "size": 4875990584
+    },
+    "model-00012-of-00014.safetensors": {
+      "mtime": 1793130005.0,
+      "sha256": "05ad2d08ce71963121c9b03f1d9ec5d7641052f4b23c6c12b80d71065eb8e98e",
+      "size": 4875990584
+    },
+    "model-00013-of-00014.safetensors": {
+      "mtime": 1793130005.0,
+      "sha256": "b64f2289871261fdd1abbd3b78bcd66011b341de3dc8eeb2ed1a473ee7c8d95c",
+      "size": 4875990584
+    },
+    "model-00014-of-00014.safetensors": {
+      "mtime": 1793129997.0,
+      "sha256": "e45b6c9998c77ee5a6577f9f47bc76416c1d4d387169e50c4c9d3134ea51b13b",
+      "size": 3270697008
+    }
+  },
+  "weights_dir": "/rds/project/rds-ePtR33Nsgi4/eb2007/models/Qwen3-VL-32B-Instruct"
+}
