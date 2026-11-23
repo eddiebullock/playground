@@ -18,7 +18,7 @@ It extracts the committed tree (`git archive HEAD`) into a temporary directory, 
 
 A5 and A6 are unfrozen drafts, so a mismatch in their current recovery files is printed as `draft_changed`, a warning, not a failure. `python scripts/reproduce.py --list` prints every step, its class and the pending list. Without `--quick` (full mode) the long CPU recoveries rerun as well; that takes hours and is meant for a large CPU node.
 
-**Updated:** 2026-11-08, against `origin/main` `af84cf2` (same project files as `p1-pipeline` `80b389e`).
+**Updated:** 2026-11-08, against `origin/main` `af84cf2` (same project files as `p1-pipeline` `80b389e`). Coverage, gap and pending tables brought up to date with `scripts/reproduce.py` on 2026-11-23.
 
 ## What the paper uses, and how each is reproduced
 
@@ -27,6 +27,9 @@ A5 and A6 are unfrozen drafts, so a mismatch in their current recovery files is 
 | Figure 1 (validity audit), panels a to e | `research/paper/v2/figures/fig1.{png,pdf}`, `SOURCES.md` | rebuilt | `paper_figures_1_3` (`research/scripts/make_figures.py --all`) |
 | Figure 1 inputs | `prompt_confound_audit.json` (rebuilt), `data/eu_emotions_human_entropy.json` (in repo), `input_delivery_*.json` (cluster), `literature_table.csv` (hand-curated) | rebuilt / hash-verified | `prompt_confound_audit`, `hash_cluster_records`, `hash_curated_inputs` |
 | Figure 3 (identifiability), panels b to e | `research/paper/v2/figures/fig3.{png,pdf}` from `cfa_identifiability.json` | rebuilt | `cfa_identifiability`, then `paper_figures_1_3` |
+| Figures 2, 4, 5 and 6 (face dependence, natural clips, randomised cues, stimulus edits) | `research/paper/v2/figures/fig{2,4,5,6}.{png,pdf}` from the locked A1 and A3 summaries, natural-clip files, A4 summary, and A2 outputs with declared extras | rebuilt, from hash-verified inputs | `paper_figure_2`, `paper_figure_4`, `paper_figure_5`, `paper_figure_6` (`make_figures.py --fig N --real`) |
+| Table 1 | `research/paper/v2/table1.md` | rebuilt | `table1` (`research/scripts/make_table1.py`) |
+| Locked records of A1 (2026-11-09) and of A2, A4, A5, A7 Stage 1 and A9 (2026-11-14): pull manifests, pre-run records, run notes, summaries | `A1_RECORDS`, `A2_RECORDS`, `A4_RECORDS`, `A5_RECORDS`, `A7_RECORDS`, `A9_RECORDS` in `scripts/reproduce.py` | hash-verified: made on the cluster from model outputs that stay there | `hash_a1_records`, `hash_a2_a5_records`, `hash_a4_records`, `hash_a7_records`, `hash_a9_records` |
 | Phase 2 figures (supplement) | `research/figures/phase2_grouped_t1_rho.png`, `phase2_loo_vs_grouped.png` | rebuilt | `plot_phase2_grouped`, `plot_phase2_loo` |
 | Methods tables: cue spectra, A4 human target and ceiling, human response predictor, CREMA-D reliability, A6 human target | `cfa_identifiability.json`, `human_au_effects.{json,csv}`, `a4_human_ceiling.json`, `human_response_predictor.json`, `crema_d_*`, `a6_human_target.json` | rebuilt | quick steps of the same names |
 | Behaviour, Phase 0 numbers, calibration, prompt audit, pilot ablation, Phase 2 merge | `behaviour_summary.json`, `phase0_numbers.json`, `results/stats/human_calibration.json`, `prompt_confound_audit.json`, `phase3_pilot_ablation.json`, `phase2_gate_all_layers.json`, `phase2_all_layers_summary.csv` | rebuilt | quick steps |
@@ -41,19 +44,15 @@ A5 and A6 are unfrozen drafts, so a mismatch in their current recovery files is 
 
 | Output | Why |
 |---|---|
-| `research/reproduction/a7_recovery.json`, `a7_recovery_level1.json` | A7 draft recovery, committed in `80b389e` while this was being written and still owned by the A7 work. Listed in `UNCOVERED` in `scripts/reproduce.py` and printed as `[gap ]` on every run; add a step or a pin when A7 freezes. |
+| None | `UNCOVERED` in `scripts/reproduce.py` is empty (checked 2026-11-23). A7's recovery files, listed here until A7 froze, are verified by hash in `hash_a7_recovery`. |
 
 ## Pending (not yet produced; never run or read by the script)
 
 | Item | Path(s) the frozen code will write | Made by | Feeds |
 |---|---|---|---|
-| A1 rotation summary | `research/reproduction/rotation_summary.json`, `rotation_errored_trials.json`, `a1_pull_manifest.json` | `research/scripts/post_a1.sh`, `analyse_rotation_run.py` (cluster cells) | Figure 2, Table 1 |
-| A1 same-clip model cells | `research/reproduction/same_clip_family_model_{gemma4,qwen3vl,molmo2}.json` | `same_clip_family_analysis.py --model M`, via `post_a1.sh` | Figure 4 |
-| A2 stimulus interventions | `research/reproduction/stimulus_interventions_{gemma4,qwen3vl}.json` | `scripts/analyse_stimulus_interventions.py` | Figure 6 |
-| A4 summary | `results/a4/summary.json` | `python -m scripts.a4_analyse` | Figure 5 |
-| A5, A6, A7 analyses | `results/a5/a5_analysis.json`; `results/a6/a6_stage1.json`, `a6_stage2_{model}.json`; `results/a7/a7_analysis.json` | `scripts/a5_analyse.py`, `a6_analyse.py`, `a7_analyse.py` (draft preregistrations) | Results, supplement |
-| Figures 2, 4, 5, 6 | `research/paper/v2/figures/fig{2,4,5,6}.{pdf,png}` | `make_figures.py --fig N --real`, which refuses until its `LOCKED` inputs exist | paper |
-| Table 1 | not yet written | from the A1, A2 and A4 outputs | paper |
+| A8, larger models | `results/a8/a4/summary.json` and A8's other outputs | `research/scripts/a8_*` and the frozen pipelines, on the cluster | Results, Section 8 |
+
+Updated 2026-11-23 to match `PENDING` in `scripts/reproduce.py`, which lists A8 only. The rows this table held on 2026-11-08 (A1's summary and natural-clip files, A2, A4, A5 and A7's analyses, Figures 2, 4, 5 and 6, and Table 1) were locked or built on 2026-11-09 and 2026-11-14, and are covered in the first table. A6's analysis has no output, because RQ5 was closed as a limit (Results, Section 9); its recoveries and human target are covered in the first table.
 
 When one of these is locked: add a step to `STEPS` in `scripts/reproduce.py` (rebuilt if CPU-only on public inputs, otherwise a pinned sha256 in `PINS` and a hash group), remove it from `PENDING`, rerun `--quick`, and update this file. `tests/test_reproduce.py` fails if a committed output under `research/reproduction/` or the figure folders is in neither class, or if a pending path appears in any step.
 
