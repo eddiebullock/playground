@@ -7,11 +7,18 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
 ## Hand-off, 2026-11-23
 
 - **PR #134 is merged into `main`.** The author merged it on 2026-11-21 at 09:10 UTC (`3678113`, a true merge commit). Its three commits (`f6df4a6`, `88353f9`, `9e6776f`) are authored by `eddiebullock`. The entry of 2026-11-21 below, which says it is open, is superseded.
-- **The cluster connection ended at about 22:05 on 2026-11-21, so please log in again** (NEEDS_INPUT item 18).
+- **New at 09:35: the 8B check has waited 49 hours, and A8's scored steps cannot run before the shutdown on the free tier. Decision needed** (NEEDS_INPUT item 19; recommended: defer them by dated note and finish the paper with what A8 has).
+  - You logged in again at 09:33. Job 41575304 is pending on priority: 173 (age 74, QOS 100, fair-share 0), behind 391 A100 jobs, with no planned start.
+  - About 30 of the 74 A100 nodes have been in the `rebuilds` maintenance reservation since 2026-11-18. Paid jobs carry QOS priority 500 against our 100, and age adds about 36 points a day, so the earliest realistic start is early December. The gates and A1, A2 and A4 would each restart at age 0.
+  - Correction to the hand-off of 2026-11-21: `intr` allows one job per user at a time, of at most 60 minutes and 3 nodes. So it cannot carry A8's sharded runs at the scale needed (500 to 600 GPU-hours) before the shutdown, besides being too short for the 8B check.
+  - Nothing was cancelled or changed; the job stays queued. A watcher reports when it starts or ends, and it stops at once if the connection drops.
+- **Checks of 2026-11-23, at `9ead0bc`.** Full suite: 1,177 passed, 26 skipped, 0 failed. Clean-checkout reproduction: 47 rebuilt and matched (Figures 2, 4, 5 and 6, `SOURCES.md` and Table 1 byte-identical), 136 verified by hash, 0 failed, 1 pending (A8). Recorded in `REPRODUCE.md`.
+- **PR #135** (the figure relabel and these records) is open: https://github.com/eddiebullock/playground/pull/135. Its commits are authored by `eddiebullock` and dated 2026-11-23.
+- **The cluster connection ended at about 22:05 on 2026-11-21** (NEEDS_INPUT item 18, resolved at 09:33 on 2026-11-23).
   - The watcher on job 41575304 (the 8B check) stalled at a fresh login prompt, and on 2026-11-23 it was stopped.
   - At its last good check, about 22:00 on 2026-11-21, the job was still in the queue. Its state now is unknown.
   - A new watcher waits for the login. It reports the job's state as soon as you log in. Nothing else of this project was queued or running.
-- **Next on the cluster, unchanged.** Read the 8B check by its rule (DECISIONS 2026-11-17). If it passes, submit Qwen3-VL-32B's gates (whole `ampere` node, about 7 hours). Then A1, A2 and A4 by dated note, with `intr` slices for the sharded runs. The GPU reservation begins on 2026-12-07 at 07:00, 14 days from today.
+- **Next on the cluster.** When the 8B check ends, read it by its rule (DECISIONS 2026-11-17) and record it. What follows depends on item 19. The GPU reservation begins on 2026-12-07 at 07:00, 14 days from today.
 - **The figures are relabelled** (IMPACT_PLAN.md, step 9; Section 5, item 9).
   - Figures 2, 4, 5 and 6 print plain names in place of A1, A3, RQ0, RQ1, SESOI, do-effects and route identifiers. Figure 6 names each contrast by its edit and items, beside its ID.
   - They were rebuilt with `--real` from the same locked inputs, and every input sha256 in `SOURCES.md` is unchanged. The legends follow.
