@@ -1,0 +1,84 @@
+{
+  "gemma4_31b": {
+    "accuracy_mismatch": 0.09218106995884773,
+    "accuracy_real": 0.4082304526748971,
+    "delta_ci_actor_bootstrap": [
+      0.243036405481745,
+      0.3928301903497122
+    ],
+    "delta_real_minus_mismatch": 0.31604938271604943,
+    "failure_reasons": {},
+    "n_items": 243,
+    "n_items_expected": 243,
+    "n_partial_lines_dropped": 0,
+    "over_lost_item_limit": false,
+    "p_delta_actor_sign_flip": 2.999970000299997e-05,
+    "p_delta_holm": 5.999940000599994e-05,
+    "secondary": {
+      "accuracy_by_target_position": {
+        "0": 0.37448559670781895,
+        "1": 0.41975308641975306,
+        "2": 0.42386831275720166,
+        "3": 0.411522633744856,
+        "4": 0.411522633744856
+      },
+      "accuracy_real_vs_chance_pooled_p": 2.7161258869704253e-88,
+      "delta_modal_ci_actor_bootstrap": [
+        0.24596479344638533,
+        0.41115879828326185
+      ],
+      "delta_scored_against_human_modal_label": 0.32674897119341567,
+      "delta_without_kind_unfriendly_jealous": 0.3456221198156682,
+      "delta_without_those_ci_actor_bootstrap": [
+        0.2627259111855886,
+        0.42870429727820925
+      ],
+      "mean_target_probability_real": 0.40807525120788896,
+      "rho_ptarget_human": 0.4599965376442389,
+      "within_category_r_ptarget_human": 0.2895828348009078
+    },
+    "share_items_lost": 0.0,
+    "vision_dependent": true
+  },
+  "qwen3vl_32b": {
+    "accuracy_mismatch": 0.14238683127572016,
+    "accuracy_real": 0.47160493827160493,
+    "delta_ci_actor_bootstrap": [
+      0.2734370055379747,
+      0.38770661822607194
+    ],
+    "delta_real_minus_mismatch": 0.3292181069958848,
+    "failure_reasons": {},
+    "n_items": 243,
+    "n_items_expected": 243,
+    "n_partial_lines_dropped": 0,
+    "over_lost_item_limit": false,
+    "p_delta_actor_sign_flip": 2.999970000299997e-05,
+    "p_delta_holm": 5.999940000599994e-05,
+    "secondary": {
+      "accuracy_by_target_position": {
+        "0": 0.48559670781893005,
+        "1": 0.4773662551440329,
+        "2": 0.4773662551440329,
+        "3": 0.4403292181069959,
+        "4": 0.4773662551440329
+      },
+      "accuracy_real_vs_chance_pooled_p": 4.520399654813278e-134,
+      "delta_modal_ci_actor_bootstrap": [
+        0.2671873491795367,
+        0.37885573697611447
+      ],
+      "delta_scored_against_human_modal_label": 0.32181069958847736,
+      "delta_without_kind_unfriendly_jealous": 0.3529953917050691,
+      "delta_without_those_ci_actor_bootstrap": [
+        0.2965478409443927,
+        0.4111640947620082
+      ],
+      "mean_target_probability_real": 0.4728904321525209,
+      "rho_ptarget_human": 0.4770102926641573,
+      "within_category_r_ptarget_human": 0.2614164138444189
+    },
+    "share_items_lost": 0.0,
+    "vision_dependent": true
+  }
+}

@@ -163,7 +163,48 @@ These only matter at submission. Nothing waits on them.
 - Phase A finished at 23:57: delivery, ladder and A3 ended ok for both models.
 - A8's A3 summary, its first scored result, waits on this decision, so that the decision is made before any A8 result is known.
 
+## 19. A8 cannot finish before the GPU shutdown on the free tier. Defer its scored steps? (decision, 2026-11-23) — RESOLVED 2026-11-23: option (a)
+
+**Resolved 2026-11-23: you chose (a)** ("great proceed with all jobs", after asking how essential A8 is). The deferral is recorded in DECISIONS 2026-11-23 (row 105) and PREREG_A8's dated note. A8's final checks and the paper's A8 text follow.
+
+
+**What I found at 09:35 on 2026-11-23** (cluster facts only; no A8 output read):
+- **The 8B check has waited 49 hours** (job 41575304, submitted 2026-11-21 08:02). Its priority is 173: 74 for age and 100 for the free tier's QOS, with a fair-share of 0. 391 pending A100 jobs rank above it, and the scheduler has planned no start for it.
+- **Capacity is down.** About 30 of the 74 A100 nodes have been in a maintenance reservation (`rebuilds`) since 2026-11-18, with no end date. 548 jobs are pending for the rest.
+- **Paid jobs start 400 points ahead.** Paid (SL2) jobs carry a QOS priority of 500, and ours carries 100. Age adds about 36 points a day (weight 1,000 over 28 days). So our job outranks *newly submitted* paid jobs only from about 2 December, and paid jobs submitted before then stay ahead of it. Its earliest realistic start is early December.
+- **Every later step restarts at age 0.** Qwen3-VL-32B's gates (about 7 hours on a node) come next, and then A1, A2 and A4 (about 500 to 600 GPU-hours).
+- **`intr` cannot carry this.** It allows one job per user at a time, of at most 60 minutes and 3 nodes. The check's frozen runs take about 1 h 44 min each, so they cannot run under it.
+- **Projection.** On the free tier, A8's scored steps (gates, then A1, A2 and A4 for Qwen3-VL-32B) cannot run before the shutdown of 2026-12-07 07:00. The 8B check itself may or may not.
+
+**The choice.**
+- **(a) Recommended: defer A8's scored steps past the shutdown, by dated note.**
+  - Deferral by a dated note is one of the "Not run" reasons A8 fixed before data.
+  - Fill the paper's A8 slots now from A8's finished steps: A3 for both larger models (both pass, read on 2026-11-21), and delivery and the ladder once the end-of-A8 pull brings them back to be read by their rules (not read yet). Write the scored steps as not run, with the reason, and infer nothing from them.
+  - Keep the 8B check queued, at no cost. If it runs, I read it by its rule and record it, so that any later run (after 2027-01-10, for a revision say) starts with the device question settled.
+  - The paper can then be completed now.
+- **(b) Hold the paper for A8.** Keep the job queued and wait. The scored steps would resume after 2027-01-10 at the earliest, so submission would move to February or later.
+- **(c) Paid GPU time.** The project's free-only rule rules this out, and only you can change that rule.
+
+**Why (a).** It reports what A8 could test, the face dependence of both larger models, and keeps the paper's timeline. A8's Results and Discussion branches for "not run" were drafted before data for this case.
+
+**What I need.** A letter. Nothing changes until you answer, and the job stays queued either way.
+
+## 18. CSD3 SSH: please log in again (2026-11-23) — RESOLVED 2026-11-23
+
+**Resolved 2026-11-23, 09:33: you logged in again.** The 8B check was still pending on priority (item 19).
+
+
+**Context.** The master connection you opened on 2026-11-21 ended at about 22:05 that evening. This session's watcher on job 41575304 then stalled at a fresh login prompt, and on 2026-11-23 it was stopped. Job 41575304, the 8B check, was still in the queue at the watcher's last good check, about 22:00 on 2026-11-21. The watcher checked only that, not whether the job was pending or running. Its state now is unknown: it may have run, and it may still be waiting. Nothing else of this project was queued or running.
+
+**What waits on it.** Read the 8B check by its rule (DECISIONS 2026-11-17). If it passes, submit Qwen3-VL-32B's gates (one whole `ampere` node, about 7 hours; not `intr`, per row 102's stop rule). Then A1, A2 and A4 for that model by dated note, before the GPU reservation of 2026-12-07 07:00. That is 14 days from 2026-11-23.
+
+**What to do.** In this session, type the line below, then give the password and the one-time code when asked. A watcher in this session is already waiting for the connection, and it reports the job's state as soon as you log in. Keep the Mac awake and on power while jobs run.
+
+`! ssh -fN -o ControlMaster=yes -o ControlPath=~/.ssh/cm-%r@%h:%p -o ControlPersist=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=10 eb2007@login.hpc.cam.ac.uk`
+
 ## 17. The reframed paper: your review, the title, and one optional analysis (2026-11-21)
+
+**2026-11-23.** The reframe reached `main` in PR #134, which you merged on 2026-11-21 (`3678113`), and the figures were relabelled on 2026-11-23 (IMPACT_PLAN.md, step 9). The questions below are still open.
 
 **Context.** On your instruction, the paper was reframed around one headline: matching answers cannot show that a vision-language model reads faces as people do, and randomised cues can (`research/paper/v2/IMPACT_PLAN.md`; DECISIONS 2026-11-21). The changes are committed locally on `p1-pipeline` and not pushed.
 

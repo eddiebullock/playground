@@ -1,0 +1,1053 @@
+{
+ "model": "qwen3vl",
+ "gate_rules": {
+  "fixed_before_any_model_run": true,
+  "G2": {
+   "pass": "max relative L2 at image positions, over layers and clips, is within tolerance",
+   "relative_l2_tolerance": {
+    "float32": 0.0001,
+    "bfloat16": 0.01
+   },
+   "applies_when": "ids up to the last image token match and the mask blocks image-to-text",
+   "exact_zero_is_reported_separately": true
+  },
+  "G3": {
+   "pass": "max abs last-position logit difference within tolerance for every self-patch, for cut versus image-free, and for cut(clip A) versus cut(clip B)",
+   "logit_tolerance": {
+    "float32": 0.001,
+    "bfloat16": "2 ulp at the largest logit magnitude"
+   }
+  },
+  "G4": {
+   "primary_metric": "RMS change in mean-centred option joint logprob, in nats, per clip",
+   "monotonic": "mean strictly increases over 10, 25, 50, 100 percent and the actor bootstrap 95 percent CI of (100 percent minus 10 percent) excludes 0",
+   "large": "mean primary metric at 100 percent >= 1.0 nat AND argmax flip rate at 100 percent >= 0.25",
+   "hook_check": "the 100 percent swap equals a native forward on the donor clip",
+   "threshold_note": "the brief gave no number for 'large'; these were set by the implementer before running and must not be tuned"
+  }
+ },
+ "seed": 42,
+ "smoke": false,
+ "script_sha256": "6327b6f88e99409cba5c63d5aca0fe97348fbce4f3b08522158a8d9ba3ce8194",
+ "versions": {
+  "cv2": "4.11.0",
+  "transformers": "5.10.1",
+  "torch": "2.10.0+cu128",
+  "python": "3.10.4"
+ },
+ "sample": {
+  "n_eligible_items": 243,
+  "actor_counts": {
+   "O": 3,
+   "J": 3,
+   "H": 3,
+   "R": 3,
+   "L": 3,
+   "G": 3,
+   "I": 2,
+   "P": 2,
+   "S": 2,
+   "D": 2,
+   "B": 2,
+   "M": 2,
+   "K": 2,
+   "E": 2,
+   "N": 2,
+   "F": 2,
+   "C": 2
+  },
+  "label_counts": {
+   "Hurt": 2,
+   "Angry": 2,
+   "Interested": 2,
+   "Sad": 2,
+   "Unfriendly": 2,
+   "Jealous": 2,
+   "Bored": 2,
+   "Neutral": 2,
+   "Joking": 1,
+   "Frustrated": 2,
+   "Sneaky": 2,
+   "Disgusted": 2,
+   "Excited": 2,
+   "Afraid": 2,
+   "Kind": 2,
+   "Surprised": 2,
+   "Happy": 2,
+   "Ashamed": 1,
+   "Worried": 2,
+   "Proud": 2,
+   "Disappointed": 2
+  },
+  "rotation_counts": {
+   "1": 10,
+   "2": 10,
+   "3": 10,
+   "4": 10
+  },
+  "signature_counts": {
+   "(10, 1920, 1080)": 2,
+   "(7, 1920, 1080)": 7,
+   "(8, 1920, 1080)": 7,
+   "(3, 1920, 1080)": 1,
+   "(9, 1920, 1080)": 8,
+   "(11, 1920, 1080)": 5,
+   "(5, 1920, 1080)": 3,
+   "(7, 1440, 1080)": 1,
+   "(6, 1920, 1080)": 3,
+   "(4, 1920, 1080)": 1,
+   "(11, 1440, 1080)": 1,
+   "(10, 1440, 1080)": 1
+  },
+  "clips": [
+   {
+    "trial_id": "emotions_38/EDITED/Hurt/OF10_cut.mp4",
+    "label": "Hurt",
+    "actor": "O",
+    "signature": [
+     10,
+     1920,
+     1080
+    ],
+    "rotation": 1,
+    "gate_options": [
+     "Worried",
+     "Unfriendly",
+     "Surprised",
+     "Happy",
+     "Hurt",
+     "None of the above"
+    ],
+    "donor_id": "emotions/EDITED/Worried/BF22_cut.mp4",
+    "donor_label": "Worried",
+    "donor_actor": "B",
+    "donor_label_in_options": true
+   },
+   {
+    "trial_id": "emotions_4/EDITED/Angry/JF17_cut.mp4",
+    "label": "Angry",
+    "actor": "J",
+    "signature": [
+     7,
+     1920,
+     1080
+    ],
+    "rotation": 2,
+    "gate_options": [
+     "Disgusted",
+     "Surprised",
+     "Happy",
+     "Angry",
+     "Jealous",
+     "None of the above"
+    ],
+    "donor_id": "emotions_6/EDITED/Happy Low Intensity/GF2_cut.mp4",
+    "donor_label": "Happy",
+    "donor_actor": "G",
+    "donor_label_in_options": true
+   },
+   {
+    "trial_id": "emotions_7/EDITED/Interested/HF21_cut.mp4",
+    "label": "Interested",
+    "actor": "H",
+    "signature": [
+     8,
+     1920,
+     1080
+    ],
+    "rotation": 3,
+    "gate_options": [
+     "Joking",
+     "Disappointed",
+     "Interested",
+     "Excited",
+     "Proud",
+     "None of the above"
+    ],
+    "donor_id": "emotions_6/EDITED/Excited/IF7_cut.mp4",
+    "donor_label": "Excited",
+    "donor_actor": "I",
+    "donor_label_in_options": true
+   },
+   {
+    "trial_id": "emotions_3/EDITED/Sad/RF15_cut.mp4",
+    "label": "Sad",
+    "actor": "R",
+    "signature": [
+     3,
+     1920,
+     1080
+    ],
+    "rotation": 4,
+    "gate_options": [
+     "Proud",
+     "Sad",
+     "Afraid",
+     "Jealous",
+     "Disgusted",
+     "None of the above"
+    ],
+    "donor_id": "emotions_31/EDITED/Surprised/NF19_cut.mp4",
+    "donor_label": "Surprised",
+    "donor_actor": "N",
+    "donor_label_in_options": false
+   },
+   {
+    "trial_id": "emotions_2/EDITED/Unfriendly/LF25_cut.mp4",
+    "label": "Unfriendly",
+    "actor": "L",
+    "signature": [
+     9,
+     1920,
+     1080
+    ],
+    "rotation": 1,
+    "gate_options": [
+     "Frustrated",
+     "Hurt",
+     "Bored",
+     "Surprised",
+     "Unfriendly",
+     "None of the above"
+    ],
+    "donor_id": "emotions_23/EDITED/Bored/MF8_cut.mp4",
+    "donor_label": "Bored",
+    "donor_actor": "M",
+    "donor_label_in_options": true
+   },
+   {
+    "trial_id": "emotions_31/EDITED/Jealous/GF11_cut.mp4",
+    "label": "Jealous",
+    "actor": "G",
+    "signature": [
+     11,
+     1920,
+     1080
+    ],
+    "rotation": 2,
+    "gate_options": [
+     "Disgusted",
+     "Interested",
+     "Kind",
+     "Jealous",
+     "Disappointed",
+     "None of the above"
+    ],
+    "donor_id": "emotions_11/EDITED/Frustrated/HF23v2_cut.mp4",
+    "donor_label": "Frustrated",
+    "donor_actor": "H",
+    "donor_label_in_options": false
+   },
+   {
+    "trial_id": "emotions_68/EDITED/Bored/IF8_cut.mp4",
+    "label": "Bored",
+    "actor": "I",
+    "signature": [
+     8,
+     1920,
+     1080
+    ],
+    "rotation": 3,
+    "gate_options": [
+     "Hurt",
+     "Excited",
+     "Bored",
+     "Frustrated",
+     "Sad",
+     "None of the above"
+    ],
+    "donor_id": "emotions_31/EDITED/Sad/BF15_cut.mp4",
+    "donor_label": "Sad",
+    "donor_actor": "B",
+    "donor_label_in_options": true
+   },
+   {
+    "trial_id": "emotions_34/EDITED/Neutral/PF28_cut.mp4",
+    "label": "Neutral",
+    "actor": "P",
+    "signature": [
+     5,
+     1920,
+     1080
+    ],
+    "rotation": 4,
+    "gate_options": [
+     "Frustrated",
+     "Neutral",
+     "Bored",
+     "Kind",
+     "Surprised",
+     "None of the above"
+    ],
+    "donor_id": "emotions_33/EDITED/Surprised Low Intensity/FF20_cut.mp4",
+    "donor_label": "Surprised",
+    "donor_actor": "F",
+    "donor_label_in_options": true
+   },
+   {
+    "trial_id": "emotions_37/EDITED/Joking/SF12_cut.mp4",
+    "label": "Joking",
+    "actor": "S",
+    "signature": [
+     7,
+     1920,
+     1080
+    ],
+    "rotation": 1,
+    "gate_options": [
+     "Kind",
+     "Interested",
+     "Proud",
+     "Angry",
+     "Joking",
+     "None of the above"
+    ],
+    "donor_id": "emotions_34/EDITED/Proud/BF27v2_cut.mp4",
+    "donor_label": "Proud",
+    "donor_actor": "B",
+    "donor_label_in_options": true
+   },
+   {
+    "trial_id": "emotions_11/EDITED/Frustrated/DF23_cut.mp4",
+    "label": "Frustrated",
+    "actor": "D",
+    "signature": [
+     7,
+     1440,
+     1080
+    ],
+    "rotation": 2,
+    "gate_options": [
+     "Jealous",
+     "Sneaky",
+     "Kind",
+     "Frustrated",
+     "Sad",
+     "None of the above"
+    ],
+    "donor_id": "emotions_6/EDITED/Excited/CF7_cut.mp4",
+    "donor_label": "Excited",
+    "donor_actor": "C",
+    "donor_label_in_options": false
+   },
+   {
+    "trial_id": "emotions_37/EDITED/Sneaky/BF26v1_cut.mp4",
+    "label": "Sneaky",
+    "actor": "B",
+    "signature": [
+     9,
+     1920,
+     1080
+    ],
+    "rotation": 3,
+    "gate_options": [
+     "Ashamed",
+     "Kind",
+     "Sneaky",
+     "Angry",
+     "Disappointed",
+     "None of the above"
+    ],
+    "donor_id": "emotions_18/EDITED/Disappointed/KF9_cut.mp4",
+    "donor_label": "Disappointed",
+    "donor_actor": "K",
+    "donor_label_in_options": true
+   },
+   {
+    "trial_id": "emotions_23/EDITED/Disgusted Low Intensity/MF6_cut.mp4",
+    "label": "Disgusted",
+    "actor": "M",
+    "signature": [
+     9,
+     1920,
+     1080
+    ],
+    "rotation": 4,
+    "gate_options": [
+     "Interested",
+     "Disgusted",
+     "Afraid",
+     "Frustrated",
+     "Sad",
+     "None of the above"
+    ],
+    "donor_id": "emotions_5/EDITED/Sad Low Intensity/DF16_cut.mp4",
+    "donor_label": "Sad",
+    "donor_actor": "D",
+    "donor_label_in_options": true
+   },
+   {
+    "trial_id": "emotions_39/EDITED/Excited/KF7_cut.mp4",
+    "label": "Excited",
+    "actor": "K",
+    "signature": [
+     6,
+     1920,
+     1080
+    ],
+    "rotation": 1,
+    "gate_options": [
+     "Interested",
+     "Joking",
+     "Hurt",
+     "Bored",
+     "Excited",
+     "None of the above"
+    ],
+    "donor_id": "emotions_68/EDITED/Bored/SF8_cut.mp4",
+    "donor_label": "Bored",
+    "donor_actor": "S",
+    "donor_label_in_options": true
+   },
+   {
+    "trial_id": "emotions_36/EDITED/Afraid Low Intensity/EF4_cut.mp4",
+    "label": "Afraid",
+    "actor": "E",
+    "signature": [
+     8,
+     1920,
+     1080
+    ],
+    "rotation": 2,
+    "gate_options": [
+     "Unfriendly",
+     "Disappointed",
+     "Kind",
+     "Afraid",
+     "Ashamed",
+     "None of the above"
+    ],
+    "donor_id": "emotions_38/EDITED/Ashamed/MF13_cut.mp4",
+    "donor_label": "Ashamed",
+    "donor_actor": "M",
+    "donor_label_in_options": true
+   },
+   {
+    "trial_id": "emotions_33/EDITED/Kind/NF24_cut.mp4",
+    "label": "Kind",
+    "actor": "N",
+    "signature": [
+     6,
+     1920,
+     1080
+    ],
+    "rotation": 3,
+    "gate_options": [
+     "Excitement",
+     "Frustrated",
+     "Kind",
+     "Interested",
+     "Proud",
+     "None of the above"
+    ],
+    "donor_id": "emotions_34/EDITED/Proud/DF27_cut.mp4",
+    "donor_label": "Proud",
+    "donor_actor": "D",
+    "donor_label_in_options": true
+   },
+   {
+    "trial_id": "emotions_33/EDITED/Surprised Low Intensity/FF20_cut.mp4",
+    "label": "Surprised",
+    "actor": "F",
+    "signature": [
+     5,
+     1920,
+     1080
+    ],
+    "rotation": 4,
+    "gate_options": [
+     "Bored",
+     "Surprised",
+     "Happy",
+     "Joking",
+     "Worried",
+     "None of the above"
+    ],
+    "donor_id": "emotions_4/EDITED/Joking/OF12v1_cut.mp4",
+    "donor_label": "Joking",
+    "donor_actor": "O",
+    "donor_label_in_options": true
+   },
+   {
+    "trial_id": "emotions_6/EDITED/Happy Low Intensity/CF2_cut.mp4",
+    "label": "Happy",
+    "actor": "C",
+    "signature": [
+     8,
+     1920,
+     1080
+    ],
+    "rotation": 1,
+    "gate_options": [
+     "Interested",
+     "Surprised",
+     "Bored",
+     "Angry",
+     "Happy",
+     "None of the above"
+    ],
+    "donor_id": "emotions_68/EDITED/Bored/IF8_cut.mp4",
+    "donor_label": "Bored",
+    "donor_actor": "I",
+    "donor_label_in_options": true
+   },
+   {
+    "trial_id": "emotions_11/EDITED/Ashamed/Of13_cut.mp4",
+    "label": "Ashamed",
+    "actor": "O",
+    "signature": [
+     10,
+     1920,
+     1080
+    ],
+    "rotation": 2,
+    "gate_options": [
+     "Worried",
+     "Unfriendly",
+     "Proud",
+     "Ashamed",
+     "Disappointed",
+     "None of the above"
+    ],
+    "donor_id": "emotions/EDITED/Worried/BF22_cut.mp4",
+    "donor_label": "Worried",
+    "donor_actor": "B",
+    "donor_label_in_options": true
+   },
+   {
+    "trial_id": "emotions/EDITED/Worried/JF22_cut.mp4",
+    "label": "Worried",
+    "actor": "J",
+    "signature": [
+     7,
+     1920,
+     1080
+    ],
+    "rotation": 3,
+    "gate_options": [
+     "Disgusted",
+     "Happy",
+     "Worried",
+     "Angry",
+     "Disappointed",
+     "None of the above"
+    ],
+    "donor_id": "emotions_36/EDITED/Happy/EF1_cut.mp4",
+    "donor_label": "Happy",
+    "donor_actor": "E",
+    "donor_label_in_options": true
+   },
+   {
+    "trial_id": "emotions_34/EDITED/Proud/HF27_cut.mp4",
+    "label": "Proud",
+    "actor": "H",
+    "signature": [
+     11,
+     1920,
+     1080
+    ],
+    "rotation": 4,
+    "gate_options": [
+     "Afraid",
+     "Proud",
+     "Excited",
+     "Interested",
+     "Kind",
+     "None of the above"
+    ],
+    "donor_id": "emotions_35/EDITED/Afraid/GF3_cut.mp4",
+    "donor_label": "Afraid",
+    "donor_actor": "G",
+    "donor_label_in_options": true
+   },
+   {
+    "trial_id": "emotions_31/EDITED/Surprised Low Intensity/RF20 v1_cut.mp4",
+    "label": "Surprised",
+    "actor": "R",
+    "signature": [
+     4,
+     1920,
+     1080
+    ],
+    "rotation": 1,
+    "gate_options": [
+     "Happy",
+     "Joking",
+     "Worried",
+     "Bored",
+     "Surprised",
+     "None of the above"
+    ],
+    "donor_id": "emotions_37/EDITED/Happy Low Intensity/OF2_cut.mp4",
+    "donor_label": "Happy",
+    "donor_actor": "O",
+    "donor_label_in_options": true
+   },
+   {
+    "trial_id": "emotions_34/EDITED/Kind/LF24_cut.mp4",
+    "label": "Kind",
+    "actor": "L",
+    "signature": [
+     6,
+     1920,
+     1080
+    ],
+    "rotation": 2,
+    "gate_options": [
+     "Proud",
+     "Excitement",
+     "Frustrated",
+     "Kind",
+     "Interested",
+     "None of the above"
+    ],
+    "donor_id": "emotions_30/EDITED/Proud/RF27_cut.mp4",
+    "donor_label": "Proud",
+    "donor_actor": "R",
+    "donor_label_in_options": true
+   },
+   {
+    "trial_id": "emotions_22/EDITED/Disappointed/GF9_cut.mp4",
+    "label": "Disappointed",
+    "actor": "G",
+    "signature": [
+     11,
+     1920,
+     1080
+    ],
+    "rotation": 3,
+    "gate_options": [
+     "Afraid",
+     "Joking",
+     "Disappointed",
+     "Worried",
+     "Bored",
+     "None of the above"
+    ],
+    "donor_id": "emotions_34/EDITED/Proud/HF27_cut.mp4",
+    "donor_label": "Proud",
+    "donor_actor": "H",
+    "donor_label_in_options": false
+   },
+   {
+    "trial_id": "emotions_39/EDITED/Hurt/IF10_cut.mp4",
+    "label": "Hurt",
+    "actor": "I",
+    "signature": [
+     8,
+     1920,
+     1080
+    ],
+    "rotation": 4,
+    "gate_options": [
+     "Happy",
+     "Hurt",
+     "Worried",
+     "Unfriendly",
+     "Surprised",
+     "None of the above"
+    ],
+    "donor_id": "emotions_6/EDITED/Happy Low Intensity/CF2_cut.mp4",
+    "donor_label": "Happy",
+    "donor_actor": "C",
+    "donor_label_in_options": true
+   },
+   {
+    "trial_id": "emotions_5/EDITED/Sneaky/PF26v1_cut.mp4",
+    "label": "Sneaky",
+    "actor": "P",
+    "signature": [
+     9,
+     1920,
+     1080
+    ],
+    "rotation": 1,
+    "gate_options": [
+     "Angry",
+     "Disappointed",
+     "Ashamed",
+     "Kind",
+     "Sneaky",
+     "None of the above"
+    ],
+    "donor_id": "emotions_41/EDITED/Angry Low Intensity/LF18_cut.mp4",
+    "donor_label": "Angry",
+    "donor_actor": "L",
+    "donor_label_in_options": true
+   },
+   {
+    "trial_id": "emotions_7/EDITED/Excited/SF7_cut.mp4",
+    "label": "Excited",
+    "actor": "S",
+    "signature": [
+     5,
+     1920,
+     1080
+    ],
+    "rotation": 2,
+    "gate_options": [
+     "Joking",
+     "Hurt",
+     "Bored",
+     "Excited",
+     "Interested",
+     "None of the above"
+    ],
+    "donor_id": "emotions_7/EDITED/Interested/BF21.mp4",
+    "donor_label": "Interested",
+    "donor_actor": "B",
+    "donor_label_in_options": true
+   },
+   {
+    "trial_id": "emotions_5/EDITED/Sad Low Intensity/DF16_cut.mp4",
+    "label": "Sad",
+    "actor": "D",
+    "signature": [
+     9,
+     1920,
+     1080
+    ],
+    "rotation": 3,
+    "gate_options": [
+     "Disgusted",
+     "Proud",
+     "Sad",
+     "Afraid",
+     "Jealous",
+     "None of the above"
+    ],
+    "donor_id": "emotions_6/EDITED/Disgusted/OF5_cut.mp4",
+    "donor_label": "Disgusted",
+    "donor_actor": "O",
+    "donor_label_in_options": true
+   },
+   {
+    "trial_id": "emotions_36/EDITED/Neutral/BF28_cut.mp4",
+    "label": "Neutral",
+    "actor": "B",
+    "signature": [
+     7,
+     1920,
+     1080
+    ],
+    "rotation": 4,
+    "gate_options": [
+     "Frustrated",
+     "Neutral",
+     "Bored",
+     "Kind",
+     "Surprised",
+     "None of the above"
+    ],
+    "donor_id": "emotions_38/EDITED/Frustrated/NF23_cut.mp4",
+    "donor_label": "Frustrated",
+    "donor_actor": "N",
+    "donor_label_in_options": true
+   },
+   {
+    "trial_id": "emotions_6/EDITED/Happy/MF1_cut.mp4",
+    "label": "Happy",
+    "actor": "M",
+    "signature": [
+     7,
+     1920,
+     1080
+    ],
+    "rotation": 1,
+    "gate_options": [
+     "Interested",
+     "Surprised",
+     "Bored",
+     "Angry",
+     "Happy",
+     "None of the above"
+    ],
+    "donor_id": "emotions_23/EDITED/Angry Low Intensity/FF18_cut.mp4",
+    "donor_label": "Angry",
+    "donor_actor": "F",
+    "donor_label_in_options": true
+   },
+   {
+    "trial_id": "emotions_18/EDITED/Disappointed/KF9_cut.mp4",
+    "label": "Disappointed",
+    "actor": "K",
+    "signature": [
+     9,
+     1920,
+     1080
+    ],
+    "rotation": 2,
+    "gate_options": [
+     "Bored",
+     "Afraid",
+     "Joking",
+     "Disappointed",
+     "Worried",
+     "None of the above"
+    ],
+    "donor_id": "emotions_35/EDITED/Afraid/EF3_cut.mp4",
+    "donor_label": "Afraid",
+    "donor_actor": "E",
+    "donor_label_in_options": true
+   },
+   {
+    "trial_id": "emotions_21/EDITED/Bored/EF8_cut.mp4",
+    "label": "Bored",
+    "actor": "E",
+    "signature": [
+     11,
+     1440,
+     1080
+    ],
+    "rotation": 3,
+    "gate_options": [
+     "Hurt",
+     "Excited",
+     "Bored",
+     "Frustrated",
+     "Sad",
+     "None of the above"
+    ],
+    "donor_id": "emotions/EDITED/Worried/FF22_cut.mp4",
+    "donor_label": "Worried",
+    "donor_actor": "F",
+    "donor_label_in_options": false
+   },
+   {
+    "trial_id": "emotions/EDITED/Worried/NF22_cut.mp4",
+    "label": "Worried",
+    "actor": "N",
+    "signature": [
+     7,
+     1920,
+     1080
+    ],
+    "rotation": 4,
+    "gate_options": [
+     "Happy",
+     "Worried",
+     "Angry",
+     "Disappointed",
+     "Disgusted",
+     "None of the above"
+    ],
+    "donor_id": "emotions_6/EDITED/Happy/MF1_cut.mp4",
+    "donor_label": "Happy",
+    "donor_actor": "M",
+    "donor_label_in_options": true
+   },
+   {
+    "trial_id": "emotions_2/EDITED/Unfriendly/FF25_cut.mp4",
+    "label": "Unfriendly",
+    "actor": "F",
+    "signature": [
+     7,
+     1920,
+     1080
+    ],
+    "rotation": 1,
+    "gate_options": [
+     "Frustrated",
+     "Hurt",
+     "Bored",
+     "Surprised",
+     "Unfriendly",
+     "None of the above"
+    ],
+    "donor_id": "emotions_6/EDITED/Frustrated/RF23 v1_cut.mp4",
+    "donor_label": "Frustrated",
+    "donor_actor": "R",
+    "donor_label_in_options": true
+   },
+   {
+    "trial_id": "emotions_31/EDITED/Jealous/CF11_cut.mp4",
+    "label": "Jealous",
+    "actor": "C",
+    "signature": [
+     10,
+     1440,
+     1080
+    ],
+    "rotation": 2,
+    "gate_options": [
+     "Disgusted",
+     "Interested",
+     "Kind",
+     "Jealous",
+     "Disappointed",
+     "None of the above"
+    ],
+    "donor_id": "emotions_4/EDITED/Sneaky/FF26_cut.mp4",
+    "donor_label": "Sneaky",
+    "donor_actor": "F",
+    "donor_label_in_options": false
+   },
+   {
+    "trial_id": "emotions_53/EDITED/Afraid/OF3_cut.mp4",
+    "label": "Afraid",
+    "actor": "O",
+    "signature": [
+     9,
+     1920,
+     1080
+    ],
+    "rotation": 3,
+    "gate_options": [
+     "Disappointed",
+     "Kind",
+     "Afraid",
+     "Ashamed",
+     "Unfriendly",
+     "None of the above"
+    ],
+    "donor_id": "emotions_2/EDITED/Unfriendly/BF25v2_cut.mp4",
+    "donor_label": "Unfriendly",
+    "donor_actor": "B",
+    "donor_label_in_options": true
+   },
+   {
+    "trial_id": "emotions_34/EDITED/Proud/JF27_cut.mp4",
+    "label": "Proud",
+    "actor": "J",
+    "signature": [
+     8,
+     1920,
+     1080
+    ],
+    "rotation": 4,
+    "gate_options": [
+     "Afraid",
+     "Proud",
+     "Excited",
+     "Interested",
+     "Kind",
+     "None of the above"
+    ],
+    "donor_id": "emotions_40/EDITED/Afraid Low Intensity/CF4_cut.mp4",
+    "donor_label": "Afraid",
+    "donor_actor": "C",
+    "donor_label_in_options": true
+   },
+   {
+    "trial_id": "emotions_11/EDITED/Angry/HF17v1_cut.mp4",
+    "label": "Angry",
+    "actor": "H",
+    "signature": [
+     11,
+     1920,
+     1080
+    ],
+    "rotation": 1,
+    "gate_options": [
+     "Jealous",
+     "Disgusted",
+     "Surprised",
+     "Happy",
+     "Angry",
+     "None of the above"
+    ],
+    "donor_id": "emotions_31/EDITED/Jealous/GF11_cut.mp4",
+    "donor_label": "Jealous",
+    "donor_actor": "G",
+    "donor_label_in_options": true
+   },
+   {
+    "trial_id": "emotions_38/EDITED/Interested/RF21_cut.mp4",
+    "label": "Interested",
+    "actor": "R",
+    "signature": [
+     8,
+     1920,
+     1080
+    ],
+    "rotation": 2,
+    "gate_options": [
+     "Proud",
+     "Joking",
+     "Disappointed",
+     "Interested",
+     "Excited",
+     "None of the above"
+    ],
+    "donor_id": "emotions_6/EDITED/Excited/MF7_cut.mp4",
+    "donor_label": "Excited",
+    "donor_actor": "M",
+    "donor_label_in_options": true
+   },
+   {
+    "trial_id": "emotions_6/EDITED/Frustrated/LF23_cut.mp4",
+    "label": "Frustrated",
+    "actor": "L",
+    "signature": [
+     9,
+     1920,
+     1080
+    ],
+    "rotation": 3,
+    "gate_options": [
+     "Sneaky",
+     "Kind",
+     "Frustrated",
+     "Sad",
+     "Jealous",
+     "None of the above"
+    ],
+    "donor_id": "emotions_5/EDITED/Sad/DF15_cut.mp4",
+    "donor_label": "Sad",
+    "donor_actor": "D",
+    "donor_label_in_options": true
+   },
+   {
+    "trial_id": "emotions_6/EDITED/Disgusted/GF5_cut.mp4",
+    "label": "Disgusted",
+    "actor": "G",
+    "signature": [
+     11,
+     1920,
+     1080
+    ],
+    "rotation": 4,
+    "gate_options": [
+     "Interested",
+     "Disgusted",
+     "Afraid",
+     "Frustrated",
+     "Sad",
+     "None of the above"
+    ],
+    "donor_id": "emotions_11/EDITED/Frustrated/HF23v2_cut.mp4",
+    "donor_label": "Frustrated",
+    "donor_actor": "H",
+    "donor_label_in_options": true
+   }
+  ]
+ },
+ "stages": {
+  "bfloat16": {
+   "model_load_seconds": 89.8,
+   "prompt_tail_first_clip": "You are performing a 6-alternative forced-choice mental state recognition task.\nAnalyze video frames only. Choose exactly one label.\n\nOPTIONS:\n1) Worried\n2) Unfriendly\n3) Surprised\n4) Happy\n5) Hurt\n6) None of the above\n\nRespond with:\nEMOTION: <one of the option labels exactly>\nREASONING: <brief justification>\n<|im_end|>\n<|im_start|>assistant\nEMOTION:",
+   "input_keys": [
+    "attention_mask",
+    "image_grid_thw",
+    "input_ids",
+    "mm_token_type_ids",
+    "pixel_values"
+   ],
+   "architecture": {
+    "n_lm_layers": 64,
+    "n_vit_layers": 27,
+    "deepstack_visual_indexes": [
+     8,
+     16,
+     24
+    ],
+    "deepstack_input_equals_vit_block_output": {
+     "8": true,
+     "16": true,
+     "24": true
+    }
+   },
+   "gpu": "NVIDIA A100-SXM4-80GB"
+  }
+ }
+}

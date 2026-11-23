@@ -602,7 +602,7 @@ def _norm_trials():
 
 FIG2_KEYS = ("accuracy_real", "accuracy_mismatch", "delta_real_minus_mismatch",
              "delta_ci_actor_bootstrap", "p_delta_holm", "vision_dependent")
-FIG2_INPUTS = (("a1", "A1, grid"), ("a3", "A3, single face"))
+FIG2_INPUTS = (("a1", "composite input"), ("a3", "single face"))  # A1 and A3, plain names (IMPACT_PLAN step 9)
 
 
 def _fig2_rows(a1, a3):
@@ -638,7 +638,7 @@ def fig2_delta(ax, rows, synthetic):
     ax.set_ylim(len(rows) - 0.5, -0.6)
     ax.set_xlabel("Accuracy real minus mismatch (actor bootstrap 95% CI)")
     hgrid(ax, "x")
-    ax.set_title(_tag("RQ0: real minus mismatch", synthetic))
+    ax.set_title(_tag("Real minus mismatched face", synthetic))
 
 
 def fig2_accuracy(ax, rows, synthetic):
@@ -687,7 +687,7 @@ def fig2_from(a1, a3, synthetic=False):
     """Figure 2 from the A1 and A3 summaries (dicts keyed by model)."""
     rows = _fig2_rows(a1, a3)
     fig = plt.figure(figsize=(7.08, 5.6))
-    gs = fig.add_gridspec(2, 2, height_ratios=[1.15, 1], left=0.17, right=0.95,
+    gs = fig.add_gridspec(2, 2, height_ratios=[1.15, 1], left=0.21, right=0.95,
                           top=0.9 if synthetic else 0.94, bottom=0.15, wspace=0.12, hspace=0.55)
     axa, axb = fig.add_subplot(gs[0, 0]), fig.add_subplot(gs[0, 1])
     gs2 = gs[1, :].subgridspec(1, 2, wspace=0.3)
@@ -702,7 +702,7 @@ def fig2_from(a1, a3, synthetic=False):
                 plt.Line2D([], [], marker="o", color=INK2, markerfacecolor=SURFACE,
                            linestyle="none", markersize=5)]
     names = [_model_name(m) for m in dict.fromkeys(r[0] for r in rows)]
-    names += ["Vision dependent by the rule", "Not by the rule"]
+    names += ["Face dependent by the rule", "Not by the rule"]
     fig.legend(handles, names, loc="lower center", ncol=len(names), bbox_to_anchor=(0.55, 0.0),
                handletextpad=0.3, columnspacing=1.2)
     for ax, letter in zip((axa, axb, axc, axd), "abcd"):
@@ -870,7 +870,7 @@ def fig4_from(models, recovery, synthetic=False):
     ax.set_xlim(-0.35, 1.0)
     ax.set_xlabel("Family pattern score with the human matrix (Pearson over cells)")
     hgrid(ax, "x")
-    ax.set_title(_tag("RQ1: natural-clip pattern score per model", synthetic))
+    ax.set_title(_tag("Natural-clip pattern score per model", synthetic))
     handles = [plt.Line2D([], [], marker="o", color=INK2, linestyle="none", markersize=5),
                plt.Line2D([], [], marker="o", color=INK2, markerfacecolor=SURFACE,
                           linestyle="none", markersize=5),
@@ -1007,13 +1007,13 @@ def fig5_from(summary, synthetic=False):
                _tag("Residual CEA (confirmatory)", synthetic),
                ref=lambda ds: href[f"{ds.split('_')[0]}_residual"])
     axa.axvline(SESOI_CFA, color=INK2, linewidth=0.8, linestyle=(0, (3, 2)))
-    axa.text(SESOI_CFA + 0.02, -0.85, f"SESOI {SESOI_CFA:.2f}", fontsize=5.8, color=INK2,
+    axa.text(SESOI_CFA + 0.02, -0.85, "bound " + f"{SESOI_CFA:.2f}".lstrip("0"), fontsize=5.8, color=INK2,
              va="center")
     axa.set_xlim(-0.5, 1.62)
     axa.spines["bottom"].set_bounds(-0.5, 1)
     for i, (_, _, e) in enumerate(rows):
         axa.text(1.1, i, e["decision"], ha="left", va="center", fontsize=5.6, color=INK)
-    axa.set_xlabel("CEA with the human do-effects (95% CI)")
+    axa.set_xlabel("CEA with human cue effects (95% CI)")
     _fig5_axis(axb, rows, lambda e: (e["raw"]["cfa"], e["raw"]["ci"]), _tag("Raw CEA", synthetic),
                ref=lambda ds: href[ds.split("_")[0]], labels=False)
     axb.set_xlabel("CEA, raw (95% CI)")
@@ -1095,6 +1095,26 @@ def make_fig5_synthetic():
 #   opposes_prediction, null, inconclusive.
 
 FIG6_ROUTES = ("single_face", "video_face")
+FIG6_ROUTE_NAMES = {"single_face": "single face", "video_face": "video"}
+# Plain names for the frozen contrasts (scripts/stimulus_design.py CONFIRMATORY; Supplementary
+# Methods, Section S8, under the same IDs). "X on Y" reads the X family on items acted as Y.
+# tests/test_make_figures.py checks every name against the frozen design.
+FIG6_NAMES = {
+    "P1": "Mouth mask on Happy", "P2": "Mouth mask on Disgusted", "P3": "Eye mask on Afraid",
+    "P4": "Eye mask on Sad", "P5": "Brow mask on Angry",
+    "P6": "Mouth minus eye mask, Happy and Disgusted",
+    "P7": "Mouth mask, Neutral on Happy, Sad, Angry", "P8": "Mouth mask, Angry on Disgusted",
+    "P9": "Low- minus high-pass on Happy", "P10": "Low- minus high-pass on Sad",
+    "P12": "Shuffled frames, Happy and Surprised", "P13": "Shuffled frames, low intensity",
+    "P14a": "First minus last third, Surprised on Afraid",
+    "P14b": "First minus last third, Afraid on Surprised",
+    "P15a": "First minus last third, Disgusted on Angry",
+    "P15b": "First minus last third, Angry on Disgusted",
+}
+
+
+def _fig6_name(cid):
+    return f"{cid} {FIG6_NAMES[cid]}" if cid in FIG6_NAMES else cid
 VERDICT_STYLE = {  # verdict -> (colour, filled, legend)
     "matches_prediction": (BLUE, True, "Matches prediction"),
     "opposes_prediction": (ORANGE, True, "Opposes prediction"),
@@ -1134,9 +1154,15 @@ def fig6_panel(ax, out, ids, title, labels=True):
     split = next((i for i in range(1, len(routes)) if routes[i] != routes[i - 1]), None)
     if split is not None:
         ax.axhline(split - 0.5, color=GRID, linewidth=0.8)
+        if labels:  # name each input once, beside the line that separates them
+            where = ax.get_yaxis_transform()
+            ax.text(0.99, split - 0.62, FIG6_ROUTE_NAMES.get(routes[0], routes[0]), transform=where,
+                    ha="right", va="bottom", fontsize=5.8, color=INK2)
+            ax.text(0.99, split - 0.38, FIG6_ROUTE_NAMES.get(routes[split], routes[split]),
+                    transform=where, ha="right", va="top", fontsize=5.8, color=INK2)
     ax.set_yticks(range(len(ids)))
     if labels:
-        ax.set_yticklabels([f"{cid}, {route}" for route, cid in ids], fontsize=6)
+        ax.set_yticklabels([_fig6_name(cid) for _, cid in ids], fontsize=6)
     else:
         ax.tick_params(labelleft=False)
     ax.set_ylim(len(ids) - 0.5, -0.6)
@@ -1149,16 +1175,16 @@ def fig6_from(outputs, synthetic=False):
     ids = _fig6_rows(outputs)
     n = len(outputs)
     fig, axes = plt.subplots(1, n, figsize=(7.08, 0.2 * len(ids) + 1.9), sharex=True, squeeze=False)
-    fig.subplots_adjust(left=0.15, right=0.98, top=0.89 if synthetic else 0.93, bottom=0.16,
+    fig.subplots_adjust(left=0.3, right=0.98, top=0.89 if synthetic else 0.93, bottom=0.16,
                         wspace=0.1)
     for j, (m, out) in enumerate(outputs.items()):
         fig6_panel(axes[0, j], out, ids, _tag(_model_name(m), synthetic), labels=j == 0)
-    fig.supxlabel("Change in the predicted direction (blind readout, actor 95% CI)", fontsize=7,
-                  y=0.06, color=INK2)
+    fig.supxlabel("Change in the predicted direction (option-free judgement, actor 95% CI)",
+                  fontsize=7, x=0.64, y=0.06, color=INK2)
     handles = [plt.Line2D([], [], marker="o", color=c, markerfacecolor=c if f else SURFACE,
                           linestyle="none", markersize=5) for c, f, _ in VERDICT_STYLE.values()]
     fig.legend(handles, [v[2] for v in VERDICT_STYLE.values()], loc="lower center", ncol=4,
-               bbox_to_anchor=(0.56, 0.0), handletextpad=0.3, columnspacing=1.2)
+               bbox_to_anchor=(0.64, 0.0), handletextpad=0.3, columnspacing=1.2)
     _synthetic_banner(fig, synthetic)
     return fig
 

@@ -200,6 +200,7 @@ A language model could answer from what an emotion word usually goes with, rathe
 ## 8. Larger models in the same families
 
 <!-- Added 2026-11-09. A8 is FROZEN, tag a8-freeze (research/PREREG_A8_DRAFT.md:3). No A8 output has been read. No result is stated. The scaffold below is kept, unchanged, for the fill at step 4.1; the visible slot is the one placeholder.
+Filled 2026-11-23 (DECISIONS 2026-11-23, row 105: A8 ended for this paper after Phase A, its scored steps deferred past the GPU shutdown by dated note). Slots used: A3 (both Pass, A8 family of two, read 2026-11-21); vision gates, no result for either model (rows 99 to 101; row 102's rerun deferred); A1, A2 and A4 not run by the stop rule; natural-clip RQ1 not run (needs A1). Delivery and the ladder are in Methods and Supplementary Methods, Section S9, to keep the main text under 5,000 words.
 **Question.** Do the frozen tests give the same answers on Qwen3-VL-32B and Gemma 4 31B?
 **Rule.** Every step is judged by its frozen rule, with no new threshold (`research/PREREG_A8_DRAFT.md:678-690`). A1 and A3 as in Section 2, with A8's own Holm family; the RQ0 reading as in the A1 and A3 table. A model that fails G2 to G4, or whose A3 result is not Pass, does not run A1 and is reported "A1 not run, by the A8 stop rule" (`:690`). A2 and A4 by their frozen rules, run only on eligible models. Natural-clip RQ1 is descriptive only. Families are A8 models only (`:694-701`); with one model Holm is the identity, and a smaller family is less strict per model than the frozen three-model family, which the text must say. No pooling with the frozen models, with each other or with the small siblings (`:703`).
 **Reporting rule.** A8 rows are labelled A8 and placed under the frozen rows, whatever they show. Where an A8 model and its sibling disagree, both verdicts are reported and the difference is described, not tested (`:705`). A8 cannot change any frozen verdict: a frozen Inconclusive stays Inconclusive, a frozen null stays a null, and Molmo2 stays ineligible (`:707`). A8 may support a statement of scope only.
@@ -217,7 +218,7 @@ A language model could answer from what an emotion word usually goes with, rathe
 **Figure.** A8 rows join Figures 2, 5 and 6 and Table 1 below the frozen rows, marked A8. [PENDING: figure functions.]
 -->
 
-[PENDING: larger models. Qwen3-VL-32B and Gemma 4 31B through the frozen tests, reported below the frozen rows by the preregistered reporting rule, within about 120 words. Gemma 4 31B's gates were not tested (preregistered lead decision 5); Qwen3-VL-32B's run under the dated device-only deviation of 2026-11-17.]
+As preregistered, two larger models in the same families, Qwen3-VL-32B and Gemma 4 31B, entered the frozen tests (Methods). On a single face crop, both models' answers depended on the face: the delta was .329 for Qwen3-VL-32B and .316 for Gemma 4 31B (Holm *P* = .00006 for each, over two models, a family less strict per model than the three-model one) [REG: A8 A3 table]. Neither has a validity-gate result, so by the preregistered stop rule neither ran the other tests (Methods; Table 1) [REG: "A8 Phase A records and final checks"].
 
 ## 9. What could not be tested
 

@@ -1,0 +1,16 @@
+{
+  "design_sha256": "95dd41b5d3c33b79ee9e54a20d34ea1e18b6c9156fcabd719ebfb084709b7b50",
+  "excluded": {},
+  "family": [
+    "qwen3vl_32b",
+    "gemma4_31b"
+  ],
+  "inputs_sha256": {
+    "data/eu_emotions_human_entropy.json": "f9d91b4e47816fd01b773f0a63f8fff39c7e0cfa2c56a2136b1f52ba5cc33744",
+    "results/a8/gemma4_31b/face_input_validity/cells_gemma4.jsonl": "556c3b1b9960f80afbc70c59b0093fc3ada7c937cda4fc00ad29e96feed85b38",
+    "results/a8/qwen3vl_32b/face_input_validity/cells_qwen3vl.jsonl": "932c9cd05602806adb6cda7d939436bbf838902b721367192ba7d76c85f19473"
+  },
+  "output": "research/reproduction/a8/face_input_validity_summary_a8.json",
+  "output_sha256": "c2f87b9f6b9cf88cb7807c124c14be346a1dab74f11d088c979cea39daaf60ca",
+  "wrapper_sha256": "3dd613c74ddae8fe325edcb737a105f7c9a100115e7febe1d9dba66deeb13e52"
+}

@@ -1025,3 +1025,15 @@ Recorded in DECISIONS 2026-11-17 (row 102), written on 2026-11-20.
 - Storage at 08:00: 1,068.3 GB and 991,653 files, under the stop lines (1,080 GB; 1,040,000 files). The group's GPU account had 2,438 GPU-hours left.
 - `BUDGET=240m sbatch slurm_jobs/a8_gates_device_check.sh` was submitted at 08:02:23 UTC as job 41575304, one whole `ampere` node. At 08:39 it was pending on priority. A watcher reports its end, and the check is read once, by the rule set on 2026-11-17.
 - This note is not copied to the cluster while the job runs, since A8's entry points read this file. The design block and the code hashes are the same in both copies.
+
+**2026-11-23, about 10:10, A8's scored steps for Qwen3-VL-32B are deferred past the GPU shutdown, and A8 ends for this paper after Phase A (the author's instruction; DECISIONS 2026-11-23, row 105; no gate result of Qwen3-VL-32B exists, and no delivery or ladder output was read).**
+- **Why.** The 8B check (job 41575304) had waited 49 hours on the free tier's priority, behind 391 A100 jobs and with no planned start. About 30 of 74 A100 nodes were in maintenance, and every later step would restart at age 0. `intr` cannot run the check under row 102's stop rule. The GPU nodes are reserved from 2026-12-07 07:00.
+- **Deferred, "not run" by this dated note:** Qwen3-VL-32B's gates, and so A1, A2 and A4 for that model. A reason fixed before data covers this ("deferral by a dated note"). Natural-clip RQ1 does not run, because it needs A1's merged files.
+- **Unchanged.** The design block and its hash, the code hashes, and row 102 with its stop rule. The 8B check stays queued; if it runs, it is read once on the cluster by its rule and recorded. Gemma 4 31B stays not tested (lead decision 5).
+- **Now, in the runbook's order:**
+  1. `a8_preflight.py --full_hash` on both weight copies;
+  2. `post_phase3.py pull a8`, with every A8 job listed, and the gates jobs that ended without a verdict waived with this note as the reason;
+  3. delivery and the ladder, read by their frozen rules;
+  4. the registry rows, and the paper's A8 slots from the branches drafted before data.
+- **If A8 resumes later,** it does so by a further dated note, with a second pull and its own manifest.
+- This note is not copied to the cluster while job 41575304 is queued, since A8's entry points read this file. It changes neither the design block nor the code hashes.

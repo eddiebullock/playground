@@ -276,3 +276,38 @@ def test_fig6_uses_the_fill_rule_verdicts():
     extras[mod.FIG6_ROUTES[0]]["contrasts"]["P2"]["frozen_verdict"] = "null"
     with pytest.raises(SystemExit):
         mod.apply_fill_rule(out, extras, "abc")
+
+
+def test_fig6_names_match_the_frozen_design():
+    """Every frozen A2 contrast has a plain name in Figure 6 that names its items, and the family it
+    reads when that is not the acted label (IMPACT_PLAN step 9; scripts/stimulus_design.py)."""
+    mod = _module()
+    sys.path.insert(0, str(ROOT))
+    from scripts.stimulus_design import CONFIRMATORY
+
+    assert set(mod.FIG6_NAMES) == {c.id for c in CONFIRMATORY}
+    for c in CONFIRMATORY:
+        name = mod.FIG6_NAMES[c.id]
+        assert mod._fig6_name(c.id) == f"{c.id} {name}"
+        for label in c.labels:
+            assert label in name, (c.id, label)
+        if c.outcome != "acted":
+            assert f"{c.outcome} on" in name, (c.id, c.outcome)
+        if c.low_intensity:
+            assert "low intensity" in name, c.id
+    assert set(mod.FIG6_ROUTE_NAMES) == set(mod.FIG6_ROUTES)
+
+
+def test_real_figures_print_no_amendment_codes():
+    """Figures 2, 4, 5 and 6, built from the locked outputs, print plain names: no amendment or
+    research-question code, no SESOI, no do-effects and no route identifier (IMPACT_PLAN step 9).
+    Contrast IDs (P1 to P15b) stay in Figure 6 beside their names, as in Supplementary Methods, S8."""
+    mod = _module()
+    code = re.compile(r"\b(A[1-9]|RQ[0-5]|SESOI)\b|do-effect|_face\b|legacy_full")
+    for n in (2, 4, 5, 6):
+        fig = mod.REAL[n]()
+        texts = [t.get_text() for t in fig.findobj(match=lambda a: hasattr(a, "get_text"))]
+        plt.close(fig)
+        printed = [t for t in texts if isinstance(t, str) and t.strip()]
+        assert printed, n
+        assert not [t for t in printed if code.search(t)], (n, [t for t in printed if code.search(t)])

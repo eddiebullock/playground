@@ -95,5 +95,5 @@ Select: **Behavioural and social sciences**. [USER: confirm. The study could als
 1. [USER] Ethics: a provisional statement is in Methods (Human data) and above, written 2026-11-13 on the user's instruction. Confirm it with the institution before submission.
 2. [USER] Whether tagged commits count as preregistration for the journal, or whether to deposit the amendments on a registry such as OSF.
 3. [USER] Create the Zenodo DOI.
-4. Done 2026-11-14: the result-dependent rows are filled from the locked outputs. A8's rows wait on its runs.
+4. Done 2026-11-14: the result-dependent rows are filled from the locked outputs. A8 ended for this paper after Phase A on 2026-11-23 (DECISIONS 2026-11-23, row 105): its rows report A3, delivery and the ladder, and its later steps as not run.
 5. Check every heading above against the current reporting summary form, which could not be read as text on 2026-11-08.

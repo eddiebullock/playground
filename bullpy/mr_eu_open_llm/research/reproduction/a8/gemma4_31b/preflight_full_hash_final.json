@@ -1,0 +1,36 @@
+{
+  "a8_id": "gemma4_31b",
+  "checked_at_utc": "2026-11-23T10:16:03.461903+00:00",
+  "code_key": "gemma4",
+  "config": {
+    "architectures": [
+      "Gemma4ForConditionalGeneration"
+    ],
+    "model_type": "gemma4",
+    "text_hidden_size": 5376,
+    "text_num_hidden_layers": 60
+  },
+  "design_sha256": "95dd41b5d3c33b79ee9e54a20d34ea1e18b6c9156fcabd719ebfb084709b7b50",
+  "full_hash": true,
+  "outputs": [],
+  "preflight_sha256": "9c9ec944be4dbef30f8cd09488f57c54ad33c1de0d1f48fb20270eff27db9160",
+  "rds_usage": {
+    "files": 991660,
+    "gb": 1068.3
+  },
+  "repo": "google/gemma-4-31B-it",
+  "revision": "842da3794eaa0b77d5f08bae87a17459d91ff475",
+  "weight_files": {
+    "model-00001-of-00002.safetensors": {
+      "mtime": 1794217091.0,
+      "sha256": "eeef8791537bc04f110967c513149e037d2a9ae97d49add7291ebfa62806bbfa",
+      "size": 49784788364
+    },
+    "model-00002-of-00002.safetensors": {
+      "mtime": 1794216831.0,
+      "sha256": "018912220f559f7025d60333e0996183cd538aa77ad6f4988a89ce47be681f10",
+      "size": 12761549884
+    }
+  },
+  "weights_dir": "/rds/project/rds-ePtR33Nsgi4/eb2007/models/gemma-4-31B-it"
+}

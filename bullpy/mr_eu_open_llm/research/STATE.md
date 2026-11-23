@@ -2,7 +2,40 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-11-21 Europe/London
+**Updated:** 2026-11-23 Europe/London
+
+## Hand-off, 2026-11-23
+
+- **New at about 11:00: A8 has ended for this paper after Phase A, on your choice of option (a)** ("great proceed with all jobs"; DECISIONS 2026-11-23, row 105; NEEDS_INPUT item 19 resolved).
+  - **The deferral was recorded and pushed first** (`88ed58b`), before any delivery or ladder output was read. Qwen3-VL-32B's gates, and its A1, A2 and A4, are deferred past the shutdown by dated note. Gemma 4 31B stays not tested.
+  - **Final checks, in the runbook's order:**
+    1. Full weights hash: both copies equal their pins (14 of 14, 2 of 2), in jobs 41726553 and 41727362 (`intr`, icelake). The Gemma part of 41726553 never started, because of a shell error in my job command, so it ran alone in 41727362.
+    2. Single pull: 22 files copied with sha256 checks. The four gates jobs that ended without a verdict are waived, with the reason, in `a8_pull_manifest.json`.
+    3. Delivery and ladder, read by their frozen rules.
+  - **What A8 found:**
+    - Both models pass A3 (.329 and .316).
+    - Qwen3-VL-32B passes delivery on all four routes. Gemma 4 31B passes on `single_face` and `video_face` and fails the token gate on the full frame and the composite grid, as E4B does. Both delivery records equal their siblings' on every field.
+    - The frozen readout passes ladder rung 1 on both models (descriptive).
+  - **The paper.** Results, Section 8 and the Discussion are filled from the branches drafted before data (main text 4,995 of 5,000 words). Methods and S9 give the detail, and Table 1 has two A8 rows. The enquiry, cover letter, reporting summary and deviation list are updated. `reproduce.py` pins the 23 pulled files.
+  - **Still queued:** the 8B check, job 41575304, at no cost. If it runs, I read it once on the cluster by its rule and record it, and nothing else follows in this paper.
+- **PR #134 is merged into `main`.** The author merged it on 2026-11-21 at 09:10 UTC (`3678113`, a true merge commit). Its three commits (`f6df4a6`, `88353f9`, `9e6776f`) are authored by `eddiebullock`. The entry of 2026-11-21 below, which says it is open, is superseded.
+- **New at 09:35: the 8B check has waited 49 hours, and A8's scored steps cannot run before the shutdown on the free tier. Decision needed** (NEEDS_INPUT item 19; recommended: defer them by dated note and finish the paper with what A8 has).
+  - You logged in again at 09:33. Job 41575304 is pending on priority: 173 (age 74, QOS 100, fair-share 0), behind 391 A100 jobs, with no planned start.
+  - About 30 of the 74 A100 nodes have been in the `rebuilds` maintenance reservation since 2026-11-18. Paid jobs carry QOS priority 500 against our 100, and age adds about 36 points a day, so the earliest realistic start is early December. The gates and A1, A2 and A4 would each restart at age 0.
+  - Correction to the hand-off of 2026-11-21: `intr` allows one job per user at a time, of at most 60 minutes and 3 nodes. So it cannot carry A8's sharded runs at the scale needed (500 to 600 GPU-hours) before the shutdown, besides being too short for the 8B check.
+  - Nothing was cancelled or changed; the job stays queued. A watcher reports when it starts or ends, and it stops at once if the connection drops.
+- **Checks of 2026-11-23, at `9ead0bc`.** Full suite: 1,177 passed, 26 skipped, 0 failed. Clean-checkout reproduction: 47 rebuilt and matched (Figures 2, 4, 5 and 6, `SOURCES.md` and Table 1 byte-identical), 136 verified by hash, 0 failed, 1 pending (A8). Recorded in `REPRODUCE.md`.
+- **PR #135** (the figure relabel and these records) is open: https://github.com/eddiebullock/playground/pull/135. Its commits are authored by `eddiebullock` and dated 2026-11-23.
+- **The cluster connection ended at about 22:05 on 2026-11-21** (NEEDS_INPUT item 18, resolved at 09:33 on 2026-11-23).
+  - The watcher on job 41575304 (the 8B check) stalled at a fresh login prompt, and on 2026-11-23 it was stopped.
+  - At its last good check, about 22:00 on 2026-11-21, the job was still in the queue. Its state now is unknown.
+  - A new watcher waits for the login. It reports the job's state as soon as you log in. Nothing else of this project was queued or running.
+- **Next on the cluster.** Only the 8B check is queued. When it ends, read it by its rule (DECISIONS 2026-11-17) and record it. Under item 19's option (a), nothing else is submitted for A8 before the shutdown of 2026-12-07 07:00.
+- **The figures are relabelled** (IMPACT_PLAN.md, step 9; Section 5, item 9).
+  - Figures 2, 4, 5 and 6 print plain names in place of A1, A3, RQ0, RQ1, SESOI, do-effects and route identifiers. Figure 6 names each contrast by its edit and items, beside its ID.
+  - They were rebuilt with `--real` from the same locked inputs, and every input sha256 in `SOURCES.md` is unchanged. The legends follow.
+  - Two new tests: one checks Figure 6's names against the frozen design, the other fails if a code is printed.
+  - The main text is unchanged at 4,863 words.
 
 ## Hand-off, 2026-11-21
 
@@ -17,7 +50,7 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
   - Gemma 4 31B stops here (gates not tested). Qwen3-VL-32B waits on the 8B check, then its gates.
 - **`intr` cannot run the 8B check or the 32B gates.** The frozen 8B gate run at bfloat16 took 6,258 s on one GPU (G4 alone 5,266 s), beyond `intr`'s 1-hour limit. A timeout would count as "the check fails to run", which ends the deviation under row 102's stop rule, and splitting the gates would be the "second change" that rule forbids. So 41575304 stays in `ampere`. `intr` slices suit A8's later sharded A1, A2 and A4 runs, which resume.
 - **Deadline.** Every GPU node is reserved from 2026-12-07 07:00 to 2027-01-10 (`Dec2026-shutdown`).
-- **PR #134** (the reframe and today's records) is open. Its merge was blocked by this session's permission settings, so the author merges it.
+- **PR #134** (the reframe and today's records) is open. Its merge was blocked by this session's permission settings, so the author merges it. (Merged by the author at 09:10 UTC; see the hand-off of 2026-11-23.)
 - **The paper is reframed, on the author's instruction** (`research/paper/v2/IMPACT_PLAN.md`; DECISIONS 2026-11-21; decisions table rows 103 and 104).
   - Headline: matching answers cannot show that a vision-language model reads faces as people do. Randomised cues can, and Gemma 4 shares people's cue effects for basic emotions, replicated on a second sample from the same lab, below human agreement. Qwen3-VL was not shown to.
   - Length: main text 4,863 words (limit 5,000), abstract 150.

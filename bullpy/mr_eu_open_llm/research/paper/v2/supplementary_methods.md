@@ -349,6 +349,21 @@ On the video input (`video_face`), neither shuffled frames (P12, P13) nor clips 
 
 **Reporting.** A8 rows are labelled A8 and placed under the frozen rows, whatever they show. A8 cannot rescue or weaken a frozen verdict: a frozen Inconclusive stays Inconclusive, a frozen null stays a null, and Molmo2 stays ineligible. Where an A8 model and its sibling disagree, both verdicts are reported and the difference is described, not tested. A8 may support a statement of scope, never a change to a frozen verdict.
 
+**What ran, and what was deferred (2026-11-23).** Phase A ran for both models on 15 November 2026, each step through the launcher, with every frozen file and code pin checked. A8's results are in its own rows of Table 1.
+- *A3.* Both models passed on `single_face`, in an A8 Holm family of two [REG: A8 A3 table].
+  - Qwen3-VL-32B: accuracy .472 with the real face against .142 with a mismatched face; delta .329 (95% CI .273 to .388), Holm *P* = .00006.
+  - Gemma 4 31B: .408 against .092; delta .316 (.243 to .393), Holm *P* = .00006.
+  - All 243 items scored on both models.
+- *Input delivery.* Qwen3-VL-32B passed all four delivery gates on all four routes, with a median of 13.52 image tokens across the face on the single face crop and 11.54 on the full frame and the composite grid. Gemma 4 31B passed on `single_face` and `video_face` (9.01 tokens) and failed the token gate on `single_full` (4.15) and `legacy_full` (1.08). Each record equals its small sibling's on every route and field, as expected for models that share their image processing [REG: "A8 Phase A records and final checks"].
+- *Readout ladder, descriptive.* The frozen option-free readout passed rung 1 on both models, on the 24 calibration clips, with no labels or votes read. Qwen3-VL-32B: median lexicon mass .976, 24 of 24 clips at or above .05, image sensitivity met. Gemma 4 31B: .989, 23 of 24 clips, image sensitivity met. The readout was not re-chosen.
+- *Vision gates.* Neither model has a gate result.
+  - The frozen Gemma gate adapter assumes the per-layer inputs of Gemma 4 E4B, which Gemma 4 31B lacks. It stopped twice, and by lead decision 5 the model has no gate result (supplementary table of dated decisions and deviations, row 99).
+  - Qwen3-VL-32B's gates stopped twice. On two GPUs, the frozen layer hooks index each layer's output with positions held on the first GPU. On one GPU, the weights and the first forward pass ran out of the A100's memory. So the gates count as not tested (rows 100 and 101).
+  - A dated device-only deviation (row 102) would have rerun them through hooks that move each position index to its tensor's device, after a check on the frozen Qwen3-VL-8B. That check waited two days on the free tier's priority without starting, and the GPU nodes were reserved for a shutdown from 7 December 2026. So the gates were deferred past the shutdown by dated note (row 105), and the check stays queued.
+- *Not run.* By A8's stop rule, neither model ran A1, A2 or A4. Natural-clip RQ1, descriptive in A8, needs A1's files and did not run. Nothing is inferred from the steps not run.
+- *Final checks.* After the last A8 job, every weight file's sha256 again equalled its pin: 14 of 14 for Qwen3-VL-32B and 2 of 2 for Gemma 4 31B. A8's single pull then copied its records with sha256 checks, after every provenance file checked on the cluster. It recorded the job states, and named the gates jobs that ended without a verdict as waived, with the reason.
+- *If A8 resumes,* for example in revision, it does so under its frozen design and row 102, by a further dated note.
+
 ### S10. Scoped and provisional questions
 
 **RQ3 (continued).** Such a cut can only check that no route from pixels to the answer was missed. Holding image positions past the entry of the language model cannot be a complete cut, because text positions have by then read the image, and holding those too returns the image-free forward. The depth at which a cue is carried is therefore not testable on either eligible model. The vision gates ran on the legacy input with the option prompt; A7's Stage 0 then tested completeness on `single_face` with the blind readout (Results, Section 9).
