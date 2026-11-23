@@ -163,7 +163,10 @@ These only matter at submission. Nothing waits on them.
 - Phase A finished at 23:57: delivery, ladder and A3 ended ok for both models.
 - A8's A3 summary, its first scored result, waits on this decision, so that the decision is made before any A8 result is known.
 
-## 19. A8 cannot finish before the GPU shutdown on the free tier. Defer its scored steps? (decision, 2026-11-23)
+## 19. A8 cannot finish before the GPU shutdown on the free tier. Defer its scored steps? (decision, 2026-11-23) — RESOLVED 2026-11-23: option (a)
+
+**Resolved 2026-11-23: you chose (a)** ("great proceed with all jobs", after asking how essential A8 is). The deferral is recorded in DECISIONS 2026-11-23 (row 105) and PREREG_A8's dated note. A8's final checks and the paper's A8 text follow.
+
 
 **What I found at 09:35 on 2026-11-23** (cluster facts only; no A8 output read):
 - **The 8B check has waited 49 hours** (job 41575304, submitted 2026-11-21 08:02). Its priority is 173: 74 for age and 100 for the free tier's QOS, with a fair-share of 0. 391 pending A100 jobs rank above it, and the scheduler has planned no start for it.

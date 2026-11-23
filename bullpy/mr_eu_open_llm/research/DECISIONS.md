@@ -1067,3 +1067,29 @@ The test is the one in the entry "A8's GPU equivalence test runs as one intr job
   - "Written to stand whatever the results are" was removed.
 - **Class.** Claims narrowed or withdrawn, after every analysis but A8 was read. Each correction only narrows a statement. No class, number or threshold changes.
 - **Disclosure.** Decisions table row 104. The withdrawn sentences are quoted here and are not moved to the Supplementary Information.
+
+## 2026-11-23: A8's scored steps for Qwen3-VL-32B are deferred past the GPU shutdown, and A8 ends for this paper after Phase A (the author's instruction, option (a) of NEEDS_INPUT item 19; after A8's A3 summary was read; before Phase A's delivery and ladder outputs were read)
+
+- **The author's instruction (2026-11-23).** "great proceed with all jobs", in reply to the recommendation of option (a) in NEEDS_INPUT item 19. The author had first asked why the wait was so long, whether `intr` could be used, and how essential A8 is to the paper.
+- **Why.** Facts from the cluster at 09:35 and 09:59 on 2026-11-23 (scheduler state only; no A8 output read):
+  - Job 41575304, the 8B check of row 102, had been pending since 2026-11-21 08:02, at priority 173 to 174: age 74, QOS 100 and a fair-share of 0. 391 and then 399 A100 jobs ranked above it, and the scheduler planned no start for it.
+  - About 30 of the 74 A100 nodes were in maintenance reservations (`rebuilds`, since 2026-11-18), and 548 jobs were pending.
+  - Paid (SL2) jobs carry a QOS priority of 500 against the free tier's 100, and age adds 1,000 over 28 days, about 36 a day. So the check would outrank only paid jobs submitted after about 2 December.
+  - Every later step would restart at age 0: Qwen3-VL-32B's gates (about 7 hours on a node), then A1, A2 and A4 (about 500 to 600 GPU-hours).
+  - `intr` allows one job per user at a time, of at most 60 minutes and 3 nodes. The check's frozen runs take about 1 h 44 min each (G4 alone 88 minutes), and the frozen gate script splits by gate only. A timeout would count as the check failing to run, and a split would be a second change. Either ends the deviation under row 102's stop rule.
+  - The GPU nodes are reserved from 2026-12-07 07:00 to 2027-01-10 (`Dec2026-shutdown`).
+- **What changes.**
+  - Qwen3-VL-32B's gates are deferred past the shutdown by this dated note, and so are A1, A2 and A4, which depend on them. Deferral by a dated note is a "not run" reason that A8 fixed before data (Results and Discussion branches drafted 2026-11-12).
+  - A8 ends for this paper after Phase A and A3's summary. Its final checks run now, in the order the A8 runbook gives (ROADMAP, Part 3, step 8):
+    1. the weights' full hash (`a8_preflight.py --full_hash`);
+    2. the single pull (`post_phase3.py pull a8`);
+    3. Phase A's delivery and ladder outputs, read by their frozen rules and recorded;
+    4. the paper's A8 slots, filled from the branches drafted before data.
+  - Natural-clip RQ1, descriptive in A8, does not run, because it needs A1's merged files.
+- **What stays the same.**
+  - Row 102's deviation and its stop rule. The 8B check stays queued, at no cost. If it runs, it is read once on the cluster by its rule and recorded, and nothing else follows from it in this paper.
+  - Gemma 4 31B stays not tested (lead decision 5; row 99).
+  - No threshold, rule, family or verdict changes. A8 rows sit under the frozen rows and support a scope statement only. Nothing is inferred from the deferred steps.
+- **If A8 resumes later** (for example in revision), it does so under its frozen design and row 102, by a further dated note. Its later outputs come back by a second pull with its own manifest, since this pull's manifest is written once.
+- **Relative to data.** After A8's A3 summary was read (2026-11-21; both models pass) and before any delivery or ladder output of Phase A was read. The queue forced the deferral, as documented above, and A3's result is reported whatever the deferral.
+- **Disclosure.** Decisions table row 105; PREREG_A8, dated note of 2026-11-23; Results, Section 8; Methods, "Larger models (A8)".
