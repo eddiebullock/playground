@@ -67,9 +67,9 @@ The supporting results are face evidence beyond word knowledge (Results 7) and s
 | Title | Working title "Beyond matching answers: testing whether vision-language models use facial cues as people do"; three alternatives in `abstract.md` | 13 |
 | Abstract | Question, audit, face dependence, theorem, randomised result with its size against human agreement, take-home | 150 (limit 150) |
 | Introduction | Claims and Schyns' three degrees; validity; our earlier task; the eight-paper check; identifiability; CEA; novelty; what we did and found; preregistration and scope | 1,223 |
-| Results | 1 Accuracy alone cannot show face use. 2 Answers depend on the face. 3 Agreement on natural faces cannot identify cue use. 4 With cues randomised, Gemma 4 aligns for basic emotions. 5 Answers on the same faces track people's only weakly (descriptive). 6 Masks and filters, about half the single-face contrasts. 7 Face evidence, not word knowledge alone. 8 Larger models. 9 What could not be tested | 2,487 |
+| Results | 1 Accuracy alone cannot show face use. 2 Answers depend on the face. 3 Agreement on natural faces cannot identify cue use. 4 With cues randomised, Gemma 4 aligns for basic emotions. 5 Answers on the same faces track people's only weakly (descriptive). 6 Masks and filters, about half the single-face contrasts. 7 Face evidence, not word knowledge alone. 8 Larger models. 9 What could not be tested | 2,485 |
 | Discussion | Continuous prose: answers against cues; the cue-level result and its limits; two descriptive observations; edits and priors; A8; five limits; two lessons | 1,287 |
-| Main text | | 4,997 (limit 5,000), with A8 filled on 2026-11-23 |
+| Main text | | 4,995 (limit 5,000), with A8 filled on 2026-11-23 |
 
 ## 5. Implemented on 2026-11-21
 
@@ -100,8 +100,8 @@ The supporting results are face evidence beyond word knowledge (Results 7) and s
    - The legends follow (`figure_legends.md`). No encoding, value, marker or decision changed. `SOURCES.md` line numbers are current again: Figures 2 and 4 had been one line stale since 2026-11-14.
 10. **A8 filled (2026-11-23; step 12).** On the author's choice of option (a) in NEEDS_INPUT item 19, A8's scored steps were deferred past the December GPU shutdown, and A8 ended for this paper after Phase A (DECISIONS 2026-11-23, row 105).
    - A8's final checks ran in the runbook's order: the full weights hash (both copies match their pins), the single pull, and delivery and the ladder read by their frozen rules.
-   - Results, Section 8 (82 words) and the Discussion (52 words) were filled from the branches drafted before data. Methods and Supplementary Methods, Section S9 carry the detail. Table 1 has two A8 rows, built from the pulled records, and `scripts/reproduce.py` pins the 23 pulled files.
-   - Main text 4,997 words (limit 5,000).
+   - Results, Section 8 (80 words) and the Discussion (52 words) were filled from the branches drafted before data. Methods and Supplementary Methods, Section S9 carry the detail. Table 1 has two A8 rows, built from the pulled records, and `scripts/reproduce.py` pins the 23 pulled files.
+   - Main text 4,995 words (limit 5,000).
    - Figure 2 does not carry the A8 rows. The Results scaffold planned that when A8 was expected to run A1, A2 and A4. With A3 alone, Table 1 and Section 8 report it; adding the rows to Figure 2 is a display choice for the author.
 
 ## 6. Next steps, in order

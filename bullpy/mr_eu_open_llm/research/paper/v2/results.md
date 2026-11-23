@@ -218,7 +218,7 @@ Filled 2026-11-23 (DECISIONS 2026-11-23, row 105: A8 ended for this paper after 
 **Figure.** A8 rows join Figures 2, 5 and 6 and Table 1 below the frozen rows, marked A8. [PENDING: figure functions.]
 -->
 
-We ran the frozen tests on two larger models in the same families, Qwen3-VL-32B and Gemma 4 31B, as preregistered (Methods). On a single face crop, both models' answers depended on the face: the delta was .329 for Qwen3-VL-32B and .316 for Gemma 4 31B (Holm *P* = .00006 for each, over two models, a family less strict per model than the three-model one) [REG: A8 A3 table]. Neither has a validity-gate result, so by the preregistered stop rule neither ran the other tests (Methods; Table 1) [REG: "A8 Phase A records and final checks"].
+As preregistered, two larger models in the same families, Qwen3-VL-32B and Gemma 4 31B, entered the frozen tests (Methods). On a single face crop, both models' answers depended on the face: the delta was .329 for Qwen3-VL-32B and .316 for Gemma 4 31B (Holm *P* = .00006 for each, over two models, a family less strict per model than the three-model one) [REG: A8 A3 table]. Neither has a validity-gate result, so by the preregistered stop rule neither ran the other tests (Methods; Table 1) [REG: "A8 Phase A records and final checks"].
 
 ## 9. What could not be tested
 

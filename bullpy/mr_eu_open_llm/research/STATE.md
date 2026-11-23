@@ -16,7 +16,7 @@ Single source of truth for the paper-v2 agent. Update after every meaningful ste
     - Both models pass A3 (.329 and .316).
     - Qwen3-VL-32B passes delivery on all four routes. Gemma 4 31B passes on `single_face` and `video_face` and fails the token gate on the full frame and the composite grid, as E4B does. Both delivery records equal their siblings' on every field.
     - The frozen readout passes ladder rung 1 on both models (descriptive).
-  - **The paper.** Results, Section 8 and the Discussion are filled from the branches drafted before data (main text 4,997 of 5,000 words). Methods and S9 give the detail, and Table 1 has two A8 rows. The enquiry, cover letter, reporting summary and deviation list are updated. `reproduce.py` pins the 23 pulled files.
+  - **The paper.** Results, Section 8 and the Discussion are filled from the branches drafted before data (main text 4,995 of 5,000 words). Methods and S9 give the detail, and Table 1 has two A8 rows. The enquiry, cover letter, reporting summary and deviation list are updated. `reproduce.py` pins the 23 pulled files.
   - **Still queued:** the 8B check, job 41575304, at no cost. If it runs, I read it once on the cluster by its rule and record it, and nothing else follows in this paper.
 - **PR #134 is merged into `main`.** The author merged it on 2026-11-21 at 09:10 UTC (`3678113`, a true merge commit). Its three commits (`f6df4a6`, `88353f9`, `9e6776f`) are authored by `eddiebullock`. The entry of 2026-11-21 below, which says it is open, is superseded.
 - **New at 09:35: the 8B check has waited 49 hours, and A8's scored steps cannot run before the shutdown on the free tier. Decision needed** (NEEDS_INPUT item 19; recommended: defer them by dated note and finish the paper with what A8 has).
