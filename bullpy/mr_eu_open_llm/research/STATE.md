@@ -2,7 +2,21 @@
 
 Single source of truth for the paper-v2 agent. Update after every meaningful step.
 
-**Updated:** 2026-11-23 Europe/London
+**Updated:** 2026-11-24 Europe/London
+
+## Hand-off, 2026-11-24
+
+- **PR #135 is merged into `main`.** On your instruction I ran the merge, as `eddiebullock`, on 2026-11-23 at 13:16 (`773ddf0`, a true merge commit). The entry of 2026-11-23 below, which says it is open, is superseded.
+- **The cluster connection ended at 07:02 on 2026-11-24.** The watcher on job 41575304 (the 8B check) stopped on the lost connection, as designed. At its last check the job was still pending; its state since then is unknown. Nothing else of this project is queued or running. When you log in again, I check the job and restart the watcher. Under item 19's option (a), nothing follows from the check in this paper.
+- **Two Word documents for collaborators**, in `reports/`, built by `reports/build_collaborator_docs.js`:
+  - `VLM_face_cues_results_summary.docx`: the headline, a results table, one section per finding with Figures 1 to 6, what it means, the limits, where the paper stands and four questions to discuss.
+  - `VLM_face_cues_how_the_study_worked.docx`: the design, each test with its rule, the gates, the safeguards, a timeline and a glossary, in plain language.
+  - Every number is copied from the locked text, and the paper's wording rules are kept. Both files pass the Word schema check. Only their first pages could be previewed here, because LibreOffice is not installed.
+- **A reading copy of the paper** (title to references, with the figures) was built from `main` at `773ddf0` on 2026-11-23 and published as a private page for the author. It is not part of the repository.
+- **Submission check (2026-11-24).** The study is finished for this paper. The paper is not yet ready to submit:
+  - Author items: NEEDS_INPUT 9 (code DOI, preregistration record, authors, ethics confirmation, RMET) and 17 (review, title, noise ceiling). The end matter (author contributions, competing interests, acknowledgements, funding) is not written yet.
+  - Agent items, waiting on your go-ahead: build the reference list (four venues to confirm; nine cited sources were read below partial level, two of them, [65] and [66], behind an Introduction sentence); check Methods (6,884 words) and the Figure 1 legend against the journal's limits; relabel Figure 1, which still prints route identifiers; rerun the clean-checkout test on the submission commit.
+  - The presubmission enquiry needs only the title, the author's details, a sentence on fit and the co-authors' agreement.
 
 ## Hand-off, 2026-11-23
 
