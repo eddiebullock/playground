@@ -1,0 +1,54 @@
+# Ignore Python virtual environments
+venv/
+backend/venv/
+
+# Ignore Python cache files
+__pycache__/
+*.py[cod]
+
+# Ignore environment variables and sensitive config files
+.env
+
+# Ignore macOS-specific files
+.DS_Store
+
+# Ignore logs
+*.log
+
+# Ignore compiled Python files
+*.pyo
+
+# Ignore test coverage reports
+htmlcov/
+.tox/
+.coverage
+*.cover
+
+# Ignore build and distribution directories
+build/
+dist/
+*.egg-info/
+
+# Ignore node_modules (if applicable)
+node_modules/
+
+# Ignore large library files (common binary files)
+*.dylib
+*.so
+*.a
+*.exe
+*.o
+
+# Ignore temporary and backup files
+*.swp
+*.swo
+*.bak
+*~
+
+# Ignore large files
+backend/venv/lib/python3.12/site-packages/torch/lib/libtorch_cpu.dylib
+backend/venv/lib/python3.12/site-packages/numpy/.dylibs/libopenblas64_.0.dylib
+
+# Ignore embedded repositories
+clinicAI-clean/
+clinicAI-fresh/

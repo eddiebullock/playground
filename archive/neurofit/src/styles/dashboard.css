@@ -1,0 +1,32 @@
+/* Custom styles for dashboard */
+.dashboard-container {
+  min-height: calc(100vh - 4rem);
+}
+
+.chat-message {
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.workout-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.workout-card:hover {
+  transform: translateY(-2px);
+}
+
+.progress-bar {
+  transition: width 0.5s ease;
+}
+

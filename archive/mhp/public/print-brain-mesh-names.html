@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Print Brain Mesh Names (ES Modules)</title>
+</head>
+<body>
+  <h1>Open your browser's dev console (F12 or Cmd+Option+I) to see mesh names.</h1>
+  <p style="color: red; font-weight: bold;">This page must be served from a local server (not opened as file://) for ES module imports to work.</p>
+  <script type="module">
+    import * as THREE from 'https://unpkg.com/three@0.152.2/build/three.module.js';
+    import { GLTFLoader } from 'https://unpkg.com/three@0.152.2/examples/jsm/loaders/GLTFLoader.js';
+
+    const loader = new GLTFLoader();
+    const modelUrl = '/models/brain_areas.glb';
+    console.log("Attempting to load model from:", modelUrl);
+    loader.load(modelUrl, (gltf) => {
+      console.log("--- Mesh names in brain_areas.glb ---");
+      gltf.scene.traverse((node) => {
+        if (node.isMesh) {
+          console.log("- " + node.name);
+        }
+      });
+      console.log("--- End of mesh list ---");
+    }, undefined, (err) => {
+      console.error("Error loading model:", err);
+    });
+  </script>
+</body>
+</html>

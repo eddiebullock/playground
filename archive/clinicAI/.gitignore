@@ -1,0 +1,8 @@
+
+# Ignore large files
+backend/venv/lib/python3.12/site-packages/torch/lib/libtorch_cpu.dylib
+backend/venv/lib/python3.12/site-packages/numpy/.dylibs/libopenblas64_.0.dylib
+
+# Ignore large library files
+backend/venv/lib/python3.12/site-packages/torch/lib/libtorch_cpu.dylib
+backend/venv/lib/python3.12/site-packages/numpy/.dylibs/libopenblas64_.0.dylib
