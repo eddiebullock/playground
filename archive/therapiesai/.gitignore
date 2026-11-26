@@ -1,0 +1,31 @@
+# Ignore virtual environment
+backend/venv/
+
+# Ignore Python cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore environment variables (important for security)
+.env
+*.env
+
+# Ignore logs and temporary files
+logs/
+*.log
+debug.log
+
+# Ignore IDE/editor config files
+.vscode/
+.idea/
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+# Ignore database files (if applicable)
+*.sqlite3
+
+# Ignore frontend dependencies (if using Node.js)
+frontend/node_modules/
